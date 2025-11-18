@@ -21,26 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './app/jquery-extensions.js';
+import './app/jquery-extensions.ts';
 import appSettings from './app/app-settings.js';
-import attachWindowResizeHandler from './app/window-resize.js';
-import beforeReady from './app/before-ready.js';
-import personalSettings from './app/personal-settings.js';
-import settings from './app/settings.js';
-import { documentReady as blogDocumentReady } from './app/blog.js';
-import { documentReady as configCheckDocumentReady } from './app/configcheck.js';
-import { documentReady as donationReceiptsReady } from './app/donation-receipts.js';
-import { documentReady as emailDocumentReady } from './app/email.js';
-import { documentReady as insurancesDocumentReady } from './app/insurance.js';
+import attachWindowResizeHandler from './app/window-resize.ts';
+import beforeReady from './app/before-ready.ts';
+import personalSettings from './app/personal-settings.ts';
+import settings from './app/settings.ts';
+import { documentReady as blogDocumentReady } from './app/blog.ts';
+import { documentReady as configCheckDocumentReady } from './app/configcheck.ts';
+import { documentReady as donationReceiptsReady } from './app/donation-receipts.ts';
+import { documentReady as emailDocumentReady } from './app/email.ts';
+import { documentReady as insurancesDocumentReady } from './app/insurance.ts';
 import { documentReady as invoicesReady } from './app/invoices.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
-import { documentReady as pageDocumentReady } from './app/page.js';
-import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
-import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.js';
+import { documentReady as pageDocumentReady } from './app/page.ts';
+import { documentReady as phpMyEditDocumentReady } from './app/pme.ts';
+import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.ts';
 import { documentReady as projectInstrumentationNumbersDocumentReady } from './app/project-instrumentation-numbers.js';
 import { documentReady as projectParticipantsDocumentReady } from './app/project-participants.js';
-import { documentReady as projectPaymentsReady } from './app/project-payments.js';
-import { documentReady as projectsDocumentReady } from './app/projects.js';
+import { documentReady as projectPaymentsReady } from './app/project-payments.ts';
+import { documentReady as projectsDocumentReady } from './app/projects.ts';
 import { documentReady as sepaBulkTransactionsDocumentReady } from './app/sepa-bulk-transactions.js';
 import { documentReady as sepaDebitMandatesDocumentReady } from './app/sepa-debit-mandate.js';
 import { documentReady as taxExemptionNoticesReady } from './app/tax-exemption-notices.js';
@@ -54,7 +54,7 @@ require('navsnapper.scss');
 require('variables-generator.scss');
 
 __webpack_public_path__ = webRoot;
-__webpack_nonce__ = nonce;
+__webpack_nonce__ = nonce ?? '';
 
 onDocumentLoaded(() => {
   attachWindowResizeHandler();

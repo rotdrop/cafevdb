@@ -24,7 +24,7 @@
 import ToolKitConsole from '../toolkit/util/console.ts';
 import type { ConsoleOptions } from '../toolkit/util/console.ts';
 
-import globalState from '../app/globalstate.js';
+import globalState from '../app/globalstate.ts';
 import { DEBUG_SMAPS } from '../debug-modes.ts';
 
 class Console extends ToolKitConsole {

@@ -23,6 +23,7 @@
 
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
+import { messages } from '../app/notification.ts';
 
 import {
   ADD_CONTACTS_TO_PROJECT,
@@ -41,6 +42,8 @@ import {
   PAGE_TEMPLATE_ACTION_MENU,
   POP_BUSY_STATE,
   PROJECT_EVENTS_LISTING,
+  PROJECT_INSTRUMENTATION_NUMBERS_POPUP,
+  PROJECT_PARTICIPANT_FIELDS_POPUP,
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
   SET_DEBUG_MODES,
@@ -59,6 +62,8 @@ import {
 
 import type { ComponentProps, PropsData } from '../mountable-component-names.ts';
 
+import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
+
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
   export type TemplatePostData = {
@@ -66,36 +71,34 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     projectId?: number,
     projectName?: string,
     musicianId?: number,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string|number]: any,
   }
 
-  type Callbacks = {
-    done?(): unknown,
-    fail?(): unknown,
-    always?(): unknown,
-  };
-  type SetterArgs<T = any> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type SetterArgs<T = any, E extends HTMLElement = HTMLElement> = {
     value: T,
     callbacks: Callbacks,
-    showMessage?: (messages: string|string[]) => void,
-    $control?: jQuery,
+    showMessage?: typeof messages,
+    $control?: JQuery<E>,
   };
   type BoolSetterArgs = SetterArgs<boolean>
 
   export interface EventArgs {
     // mapping of 'event name' => 'event type'
     [ADD_CONTACTS_TO_PROJECT]: { projectName: string },
-    [APP_SETTINGS_POPUP]: Callbacks,
+    [APP_SETTINGS_POPUP]: AppSettingsCallbacks,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [EMAIL_POPUP]: { projectId?: number, projectName?: string, reopen?: boolean, post?: Record<string, any> },
     [GET_VUE_COMPONENT]: {
-      name: keyof ComponentProps,
+      name: keyof ComponentPorps,
       propsData: PropsData<keyof ComponentProps>,
     }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
     [HISTORY_GO_REQUEST]: { level: number },
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string },
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
-    [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template: string|null, projectId: number|null, projectName: string|undefined, keepHistory: boolean, },
+    [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template?: string|null, projectId?: number|null, projectName?: string|undefined, keepHistory: boolean, },
     [LEGACY_PME_UPDATE]: { post: TemplatePostData, htmlBody: string, action: 'push'|'replace', },
     [LEGACY_RECORD_POPUP]: { entityId: number, projectId?: number, projectName?: string, template: string },
     [LEGACY_SANITIZE_POST_DATA]: { post: TemplatePostData },
@@ -103,11 +106,13 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [PAGE_TEMPLATE_ACTION_MENU]: { template: string, entityId: number, open: boolean, x?: number, y?: number },
     [POP_BUSY_STATE]: undefined,
     [PROJECT_EVENTS_LISTING]: { projectName: string },
+    [PROJECT_INSTRUMENTATION_NUMBERS_POPUP]: { projectId: number, projectName: string },
+    [PROJECT_PARTICIPANT_FIELDS_POPUP]: { projectId: number, projectName: string },
     [PUSH_BUSY_STATE]: undefined,
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
 
-    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[]>,
+    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[], HTMLSelectElement>,
     [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
     [SET_DIRECT_CHANGE]: BoolSetterArgs,
     [SET_EXPERT_MODE]: BoolSetterArgs,

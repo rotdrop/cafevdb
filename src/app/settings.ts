@@ -23,22 +23,23 @@
 
 import $ from './jquery.js';
 import { appName, appPrefix } from '../config.ts';
-import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
+import * as Ajax from './ajax.ts';
+import * as Notification from './notification.ts';
 import * as Dialogs from './dialogs.ts';
-import * as FileUpload from './file-upload.js';
-import * as SelectUtils from './select-utils.js';
-import generateAppUrl from './generate-url.js';
-import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.js';
-import { toolTipsInit } from './cafevdb.js';
-import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
-import fileDownload from './file-download.js';
-import { makePlaceholder as selectPlaceholder } from './select-utils.js';
-import * as WysiwygEditor from './wysiwyg-editor.js';
+import * as FileUpload from './file-upload.ts';
+import * as SelectUtils from './select-utils.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.ts';
+import { toolTipsInit } from './cafevdb.ts';
+import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.ts';
+import fileDownload from './file-download.ts';
+import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
 import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
 import { showInfo } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -193,30 +194,30 @@ const afterLoad = function(container?: JQuery) {
     const adminGeneral = $('#admingeneral');
     const msg = adminGeneral.find('.msg');
 
-    const afterSetOrchestraName = function(_element: JQuery, _data: Record<string, any>, value: string, _msg: JQuery) {
-      if (value === '') {
-        $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function() {
-          $(this).prop('disabled', true);
-        });
-      } else {
-        $('div.personalblock.admin').find('fieldset').each(function() {
-          $(this).removeAttr('disabled');
-        });
-        if ($('#shareowner #user-saved').val() !== '') {
-          $('div.personalblock.sharing').find('fieldset').each(function() {
-            $(this).removeAttr('disabled');
-          });
-        } else {
-          $('#shareownerform').find('fieldset').each(function() {
-            $(this).removeAttr('disabled');
-          });
-        }
-      }
-    };
-
     simpleSetValueHandler(
-      adminGeneral.find('input[name="orchestra"]'), 'blur', msg, {
-        success: afterSetOrchestraName,
+      adminGeneral.find('input[name="orchestra"]') as JQuery<HTMLInputElement>,
+      'blur',
+      msg, {
+        success(_element, _data, value, _msg) {
+          if (value === '') {
+            $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function() {
+              $(this).prop('disabled', true);
+            });
+          } else {
+            $('div.personalblock.admin').find('fieldset').each(function() {
+              $(this).removeAttr('disabled');
+            });
+            if ($('#shareowner #user-saved').val() !== '') {
+              $('div.personalblock.sharing').find('fieldset').each(function() {
+                $(this).removeAttr('disabled');
+              });
+            } else {
+              $('#shareownerform').find('fieldset').each(function() {
+                $(this).removeAttr('disabled');
+              });
+            }
+          }
+        },
       });
 
     simpleSetValueHandler(
@@ -225,7 +226,7 @@ const afterLoad = function(container?: JQuery) {
           if (data.localeInfo) {
             const $localeInfo = adminGeneral.find('.locale.information');
             $localeInfo.children().remove();
-            $localeInfo.append($(data.localeInfo).children());
+            $localeInfo.append($(data.localeInfo as string).children());
           }
         },
       });
@@ -369,7 +370,7 @@ const afterLoad = function(container?: JQuery) {
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
         },
         getValue(_element, msg) {
-          const val = { name: dbPassword.attr('name'), value: dbPassword.val() };
+          const val = { name: dbPassword.attr('name')!, value: dbPassword.val() };
           if (val.value === '') {
             msg.html(t(appName, 'Empty password, trying to use configured credentials.')).show();
           }
@@ -464,10 +465,10 @@ const afterLoad = function(container?: JQuery) {
           // passwordClone.val('');
         },
         getValue(_element, msg) {
-          let val: ReturnType<GetValueResult> = { name: password.attr('name'), value: password.val() };
+          const val = { name: password.attr('name')!, value: password.val() };
           if (val.value === '') {
             msg.html(t(appName, 'Password field must not be empty')).show();
-            val = undefined;
+            return;
           }
           return val;
         },
@@ -518,7 +519,7 @@ const afterLoad = function(container?: JQuery) {
       'blur',
       msg,
       {
-        success($self, data, value, _msgElement) {
+        success($self, data: DTO.NameIdValueResponse, value: string, _msgElement) {
           if (data.value.name && data.value.name !== value) {
             $self.val(data.value.name);
           }
@@ -528,14 +529,29 @@ const afterLoad = function(container?: JQuery) {
 
     container.find('#sharedfolder-form').on('submit', function() { return false; });
 
-    const sharedFolder = function(
-      cssBase: string,
-      callback?: (element: JQuery, css: string, data: { folderLink: string, url?: string }, value: string, msg: JQuery) => undefined,
-    ) {
+    type CSSBase = typeof ConfigConstants.DEDICATED_FOLDERS[number];
+    type CSSSaved<T extends CSSBase> = `${T}${'-saved'}`;
+    type CSSForce<T extends CSSBase> = `${T}${'-force'}`;
+    type CSSCheck<T extends CSSBase> = `${T}${'-check'}`;
+
+    type Value<T extends CSSBase> = {
+      [key in T|CSSSaved<T>|CSSForce<T>]: key extends T|CSSSaved<T> ? string : boolean;
+    };
+
+    const sharedFolder = <CSS extends CSSBase>(
+      cssBase: CSS,
+      callback?: (
+        $element: JQuery,
+        css: CSS,
+        data: DTO.FolderValueResponse,
+        value: Value<CSS>,
+        $msg: JQuery,
+      ) => undefined,
+    ) => {
       const css = cssBase;
-      const cssSaved = cssBase + '-saved';
-      const cssForce = cssBase + '-force';
-      const cssCheck = cssBase + '-check';
+      const cssSaved: CSSSaved<CSS> = `${css}-saved` as const;
+      const cssForce: CSSForce<CSS> = `${css}-force` as const;
+      const cssCheck: CSSCheck<CSS> = `${css}-check` as const;
       const sharedObject = container.find('#' + css);
       const sharedObjectSaved = container.find('#' + cssSaved);
       const sharedObjectForce = container.find('#' + cssForce);
@@ -557,7 +573,7 @@ const afterLoad = function(container?: JQuery) {
 
       simpleSetValueHandler(
         sharedObjectCheck, 'click', msg, {
-          success(element, data, value, msg) { // done
+          success(element, data: DTO.FolderValueResponse, value: Value<CSS>, msg) { // done
             // value is just the thing submitted to the AJAX call
             sharedObject.val(data.value);
             sharedObjectSaved.val(data.value);
@@ -573,10 +589,10 @@ const afterLoad = function(container?: JQuery) {
             return {
               name: css,
               value: {
-                [css]: sharedObject.val(),
-                [cssSaved]: sharedObjectSaved.val(),
+                [css]: sharedObject.val() as string,
+                [cssSaved]: sharedObjectSaved.val() as string,
                 [cssForce]: sharedObjectForce.is(':checked'),
-              },
+              } as Value<CSS>,
             };
           },
         });
@@ -595,7 +611,7 @@ const afterLoad = function(container?: JQuery) {
     });
     sharedFolder('financefolder', function(_element, css, _data, value, _msg) {
       // const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
-      $('div#sharing-settings span.financefolder').html(value[css]); // update
+      $('div#sharing-settings span.financefolder').html(value[css] as string); // update
       enableFieldSets();
     });
     sharedFolder('projectsfolder', function(_element, css, _data, value, _msg) {
@@ -624,14 +640,14 @@ const afterLoad = function(container?: JQuery) {
     const $cloudUserForm = container.find('form.cloud-user');
 
     const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
-    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]');
+    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]') as JQuery<HTMLInputElement>;
     const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
     const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
     const $enabledIfImport = $cloudUserForm.find('.enable-if-user-sql-backend');
 
     const $personalizedViewsFieldSet = $cloudUserForm.find('fieldset.personalized-views');
-    const $musicianPersonalizedViews = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViews"]');
-    const $recreatePersonalizedViewsButton = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViewsRecreateViews"]');
+    const $musicianPersonalizedViews = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViews"]') as JQuery<HTMLInputElement>;
+    const $recreatePersonalizedViewsButton = $personalizedViewsFieldSet.find('input[name="musicianPersonalizedViewsRecreateViews"]') as JQuery<HTMLInputElement>;
     const $enabledIfPersonalizedViews = $cloudUserForm.find('.enable-if-personalized-views');
 
     const $cloudUserHints = $cloudUserForm.find('div.cloud-user.hints');
@@ -663,7 +679,9 @@ const afterLoad = function(container?: JQuery) {
     };
 
     simpleSetValueHandler(
-      $importClubMembersAsCloudUsers, 'change', undefined, {
+      $importClubMembersAsCloudUsers,
+      'change',
+      undefined, {
         setup() {
           const $this = $(this) as JQuery;
           $this.addClass('busy');
@@ -674,7 +692,7 @@ const afterLoad = function(container?: JQuery) {
           updateOtherOnImportChange($this);
           $this.removeClass('busy');
         },
-        success(_$element, data) {
+        success(_$element, data: DTO.SimpleSetValueResponse) {
           console.info('DATA', data);
           updateHints(data.hints);
         },
@@ -687,7 +705,7 @@ const afterLoad = function(container?: JQuery) {
         },
       });
 
-    const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]');
+    const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]') as JQuery<HTMLInputElement>;
     const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database') as JQuery<HTMLInputElement>;
 
     $cloudUserViewsDatabaseCheckbox
@@ -710,14 +728,14 @@ const afterLoad = function(container?: JQuery) {
       });
 
     simpleSetValueHandler($cloudUserViewsDatabase, 'blur', undefined, {
-      success(_$element, data) {
+      success(_$element, data: DTO.SimpleSetValueResponse) {
         updateHints(data.hints);
       },
     });
 
     simpleSetValueHandler($recreateViewsButton, 'click', undefined, {
       setup() { $recreateViewsButton.addClass('busy'); },
-      success(_$element, data) {
+      success(_$element, data: DTO.SimpleSetValueResponse) {
         updateHints(data.hints);
       },
       cleanup() { $recreateViewsButton.removeClass('busy'); },
@@ -735,7 +753,7 @@ const afterLoad = function(container?: JQuery) {
           updateOtherOnPersonalizedViewsChange($this);
           $this.removeClass('busy');
         },
-        success(_$element, data) {
+        success(_$element, data: DTO.SimpleSetValueResponse) {
           console.info('DATA', data);
           updateHints(data.hints);
         },
@@ -750,7 +768,7 @@ const afterLoad = function(container?: JQuery) {
 
     simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
       setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
-      success(_$element, data) {
+      success(_$element, data: DTO.SimpleSetValueResponse) {
         updateHints(data.hints);
       },
       cleanup() { $recreatePersonalizedViewsButton.removeClass('busy'); },
@@ -1035,16 +1053,15 @@ const afterLoad = function(container?: JQuery) {
     simpleSetValueHandler($('input[class^="' + ConfigConstants.STREET_ADDRESS_PREFIX + '"], input[class^="register"]'), 'blur', msg);
 
     simpleSetValueHandler(
-      $('input.phoneNumber'),
+      $('input.phoneNumber') as JQuery<HTMLInputElement>,
       'blur',
       msg, {
-        success(element, data, _value, _msgElement) {
+        success(element, data: DTO.PhoneNumberResponse, _value, _msgElement) {
           element.val(data.number);
         },
       });
 
     const $streetAddressCountry = $('select.' + ConfigConstants.STREET_ADDRESS_COUNTRY);
-    // @ts-expect-error 2339
     $streetAddressCountry.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
@@ -1059,99 +1076,108 @@ const afterLoad = function(container?: JQuery) {
      *************************************************************************/
 
     // Set special members projects with create/rename/delete feedback
-    const specialMemberProjects = $('input[type="text"].specialMemberProjects');
+    const $specialMemberProjects = $('input[type="text"].specialMemberProjects') as JQuery<HTMLInputElement>;
 
-    const projectsData = specialMemberProjects.data('projects');
+    const projectsData = $specialMemberProjects.data('projects');
     let autocompleteProjects = projectsData
-      ? specialMemberProjects.data('projects').map((v: { name: string }) => v.name)
+      ? $specialMemberProjects.data('projects').map((v: { name: string }) => v.name)
       : [];
 
-    specialMemberProjects.autocomplete({
+    $specialMemberProjects.autocomplete({
       source: autocompleteProjects,
       position: { my: 'left bottom', at: 'left top' },
       minLength: 0,
     });
 
-    specialMemberProjects.on('focus', function(_event) {
+    $specialMemberProjects.on('focus', function(_event) {
       const $self = $(this);
       if ($self.val() === '') {
         $self.autocomplete('search', '');
       }
     });
 
-    simpleSetValueHandler(specialMemberProjects, 'blur', msg, {
-      success($self, data, _value, _msgElement) {
-        const name = $self.attr('name');
-        $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
-        if (data.newName) {
-          $self.val(data.newName);
-        }
-        if (data.suggestions) {
-          autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
-          specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
-        }
-        if (data.feedback) {
-          const feedbackOptions = ['Create', 'Rename', 'Delete'];
-          for (const option of feedbackOptions) {
-            if (data.feedback[option]) {
-              Dialogs.confirm(
-                data.feedback[option].message,
-                data.feedback[option].title,
-                function(decision: boolean) {
-                  data.feedback = decision;
-                  if (decision === true) {
-                    $.post(
-                      setAppUrl(name + option), {
-                        value: {
-                          project: data.project,
-                          projectId: data.projectId,
-                          newName: data.newName,
-                        },
-                      })
-                      .fail(function(xhr, status, errorThrown) {
-                        Ajax.handleError(xhr, status, errorThrown);
-                      })
-                      .done(function(data) {
-                        if (data.message) {
-                          data.message = Notification.messages(data.message, { timeout: 15 });
-                          msg.html(data.message.join('; ')).show();
-                        }
-                        if (data.suggestions) {
-                          autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
-                          specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
-                        }
-                        if (data.projectid) {
-                          $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
-                        }
-                      });
-                  }
-                },
-                true);
+    simpleSetValueHandler(
+      $specialMemberProjects,
+      'blur',
+      msg, {
+        success($self, data: DTO.SpecialProjectsResponse, _value, _msgElement) {
+          const name = $self.attr('name');
+          $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+          if (data.newName) {
+            $self.val(data.newName);
+          }
+          if (data.suggestions) {
+            autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
+            $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+          }
+          if (data.feedback) {
+            const feedbackOptions = ['Create', 'Rename', 'Delete'];
+            for (const option of feedbackOptions) {
+              if (data.feedback[option]) {
+                Dialogs.confirm(
+                  data.feedback[option].message,
+                  data.feedback[option].title,
+                  function(decision: boolean) {
+                    data.feedback = decision;
+                    if (decision === true) {
+                      $.post(
+                        setAppUrl(name + option), {
+                          value: {
+                            project: data.project,
+                            projectId: data.projectId,
+                            newName: data.newName,
+                          },
+                        })
+                        .fail(function(xhr, status, errorThrown) {
+                          Ajax.handleError(xhr, status, errorThrown);
+                        })
+                        .done(function(data) {
+                          if (data.message) {
+                            data.message = Notification.messages(data.message, { timeout: 15 });
+                            msg.html(data.message.join('; ')).show();
+                          }
+                          if (data.suggestions) {
+                            autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
+                            $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
+                          }
+                          if (data.projectid) {
+                            $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
+                          }
+                        });
+                    }
+                  },
+                  true);
+              }
             }
           }
-        }
-      },
-    });
+        },
+      });
 
-    const specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects');
+    type SpecialProjectCreatePayload = {
+      newProjectName: string,
+      projectId: number,
+      projectName: string,
+    };
+
+    const $specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects') as JQuery<HTMLInputElement>;
     simpleSetValueHandler(
-      specialMemberProjectsCreate, 'click', msg, {
-        success(_$self, _data, _value, _msgElement) {},
+      $specialMemberProjectsCreate, 'click', msg, {
+        success(_$self, _data: DTO.SpecialProjectsResponse, _value: SpecialProjectCreatePayload, _msgElement) {},
         getValue($self, _msgElement) {
-          const name = $self.attr('name');
+          const name = $self.attr('name')!;
           return {
             name,
             value: {
-              newProjectName: $self.next().val(),
-              projectId: $self.data('projectId'),
-              projectName: $self.data('projectName'),
+              newProjectName: $self.next().val() as string,
+              projectId: $self.data('projectId')!,
+              projectName: $self.data('projectName')!,
             },
           };
         },
       });
 
-    const executiveBoardIds = $('select.executive-board-ids');
-    // @ts-expect-error 2339
+    const executiveBoardIds = $('select.executive-board-ids') as JQuery<HTMLSelectElement>;
+    // ts-expect-error 2339
     executiveBoardIds.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
@@ -1169,9 +1195,9 @@ const afterLoad = function(container?: JQuery) {
      *
      *************************************************************************/
 
-    const bankAccountInputs = $('input[class^="bankAccount"]');
+    const $bankAccountInputs = $('input[class^="bankAccount"]') as JQuery<HTMLInputElement>;
 
-    bankAccountInputs.autocomplete({
+    $bankAccountInputs.autocomplete({
       source: [],
       minLength: 0,
     });
@@ -1184,7 +1210,7 @@ const afterLoad = function(container?: JQuery) {
     ] as const;
 
     simpleSetValueHandler(
-      bankAccountInputs,
+      $bankAccountInputs,
       'blur',
       msg,
       {
@@ -1222,19 +1248,14 @@ const afterLoad = function(container?: JQuery) {
      *************************************************************************/
 
     const $fieldset = $('fieldset.document-template');
-    const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace');
-    const $cloudSelectors = $fieldset.find('input.select-cloud');
-    const $deleters = $fieldset.find('input.delete');
-    const $autofillers = $fieldset.find('input.auto-fill-test');
-    const $autofillersdata = $fieldset.find('input.auto-fill-test-data');
+    const $uploaders = $fieldset.find('input.upload-placeholder, input.upload-replace') as JQuery<HTMLInputElement>;
+    const $cloudSelectors = $fieldset.find('input.select-cloud') as JQuery<HTMLInputElement>;
+    const $deleters = $fieldset.find('input.delete') as JQuery<HTMLInputElement>;
+    const $autofillers = $fieldset.find('input.auto-fill-test') as JQuery<HTMLInputElement>;
+    const $autofillersdata = $fieldset.find('input.auto-fill-test-data') as JQuery<HTMLInputElement>;
 
     if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
       $fieldset.find('input').prop('disabled', true);
-    }
-
-    interface UploadFile {
-      original_name: string,
-      tmp_name: string,
     }
 
     /**
@@ -1248,7 +1269,7 @@ const afterLoad = function(container?: JQuery) {
      * it should be replace by the things the other parts of the code
      * use.
      */
-    const moveIntoPlace = function(file: UploadFile, $container: JQuery, $trigger: JQuery) {
+    const moveIntoPlace = function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
             '/' + $('#sharedfolder').val()
@@ -1301,7 +1322,7 @@ const afterLoad = function(container?: JQuery) {
     };
 
     simpleSetHandler($deleters, 'click', undefined, {
-      success($self, _data, _msgElement) {
+      success($self, _data, _$msgElement) {
         $self.prop('disabled', true);
         $self.nextAll('input.upload-placeholder').val('').show();
         $self.nextAll('a.downloadlink')
@@ -1364,10 +1385,10 @@ const afterLoad = function(container?: JQuery) {
 
       FileUpload.init({
         url: generateAppUrl('upload/stash'),
-        doneCallback(file: UploadFile, _index: number, _container: JQuery) {
+        doneCallback(file, _index: number|string, _container: JQuery) {
           moveIntoPlace(file, $container, $this);
         },
-        stopCallback: null,
+        stopCallback: undefined,
         failCallback(_event: any, _data: any) { $this.removeClass('busy'); },
         dropZone: $container,
         containerSelector: '.document-template-upload-wrapper',
@@ -1423,7 +1444,7 @@ const afterLoad = function(container?: JQuery) {
      *
      *************************************************************************/
 
-    const $translationKeys = $('select.translation-phrases');
+    const $translationKeys = $('select.translation-phrases') as JQuery<HTMLSelectElement>;
     const $locales = $('select.translation-locales');
     const $translationKey = $('.translation-key');
     const $translationText = $('textarea.translation-translation');
@@ -1474,14 +1495,12 @@ const afterLoad = function(container?: JQuery) {
       $translationKeys.trigger('change');
     };
 
-    // @ts-expect-error 2339
     $translationKeys.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
       width: '30%',
     });
 
-    // @ts-expect-error 2339
     $locales.chosen({
       disable_search_threshold: 10,
       allow_single_deselect: true,
@@ -1510,7 +1529,6 @@ const afterLoad = function(container?: JQuery) {
           // no need to do any extra stuff?
         },
         getValue(_element, _msg) {
-          let val: GetValueResult;
           if (language && $key.length === 1) {
             // save it in order to restore, maybe we want to have an
             // "OK" button in order not to accidentally damage
@@ -1518,7 +1536,7 @@ const afterLoad = function(container?: JQuery) {
             translation = $translationText.val() as string;
             translations[language] = translation;
             $key.data('translations', translations);
-            val = {
+            const val: GetValueResult = {
               name: 'translation',
               value: {
                 key: $key.text(),
@@ -1526,8 +1544,8 @@ const afterLoad = function(container?: JQuery) {
                 translation: $translationText.val(),
               },
             };
+            return val;
           }
-          return val;
         },
       });
 
@@ -1543,7 +1561,7 @@ const afterLoad = function(container?: JQuery) {
       fileDownload(
         'settings/app/get/translation-templates',
         [], {
-          errorMessage(_data: any, _url: string) {
+          errorMessage(_url: string, _data: any) {
             return t(appName, 'Unable to download translation templates.');
           },
         });
@@ -1568,7 +1586,7 @@ const afterLoad = function(container?: JQuery) {
       setup() {
         devLinkTests.prop('disabled', true);
       },
-      success($self, _data, value, _msgElement) {
+      success($self, _data, value: string, _msgElement) {
         const $testLink = $self.parent().find('a.devlinktest');
         $testLink.attr('href', value);
       },
@@ -1619,9 +1637,7 @@ const documentReady = function(container?: JQuery|undefined) {
     updateLocaleTimeStamps($(this));
 
     if (ui.newPanel[0].id === 'tabs-5') {
-      // @ts-expect-error 2339
       $('#smtpsecure').chosen({ disable_search_threshold: 10 });
-      // @ts-expect-error 2339
       $('#imapsecure').chosen({ disable_search_threshold: 10 });
     } else if (ui.newPanel[0].id === 'tabs-4') {
       $('div#sharing-settings').accordion('refresh');
@@ -1632,7 +1648,6 @@ const documentReady = function(container?: JQuery|undefined) {
       // $('#imapsecure').chosen().remove();
     }
 
-    // @ts-expect-error 2339
     $.fn.cafevTooltip.remove(); // remove pending tooltips ...
   });
 

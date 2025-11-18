@@ -124,7 +124,7 @@
 </template>
 <script setup lang="ts">
 import { appName, appPrefix } from '../config.ts'
-import globalState from '../app/globalstate.js'
+import globalState from '../app/globalstate.ts'
 import {
   nextTick,
   ref,
@@ -150,7 +150,7 @@ import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
 import ErrorPageModal from './ErrorPageModal.vue'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { closeNavigation } from '../services/navigation.js'
+import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useHistoryStore from '../stores/history.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
@@ -169,7 +169,7 @@ import {
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
-import * as LegacyNotification from '../app/notification.js'
+import * as LegacyNotification from '../app/notification.ts'
 import {
   FRONTEND_URL_PATH_KEY,
   HASH_KEY,

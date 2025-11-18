@@ -24,7 +24,7 @@
 // eslint-disable-next-line n/no-missing-import
 import 'core-js/actual';
 import { appName } from './config.ts';
-import globalState from './app/globalstate.js';
+import globalState from './app/globalstate.ts';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
@@ -44,10 +44,6 @@ import { provideMountableComponents } from './services/mountable-components.ts';
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
-declare global {
-  let __webpack_nonce__: string;
-  let __webpack_public_path__: string;
-}
 // CSP config for webpack dynamic chunk loading
 __webpack_nonce__ = btoa(getRequestToken() || '');
 __webpack_public_path__ = generateFilePath(appName, '', '');

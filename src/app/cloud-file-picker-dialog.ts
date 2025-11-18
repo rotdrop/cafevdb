@@ -23,26 +23,28 @@
 
 import $ from './jquery.js';
 import { appName } from '../config.ts';
-import * as Ajax from './ajax.js';
+import * as Ajax from './ajax.ts';
 import {
   YES_NO_BUTTONS,
   alert as alertDialog,
   confirm as confirmDialog,
   filePicker as filePickerDialog,
 } from './dialogs.ts';
-import * as Notification from './notification.js';
-import generateAppUrl from './generate-url.js';
-import { parse as pathParse } from './path.js';
+import * as Notification from './notification.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { parse as pathParse } from './path.ts';
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
 import { UPLOAD_MODES } from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
+import type { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
+import type { UploadFileData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
-type UploadMode = typeof UPLOAD_MODES[number];
+type UploadMode = EnumFileUploadMode;
 
 export interface CloudFilePickerParameters {
   setup?: () => void,
   cleanup?: () => void,
-  handlePickedFiles?: (files: Record<string, unknown>[], paths: string[], cleanup: () => void) => void,
+  handlePickedFiles?: (files: UploadFileData[], paths: string[], cleanup: () => void) => void,
   filePickerCaption?: string,
   stashUrl?: string,
   multiple?: boolean,
@@ -114,13 +116,13 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
               });
           };
 
-          const uploadFiles = [];
-          let uploadModes: string[] = UPLOAD_MODES;
+          const uploadFiles: ReturnType<typeof pathParse>[] = [];
+          let uploadModes: EnumFileUploadMode[] = [...UPLOAD_MODES];
           for (const uploadInfo of data) {
             uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));
             uploadFiles.push(pathParse(uploadInfo.original_name));
           }
-          const templateParameters = {
+          const templateParameters: Record<string, string> = {
             operations: uploadModes.join(' '),
             files: uploadFiles.map(
               (info) => {
@@ -156,11 +158,11 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
             { escapeFunction: (x) => x },
           );
 
-          let uploadMode = 'copy';
+          let uploadMode: UploadMode = 'copy';
           $('body')
             .off('change', 'input.cloud-file-system-operations-input')
             .on('change', 'input.cloud-file-system-operations-input', function(_event) {
-              uploadMode = $(this).val();
+              uploadMode = $(this).val() as UploadMode;
               console.info('UPLOAD MODE', uploadMode);
             });
           $('body')

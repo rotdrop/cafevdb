@@ -254,7 +254,7 @@ import {
   isJqNextcloudLogEntryXHR,
   isJQueryAjaxHtmlError,
 } from '../types/ajax/jqxhr-error.ts'
-import globalState from '../app/globalstate.js'
+import globalState from '../app/globalstate.ts'
 import StackTrace from 'stacktrace-js'
 import type { StackFrame } from 'stacktrace-js'
 import Console, { stackTraceOptions } from '../util/console.ts'

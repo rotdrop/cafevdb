@@ -133,10 +133,10 @@
                                   :submit-button="false"
           >
             <template #option="option">
-              <NcEllipsisedOption :name="+option.label === -1 ? '∞' : '' + option.label" />
+              <NcEllipsisedOption :name="makePageRowsLabel(option)" />
             </template>
             <template #selected-option="option">
-              <NcEllipsisedOption :name="+option.label === -1 ? '∞' : '' + option.label" />
+              <NcEllipsisedOption :name="makePageRowsLabel(option)" />
             </template>
           </SelectWithSubmitButton>
           <NcCheckboxRadioSwitch v-if="financeAllowed"
@@ -249,7 +249,7 @@
 </template>
 <script setup lang="ts">
 import { appName as appId, appName } from './config.ts'
-import globalState from './app/globalstate.js'
+import globalState from './app/globalstate.ts'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActions,
@@ -301,7 +301,7 @@ import {
   subscribe as asyncSubscribe,
 } from './services/async-event-bus.ts'
 import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
-import { closeNavigation } from './services/navigation.js'
+import { closeNavigation } from './services/navigation.ts'
 import * as BusEvents from './event-bus-events.ts'
 import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
 import appIcon from '../img/cafevdb.svg?raw'
@@ -433,6 +433,8 @@ const authorizedNavigationItems = computed(() => {
 // methods
 
 // const closeSidebar = () => { showSidebar.value = false }
+
+const makePageRowsLabel = (option: { label?: number }) => +option.label! === -1 ? '∞' : '' + option.label!
 
 const handleDetailsRequest = (data: { viewName: string, title: string, props: object }) => {
   showSidebar.value = true

@@ -68,7 +68,7 @@ import { translate as t } from '@nextcloud/l10n'
 import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { PAGE_TEMPLATE_ACTION_MENU } from '../event-bus-events.ts'
-import { closeNavigation } from '../services/navigation.js'
+import { closeNavigation } from '../services/navigation.ts'
 import {
   computed,
   nextTick,

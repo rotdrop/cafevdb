@@ -22,7 +22,7 @@
  */
 
 import { appName } from '../config.ts';
-import globalState from '../app/globalstate.js';
+import globalState from '../app/globalstate.ts';
 import { translate as t } from '@nextcloud/l10n';
 import { defineStore } from 'pinia';
 import {

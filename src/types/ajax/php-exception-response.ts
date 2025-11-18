@@ -22,7 +22,6 @@
  */
 
 import { isAxiosErrorResponse, type AxiosErrorResponse } from '../../toolkit/types/axios-type-guards.ts';
-import ResponseTypes from './response-types.ts';
 import type {
   ILogEntry as NextcloudLogEntry,
   IException as NextcloudException,
@@ -33,22 +32,6 @@ export interface NextcloudExceptionLogEntry extends Omit<NextcloudLogEntry, 'exc
   exception: NextcloudException,
 }
 
-// Our own exception format
-export interface PHPExceptionData {
-  type: ResponseTypes.PHPExceptionData,
-  message: string, // heading, deprecated
-  brief: string, // brief summary, deprecated
-  exception: { // the data from the exception itself
-    class: string, // full exception PHP class name
-    message: string, // exception message
-    file: string,
-    line: number,
-    code: number,
-    trace: string, // $e->getTraceAsString()
-  },
-  previous: null|PHPExceptionData,
-}
-
 export const isNextcloudLogEntry = (data: unknown): data is NextcloudLogEntry =>
   !!data && typeof data === 'object' && !!(data as Keyable).reqId && !!(data as Keyable).app;
 
@@ -57,9 +40,3 @@ export const isNextcloudExceptionLogEntry = (data: unknown): data is NextcloudEx
 
 export const isNextcloudExceptionResponse = (data: unknown): data is AxiosErrorResponse<NextcloudExceptionLogEntry> =>
   isAxiosErrorResponse(data) && isNextcloudExceptionLogEntry(data.response.data);
-
-export const isPHPExceptionData = (data: unknown): data is PHPExceptionData =>
-  !!data && typeof data === 'object' && (data as Keyable)?.type === ResponseTypes.PHPExceptionData;
-
-export const isPHPExceptionResponse = <D = unknown>(error: unknown): error is AxiosErrorResponse<PHPExceptionData, D> =>
-  isAxiosErrorResponse(error) && isPHPExceptionData(error.response.data);

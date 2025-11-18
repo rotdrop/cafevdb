@@ -1,0 +1,287 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import $, { jq } from './jquery.ts';
+import { globalState } from './cafevdb.ts';
+
+/* global JQuery */
+
+/**
+ * Add a WYSIWYG editor to the element specified by @a selector.
+ *
+ * @param selector TBD.
+ *
+ * @param [initCallback] TBD.
+ */
+const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
+  const $editorElements = jq(selector);
+  console.debug('WysiwygEditor.addEditor', $editorElements);
+  initCallback = (typeof initCallback === 'function') ? initCallback : () => {};
+  if (!$editorElements.length) {
+    console.info('ADD EDITOR: NO ELEMENTS, INVOKING SUCCESS CALLBACK');
+    initCallback();
+    return;
+  }
+  switch (globalState.wysiwygEditor) {
+    case 'ckeditor':
+      console.debug('attach ckeditor');
+      import('@ckeditor/ckeditor5-build-classic')
+        .then(({ default: ClassicEditor }) => {
+          // this is a Gurkerei because jQuery is missing allSettled and
+          // because ckeditor by default updates the textarea content
+          // only on form submit.
+          // eslint-disable-next-line prefer-spread
+          $.when
+            .apply(
+              $,
+              $editorElements.map(function(_index, editorElement) {
+                const $editorElement = $(editorElement);
+                return ClassicEditor
+                  .create(editorElement)
+                  .then(editorInstance => {
+                    $editorElement.data('ckeditorInstance', editorInstance);
+                    editorInstance.ui.focusTracker.on('change:isFocused', (_evt: unknown, _name: unknown, isFocused: boolean) => {
+                      if (!isFocused) {
+                        editorInstance.updateSourceElement();
+                        $editorElement.trigger('blur');
+                      }
+                    });
+                  })
+                  .catch((error: unknown) => {
+                    console.error('There was a problem initializing the editor.', error);
+                    return $.Deferred().resolveWith(this);
+                  });
+              }).get(),
+            )
+            .then(() => {
+              console.debug('ckeditor promise(s) settled.');
+              initCallback();
+            });
+        });
+      break;
+    case 'tinymce': {
+      console.debug('attach tinymce');
+      // This is a Gurkerei
+      $(document).on('focusin', function(e) {
+        // e.stopImmediatePropagaion();
+        // alert(CAFEVDB.print_r(e.target, true));
+        if ($(e.target).closest('.mce-container').length) {
+          e.stopImmediatePropagation();
+        }
+      });
+      const plusConfig = {
+      };
+      const mceDeferredTimeout = 10 * 1000;
+      import('./tinymceinit.js')
+        .then((myTinyMCE) => {
+          const mceConfig = myTinyMCE.getConfig(plusConfig);
+          // eslint-disable-next-line prefer-spread
+          $.when
+            .apply(
+              $,
+              $editorElements.map(function(_index, editorElement) {
+                const $editorElement = $(editorElement);
+                let mceDeferred = $editorElement.data('mceDeferred');
+                if (mceDeferred) {
+                  console.error('RACE CONDITION ADDING TINYMCE TOO FAST TOO OFTEN', {
+                    $editorElements,
+                    editorElement,
+                  });
+                  return $.Deferred().resolveWith(this, ['race']);
+                }
+                mceDeferred = $.Deferred();
+                $editorElement.data('mceDeferred', mceDeferred);
+                const elementConfig =
+                  $editorElement.hasClass('external-documents')
+                  // eslint-disable-next-line camelcase
+                    ? { relative_urls: false, convert_urls: false }
+                    : {};
+                if (!$editorElement.is('textarea')) {
+                  elementConfig.inline = true;
+                }
+                if ($editorElement.prop('disabled') || $editorElement.prop('readonly')) {
+                  elementConfig.readonly = true; // does not seem to work ..
+                }
+                $editorElement.tinymce({ ...mceConfig, ...elementConfig });
+                const mceDeferredTimer = setTimeout(function() { mceDeferred.reject('timeout'); }, mceDeferredTimeout);
+                $editorElement.data('mceDeferredTimer', mceDeferredTimer);
+                return mceDeferred.then(
+                  id => {
+                    $editorElement.next().css('height', '');
+                    $editorElement.removeData('mceDeferredTimer');
+                    clearTimeout(mceDeferredTimer);
+                    console.debug('MCE deferred resolved for id ' + id);
+                    return id;
+                  },
+                  function(error) {
+                    switch (error) {
+                      case 'timeout':
+                        console.error('There was a problem initializing the editor:', error);
+                        try {
+                          $editorElement.tinymce().remove();
+                        } catch (e) {
+                          console.error('EXCEPTION', e);
+                        }
+                        break;
+                      case 'removed':
+                        console.error('Editor has been removed');
+                        $editorElement.removeData('mceDeferredTimer');
+                        clearTimeout(mceDeferredTimer);
+                        break;
+                    }
+                    return $.Deferred().resolveWith(this);
+                  });
+              }).get(),
+            )
+            .then(function(...args) {
+              console.debug('tinyMCE promise(s) settled.', args);
+              initCallback();
+            });
+        });
+      break;
+    }
+    default:
+      console.error('UNSUPPORTED WYSIWYG EDITOR', globalState);
+      break;
+  }
+};
+
+/**
+ * Remove a WYSIWYG editor from the element specified by @a selector.
+ *
+ * @param {string} selector TBD.
+ */
+const removeEditor = function(selector) {
+  const $editorElements = $(selector);
+  if (!$editorElements.length) {
+    return;
+  }
+  $editorElements.each(function() {
+    const $editorElement = $(this);
+    try {
+      const ckeditor = $editorElement.data('ckeditorInstance');
+      if (ckeditor) {
+        ckeditor.destroy();
+        $editorElement.removeData('ckeditorInstance');
+      }
+    } catch (e) {
+      console.debug('EXCEPTION', e);
+    }
+    try {
+      const mceDeferred = $editorElement.data('mceDeferred');
+      if (mceDeferred) {
+        mceDeferred.reject('removed');
+        $editorElement.removeData('mceDeferred');
+      }
+      if ($editorElement.tinymce && $editorElement.tinymce()) {
+        $editorElement.tinymce().remove();
+      }
+    } catch (e) {
+      console.debug('EXCEPTION', e);
+    }
+  });
+};
+
+/**
+ * Replace the contents of the given editor by contents.
+ *
+ * @param {string} selector TBD.
+ *
+ * @param {string} contents TBD.
+ */
+const updateEditor = function(selector, contents) {
+  const $editorElements = $(selector);
+  let editor;
+  if (!$editorElements.length) {
+    return;
+  }
+  switch (globalState.wysiwygEditor) {
+    case 'ckeditor':
+      $editorElements.each(function() {
+        const ckeditor = $(this).data('ckeditorInstance');
+        if (ckeditor) {
+          ckeditor.setData(contents);
+        }
+      });
+      break;
+    case 'tinymce':
+      $editorElements.each(function() {
+        const tinymce = $(this).tinymce();
+        tinymce.setContent(contents);
+        tinymce.undoManager.add();
+      });
+      break;
+    default:
+      if ($editorElements.ckeditor) {
+        editor = $editorElements.ckeditor().ckeditorGet();
+        editor.setData(contents);
+        // ckeditor snapshots itself on update.
+        // editor.undoManager.save(true);
+      }
+      break;
+  }
+};
+
+/**
+ * Generate a "snapshot", meaning an undo-level, for instance after
+ * replacing all data by loading email templates and stuff.
+ *
+ * @param {string} selector TBD.
+ */
+const snapshotEditor = function(selector) {
+  const $editorElements = $(selector);
+  let editor;
+  if (!$editorElements.length) {
+    return;
+  }
+  switch (globalState.wysiwygEditor) {
+    case 'ckeditor':
+      $editorElements.each(function() {
+        const ckeditor = $(this).data('ckeditorInstance');
+        if (ckeditor) {
+          ckeditor.undoManager.save(true);
+        }
+      });
+      break;
+    case 'tinymce':
+      $editorElements.each(function() {
+        const tinymce = $(this).tinymce();
+        tinymce.undoManager.add();
+      });
+      break;
+    default:
+      if ($editorElements.ckeditor) {
+        editor = $editorElements.ckeditor().ckeditorGet();
+        editor.undoManager.save(true);
+      }
+      break;
+  }
+};
+
+export {
+  globalState,
+  addEditor,
+  removeEditor,
+  updateEditor,
+  snapshotEditor,
+};

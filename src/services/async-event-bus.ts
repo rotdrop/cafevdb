@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from '../app/globalstate.js';
+import globalState from '../app/globalstate.ts';
 import { SimpleBus } from '@rotdrop/async-nextcloud-event-bus';
 import type { AsyncNextcloudEvents, EventHandler, EventArg } from '@rotdrop/async-nextcloud-event-bus';
 

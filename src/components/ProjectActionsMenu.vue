@@ -174,7 +174,7 @@ import {
   NcActionRouter,
   NcActionSeparator,
 } from '@nextcloud/vue'
-import globalState from '../app/globalstate.js'
+import globalState from '../app/globalstate.ts'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
@@ -189,7 +189,7 @@ import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/BankTransfer.vue'
 // import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
 import { emit as asyncEmit } from '../services/async-event-bus.ts'
-import { closeNavigation } from '../services/navigation.js'
+import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import type { Project } from '../stores/app-data.ts'

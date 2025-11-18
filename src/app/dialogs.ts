@@ -104,7 +104,7 @@ export interface LegacyMessageParameters {
   dialogClasses?: string|string[],
 }
 export type LegacyDialogParameters = Omit<LegacyMessageParameters, 'dialogType'>;
-const isLegacyMessageParameters = <T extends LegacyDialogParameters = LegacyMessageParameters>(arg: unknown): arg is T =>
+const isLegacyMessageParameters = <T extends Partial<LegacyDialogParameters> = LegacyMessageParameters>(arg: unknown): arg is T =>
   (typeof arg !== 'string') && (arg as Record<string, unknown>).content !== undefined;
 
 const message = function({
@@ -165,16 +165,18 @@ const message = function({
   return promise;
 };
 
-const alert = function(content: string|LegacyDialogParameters, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
+type AlertInfoOptions = Omit<LegacyDialogParameters, 'callback'|'buttons'|'modal'|'allowHtml'> & Partial<LegacyDialogParameters>;
+
+const alert = function(content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
   const defaultArg = {
     dialogType: DIALOG_TYPE_ALERT,
     buttons: OK_BUTTONS,
     callback: () => {},
     modal: false,
     allowHtml: false,
-  } as Omit<LegacyMessageParameters, 'title'|'content'|'callback'>;
+  } as Omit<LegacyMessageParameters, 'title'|'content'>;
   return message(
-    isLegacyMessageParameters<LegacyDialogParameters>(content)
+    isLegacyMessageParameters<AlertInfoOptions>(content)
       ? { ...defaultArg, ...content }
       : {
         ...defaultArg,
@@ -186,16 +188,16 @@ const alert = function(content: string|LegacyDialogParameters, title?: string, c
       });
 };
 
-const info = function(content: string|LegacyDialogParameters, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
+const info = function(content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
   const defaultArg = {
     dialogType: DIALOG_TYPE_INFO,
     buttons: OK_BUTTONS,
     callback: () => {},
     modal: false,
     allowHtml: false,
-  } as Omit<LegacyMessageParameters, 'title'|'content'|'callback'>;
+  } as Omit<LegacyMessageParameters, 'title'|'content'>;
   return message(
-    isLegacyMessageParameters<LegacyDialogParameters>(content)
+    isLegacyMessageParameters<AlertInfoOptions>(content)
       ? { ...defaultArg, ...content }
       : {
         ...defaultArg,
@@ -225,7 +227,7 @@ export type LegacyConfirmOptions = Partial<LegacyMessageParameters> & { default?
  * @param modal TBD.
  * @param allowHtml TBD.
  */
-const confirm = function(content: string, title: string, options?: LegacyCallback|LegacyConfirmOptions, modal?: boolean, allowHtml?: boolean) {
+const confirm = (content: string, title: string, options?: LegacyCallback|LegacyConfirmOptions, modal?: boolean, allowHtml?: boolean) => {
   const defaultOptions = {
     callback() {},
     modal: false,
@@ -250,7 +252,7 @@ const confirm = function(content: string, title: string, options?: LegacyCallbac
 
   console.debug('CONFIRM CONTENT', { content, title, parameters, modal, allowHtml });
 
-  return new Promise((resolve, _reject) =>
+  return new Promise<boolean>((resolve, _reject) =>
     message({
       content,
       title,
@@ -335,7 +337,7 @@ const filePicker = function(options: LegacyFilePickerParameters) {
         ? (nodes: Node[]) => options.callback(nodes.map(getNodePath))
         : (nodes: Node[]) => options.callback(getNodePath(nodes[0])),
       label: node && !options.multiple ? t('core', 'Choose {file}', { file: target }) : t('core', 'Choose'),
-      type: 'primary',
+      type: 'primary' as const,
       disabled: !options.allowDirectories && isDirectory,
     }];
     console.info('BUTTON FACTORY', { result, nodes, path, isDirectory, options });

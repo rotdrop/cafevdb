@@ -1,0 +1,66 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Decode an url-encoded query string.
+ * @param str The query string.
+ *
+ *
+ * @returns The decoded query string.
+ *
+ * @see {@link https://locutus.io/php/url/urlencode/}
+ */
+const urlDecode = function<T extends string>(str: T) {
+  return decodeURIComponent(
+    str
+      .replace(/%(?![\da-f]{2})/gi, function() {
+        // PHP tolerates poorly formed escape sequences
+        return '%25';
+      })
+      .replace(/\+/g, '%20'));
+};
+
+/**
+ * Encode a query string.
+ *
+ * @param str The query string.
+ *
+ * @returns The encoded query string.
+ *
+ * @see {@link https://locutus.io/php/url/urlencode/}
+ */
+const urlEncode = function<T extends string>(str: T) {
+  return encodeURIComponent(str)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/~/g, '%7E')
+    .replace(/%20/g, '+');
+};
+
+export {
+  urlEncode,
+  urlDecode,
+};

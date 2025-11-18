@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from '../app/globalstate.js';
+import globalState from '../app/globalstate.ts';
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
 
