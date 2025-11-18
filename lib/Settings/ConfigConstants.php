@@ -88,6 +88,23 @@ class ConfigConstants
   public const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
   public const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
 
+  public const DEDICATED_FOLDERS = [
+    self::SHARED_FOLDER,
+    self::PROJECTS_FOLDER,
+    self::PROJECT_PARTICIPANTS_FOLDER,
+    self::PROJECT_POSTERS_FOLDER,
+    self::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
+    self::FINANCE_FOLDER,
+    self::BALANCES_FOLDER,
+    self::TRANSACTIONS_FOLDER,
+    self::DOCUMENT_TEMPLATES_FOLDER,
+    self::POSTBOX_FOLDER,
+    self::OUTBOX_FOLDER,
+    self::PROJECT_SKELETON_FOLDER,
+    self::PROJECT_PARTICIPANTS_SKELETON_FOLDER,
+    self::PROJECT_MANAGEMENT_SKELETON_FOLDER,
+  ];
+
   public const CMS_CATEGORIES = [
     'preview',
     'archive',

@@ -135,7 +135,7 @@ class DocumentStorageUploadController extends Controller
     array|string $data = '{}',
     ?string $cloudFile = null,
     string $uploadMode = UploadsController::UPLOAD_MODE_COPY,
-    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE,
+    string $conflict = EnumAddDocumentConflictAction::REPLACE->value,
   ):Response {
     switch ($operation) {
       case self::DOCUMENT_ACTION_UPLOAD:
@@ -385,7 +385,7 @@ class DocumentStorageUploadController extends Controller
 
         $pathInfo = pathinfo($fileName);
 
-        $file['meta'] = [
+        $file['meta'] = DTO\UploadFileMetaData::fromArray([
           'musicianId' => $musicianId,
           'projectId' => $projectId,
           // 'pathChain' => $pathChain, ?? needed ??
@@ -394,12 +394,12 @@ class DocumentStorageUploadController extends Controller
           'extension' => $pathInfo['extension']?:'',
           'fileName' => $pathInfo['filename'],
           'fileId'   => $fileNodeEntity->getId(),
-          'storageBackend'  => 'db',
+          'storageBackend'  => EnumFileStorageBackend::DB,
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $actualConflict,
           'messages' => $message,
-        ];
+        ]);
 
         return self::dataResponse([ $file ]);
       case self::DOCUMENT_ACTION_DELETE:

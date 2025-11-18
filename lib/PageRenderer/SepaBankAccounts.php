@@ -569,7 +569,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['bank_account_owner'] = [
       'tab' => [ 'id' => [ 'account', 'mandate', ], ],
       'name' => $this->l->t('Bank Account Owner'),
-      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', 'lazy-decryption', ], ],
+      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', DataConstants::CLASS_LAZY_DECRYPTION, ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
@@ -588,8 +588,8 @@ class SepaBankAccounts extends PMETableViewBase
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
-          'crypto-hash' => 'MD5($table.$column)',
-          'meta-data' => '"bankAccountOwner"', // SQL STRING
+          DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+          DataConstants::META_DATA_ATTR => '"bankAccountOwner"', // SQL STRING
         ],
       ],
       'values|ACP' => [
@@ -600,14 +600,14 @@ class SepaBankAccounts extends PMETableViewBase
         // while adding new mandates we provide the bank account identifier
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
-          'crypto-hash' => 'MD5($table.$column)',
-          'meta-data' => '"bankAccountOwner"', // SQL string
+          DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+          DataConstants::META_DATA_ATTR => '"bankAccountOwner"', // SQL string
         ],
         'filters' => '$table.deleted IS NULL',
       ],
       'display' => [
         'attributes' => [
-          'data-meta-data' => ConfigConstants::BANK_ACCOUNT_OWNER,
+          'data-' . DataConstants::META_DATA_ATTR => ConfigConstants::BANK_ACCOUNT_OWNER,
         ],
       ],
     ];
@@ -616,7 +616,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['bank_account_owner']['encryption|LFVD']['decrypt'] = function($value) {
       // $this->ormDecrypt($value);
       $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . md5($value) . '"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '="' . md5($value) . '"
       title="' . $this->l->t('Fetching decrypted values in the background.') . '"
 >'
         . $this->l->t('please wait')
@@ -634,7 +634,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['iban'] = [
       'tab' => [ 'id' => [ 'account', 'mandate' ] ],
       'name' => 'IBAN',
-      'css' => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', 'lazy-decryption' ], ],
+      'css' => [ 'postfix' => [ 'bank-account-iban', DataConstants::CLASS_META_DATA_POPUP, DataConstants::CLASS_LAZY_DECRYPTION ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
@@ -653,8 +653,8 @@ class SepaBankAccounts extends PMETableViewBase
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
-          'crypto-hash' => 'MD5($table.$column)',
-          'meta-data' => '"iban"', // SQL STRING
+          DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+          DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
         ],
       ],
       'values|ACP' => [ // use full table contents for auto-completion
@@ -665,8 +665,8 @@ class SepaBankAccounts extends PMETableViewBase
         // while adding new mandates we provide the bank account identifier
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
-          'crypto-hash' => 'MD5($table.$column)',
-          'meta-data' => '"iban"', // SQL STRING
+          DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+          DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
         ],
         'filters' => '$table.deleted IS NULL',
       ],
@@ -680,12 +680,12 @@ class SepaBankAccounts extends PMETableViewBase
           return $result;
         },
         'attributes' => [
-          'data-meta-data' => 'iban',
+          'data-' . DataConstants::META_DATA_ATTR => 'iban',
         ],
       ],
       'display|LF' => [
         'attributes' => [
-          'data-meta-data' => 'iban',
+          'data-' . DataConstants::META_DATA_ATTR => 'iban',
         ],
       ],
     ];
@@ -694,7 +694,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['iban']['encryption|LFVD']['decrypt'] = function($value) {
       // $this->ormDecrypt($value);
       $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . md5($value) . '"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '="' . md5($value) . '"
       title="' . $this->l->t('Fetching decrypted values in the background.') . '"
 >'
         . $this->l->t('please wait')

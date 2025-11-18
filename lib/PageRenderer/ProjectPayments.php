@@ -1339,13 +1339,13 @@ WHERE dsf.id IS NOT NULL',
         'input'  => 'R',
         'options' => 'LFVDCP',
         'select|LF' => 'D',
-        'css'  => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', ], ],
+        'css'  => [ 'postfix' => [ 'bank-account-iban', DataConstants::CLASS_META_DATA_POPUP, ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => fn($value) => $this->ormDecrypt($value ?? ''),
         ],
-        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', 'meta-data-popup', ], ],
+        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', DataConstants::CLASS_LAZY_DECRYPTION, DataConstants::CLASS_META_DATA_POPUP, ], ],
         'encryption|LF' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => function($value) {
@@ -1353,7 +1353,7 @@ WHERE dsf.id IS NOT NULL',
               return '';
             }
             $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . md5($value) . '"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '="' . md5($value) . '"
       title="' . Util::htmlEscape($this->l->t('Fetching decrypted values in the background.')) . '"
 >'
               . $this->l->t('please wait')
@@ -1363,8 +1363,8 @@ WHERE dsf.id IS NOT NULL',
         ],
         'values' => [
           'data' => [
-            'crypto-hash' => 'MD5($table.$column)',
-            'meta-data' => '"iban"', // SQL STRING
+            DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+            DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
           ],
         ],
         'display' => [
@@ -1383,13 +1383,13 @@ WHERE dsf.id IS NOT NULL',
             return $result;
           },
           'attributes' => [
-            'data-meta-data' => 'iban',
+            'data-' . DataConstants::META_DATA_ATTR => 'iban',
           ],
         ],
         'display|LF' => [
           'popup' => 'data',
           'attributes' => [
-            'data-meta-data' => 'iban',
+            'data-' . DataConstants::META_DATA_ATTR => 'iban',
           ],
         ],
       ]);

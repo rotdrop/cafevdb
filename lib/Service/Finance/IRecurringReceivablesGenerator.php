@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use DateTimeInterface;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\IProgressStatus;
@@ -35,6 +37,7 @@ use OCA\CAFEVDB\Common\IProgressStatus;
  * Entities\ProjectParticipantField entity. The two prominent examples are
  * membership fees and instrument insurances.
  */
+#[TSAttributes\TypeScript]
 interface IRecurringReceivablesGenerator
 {
   /**

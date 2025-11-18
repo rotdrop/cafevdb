@@ -547,7 +547,7 @@ class PersonalSettingsController extends Controller
           $number['valid'] = true;
           $this->setConfigValue($parameter, $number['number']);
           return self::dataResponse(array_merge($number, [
-            'message' => $this->l->t('Orchestra Phone Number set to %s', $number['number']),
+            'messages' => $this->l->t('Orchestra Phone Number set to %s', $number['number']),
           ]));
         } else {
           return self::grumble($this->l->t(
@@ -754,7 +754,7 @@ class PersonalSettingsController extends Controller
         $currentProjectName = $this->getConfigValue($parameter, '');
         $currentProjectId = $this->getConfigValue($parameter.'Id', null);
         $data = [
-          'message' => [],
+          'messages' => [],
           'project' =>  $currentProjectName,
           'projectId' => $currentProjectId,
           'feedback' => false,
@@ -850,7 +850,7 @@ class PersonalSettingsController extends Controller
         $currentProjectName = $this->getConfigValue($projectParameter, '');
         $currentProjectId = $this->getConfigValue($projectParameter.'Id', null);
 
-        $data = [ 'message' => [] ];
+        $data = [ 'messages' => [] ];
 
         if ((int)$currentProjectId != (int)$projectId) {
           return self::grumble(
@@ -874,9 +874,13 @@ class PersonalSettingsController extends Controller
           }
 
           $data = [
-            'message' => [
+            'project' => $projectName,
+            'projectId' => $project->getId(),
+            'newName' => $projectName,
+            'messages' => [
               $this->l->t('Created Project "%s" with id "%d".', [
-                $project['name'], $project['id'] ]) ],
+                $project['name'], $project['id'] ])
+            ],
             'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
           ];
 
@@ -896,10 +900,17 @@ class PersonalSettingsController extends Controller
               previous: $t,
             );
           }
-          $data['message'][] = $this->l->t('Project "%s" successfully validated.', $project->getName());
+
+          $data = [
+            'project' => $projec->getName(),
+            'projectId' => $project->getId(),
+            'messages' => [
+              $this->l->t('Project "%s" successfully validated.', $project->getName()),
+            ],
+          ];
         }
 
-        return self::dataResponse($data);
+        return DTO\SpecialProjectsResponse::fromArray($data)->response();
       case 'memberProjectDelete':
       case 'executiveBoardProjectDelete':
         try {
@@ -1015,12 +1026,12 @@ class PersonalSettingsController extends Controller
         // fallthrough
       case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
         $oldFileName = $this->getConfigValue($parameter);
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
           return self::grumble($this->l->t(
             'Shared folder is not configured, cannot store templates.'));
         }
-        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        $templatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
         if (empty($templatesFolder)) {
           return self::grumble($this->l->t(
             'Document template folder is not configured, cannot store templates.'));
@@ -1069,7 +1080,7 @@ class PersonalSettingsController extends Controller
         return self::dataResponse([
           'message' => $messages,
         ]);
-      case 'sharedfolder':
+      case ConfigConstants::SHARED_FOLDER:
         $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
@@ -1103,11 +1114,11 @@ class PersonalSettingsController extends Controller
               } catch (Throwable $t) {
                 // don't care
               }
-              return self::dataResponse([
-                'value' => $real,
+              return DTO\FolderValueResponse::fromArray([
                 'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
+                'value' => $real,
                 'folderLink' => $folderLink,
-              ]);
+              ])->response();
             } else {
               return self::grumble($this->l->t('Failed to create new shared folder "%s".', [$real]));
             }
@@ -1119,11 +1130,11 @@ class PersonalSettingsController extends Controller
             } catch (Throwable $t) {
               // don't care
             }
-            return self::dataResponse([
-              'value' => $actual,
+            return DTO\FolderValueResponse::fromArray([
               'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
+              'value' => $actual,
               'folderLink' => $folderLink,
-            ]);
+            ])->response();
           } else {
             return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
           }
@@ -1152,7 +1163,7 @@ class PersonalSettingsController extends Controller
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
           return self::grumble($this->l->t('Shared folder is not set.'));
         }
@@ -1302,12 +1313,12 @@ class PersonalSettingsController extends Controller
           if ($newId > 0) {
             $this->setConfigValue($parameter, $real);
             $this->setConfigValue($parameter.'id', $newId);
-            return self::valueResponse(
+            return (new DTO\NameIdValueResponse(
+              $newId != $actualId
+              ? $this->l->t('Created and shared new calendar "%s".', [$real])
+              : $this->l->t('Validated shared calendar "%s".', [$real]),
               ['name' => $real, 'id' => $newId],
-              ($newId != $actualId
-               ? $this->l->t('Created and shared new calendar "%s".', [$real])
-               : $this->l->t('Validated shared calendar "%s".', [$real]))
-            );
+            ))->response();
           } else {
             return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
           }
@@ -1366,7 +1377,7 @@ class PersonalSettingsController extends Controller
         $this->setUserValue($parameter, $realValue);
         return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
 
-      case 'importClubMembersAsCloudUsers':
+      case EnumSimpleSettingsKey::IMPORT_CLUB_MEMBERS_AS_CLOUD_USERS->value:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
@@ -1410,7 +1421,6 @@ class PersonalSettingsController extends Controller
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
           'messages' => $hints,
-          'message' => $hints,
           'hints' => $hints,
         ]);
 
@@ -1666,7 +1676,7 @@ class PersonalSettingsController extends Controller
         $moderators = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']) ]);
         $posters = $moderators;
         $listInfo = $listsService->getListInfo($announcementsMailingList);
-        if ($listInfo === null)  {
+        if ($listInfo === null) {
           $listsService->createList($announcementsMailingList);
         }
         $listsService->configureAnnouncementsList($announcementsMailingList, $announcementsMailingListName, $owners, $moderators, $posters);
@@ -1926,12 +1936,12 @@ class PersonalSettingsController extends Controller
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
-      case 'documenttemplatesfolder':
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+      case ConfigConstants::DOCUMENT_TEMPLATES_FOLDER:
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
           return self::grumble($this->l->t('Shared folder is not configured.'));
         }
-        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        $templatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
         if (empty($templatesFolder)) {
           return self::grumble($this->l->t('Document template folder is not configured.'));
         }
@@ -2252,25 +2262,21 @@ class PersonalSettingsController extends Controller
   /**
    * @param string $key Config key to set.
    *
-   * @param mixed $value Value to set. If empty config entry will be deleted.
+   * @param null|string $value Value to set. If empty config entry will be deleted.
    *
-   * @param mixed $reportValue Human readable value for display in the
+   * @param null|string $reportValue Human readable value for display in the
    * frontend (e.g. formatted floating point value, or boolean as text.
    *
    * @param array $furtherData Further data to be mixed into the
    * data-response data.
    *
-   * @param null|array $responseData The data wrapped into the return
-   * value. Will be set if specified.
-   *
    * @return Http\DataResponse
    */
   private function setSimpleConfigValue(
     string $key,
-    mixed $value,
-    mixed $reportValue = null,
+    ?string $value,
+    ?string $reportValue = null,
     array $furtherData = [],
-    ?array &$responseData = null
   ):Http\DataResponse {
     $realValue = Util::normalizeSpaces($value);
     if (empty($reportValue)) {
@@ -2292,8 +2298,8 @@ class PersonalSettingsController extends Controller
         $reportValue = $realValue = $realValue[0] . '••••••••';
       }
       return self::dataResponse(
-        $responseData = Util::arrayMergeRecursive([
-          'message' => [ htmlspecialchars($this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ])), ],
+        Util::arrayMergeRecursive([
+          'messages' => [ htmlspecialchars($this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ])), ],
           $key => $reportValue,
           $key.'Raw' => $realValue,
         ], $furtherData));

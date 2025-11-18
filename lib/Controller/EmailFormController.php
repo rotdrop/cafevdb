@@ -1153,6 +1153,7 @@ class EmailFormController extends Controller
 
           // We emulate an uploaded file here:
           $fileRecord = [
+            'origin' => EnumFileUploadOrigin::CLOUD,
             'name' => $path,
             'error' => 0,
             'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
@@ -1170,7 +1171,7 @@ class EmailFormController extends Controller
           $fileRecord['max_human_file_size']  = $maxHumanFileSize;
           $files[] = $fileRecord;
         }
-        return self::dataResponse($files);
+        break;
       case AttachmentOrigin::UPLOAD:
         $files = $this->request->files[self::UPLOAD_KEY];
         if (empty($files)) {
@@ -1208,6 +1209,7 @@ class EmailFormController extends Controller
             ]);
           }
 
+          $file['origin'] = EnumFileUploadOrigin::UPLOAD;
           $file['upload_max_file_size'] = $maxUploadFileSize;
           $file['max_human_file_size']  = $maxHumanFileSize;
           $file['original_name'] = $file['name']; // clone
@@ -1224,7 +1226,15 @@ class EmailFormController extends Controller
             continue;
           }
         }
-        return self::dataResponse($files);
+        break;
+      defaults:
+        $files = null;
+        break;
+    }
+    if ($files !== null) {
+      return new DataResponse(
+        array_map(fn(array $file) => DTO\UploadFileData::fromArray($file), $files),
+      );
     }
     return self::grumble($this->l->t('Unknown attachment source: "%s".', $source));
   }

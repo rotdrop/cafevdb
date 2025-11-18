@@ -43,7 +43,7 @@ class CryptoController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const META_DATA_IBAN = 'iban';
+  public const META_DATA_IBAN = 'iban';
 
   /** @var null|Transformable\Transformer\TransformerInterface */
   protected ?Transformable\Transformer\TransformerInterface $encryptionTransformer;
@@ -118,28 +118,28 @@ class CryptoController extends Controller
    *
    * @param null|string $metaData
    *
-   * @return array
+   * @return DTO\UnsealedData
    */
-  private function getUnsealedData(string $sealedData, ?string $metaData):array
+  private function getUnsealedData(string $sealedData, ?string $metaData): DTO\UnsealedData
   {
     $context = null;
     $unsealedData = $this->encryptionTransformer->reverseTransform($sealedData, $context);
 
     switch ($metaData) {
       case self::META_DATA_IBAN:
-        $metaData = $this->getIBANMetaData($unsealedData);
+        $metaData = DTO\IBANMetaData::fromArray($this->getIBANMetaData($unsealedData));
         break;
       default:
         $metaData = null;
         break; // silently ignore
     }
 
-    return [
-      'hash' => md5($sealedData),
-      'data' => $unsealedData,
-      'context' => $context,
-      'metaData' => $metaData,
-    ];
+    return new DTO\UnsealedData(
+      hash: md5($sealedData),
+      data: $unsealedData,
+      contenxt: $context,
+      metaData: $metaData,
+    );
   }
 
   /**

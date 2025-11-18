@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024-2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,33 +22,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Controller\DTO;
+
+use DateTimeInterface;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+
 /**
- * Type of projects.
- *
- * @method static EnumProjectTemporalType TEMPORARY()
- * @method static EnumProjectTemporalType PERMANENT()
- * @method static EnumProjectTemporalType TEMPLATE()
+ * DTO for ProejctParticipantField retrieval.
  */
 #[TSAttributes\TypeScript]
-class EnumProjectTemporalType extends AbstractEnumType
+class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
-  public const TEMPORARY = 'temporary';
-  public const PERMANENT = 'permanent';
-  public const TEMPLATE = 'template';
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly int $fieldId,
+    /** @var string */
+    public readonly UuidInterface $key,
+    public readonly string $label,
+    public readonly string $untranslatedLabel,
+    public readonly string $data,
+    public readonly ?int $limit,
+    public readonly ?DateTimeInterface $deleted,
+  ) {
+  }
 
   /**
-   * Just here in order to inject the enum values into the l10n framework.
+   * Create from array.
    *
-   * @return void
+   * @param array $data
+   *
+   * @return self
+   *
+   * @throws UnexpectedValueException
    */
-  protected static function translationHack():void
+  public static function fromArray(array $data): self
   {
-    self::t(self::TEMPORARY);
-    self::t(self::PERMANENT);
-    self::t(self::TEMPLATE);
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self($fieldId, $key, $label, $untranslatedLabel, $data, $limit, $deleted);
   }
 }

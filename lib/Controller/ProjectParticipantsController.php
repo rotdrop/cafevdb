@@ -834,7 +834,7 @@ class ProjectParticipantsController extends Controller
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
-                $storageBackend = 'cloud';
+                $storageBackend = EnumFileStorageBackend::CLOUD;
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
                 if ($dataType == FieldDataType::CLOUD_FOLDER) {
@@ -874,7 +874,7 @@ class ProjectParticipantsController extends Controller
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
-                $storageBackend = 'db';
+                $storageBackend = EnumFileStorageBackend::DB;
 
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
@@ -971,7 +971,7 @@ class ProjectParticipantsController extends Controller
             }
             $file['name'] = $filePath;
 
-            $file['meta'] = [
+            $file['meta'] = DTO\UploadFileMetaData::fromArray([
               'musicianId' => $musicianId,
               'projectId' => $projectId,
               'dirName' => $pathInfo['dirname'],
@@ -984,7 +984,7 @@ class ProjectParticipantsController extends Controller
               'filesApp' => $filesAppLink,
               'conflict' => $conflict,
               'messages' => $messages,
-            ];
+            ]);
 
             $this->flush();
 

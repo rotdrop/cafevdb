@@ -1,0 +1,104 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2025 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller\DTO;
+
+use InvalidArgumentException;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCA\CAFEVDB\Controller\EnumFileUploadOrigin;
+use OCA\CAFEVDB\Controller\EnumFileUploadMode;
+
+/**
+ * DTO upload file data as reported by PHP, a bit enhanced.
+ */
+#[TSAttributes\TypeScript]
+class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+{
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly string $name,
+    public readonly ?int $error,
+    public readonly ?string $str_error,
+    public readonly ?string $message,
+    public readonly string $tmp_name,
+    public readonly string $type,
+    public readonly int $size,
+    public readonly string $original_name,
+    public readonly int $upload_max_file_size,
+    public readonly string $max_human_file_size,
+    public readonly ?UploadFileMetaData $meta,
+    public readonly ?EnumFileUploadOrigin $origin,
+    public readonly ?EnumFileUploadMode $upload_mode,
+  ) {
+  }
+
+  /**
+   * Create from FinanceService::getIbanInfo().
+   *
+   * @param array $ibanMetaData
+   *
+   * @return IBANMetatData
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    if (!empty($meta) && !($meta instanceof UploadFileMetaData)) {
+      $meta = UploadFileMetaData::fromArray($meta);
+    } else {
+      $meta = null;
+    }
+    if (!empty($origin)) {
+      try {
+        $origin = EnumFileUploadOrigin::get($origin);
+      } catch (InvalidArgumentException $e)  {
+        throw $e;
+      }
+    }
+    if (!empty($upload_mode)) {
+      try {
+        $upload_mode = EnumFileUploadOrigin::get($upload_mode);
+      } catch (InvalidArgumentException $e)  {
+        throw $e;
+      }
+    }
+    return new self(
+      $name,
+      $error ?? null,
+      $str_error ?? null,
+      $message ?? null,
+      $tmp_name,
+      $type,
+      $size,
+      $original_name,
+      $upload_max_file_size,
+      $max_human_file_size,
+      meta: $meta ?? null,
+      origin: $origin ?? null,
+      upload_mode: $upload_mode ?? null,
+    );
+  }
+}

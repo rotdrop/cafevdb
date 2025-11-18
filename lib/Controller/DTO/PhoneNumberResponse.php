@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,23 +22,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Controller\DTO;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Member status enum for musicians.
- *
- * @method static EnumAttachmentOrigin UPLOAD()
- * @method static EnumAttachmentOrigin CLOUD()
- * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
- * @method static EnumAttachmentOrigin TEMPLATE()
+ * DTO for orchestra phone numbers.
  */
 #[TSAttributes\TypeScript]
-class EnumAttachmentOrigin extends AbstractEnumType
+class PhoneNumberResponse extends MessagesResponse
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  /** {@inheritdoc} */
+  public function __construct(
+    string $message,
+    public readonly string $number,
+    public readonly string $meta,
+    public readonly bool $isMobile,
+    public readonly bool $valid,
+  ) {
+    parent::__construct([ $message ]);
+  }
+
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    return new self($messsage, $number, $meta, $isMobile, $valid);
+  }
 }

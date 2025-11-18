@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -41,6 +43,7 @@ use OCA\CAFEVDB\Exceptions;
  * Folder entry for a database-backed file.
  */
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository::class)]
+#[TSAttributes\TypeScript]
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -49,6 +52,11 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public const ADD_DOCUMENT_CONFLICT_FAIL = 'fail';
   public const ADD_DOCUMENT_CONFLICT_REPLACE = 'replace';
   public const ADD_DOCUMENT_CONFLICT_RENAME = 'rename';
+  public const ADD_DOCUMENT_CONFLICTS = [
+    self::ADD_DOCUMENT_CONFLICT_FAIL,
+    self::ADD_DOCUMENT_CONFLICT_REPLACE,
+    self::ADD_DOCUMENT_CONFLICT_RENAME,
+  ];
 
   /**
    * @var MusicianRowAccessToken

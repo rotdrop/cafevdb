@@ -136,11 +136,11 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   const TAX_EXEMPTION_ITEMS_TABLE = 'TaxExemptionItems';
   const TAXATION_STATUTORY_SOURCES_TABLE = 'TaxationStatutorySources';
 
-  const VALUES_SEP = ',';
-  const JOIN_FIELD_NAME_SEPARATOR = ':';
-  const JOIN_KEY_SEP = ':';
-  const COMP_KEY_SEP = '-';
-  const VALUES_TABLE_SEP = '@';
+  const VALUES_SEP = DataConstants::VALUES_SEP;
+  const JOIN_FIELD_NAME_SEPARATOR = DataConstants::JOIN_FIELD_NAME_SEPARATOR;
+  const JOIN_KEY_SEP = DataConstants::JOIN_KEY_SEP;
+  const COMP_KEY_SEP = DataConstants::COMP_KEY_SEP;
+  const VALUES_TABLE_SEP = DataConstants::VALUES_TABLE_SEP;
 
   const MASTER_FIELD_SUFFIX = '__master_key_';
 

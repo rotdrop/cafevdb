@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,23 +22,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Controller\DTO;
+
+use DateTimeInterface;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Member status enum for musicians.
- *
- * @method static EnumAttachmentOrigin UPLOAD()
- * @method static EnumAttachmentOrigin CLOUD()
- * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
- * @method static EnumAttachmentOrigin TEMPLATE()
+ * DTO upload file data as reported by PHP, a bit enhanced.
  */
 #[TSAttributes\TypeScript]
-class EnumAttachmentOrigin extends AbstractEnumType
+class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  /** {@inheritdoc} */
+  public function __construct(
+    /** string[] */
+    public readonly array $messages,
+    public readonly ?string $share,
+    public readonly ?string $folder,
+    public readonly ?DateTimeInterface $expires,
+  ) {
+  }
+
+  /**
+   * Create from $data array.
+   *
+   * @param array $data
+   *
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self(
+      $messages ?? [],
+      $share ?? null,
+      $folder ?? null,
+      $expires ?? null,
+    );
+  }
 }

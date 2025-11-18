@@ -378,7 +378,7 @@ class MusicianValidationController extends Controller
           // any of the email address or phone numbers match
           // -> 50 % (we have different participants which share their comms)
 
-          $duplicatesPropability = 0.0;
+          $duplicatesProbability = 0.0;
 
           $commsMatch = (
             (!empty($email) && $email == $musician->getEmail())
@@ -399,23 +399,23 @@ class MusicianValidationController extends Controller
 
           if ($firstNameMatch) {
             if ($commsMatch) {
-              $duplicatesPropability = 1.0; // treat as exact match
+              $duplicatesProbability = 1.0; // treat as exact match
             }
             if ($addressMatch) {
-              $duplicatesPropability = 1.0; // treat as exact match
+              $duplicatesProbability = 1.0; // treat as exact match
             }
           }
 
-          if ($duplicatesPropability < 1) {
+          if ($duplicatesProbability < 1) {
             if ($namesMatch) {
-              $duplicatesPropability = max($duplicatesPropability, 0.5);
+              $duplicatesProbability = max($duplicatesProbability, 0.5);
             }
             if ($commsMatch) {
-              $duplicatesPropability = max($duplicatesPropability, 0.5);
+              $duplicatesProbability = max($duplicatesProbability, 0.5);
             }
           }
 
-          if ($duplicatesPropability > 0) {
+          if ($duplicatesProbability > 0) {
             $reasons = [];
             if ($namesMatch) {
               $reasons[] = $this->l->t('full name');
@@ -427,18 +427,18 @@ class MusicianValidationController extends Controller
             $addressMatch && $reasons[] = $this->l->t('address');
 
             $duplicates[$musicianId] = $this->flattenMusician($musician, only: []);
-            $duplicates[$musicianId]['duplicatesPropability'] = $duplicatesPropability;
+            $duplicates[$musicianId]['duplicatesProbability'] = $duplicatesProbability;
             $duplicates[$musicianId]['reasons'] = implode(', ', $reasons);
           }
         }
 
-        $message = [];
+        $messages = [];
         if (count($duplicates) > 0) {
-          $message[] = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
+          $messages[] = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
         }
 
         return self::dataResponse([
-          'message' => $message,
+          'messages' => $messages,
           'duplicates' => $duplicates,
         ]);
         break;

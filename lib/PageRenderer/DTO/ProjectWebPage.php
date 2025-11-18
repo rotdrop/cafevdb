@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024-2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,33 +22,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\PageRenderer\DTO;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Type of projects.
+ * DTO for project web-pages.
  *
- * @method static EnumProjectTemporalType TEMPORARY()
- * @method static EnumProjectTemporalType PERMANENT()
- * @method static EnumProjectTemporalType TEMPLATE()
+ * @todo This should inherit from the Redaxo app.
  */
 #[TSAttributes\TypeScript]
-class EnumProjectTemporalType extends AbstractEnumType
+class ProjectWebPage extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  public const TEMPORARY = 'temporary';
-  public const PERMANENT = 'permanent';
-  public const TEMPLATE = 'template';
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly int $articleId,
+    public readonly string $articleName,
+    public readonly int $categoryId,
+    public readonly ?string $categoryName,
+    public readonly string $templateName,
+    public readonly int $priority,
+  ) {
+  }
 
   /**
-   * Just here in order to inject the enum values into the l10n framework.
+   * Create an instance from a data array.
    *
-   * @return void
+   * @param array $data
+   *
+   * @return self
    */
-  protected static function translationHack():void
+  public static function fromArray(array $data): self
   {
-    self::t(self::TEMPORARY);
-    self::t(self::PERMANENT);
-    self::t(self::TEMPLATE);
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self(
+      articleId: $articleId,
+      articleName: $articleName,
+      categoryId: $categoryId,
+      categoryName: $categoryName,
+      templateName: $templateName,
+      priority: $priority,
+    );
   }
 }

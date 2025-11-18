@@ -152,11 +152,11 @@ class ProgressStatusController extends Controller
    */
   private static function progressResponse(IProgressStatus $progress):DataResponse
   {
-    return self::dataResponse([
+    return DTO\ProgressResponse::fromArray([
       'id' => $progress->getId(),
       'current' => $progress->getCurrent(),
       'target' => $progress->getTarget(),
       'data' => $progress->getData(),
-    ]);
+    ])->response();
   }
 }

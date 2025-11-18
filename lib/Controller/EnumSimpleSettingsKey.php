@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,23 +22,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Controller;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Member status enum for musicians.
- *
- * @method static EnumAttachmentOrigin UPLOAD()
- * @method static EnumAttachmentOrigin CLOUD()
- * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
- * @method static EnumAttachmentOrigin TEMPLATE()
+ * Simple setting as enum.
  */
 #[TSAttributes\TypeScript]
-class EnumAttachmentOrigin extends AbstractEnumType
+enum EnumSimpleSettingsKey: string
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case IMPORT_CLUB_MEMBERS_AS_CLOUD_USERS = 'importClubMembersAsCloudUsers';
 }

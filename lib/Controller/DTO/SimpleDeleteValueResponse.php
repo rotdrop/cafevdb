@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,23 +22,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Controller\DTO;
+
+use ValueError;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
+
 /**
- * Member status enum for musicians.
+ * DTO, delete a "simple value".
  *
- * @method static EnumAttachmentOrigin UPLOAD()
- * @method static EnumAttachmentOrigin CLOUD()
- * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
- * @method static EnumAttachmentOrigin TEMPLATE()
+ * @property string $blah
  */
 #[TSAttributes\TypeScript]
-class EnumAttachmentOrigin extends AbstractEnumType
+class SimpleDeleteValueResponse extends MessagesResponse
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly EnumSimpleSettingsKey $key,
+    public readonly string $value,
+    array $messages,
+  ) {
+    parent::__construct($messages);
+    $this->value = is_array($value) ? NameId::fromArray($value) : $value;
+  }
+
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    try {
+      $key = EnumSimpleSettingsKey::get($key);
+    } catch (InvalidArgumentException $e) {
+      throw $e;
+    }
+    return new self($messsage, $key, $value);
+  }
 }
