@@ -116,7 +116,7 @@ class ClassConstantsTransformer implements Transformer
     }
     if (is_string($value)) {
       if (str_contains($value, "\n")) {
-        return "`" . $value . "`";
+        return '`' . $value . '`';
       } else {
         return "'" . $value . "'";
       }

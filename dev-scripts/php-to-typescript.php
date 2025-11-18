@@ -55,30 +55,16 @@ $outputSuffix = '.d.ts';
 $sourcePrefix = __DIR__ . '/../';
 
 $outputFiles = [
-  'enum-types' => [
+  'types' => [
     'transformers' => [
+      Transformers\EnumTransformer::class,
       Transformers\MyclabsEnumTransformer::class,
-    ],
-    'paths' => [
-      'lib/Database/Doctrine/DBAL/Types',
-    ],
-  ],
-  'class-constants' => [
-    'transformers' => [
       PhpToTypeScript\ClassConstantsTransformer::class,
-    ],
-    'paths' => [
-      'lib/Settings',
-      'lib/Constants.php',
-      'lib/Controller',
-    ],
-  ],
-  'database-entities' => [
-    'transformers' => [
+      Transformers\EnumTransformer::class,
       Transformers\DtoTransformer::class,
     ],
     'paths' => [
-      'lib/Database/Doctrine/ORM/Entities',
+      'lib',
     ],
   ],
 ];

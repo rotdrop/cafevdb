@@ -55,6 +55,7 @@ class PhpToTypeScript extends Command
   private const VERBOSITY_MAX = 3;
   private const PHP_PREFIX = 'php-';
   private const LINE_SEPARATOR = "\r\n";
+  private const LINE_BUFFER_SIZE = 4096;
   private const NS_DECLARATION = 'declare namespace';
 
   /** {@inheritdoc} */
@@ -233,10 +234,15 @@ class PhpToTypeScript extends Command
     foreach ($this->configInfo as $outputName => $outputInfo) {
       $outputFile = $outputPrefix . self::PHP_PREFIX . $outputName . self::OUTPUT_SUFFIX;
 
+      $excludes = array_merge($this->excludes, $outputInfo['excludes'] ?? []);
+
       $config = ClassConstantsTransformerConfig::create()
         // path where your PHP classes are
         ->autoDiscoverTypes(...array_map(fn(string $path) => $sourcePrefix . $path, $outputInfo['paths']))
-        ->autoDiscoverExclude(...array_map(fn(string $path) => $sourcePrefix . $path, $this->excludes))
+        ->autoDiscoverExcludePaths(...array_map(fn(string $path) => $sourcePrefix . $path, $excludes))
+        ->autoDiscoverExcludeRegExp('/.*~$|\\/\\.#.+/')
+        ->nullToOptional(true)
+        // ->transformToNativeEnums(true)
         // list of transformers
         ->transformers($outputInfo['transformers'])
         // file where TypeScript type definitions will be written
@@ -259,10 +265,28 @@ class PhpToTypeScript extends Command
       $tsData = null;
       if (!empty($tsNameSpacePrefix)) {
         $tsData = str_replace(
-          'declare namespace ' . $tsNameSpacePrefix,
-          'declare namespace ',
+          [
+            self::NS_DECLARATION . ' ' . $tsNameSpacePrefix,
+            ': ' . $tsNameSpacePrefix,
+            '<' . $tsNameSpacePrefix,
+          ],
+          [
+            self::NS_DECLARATION . ' ',
+            ': ',
+            '<',
+          ],
           file_get_contents($outputFile),
         );
+        // remove also namespace prefix pointing into the current namespace
+        if (str_starts_with($tsData, self::NS_DECLARATION)) {
+          $offset = strlen(self::NS_DECLARATION) + 1;
+          $len = strpos($tsData, '{') - 1 - $offset;
+          $thisNS = substr($tsData, $offset, $len);
+          if (!empty($thisNS)) {
+            $thisNS .= '.';
+            $tsData = str_replace(': ' . $thisNS, ': ', $tsData);
+          }
+        }
         file_put_contents($outputFile, $tsData);
       }
 
@@ -273,55 +297,119 @@ class PhpToTypeScript extends Command
         if ($tsData === null) {
           $tsData = file_get_contents($outputFile);
         }
-        $separator = "\r\n";
-        $line = strtok($tsData, self::LINE_SEPARATOR);
         $currentModule = null;
+        $currentFullNS = null;
+        $allNameSpaces = [];
+        $headerData = [];
         $currentData = null;
+        $templateString = false;
+        $tsFile = fopen('php://temp', 'r+');
+        fputs($tsFile, $tsData);
+        // First scan: collect all namespaces
+        rewind($tsFile);
+        $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
         while ($line !== false) {
-          if (str_starts_with($line, self::NS_DECLARATION)) {
-            $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
-            $modulesPath = $modulesDir;
-            while (!empty($nameSpaces)) {
-              $currentNs = array_shift($nameSpaces);
-              if (!empty($nameSpaces)) {
-                // emit trampoline modules
-                $nextNs = reset($nameSpaces);
-                $currentModule = $modulesPath . $currentNs . '.ts';
-                $newData = "export * as {$nextNs} from './{$currentNs}/${nextNs}.ts';";
-                $currentData = file_get_contents($currentModule);
-                if (!empty($currentData) && !str_contains($currentData, $newData)) {
-                  $currentData .= $newData . PHP_EOL;
-                } elseif (empty($currentData)) {
-                  $currentData = <<<EOF
+          $line = rtrim($line, PHP_EOL);
+          $backticksCount = substr_count($line, '`');
+          if (!$templateString && $backticksCount == 0) {
+            if (str_starts_with($line, self::NS_DECLARATION)) {
+              $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
+              $currentFullNS = implode('.', $nameSpaces);
+              $output->writeln('Current FQ NameSpace ' . $currentFullNS);
+              $allNameSpaces[] = $currentFullNS;
+              $allNameSpaces = array_values(array_unique($allNameSpaces));
+            }
+          } elseif ($templateString) {
+            $templateString = $backticksCount % 2 == 0;
+          } else {
+            $templateString = $backticksCount % 2 == 1;
+          }
+          $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
+        }
+        // Second run: emit typedefs, replace namespaces as appropriate
+        $templateString = false;
+        $currentFullNS = null;
+        rewind($tsFile);
+        $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
+        while ($line !== false) {
+          $line = rtrim($line, PHP_EOL);
+          $backticksCount = substr_count($line, '`');
+          if (!$templateString && $backticksCount == 0) {
+            if (str_starts_with($line, self::NS_DECLARATION)) {
+              $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
+              $currentFullNS = implode('.', $nameSpaces);
+              $modulesPath = $modulesDir;
+              while (!empty($nameSpaces)) {
+                $currentNs = array_shift($nameSpaces);
+                if (!empty($nameSpaces)) {
+                  // emit trampoline modules
+                  $nextNs = reset($nameSpaces);
+                  $currentModule = $modulesPath . $currentNs . '.ts';
+                  $newData = "export * as {$nextNs} from './{$currentNs}/{$nextNs}.ts';";
+                  $currentData = file_get_contents($currentModule);
+                  if (!empty($currentData) && !str_contains($currentData, $newData)) {
+                    $currentData .= $newData . PHP_EOL;
+                  } elseif (empty($currentData)) {
+                    $currentData = <<<EOF
 // Automatically generated by {$generator}, do not edit!
 
 
 EOF;
-                  $currentData .= $newData . PHP_EOL;
+                    $currentData .= $newData . PHP_EOL;
+                  }
+                  file_put_contents($currentModule, $currentData);
+                  $modulesPath .= $currentNs . '/';
+                  mkdir($modulesPath);
+                } else {
+                  // emit the current's namespace module
+                  $currentModule = $modulesPath . $currentNs . '.ts';
+                  $currentData = '';
+                  $headerData[] = <<<EOF
+// Automatically generated by {$generator}, do not edit!
+
+
+EOF;
                 }
-                file_put_contents($currentModule, $currentData);
-                $modulesPath .= $currentNs . '/';
-                mkdir($modulesPath);
-              } else {
-                // emit the leaf module
-                $currentModule = $modulesPath . $currentNs . '.ts';
-                $currentData = <<<EOF
-// Automatically generated by {$generator}, do not edit!
-
-
-EOF;
               }
+            } elseif ($currentFullNS && $line == '}') {
+              if ($currentData && $currentModule) {
+                $headerData = array_values(array_unique($headerData));
+                sort($headerData);
+                $currentData = implode(PHP_EOL, $headerData) . PHP_EOL . PHP_EOL .  $currentData;
+                file_put_contents($currentModule, $currentData);
+                $currentData = $currentModule = null;
+              }
+              $currentFullNS = null;
+              $headerData = [];
+            } else {
+              $line = str_replace($currentFullNS . '.', '', $line);
+              foreach ($allNameSpaces as $existingNameSpace) {
+                if (str_contains($line, $existingNameSpace)) {
+                  $selfNS = explode('.', $currentFullNS);
+                  $refNS = explode('.', $existingNameSpace);
+                  $upNameSpace = reset($refNS);
+                  $output->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace);
+                  while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS)) {
+                    array_shift($selfNS);
+                    $upNameSpace = array_shift($refNS);
+                  }
+                  $up = str_repeat('../', count($selfNS));
+                  $headerData[] = "import * as {$upNameSpace} from './{$up}{$upNameSpace}.ts';";
+                }
+              }
+              $currentData .= substr($line, 2) . PHP_EOL;
             }
-          } elseif ($line == '}') {
-            if ($currentData && $currentModule) {
-              file_put_contents($currentModule, $currentData);
-              $currentData = $currentModule = null;
-            }
+          } elseif ($templateString) {
+            // just write the line as is
+            $currentData .= $line . PHP_EOL;
+            $templateString = $backticksCount % 2 == 0;
           } else {
             $currentData .= substr($line, 2) . PHP_EOL;
+            $templateString = $backticksCount % 2 == 1;
           }
-          $line = strtok(self::LINE_SEPARATOR);
+          $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
         }
+        fclose($tsFile);
       }
 
       if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {

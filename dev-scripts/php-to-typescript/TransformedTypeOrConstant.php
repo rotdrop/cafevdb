@@ -51,7 +51,7 @@ class TransformedTypeOrConstant extends TransformedType
   {
     if ($this->keyword == 'const') {
       return "const {$this->name} = {$this->transformed}"
-        . ($this->trailingSemicolon ? ';' : '');;
+        . ($this->trailingSemicolon ? ';' : '');
     }
     return parent::toString();
   }
