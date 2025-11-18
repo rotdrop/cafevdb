@@ -401,7 +401,7 @@ class DocumentStorageUploadController extends Controller
           'messages' => $message,
         ]);
 
-        return self::dataResponse([ $file ]);
+        return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
       case self::DOCUMENT_ACTION_DELETE:
         $fileNodeEntity = $this->getDocument($entity);
         if (empty($fileNodeEntity)) {

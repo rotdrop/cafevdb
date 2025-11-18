@@ -1006,7 +1006,7 @@ class ProjectParticipantsController extends Controller
             }
             throw new RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
           }
-          $uploads[] = $file;
+          $uploads[] = DTO\UploadFileData::fromArray($file);
         }
         return self::dataResponse($uploads);
       default:

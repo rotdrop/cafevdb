@@ -726,19 +726,16 @@ class ProjectParticipantFieldsController extends Controller
             }
 
             array_unshift($messages, $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]));
-            return self::dataResponse([
-              'message' => $messages,
+            return DTO\ReceivablesStatistics::fromArray([
+              'messages' => $messages,
               'amounts' => $receivableAmounts,
               'added' => $added,
               'removed' => $removed,
               'changed' => $changed,
               'skipped' => $skipped,
-              'musician' => [
-                'id' => $musicianId,
-                'name' => $musicianName,
-              ],
+              'musicians' => [ $musicianId => $musicianName ],
               'receivables' => $receivables,
-            ]);
+            ])->response();
           default:
             break;
         }
@@ -775,14 +772,15 @@ class ProjectParticipantFieldsController extends Controller
         $data = [];
         /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
         foreach ($field->getSelectableOptions() as $dataOption) {
-          $data[] = [
+          $data[] = DTO\ProjectParticipantFieldDataOption::fromArray([
+            'fieldId' => $field->getId(),
             'key' => (string)$dataOption->getKey(),
             'label' => $dataOption->getLabel(),
             'data' => $dataOption->getData(),
             'limit' => $dataOption->getLimit(),
             'untranslatedLabel' => $dataOption->getUntranslatedLabel(),
-            'deleted' => $dataOption->getDeleted() === null ? null : $dataOption->getDeleted()->format(DateTime::W3C),
-          ];
+            'deleted' => $dataOption->getDeleted(),
+          ]);
         }
         return self::dataResponse($data);
       default:

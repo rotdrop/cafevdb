@@ -474,17 +474,16 @@ class ProjectsController extends Controller
           if (!empty($multiplicity) && $fieldMultiplicity != $multiplicity) {
             continue;
           }
-          $data[] = [
+          $data[] = DTO\ProjectParticipantField::fromArray([
             'id' => $field->getId(),
             'name' => $field->getName(),
             'untranslatedName' => $field->getUntranslatedName(),
             'type' => $fieldType,
             'multiplicity' => $fieldMultiplicity,
-            // more added later when needed
-          ];
+          ]);
         }
-        usort($data, fn($a, $b) => strcmp($a['name'], $b['name']));
-        return self::dataResponse($data);
+        usort($data, fn($a, $b) => strcmp($a->name, $b->name));
+        return new DataResponse($data);
 
       case self::GET_PARTICIPANTS:
         $data = [];
@@ -492,6 +491,7 @@ class ProjectsController extends Controller
         foreach ($project->getParticipants() as $participant) {
           $musician = $participant->getMusician();
           $data[] = [
+            'projectId' => $project->getId(),
             'musicianId' => $musician->getId(),
             'publicName' => $musician->getPublicName(),
             'personalPublicName' => $musician->getPublicName(firstNameFirst: true),
@@ -505,12 +505,14 @@ class ProjectsController extends Controller
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
-            return self::dataResponse([
+            return DTO\DownloadsShareResponse::fromArray(
               $projectService->ensureDownloadsShare($project, noCreate: true),
-            ]);
+            );
             break;
           default:
-            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unknown share type "%s".', $subTopic),
+            );
         }
 
       case self::GET_CALENDAR_EVENTS:

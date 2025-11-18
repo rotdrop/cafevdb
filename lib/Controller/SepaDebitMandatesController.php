@@ -28,6 +28,7 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use PHP_IBAN\IBAN;
 use Throwable;
+use ValueError;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -163,7 +164,7 @@ class SepaDebitMandatesController extends Controller
     }
 
     $feedback = [];
-    $message = [];
+    $messages = [];
     $result = [];
 
     while (($validation = array_pop($validations)) !== null) {
@@ -195,16 +196,16 @@ class SepaDebitMandatesController extends Controller
             $IBAN = $mandate['IBAN'];
             $BLZ = $mandate['BLZ'];
             $BIC = $mandate['BIC'];
-            $message[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
+            $messages[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
           } elseif (!empty($newProjectId) && !empty($musicianId)) {
             $mandate = (new Entities\SepaDebitMandate)
               ->setProject($this->getReference(Entities\Project::class, $newProjectId))
               ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
             $reference = $this->financeService->generateSepaMandateReference($mandate);
-            $message[] = $this->l->t('Generated new reference "%s"', $reference);
+            $messages[] = $this->l->t('Generated new reference "%s"', $reference);
           } elseif (empty($newProjectId)) {
             $reference = '';
-            $message[] = $this->l->t('No project, delete mandate-reference.');
+            $messages[] = $this->l->t('No project, delete mandate-reference.');
           }
           $mandateProjectId = $newProjectId;
           $newValidations[] = [
@@ -239,11 +240,11 @@ class SepaDebitMandatesController extends Controller
         case 'mandateDate':
           // Whatever the user likes ;)
           // The date-picker does some validation on its own, so just live with it.
-          return self::dataResponse([
-            'message' => $this->l->t('Value for `%s\' set to `%s\'.', [ $changed, $value ]),
-            'suggestions' => '',
+          return DTO\SepaDebitMandateValidation::fromArray([
+            'messages' => [$this->l->t('Value for `%s\' set to `%s\'.', [ $changed, $value ])],
+            'suggestions' => [],
             'value' => $value,
-          ]);
+          ])->response();
         case 'musicianId':
           if (empty($musicianId)) {
             $newValidations[] = [
@@ -321,33 +322,29 @@ class SepaDebitMandatesController extends Controller
                 return $this->bav->isValidBank($input);
               });
 
-              return self::dataResponse(
-                [
-                  'message' => $this->l->t('Invalid German(?) bank id "%s".', [ $blz    ]),
-                  'suggestions' => implode(', ', $suggestions),
-                ],
-                Http::STATUS_BAD_REQUEST);
+              return DTO\SepaDebitMandateValidation::fromArray([
+                  'messages' => [$this->l->t('Invalid German(?) bank id "%s".', [ $blz    ])],
+                  'suggestions' => $suggestions,
+              ])->response(Http::STATUS_BAD_REQUEST);
             }
 
             // BLZ is valid -- or at least appears to be valid
 
             // assume this is a bank account number and validate it with BAV
             if (!$this->bav->isValidAccount($value)) {
-              $message = $this->l->t(
+              $messages = [$this->l->t(
                 'Invalid German(?) bank account number %s @ %s.',
                 [ $value, $blz ]
-              );
+              )];
               $suggestions = $this->fuzzyInputService->transposition($value, function($input) {
                 return $this->bav->isValidAccount($input);
               });
-              $suggestions = implode(', ', $suggestions);
 
-              return self::dataResponse(
-                [
-                  'message' => $message,
-                  'suggestions' => $suggestions,
-                  'blz' => $blz,
-                ], Http::STATUS_BAD_REQUEST);
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => $messages,
+                'suggestions' => $suggestions,
+                'blz' => $blz,
+              ])->response(Http::STATUS_BAD_REQUEST);
             }
             $value = $this->financeService->makeIBAN($blz, $value);
           }
@@ -355,9 +352,12 @@ class SepaDebitMandatesController extends Controller
           if (!$iban->Verify()) {
             $message = $this->l->t('Invalid IBAN: "%s".', $value);
             $message .= ' ' . $this->l->t(
-              'Hint: it is possible to disable instant validations by unchecking the checkbox labelled "%s". Please note, however, that it is impossible to save the entered IBAN if the validation is disabled. Therefore you have to enable the validation checkbox again before you are allowed to save the data to the database.',
+              'Hint: it is possible to disable instant validations by unchecking the checkbox labelled "%s".
+Please note, however, that it is impossible to save the entered IBAN if the validation is disabled.
+Therefore you have to enable the validation checkbox again before you are allowed to save the data to the database.',
               $this->l->t('Instant IBAN Validation:'),
             );
+            $messages[] = $message;
             $suggestions = [];
             // $this->logInfo('Try Alternatives');
             foreach ($iban->MistranscriptionSuggestions() as $alternative) {
@@ -373,13 +373,11 @@ class SepaDebitMandatesController extends Controller
                 return $iban->Verify($input);
               });
             }
-            $suggestions = implode(', ', $suggestions);
 
-            return self::dataResponse(
-              [
-                'message' => $message,
-                'suggestions' => $suggestions,
-              ], Http::STATUS_BAD_REQUEST);
+            return DTO\SepaDebitMandateValidation::fromArray([
+              'messages' => $messages,
+              'suggestions' => $suggestions,
+            ])->response(Http::STATUS_BAD_REQUEST);
           }
 
           // Still this may be a valid "hand" generated IBAN but with the
@@ -395,11 +393,10 @@ class SepaDebitMandatesController extends Controller
               $message = $this->l->t('Invalid German(?) bank id "%s".', [ $blz ]);
               $suggestions = implode(', ', $suggestions);
 
-              return self::dataResponse(
-                [
-                  'message' => $message,
-                  'suggestions' => $suggestions,
-                ], Http::STATUS_BAD_REQUEST);
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => [$message],
+                'suggestions' => $suggestions,
+              ])->response(Http::STATUS_BAD_REQUEST);
             }
 
             // BLZ is valid after this point
@@ -412,14 +409,12 @@ class SepaDebitMandatesController extends Controller
               $suggestions = $this->fuzzyInputService->transposition($ktnr, function($input) {
                 return $this->bav->isValidAccount($input);
               });
-              $suggestions = implode(', ', $suggestions);
 
-              return self::dataResponse(
-                [
-                  'message' => $message,
-                  'suggestions' => $suggestions,
-                  'blz' => $blz,
-                ], Http::STATUS_BAD_REQUEST);
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => [$message],
+                'suggestions' => $suggestions,
+                'blz' => $blz,
+              ])->response(Http::STATUS_BAD_REQUEST);
             }
           }
 
@@ -499,7 +494,7 @@ class SepaDebitMandatesController extends Controller
       }
 
       if ($initialValue != $value) {
-        $message[] = $this->l->t(
+        $messages[] = $this->l->t(
           'Value for "%s" set to "%s".', [ $changed, $value ]);
       }
       $result[$changed] = $value;
@@ -521,20 +516,19 @@ class SepaDebitMandatesController extends Controller
       // return with all the sanitized and canonicalized values for the
       // bank-account
 
-      return self::dataResponse(
-        [
-          'message' => $message,
-          'suggestions' => '',
-          'mandateProjectId' => $mandateProjectId,
-          'reference' => $reference,
-          'value' => $result,
-          'iban' => $IBAN,
-          'blz' => $BLZ,
-          'bic' => $BIC,
-          'owner' => $owner,
-          'feedback' => $feedback,
-          'mandateNonRecurring' => (int)$mandateNonRecurring,
-        ]);
+      return DTO\SepaDebitMandateValidation::fromArray([
+        'messages' => $messages,
+        'suggestions' => [],
+        'mandateProjectId' => $mandateProjectId,
+        'reference' => $reference,
+        'value' => $result,
+        'iban' => $IBAN,
+        'blz' => $BLZ,
+        'bic' => $BIC,
+        'owner' => $owner,
+        'feedback' => $feedback,
+        'mandateNonRecurring' => $mandateNonRecurring,
+      ])->response();
 
     } // validation loop
   }
@@ -744,7 +738,7 @@ class SepaDebitMandatesController extends Controller
     );
     $html = $tmpl->render();
 
-    $responseData = [
+    return DTO\SepaDebitMandate::fromArray([
       'contents' => $html,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
@@ -753,9 +747,7 @@ class SepaDebitMandatesController extends Controller
       'mandateSequence' => $mandate->getSequence(),
       'mandateDeleted' => !empty($mandate->getDeleted()),
       'mandateReference' => $mandate->getMandateReference(),
-    ];
-
-    return self::dataResponse($responseData);
+    ])->response();
   }
 
   // phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
@@ -1049,16 +1041,16 @@ class SepaDebitMandatesController extends Controller
       $messages = array_merge($messages, $uploadMessages);
     }
 
-    $responseData = [
+    return DTO\SepaDebitMandate::fromArray([
       'message' => $messages,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'bankAccountSequence' => $bankAccount->getSequence(),
+      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
       'mandateSequence' => $debitMandate->getSequence(),
+      'mandateDeleted' => !empty($mandate->getDeleted()),
       'mandateReference' => $debitMandate->getMandateReference(),
-    ];
-
-    return self::dataResponse($responseData);
+    ])->response();
   }
 
   // phpcs:enable
@@ -1468,7 +1460,7 @@ class SepaDebitMandatesController extends Controller
       'messages' => $message,
     ];
 
-    return self::dataResponse([ $file ]);
+    return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
   }
 
   /**
@@ -1497,6 +1489,8 @@ class SepaDebitMandatesController extends Controller
         );
       }
     }
+
+    $operation = EnumSepaDebitMandateRevocationAction::from($operation);
 
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     /** @var Entities\SepaDebitMandate $mandate */
@@ -1541,21 +1535,21 @@ class SepaDebitMandatesController extends Controller
     if ($this->entityManager->contains($mandate)) {
       if (!empty($mandate->getDeleted())) {
         $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
-        $state = 'invalidated';
+        $state = EnumSepaDebitMandateRevocationStatus::INVALIDATED;
       } else {
         $message = $this->l->t('SEPA debit mandate with reference "%s" has been reactivated.', $reference);
-        $state = 'reactivated';
+        $state = EnumSepaDebitMandateRevocationStatus::REACTIVATED;
       }
-      $responseData = array_merge($responseData, [
-        'message' => $message,
+      $responseData = Util::arrayMergeRecursive($responseData, [
+        'messages' => [$message],
         'state' => $state,
         'mandateSequence' => $mandate->getSequence(),
         'mandateReference' => $mandate->getMandateReference(),
       ]);
     } else {
-      $responseData = array_merge($responseData, [
-        'state' => 'deleted',
-        'message' => $this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference),
+      $responseData = Util::arrayMergeRecursive($responseData, [
+        'state' => EnumSepaDebitMandateRevocationStatus::DELETED,
+        'messages' => [$this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference)],
         'mandateSequence' => 0,
         'mandateReference' => '',
       ]);
@@ -1611,9 +1605,14 @@ class SepaDebitMandatesController extends Controller
    * @param string $action The action to perform.
    *
    * @return Response
+   *
+   * @throws ValueError Thrown if $action is not a valid value of EnumSepaDebitMandateRevocationAction.
    */
-  private function handleAccountRevocation(int $musicianId, int $bankAccountSequence, string $action):Response
-  {
+  private function handleAccountRevocation(
+    int $musicianId,
+    int $bankAccountSequence,
+    string $action,
+  ):Response {
     $requiredKeys = [ 'musicianId', 'bankAccountSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -1627,6 +1626,8 @@ class SepaDebitMandatesController extends Controller
       }
     }
 
+    $action = EnumSepaDebitMandateRevocationAction::from($action);
+
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\SepaBankAccount $account */
@@ -1639,7 +1640,7 @@ class SepaDebitMandatesController extends Controller
 
       $affectedMandates = [];
       switch ($action) {
-        case 'delete':
+        case EnumSepaDebitMandateRevocationAction::DELETE:
           /** @var Entities\SepaDebitMandate $mandate */
           foreach ($account->getSepaDebitMandates() as $mandate) {
             if (empty($mandate->getDeleted())) {
@@ -1669,7 +1670,7 @@ class SepaDebitMandatesController extends Controller
           $this->remove($account);
           $this->flush();
           break;
-        case 'disable':
+        case EnumSepaDebitMandateRevocationAction::DISABLE:
           if (!empty($account->getDeleted())) {
             throw new Exceptions\EnduserNotificationException(
               $this->l->t('Bank account with IBAN "%s" is already disabled.', $iban),
@@ -1698,7 +1699,7 @@ class SepaDebitMandatesController extends Controller
           $account->setDeleted('now');
           $this->flush();
           break;
-        case 'reactivate':
+        case EnumSepaDebitMandateRevocationAction::REACTIVATE:
           if (empty($account->getDeleted())) {
             throw new Exceptions\EnduserNotificationException(
               $this->l->t('Bank account with IBAN "%s" is already active.', $iban),

@@ -57,18 +57,18 @@ class UploadsController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const UPLOAD_KEY = 'files';
-  public const MOVE_DEST_CLOUD = 'cloud';
-  public const MOVE_DEST_DB = 'db';
+  public const MOVE_DEST_CLOUD = EnumFileStorageBackend::CLOUD->value;
+  public const MOVE_DEST_DB = EnumFileStorageBackend::DB->value;
 
   public const MOVE_DESTINATIONS = [
     self::MOVE_DEST_CLOUD,
     self::MOVE_DEST_DB,
   ];
 
-  public const UPLOAD_MODE_TEST = 'test';
-  public const UPLOAD_MODE_MOVE = 'move';
-  public const UPLOAD_MODE_LINK = 'link';
-  public const UPLOAD_MODE_COPY = 'copy';
+  public const UPLOAD_MODE_COPY = EnumFileUploadMode::COPY->value;
+  public const UPLOAD_MODE_LINK = EnumFileUploadMode::LINK->value;
+  public const UPLOAD_MODE_MOVE = EnumFileUploadMode::MOVE->value;
+  public const UPLOAD_MODE_TEST = EnumFileUploadMode::TEST->value;
 
   public const UPLOAD_MODES = [
     self::UPLOAD_MODE_COPY,
