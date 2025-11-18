@@ -1684,6 +1684,7 @@ Whatever.',
       if (is_array($pages)) {
         foreach ($pages as $idx => $article) {
           $article['categoryName'] = $category['name'];
+          $article = PageRenderer\DTO\ProjectWebPage::fromArray($article);
           if (isset($articleIds[$article['articleId']])) {
             $projectPages[] = $article;
           } else {
