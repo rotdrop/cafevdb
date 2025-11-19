@@ -53,7 +53,7 @@ class NameIdValueResponse extends MessagesResponse
   public static function fromArray(array $data): NameIdValueResponse
   {
     static::initKeys();
-    extract(array_intersect_key($ibanMetaData, array_flip(static::$keys[__CLASS__])));
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self($messsage, NameId::fromArray($value));
   }
 }

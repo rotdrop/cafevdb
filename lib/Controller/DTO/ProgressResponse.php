@@ -45,11 +45,11 @@ class ProgressResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
   }
 
   /**
-   * Create from FinanceService::getIbanInfo().
+   * Create from a data array.
    *
-   * @param array $ibanMetaData
+   * @param array $data
    *
-   * @return IBANMetatData
+   * @return self
    */
   public static function fromArray(array $data): self
   {

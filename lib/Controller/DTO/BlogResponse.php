@@ -51,9 +51,9 @@ class BlogResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
   /**
    * Create from FinanceService::getIbanInfo().
    *
-   * @param array $ibanMetaData
+   * @param array $date
    *
-   * @return IBANMetatData
+   * @return self
    */
   public static function fromArray(array $data): self
   {

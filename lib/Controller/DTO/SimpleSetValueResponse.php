@@ -39,12 +39,17 @@ class SimpleSetValueResponse extends MessagesResponse
   /** {@inheritdoc} */
   public function __construct(
     public readonly EnumSimpleSettingsKey $key,
-    public readonly string $value,
-    public readonly string $humanValue,
+    public readonly ?string $value,
+    /** @var string[] */
     array $messages,
+    public readonly ?string $humanValue = null,
+    /** @var string[] */
+    ?array $hints = null,
   ) {
-    parent::__construct($messages);
-    $this->value = is_array($value) ? NameId::fromArray($value) : $value;
+    parent::__construct(
+      messages: $messages,
+      hints: $hints,
+    );
   }
 
   /**
@@ -52,17 +57,26 @@ class SimpleSetValueResponse extends MessagesResponse
    *
    * @param array $data
    *
-   * @return NameIdValueResponse
+   * @return self
    */
   public static function fromArray(array $data): self
   {
     static::initKeys();
-    extract(array_intersect_key($ibanMetaData, array_flip(static::$keys[__CLASS__])));
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     try {
       $key = EnumSimpleSettingsKey::get($key);
     } catch (InvalidArgumentException $e) {
       throw $e;
     }
-    return new self($messsage, $key, $value, $humanValue);
+    if (empty($messages) && !empty($data['message'])) {
+      $messages = [$data['message']];
+    }
+    return new self(
+      hints: $hints ?? null,
+      humanValue: $humanValue ?? null,
+      key: $key,
+      messages: $messsages,
+      value: $value,
+    );
   }
 }

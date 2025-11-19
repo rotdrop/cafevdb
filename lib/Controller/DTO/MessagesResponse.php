@@ -29,7 +29,8 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 /**
  * Base DTO containing messages.
  */
-abstract class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+#[TSAttributes\TypeScript]
+class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
@@ -38,5 +39,25 @@ abstract class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespons
     /** @var array<string> */
     public readonly ?array $hints = null,
   ) {
+  }
+
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    if (empty($messages) && !empty($data['message'])) {
+      $messages = [$data['message']];
+    }
+    return new self(
+      messges: $messsages,
+      hints: $hints ?? null,
+    );
   }
 }

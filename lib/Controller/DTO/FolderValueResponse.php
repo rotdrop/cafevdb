@@ -34,14 +34,14 @@ class FolderValueResponse extends MessagesResponse
 {
   /** {@inheritdoc} */
   public function __construct(
-    string $message,
+    array $messages,
     public readonly string $value,
     /** @var null|string Files-app link. */
     public readonly ?string $folderLink,
     /** @var null|string Public link if appropriate. */
     public readonly ?string $url,
   ) {
-    parent::__construct([ $message ]);
+    parent::__construct($messages);
   }
 
   /**
@@ -54,7 +54,10 @@ class FolderValueResponse extends MessagesResponse
   public static function fromArray(array $data): FolderValueResponse
   {
     static::initKeys();
-    extract(array_intersect_key($ibanMetaData, array_flip(static::$keys[__CLASS__])));
-    return new self($messsage, $value, $folderLink, $url ?? null);
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    if (empty($messages) && !empty($data['message'])) {
+      $messages = [$data['message']];
+    }
+    return new self($messages, $value, $folderLink, $url ?? null);
   }
 }
