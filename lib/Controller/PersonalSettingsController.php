@@ -1744,7 +1744,7 @@ class PersonalSettingsController extends Controller
           switch ($parameter) {
             case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_KEY->value:
               $this->setConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName);
-              $reportValue = $displayName . ' <' . $realValue . '>';
+              $humanValue = $displayName . ' <' . $realValue . '>';
               break;
             case EnumSimpleSettingsKey::EMAIL_TEST_ADDRESS_KEY->value:
               $this->setConfigValue(ConfigConstants::EMAIL_TEST_NAME_KEY, $displayName);
@@ -1784,7 +1784,7 @@ class PersonalSettingsController extends Controller
       case EnumSimpleSettingsKey::EMAIL_FROM_NAME_KEY->value:
       case EnumSimpleSettingsKey::EMAIL_TEST_NAME_KEY->value:
       case EnumSimpleSettingsKey::EMAIL_FROM_DOMAIN_KEY->value:
-        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, messages: $messages);
+        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, humanValue: $humanValue ?? null, messages: $messages ?? []);
 
       case EnumSimpleSettingsKey::BULK_EMAIL_PRIVACY_NOTICE->value:
         $value = $this->fuzzyInputService->purifyHTML($value);
@@ -1812,18 +1812,18 @@ class PersonalSettingsController extends Controller
           $now = new DateTimeImmutable;
           $realValue = $now->diff($now->add($interval))->format('%a');
           // $realValue = $interval->total('days');
-          $reportValue = $this->l->t('%d days', $realValue);
+          $humanValue = $this->l->t('%d days', $realValue);
         } else {
-          $realValue = $reportValue = null;
+          $realValue = $humanValue = null;
         }
-        return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
+        return $this->setSimpleConfigValue($parameter, $realValue, $humanValue);
 
       case EnumSimpleSettingsKey::ATTACHMENT_LINK_SIZE_LIMIT->value:
         $realValue = $this->fuzzyInputService->storageValue($value);
-        $reportValue = empty($realValue)
+        $humanValue = empty($realValue)
           ? null
           : $this->humanFileSize($realValue);
-        return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
+        return $this->setSimpleConfigValue($parameter, $realValue, $humanValue);
 
       case (in_array($parameter, ConfigConstants::MAILING_LIST_CONFIG) ? $parameter : null):
         return $this->setSimpleConfigValue($parameter, $value);
@@ -2301,7 +2301,7 @@ class PersonalSettingsController extends Controller
    *
    * @param null|string $value Value to set. If empty config entry will be deleted.
    *
-   * @param null|string $reportValue Human readable value for display in the
+   * @param null|string $humanValue Human readable value for display in the
    * frontend (e.g. formatted floating point value, or boolean as text.
    *
    * @param array $furtherData Further data to be mixed into the
@@ -2312,7 +2312,7 @@ class PersonalSettingsController extends Controller
   private function setSimpleConfigValue(
     string|EnumSimpleSettingsKey $key,
     ?string $value,
-    ?string $reportValue = null,
+    ?string $humanValue = null,
     array $messages = [],
     ?array $hints = null,
   ):Http\DataResponse {
@@ -2327,8 +2327,8 @@ class PersonalSettingsController extends Controller
     }
 
     $realValue = Util::normalizeSpaces($value);
-    if (empty($reportValue)) {
-      $reportValue = $realValue;
+    if (empty($humanValue)) {
+      $humanValue = $realValue;
     }
 
     if (empty($realValue)) {
@@ -2343,9 +2343,9 @@ class PersonalSettingsController extends Controller
       $this->setConfigValue($key->value, $realValue);
 
       if (preg_match('/.*password.*/i', $key->value)) {
-        $reportValue = $realValue = $realValue[0] . '••••••••';
+        $humanValue = $realValue = $realValue[0] . '••••••••';
       }
-      array_unshift($messages, $this->l->t('Value for "%1$s" set to "%2$s"', [ $key->value, $reportValue ]));
+      array_unshift($messages, $this->l->t('Value for "%1$s" set to "%2$s"', [ $key->value, $humanValue ]));
       return (new DTO\SimpleSetValueResponse(
         key: $key,
         messages: $messages,
