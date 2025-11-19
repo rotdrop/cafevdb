@@ -16,6 +16,7 @@
       "../files/lib",
       "../files_trashbin/lib",
       "../mail/lib",
+      "../mail_roundcube/lib",
       "../redaxo/lib",
       "../text/lib",
       "../user_sql/lib"
