@@ -38,7 +38,12 @@ export interface GetValueResult<T extends HTMLElement = HTMLElement, Value = Def
 }
 
 export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value> > {
-  setup: (this: Element) => void,
+  /**
+   *Setup function called before placing the AJAX call. If false is
+   * returned the AJAX call will not be placed and the cleanup
+   * function is called.
+   */
+  setup: (this: Element) => false|void,
   success: (this: Element, $element: JQuery<Element>, data: Data, value: Value, $msg: JQuery) => void,
   fail: (this: Element, xhr: JQuery.jqXHR, textStatus: string, errorThrown: string) => void,
   cleanup: (this: Element) => void,
@@ -100,22 +105,24 @@ const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value 
     if (valueData?.value === undefined) {
       callbacks.cleanup.apply(this);
     } else {
-      callbacks.setup.apply(this);
+      if (callbacks.setup.apply(this) === false) {
+        callbacks.cleanup.apply(this);
+      }
       $.post(setAppUrl(valueData.name), { value: valueData.value })
         .fail((xhr, textStatus, errorThrown) => {
           let messages = Ajax.failMessages(xhr, textStatus, errorThrown);
           messages = Notification.messages(messages, { timeout: 15 });
           $msgElement.html(messages.join('; ')).show();
-          callbacks.fail.call(this, xhr, textStatus, errorThrown);
-          callbacks.cleanup.apply(this);
+          callbacks.fail.call($this[0], xhr, textStatus, errorThrown);
+          callbacks.cleanup.apply($this[0]);
         })
         .done((data) => {
           if (data.messages) {
             data.messages = Notification.messages(data.messages, { timeout: 15 });
             $msgElement.html(data.messages.join('; ')).show();
           }
-          callbacks.success.call(this, $this, data, valueData.value, $msgElement);
-          callbacks.cleanup.apply(this);
+          callbacks.success.call($this[0], $this, data, valueData.value, $msgElement);
+          callbacks.cleanup.apply($this[0]);
         });
     }
     return false;
@@ -163,8 +170,11 @@ const simpleSetHandler = <Element extends HTMLElement = HTMLElement>(
   $element.on(eventType, function() {
     const $self = $(this);
     $msgElement.hide();
+    if (callbacks.setup.call(this) === false) {
+      callbacks.cleanup.call(this);
+    }
     const name = $self.attr('name')!;
-    callbacks.setup.call(this);
+    console.info('NAME', { name, $self });
     $.post(setAppUrl(name))
       .fail(function(xhr, textStatus, errorThrown) {
         $msgElement.html(Ajax.failMessage(xhr, textStatus, errorThrown)).show();
