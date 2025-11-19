@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
+use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
@@ -46,42 +47,49 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
     <h4><?php p($l->t('Server Settings')); ?></h4>
     <form class="serversettings">
       <!-- SMTP and IMAP settings -->
-      <?php
-      foreach (array('smtp', 'imap') as $proto) {
-        $upproto = strtoupper($proto);
-        echo ''
-            .'<fieldset id="email'.$proto.'fields">'
-            .'<legend>'.$upproto.' '.$l->t('Settings').'</legend>
-  <input type="text" name="'.$proto.'server" id="'.$proto.'server" '
-            .'value="'.$_[$proto.'server'].'" '
-            .'placeholder="'.$upproto.' Server" />
-  <label for="'.$proto.'server">'.$upproto.' Server</label>
-  <br/>
-  <input type="number" name="'.$proto.'port" id="'.$proto.'port" '
-            .'value="'.$_[$proto.'port'].'" '
-            .'placeholder="'.$upproto.' Port"
-    min="1" max="65535"
-    />
-  <label for="'.$proto.'port">'.$upproto.' Port</label>
-  <br/>
-  <label for="'.$proto.'security" id="'.$proto.'securitylabel">
-  <select name="'.$proto.'security" id="'.$proto.'security" '
-            .'data-placeholder="'.$upproto.' '.$l->t('security').'" >
-    <option value=""></option>';
-        foreach (PersonalSettingsController::EMAIL_SECURITY as $value) {
-          $upvalue = strtoupper($value);
-          $sel = ($_[$proto.'security'] == $value) ? 'selected="selected"' : '';
-          echo '<option value="'.$value.'" '.$sel.'>'.$upvalue.'</option>'."\n";
-        }
-        echo '
-  </select>'.$upproto.' '.$l->t('security').'</label>'."\n";
-        echo '
-</fieldset>';
-        if ($proto == 'smtp') {
-          echo '&nbsp;&nbsp;&nbsp;&nbsp;'."\n";
-        }
-      }
-      ?>
+<?php
+foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
+  $upproto = strtoupper($proto);
+  // enforce consistency with controllers and TS frontend code.
+  $serverKey = EnumSimpleSettingsKey::get($proto . 'server')->value;
+  $portKey = EnumSimpleSettingsKey::get($proto . 'port')->value;
+  $securityKey = EnumSimpleSettingsKey::get($proto . 'security')->value;
+?>
+      <fieldset id="email<?= $proto ?>fields">
+        <legend><?= $upproto ?> <?php p($l->t('Settings')) ?></legend>
+        <input type="text" name="<?= $serverKey ?>" id="<?= $serverKey ?>"
+               value="<?= $_[$serverKey] ?>"
+               placeholder="<?= $upproto ?> Server"
+        />
+        <label for="<?= $serverKey ?>"><?= $upproto ?> Server</label>
+        <br/>
+        <input type="number" name="<?= $portKey ?>" id="<?= $portKey ?>"
+               value="<?= $_[$portKey] ?>"
+               placeholder="'<?= $upproto ?> Port"
+               min="1" max="65535"
+        />
+        <label for="<?= $portKey ?>"><?= $upproto ?> Port</label>
+        <br/>
+        <label for="<?= $proto ?>security" id="<?= $proto ?>securitylabel">
+        <select name="<?= $securityKey ?>" id="<?= $securityKey ?>"
+                data-placeholder="<?= $upproto ?> <?php p($l->t('security')) ?>"
+        >
+        <!-- <option value=""></option> -->
+<?php
+  foreach (PersonalSettingsController::EMAIL_SECURITY as $value) {
+    $upvalue = strtoupper($value);
+    $sel = ($_[$securityKey] == $value) ? ' selected="selected"' : '';
+?>
+          <option value="<?= $value ?>"<?= $sel ?>><?= $upvalue ?></option>
+<?php } ?>
+        </select><?= $upproto ?> <?php p($l->t('security')) ?></label>
+      </fieldset>
+<?php if ($proto == 'smtp') { ?>
+  &nbsp;&nbsp;&nbsp;&nbsp
+<?php
+  }
+}
+?>
       <!-- div class="statusmessage"></div -->
     </form><!-- server settings -->
     <!-- GENERAL EMAIL STUFF -->
