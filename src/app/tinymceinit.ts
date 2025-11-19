@@ -198,10 +198,11 @@ const myConfig = {
       }
     });
 
-    inst.on('blur', function() {
-      // FIXME: how the heck get the element the editor is attached to????
-      $mceContainer.prev().trigger('blur');
-    });
+    for (const event of ['blur', 'change']) {
+      inst.on(event, function() {
+        $mceContainer.prev().trigger(event);
+      });
+    }
 
     console.debug('Resolve mceDeferred');
     const $mceElement = $('#' + inst.id);
