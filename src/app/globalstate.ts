@@ -78,7 +78,8 @@ export interface GlobalState {
 }
 
 declare global {
-  let CAFEVDB: GlobalState;
+  // eslint-disable-next-line no-var
+  var CAFEVDB: GlobalState;
 }
 
 /**
@@ -91,6 +92,6 @@ declare global {
  * initialization here.
  */
 // @ts-expect-error 2322
-const globalState: GlobalState = CAFEVDB = (CAFEVDB as GlobalState|undefined) ?? { PHPMyEdit: {} };
+const globalState: GlobalState = globalThis.CAFEVDB = (globalThis.CAFEVDB as GlobalState|undefined) ?? { PHPMyEdit: {} };
 
 export default globalState;
