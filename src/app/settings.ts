@@ -36,7 +36,7 @@ import fileDownload from './file-download.ts';
 import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
-import { showInfo } from '@nextcloud/dialogs';
+import { showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
@@ -839,27 +839,15 @@ const afterLoad = function(container?: JQuery) {
               Notification.messages(data.messages);
             });
         } else {
-          Notification.messages(t(appName, 'Password field must not be empty.'));
+          Notification.messages([t(appName, 'Password field must not be empty.')], { timeout: TOAST_PERMANENT_TIMEOUT });
         }
         return false;
       });
     } // fieldset emailpassword
 
-    { // eslint-disable-line
-      // const container = form.find('#emaildistribute');
-
-      $('#emaildistributebutton').on('click', function() {
-        const name = $(this).attr('name')!;
-        $.post(
-          setAppUrl(name))
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            Notification.messages(data.message);
-          });
-        return false;
-      });
+    {
+      const $emailAccountDistribute = $emailContainer.find<HTMLInputElement>('#' + ConfigConstants.EMAIL_ACCOUNT_DISTRIBUTE);
+      simpleSetHandler($emailAccountDistribute, 'click');
     }
 
     {

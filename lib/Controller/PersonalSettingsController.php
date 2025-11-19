@@ -1576,44 +1576,8 @@ class PersonalSettingsController extends Controller
       case 'keydistribute':
         list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
         $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));
-        return self::dataResponse([ 'message' => $messages ], $status);
-      case 'emaildistribute':
-        $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
-        $emailUser = $this->getConfigValue('emailuser');
-        $emailPassword = $this->getConfigValue('emailpassword');
-        $noEmailUsers = [];
-        $fatalUsers = [];
-        $modifiedUsers = [];
-        foreach ($this->group()->getUsers() as $user) {
-          $userId = $user->getUID();
-          try {
-            $roundCubeConfig->setEmailCredentials($userId, $emailUser, $emailPassword);
-            $modifiedUsers[] = $userId;
-          } catch (Exception $e) {
-            $noEmailUsers[$userId] = $e->getMessage();
-          } catch (Throwable $t) {
-            $fatalUsers[$userId] = $t->getMessage();
-          }
-        }
-        $messages = [];
-        if (!empty($modifiedUsers)) {
-          $messages[] = $this->l->t('Successfully distributed the email credentials for %s.', implode(', ', $modifiedUsers));
-        } else {
-          $messages[] = $this->l->t('Unable to distribute the email credentials to any user.');
-        }
-        if (!empty($noEmailUsers)) {
-          $messages[] = $this->l->t('Email credentials could not be set for %s.', implode(', ', array_keys($noEmailUsers)));
-        }
-        foreach ($noEmailUsers as $userId => $message) {
-          $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
-        }
-        foreach ($fatalUsers as $userId => $message) {
-          $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
-        }
-        $status = empty($fatalUsers) && !empty($modifiedUsers)
-          ? Http::STATUS_OK
-          : Http::STATUS_BAD_REQUEST;
-        return self::dataResponse([ 'message' => $messages ], $status);
+        return (new DTO\MessagesResponse($messages))->response($status);
+
       case 'emailtest':
         $user = $this->getConfigValue('emailuser');
         $password = $this->getConfigValue('emailpassword');
@@ -1741,10 +1705,10 @@ class PersonalSettingsController extends Controller
         $displayName = reset($parsedEmail);
         $messages = [];
         if (!empty($displayName)) {
+          $humanValue = $displayName . ' <' . $realValue . '>';
           switch ($parameter) {
             case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_KEY->value:
               $this->setConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName);
-              $humanValue = $displayName . ' <' . $realValue . '>';
               break;
             case EnumSimpleSettingsKey::EMAIL_TEST_ADDRESS_KEY->value:
               $this->setConfigValue(ConfigConstants::EMAIL_TEST_NAME_KEY, $displayName);
@@ -1773,18 +1737,46 @@ class PersonalSettingsController extends Controller
           // try to create the template folder even if the list does not exist
           $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
 
-          $furtherData['messages'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+          $messages = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
           $this->logInfo('SHARE URI ' . $shareUri);
         }
-        // fall through
+        $key = EnumSimpleSettingsKey::get($parameter);
+        $this->setSimpleConfigValue($key, $realValue, $humanValue, $messages);
+        return (new DTO\SimpleSetValueResponse(
+          key: $key,
+          value: $humanValue,
+          messages: $messages,
+        ))->response();
+
+      case EnumSimpleSettingsKey::EMAIL_FROM_DOMAIN_KEY->value:
+        $emailFromDomain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
+        if (empty($emailFromDomain)) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Please first configure the email domain you intend to send messages form.'),
+          );
+        }
+        $messages = [];
+        // Nowadays we use SSO, so make sure RCmail has the correct domain and
+        // is configured to use SSO.
+        $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
+        $roundCubeConfig->setAppValue(
+          RoundCubeConfig::EMAIL_ADDRESS_CHOICE,
+          RoundCubeConfig::EMAIL_ADDRESS_CHOICE_USER_ID,
+        );
+        $roundCubeConfig->setAppValue(
+          RoundCubeConfig::EMAIL_DEFAULT_DOMAIN,
+          $emailFromDomain,
+        );
+        $messages[] = $this->l->t(
+          'Configured the Roundcube mailer for SSO using the current user\'s user-id and credentials with the configure email-domain "%1$s".',
+          $emailFromDomain,
+        );
       case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY->value:
       case EnumSimpleSettingsKey::BULK_EMAIL_SUBJECT_TAG->value:
       case EnumSimpleSettingsKey::EMAIL_USER->value:
       case EnumSimpleSettingsKey::EMAIL_PASSWORD->value:
-      case EnumSimpleSettingsKey::EMAIL_FROM_NAME_KEY->value:
-      case EnumSimpleSettingsKey::EMAIL_TEST_NAME_KEY->value:
-      case EnumSimpleSettingsKey::EMAIL_FROM_DOMAIN_KEY->value:
-        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, humanValue: $humanValue ?? null, messages: $messages ?? []);
+        $messages = $messags ?? [];
+        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, humanValue: $humanValue ?? null, messages: $messages);
 
       case EnumSimpleSettingsKey::BULK_EMAIL_PRIVACY_NOTICE->value:
         $value = $this->fuzzyInputService->purifyHTML($value);
@@ -2313,7 +2305,7 @@ class PersonalSettingsController extends Controller
     string|EnumSimpleSettingsKey $key,
     ?string $value,
     ?string $humanValue = null,
-    array $messages = [],
+    ?array &$messages = null,
     ?array $hints = null,
   ):Http\DataResponse {
     try {
@@ -2331,11 +2323,16 @@ class PersonalSettingsController extends Controller
       $humanValue = $realValue;
     }
 
+    if ($messages === null) {
+      $messages = [];
+    }
+
     if (empty($realValue)) {
       $this->deleteConfigValue($key->value);
       array_unshift($messages, $this->l->t('Erased config value for parameter "%s".', $key->value));
       return (new DTO\SimpleSetValueResponse(
         key: $key,
+        value: null,
         messages: $messages,
         hints: $hints,
       ))->response();
@@ -2345,6 +2342,7 @@ class PersonalSettingsController extends Controller
       if (preg_match('/.*password.*/i', $key->value)) {
         $humanValue = $realValue = $realValue[0] . '••••••••';
       }
+      $humanValue = htmlspecialchars($humanValue);
       array_unshift($messages, $this->l->t('Value for "%1$s" set to "%2$s"', [ $key->value, $humanValue ]));
       return (new DTO\SimpleSetValueResponse(
         key: $key,
