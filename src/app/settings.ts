@@ -173,9 +173,9 @@ const afterLoad = function(container?: JQuery) {
             Ajax.handleError(xhr, textStatus, errorThrown);
           });
       })
-      .fail(function(xhr, status, errorThrown) {
-        const failData = Ajax.handleError(xhr, status, errorThrown);
-        $('#userkey .info').html(failData.message);
+      .fail(async (xhr, status, errorThrown) => {
+        const failData = await Ajax.handleError(xhr, status, errorThrown);
+        $('#userkey .info').html(failData.messages.join(' '));
         $('#userkey .info').show();
         $('#userkey .error').show();
       });
@@ -288,8 +288,8 @@ const afterLoad = function(container?: JQuery) {
               container.find('.statusmessage.general').html(data.message).show();
             }
           })
-          .fail(function(xhr, status, errorThrown) {
-            const failData = Ajax.handleError(xhr, status, errorThrown);
+          .fail(async (xhr, status, errorThrown) => {
+            const failData = await Ajax.handleError(xhr, status, errorThrown);
             $(tabsSelector + ' fieldset').prop('disabled', false);
             $(tabsSelector).tabs('enable');
             container.find('.statusmessage.standby').hide();
@@ -337,9 +337,9 @@ const afterLoad = function(container?: JQuery) {
       form.find('.statusmessage').hide();
       const name = $(this).attr('name') as string;
       $.post(setAppUrl(name))
-        .fail(function(xhr, status, errorThrown) {
-          const failData = Ajax.handleError(xhr, status, errorThrown);
-          msg.html(failData.message).show();
+        .fail(async (xhr, status, errorThrown) => {
+          const failData = await Ajax.handleError(xhr, status, errorThrown);
+          msg.html(failData.messages.join(' ')).show();
         })
         .done(function(data) {
           Notification.messages(data.message);
@@ -409,10 +409,10 @@ const afterLoad = function(container?: JQuery) {
     const msg = $('#shareownerform .statusmessage');
     const shareOwner = container.find('#user') as JQuery<HTMLInputElement>;
     const shareOwnerSaved = container.find('#user-saved') as JQuery<HTMLInputElement>;
-    const shareOwnerForce = container.find('#shareowner-force');
+    const shareOwnerForce = container.find<HTMLInputElement>('#shareowner-force');
     const shareOwnerCheck = container.find('#check');
 
-    shareOwnerForce.on('change', function(_event) {
+    shareOwnerForce.on('change', function(this: HTMLInputElement, _event) {
       msg.hide();
       if (!$(this).is(':checked') && shareOwnerSaved.val() !== '') {
         shareOwner.val(shareOwnerSaved.val()!);
@@ -640,7 +640,7 @@ const afterLoad = function(container?: JQuery) {
     const $cloudUserForm = container.find('form.cloud-user');
 
     const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
-    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find('input[name="importClubMembersAsCloudUsers"]') as JQuery<HTMLInputElement>;
+    const $importClubMembersAsCloudUsers = $importClubMembersFieldSet.find<HTMLInputElement>('input[name="importClubMembersAsCloudUsers"]');
     const $recreateViewsButton = $importClubMembersFieldSet.find('input[name="userSqlBackendRecreateViews"]');
     const $shownIfImport = $importClubMembersFieldSet.find('.show-if-user-sql-backend');
     const $enabledIfImport = $cloudUserForm.find('.enable-if-user-sql-backend');
@@ -664,8 +664,15 @@ const afterLoad = function(container?: JQuery) {
       }
     };
 
-    const updateOtherOnImportChange = function($element: JQuery) {
+    const updateOtherOnImportChange = <T extends HTMLElement>($element: JQuery<T>) => {
       const isChecked = $element.prop('checked');
+      console.info('UPDATE OTHER', {
+        isChecked,
+        $cloudUserHints,
+        $enabledIfImport,
+        $shownIfImport,
+        $importClubMembersFieldSet,
+      });
       $cloudUserHints.closest('fieldset').toggleClass('hidden', !isChecked);
       $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
       $shownIfImport.toggleClass('hidden', !isChecked);
@@ -683,20 +690,24 @@ const afterLoad = function(container?: JQuery) {
       'change',
       undefined, {
         setup() {
+          console.info('SETUP');
           const $this = $(this) as JQuery;
           $this.addClass('busy');
           updateOtherOnImportChange($this);
         },
         cleanup() {
+          console.info('CLEANUP');
           const $this = $(this) as JQuery;
           updateOtherOnImportChange($this);
           $this.removeClass('busy');
         },
         success(_$element, data: DTO.SimpleSetValueResponse) {
+          console.info('SUCCESS');
           console.info('DATA', data);
           updateHints(data.hints);
         },
         fail(xhr, textStatus, errorThrown) {
+          console.info('FAIL');
           const $this = $(this) as JQuery;
           Ajax.handleError(xhr, textStatus, errorThrown);
           // revert on failure
@@ -795,7 +806,7 @@ const afterLoad = function(container?: JQuery) {
       $.post(
         setAppUrl(name), { value })
         .fail(function(xhr, status, errorThrown) {
-          Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+          Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
         })
         .done(function(data) {
           Notification.messages(data.message);
@@ -819,7 +830,7 @@ const afterLoad = function(container?: JQuery) {
           $.post(
             setAppUrl(name), { value })
             .fail(function(xhr, status, errorThrown) {
-              Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+              Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
             })
             .done(function(data) {
               Notification.messages(data.message);
@@ -839,7 +850,7 @@ const afterLoad = function(container?: JQuery) {
         $.post(
           setAppUrl(name))
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
           })
           .done(function(data) {
             Notification.messages(data.message);
@@ -849,41 +860,49 @@ const afterLoad = function(container?: JQuery) {
     }
 
     {
-      const container = emailContainer.find('form.serversettings');
+      const $container = emailContainer.find('form.serversettings');
+      const $serverSelects = $container.find<HTMLSelectElement>(
+        [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map(x => 'select#' + x).join(','),
+      );
+      const $serverInputs = $container.find<HTMLInputElement>(
+        [
+          ConfigConstants.SMTP_PORT,
+          ConfigConstants.SMTP_SERVER,
+          ConfigConstants.IMAP_PORT,
+          ConfigConstants.IMAP_SERVER,
+        ].map(x => 'input#' + x).join(','),
+      );
 
-      $('[id$=security]:input').on('change', function(_event) {
+      $serverSelects.on('change', function(this: HTMLSelectElement, _event) {
         const name = $(this).attr('name')!;
         const value = $(this).val();
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Ajax.handleError(xhr, status, errorThrown);
           })
           .done(function(data) {
+            console.info('SECURITY RESPONSE', { data });
             if (data.port) {
               $('#' + data.proto + 'port').val(data.port);
             }
-            Notification.messages(data.message);
+            Notification.messages(data.messages);
           });
         return false;
       });
 
-      container.find('#smtpport,#imapport,#smtpserver,#imapserver').on('blur', function(_event) {
-        const $self = $(this);
-        const name = $(this).attr('name')!;
-        const value = $(this).val();
-        $.post(setAppUrl(name), { value })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            if (data[name]) {
-              $self.val(data[name]);
+      simpleSetValueHandler(
+        $serverInputs,
+        'blur',
+        undefined, {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('EMAIL SERVER VALUE', { data });
+            if (data.value) {
+              $element.val(data.value);
             }
-            Notification.messages(data.message);
-          });
-        return false;
-      });
+          },
+        },
+      );
     }
 
     {
@@ -912,7 +931,7 @@ const afterLoad = function(container?: JQuery) {
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
           })
           .done(function(data) {
             console.info('DATA', data);
@@ -937,13 +956,13 @@ const afterLoad = function(container?: JQuery) {
         checkboxInputs,
       });
 
-      checkboxInputs.on('change', function(_event) {
+      checkboxInputs.on('change', function(this: HTMLInputElement, _event) {
         const $this = $(this);
         const name = $this.attr('name')!;
         $.post(
           setAppUrl(name), { value: $this.prop('checked') })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
           })
           .done(function(data) {
             Notification.messages(data.message);
@@ -969,7 +988,7 @@ const afterLoad = function(container?: JQuery) {
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
           })
           .done(function(data) {
             console.info('DATA', data);
@@ -983,13 +1002,13 @@ const afterLoad = function(container?: JQuery) {
     }
 
     {
-      const container = emailContainer.find('form.emailtest');
-      const emailTestAddress = container.find('#emailtestaddress');
+      const $container = emailContainer.find('form.emailtest');
+      const $emailTestAddress = container.find('#emailtestaddress');
 
-      simpleSetHandler(container.find('#emailtestbutton'), 'click');
-      simpleSetValueHandler(emailTestAddress, 'blur');
+      simpleSetHandler($container.find('#emailtestbutton'), 'click');
+      simpleSetValueHandler($emailTestAddress, 'blur');
       simpleSetValueHandler(
-        container.find('#emailtestmode'), 'change', undefined, {
+        $container.find('#emailtestmode'), 'change', undefined, {
           success(_element, _data) {
             // if (element.is(':checked')) {
             //   emailTestAddress.prop('disabled', false);
@@ -1025,7 +1044,7 @@ const afterLoad = function(container?: JQuery) {
         $.post(
           setAppUrl(name), { value })
           .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
           })
           .done(function(data) {
             Notification.messages(data.message);
@@ -1340,14 +1359,13 @@ const afterLoad = function(container?: JQuery) {
 
       fileDownload(
         'settings/app/get/auto-fill-test', {
-          // @ts-expect-error 2353
           documentTemplate: $self.data('template'),
           format: $self.data('format'),
         }, {
           always() {
             $self.removeClass('busy');
           },
-          errorMessage(_data: object, _url: string) {
+          errorMessage() {
             return t(appName, 'Unable to download auto-fill result.');
           },
         });
@@ -1363,13 +1381,12 @@ const afterLoad = function(container?: JQuery) {
 
       fileDownload(
         'settings/app/get/auto-fill-test-data', {
-          // @ts-expect-error 2353
           documentTemplate: $self.data('template'),
         }, {
           always() {
             $self.removeClass('busy');
           },
-          errorMessage(_data: object, _url: string) {
+          errorMessage() {
             return t(appName, 'Unable to download auto-fill result.');
           },
         });
@@ -1385,7 +1402,7 @@ const afterLoad = function(container?: JQuery) {
 
       FileUpload.init({
         url: generateAppUrl('upload/stash'),
-        doneCallback(file, _index: number|string, _container: JQuery) {
+        doneCallback(file) {
           moveIntoPlace(file, $container, $this);
         },
         stopCallback: undefined,
