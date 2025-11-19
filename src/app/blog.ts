@@ -177,8 +177,8 @@ const submit = function(event: JQuery.ClickEvent) {
     clearReader: clearReaderValue,
   })
     .fail(function(xhr, status, errorThrown) {
-      const messages = Ajax.failMessage(xhr, status, errorThrown);
-      Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+      const message = Ajax.failMessage(xhr, status, errorThrown);
+      Dialogs.alert(message, t(appName, 'Error'));
     })
     .done(function(data) {
       $('#blogedit').dialog('close').remove();
@@ -225,8 +225,8 @@ const popupMessages = function() {
             const action = 'markread';
             $.post(generateAppUrl('blog/action/' + action), { blogId: thisBlogId })
               .fail(function(xhr, status, errorThrown) {
-                const messages = Ajax.failMessage(xhr, status, errorThrown);
-                Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+                const message = Ajax.failMessage(xhr, status, errorThrown);
+                Dialogs.alert(message, t(appName, 'Error'));
               })
               .done(function(_data) {
                 // no need to submit the form
@@ -275,8 +275,8 @@ const documentReady = function() {
       const post = $('#blogform').serializeArray();
       $.post(generateAppUrl('blog/editentry'), post)
         .fail(function(xhr, status, errorThrown) {
-          const messages = Ajax.failMessage(xhr, status, errorThrown);
-          Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+          const message = Ajax.failMessage(xhr, status, errorThrown);
+          Dialogs.alert(message, t(appName, 'Error'));
         })
         .done(editWindow);
       return false;
@@ -295,8 +295,8 @@ const documentReady = function() {
           inReplyTo: $(this).val(),
         })
           .fail(function(xhr, status, errorThrown) {
-            const messages = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(editWindow);
         return false;
@@ -312,8 +312,8 @@ const documentReady = function() {
           inReplyTo: -1,
         })
           .fail(function(xhr, status, errorThrown) {
-            const messages = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(editWindow);
         return false;
@@ -333,8 +333,8 @@ const documentReady = function() {
               const action = 'delete';
               $.post(generateAppUrl('blog/action/' + action), { blogId })
                 .fail(function(xhr, status, errorThrown) {
-                  const messages = Ajax.failMessage(xhr, status, errorThrown);
-                  Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+                  const message = Ajax.failMessage(xhr, status, errorThrown);
+                  Dialogs.alert(message, t(appName, 'Error'));
                 })
                 .done(updateThreads);
             }
@@ -359,8 +359,8 @@ const documentReady = function() {
           inReplyTo: -1,
         })
           .fail(function(xhr, status, errorThrown) {
-            const messages = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(updateThreads);
         return false;
@@ -382,8 +382,8 @@ const documentReady = function() {
           inReplyTo: -1,
         })
           .fail(function(xhr, status, errorThrown) {
-            const messages = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(messages.join(' '), t(appName, 'Error'));
+            const message = Ajax.failMessage(xhr, status, errorThrown);
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(updateThreads);
         return false;
@@ -399,8 +399,3 @@ const documentReady = function() {
 export {
   documentReady,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
