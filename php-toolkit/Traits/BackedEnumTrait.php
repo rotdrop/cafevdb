@@ -71,10 +71,10 @@ trait BackedEnumTrait
       return $key;
     }
     try {
-      $key = EnumSimpleSettingsKey::from($key);
+      $key = self::from($key);
     } catch (ValueError) {
       try {
-        $key = EnumSimpleSettingsKey::{$key};
+        $key = self::{$key};
       } catch (Throwable $t) {
         throw new InvalidArgumentException("{$key} is neither a value nor a key of {self::class}");
       }
