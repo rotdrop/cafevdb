@@ -103,16 +103,16 @@ const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value 
       callbacks.setup.apply(this);
       $.post(setAppUrl(valueData.name), { value: valueData.value })
         .fail((xhr, textStatus, errorThrown) => {
-          let message = Ajax.failMessage(xhr, textStatus, errorThrown);
-          message = Notification.messages(message, { timeout: 15 });
-          $msgElement.html(message).show();
+          let messages = Ajax.failMessages(xhr, textStatus, errorThrown);
+          messages = Notification.messages(messages, { timeout: 15 });
+          $msgElement.html(messages.join('; ')).show();
           callbacks.fail.call(this, xhr, textStatus, errorThrown);
           callbacks.cleanup.apply(this);
         })
         .done((data) => {
-          if (data.message) {
-            data.message = Notification.messages(data.message, { timeout: 15 });
-            $msgElement.html(data.message.join('; ')).show();
+          if (data.messages) {
+            data.messages = Notification.messages(data.messages, { timeout: 15 });
+            $msgElement.html(data.messages.join('; ')).show();
           }
           callbacks.success.call(this, $this, data, valueData.value, $msgElement);
           callbacks.cleanup.apply(this);
@@ -172,9 +172,9 @@ const simpleSetHandler = <Element extends HTMLElement = HTMLElement>(
         callbacks.cleanup.call($self[0]);
       })
       .done(function(data) {
-        if (data.message) {
-          data.message = Notification.messages(data.message, { timeout: 15 });
-          $msgElement.html(data.message.join('; ')).show();
+        if (data.messages.length > 0) {
+          Notification.messages(data.messages, { timeout: 15 });
+          $msgElement.html(data.messages.join(' ')).show();
         }
         callbacks.success.call($self[0], $self, data, $msgElement);
         callbacks.cleanup.call($self[0]);
