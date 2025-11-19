@@ -68,13 +68,12 @@ const overrideProp = function<T extends HTMLElement>(
   property: string|JQuery.PlainObject,
   propertyValue?: ValueType,
 ) {
+  if (this.length === 0) {
+    return;
+  }
   const value: undefined|boolean = propertyValue as undefined|boolean;
-  const outerArguments = value ? [property, value] as [string, boolean] : [property] as [string];
   if (propertyValue === undefined) {
     if (typeof property === 'string') {
-      if (this.length === 0) {
-        return;
-      }
       const $this = this.first();
       const thisData = data($this);
       if (property === 'disabled' && thisData.readonlyState === true) {
@@ -91,6 +90,7 @@ const overrideProp = function<T extends HTMLElement>(
       return this;
     }
   }
+  // else
   this.each(function() {
     const $this = $(this);
     const thisData = data($this);
@@ -101,7 +101,7 @@ const overrideProp = function<T extends HTMLElement>(
       const $placeholder = thisData.readonlyPlaceholder;
       if ($placeholder) {
         // enable and disable the placeholder instead of the element
-        vanillaProp.apply($placeholder, outerArguments);
+        vanillaProp.call($placeholder, property, value);
       }
       if ($this.is('option')) {
         // just tweak the to-be-restored value
@@ -126,7 +126,7 @@ const overrideProp = function<T extends HTMLElement>(
           thisData.readonlyRestoreDisabled = value;
         } else {
           // apply the disabled attribute to the surrounding single select
-          vanillaProp.apply($this, outerArguments);
+          vanillaProp.call($this, property, value);
         }
       } else if ($this.is(':radio')) {
         // just tweak the to-be-restored value as the radio butotn is already disabled
@@ -137,10 +137,10 @@ const overrideProp = function<T extends HTMLElement>(
       } else if ($this.is(':button, :submit')) {
         thisData.readonlyRestoreDisabled = value;
       } else {
-        vanillaProp.apply($this, outerArguments);
+        vanillaProp.call($this, property, value);
       }
     } else {
-      vanillaProp.apply($this, outerArguments);
+      vanillaProp.call($this, property as string, value);
     }
   });
   return this;
@@ -285,12 +285,12 @@ $.fn.readonly = function(state?: boolean|string) {
       // Here the strategy is to just disable all radios safe the
       // selected one. As all other radios of the group are disabled,
       // the value is then read-only.
-      let $container = $this.closest('fieldset');
+      let $container: undefined|JQuery<HTMLFieldSetElement>|JQuery<HTMLFormElement>|JQuery<HTMLBodyElement> = $this.closest('fieldset');
       if (!$container) {
         $container = $this.closest('form');
       }
       if (!$container) {
-        $container = $('body');
+        $container = $('body') as JQuery<HTMLBodyElement>;
       }
       const $radioGroup = $container.find('input:radio[name="' + $this.attr('name') + '"]');
       $radioGroup.each(function() {
