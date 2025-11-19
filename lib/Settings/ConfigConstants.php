@@ -298,6 +298,20 @@ class ConfigConstants
   /** @var string Config-key for the announcements mailing list */
   public const ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY = 'announcementsMailingListName';
 
+  public const SMTP_SERVER = 'smtpserver';
+  public const IMAP_SERVER = 'imapserver';
+  public const SMTP_PORT = 'smtpport';
+  public const IMAP_PORT = 'imapport';
+  public const SMTP_SECURITY = 'smtpsecurity';
+  public const IMAP_SECURITY = 'imapsecurity';
+  public const EMAIL_TEST_MODE = 'emailtestmode';
+
+  /** @var string Config-key for the global email account user-id */
+  public const EMAIL_USER = 'emailuser';
+
+  /** @var string Config-key for the global email account password */
+  public const EMAIL_PASSWORD = 'emailpassword';
+
   /** @var string Config-key for bulk-email message composition. */
   public const BULK_EMAIL_SUBJECT_TAG = 'bulkEmailSubjectTag';
 
@@ -315,6 +329,9 @@ class ConfigConstants
 
   /** @var sting Config-key for attachment customization. */
   public const ATTACHMENT_LINK_SIZE_LIMIT = 'attachmentLinkSizeLimit';
+
+  /** @var string Config-key for the bulk email privacy notice */
+  public const BULK_EMAIL_PRIVACY_NOTICE = 'bulkEmailPrivacyNotice';
 
   /** @var string */
   public const USER_GROUP_KEY = 'usergroup';
