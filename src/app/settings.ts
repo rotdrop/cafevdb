@@ -794,49 +794,52 @@ const afterLoad = function(container?: JQuery) {
    ***************************************************************************/
 
   {
-    const emailContainer = $('div#email-settings');
+    const $emailContainer = $('div#email-settings');
 
     $('div#email-settings').accordion({
       heightStyle: 'content',
     });
 
-    $('#emailuser').on('blur', function(_event) {
-      const name = $(this).attr('name')!;
-      const value = $(this).val();
-      $.post(
-        setAppUrl(name), { value })
-        .fail(function(xhr, status, errorThrown) {
-          Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-        })
-        .done(function(data) {
-          Notification.messages(data.message);
-        });
-      return false;
-    });
+    {
+      const configKey = ConfigConstants.EMAIL_USER;
+      // Email-User
+      const $container = $emailContainer.find('fieldset.' + configKey);
+      const $input = $container.find<HTMLInputElement>('input#' + configKey);
+
+      simpleSetValueHandler($input, 'blur', undefined,
+        {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            if (data.value) {
+              $element.val(data.value);
+            }
+          },
+        },
+      );
+    }
 
     {
-      // Email-Password
-      const container = emailContainer.find('fieldset.emailpassword');
+      const configKey = ConfigConstants.EMAIL_PASSWORD;
+      const $container = $emailContainer.find('fieldset.' + configKey);
 
       // 'show password' checkbox
-      const password = container.find('#emailpassword');
-      showPassword(password);
-      const passwordChange = container.find('input.button');
+      const $input = $container.find<HTMLInputElement>('#' + configKey);
+      showPassword($input);
+      const $passwordChange = $container.find<HTMLInputElement>('input.button');
 
-      passwordChange.on('click', function() {
-        const value = password.val();
-        const name = password.attr('name')!;
+      $passwordChange.on('click', function() {
+        const value = $input.val()!;
+        const name = $input.attr('name')!;
         if (value !== '') {
           $.post(
             setAppUrl(name), { value })
             .fail(function(xhr, status, errorThrown) {
-              Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
+              Ajax.handleError(xhr, status, errorThrown);
             })
-            .done(function(data) {
-              Notification.messages(data.message);
+            .done(function(data: DTO.SimpleSetValueResponse) {
+              Notification.messages(data.messages);
             });
         } else {
-          Notification.messages(t(appName, 'Password field must not be empty'));
+          Notification.messages(t(appName, 'Password field must not be empty.'));
         }
         return false;
       });
@@ -860,7 +863,7 @@ const afterLoad = function(container?: JQuery) {
     }
 
     {
-      const $container = emailContainer.find('form.serversettings');
+      const $container = $emailContainer.find('form.serversettings');
       const $serverSelects = $container.find<HTMLSelectElement>(
         [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map(x => 'select#' + x).join(','),
       );
@@ -906,8 +909,8 @@ const afterLoad = function(container?: JQuery) {
     }
 
     {
-      const container = emailContainer.find('form.bulk-email-settings');
-      console.log('************', container);
+      const $container = $emailContainer.find('form.bulk-email-settings');
+      console.log('************', $container);
 
       const blurInputsSelector = [
         'input#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY,
@@ -918,32 +921,22 @@ const afterLoad = function(container?: JQuery) {
         'input.' + ConfigConstants.ATTACHMENT_LINK_SIZE_LIMIT,
         'input.' + ConfigConstants.ATTACHMENT_LINK_EXPIRATION_LIMIT,
       ].join(',');
-      const blurInputs = container.find(blurInputsSelector);
+      const $blurInputs = $container.find<HTMLInputElement>(blurInputsSelector);
 
-      const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
-      console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
-      WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
-
-      blurInputs.on('blur', function(_event) {
-        const $this = $(this);
-        const name = $this.attr('name')!;
-        const value = $this.val();
-        $.post(
-          setAppUrl(name), { value })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            console.info('DATA', data);
-            if (data[name] && data[name] !== value) {
-              $this.val(data[name]);
+      simpleSetValueHandler(
+        $blurInputs,
+        'blur',
+        undefined, {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('BULK EMAIL VALUE', { data });
+            if (data.value && $element.val() !== data.value) {
+              $element.val(data.value);
             }
-            Notification.messages(data.message);
-          });
-        return false;
-      });
+          },
+        },
+      );
 
-      const checkboxInputs = container.find(
+      const $checkboxInputs = $container.find<HTMLInputElement>(
         [
           'input#' + ConfigConstants.CLOUD_ATTACHMENT_ALWAYS_LINK,
           'input#' + ConfigConstants.PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY,
@@ -951,64 +944,42 @@ const afterLoad = function(container?: JQuery) {
         ].join(','),
       );
 
-      console.info('CHECK BOX INPUTS', {
-        blurInputs,
-        checkboxInputs,
-      });
+      simpleSetValueHandler($checkboxInputs, 'change');
 
-      checkboxInputs.on('change', function(this: HTMLInputElement, _event) {
-        const $this = $(this);
-        const name = $this.attr('name')!;
-        $.post(
-          setAppUrl(name), { value: $this.prop('checked') })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            Notification.messages(data.message);
-          });
-        return false;
-      });
-
-      simpleSetHandler(container.find('#announcements-mailing-list-autoconf'), 'click');
+      simpleSetHandler($container.find('#' + ConfigConstants.ANNOUNCEMENTS_MAILING_LIST_KEY + 'Autoconf'), 'click');
     }
 
     {
-      const container = emailContainer.find('form.bulk-email-privacy-notice');
-      console.log('************', container);
+      const configKey = ConfigConstants.BULK_EMAIL_PRIVACY_NOTICE;
+      const $container = $emailContainer.find('form.' + configKey);
+      console.log('************', $container);
 
-      const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
+      const $bulkEmailPrivacyNotice = $container.find<HTMLTextAreaElement>('textarea[name="' + configKey + '"]');
       console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
       WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
 
-      $bulkEmailPrivacyNotice.on('blur', function(_event) {
-        const $this = $(this);
-        const name = $this.attr('name')!;
-        const value = $this.val();
-        $.post(
-          setAppUrl(name), { value })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            console.info('DATA', data);
-            if (data[name] && data[name] !== value) {
-              $this.val(data[name]);
+      simpleSetValueHandler(
+        $bulkEmailPrivacyNotice,
+        'blur',
+        undefined, {
+          success($element, data: DTO.SimpleSetValueResponse) {
+            console.info('BULK EMAIL PRIVACY NOTICE', { data });
+            if (data.value && $element.val() !== data.value) {
+              $element.val(data.value);
             }
-            Notification.messages(data.message);
-          });
-        return false;
-      });
+          },
+        },
+      );
     }
 
     {
-      const $container = emailContainer.find('form.emailtest');
-      const $emailTestAddress = container.find('#emailtestaddress');
+      const $container = $emailContainer.find('form.emailtest');
+      const $emailTestAddress = $container.find('#' + ConfigConstants.EMAIL_TEST_ADDRESS_KEY);
 
       simpleSetHandler($container.find('#emailtestbutton'), 'click');
       simpleSetValueHandler($emailTestAddress, 'blur');
       simpleSetValueHandler(
-        $container.find('#emailtestmode'), 'change', undefined, {
+        $container.find('#' + ConfigConstants.EMAIL_TEST_MODE), 'change', undefined, {
           success(_element, _data) {
             // if (element.is(':checked')) {
             //   emailTestAddress.prop('disabled', false);
@@ -1021,37 +992,18 @@ const afterLoad = function(container?: JQuery) {
 
     {
       // mailing list REST stuff
-      const container = emailContainer.find('form.mailing-list');
+      const $container = $emailContainer.find('form.mailing-list');
 
-      const prefix = 'mailingList';
       const inputValues = [
-        'EmailDomain',
-        'WebPages',
-        'RestUrl',
-        'RestUser',
-        'RestPassword',
-        'DefaultOwner',
-        'DefaultModerator',
+        ...Object.values(ConfigConstants.MAILING_LIST_CONFIG),
+        ...Object.values(ConfigConstants.MAILING_LIST_REST_CONFIG),
       ];
-      const $inputs = $(inputValues.map(x => '#' + prefix + x).join(', '));
+      const $inputs = $container.find<HTMLInputElement>(inputValues.map(x => '#' + x).join(','));
 
-      const password = container.find('#mailingListRestPassword');
-      showPassword(password);
+      const $password = $container.find('#' + ConfigConstants.MAILING_LIST_REST_CONFIG.password);
+      showPassword($password);
 
-      $inputs.on('blur', function(_event) {
-        const name = $(this).attr('name')!;
-        const value = $(this).val();
-        $.post(
-          setAppUrl(name), { value })
-          .fail(function(xhr, status, errorThrown) {
-            Notification.messages(Ajax.failMessages(xhr, status, errorThrown));
-          })
-          .done(function(data) {
-            Notification.messages(data.message);
-          });
-        return false;
-      });
-
+      simpleSetValueHandler($inputs, 'blur');
     }
 
     $('form#orchestra').accordion({
