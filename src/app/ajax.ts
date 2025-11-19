@@ -213,7 +213,7 @@ const ajaxHandleError = async (
     }
     case HttpStatusCodes.PRECONDITION_FAILED:
       // a simple page reload may help
-      callbacks.cleanup = function() {
+      callbacks.cleanup = () => {
         window.location.reload();
       };
       if (failData.error && httpStatusText(xhr.status) !== t(appName, failData.error)) {
@@ -245,7 +245,7 @@ done automatically when cloud click "ok" or close this dialog window.
       break;
     case HttpStatusCodes.UNAUTHORIZED: {
       // no point in continuing, direct the user to the login page
-      callbacks.cleanup = function() {
+      callbacks.cleanup = () => {
         window.location.replace(cloudWebRoot);
       };
 
@@ -292,7 +292,7 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
   required: string[],
   errorCB: (arg: T) => void = () => {},
 ) => {
-  const dialogCallback = function() {
+  const dialogCallback = () => {
     errorCB(data);
   };
   // error handling
@@ -362,7 +362,11 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
  *
  * @param errorThrown see fail() method of jQuery ajax.
  */
-const ajaxFailData = function(xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) {
+const ajaxFailData = (
+  xhr: JQuery.jqXHR|AjaxFailData,
+  textStatus: string,
+  errorThrown: string,
+) => {
   console.info('AJAX FAIL DATA ARGS', {
     xhr,
     textStatus,
@@ -428,17 +432,18 @@ const ajaxFailData = function(xhr: JQuery.jqXHR|AjaxFailData, textStatus: string
  *
  * @param errorThrown see fail() method of jQuery ajax.
  */
-const ajaxFailMessage = function(xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) {
-  return ajaxFailData(xhr, textStatus, errorThrown).messages;
-};
+const ajaxFailMessage = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) =>
+  ajaxFailData(xhr, textStatus, errorThrown).messages.join(' ');
 
-$(function() {
-  Dialogs.attachDialogHandlers();
-});
+const ajaxFailMessages = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) =>
+  ajaxFailData(xhr, textStatus, errorThrown).messages;
+
+$(Dialogs.attachDialogHandlers);
 
 export {
   ajaxHandleError as handleError,
   ajaxValidateResponse as validateResponse,
   ajaxFailData as failData,
   ajaxFailMessage as failMessage,
+  ajaxFailMessages as failMessages,
 };
