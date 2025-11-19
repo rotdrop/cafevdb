@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\Database\MountProvider;
 use OCA\CAFEVDB\Toolkit\Service\GroupFoldersService;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
@@ -955,6 +956,15 @@ class ConfigCheckService
       // $this->logInfo('Inspect ' . $path);
       try {
         $node = $rootView->get($path);
+        if ($node->getType() == FileInfo::TYPE_FOLDER) {
+          // If the node is one of our special mounts then check the
+          // permission checks, as the permissions are hard-coded into the
+          // mount-provider.
+          $mountProvider = $node->getMountPoint()->getMountProvider();
+          if ($mountProvider === MountProvider::class) {
+            continue;
+          }
+        }
         if ($node->getType() != FileInfo::TYPE_FOLDER
             || $node->getPermissions() != self::SHARE_PERMISSIONS) {
           try {
