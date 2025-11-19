@@ -117,7 +117,7 @@ if ($cnt == 0) {
        class="cmsarticlecontainer cafev"
        data-article-id="-1"
        data-project-id="<?= $projectId ?>">
-    <div id="cmsarticle-nopage" class="cmsarticleframe <?= $_['action'] ?>"><?php p($l->t("No public web pages registered for this project") ?></div>
+    <div id="cmsarticle-nopage" class="cmsarticleframe <?= $_['action'] ?>"><?php p($l->t("No public web pages registered for this project")) ?></div>
   </div>
 <?php } ?>
   <div id="projectArticle-newpage"
@@ -138,7 +138,8 @@ if ($cnt == 0) {
         <option></option>
 <?php
 if (count($otherPages) > 0) {
-        $oldGroup = $otherPages[0]['categoryName'];
+  $oldGroup = $otherPages[0]['categoryName'];
+}
 ?>
         <optgroup label="<?php p($oldGroup) ?>">
 <?php

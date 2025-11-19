@@ -24,6 +24,10 @@
 
 namespace OCA\CAFEVDB;
 
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect
+// phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.Indent
+
 use OCA\CAFEVDB\Controller\PersonalSettingsController;
 use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
 use OCA\CAFEVDB\Common\Util;
@@ -40,6 +44,12 @@ if (!empty($_[ConfigConstants::EMAIL_FROM_NAME_KEY])) {
 } else {
   $emailAddressValue = $_[ConfigConstants::EMAIL_FROM_ADDRESS_KEY];
 }
+
+$emailUserKey = ConfigConstants::EMAIL_USER;
+$emailPasswordKey = ConfigConstants::EMAIL_PASSWORD;
+$privacyNoticeKey = ConfigConstants::BULK_EMAIL_PRIVACY_NOTICE;
+$mailingListConfig = ConfigConstants::MAILING_LIST_CONFIG;
+$mailingListRestConfig = ConfigConstants::MAILING_LIST_REST_CONFIG;
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin email">
@@ -95,35 +105,35 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
     <!-- GENERAL EMAIL STUFF -->
     <h4><?php echo $l->t('Email Account'); ?></h4>
     <form id="emailaccount">
-      <fieldset class="emailuser flex-container flex-center">
+      <fieldset class="<?= $emailUserKey ?> flex-container flex-center">
         <!-- EMAIL user / password -->
         <input type="text"
-               name="emailuser"
-               id="emailuser"
-               value="<?php echo $_['emailuser']; ?>"
+               name="<?= $emailUserKey ?>"
+               id="<?= $emailUserKey ?>"
+               value="<?= $_[$emailUserKey]; ?>"
                placeholder="<?php echo $l->t('Email-User');?>"
                autocomplete="username"
         />
-        <label for="emailuser"><?php echo $l->t('Login for email account.');?></label>
+        <label for="<?= $emailUserKey ?>"><?php echo $l->t('Login for email account.');?></label>
       </fieldset>
-      <fieldset class="emailpassword flex-container flex-center">
+      <fieldset class="<?= $emailPasswordKey ?> flex-container flex-center">
         <div class="password-container inline-block">
           <input class="cafevdb-password"
                  type="password"
-                 value="<?php echo $_['emailpassword']; ?>"
-                 id="emailpassword"
-                 name="emailpassword"
+                 value="<?= $_[$emailPasswordKey]; ?>"
+                 id="<?= $emailPasswordKey ?>"
+                 name="<?= $emailPasswordKey ?>"
                  placeholder="<?php echo $l->t('New Password');?>"
-                 data-typetoggle="#emailpassword-show"
+                 data-typetoggle="#<?= $emailPasswordKey ?>-show"
                  autocomplete="current-password"
           />
           <input class="cafevdb-password-show"
                  type="checkbox"
-                 id="emailpassword-show"
-                 name="emailpassword-show"
+                 id="<?= $emailPasswordKey ?>-show"
+                 name="<?= $emailPasswordKey ?>-show"
           />
           <label class="cafevdb-password-show"
-                 for="emailpassword-show">
+                 for="<?= $emailPasswordKey ?>-show">
             <?php echo $l->t('show');?>
           </label>
         </div>
@@ -148,26 +158,26 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
     <form class="bulk-email-settings">
       <fieldset class="emailtransport flex-container flex-column flex-grow">
         <legend><?php p($l->t('Bulk Email Transport')); ?></legend>
-        <label for="announcements-mailing-list"
+        <label for="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>"
                title="<?php echo $toolTips['emailform:transport:announcements:mailing-list']; ?>"
                class="settings-input-label"
         >
           <span><?php p($l->t('Announcements Mailing List')); ?></span>
         </label>
         <input type="text"
-               name="announcementsMailingList"
-               id="announcements-mailing-list"
-               value="<?php p($announcementsMailingList); ?>"
+               name="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>"
+               id="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>"
+               value="<?php p($_[ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY]); ?>"
                placeholder="<?php p($l->t('e.g. Playground <playground@lists.domain.tld>')); ?>"
                title="<?php echo $toolTips['emailform:transport:announcements:mailing-list']; ?>"
         />
         <br class="input-field-separater"/>
-        <label for ="announcements-mailing-list-autoconf"
+        <label for ="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>Autoconf"
                title="<?php echo $toolTips['mailing-list:announcements:autoconf']; ?>"
         >
           <input type="button"
-                 name="announcementsMailingListAutoconf"
-                 id="announcements-mailing-list-autoconf"
+                 name="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>Autoconf"
+                 id="<?= ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY ?>Autoconf"
                  value="<?php echo $l->t('configure'); ?>"
           />
           <?php p($l->t('auto-configure announcements mailing-list')); ?>
@@ -295,19 +305,18 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
       </fieldset>
     </form>
     <h4><?php echo $l->t('Bulk Email Privacy Notice'); ?></h4>
-    <form class="bulk-email-privacy-notice">
-      <fieldset class="bulk-email-privacy-notice">
+    <form class="<?= $privacyNoticeKey ?> bulk-email-privacy-notice">
+      <fieldset class="<?= $privacyNoticeKey ?> bulk-email-privacy-notice">
         <legend><?php p($l->t(
                 'This is the notice attached to all bulk-emails which are not directed to a mailing list or project-participants.'
                 . ' The idea is to give the recipients information why they receive the message'
                 . ' and how they can prevent further messages if they consider such messages as spam.')); ?></legend>
         <div class="bulk-email-privacy-notice container">
-          <textarea class="bulk-email-privacy-notice wysiwyg"
-                    name="bulkEmailPrivacyNotice"
+          <textarea class="<?= $privacyNoticeKey ?> bulk-email-privacy-notice wysiwyg"
+                    name="<?= $privacyNoticeKey ?>"
+                    id="<?= $privacyNoticeKey ?>"
                     cols="60"
-                    rows="10">
-            <?php p($bulkEmailPrivacyNotice); ?>
-          </textarea>
+                    rows="10"><?php p($_[$privacyNoticeKey]); ?></textarea>
         </div>
       </fieldset>
     </form>
@@ -318,26 +327,26 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
                 title="<?php echo $toolTips['mailing-list:domain']; ?>">
           <?php p($l->t('Mailing Lists Domain')); ?>
         </legend>
-        <label for="mailingListEmailDomain"
+        <label for="<?= $mailingListConfig['domain'] ?>"
                title="<?php echo $toolTips['mailing-list:domain:config']; ?>"
         >
           <input type="text"
-                 name="mailingListEmailDomain"
-                 id="mailingListEmailDomain"
-                 value="<?php echo $mailingListEmailDomain; ?>"
+                 name="<?= $mailingListConfig['domain'] ?>"
+                 id="<?= $mailingListConfig['domain'] ?>"
+                 value="<?php p($_[$mailingListConfig['domain']]) ?>"
                  placeholder="<?php p('e.g. lists.tld');?>"
                  required
           />
           <?php echo $l->t('Mailing-List Domain');?>
         </label>
         <br/>
-        <label for="mailingListWebPages"
-                 title="<?php echo $toolTips['mailing-list:domain:config']; ?>"
+        <label for="<?= $mailingListConfig['web'] ?>"
+               title="<?php echo $toolTips['mailing-list:domain:config']; ?>"
         >
           <input type="text"
-                 name="mailingListWebPages"
-                 id="mailingListWebPages"
-                 value="<?php echo $mailingListWebPages; ?>"
+                 name="<?= $mailingListConfig['web'] ?>"
+                 id="<?= $mailingListConfig['web'] ?>"
+                 value="<?php p($_[$mailingListConfig['web']]) ?>"
                  placeholder="<?php p('e.g. https://lists.tld/mailman');?>"
                  required
           />
@@ -350,27 +359,27 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
         >
           <?php p($l->t('REST API Account')); ?>
         </legend>
-        <label for="mailingListRestUrl"
+        <label for="<?= $mailingListRestConfig['url'] ?>"
                title="<?php echo $toolTips['mailing-list:restapi:url']; ?>"
         >
           <input type="text"
-                 name="mailingListRestUrl"
-                 id="mailingListRestUrl"
-                 value="<?php echo $mailingListRestUrl; ?>"
+                 name="<?= $mailingListRestConfig['url'] ?>"
+                 id="<?= $mailingListRestConfig['url'] ?>"
+                 value="<?php p($_[$mailingListRestConfig['url']]); ?>"
                  placeholder="<?php p('http://localhost:8001');?>"
                  required
           />
           <?php echo $l->t('Mailing-List REST URL');?>
         </label>
         <br/>
-        <label for="mailingListRestUser"
+        <label for="<?= $mailingListRestConfig['user'] ?>"
                title="<?php echo $toolTips['mailing-list:restapi:user']; ?>"
         >
           <input type="text"
-                 name="mailingListRestUser"
-                 id="mailingListRestUser"
+                 name="<?= $mailingListRestConfig['user'] ?>"
+                 id="<?= $mailingListRestConfig['user'] ?>"
                  autocomplete="username"
-                 value="<?php echo $mailingListRestUser; ?>"
+                 value="<?php p($_[$mailingListRestConfig['user']]); ?>"
                  placeholder="<?php echo $l->t('User');?>"
                  required
                  autocomplete="username"
@@ -378,27 +387,27 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
           <?php echo $l->t('REST User');?>
         </label>
         <br/>
-        <label for="mailingListRestPassword"
+        <label for="<?= $mailingListRestConfig['password'] ?>"
                title="<?php echo $toolTips['mailing-list:restapi:password']; ?>"
         >
           <div class="password-container inline-block">
             <input class="cafevdb-password"
-                   name="mailingListRestPassword"
+                   name="<?= $mailingListRestConfig['password'] ?>"
                    type="password"
                    autocomplete="current-password"
-                   value="<?php echo $mailingListRestPassword; ?>"
-                   id="mailingListRestPassword"
+                   value="<?php p($_[$mailingListRestConfig['password']]); ?>"
+                   id="<?= $mailingListRestConfig['password'] ?>"
                    placeholder="<?php echo $l->t('Password');?>"
-                   data-typetoggle="#mailingListRestPassword-show"
+                   data-typetoggle="#<?= $mailingListRestConfig['password'] ?>-show"
                    required
             />
             <input class="cafevdb-password-show"
                    type="checkbox"
-                   id="mailingListRestPassword-show"
-                   name="mailingListRestPassword-show"
+                   id="<?= $mailingListRestConfig['password'] ?>-show"
+                   name="<?= $mailingListRestConfig['password'] ?>-show"
             />
             <label class="cafevdb-password-show"
-                   for="mailingListRestPassword-show">
+                   for="<?= $mailingListRestConfig['password'] ?>-show">
               <?php echo $l->t('show');?>
             </label>
           </div>
@@ -411,25 +420,25 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
         >
           <?php p($l->t('Defaults for Generated Lists')); ?>
         </legend>
-        <label for="mailingListDefaultOwner"
+        <label for="<?= $mailingListConfig['owner'] ?>"
                title="<?php echo $toolTips['mailing-list:generated:defaults:owner']; ?>"
         >
           <input type="text"
-                 name="mailingListDefaultOwner"
-                 id="mailingListDefaultOwner"
-                 value="<?php p($mailingListDefaultOwner); ?>"
+                 name="<?= $mailingListConfig['owner'] ?>"
+                 id="<?= $mailingListConfig['owner'] ?>"
+                 value="<?php p($_[$mailingListConfig['owner']]); ?>"
                  placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
           />
           <?php p($l->t('Default List-Owner'));?>
         </label>
         <br/>
-        <label for="mailingListDefaultModerator"
+        <label for="<?= $mailingListConfig['moderator'] ?>"
                title="<?php echo $toolTips['mailing-list:generated:defaults:moderator']; ?>"
         >
           <input type="text"
-                 name="mailingListDefaultModerator"
-                 id="mailingListDefaultModerator"
-                 value="<?php p($mailingListDefaultModerator); ?>"
+                 name="<?= $mailingListConfig['moderator'] ?>"
+                 id="<?= $mailingListConfig['moderator'] ?>"
+                 value="<?php p($_[$mailingListConfig['moderator']]); ?>"
                  placeholder="<?php p($l->t('someone@somewhere.tld')); ?>"
           />
           <?php p($l->t('Default List-Moderator'));?>
@@ -444,13 +453,13 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
              value="<?php echo $l->t('Test Email Setup'); ?>"
              title="<?php echo $toolTips['emailtest']; ?>"
       />
-      <input id="emailtestmode"
+      <input id="<?= ConfigConstants::EMAIL_TEST_MODE ?>"
              type="checkbox"
              class="checkbox"
-             name="emailtestmode"
-             <?= $_['emailtestmode'] == 'on' ? 'checked="checked"' : ''; ?>
+             name="<?= ConfigConstants::EMAIL_TEST_MODE ?>"
+             <?= $_[ConfigConstants::EMAIL_TEST_MODE] == 'on' ? 'checked="checked"' : ''; ?>
       />
-      <label for="emailtestmode"
+      <label for="<?= ConfigConstants::EMAIL_TEST_MODE ?>"
              title="<?php echo $l->t('Email test-mode; send emails only to the email test-address.') ?>">
         <?php echo $l->t('Test-Mode'); ?>
       </label>
