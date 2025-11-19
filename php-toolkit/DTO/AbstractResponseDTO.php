@@ -41,6 +41,6 @@ abstract class AbstractResponseDTO extends AbstractDTO
    */
   public function response(int $httpStatusCode = Http::STATUS_OK): DataResponse
   {
-    return new DataResponse($this, status: $httpStatusCode);
+    return new DataResponse($this, statusCode: $httpStatusCode);
   }
 }

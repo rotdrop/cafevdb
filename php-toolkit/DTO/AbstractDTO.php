@@ -43,8 +43,10 @@ abstract class AbstractDTO implements \JsonSerializable
   protected static function initKeys(): void
   {
     if (empty(static::$keys[static::class])) {
-      static::$keys[static::class] = (new ReflectionClass(static::class))
-        ->getProperties(ReflectionProperty::IS_PUBLIC);
+      static::$keys[static::class] = array_map(
+        fn(ReflectionProperty $p) => $p->getName(),
+        (new ReflectionClass(static::class))->getProperties(ReflectionProperty::IS_PUBLIC),
+      );
     }
   }
 
@@ -54,7 +56,7 @@ abstract class AbstractDTO implements \JsonSerializable
     static::initKeys();
     $result = [];
     foreach (static::$keys[static::class] as $key) {
-      $value = $this->${$key};
+      $value = $this->{$key};
       if ($value instanceof DateTimeInterface) {
         $value = $value->format(DateTime::W3C);
       }
