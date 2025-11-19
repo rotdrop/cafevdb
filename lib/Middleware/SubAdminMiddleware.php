@@ -67,7 +67,7 @@ class SubAdminMiddleware extends Middleware
   {
     $reflectionMethod = new ReflectionMethod($controller, $methodName);
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\SubAdminRequired::class)) {
-      $this->logInfo('Middleware attribute match');
+      // $this->logInfo('Middleware attribute match');
       if (!$this->configService->isSubAdminOfGroup()) {
         throw new NotAdminException($this->l->t('Logged in user must be a sub-admin of the orchestra group'));
       }
