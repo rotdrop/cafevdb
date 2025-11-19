@@ -416,7 +416,7 @@ const ajaxFailData = (
       console.log('unknown response');
     }
   }
-  // console.info(data);
+  console.info('AJAX FAIL DATA RETURN', { data });
   return data;
 };
 
