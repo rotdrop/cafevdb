@@ -117,7 +117,7 @@ function messages(messages: undefined|string|string[], options: ToastOptions = {
       }
     }
   }
-  return messages || [];
+  return messages ?? [];
 }
 
 export {
