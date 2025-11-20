@@ -41,17 +41,6 @@ type TooltipOptions = Tooltip.Options & {
   timestamp: boolean,
 };
 
-type TooltipMethods =
-  | 'show'
-  | 'hide'
-  | 'toggle'
-  | 'enable'
-  | 'disable'
-  | 'toggleEnabled'
-  | 'update'
-  | 'setContent'
-  | 'dispose';
-
 const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
 const vendorOriginalTitleAttribute = 'data-bs-original-title' as const;
 const appTitleKey = joinLiterals('')(appName, 'Title');
@@ -230,12 +219,12 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
   }
 }
 
-function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: TooltipMethods|Partial<TooltipOptions>) {
-  const $this = $(this);
-  if (typeof config === 'undefined') {
-    config = {};
-  }
-  if (typeof config === 'object' && Object.entries(config).length === 0) {
+type TooltipArgument = Parameters<Tooltip.jQueryInterface>[0];
+
+function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<TooltipOptions>|TooltipArgument) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const $this = this; // $(this);
+  if (arguments.length === 1 && typeof config !== 'string') {
     const optionsForAll = $.extend(true, {}, defaultOptions, config);
     if (typeof optionsForAll.placement === 'string') {
       const words = optionsForAll.placement.split(' ');
