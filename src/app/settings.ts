@@ -846,11 +846,6 @@ const afterLoad = function(container?: JQuery) {
     } // fieldset emailpassword
 
     {
-      const $emailAccountDistribute = $emailContainer.find<HTMLInputElement>('#' + ConfigConstants.EMAIL_ACCOUNT_DISTRIBUTE);
-      simpleSetHandler($emailAccountDistribute, 'click');
-    }
-
-    {
       const $container = $emailContainer.find('form.serversettings');
       const $serverSelects = $container.find<HTMLSelectElement>(
         [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map(x => 'select#' + x).join(','),
