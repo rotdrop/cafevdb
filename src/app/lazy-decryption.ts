@@ -100,15 +100,17 @@ const metaDataText = function(metaData: Record<string, undefined|null|string>|st
   return metaData.join('<br/>');
 };
 
-const getData = ($element: JQuery, key: string) => {
+const getData = ($element: JQuery, key: string, silent: boolean = false) => {
   const data = $element.attr('data-' + key);
-  if (!data) {
+  if (!silent && !data) {
     console.error('DATA ATTRIBUTE IS EMPTY DURING LAZY DECRYPTION', { $element, key });
   }
   return data;
 };
 const getDataCryptoHash = ($element: JQuery) => getData($element, DataConstants.DATA_CRYPTO_HASH);
-const getDataSealedValue = ($element: JQuery) => getData($element, DataConstants.DATA_SEALED_VALUE);
+// sealed data is only there for special filter selects, otherwise use the option value
+const getDataSealedValue = ($element: JQuery) =>
+  getData($element, DataConstants.DATA_SEALED_VALUE, true);
 const getDataMetaData = ($element: JQuery) => getData($element, DataConstants.DATA_META_DATA);
 const getDataPMEValues = ($element: JQuery) => {
   const data = getData($element, DataConstants.DATA_PME_VALUES);
@@ -223,16 +225,19 @@ const lazyBatchDecryptValues = function($container: JQuery) {
     if (!metaData) {
       return;
     }
-    const $options = getOptions($filter);
-    $options.each(function() {
+    getOptions($filter).each(function() {
       const $option = $(this);
+      if ($option.val() === '' || $option.val() === '*') {
+        // skip special placeholder filters.
+        return;
+      }
       const cryptoHash = getDataCryptoHash($option);
       const cachedData = getCachedCryptoData(cryptoHash);
       if (cachedData) {
         replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
         return;
       }
-      const sealedData = getDataSealedValue($option) || $option.val() as string|undefined;
+      const sealedData = (getDataSealedValue($option) ?? $option.val()) as string|undefined;
       if (!cryptoHash || !sealedData || sealedData === '*') {
         return;
       }
