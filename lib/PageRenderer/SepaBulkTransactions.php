@@ -454,7 +454,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'data' => [
             DataConstants::DATA_CRYPTO_HASH => '$table.crypto_hash',
             DataConstants::DATA_SEALED_VALUE => '$table.sealed_value',
-            DataConstants::META_DATA_ATTR => "'iban'",
+            DataConstants::DATA_META_DATA => "'iban'",
           ],
         ],
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
@@ -476,7 +476,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'postfix' => '</div></div>',
           'popup' => 'data',
           'attributes' => [
-            'data-' . DataConstants::META_DATA_ATTR => 'iban',
+            'data-' . DataConstants::DATA_META_DATA => 'iban',
           ],
         ],
       ]);

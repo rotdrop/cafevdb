@@ -589,7 +589,7 @@ class SepaBankAccounts extends PMETableViewBase
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
           DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-          DataConstants::META_DATA_ATTR => '"bankAccountOwner"', // SQL STRING
+          DataConstants::DATA_META_DATA => '"bankAccountOwner"', // SQL STRING
         ],
       ],
       'values|ACP' => [
@@ -601,13 +601,13 @@ class SepaBankAccounts extends PMETableViewBase
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
           DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-          DataConstants::META_DATA_ATTR => '"bankAccountOwner"', // SQL string
+          DataConstants::DATA_META_DATA => '"bankAccountOwner"', // SQL string
         ],
         'filters' => '$table.deleted IS NULL',
       ],
       'display' => [
         'attributes' => [
-          'data-' . DataConstants::META_DATA_ATTR => ConfigConstants::BANK_ACCOUNT_OWNER,
+          'data-' . DataConstants::DATA_META_DATA => ConfigConstants::BANK_ACCOUNT_OWNER,
         ],
       ],
     ];
@@ -654,7 +654,7 @@ class SepaBankAccounts extends PMETableViewBase
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
           DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-          DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
+          DataConstants::DATA_META_DATA => '"iban"', // SQL STRING
         ],
       ],
       'values|ACP' => [ // use full table contents for auto-completion
@@ -666,7 +666,7 @@ class SepaBankAccounts extends PMETableViewBase
         'data' => [
           'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
           DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-          DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
+          DataConstants::DATA_META_DATA => '"iban"', // SQL STRING
         ],
         'filters' => '$table.deleted IS NULL',
       ],
@@ -680,12 +680,12 @@ class SepaBankAccounts extends PMETableViewBase
           return $result;
         },
         'attributes' => [
-          'data-' . DataConstants::META_DATA_ATTR => 'iban',
+          'data-' . DataConstants::DATA_META_DATA => 'iban',
         ],
       ],
       'display|LF' => [
         'attributes' => [
-          'data-' . DataConstants::META_DATA_ATTR => 'iban',
+          'data-' . DataConstants::DATA_META_DATA => 'iban',
         ],
       ],
     ];

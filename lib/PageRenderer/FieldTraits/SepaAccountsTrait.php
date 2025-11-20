@@ -230,7 +230,7 @@ trait SepaAccountsTrait
             'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
             'postfix' => '</div></div>',
             'attributes' => [
-              'data-' . DataConstants::META_DATA_ATTR => 'iban',
+              'data-' . DataConstants::DATA_META_DATA => 'iban',
             ],
           ],
           'sort' => true,
@@ -242,7 +242,7 @@ trait SepaAccountsTrait
             'orderby' => '$table.musician_id ASC, $table.sequence ASC',
             'data' => [
               DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-              DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
+              DataConstants::DATA_META_DATA => '"iban"', // SQL STRING
             ],
           ],
           'values2glue' => '<br/>',

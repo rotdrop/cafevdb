@@ -1647,7 +1647,7 @@ WHERE dsf.id IS NOT NULL',
         'values' => [
           'data' => [
             DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
-            DataConstants::META_DATA_ATTR => '"iban"', // SQL STRING
+            DataConstants::DATA_META_DATA => '"iban"', // SQL STRING
           ],
         ],
         'display' => [
@@ -1666,13 +1666,13 @@ WHERE dsf.id IS NOT NULL',
             return $result;
           },
           'attributes' => [
-            'data-' . DataConstants::META_DATA_ATTR => 'iban',
+            'data-' . DataConstants::DATA_META_DATA => 'iban',
           ],
         ],
         'display|LF' => [
           'popup' => 'data',
           'attributes' => [
-            'data-' . DataConstants::META_DATA_ATTR => 'iban',
+            'data-' . DataConstants::DATA_META_DATA => 'iban',
           ],
         ],
       ]);
