@@ -137,7 +137,7 @@ class CryptoController extends Controller
     return new DTO\UnsealedData(
       hash: md5($sealedData),
       data: $unsealedData,
-      contenxt: $context,
+      context: $context,
       metaData: $metaData,
     );
   }
