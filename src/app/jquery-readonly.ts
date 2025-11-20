@@ -68,10 +68,12 @@ const overrideProp = function<T extends HTMLElement>(
   property: string|JQuery.PlainObject,
   propertyValue?: ValueType,
 ) {
-  if (this.length === 0) {
-    return;
-  }
   const value: undefined|boolean = propertyValue as undefined|boolean;
+  // eslint-disable-next-line
+  if (this.length === 0) {
+    // @ts-expect-error 2345 DO NOT CARE
+    return vanillaProp.call(this, property, propertyValue);
+  }
   if (propertyValue === undefined) {
     if (typeof property === 'string') {
       const $this = this.first();
