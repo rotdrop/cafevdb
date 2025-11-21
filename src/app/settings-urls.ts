@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { UrlOptions } from '@nextcloud/router';
 
@@ -49,7 +50,7 @@ const generateSettingsUrl = (
  * @param [urlOptions] TBD.
  */
 const setPersonalUrl = (
-  url: string,
+  url: EnumPersonalSettingsKey,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
 ) => generateSettingsUrl('personal/set/' + url, urlParams, urlOptions);

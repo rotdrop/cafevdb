@@ -142,33 +142,47 @@ class PersonalSettingsController extends Controller
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
-    switch ($parameter) {
-      case 'tooltips':
-      case 'restorehistory':
-      case 'filtervisibility':
-      case 'directchange':
-      case 'deselectInvisibleMiscRecs':
-      case 'showdisabled':
-      case 'expertMode':
-      case 'financeMode':
+    try {
+      $key = EnumPersonalSettingsKey::get($parameter);
+    } catch (Throwable $t) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unknown configuration key "%s".', $parameter),
+      );
+    }
+    switch (key) {
+      case EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS:
+      case EnumPersonalSettingsKey::DIRECT_CHANGE:
+      case EnumPersonalSettingsKey::EXPERT_MODE:
+      case EnumPersonalSettingsKey::FINANCE_MODE:
+      case EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY:
+      case EnumPersonalSettingsKey::RESTORE_HISTORY:
+      case EnumPersonalSettingsKey::SHOW_DISABLED:
+      case EnumPersonalSettingsKey::TOOL_TIPS_ENABLED:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]),
+          );
         }
         $stringValue = $realValue ? 'on' : 'off';
         $this->setUserValue($parameter, $stringValue);
-        return self::response($this->l->t('Switching %2$s %1$s', [
-          $this->l->t($stringValue),
-          $this->l->t($parameter),
-        ]));
-      case 'pagerows':
+        return (new DTO\MessagesResponse([
+          $this->l->t('Switching %2$s %1$s', [ $this->l->t($stringValue), $this->l->t($parameter), ]),
+        ]))->response();
+
+      case EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
         if ($realValue === false) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]),
+          );
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
-      case 'debugmode':
+        return (new DTO\MessagesResponse([
+          $this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]),
+        ]))->respones();
+
+      case EnumPersonalSettingsKey::DEBUG_MODE:
         if (!is_array($value)) {
           $debugModes = [];
         } else {
@@ -179,41 +193,66 @@ class PersonalSettingsController extends Controller
           $debug |= $item['value'];
         }
         if ($debug > ConfigConstants::DEBUG_ALL) {
-          return grumble($this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]),
+          );
         }
-        $this->setConfigValue('debugmode', $debug);
+        $this->setUserValue(EnumPersonalSettingsKey::DEBUG_MODE->value, $debug);
         if ($debug & ConfigConstants::DEBUG_CSP) {
           // generate a random magic key for sort-of authentication
-          $this->setAppValue('cspfailuretoken', $this->generateRandomBytes(128));
+          $this->setUserValue('cspfailuretoken', $this->generateRandomBytes(128));
         } else {
-          $this->deleteAppValue('cspfailuretoken');
+          $this->deleteUserValue('cspfailuretoken');
         }
-        return new DataResponse([
-          'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
-          'value' => $debug
-        ]);
-      case 'wysiwygEditor':
+        return (new DTO\ValueResponse(
+          messages: [
+            $this->l->t('Setting %2$s to %1$d', [$debug, $key->value]),
+          ],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER:
+        $realValue = Util::normalizeSpaces($value);
+        $this->setUserValue(EnumSimpleSettingsKey::DEBUG_QUERY_SQL_FILTER, $realValue);
+        return (new DTO\ValueResponse(
+          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::WYSIWYG_EDITOR:
         if (!isset(ConfigConstants::WYSIWYG_EDITORS[$value])) {
-          return grumble($this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]),
+          );
         }
         $this->setUserValue($parameter, $value);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$value, $parameter]));
-      case 'encryptionkey':
+        return (new DTO\ValueResponse(
+          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::ENCRYPTION_KEY:
         // Get data
         if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
-          return self::grumble($this->l->t('Invalid request data: "%s".', [ print_r($value, true) ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid request data: "%s".', [ print_r($value, true) ]),
+          );
         }
         $password = $value['loginpassword'];
         $encryptionkey = $value['encryptionkey'];
 
         // Re-validate the user
         if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
-          return self::grumble($this->l->t('Invalid password for "%s".', [$this->userId()]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid password for "%s".', [$this->userId()]),
+          );
         }
 
         // Then check whether the key is correct
         if (!$this->encryptionKeyValid($encryptionkey)) {
-          return self::grumble($this->l->t('Invalid encryption key.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid encryption key.'),
+          );
         }
 
         // So generate a new key-pair and store the key. This will only
@@ -232,7 +271,7 @@ class PersonalSettingsController extends Controller
           );
         }
         return self::response($this->l->t('Encryption key stored.'));
-      case 'emailDraftAutoSave':
+      case EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -241,14 +280,19 @@ class PersonalSettingsController extends Controller
           } elseif ($realValue === false) {
             $realValue = 0;
           } else {
-            return self::grumble($this->l->t('Value "%1$s" for set "%2$s" must be a non-negative integer or false.', [$value, $parameter]));
+            throw new Exceptiosn\EnduserNotificationException(
+              $this->l->t('Value "%1$s" for set "%2$s" must be a non-negative integer or false.', [$value, $parameter]),
+            );
           }
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
+        return (new DTO\MessagesResponse(
+          [$this->l->t('Setting %2$s to %1$s', [$realValue, $parameter])],
+        ))->response();
+
       default:
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    throw new Exceptions\EnduserNotificationException($this->l->t('Unknown Request'));
   }
 
   /**

@@ -47,6 +47,7 @@ import {
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
   SET_DEBUG_MODES,
+  SET_DEBUG_QUERY_SQL_FILTER,
   SET_DESELECT_INVISIBLE,
   SET_DIRECT_CHANGE,
   SET_EXPERT_MODE,
@@ -78,11 +79,10 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type SetterArgs<T = any, E extends HTMLElement = HTMLElement> = {
     value: T,
-    callbacks: Callbacks,
     showMessage?: typeof messages,
     $control?: JQuery<E>,
   };
-  type BoolSetterArgs = SetterArgs<boolean>
+  type BoolSetterArgs = SetterArgs<boolean, HTMLInputElement>
 
   export interface EventArgs {
     // mapping of 'event name' => 'event type'
@@ -113,12 +113,13 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
 
     [SET_DEBUG_MODES]: SetterArgs<{ value: number }[], HTMLSelectElement>,
+    [SET_DEBUG_QUERY_SQL_FILTER]: SetterArgs<string, HTMLSelectElement>,
     [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
     [SET_DIRECT_CHANGE]: BoolSetterArgs,
     [SET_EXPERT_MODE]: BoolSetterArgs,
     [SET_FINANCE_MODE]: BoolSetterArgs,
     [SET_INITIAL_FILTER_VISIBILITY]: BoolSetterArgs,
-    [SET_PAGE_ROWS]: SetterArgs<number>,
+    [SET_PAGE_ROWS]: SetterArgs<number, HTMLSelectElement>,
     [SET_RESTORE_HISTORY]: BoolSetterArgs,
     [SET_SHOW_DISABLED]: BoolSetterArgs,
     [SET_TOOLTIPS_MODE]: BoolSetterArgs,

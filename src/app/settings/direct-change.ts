@@ -48,13 +48,13 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
   globalState.PHPMyEdit.directChange = value;
   $('.personal-settings input[type="checkbox"].directchange').prop('checked', value);
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('directchange'), { value })
-      .done(async function(data) {
-        showMessage(data.message);
+    $.post(setPersonalUrl('directChange'), { value })
+      .done(function(data) {
+        showMessage(data.messages);
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         reject(errorThrown);
       }),
   );

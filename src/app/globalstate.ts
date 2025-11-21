@@ -25,6 +25,7 @@
 import type { PHPMyEditState } from './pme-state.ts';
 import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
 import { showMessage } from '@nextcloud/dialogs';
+import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 
 type Toastify = ReturnType<typeof showMessage>;
 
@@ -37,14 +38,15 @@ export interface GlobalState {
   vueMode?: boolean,
   eventBus?: EventBus,
   orchestra: string,
-  financeMode: boolean,
   wikiNameSpace: string,
   toolTipsEnabled: boolean,
   userPermissions: number,
   uploadMaxFileSize?: number,
-  debugModes: number,
-  expertMode: boolean,
-  restoreHistory: boolean,
+  [EnumPersonalSettingsKey.FINANCE_MODE]: boolean,
+  [EnumPersonalSettingsKey.DEBUG_MODE]: number,
+  [EnumPersonalSettingsKey.DEBUG_QUERY_SQL_FILTER]: string,
+  [EnumPersonalSettingsKey.EXPERT_MODE]: boolean,
+  [EnumPersonalSettingsKey.RESTORE_HISTORY]: boolean,
 
   currencyCode: string,
   currencySymbol: string,

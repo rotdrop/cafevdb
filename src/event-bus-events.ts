@@ -42,6 +42,7 @@ export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
 export const WIKI_POPUP = appEventName('wiki-popup');
 
 export const SET_DEBUG_MODES = appEventName('set-debug-modes');
+export const SET_DEBUG_QUERY_SQL_FILTER = appEventName('set-debug_query-sql-filter');
 export const SET_DESELECT_INVISIBLE = appEventName('set-deselect-invsible');
 export const SET_DIRECT_CHANGE = appEventName('set-direct-change');
 export const SET_EXPERT_MODE = appEventName('set-expert-mode');

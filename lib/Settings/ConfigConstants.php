@@ -376,8 +376,5 @@ class ConfigConstants
   public const WIKI_NAME_SPACE_KEY = 'wikinamespace';
 
   /** @var string */
-  public const DEBUG_MODE_KEY = 'debugmode';
-
-  /** @var string */
   public const ORCHESTRA_NAME_KEY = 'orchestra';
 }

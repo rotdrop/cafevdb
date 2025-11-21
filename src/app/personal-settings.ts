@@ -31,6 +31,7 @@ import * as Notification from './notification.ts';
 import { chosenActive, selected as selectedValues } from './select-utils.ts';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import setDebugModes from './settings/debug-modes.ts';
+import './settings/debug-query-sql-filter.ts';
 import setDeselectInvisible from './settings/deselect-invisible.ts';
 import setDirectChange from './settings/direct-change.ts';
 import setExpertMode from './settings/expert-mode.ts';
@@ -118,7 +119,7 @@ const documentReady = function() {
   });
 
   let firstReadyCallbackInvocation = true;
-  CAFEVDB.addReadyCallback(function() {
+  CAFEVDB.addReadyCallback(async () => {
     console.info('PERSONAL READY CALLBACK');
     if (firstReadyCallbackInvocation) {
       firstReadyCallbackInvocation = false;
@@ -218,7 +219,7 @@ const documentReady = function() {
       });
     ($('.personal-settings select.wysiwyg-editor') as JQuery<HTMLSelectElement>).each(function() {
       if (this !== $this[0]) {
-        selectedValues($(this), selectedValues($this));
+        selectedValues($(this), selectedValues($this) as string);
       }
     });
     return false;

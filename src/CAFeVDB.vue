@@ -169,6 +169,12 @@
                                   :disabled="false"
                                   :submit-button="false"
           />
+          <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugModes & DEBUG_QUERY)"
+                                     :label="t(appId, 'SQL Filter')"
+                                     :placeholder="t(appId, 'SQL filter regexp')"
+                                     :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
+                                     @submit="(filter) => { globalState.debugQuerySqlFilter = filter; } "
+          />
           <NcActions :force-name="true" :inline="1" :class="{ loading: appSettingsLoading }">
             <NcActionLink v-tooltip="hints['further-settings']"
                           :class="{ loading: appSettingsLoading }"
@@ -284,6 +290,7 @@ import IconHistorySave from 'vue-material-design-icons/ContentSave.vue'
 import IconHistorySaved from 'vue-material-design-icons/ContentSaveCheck.vue'
 import IconPageTemplate from './components/PageTemplateIcon.vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
+import TextFieldWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
 import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
 import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
@@ -293,8 +300,8 @@ import axios from '@nextcloud/axios'
 import generateAppUrl from './toolkit/util/generate-url.ts'
 import { storeToRefs } from 'pinia'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
-import allDebugOptions, { DEBUG_VUE } from './debug-modes.ts'
-import { enableVueDevTools, disableVueDevTools } from './toolkit/util/vue-devtools.ts'
+import allDebugOptions, { DEBUG_VUE, DEBUG_QUERY } from './debug-modes.ts'
+import { vueDevTools } from './toolkit/util/vue-devtools.ts'
 import { formatFileSize } from '@nextcloud/files'
 import {
   emit as asyncEmit,
@@ -479,13 +486,9 @@ const updatePersonalSettings = async (
   settingsLocked.value = true
   await asyncEmit(event, {
     value,
-    callbacks: {
-      always: async () => {
-        await nextTick()
-        settingsLocked.value = false
-      },
-    },
   })
+  await nextTick()
+  settingsLocked.value = false
 }
 
 asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => {
@@ -570,11 +573,7 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
   await nextTick()
   settingsLocked.value = false
 
-  if (globalState.debugModes & DEBUG_VUE) {
-    enableVueDevTools()
-  } else {
-    disableVueDevTools()
-  }
+  vueDevTools({ enabled: !!(globalState.debugModes & DEBUG_VUE) })
 }
 
 const historyHasBeenSaved = computed(() => history.modificationTime === history.saveTime)
@@ -632,6 +631,10 @@ const reactifyGlobalState = function() {
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue),
   )
   watch(() => globalState.debugModes, updateDebugModes)
+  watch(
+    () => globalState.debugQuerySqlFilter,
+    (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_QUERY_SQL_FILTER, value, oldValue),
+  )
   watch(
     () => globalState.restoreHistory,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_RESTORE_HISTORY, value, oldValue),

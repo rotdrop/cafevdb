@@ -27,34 +27,35 @@ import { setPersonalUrl } from './../settings-urls.ts';
 import * as Ajax from './../ajax.ts';
 import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_RESTORE_HISTORY as EVENT } from '../../event-bus-events.ts';
+import { SET_DEBUG_QUERY_SQL_FILTER } from '../../event-bus-events.ts';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
-subscribe(EVENT, (event) => {
+subscribe(SET_DEBUG_QUERY_SQL_FILTER, (event) => {
   setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
- * @param value Value to set.
+ * @param value Value to store and propagate to all selects.
  *
  * @param showMessage Custom function for displaying
  * feedback from the controller, defaults to a standard toast popup.
  *
  * @param _$control Originating select, may be undefined.
  */
-const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
+const setter = (value: string, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
-  globalState.PHPMyEdit.restoreHistory = value;
-  $('.personal-settings input[type="checkbox"].restorehistory').prop('checked', value);
+  globalState.debugQuerySqlFilter = value;
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('restoreHistory'), { value })
-      .done(function(data) {
+    $.post(setPersonalUrl('debugQuerySqlFilter'), { value })
+      .done(async function(data) {
         showMessage(data.messages);
+        console.log(data);
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        await Ajax.handleError(xhr, status, errorThrown);
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        // console.error(data);
         reject(errorThrown);
       }),
   );

@@ -45,7 +45,7 @@ subscribe(SET_DEBUG_MODES, (event) => {
  * @param $control Originating select, may be undefined.
  */
 const setter = (
-  selection: { value: number }[],
+  selection: { value: number|string, name?: string }[],
   showMessage?: typeof Notification.messages,
   $control?: JQuery<HTMLSelectElement>,
 ) => {
@@ -57,15 +57,15 @@ const setter = (
     }
   });
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('debugmode'), { value: selection })
+    $.post(setPersonalUrl('debugMode'), { value: selection })
       .done(async function(data) {
-        showMessage(data.message);
+        showMessage(data.messages);
         console.log(data);
         globalState.debugModes = data.value;
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         reject(errorThrown);
       }),
   );

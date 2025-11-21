@@ -54,15 +54,15 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, $con
     $('#tooltipbutton').removeClass('tooltips-enabled').addClass('tooltips-disabled');
   }
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('tooltips'), { value: globalState.toolTipsEnabled })
-      .done(async function(data) {
+    $.post(setPersonalUrl('toolTipsEnabled'), { value: globalState.toolTipsEnabled })
+      .done(function(data) {
         if (!$control?.is('#tooltipbutton-checkbox')) { // don't annoy with feedback
-          showMessage(data.message);
+          showMessage(data.messages);
         }
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         reject(errorThrown);
       }),
   );

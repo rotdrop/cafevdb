@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2022, 2023, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+
 script($appName, $assets['js']['asset']);
 style($appName, $assets['css']['asset']);
 
@@ -38,7 +40,8 @@ $experttitle    = $toolTips['expert-operations'];
 $financetitle   = $toolTips['finance-operations'];
 $debugtitle     = $toolTips['debug-mode'];
 
-$pageRows = floor($_['pagerows'] / 10) * 10;
+$pageRowsDefault = $_[EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value];
+$pageRows = floor($pageRowsDefault / 10) * 10;
 $pageRowsOptions = array(-1 => '&infin;');
 $maxRows = 100;
 for ($i = 10; $i <= $maxRows; $i += 10) {

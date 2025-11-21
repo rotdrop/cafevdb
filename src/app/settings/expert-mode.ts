@@ -55,9 +55,9 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
   $.fn.cafevTooltip.remove(); // remove any left-over items.
   globalState.expertMode = value;
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('expert-mode'), { value })
-      .done(async function(data) {
-        showMessage(data.message);
+    $.post(setPersonalUrl('expertMode'), { value })
+      .done(function(data) {
+        showMessage(data.messages);
         if (globalState.PHPMyEdit !== undefined) {
           const pmeForm = $('#content ' + PHPMyEdit.formSelector);
           pmeForm.each(function() {
@@ -68,7 +68,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         reject(errorThrown);
       }),
   );

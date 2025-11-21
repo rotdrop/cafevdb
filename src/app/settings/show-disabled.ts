@@ -49,9 +49,9 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
   globalState.PHPMyEdit.showDisabled = value;
   $('.personal-settings input[type="checkbox"].showdisabled').prop('checked', value);
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('showdisabled'), { value })
-      .done(async function(data) {
-        showMessage(data.message);
+    $.post(setPersonalUrl('showDisabled'), { value })
+      .done(function(data) {
+        showMessage(data.messages);
         const $content = $('#content, #content-vue');
         const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
         console.log('form', $pmeForm);
@@ -73,7 +73,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         reject(errorThrown);
       }),
   );

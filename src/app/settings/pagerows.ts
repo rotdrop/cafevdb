@@ -44,23 +44,23 @@ subscribe(SET_PAGE_ROWS, (event) => {
  *
  * @param $control Originating select, may be undefined.
  */
-const setter = (value: number, showMessage?: typeof Notification.messages, $control?: JQuery) => {
+const setter = (value: number, showMessage?: typeof Notification.messages, $control?: JQuery<HTMLSelectElement>) => {
   showMessage = showMessage || Notification.messages;
-  $('.personal-settings select.pagerows').each(function() {
+  $('.personal-settings').find<HTMLSelectElement>('select.pagerows').each(function() {
     if (this !== $control?.[0]) {
       selectedValues($(this), '' + value);
     }
   });
   globalState.PHPMyEdit.pageRowsDefault = value;
   return new Promise((resolve, reject) =>
-    $.post(setPersonalUrl('pagerows'), { value })
-      .done(async function(data) {
-        showMessage(data.message);
+    $.post(setPersonalUrl('pageRowsDefault'), { value })
+      .done(function(data) {
+        showMessage(data.messages);
         console.log(data);
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        await Ajax.handleError(xhr, status, errorThrown);
         // console.error(data);
         reject(errorThrown);
       }),

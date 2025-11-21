@@ -36,6 +36,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 use OCA\CAFEVDB\Crypto;
@@ -61,7 +62,7 @@ class EncryptionService
   public const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
   public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
-  public const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
+  private const USER_ENCRYPTION_KEY_KEY = EnumPersonalSettingsKey::ENCRYPTION_KEY;
   public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
   public const CONFIG_LOCK_KEY = 'configlock';
@@ -81,10 +82,6 @@ class EncryptionService
     ConfigConstants::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
     'orchestraLocale', // used in the member's app for consistent currencies etc.
     self::APP_ENCRYPTION_KEY_HASH_KEY,
-  ];
-
-  const SHARED_PRIVATE_VALUES = [
-    self::USER_ENCRYPTION_KEY_KEY,
   ];
 
   /** @var Crypto\SymmetricCryptorInterface */
@@ -344,7 +341,10 @@ class EncryptionService
   /** @return null|string */
   public function getUserEncryptionKey():?string
   {
-    return $this->getSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, null);
+    return $this->getSharedPrivateValue(
+      self::USER_ENCRYPTION_KEY_KEY,
+      $this->getSharedPrivateValue(strtolower(self::USER_ENCRYPTION_KEY_KEY), null),
+    );
   }
 
   /**

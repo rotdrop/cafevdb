@@ -31,6 +31,7 @@ use OCP\IInitialStateService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
@@ -109,11 +110,11 @@ class PersonalForm
         'CAFEVDB',
         [
           'appName' => $this->appName(),
-          'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
+          EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, $this->getUserValue('tooltips', 'on')),
           'language' => $this->getUserValue('lang', 'en'),
-          'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
-          'expertMode' => $this->getUserValue('expertMode'),
-          'financeMode' => $this->getUserValue('financeMode'),
+          EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumParticipationStatus::WYSIWYG_EDITOR->value, 'tinymce'),
+          EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE->value),
+          EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE->value),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
       $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
@@ -171,19 +172,19 @@ class PersonalForm
         'dateTimeZone' => $this->getDateTimeZone(),
         //
         'adminsettings' => $isGroupAdmin,
-        'encryptionkey' => $this->getAppEncryptionKey(),
-        'showToolTips' => $this->getUserValue('tooltips', 'on'),
-        'debugMode' => (int)$this->getConfigValue('debugmode', 0), // @todo depend on group admin
-        'pagerows' => $this->getUserValue('pagerows', 20),
+        EnumPersonalSettingsKey::ENCRYPTION_KEY->value => $this->getAppEncryptionKey(),
+        EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED),
+        EnumPersonalSettingsKey::DEBUG_MODE->value => (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE->value, (int)$this->getUserValue('debugmode', 0)),
+        EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => (int)$this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value, (int)$this->getUserValue('pagerows', 20)),
         'toolTips' => $this->toolTipsService(),
-        'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
-        'restorehistory' => $this->getUserValue('restorehistory', 'off'),
-        'directchange' => $this->getUserValue('directchange', 'off'),
-        'deselectInvisibleMiscRecs' => $this->getUserValue('deselectInvisibleMiscRecs', 'off'),
-        'showdisabled' => $this->getUserValue('showdisabled', 'off'),
-        'expertMode' => $this->getUserValue('expertMode', 'off'),
-        'financeMode' => $this->getUserValue('financeMode', 'off'),
-        'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
+        EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value, 'off'),
+        EnumPersonalSettingsKey::RESTORE_HISTORY->value => $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY->value, $this->getUserValue('restorehistory', 'off')),
+        EnumPersonalSettingsKey::DIRECT_CHANGE->value => $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE->value, $this->getUserValue('directchange', 'off')),
+        EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value, 'off'),
+        EnumPersonalSettingsKey::SHOW_DISABLED->value => $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED->value, $this->getUserValue('showdisabled', 'off')),
+        EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE->value, 'off'),
+        EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE->value, 'off'),
+        EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumParticipationStatus::WYSIWYG_EDITOR->value, self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigConstants::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
         'webPageTemplates' => $webPageTemplates,

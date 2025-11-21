@@ -55,6 +55,9 @@ import type {
   MailMergePayload,
   MailMergeResponse,
 } from './types/ajax/mail-merge.ts';
+import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import { vueDevTools } from './toolkit/util/vue-devtools.ts';
+import { EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
 
 type Toast = ReturnType<typeof showError>;
 
@@ -80,6 +83,8 @@ if (!window.OCA.CAFEVDB) {
 }
 
 const initialState = getInitialState<FilesInitialState>({ section: 'files' });
+
+vueDevTools({ enabled: !!((initialState?.[EnumPersonalSettingsKey.DEBUG_MODE] ?? 0) & DEBUG_VUE) });
 
 const projectBalancesFolder = initialState?.sharing.files.folders.projectBalances;
 const projectManagementFolder = initialState?.sharing.files.folders.projectManagement;
@@ -701,10 +706,13 @@ window.addEventListener('DOMContentLoaded', () => {
       case 'delete':
       case 'move-copy':
       case 'rename': {
+        // @ts-expect-error 2341
         const enabledMethod = fileAction._action.enabled;
+        // @ts-expect-error 2341
         fileAction._action.enabled = (nodes: Node[], view: View) =>
           (currentFolder && isSpecialEntryEnabled(currentFolder)
             ? false
+            // @ts-expect-error 2341
             : (enabledMethod ? enabledMethod.call(fileAction._action, nodes, view) : true));
         break;
       }

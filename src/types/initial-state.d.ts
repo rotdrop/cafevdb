@@ -22,6 +22,7 @@
  */
 
 import type { AddressBook as AddressBookInfo } from './address-book.d.ts';
+import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 
 export interface FilesInitialState {
   sharing: {
@@ -51,4 +52,5 @@ export interface FilesInitialState {
   contacts: {
     addressBooks: Record<number, AddressBookInfo>,
   },
-};
+  [EnumPersonalSettingsKey.DEBUG_MODE]: number,
+}
