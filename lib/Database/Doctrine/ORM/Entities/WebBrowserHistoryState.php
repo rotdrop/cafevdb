@@ -26,12 +26,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * Generic directory entry for a database-backed file.
@@ -61,7 +62,7 @@ class WebBrowserHistoryState implements \ArrayAccess
   protected string $userId;
 
   #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-  protected ?DateTimeInterface $created;
+  protected ?DateTimeImmutable $created;
 
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['key' => 'ASC'])]

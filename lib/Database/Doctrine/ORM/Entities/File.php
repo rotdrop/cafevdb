@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -104,7 +105,7 @@ class File implements \ArrayAccess
    */
   #[Gedmo\Timestampable(on: ['update', 'change'], field: 'fileData')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $updated;
+  protected ?DateTimeImmutable $updated;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null)

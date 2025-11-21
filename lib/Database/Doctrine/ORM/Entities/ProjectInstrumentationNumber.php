@@ -47,11 +47,11 @@ class ProjectInstrumentationNumber implements \ArrayAccess
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'instrumentationNumbers', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $project;
+  private Project $project;
 
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstrumentationNumbers', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $instrument;
+  private Instrument $instrument;
 
   /**
    * @var int
@@ -67,7 +67,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   private $quantity = '1';
 
   /**
-   * @var ProjectInstrument This is a list of registered instances.
+   * @var Collection<ProjectInstrument>
    */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
   private $projectInstruments;

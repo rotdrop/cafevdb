@@ -33,9 +33,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use DateTimeImmutable;
-use DateTimeInterface;
-
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -44,10 +42,7 @@ trait CreatedAtEntity
 {
   use CreatedAt;
 
-  /**
-   * @var DateTimeImmutable
-   */
   #[Gedmo\Timestampable(on: 'create')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $created;
+  protected ?DateTimeImmutable $created;
 }

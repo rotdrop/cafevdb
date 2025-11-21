@@ -35,15 +35,15 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
+
 /** Field $updated and setter/getter. */
 trait UpdatedAt
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var null|DateTimeInterface
-   */
-  protected ?DateTimeInterface $updated;
+  protected ?DateTimeImmutable $updated;
 
   /**
    * Sets updated.

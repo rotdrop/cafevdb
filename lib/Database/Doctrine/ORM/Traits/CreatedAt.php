@@ -25,16 +25,14 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use DateTimeInterface;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 /** Field $created and setter/getter. */
 trait CreatedAt
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var null|DateTimeInterface
-   */
-  protected ?DateTimeInterface $created;
+  protected ?DateTimeImmutable $created;
 
   /**
    * Sets created.

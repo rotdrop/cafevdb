@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeImmutable;
 use DateTimeInterface;
+
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -93,72 +94,80 @@ class Project implements \ArrayAccess
   private $mailingListId;
 
   /**
-   * @var \DateTimeImmutable
-   *
    * Optional registration start date. If not set then the online registration
    * is NOT available.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $registrationStartDate;
+  private ?DateTimeImmutable $registrationStartDate;
 
   /**
-   * @var \DateTimeImmutable
-   *
    * Optional registration deadline. If null then the date one day before the
    * first rehearsal is used, if set. Otherwise no registration dead-line is
    * imposed.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $registrationDeadline;
+  private ?DateTimeImmutable $registrationDeadline;
 
+  /** @var Collection<ProjectInstrumentationNumber> */
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private Collection $instrumentationNumbers;
 
   /**
+   * @var Collection<ProjectWebPage>
+   *
    * @todo this should cascade deletes
    */
   #[ORM\OneToMany(targetEntity: ProjectWebPage::class, mappedBy: 'project', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Collection $webPages;
 
   /**
+   * @var Collection<int, ProjectParticipantField>
+   *
    * @todo This does not work well with _AT_Gedmo\Translatable
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private Collection $participantFields;
 
+  /** @var Collection<ProjectParticipantFieldDatum> */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private Collection $participantFieldsData;
 
+  /** @var Collection<int, ProjectParticipant> */
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project', indexBy: 'musician_id')]
   private Collection $participants;
 
+  /** @var Collection<int, ProjectApplication> */
   #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'id')]
   private Collection $applications;
 
+  /** @var Collection<SepaDebitMandate> */
   #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'project')]
-  private $sepaDebitMandates;
+  private Collection $sepaDebitMandates;
 
+  /** @var Collection<CompositePayment> */
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'project')]
-  private $compositePayments;
+  private Collection $compositePayments;
 
+  /** @var Collection<ProjectPayment> */
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
-  private $payments;
+  private Collection $payments;
 
+  /** @var Collection<Invoice> */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'project')]
-  private $invoices;
+  private Collection $invoices;
 
+  /** @var Collection<ProjectInstrument> */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
-  private $participantInstruments;
+  private Collection $participantInstruments;
 
+  /** @var Collection<ProjectEvent> */
   #[ORM\OneToMany(targetEntity: ProjectEvent::class, mappedBy: 'project')]
-  private $calendarEvents;
+  private Collection $calendarEvents;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<SentEmail> */
   #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'project')]
-  private $sentEmail;
+  private Collection $sentEmail;
 
   /**
    * @var DatabaseStorage

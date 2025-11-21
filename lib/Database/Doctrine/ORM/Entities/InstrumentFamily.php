@@ -67,6 +67,7 @@ class InstrumentFamily implements \ArrayAccess
    */
   private string $untranslatedFamily;
 
+  /** @var Collection<Instrument> */
   #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private $instruments;
 

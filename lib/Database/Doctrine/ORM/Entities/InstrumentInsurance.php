@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +24,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeInterface;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 /**
  * InstrumentInsurance
@@ -47,83 +45,52 @@ class InstrumentInsurance implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var Musician
-   */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
-  private $instrumentHolder;
+  private Musician $instrumentHolder;
 
   /**
-   * @var Musician
-   *
    * A possibly different person which is the owner of the instrument. If NULL
    * we assume that the instrument holder is also the instrument owner.
    */
   #[ORM\ManyToOne(targetEntity: Musician::class, fetch: 'EXTRA_LAZY')]
-  private $instrumentOwner;
+  private Musician $instrumentOwner;
 
   /**
-   * @var Musician
-   *
    * A possibly different person which is responsible for paying the
    * insurance fees.
    */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payableInsurances', fetch: 'EXTRA_LAZY')]
-  private $billToParty;
+  private Musician $billToParty;
 
-  /**
-   * @var InsuranceRate
-   */
   #[ORM\JoinColumn(name: 'broker_id', referencedColumnName: 'broker_id', nullable: false)]
   #[ORM\JoinColumn(name: 'geographical_scope', referencedColumnName: 'geographical_scope', nullable: false)]
   #[ORM\ManyToOne(targetEntity: InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
-  private $insuranceRate;
+  private InsuranceRate $insuranceRate;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  private $object;
+  private string $object;
 
-  /**
-   * @var array
-   */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => false])]
-  private $accessory = false;
+  private ?bool $accessory = false;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  private $manufacturer;
+  private string $manufacturer;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
-  private $yearOfConstruction;
+  private string $yearOfConstruction;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
-  private $insuranceAmount;
+  private int $insuranceAmount;
 
-  /**
-   * @var \DateTime
-   */
   #[ORM\Column(type: 'date_immutable', nullable: false)]
-  private $startOfInsurance;
+  private DateTimeImmutable $startOfInsurance;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

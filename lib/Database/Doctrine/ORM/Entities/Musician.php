@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 
@@ -39,6 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 /**
  * Musician
@@ -98,11 +98,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private $displayName;
 
-  /**
-   * @var Types\EnumGender|null
-   */
   #[ORM\Column(type: 'EnumGender', nullable: true)]
-  private $gender;
+  private ?Types\EnumGender $gender;
 
   /**
    * This should look like a suitable user id, e.g.
@@ -125,7 +122,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
     options: [ 'separator' => '-', 'preferred' => ['nickName', 'surName'] ],
   )]
-  private $userIdSlug;
+  private ?string $userIdSlug;
 
   /**
    * @var string
@@ -134,25 +131,25 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * extensions.
    */
   #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true, options: ['collation' => 'ascii_bin'])]
-  private $userPassphrase;
+  private ?string $userPassphrase;
 
   /**
    * @var MusicianRowAccessToken
    */
   #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
-  private $rowAccessToken;
+  private ?string $rowAccessToken;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $city;
+  private ?string $city;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $street;
+  private ?string $street;
 
   /**
    * @var string
@@ -160,7 +157,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * The street-number. I may actually be alpha-numeric like "2a" or something, so it is a string.
    */
   #[ORM\Column(type: 'string', length: 32, nullable: true)]
-  private $streetNumber;
+  private ?string $streetNumber;
 
   /**
    * @var string
@@ -172,7 +169,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *  mail-merge operations.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $addressSupplement;
+  private ?string $addressSupplement;
 
   /**
    * @var string
@@ -180,71 +177,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * po-box component for the sake of supporting business contacts.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $poBox;
+  private ?string $poBox;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $country;
+  private ?string $country;
 
-  /**
-   * @var int|null
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['collation' => 'ascii_general_ci'])]
-  private $postalCode;
+  private ?string $postalCode;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 5, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $language;
+  private ?string $language;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $mobilePhone;
+  private ?string $mobilePhone;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $fixedLinePhone;
+  private ?string $fixedLinePhone;
 
-  /**
-   * @var \DateTime|null
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $birthday;
+  private DateTimeImmutable $birthday;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
-  private $email;
+  private ?string $email;
 
   /**
-   * @var Collection All email addresses.
+   * @var Collection<string, EmailAddress> All email addresses.
    */
   #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', cascade: ['remove', 'persist'], orphanRemoval: true, indexBy: 'address')]
   private $emailAddresses;
 
-  /**
-   * @var Types\EnumParticipationStatus|null
-   */
   #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
-  private $defaultParticipationStatus;
+  private Types\EnumParticipationStatus $defaultParticipationStatus;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private $remarks;
+  private ?string $remarks;
 
   /**
-   * @var bool|null
-   *
    * The effect of setting this to true is that the user can no longer login
    * in the cloud but remains visible as cloud user-account.
    *
@@ -256,11 +236,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * admins and group-admins through the cloud admin UI.
    */
   #[ORM\Column(type: 'boolean', nullable: true)]
-  private $cloudAccountDeactivated;
+  private ?bool $cloudAccountDeactivated;
 
   /**
-   * @var bool|null
-   *
    * Set to true if the cloud user-account should not be generated at
    * all. This differs from $cloudAccountDeactivated in that with
    * "...Disabled" the musician is not even exported as user account, while
@@ -269,91 +247,86 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * Not that deleted users are also not exported to the cloud.
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
-  private $cloudAccountDisabled;
+  private ?bool $cloudAccountDisabled;
 
+  /** @var Collection<int, MusicianInstrument> */
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', indexBy: 'instrument_id', cascade: ['remove', 'persist'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
-  private $instruments;
+  private Collection $instruments;
 
+  /** @var Collection<int, ProjectApplication> */
   #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
-  private $projectApplications;
+  private Collection $projectApplications;
 
+  /** @var Collection<int, ProjectParticipant> */
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
-  private $projectParticipation;
+  private Collection $projectParticipation;
 
+  /** @var Collection<ProjectInstrument> */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $projectInstruments;
+  private Collection $projectInstruments;
 
+  /** @var Collection<string, ProjectParticipantFieldDatum> */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'musician', indexBy: 'option_key', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $projectParticipantFieldsData;
+  private Collection $projectParticipantFieldsData;
 
+  /** @var Collection<InstrumentInsurance> */
   #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'instrumentHolder', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $instrumentInsurances;
+  private Collection $instrumentInsurances;
 
+  /** @var Collection<InstrumentInsurance> */
   #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'billToParty', fetch: 'EXTRA_LAZY')]
-  private $payableInsurances;
+  private Collection $payableInsurances;
 
+  /** @var Collection<SepaBankAccount> */
   #[ORM\OneToMany(targetEntity: SepaBankAccount::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $sepaBankAccounts;
+  private Collection $sepaBankAccounts;
 
+  /** @var Collection<SepaDebitMandate> */
   #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $sepaDebitMandates;
+  private Collection $sepaDebitMandates;
 
+  /** @var Collection<CompositePayment> */
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'musician', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $payments;
+  private Collection $payments;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<int, EncryptedFile> */
   #[ORM\JoinTable(name: 'EncryptedFileOwners')]
   #[ORM\ManyToMany(targetEntity: EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
-  private $encryptedFiles;
+  private Collection $encryptedFiles;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<Invoice> */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'debitor', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $invoices;
+  private Collection $invoices;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<Invoice> */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $originatedInvoices;
+  private Collection $originatedInvoices;
 
-  /**
-   * @var null|DateTimeImmutable
-   */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $updated;
+  protected ?DateTimeImmutable $updated;
 
   /**
-   * @var string
-   *
    * If non null then this is the URI of an address-book which is the primary source
    * of the contact data.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $addressBookUri;
+  private ?string $addressBookUri;
 
   /**
-   * @var string
-   *
    * If non null then this contact refers to an organization.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $organization;
+  private ?string $organization;
 
   /**
-   * @var string
-   *
    * If organization is non-NULL then this attribute may refere to the title
    * in the given organization.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $jobTitle;
+  private ?string $jobTitle;
 
   /** {@inheritdoc} */
   public function __construct()

@@ -23,12 +23,15 @@
  */
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /** Helper for Gedmo "translatable" entities. */
 trait TranslatableTrait
 {
   #[Gedmo\Locale(initialize: true)] // Used locale to override Translation listener`s locale
+  #[TSAttributes\Hidden]
   private $locale;
 
   /**
@@ -37,6 +40,7 @@ trait TranslatableTrait
    * around by remembering any old value.
    */
   #[Gedmo\TranslationChangeSet]
+  #[TSAttributes\Hidden]
   private $translationChangeSet;
 
   /**

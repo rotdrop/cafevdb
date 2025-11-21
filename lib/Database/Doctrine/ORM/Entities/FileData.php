@@ -87,11 +87,8 @@ class FileData implements \ArrayAccess
   )]
   protected $dataHash;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'blob', nullable: false)]
-  protected $data;
+  protected string $data;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * EncryptedFileData.
@@ -36,6 +36,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 #[ORM\HasLifecycleCallbacks]
 class EncryptedFileData extends FileData
 {
+  use CAFEVDB\Traits\EncryptionContextTrait;
+
   /**
    * @var EncryptedFile
    *
@@ -44,65 +46,18 @@ class EncryptedFileData extends FileData
   protected $file;
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
-  protected $data;
-
-  /**
-   * @var array
-   *
-   * In memory encryption context to support multi user encryption.
-   */
-  private $encryptionContext;
-
-  /**
-   * Add a user-id or group-id to the list of "encryption identities",
-   * i.e. the list of identities which can read and write this entry.
-   *
-   * @param string $personality
-   *
-   * @return EncryptedFileData
-   */
-  public function addEncryptionIdentity(string $personality):EncryptedFileData
-  {
-    if (empty($this->encryptionContext)) {
-      $this->encryptionContext = [];
-    }
-    if (!in_array($personality, $this->encryptionContext)) {
-      $this->encryptionContext[] = $personality;
-    }
-    return $this;
-  }
-
-  /**
-   * Remove a user-id or group-id to the list of "encryption identities",
-   * i.e. the list of identities which can read and write this entry.
-   *
-   * @param string $personality
-   *
-   * @return EncryptedFileData
-   */
-  public function removeEncryptionIdentity(string $personality):EncryptedFileData
-  {
-    $pos = array_search($personality, $this->encryptionContext??[]);
-    if ($pos !== false) {
-      unset($this->encryptionContext[pos]);
-      $this->encryptionContext = array_values($this->encryptionContext);
-    }
-    return $this;
-  }
+  protected string $data;
 
   /**
    * {@inheritdoc}
    */
   #[ORM\PostLoad]
   #[ORM\PrePersist]
-  public function sanitizeEncryptionContext(Event\PostLoadEventArgs|Event\PrePersistEventArgs $eventArgs)
+  public function handleLifecycleEvent(Event\PostLoadEventArgs|Event\PrePersistEventArgs $eventArgs)
   {
     /** @var Musician $owner */
     foreach (($this->file->getOwners()??[]) as $owner) {
-      $userIdSlug = $owner->getUserIdSlug();
-      if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {
-        $this->encryptionContext[] = $userIdSlug;
-      }
+      $this->sanitizeEncryptionContext($owner);
     }
   }
 }

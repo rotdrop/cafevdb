@@ -25,12 +25,11 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SepaDebitMandate
@@ -51,16 +50,11 @@ class SepaDebitMandate implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  /**
-   * @var Musician
-   */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
   /**
-   * @var int
-   *
    * This is a POSITIVE per-musician sequence count. It currently is
    * incremented using
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
@@ -68,18 +62,16 @@ class SepaDebitMandate implements \ArrayAccess
   #[ORM\Column(type: 'integer')]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'NONE')] // _AT_ORM\GeneratedValue(strategy="CUSTOM")
-  private $sequence;
+  private int $sequence;
 
   /**
-   * @var SepaBankAccount
-   *
    * Debit-mandates can expire, so many debit-mandates may refer the
    * same bank-account.
    */
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: false)]
   #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'sepaDebitMandates')]
-  private $sepaBankAccount;
+  private SepaBankAccount $sepaBankAccount;
 
   /**
    * All debit-mandates are tied to a specific project. The convention
@@ -94,62 +86,43 @@ class SepaDebitMandate implements \ArrayAccess
    */
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 35, options: ['collation' => 'ascii_general_ci'])]
-  private $mandateReference;
+  private string $mandateReference;
 
-  /**
-   * @var bool
-   */
   #[ORM\Column(type: 'boolean', nullable: false)]
-  private $nonRecurring;
+  private bool $nonRecurring;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $mandateDate;
+  private DateTimeImmutable $mandateDate;
 
   /**
-   * @var int
-   *
    * Pre-notification dead-line in calendar days. Normally 14, may be
    * shorter, e.g. 7 calendar days but at least 5 business days.
    */
   #[ORM\Column(type: 'integer', options: ['default' => '14'])]
-  private $preNotificationCalendarDays = 7;
+  private int $preNotificationCalendarDays = 7;
 
   /**
-   * @var int
-   *
    * Pre-notification dead-line in TARGET2 days. Normally unset.
    */
   #[ORM\Column(type: 'integer', nullable: true)]
-  private $preNotificationBusinessDays = 5;
+  private ?int $preNotificationBusinessDays = 5;
 
-  /**
-   * @var \DateTimeImmutable|null
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $lastUsedDate;
+  private ?DateTimeImmutable $lastUsedDate;
 
-  /**
-   * @var DatabaseStorageFile
-   */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
-  private $writtenMandate;
+  private ?DatabaseStorageFile $writtenMandate;
 
   /**
-   * @var ProjectPayment
+   * @var Collection<ProjectPayment>
    *
    * Linke to the payments table.
    */
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
-  private $payments;
+  private Collection $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

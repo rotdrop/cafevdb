@@ -53,7 +53,7 @@ class Instrument implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private ?int $id = null;
+  private int $id;
 
   /**
    * @var string
@@ -73,18 +73,22 @@ class Instrument implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false, options: ['comment' => 'Orchestral Ordering'])]
   private int $sortOrder;
 
+  /** @var Collection<string, InstrumentFamily> */
   #[ORM\JoinTable]
   #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', fetch: 'EXTRA_LAZY')]
   private $families;
 
+  /** @var Collection<MusicianInstrument> */
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $musicianInstruments;
 
+  /** @var Collection<ProjectInstrument> */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $projectInstruments;
 
+  /** @var Collection<ProjectInstrumentationNumber> */
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $projectInstrumentationNumbers;
 

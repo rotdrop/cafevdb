@@ -57,12 +57,11 @@ class MusicianInstrument implements \ArrayAccess
   #[ORM\Id]
   private $musician;
 
-  /** @var Instrument */
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $instrument;
+  private Instrument $instrument;
 
-  /** @var Collection */
+  /** @var Collection<ProjectInstrument> */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musicianInstrument')]
   private $projectInstruments;
 

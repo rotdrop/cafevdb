@@ -42,9 +42,6 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Id]
   protected WebBrowserHistoryState $state;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false, options: ['unsigned' => true])]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
@@ -53,6 +50,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
   protected string $path;
 
+  /** @var Collection<WebBrowserHistoryData> */
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
   #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries', fetch: 'EXTRA_LAZY')]
   protected WebBrowserHistoryData $data;

@@ -27,8 +27,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use DateTimeImmutable;
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -43,7 +41,6 @@ use OCA\CAFEVDB\Exceptions;
  * Folder entry for a database-backed file.
  */
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository::class)]
-#[TSAttributes\TypeScript]
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */

@@ -25,8 +25,8 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use DateTimeInterface;
-use DateTimeImmutable;
 
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /** Helper for Gedmo soft-deleteable entities. */
@@ -35,11 +35,8 @@ trait SoftDeleteableEntity
   use UnusedTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var DateTimeInterface|null
-   */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $deleted = null;
+  protected ?DateTimeImmutable $deleted = null;
 
   /**
    * Set or clear the deleted at timestamp.
