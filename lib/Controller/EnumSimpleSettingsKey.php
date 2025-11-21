@@ -24,14 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Simple setting as enum.
  */
-#[TSAttributes\TypeScript]
 enum EnumSimpleSettingsKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

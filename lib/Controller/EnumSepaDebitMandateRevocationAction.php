@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Simple setting as enum.
  */
-#[TSAttributes\TypeScript]
 enum EnumSepaDebitMandateRevocationAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

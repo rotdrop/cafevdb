@@ -24,13 +24,30 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
+use OCA\CAFEVDB\Settings\ConfigConstants;
+
 /**
- * Simple setting as enum.
+ * (Some) personal settings keys.
  */
-enum EnumFileStorageBackend: string
+#[TypeScript(options: ['nativeEnums' => true])]
+enum EnumPersonalSettingsKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
-  case DB = 'db';
-  case CLOUD = 'cloud';
+  case DEBUG_MODE = 'debugMode';
+  case DEBUG_QUERY_SQL_FILTER = 'debugQuerySqlFilter';
+  case DESELECT_INVISIBLE_MISC_RECS = 'deselectInvisibleMiscRecs';
+  case DIRECT_CHANGE = 'directChange';
+  case EMAIL_DRAFT_AUTO_SAVE = 'emailDraftAutoSave';
+  case ENCRYPTION_KEY = 'encryptionKey';
+  case EXPERT_MODE = 'expertMode';
+  case INITIAL_FILTER_VISIBILITY = 'initialFilterVisibility';
+  case FINANCE_MODE = 'financeMode';
+  case PAGE_ROWS_DEFAULT = 'pageRowsDefault';
+  case RESTORE_HISTORY = 'restoreHistory';
+  case SHOW_DISABLED = 'showDisabled';
+  case TOOL_TIPS_ENABLED = 'toolTipsEnabled';
+  case WYSIWYG_EDITOR = 'wysiwygEditor';
 }

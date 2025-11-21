@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Actions for manipulating project webpages.
  */
-#[TSAttributes\TypeScript]
 enum EnumProjectWebPagesParam: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

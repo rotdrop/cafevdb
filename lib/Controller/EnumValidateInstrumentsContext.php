@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Playing around with PHP enums, this is the first use in this project.
  */
-#[TSAttributes\TypeScript]
 enum EnumValidateInstrumentsContext: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

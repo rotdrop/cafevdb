@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 
 /**
@@ -33,7 +31,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentO
  * however, the idea is to provide "upload from local machine" as well as
  * "choose from cloud".
  */
-#[TSAttributes\TypeScript]
 enum EnumFileUploadMode: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

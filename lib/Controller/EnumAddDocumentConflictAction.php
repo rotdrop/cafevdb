@@ -24,14 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 
 /**
  * Simple setting as enum.
  */
-#[TSAttributes\TypeScript]
 enum EnumAddDocumentConflictAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
