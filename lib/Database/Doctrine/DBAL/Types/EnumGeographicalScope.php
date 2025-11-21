@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Geographical scope for insurances.
  *
@@ -37,7 +35,6 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  *
  * @todo Perhaps should be renamed to "COUNTRY/CONTINENT/WORLD"
  */
-#[TSAttributes\TypeScript]
 class EnumGeographicalScope extends AbstractEnumType
 {
   public const DOMESTIC = 'Domestic';

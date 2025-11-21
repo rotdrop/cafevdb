@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Type of projects.
  *
@@ -33,7 +31,6 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  * @method static EnumProjectTemporalType PERMANENT()
  * @method static EnumProjectTemporalType TEMPLATE()
  */
-#[TSAttributes\TypeScript]
 class EnumProjectTemporalType extends AbstractEnumType
 {
   public const TEMPORARY = 'temporary';

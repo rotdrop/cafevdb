@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Display context of ProjectParticipantFields. Some may only be relevant to
  * real participants, other fields may only be relevant for business contacts
@@ -37,7 +35,6 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  *
  * @todo This should rather be specified per project.
  */
-#[TSAttributes\TypeScript]
 class EnumParticipationContext extends AbstractEnumType
 {
   public const ASSOCIATES = 'associates';

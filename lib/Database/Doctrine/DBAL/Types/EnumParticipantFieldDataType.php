@@ -24,10 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
  * Enum for "participant-fields" data-types.
  *
@@ -71,8 +67,7 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * database. The total encoded size is limited by the used database
  * backend and its associated data-type.
  */
-#[TSAttributes\TypeScript]
-class EnumParticipantFieldDataType extends EnumType
+class EnumParticipantFieldDataType extends AbstractEnumType
 {
   public const BOOLEAN = 'boolean';
   public const CLOUD_FILE = 'cloud-file';

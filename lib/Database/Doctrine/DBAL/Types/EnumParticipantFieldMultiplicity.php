@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 
 /**
@@ -39,8 +37,7 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * @method static EnumParticipantFieldMultiplicity GROUPOFPEOPLE()
  * @method static EnumParticipantFieldMultiplicity GROUPSOFPEOPLE()
  */
-#[TSAttributes\TypeScript]
-class EnumParticipantFieldMultiplicity extends EnumType
+class EnumParticipantFieldMultiplicity extends AbstractEnumType
 {
   public const SIMPLE = 'simple';
   public const SINGLE = 'single';

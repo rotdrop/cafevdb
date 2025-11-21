@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Member status enum for musicians.
  *
@@ -34,7 +32,6 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
  * @method static EnumAttachmentOrigin TEMPLATE()
  */
-#[TSAttributes\TypeScript]
 class EnumAttachmentOrigin extends AbstractEnumType
 {
   public const UPLOAD = 'upload';
