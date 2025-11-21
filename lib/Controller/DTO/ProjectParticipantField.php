@@ -26,15 +26,12 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 
 /**
  * DTO for ProejctParticipantField retrieval.
  */
-#[TSAttributes\TypeScript]
 class ProjectParticipantField extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

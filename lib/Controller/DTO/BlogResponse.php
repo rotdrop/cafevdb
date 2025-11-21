@@ -26,12 +26,9 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO document storage file uploads meta data.
  */
-#[TSAttributes\TypeScript]
 class BlogResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

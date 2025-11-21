@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO special projects config (members, executive board).
  */
-#[TSAttributes\TypeScript]
 class SpecialProjectsResponse extends MessagesResponse
 {
   /** {@inheritdoc} */

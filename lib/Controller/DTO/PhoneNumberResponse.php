@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO for orchestra phone numbers.
  */
-#[TSAttributes\TypeScript]
 class PhoneNumberResponse extends MessagesResponse
 {
   /** {@inheritdoc} */

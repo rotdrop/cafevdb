@@ -25,23 +25,24 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
-
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
  * DTO upload file data as reported by PHP, a bit enhanced.
  */
-#[TSAttributes\TypeScript]
 class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
+  public readonly ?CarbonImmutable $expires;
+
   /** {@inheritdoc} */
   public function __construct(
-    /** string[] */
+    /** @var string[] */
     public readonly array $messages,
     public readonly ?string $share,
     public readonly ?string $folder,
-    public readonly ?DateTimeInterface $expires,
+    ?DateTimeInterface $expires,
   ) {
+    $this->expires = CarbonImmutable::instance($expires);
   }
 
   /**

@@ -26,15 +26,12 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Controller\EnumFileUploadOrigin;
 use OCA\CAFEVDB\Controller\EnumFileUploadMode;
 
 /**
  * DTO upload file data as reported by PHP, a bit enhanced.
  */
-#[TSAttributes\TypeScript]
 class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

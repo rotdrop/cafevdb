@@ -26,16 +26,16 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * DTO for ProejctParticipantField retrieval.
  */
-#[TSAttributes\TypeScript]
 class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
+  public readonly ?CarbonImmutable $deleted;
+
   /** {@inheritdoc} */
   public function __construct(
     public readonly int $fieldId,
@@ -45,8 +45,9 @@ class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Toolkit\DTO\Abstrac
     public readonly string $untranslatedLabel,
     public readonly string $data,
     public readonly ?int $limit,
-    public readonly ?DateTimeInterface $deleted,
+    ?DateTimeInterface $deleted,
   ) {
+    $this->deleted = CarbonImmutable::instance($deleted);
   }
 
   /**

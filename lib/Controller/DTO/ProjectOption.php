@@ -24,14 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 /**
  * DTO for an options description for a project selection.
  */
-#[TSAttributes\TypeScript]
 class ProjectOption extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

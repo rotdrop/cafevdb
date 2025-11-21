@@ -25,24 +25,25 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
-
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
  * DTO for brief project participant info.
  */
-#[TSAttributes\TypeScript]
 class ProjectParticipant extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
-  /** {@inheritdoc} */
+  public readonly ?CarbonImmutable $deleted;
+
+    /** {@inheritdoc} */
   public function __construct(
     public readonly int $projectId,
     public readonly int $musicianId,
     public readonly string $publicName,
     public readonly string $personalPublicName,
     public readonly bool $registration,
-    public readonly ?DateTimeInterface $deleted,
+    ?DateTimeInterface $deleted,
   ) {
+    $this->deleted = CarbonImmutable::instance($deleted);
   }
 
   /**

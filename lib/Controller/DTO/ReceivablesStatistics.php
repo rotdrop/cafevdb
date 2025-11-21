@@ -29,7 +29,6 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 /**
  * DTO for receivables statistics during recomputation.
  */
-#[TSAttributes\TypeScript]
 class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

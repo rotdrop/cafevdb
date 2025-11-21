@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO for lazy decryption endpoint.
  */
-#[TSAttributes\TypeScript]
 class NameIdValueResponse extends MessagesResponse
 {
   public readonly NameId $value;

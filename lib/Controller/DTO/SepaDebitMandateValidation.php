@@ -24,14 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 /**
  * DTO for a debit mandate, only the bare minimum of data.
  */
-#[TSAttributes\TypeScript]
 class SepaDebitMandateValidation extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

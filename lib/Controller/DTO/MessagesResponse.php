@@ -24,12 +24,9 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * Base DTO containing messages.
  */
-#[TSAttributes\TypeScript]
 class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

@@ -26,12 +26,9 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO for progress status reporting.
  */
-#[TSAttributes\TypeScript]
 class ProgressResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
@@ -39,7 +36,7 @@ class ProgressResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     public readonly int|string $id,
     public readonly int $current,
     public readonly int $target,
-    /** @var array<string, string|int|Object|array|float> */
+    /** @var array<string, string|int|array<string|int|float>|float|array<string, string|int|float> >*/
     public readonly ?array $data,
   ) {
   }

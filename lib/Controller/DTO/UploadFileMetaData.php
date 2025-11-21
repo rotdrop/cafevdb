@@ -26,15 +26,12 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
 use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
 
 /**
  * DTO document storage file uploads meta data.
  */
-#[TSAttributes\TypeScript]
 class UploadFileMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */

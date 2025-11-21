@@ -26,14 +26,11 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
 
 /**
  * DTO for lazy decryption endpoint.
  */
-#[TSAttributes\TypeScript]
 class SimpleSetValueResponse extends MessagesResponse
 {
   /** {@inheritdoc} */
