@@ -36,10 +36,15 @@ require_once(__DIR__ . '/console-setup.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
 require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
-require_once(__DIR__ . '/php-to-typescript/TransformedTypeOrConstant.php');
+
 require_once(__DIR__ . '/php-to-typescript/ClassConstantsTransformer.php');
 require_once(__DIR__ . '/php-to-typescript/ClassConstantsTransformerConfig.php');
+require_once(__DIR__ . '/php-to-typescript/DTOCollector.php');
+require_once(__DIR__ . '/php-to-typescript/DatabaseEntityCollector.php');
+require_once(__DIR__ . '/php-to-typescript/DatabaseEntityTransformer.php');
+require_once(__DIR__ . '/php-to-typescript/DatabaseEnumCollector.php');
 require_once(__DIR__ . '/php-to-typescript/PhpToTypeScript.php');
+require_once(__DIR__ . '/php-to-typescript/TransformedTypeOrConstant.php');
 
 use OCA\CAFEVDB\Wrapped;
 use OCA\CAFEVDB\DevScripts\PhpToTypeScript;
