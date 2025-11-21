@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Spatie\TypeScriptTransformer\TypeScriptTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
+use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
+use Spatie\TypeScriptTransformer\Types\TypeScriptType;
+
+use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Wrapped\Carbon;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * Runner for the PHP to typescript conversion.
@@ -245,6 +251,22 @@ class PhpToTypeScript extends Command
         // ->transformToNativeEnums(true)
         // list of transformers
         ->transformers($outputInfo['transformers'])
+        ->collectors([
+          // transform all abstract DTOs
+          DTOCollector::class,
+          // transform all native enums
+          EnumCollector::class,
+          // transform all MyClabs enums used in the DB entities
+          DatabaseEnumCollector::class,
+          // transfrom all database entities
+          DatabaseEntityCollector::class,
+        ])
+        // try inject default TypeScriptTransformer
+        ->defaultTypeReplacements([
+          Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          UuidInterface::class => new TypeScriptType('string'),
+        ])
         // file where TypeScript type definitions will be written
         ->outputFile($outputFile);
 
@@ -387,11 +409,18 @@ EOF;
                 if (str_contains($line, $existingNameSpace)) {
                   $selfNS = explode('.', $currentFullNS);
                   $refNS = explode('.', $existingNameSpace);
-                  $upNameSpace = reset($refNS);
                   $output->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace);
-                  while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS)) {
+                  $prefix = [];
+                  do {
                     array_shift($selfNS);
                     $upNameSpace = array_shift($refNS);
+                    $prefix[] = $upNameSpace;
+                  } while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS));
+                  array_pop($prefix);
+                  if (!empty($prefix)) {
+                    $prefix = implode('.', $prefix) . '.';
+                    $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
+                    $line = str_replace(' ' . $prefix, ' ', $line);
                   }
                   $up = str_repeat('../', count($selfNS));
                   $headerData[] = "import * as {$upNameSpace} from './{$up}{$upNameSpace}.ts';";
