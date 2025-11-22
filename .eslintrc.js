@@ -117,6 +117,14 @@ module.exports = {
       },
     },
     {
+      files: ['*.ts', '*.vue'],
+      rules: {
+        // Note: you must disable the base rule as it can report incorrect errors
+        'no-use-before-define': 'off',
+        '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
+      },
+    },
+    {
       files: ['*.ts', '*.cts', '*.mts', '*.tsx', '*.vue'],
       rules: {
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
