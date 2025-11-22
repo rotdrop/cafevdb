@@ -33,12 +33,11 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-
 use OCA\CAFEVDB\Service\ConfigService;
-
 use OCA\CAFEVDB\Common\Uuid;
 
 /**
@@ -173,11 +172,14 @@ class MusiciansController extends Controller
       // transliteration is necessary here.
 
       $criteria = [
+        DBConstants::QUERY_OPTIONS_KEY => [ DBConstants::QUERY_OPTION_WILDCARDS => true ],
         '(|surName' => $pattern,
         'firstName' => $pattern,
         'displayName' => $pattern,
         'nickName' => $pattern,
         'userIdSlug' => $this->transliterate($pattern),
+        'organization' => $pattern,
+        'email' => $pattern,
         ')' => true,
       ];
     }

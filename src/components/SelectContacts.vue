@@ -37,6 +37,7 @@
                           :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
                           :reset-action="resetAction"
                           :searchable="true"
+                          :filter-by="filterByProps"
                           v-on="$listeners"
                           @search="nextcloudSelectSearch"
   >
@@ -72,6 +73,7 @@ import type { NcSelect } from '@nextcloud/vue'
 import { translate as t } from '@nextcloud/l10n'
 import qs from 'qs'
 import { contactAddressPopup, contactNameFromContact } from '../util/address-popup.ts'
+import stringValue from '../util/string-valued.ts'
 import type { AddressBook, Contact } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 
@@ -210,6 +212,24 @@ const getValueKeys = () => {
 }
 
 const nextcloudSelectSearch = (query: string) => findContacts(query)
+
+const filterByProps = (contact: Contact, _label: string, query: string) => {
+  const lcQuery = query.toLocaleLowerCase()
+  if ((contact.FN?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+    return true
+  }
+  if (lcQuery.search('@') > -1) {
+    for (const email of (contact.EMAIL ?? [])) {
+      if (stringValue(email).toLocaleLowerCase().search(lcQuery) > -1) {
+        return true
+      }
+    }
+  }
+  if ((contact.ORG?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+    return true
+  }
+  return false
+}
 
 const findContacts = async (query: string, contactUids?: string[]) => {
   logger.info('FIND CONTACTS', { query, contactUids })

@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type StringValued from '../util/string-valued.ts';
+import type { StringValued } from '../util/string-valued.ts';
 
 export interface AddressBook {
   key: string|number,
@@ -49,15 +49,17 @@ export interface Contact {
 }
 
 export interface Musician {
-  id: number,
-  formalDisplayName: string,
-  informalDisplayName?: string,
-  userIdSlug?: string,
-  email?: string,
-  street?: string,
   city?: string,
-  streetNumber?: string,
-  postalCode?: string,
-  countryName?: string,
   country?: string,
+  countryName?: string,
+  email?: string,
+  formalDisplayName: string,
+  id: number,
+  informalDisplayName?: string,
+  nickName?: string,
+  organization?: string,
+  postalCode?: string,
+  street?: string,
+  streetNumber?: string,
+  userIdSlug?: string,
 }

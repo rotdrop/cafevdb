@@ -37,6 +37,7 @@
                           :reset-action="props.resetAction"
                           :reset-state="initialValObjects"
                           :searchable="props.searchable"
+                          :filter-by="filterByProps"
                           v-on="$listeners"
                           @search="nextcloudSelectSearch"
   >
@@ -72,7 +73,7 @@ import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/compon
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { AxiosResponse } from 'axios'
 import type { NcSelect } from '@nextcloud/vue'
-// import type { Musician } from '../types/address-book.d.ts' resurrect with Vue >= 3.3
+// import type { Musician } from '../types/address-book.d.ts'
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'SelectMusicians'
@@ -92,17 +93,19 @@ interface MusicianIdObject {
 
 // Pre Vue 3.3 cannot handle imported complex types here.
 interface Musician {
-  id: number,
-  formalDisplayName: string,
-  informalDisplayName?: string,
-  userIdSlug?: string,
-  email?: string,
-  street?: string,
   city?: string,
-  streetNumber?: string,
-  postalCode?: string,
-  countryName?: string,
   country?: string,
+  countryName?: string,
+  email?: string,
+  formalDisplayName: string,
+  id: number,
+  informalDisplayName?: string,
+  nickName?: string,
+  organization?: string,
+  postalCode?: string,
+  street?: string,
+  streetNumber?: string,
+  userIdSlug?: string,
 }
 
 const props = withDefaults(
@@ -269,7 +272,31 @@ const getValueIds = () => {
 
 const nextcloudSelectSearch = (query: string) => findMusicians(query)
 
-const findMusicians = async (query: string, musicianIds: number[]) => {
+const filterByProps = (musician: Musician, _label: string, query: string) => {
+  const lcQuery = query.toLocaleLowerCase()
+
+  if (musician.formalDisplayName.toLocaleLowerCase().search(lcQuery) > -1) {
+    return true
+  }
+  if ((musician.informalDisplayName?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+    return true
+  }
+  if (lcQuery.search('@') > -1) {
+    if ((musician.email?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+      return true
+    }
+  }
+  if ((musician.userIdSlug?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+    return true
+  }
+  if ((musician.organization?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+    return true
+  }
+
+  return false
+}
+
+const findMusicians = async (query: string, musicianIds?: number[]) => {
   query = typeof query === 'string' ? encodeURI(query) : ''
   if (query !== '') {
     query = '/' + query
@@ -281,7 +308,7 @@ const findMusicians = async (query: string, musicianIds: number[]) => {
   if (props.projectId > 0) {
     params.projectId = props.projectId
   }
-  if (musicianIds !== undefined && musicianIds.length > 0) {
+  if ((musicianIds ?? []).length > 0) {
     params.ids = musicianIds
   }
   try {

@@ -24,4 +24,6 @@
 type StringWrapper = { value: string };
 export type StringValued = string|StringWrapper;
 
-export const stringValue = (arg: StringValued):string => (arg as StringWrapper).value || (arg as string);
+export const stringValue = (arg: StringValued):string => (arg as StringWrapper).value ?? (arg as string);
+
+export default stringValue;
