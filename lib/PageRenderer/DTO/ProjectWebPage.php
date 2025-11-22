@@ -24,14 +24,11 @@
 
 namespace OCA\CAFEVDB\PageRenderer\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
 /**
  * DTO for project web-pages.
  *
  * @todo This should inherit from the Redaxo app.
  */
-#[TSAttributes\TypeScript]
 class ProjectWebPage extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
