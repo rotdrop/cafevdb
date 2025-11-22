@@ -511,7 +511,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
 import { joinLiterals } from '../toolkit/util/string-literals.ts'
-import { enableVueDevTools, disableVueDevTools } from '../toolkit/util/vue-devtools.ts'
+import { vueDevTools as setVueDevTools } from '../toolkit/util/vue-devtools.ts'
 
 const IconCancel = IconEmailVerificationFailed
 
@@ -637,13 +637,7 @@ const initialState: InitialState = loadState(appId, 'adminConfig')
 const store = useCloudUsersGroupsStore()
 
 const vueDevTools = ref(false)
-watch(vueDevTools, (value) => {
-  if (value) {
-    enableVueDevTools()
-  } else {
-    disableVueDevTools()
-  }
-})
+watch(vueDevTools, (value) => setVueDevTools({ enabled: value }))
 
 const defaultOfficeFont = ref<FontFiles|undefined>(undefined)
 const loading = reactive({
