@@ -342,6 +342,7 @@ trait FindLikeTrait
         && array_keys($criteria)[0] === self::OPTIONS_KEY
         && is_array($criteria[self::OPTIONS_KEY])) {
       $options = array_merge($options, $criteria[self::OPTIONS_KEY]);
+      unset($criteria[self::OPTIONS_KEYS]);
     }
 
     $orderBy = $orderBy?:[];
