@@ -507,6 +507,8 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Override datetime stuff
+      Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetime', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetime_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetimetz', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
