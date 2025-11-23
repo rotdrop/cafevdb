@@ -149,7 +149,7 @@ class PersonalSettingsController extends Controller
         $this->l->t('Unknown configuration key "%s".', $parameter),
       );
     }
-    switch (key) {
+    switch ($key) {
       case EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS:
       case EnumPersonalSettingsKey::DIRECT_CHANGE:
       case EnumPersonalSettingsKey::EXPERT_MODE:
