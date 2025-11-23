@@ -83,7 +83,7 @@ trait InitialStateTrait
       FILTER_VALIDATE_BOOLEAN,
     );
     $directChange  = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE->value, $this-getUserValue('directchange', 'off')),
+      $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE->value, $this->getUserValue('directchange', 'off')),
       FILTER_VALIDATE_BOOLEAN,
     );
     $showDisabled = filter_var(
@@ -96,7 +96,7 @@ trait InitialStateTrait
       FILTER_VALIDATE_BOOLEAN,
     );
     $wysiwygEditor = $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR->value, 'tinymce');
-    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, $this->getUserValue('pagerows', 20));
+    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value, $this->getUserValue('pagerows', 20));
 
     $restoreHistory = filter_var(
       $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY->value, $this->getUserValue('restorehistory', 'off')),
@@ -109,7 +109,7 @@ trait InitialStateTrait
       EnumPersonalSettingsKey::DEBUG_MODE->value,
       $this->getUserValue('debugmode', 0),
     );
-    $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, '');
+    $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER->value, '');
 
     $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 
