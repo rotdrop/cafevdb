@@ -84,22 +84,17 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $firstName;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $nickName;
+  private ?string $nickName = null;
 
   /**
    * Display name, replaces default "$surName, $firstName"
-   *
-   * @var string
    */
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
-  private $displayName;
+  private ?string $displayName = null;
 
   #[ORM\Column(type: 'EnumGender', nullable: true)]
-  private ?Types\EnumGender $gender;
+  private ?Types\EnumGender $gender = null;
 
   /**
    * This should look like a suitable user id, e.g.
@@ -122,7 +117,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     class: CAFEVDB\Listeners\Sluggable\LoginNameSlugHandler::class,
     options: [ 'separator' => '-', 'preferred' => ['nickName', 'surName'] ],
   )]
-  private ?string $userIdSlug;
+  private ?string $userIdSlug = null;
 
   /**
    * @var string
@@ -131,7 +126,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * extensions.
    */
   #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true, options: ['collation' => 'ascii_bin'])]
-  private ?string $userPassphrase;
+  private ?string $userPassphrase = null;
 
   /**
    * @var MusicianRowAccessToken
@@ -139,29 +134,19 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
   private ?string $rowAccessToken;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $city;
+  private ?string $city = null;
+
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
+  private ?string $street = null;
 
   /**
-   * @var string
-   */
-  #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $street;
-
-  /**
-   * @var string
-   *
    * The street-number. I may actually be alpha-numeric like "2a" or something, so it is a string.
    */
   #[ORM\Column(type: 'string', length: 32, nullable: true)]
-  private ?string $streetNumber;
+  private ?string $streetNumber = null;
 
   /**
-   * @var string
-   *
    * Additional address information, like "Appartment 200" or c/o. If
    * Musician::organization is not null then an address-supplement starting
    * with 'c/o' indicates that the given street-address is a private @home
@@ -169,48 +154,34 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *  mail-merge operations.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $addressSupplement;
+  private ?string $addressSupplement = null;
 
   /**
-   * @var string
-   *
    * po-box component for the sake of supporting business contacts.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $poBox;
+  private ?string $poBox = null;
 
   #[ORM\Column(type: 'string', length: 2, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private ?string $country;
+  private ?string $country = null;
 
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['collation' => 'ascii_general_ci'])]
-  private ?string $postalCode;
+  private ?string $postalCode = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 5, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private ?string $language;
+  private ?string $language = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $mobilePhone;
+  private ?string $mobilePhone = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private ?string $fixedLinePhone;
+  private ?string $fixedLinePhone = null;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private DateTimeImmutable $birthday;
+  private ?DateTimeImmutable $birthday = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
-  private ?string $email;
+  private ?string $email = null;
 
   /**
    * @var Collection<string, EmailAddress> All email addresses.
@@ -222,7 +193,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private Types\EnumParticipationStatus $defaultParticipationStatus;
 
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private ?string $remarks;
+  private ?string $remarks = null;
 
   /**
    * The effect of setting this to true is that the user can no longer login
@@ -236,7 +207,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * admins and group-admins through the cloud admin UI.
    */
   #[ORM\Column(type: 'boolean', nullable: true)]
-  private ?bool $cloudAccountDeactivated;
+  private ?bool $cloudAccountDeactivated = null;
 
   /**
    * Set to true if the cloud user-account should not be generated at
@@ -247,7 +218,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * Not that deleted users are also not exported to the cloud.
    */
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 1])]
-  private ?bool $cloudAccountDisabled;
+  private ?bool $cloudAccountDisabled = true;
 
   /** @var Collection<int, MusicianInstrument> */
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', indexBy: 'instrument_id', cascade: ['remove', 'persist'], orphanRemoval: true)]
