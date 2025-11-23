@@ -62,7 +62,7 @@ class EncryptionService
   public const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
   public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
-  private const USER_ENCRYPTION_KEY_KEY = EnumPersonalSettingsKey::ENCRYPTION_KEY;
+  private const USER_ENCRYPTION_KEY_KEY = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
   public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
 
   public const CONFIG_LOCK_KEY = 'configlock';
