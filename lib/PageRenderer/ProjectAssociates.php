@@ -821,11 +821,11 @@ GROUP BY t.id';
         'default' => null,
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVDF' => [
-          0 => '',
+          '' => '',
           1 => '&#10004;',
         ],
         'align|LF' => 'center',
-        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, "")',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-deactivated'],
         'display' => [ 'popup' => 'tooltip' ],
       ]);
@@ -838,14 +838,14 @@ GROUP BY t.id';
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
         'sort' => true,
-        'default' => null,
+        'default' => 1,
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVDF' => [
-          0 => '',
+          '' => '',
           1 => '&#10004;',
         ],
         'align|LF' => 'center',
-        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, "")',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-disabled'],
         'display' => [ 'popup' => 'tooltip' ],
       ]);
