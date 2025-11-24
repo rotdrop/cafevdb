@@ -40,20 +40,14 @@ class MusicianEmailAddress implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 254, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'NONE')]
-  private $address;
+  private string $address;
 
-  /**
-   * @var Musician
-   */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'emailAddresses', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
   /**
    * @param null|string $address

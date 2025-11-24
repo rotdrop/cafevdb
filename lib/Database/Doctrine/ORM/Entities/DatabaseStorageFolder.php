@@ -55,17 +55,14 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     self::ADD_DOCUMENT_CONFLICT_RENAME,
   ];
 
-  /**
-   * @var MusicianRowAccessToken
-   */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, mappedBy: 'root')]
-  protected $storage;
+  protected DatabaseStorage $storage;
 
   /**
-   * @var Collection
+   * @var Collection<DatabaseStorageDirEntry>
    */
   #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, cascade: ['all'], mappedBy: 'parent')]
-  protected $directoryEntries;
+  protected Collection $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

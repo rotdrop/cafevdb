@@ -64,25 +64,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\GetByUuidTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  private $surName;
+  private string $surName;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  private $firstName;
+  private string $firstName;
 
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $nickName = null;
@@ -128,11 +119,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true, options: ['collation' => 'ascii_bin'])]
   private ?string $userPassphrase = null;
 
-  /**
-   * @var MusicianRowAccessToken
-   */
   #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
-  private ?string $rowAccessToken;
+  private ?MusicianRowAccessToken $rowAccessToken;
 
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $city = null;
@@ -184,10 +172,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private ?string $email = null;
 
   /**
-   * @var Collection<string, EmailAddress> All email addresses.
+   * @var Collection<string, MusicianEmailAddress> All email addresses.
    */
   #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', cascade: ['remove', 'persist'], orphanRemoval: true, indexBy: 'address')]
-  private $emailAddresses;
+  private Collection $emailAddresses;
 
   #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
   private Types\EnumParticipationStatus $defaultParticipationStatus;
@@ -277,27 +265,27 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private Collection $originatedInvoices;
 
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeImmutable $updated;
+  protected ?DateTimeImmutable $updated = null;
 
   /**
    * If non null then this is the URI of an address-book which is the primary source
    * of the contact data.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private ?string $addressBookUri;
+  private ?string $addressBookUri = null;
 
   /**
    * If non null then this contact refers to an organization.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private ?string $organization;
+  private ?string $organization = null;
 
   /**
    * If organization is non-NULL then this attribute may refere to the title
    * in the given organization.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private ?string $jobTitle;
+  private ?string $jobTitle = null;
 
   /** {@inheritdoc} */
   public function __construct()

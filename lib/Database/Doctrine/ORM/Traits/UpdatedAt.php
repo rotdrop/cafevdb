@@ -43,7 +43,7 @@ trait UpdatedAt
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  protected ?DateTimeImmutable $updated;
+  protected ?DateTimeImmutable $updated = null;
 
   /**
    * Sets updated.

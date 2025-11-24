@@ -59,15 +59,13 @@ class FileData implements \ArrayAccess
   ];
 
   /**
-   * @var File
-   *
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
    */
   #[ORM\Id]
   #[ORM\ManyToOne(targetEntity: File::class, inversedBy: 'fileData', cascade: ['all'])]
-  protected $file;
+  protected File $file;
 
   /**
    * @var string

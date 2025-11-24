@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Closure;
-use DateTimeImmutable;
 use DateTimeInterface;
 use InvalidArgumentException;
 
@@ -33,6 +32,7 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
@@ -65,18 +65,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    */
   public const INVOICE_NUMBER_FIELDS = [ 'project', 'balanceDocumentsFolder' ];
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var string
-   * Subject of the bank transaction.
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: false)]
   #[Gedmo\Slug(
     fields: [], // self-referencing. Does it work?
@@ -89,11 +82,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   #[Gedmo\SlugHandler(
     class: CAFEVDB\Listeners\Sluggable\InvoiceNumberHandler::class,
   )]
-  private $invoiceNumber;
+  private string $invoiceNumber;
 
   /**
-   * @var Musician
-   *
    * This will -- must be -- a member of the executive borad. But the plan is
    * to tie address-fields to convenience methods of the Musician entity,
    * so better use it here.
@@ -101,16 +92,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'originatedInvoices')]
   private Musician $originator;
 
-  /**
-   * @var Musician
-   */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
-  private $debitor;
+  private Musician $debitor;
 
   /**
-   * @var RationalNumber
-   *
    * The total amount for the bank transaction. This must equal the
    * sum of the self::$invoiceItems collection.
    *
@@ -121,100 +107,75 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private RationalNumber $amount;
 
   /**
-   * @var \DateTimeImmutable|null
-   *
    * This should be set to the date of the actual sending out of the invoice.
    */
   #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => 'CURRENT_DATE'])]
-  private $invoiceDate;
+  private DateTimeImmutable $invoiceDate;
 
-  /**
-   * @var \DateTimeImmutable|null
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $dueDate;
+  private ?DateTimeImmutable $dueDate;
 
-  /**
-   * @var \DateTimeImmutable|null
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $balancedDate;
+  private ?DateTimeImmutable $balancedDate;
 
   /**
-   * @var string
    * Subject of the bank transaction.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
-  private $subject;
+  private string $subject;
 
   /**
-   * @var string
    * Free-text lead-in of the invoice letter.
    *
    * @todo Should be remove and replaced by a table listing just the
    * individual invoice items which just should be enough.
    */
   #[ORM\Column(type: 'text', nullable: true)]
-  private $purpose;
+  private ?string $purpose;
 
   /**
-   * @var Collection
+   * @var Collection<InvoiceItem>
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
-  private $invoiceItems;
+  private Collection $invoiceItems;
 
   /**
-   * @var SepaBulkTransaction
-   *
    * There may be an associated debit-note. If so: this it is.
    */
   #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')] // Promote any changes to the sepa transaction.
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
-  private $sepaTransaction = null;
+  private ?SepaBulkTransaction $sepaTransaction = null;
 
   /**
-   * @var SepaBankAccount
-   *
    * The bank account used for this payment.
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: true)]
   #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
-  private $sepaBankAccount;
+  private ?SepaBankAccount $sepaBankAccount = null;
 
   /**
-   * @var SepaDebitMandate
-   *
    * The debit-mandate used for this payment, if any.
    */
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debit_mandate_sequence', referencedColumnName: 'sequence', nullable: true)]
   #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
-  private $sepaDebitMandate;
+  private ?SepaDebitMandate $sepaDebitMandate = null;
 
-  /**
-   * @var Project
-   */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'invoices', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\JoinColumn(nullable: false)]
-  private $project;
+  private Project $project;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'debitor_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'invoices', fetch: 'EXTRA_LAZY')]
-  private $projectParticipant;
+  private ProjectParticipant $projectParticipant;
 
-  /**
-   * @var DatabaseStorageFolder
-   */
   #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, fetch: 'EXTRA_LAZY')]
-  private $balanceDocumentsFolder;
+  private ?DatabaseStorageFolder $balanceDocumentsFolder = null;
 
-  /**
-   * @var DatabaseStorageFile
-   */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'])]
-  private ?DatabaseStorageFile $writtenInvoice;
+  private ?DatabaseStorageFile $writtenInvoice = null;
 
   /**
    * The legal reason for the taxation (sales tax)
@@ -224,13 +185,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   private TaxationStatutorySource $taxationStatutorySource;
 
   /**
-   * @var SentEmail
-   *
    * Pre notification email sent out to the recipients.
    */
   #[ORM\JoinColumn(name: 'notification_message_id', referencedColumnName: 'message_id', nullable: true)]
   #[ORM\OneToOne(targetEntity: SentEmail::class, inversedBy: 'invoice')]
-  private $notificationEmail;
+  private ?SentEmail $notificationEmail = null;
 
   /** {@inheritdoc} */
   public function __construct()

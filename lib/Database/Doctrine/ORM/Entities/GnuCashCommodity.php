@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,58 +49,31 @@ class GnuCashCommodity implements \ArrayAccess
   //   `quote_source` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   //   `quote_tz` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   private string $guid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2024, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $namespace;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $mnemonic;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028)]
   private string $fullname;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028)]
   private string $cusip;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   private int $fraction;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $quoteFlag;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $quoteSource;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $quoteTz;
 

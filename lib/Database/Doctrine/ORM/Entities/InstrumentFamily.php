@@ -47,29 +47,20 @@ class InstrumentFamily implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private ?int $id = null;
+  private int $id;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable(untranslated: 'untranslatedFamily')]
   #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
   private string $family;
 
-  /**
-   * @var string
-   */
-  private string $untranslatedFamily;
+  private ?string $untranslatedFamily;
 
   /** @var Collection<Instrument> */
   #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  private $instruments;
+  private Collection $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

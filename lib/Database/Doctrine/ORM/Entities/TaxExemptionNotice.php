@@ -28,12 +28,13 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Record notices of tax exemption from the corporate income tax (or other
@@ -52,60 +53,45 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   // Notice -> Items -> JoinTable -> TaxationSources
   // Notice.item1, Notice.item2
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private int $id;
 
+  /** @var Collection<TaxationStatutorySource> */
   #[ORM\ManyToMany(targetEntity: TaxationStatutorySource::class, inversedBy: 'taxExemptionNotices', cascade: ['persist'])]
   #[ORM\JoinTable(name: 'TaxExemptionItems')]
   #[ORM\JoinColumn(nullable: false)]
   private Collection $taxationStatutorySources;
 
   /**
-   * @var int
-   *
    * First year of assessment period.
    */
   #[ORM\Column(type: 'integer', nullable: false)]
-  private ?int $assessmentPeriodStart;
+  private int $assessmentPeriodStart;
 
   /**
-   * @var int
-   *
    * Last year of assessment period.
    */
   #[ORM\Column(type: 'integer', nullable: false)]
-  private ?int $assessmentPeriodEnd;
+  private int $assessmentPeriodEnd;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: false)] // The tax office which issued the the notice of excemption.
-  private ?string $taxOffice;
+  private string $taxOffice;
 
   /**
-   * @var string
-   *
    * The tax identification number used by $taxOffice.
    */
   #[ORM\Column(type: 'string', length: 256, nullable: false)]
-  private ?string $taxNumber;
+  private string $taxNumber;
 
   /**
-   * @var DateTimeInterface
-   *
    * The date at of the notice of exemption
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private ?DateTimeInterface $dateIssued;
+  private ?DateTimeImmutable $dateIssued = null;
 
   /**
-   * @var string
-   *
    * The purpose which led to the notice of exemption as noted on that very
    * notice.
    */
@@ -113,28 +99,24 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   private string $beneficiaryPurpose;
 
   /**
-   * @var bool
-   *
    * Whether the orchester is allowed to treat membership fees as donations.
    */
-  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
+  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => 0])]
   private bool $membershipFeesAreDonations = false;
 
   /**
-   * @var DatabaseStorageFile
-   *
    * Virtul "hard copy" of the letter the tax offic
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
-  private $writtenNotice;
+  private ?DatabaseStorageFile $writtenNotice = null;
 
   /**
-   * @var Collection
+   * @var Collection<DonationReceipt>
    *
    * The collection of donation receipts assiated to this notice of tax exemption.
    */
   #[ORM\OneToMany(targetEntity: DonationReceipt::class, mappedBy: 'taxExemptionNotice')]
-  private $donationReceipts;
+  private Collection $donationReceipts;
 
   /** {@inheritdoc} */
   public function __construct()

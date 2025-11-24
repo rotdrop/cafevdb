@@ -28,6 +28,8 @@ use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -51,100 +53,79 @@ class SepaBulkTransaction implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  protected int $id;
 
   /**
-   * @var Collection
+   * @var Collection<DatabaseStorageFile>
+   *
+   * CSV-files with export tables.
    */
   #[ORM\JoinTable(name: 'SepaBulkTransactionData')]
   #[ORM\InverseJoinColumn(unique: true)]
   #[ORM\ManyToMany(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['persist'], orphanRemoval: true)]
-  private $sepaTransactionData;
+  protected Collection $sepaTransactionData;
 
   /**
-   * @var Collection
+   * @var Collection<DatabaseStorageFile>
+   *
+   * CSV-Files with account software balancing accounts (GnuCash(.
    */
   #[ORM\JoinTable(name: 'SepaBulkTransactionBalancingData')]
   #[ORM\InverseJoinColumn(unique: true)]
   #[ORM\ManyToMany(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['persist'], orphanRemoval: true)]
-  private $balancingItemsData;
+  protected Collection $balancingItemsData;
 
   /**
-   * @var \DateTimeImmutable
-   *
    * Latest date before which the debit notes have to be submitted to
    * the bank in order to match the $dueDate.
    */
   #[ORM\Column(type: 'date_immutable', nullable: false)]
-  private $submissionDeadline;
+  protected DateTimeImmutable $submissionDeadline;
 
   /**
-   * @var \DateTime|null
    * The date when the bulk-transfer data actually was submitted to the bank.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $submitDate;
+  protected ?DateTimeImmutable $submitDate;
 
   /**
-   * @var \DateTimeImmutable
    * The date when the money should arrive.
    */
   #[ORM\Column(type: 'date_immutable', nullable: false)]
-  private $dueDate;
+  protected DateTimeImmutable $dueDate;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
-  private $submissionEventUri;
+  protected ?string $submissionEventUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
-  private $submissionEventUid;
+  protected ?string $submissionEventUid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
-  private $submissionTaskUri;
+  protected ?string $submissionTaskUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
-  private $submissionTaskUid;
+  protected ?string $submissionTaskUid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
-  private $dueEventUri;
+  protected ?string $dueEventUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
-  private $dueEventUid;
+  protected ?string $dueEventUid;
 
   /**
-   * @var ArrayCollection
+   * @var Collection<string, CompositePayment>
    */
   #[ORM\OneToMany(targetEntity: CompositePayment::class, indexBy: 'musician_id', mappedBy: 'sepaTransaction', orphanRemoval: true, cascade: ['all'], fetch: 'EXTRA_LAZY')]
-  private $payments;
+  protected Collection $payments;
 
   /**
-   * @var SentEamil
+   * @var Collection<string, SentEmail>
    */
   #[ORM\OneToMany(targetEntity: SentEmail::class, indexBy: 'message_id', mappedBy: 'sepaBulkTransaction')]
-  private $preNotificationEmails;
+  protected Collection $preNotificationEmails;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

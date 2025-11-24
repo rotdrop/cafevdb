@@ -59,46 +59,32 @@ class Project implements \ArrayAccess
 
   private const DATE_FORMAT = 'Ymd';
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
-  private $year;
+  private int $year;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
-  private $name;
+  private string $name;
 
-  /**
-   * @var Types\EnumProjectTemporalType
-   */
   #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false, options: ['default' => 'temporary'])]
-  private $type = Types\EnumProjectTemporalType::TEMPORARY;
+  private Types\EnumProjectTemporalType $type;
 
   /**
-   * @var string
-   *
    * The list-id of the mailing list for the members
    */
   #[ORM\Column(type: 'string', nullable: true, length: '128', options: ['collation' => 'ascii_general_ci'])]
-  private $mailingListId;
+  private ?string $mailingListId = null;
 
   /**
    * Optional registration start date. If not set then the online registration
    * is NOT available.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private ?DateTimeImmutable $registrationStartDate;
+  private ?DateTimeImmutable $registrationStartDate = null;
 
   /**
    * Optional registration deadline. If null then the date one day before the
@@ -106,7 +92,7 @@ class Project implements \ArrayAccess
    * imposed.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private ?DateTimeImmutable $registrationDeadline;
+  private ?DateTimeImmutable $registrationDeadline = null;
 
   /** @var Collection<ProjectInstrumentationNumber> */
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
@@ -169,11 +155,8 @@ class Project implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'project')]
   private Collection $sentEmail;
 
-  /**
-   * @var DatabaseStorage
-   */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
-  private $financialBalanceDocumentsStorage;
+  private ?DatabaseStorage $financialBalanceDocumentsStorage = null;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -191,6 +174,7 @@ class Project implements \ArrayAccess
     $this->sentEmail = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->webPages = new ArrayCollection();
+    $this->type = Types\EnumProjectTemporalType::TEMPORARY();
   }
 
   /** {@inheritdoc} */

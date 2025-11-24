@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -54,78 +54,42 @@ class GnuCashSplit implements \ArrayAccess
   //   `quantity_denom` bigint(20) NOT NULL,
   //   `lot_guid` varchar(32) DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   private string $guid;
 
-  /**
-   * @var string
-   */
   #[ORM\JoinColumn(name: 'tx_guid', referencedColumnName: 'guid', nullable: false)]
   #[ORM\ManyToOne(targetEntity: GnuCashTransaction::class, inversedBy: 'splits', fetch: 'EXTRA_LAZY')]
   private GnuCashTransaction $transaction;
 
-  /**
-   * @var string
-   */
   #[ORM\JoinColumn(name: 'account_guid', referencedColumnName: 'guid', nullable: false)]
   #[ORM\ManyToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
   private GnuCashAccount $account;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $memo;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $action;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 1, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $reconcileState;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $reconcileDate;
+  protected ?DateTimeImmutable $reconcileDate;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $valueNum;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $valueDenom;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $quantityNum;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: false)]
   private int $quantityDenom;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['default' => null, 'fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $lotGuid;
 

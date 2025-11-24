@@ -52,10 +52,9 @@ class MusicianInstrument implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  /** @var Musician */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
@@ -63,11 +62,10 @@ class MusicianInstrument implements \ArrayAccess
 
   /** @var Collection<ProjectInstrument> */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musicianInstrument')]
-  private $projectInstruments;
+  private Collection $projectInstruments;
 
-  /** @var int */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Ranking of the instrument w.r.t. to the given musician (lower is better)'])]
-  private $ranking = 1;
+  private int $ranking = 1;
 
   /** {@inheritdoc} */
   public function __construct(?Musician $musician = null, ?Instrument $instrument = null, ?int $ranking = null)

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,29 +41,22 @@ class Migration implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**
-   * @var string
-   *
    * Unique sortable migration string in the format YYYYMMDDHHMMSS
    */
   #[ORM\Column(type: 'string', length: 14, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'NONE')]
-  private $version;
+  private string $version;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 512)]
-  private $migrationClassName;
+  private string $migrationClassName;
 
   /**
-   * @var int
-   *
    * Run-count for tracking multiple invocations for fun. The table only
    * contains migrations which have been executed, so the default is 1.
    */
   #[ORM\Column(type: 'integer', options: ['default' => '1'])]
-  private $runCount = 1;
+  private int $runCount = 1;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

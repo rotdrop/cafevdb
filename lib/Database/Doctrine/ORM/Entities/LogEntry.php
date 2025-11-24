@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
@@ -64,19 +64,11 @@ class LogEntry extends Loggable\Entity\MappedSuperclass\AbstractLogEntry
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /*
-   * All required columns are mapped through inherited superclass
-   */
-  /**
-   * @var string
-   */
-  protected $objectId;
+  /** @var DateTime */
+  protected \DateTime $loggedAt;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 45, nullable: true)]
-  private $remoteAddress;
+  private ?string $remoteAddress;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

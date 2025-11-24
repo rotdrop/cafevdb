@@ -46,5 +46,5 @@ trait UpdatedAtEntity
 
   #[Gedmo\Timestampable(on: 'update')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeImmutable $updated;
+  protected ?DateTimeImmutable $updated = null;
 }

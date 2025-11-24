@@ -41,13 +41,6 @@ class Image extends File
   use CAFEVDB\Traits\FactoryTrait;
 
   /**
-   * @var ImageFileData
-   *
-   * {@inheritdoc}
-   */
-  protected $fileData;
-
-  /**
    * @var int
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]

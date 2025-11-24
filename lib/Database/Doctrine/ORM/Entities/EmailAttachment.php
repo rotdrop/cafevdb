@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,19 +41,13 @@ class EmailAttachment implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 512, nullable: false)]
   #[ORM\Id]
-  private $fileName;
+  private string $fileName;
 
-  /**
-   * @var EmailDraft
-   */
   #[ORM\JoinColumn(onDelete: 'CASCADE')]
   #[ORM\ManyToOne(targetEntity: EmailDraft::class, inversedBy: 'fileAttachments')]
-  private $draft;
+  private ?EmailDraft $draft = null;
 
   /**
    * Set messageId.
@@ -74,7 +68,7 @@ class EmailAttachment implements \ArrayAccess
    *
    * @return null|EmailDraft
    */
-  public function getDraft()
+  public function getDraft():?EmailDraft
   {
     return $this->draft;
   }

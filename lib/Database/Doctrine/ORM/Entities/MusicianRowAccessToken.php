@@ -47,29 +47,21 @@ class MusicianRowAccessToken implements \ArrayAccess
 
   const HASH_LENGTH = 512;
 
-  /**
-   * @var Musician
-   */
   #[ORM\OneToOne(targetEntity: Musician::class, inversedBy: 'rowAccessToken', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
-  private $userId;
+  private ?string $userId;
 
   /**
-   * @var string
-   *
    * This field stores a SHA-512 hashed random token. The user supplies the
    * un-hashed token from its encrypted config-space, the user-token is
    * hashed, if the hashes and the user-id match then the user gets access to
    * its data. Storage is a hex-string
    */
   #[ORM\Column(type: 'string', length: self::HASH_LENGTH/4, unique: true, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
-  private $accessTokenHash;
+  private string $accessTokenHash;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?Musician $musician = null, ?string $token = null)

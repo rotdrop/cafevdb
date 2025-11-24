@@ -32,7 +32,7 @@ trait CreatedAt
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
-  protected ?DateTimeImmutable $created;
+  protected ?DateTimeImmutable $created = null;
 
   /**
    * Sets created.

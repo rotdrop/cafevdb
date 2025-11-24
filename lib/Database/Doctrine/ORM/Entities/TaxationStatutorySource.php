@@ -54,23 +54,15 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   public const RATE_PRECISION = 2;
   public const RATE_SCALE = self::RATE_PRECISION;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private int $id;
 
-  /**
-   * @var Types\EnumTaxType
-   */
   #[ORM\Column(type: 'EnumTaxType', nullable: false, options: ['default' => 'corporate income tax'])]
   private Types\EnumTaxType $taxType;
 
   /**
-   * @var string
-   *
    * Tax rate. If 0 then this item refers to a tax exemption, a taxation
    * exception. This assumes that governments never issue fractional tax rates
    * ... This not the percentage, but the fraction between 0 and 1.
@@ -79,32 +71,28 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   private RationalNumber $rate;
 
   /**
-   * @var string
-   *
    * Country where this is legally valid.
    */
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $country;
 
   /**
-   * @var string
-   *
    * The abbreviated law justifying the taxation, "§15, Abs. 3 UStG" or something like this.
    */
   #[ORM\Column(type: 'string', length: 255, nullable: false)]
   private string $law;
 
   /**
-   * @var string
-   *
    * A hint, e.g. "Kleinunternehmerregelung".
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private string $hint;
+  private ?string $hint;
 
+  /** @var Collection<TaxExemptionNotice> */
   #[ORM\ManyToMany(targetEntity: TaxExemptionNotice::class, mappedBy: 'taxationStatutorySources')]
   private Collection $taxExemptionNotices;
 
+  /** @var Collection<Invoice> */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'taxationStatutorySource')]
   private Collection $invoices;
 

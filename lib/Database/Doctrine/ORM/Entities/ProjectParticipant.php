@@ -26,14 +26,15 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * Entity for project participants.
@@ -51,73 +52,59 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\GetByUuidTrait;
 
-  /**
-   * @var Project
-   */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participants', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var Musician
-   */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipation', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
-  /**
-   * @var bool
-   */
-  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0', 'comment' => 'Participant has confirmed the registration.'])]
-  private $registration = '0';
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 0, 'comment' => 'Participant has confirmed the registration.'])]
+  private bool $registration = false;
 
-  /**
-   * @var Types\EnumParticipationStatus
-   */
   #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
-  private $participationStatus;
+  private Types\EnumParticipationStatus $participationStatus;
 
   /**
-   * @var Collection
+   * @var Collection<UuidInterface, ProjectParticipantFieldDatum>
    *
    * Link to extra fields data
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-  private $participantFieldsData;
+  private Collection $participantFieldsData;
 
   /**
-   * @var Collection
+   * @var Collection<ProjectInstrument>
    *
    * Link in the project instruments, may be more than one per participant.
    */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'projectParticipant', cascade: ['all'], orphanRemoval: true)]
-  private $projectInstruments;
+  private Collection $projectInstruments;
 
   /**
-   * @var Collection
+   * @var Collection<CompositePayment>
    *
    * Link to composit payments, needed for the usage accounting.
    */
   #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'projectParticipant')]
-  private $payments;
+  private Collection $payments;
 
   /**
-   * @var Collection
+   * @var Collection<Invoice>
    *
    * Link to composit payments, needed for the usage accounting.
    */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'projectParticipant')]
-  private $invoices;
+  private Collection $invoices;
 
   /**
-   * @var DatabaseStorage
-   *
    * The root-directory entry for the potentially encrypted participant
    * storage. This would also be available through the DatabaseStorages table,
    * but we keep it here for convenient access.
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
-  private $databaseDocuments;
+  private DatabaseStorage $databaseDocuments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?Musician $musician = null, ?Project $project = null)

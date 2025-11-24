@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,49 +41,31 @@ class GnuCashTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   private string $guid;
 
-  /**
-   * @var GnuCashCommodity
-   */
   #[ORM\JoinColumn(name: 'currency_guid', referencedColumnName: 'guid', nullable: false)]
   #[ORM\ManyToOne(targetEntity: GnuCashCommodity::class, fetch: 'EXTRA_LAZY')]
   private GnuCashCommodity $currency;
 
   /**
-   * @var string
-   *
-   *
    * @todo What is this?
    */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $num;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'datetime_immutable', options: ['default' => '1970-01-01 00:00:00.000000'])]
-  private $postDate;
+  private DateTimeImmutable $postDate;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'datetime_immutable', options: ['default' => '1970-01-01 00:00:00.000000'])]
-  private $enterDate;
+  private DateTimeImmutable $enterDate;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: true)]
-  private string $description;
+  private ?string $description;
 
   /**
-   * @var Collection
+   * @var Collection<GnuCashSplit>
    *
    * Link back to the splits belonging to this transaction.
    */

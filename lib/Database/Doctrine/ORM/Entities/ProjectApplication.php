@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,8 +42,6 @@ class ProjectApplication implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**
-   * @var Project
-   *
    * The related project.
    */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'applications', fetch: 'EXTRA_LAZY')]
@@ -60,8 +57,6 @@ class ProjectApplication implements \ArrayAccess
   private string $email;
 
   /**
-   * @var null|string
-   *
    * In order to revisit their registration data people have to provide a
    * password or -- if they have cloud account -- have to be logged in. This
    * is the cryptographically strong password hash obtained from the NC hasher
@@ -71,8 +66,6 @@ class ProjectApplication implements \ArrayAccess
   private ?string $passwordHash =  null;
 
   /**
-   * @var Musician
-   *
    * The related musician (i.e. person). Maybe null. As we do not know how
    * people try to register themselves we need a manual review of the
    * registation data. For the case that applicants first logged into the
@@ -83,7 +76,7 @@ class ProjectApplication implements \ArrayAccess
   private ?Musician $musician = null;
 
   /**
-   * @var array
+   * @var array<string, float|string|object>
    *
    * The JSON data submitted by the applicant.
    */

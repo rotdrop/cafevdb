@@ -43,7 +43,7 @@ class EncryptedFileData extends FileData
    *
    * {@inheritdoc}
    */
-  protected $file;
+  protected File $file;
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   protected string $data;

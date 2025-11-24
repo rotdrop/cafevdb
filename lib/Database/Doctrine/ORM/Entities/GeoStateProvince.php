@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,41 +42,25 @@ class GeoStateProvince implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
-  private $countryIso;
+  private string $countryIso;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 3, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
-  private $code;
+  private string $code;
 
-  /**
-   * @var string
-   *
-   */
   #[ORM\Id]
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $target;
+  private string $target;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
-  private $l10nName;
+  private string $l10nName;
 
-  /**
-   * @var GeoCountry
-   */
   #[ORM\JoinColumn(name: 'country_iso', referencedColumnName: 'iso')]
   #[ORM\JoinColumn(name: 'target', referencedColumnName: 'target')]
   #[ORM\ManyToOne(targetEntity: GeoCountry::class, inversedBy: 'statesProvinces', fetch: 'EAGER')]
-  private $country;
+  private GeoCountry $country;
 
   /** {@inheritdoc} */
   public function __construct()

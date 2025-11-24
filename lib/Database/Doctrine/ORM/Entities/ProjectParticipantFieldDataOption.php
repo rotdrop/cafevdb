@@ -61,39 +61,27 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public const GENERATOR_LABEL = '__generator__';
 
   /**
-   * @var ProjectParticipantField
-   *
    * Link back to ProjectParticipantField
    */
   #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'dataOptions')]
   #[ORM\Id]
-  private $field;
+  private ProjectParticipantField $field;
 
-  /**
-   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   */
   #[ORM\Column(type: 'uuid_binary')]
   #[ORM\Id]
-  private $key;
+  private UuidInterface $key;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable(untranslated: 'untranslatedLabel')]
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
-  private $label;
+  private ?string $label = null;
 
   /**
-   * @var string
-   *
    * Untranslated variant of self:$label, filled automatically by
    * Gedmo\Translatable
    */
-  private $untranslatedLabel;
+  private ?string $untranslatedLabel = null;
 
   /**
-   * @var string
-   *
    * Multi-purpose field.
    *
    * - for FieldMultiplicity::RECURRING the generator option (Uuid::NIL) stores
@@ -104,11 +92,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *   the birth of its receivables.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private $data;
+  private ?string $data = null;
 
   /**
-   * @var string
-   *
    * Only for receivables and liabilities. The balancing account for
    * double-entry accounting. Currently this is just the full path of the
    * GnuCash account, separated by colons. The other account is implied by
@@ -117,46 +103,44 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @todo Quite hard-coded.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private $balancingAccount;
+  private ?string $balancingAccount = null;
 
   /**
    * @var string
    * Optional value of a deposit for monetary options.
    */
   #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
-  private ?RationalNumber $deposit;
+  private ?RationalNumber $deposit = null;
 
   /**
-   * @var int Limit on number of group members for
+   * Limit on number of group members for
    * FieldMultiplicity::GROUPSOFPEOPLE, FieldMultiplicity::GROUPOFPEOPLE
    * fields. Also misused as starting date for recurring receivables
    * generators.
    */
   #[ORM\Column(type: 'bigint', nullable: true)]
-  private $limit;
+  private ?int $limit = null;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable]
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
-  private $tooltip;
+  private ?string $tooltip = null;
 
+  /** @var Collection<int, ProjectParticipantFieldDatum> */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'dataOption', indexBy: 'musician_id', cascade: ['persist'], orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   #[Gedmo\SoftDeleteableCascade(delete: false, undelete: true)]
-  private $fieldData;
+  private Collection $fieldData;
 
   /**
-   * @var ProjectPayment
+   * @var Collection<ProjectPayment>
    */
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivableOption')]
-  private $payments;
+  private Collection $payments;
 
   /**
-   * @var InvoiceItem
+   * @var Collection<InvoiceItem>
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivableOption')]
-  private $invoiceItems;
+  private Collection $invoiceItems;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -165,8 +149,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $this->fieldData = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->invoiceItems = new ArrayCollection();
-    $this->key = null;
-    $this->field = null;
   }
   // phpcs:enable
 

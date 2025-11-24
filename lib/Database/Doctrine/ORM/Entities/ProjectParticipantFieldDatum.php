@@ -57,86 +57,61 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   const PAYMENT_REFERENCE_SEPARATOR = CompositePayment::SUBJECT_OPTION_SEPARATOR;
 
-  /**
-   * @var ProjectParticipantField
-   */
   #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $field;
+  private ProjectParticipantField $field;
 
-  /**
-   * @var Project
-   */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var Musician
-   */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
-  /**
-   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   */
   #[ORM\Column(type: 'uuid_binary')]
   #[ORM\Id]
-  private $optionKey;
+  private UuidInterface $optionKey;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'text', length: 16777215, nullable: true, options: ['default' => null])]
-  private $optionValue = null;
+  private ?string $optionValue = null;
 
   /**
-   * @var RationalNumber
-   *
    * Optional value of a deposit for monetary options. This is
    * unused if the deposit is fixed by single- or multi-select
    * options. Supported range is IIIII.DD which is plenty at the time of this
    * writing.
    */
   #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
-  private ?RationalNumber $deposit;
+  private ?RationalNumber $deposit = null;
 
-  /**
-   * @var ProjectParticipantFieldDataOption
-   */
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
-  private $dataOption;
+  private ProjectParticipantFieldDataOption $dataOption;
 
-  /**
-   * @var ProjectParticipant
-   */
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
-  private $projectParticipant;
+  private ProjectParticipant $projectParticipant;
 
   /**
-   * @var ProjectPayment
+   * @var Collection<ProjectPayment>
    */
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivable')]
-  private $payments;
+  private Collection $payments;
 
   /**
-   * @var InvoiceItems
+   * @var Collection<InvoiceItem>
    */
   #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'receivable')]
-  private $invoiceItems;
+  private Collection $invoiceItems;
 
   /**
-   * @var DatabaseStorageFile
-   *
    * Optional. ATM only used for particular auto-generated monetary fields.
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
-  private $supportingDocument;
+  private ?DatabaseStorageFile $supportingDocument = null;
 
   /** TBD. */
   public function __construct()

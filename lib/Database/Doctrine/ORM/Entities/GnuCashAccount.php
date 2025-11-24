@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,78 +53,43 @@ class GnuCashAccount implements \ArrayAccess
   //   `hidden` int(11) DEFAULT NULL,
   //   `placeholder` int(11) DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   private string $guid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $name;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $accountType;
 
-  /**
-   * @var null|GnuCashCommodity
-   */
   #[ORM\JoinColumn(name: 'commodity_guid', referencedColumnName: 'guid', nullable: true)]
   #[ORM\ManyToOne(targetEntity: GnuCashCommodity::class, fetch: 'EXTRA_LAZY')]
   private ?GnuCashCommodity $commodity;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   private int $commodityScu;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   private int $nonStdScu;
 
-  /**
-   * @var GnuCashAccount
-   */
   #[ORM\JoinColumn(name: 'parent_guid', referencedColumnName: 'guid', nullable: true)]
   #[ORM\ManyToOne(targetEntity: GnuCashAccount::class, inversedBy: 'children', fetch: 'EXTRA_LAZY')]
   private ?GnuCashAccount $parent;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<GnuCashAccount> */
   #[ORM\OneToMany(targetEntity: GnuCashAccount::class, mappedBy: 'parent', fetch: 'EXTRA_LAZY')]
-  private string $children;
+  private Collection $children;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private string $code;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2028, nullable: false)]
   private string $description;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $hidden;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'boolean', nullable: false)]
   private bool $placeholder;
 

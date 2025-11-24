@@ -62,8 +62,9 @@ class WebBrowserHistoryState implements \ArrayAccess
   protected string $userId;
 
   #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-  protected ?DateTimeImmutable $created;
+  protected ?DateTimeImmutable $created = null;
 
+  /** @var Collection<string, WebBrowserHistoryEntry> */
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['key' => 'ASC'])]
   protected Collection $stack;

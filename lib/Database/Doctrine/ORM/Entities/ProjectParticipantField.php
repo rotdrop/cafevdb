@@ -24,11 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use DateTimeImmutable;
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\Uuid;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -36,10 +34,12 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectParticipantFields
@@ -61,67 +61,44 @@ class ProjectParticipantField implements \ArrayAccess
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer')]
   #[ORM\Id]
   #[ORM\GeneratedValue]
-  private $id;
+  private int $id;
 
-  /**
-   * @var Project
-   */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFields', fetch: 'EXTRA_LAZY')]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable(untranslated: 'untranslatedName')]
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  private $name;
+  private string $name;
 
   /**
-   * @var string
-   *
    * Untranslated variant of self:$name, filled automatically by
    * Gedmo\Translatable
    */
-  private $untranslatedName;
+  private string $untranslatedName;
 
-  /**
-   * @var Types\EnumParticipantFieldMultiplicity
-   */
   #[ORM\Column(type: 'EnumParticipantFieldMultiplicity', nullable: false)]
-  private $multiplicity;
+  private Types\EnumParticipantFieldMultiplicity $multiplicity;
 
-  /**
-   * @var EnumParticipantFieldDataType
-   */
   #[ORM\Column(type: 'EnumParticipantFieldDataType', nullable: false, options: ['default' => 'text'])]
-  private $dataType = 'text';
+  private Types\EnumParticipantFieldDataType $dataType;
 
   /**
-   * @var Collection
+   * @var Collection<UuidInterface, ProjectParticipantFieldDataOption>
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDataOption::class, mappedBy: 'field', indexBy: 'key', cascade: ['persist'], orphanRemoval: true)]
   #[ORM\OrderBy(['label' => 'ASC', 'key' => 'ASC'])]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
-  private $dataOptions;
+  private Collection $dataOptions;
 
-  /**
-   * @var DateTimeImmutable
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date for financial fields.'])]
-  private $dueDate = null;
+  private ?DateTimeImmutable $dueDate = null;
 
-  /**
-   * @var DateTimeImmutable
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date of deposit for financial fields.'])]
-  private $depositDueDate = null;
+  private ?DateTimeImmutable $depositDueDate = null;
 
   /**
    * @var null|ProjectParticipantFieldDataOption
@@ -129,11 +106,9 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\JoinColumn(name: 'id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'default_value', referencedColumnName: 'key', nullable: true)]
   #[ORM\OneToOne(targetEntity: ProjectParticipantFieldDataOption::class, cascade: ['persist'])]
-  private $defaultValue = null;
+  private ?ProjectParticipantFieldDataOption $defaultValue = null;
 
   /**
-   * @var string
-   *
    * Only for receivables and liabilities. The balancing account for
    * double-entry accounting. Currently this is just the full path of the
    * GnuCash account, separated by colons. The other account is implied by
@@ -142,71 +117,53 @@ class ProjectParticipantField implements \ArrayAccess
    * @todo Quite hard-coded.
    */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private $balancingAccount;
+  private ?string $balancingAccount = null;
 
   /**
    * @var string
    */
   #[Gedmo\Translatable]
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
-  private $tooltip = null;
+  private ?string $tooltip = null;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable(untranslated: 'untranslatedTab')]
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Tab to display the field in. If empty, then the project tab is used.'])]
-  private $tab = null;
+  private ?string $tab = null;
 
   /**
-   * @var string
-   *
    * Untranslated variant of self::$tab, filled automatically by
    * Gedmo\Translatable
    */
-  private $untranslatedTab;
+  private ?string $untranslatedTab = null;
 
-  /**
-   * @var int|null
-   */
   #[ORM\Column(type: 'integer', nullable: true)]
-  private $displayOrder = null;
+  private ?int $displayOrder = null;
 
   /**
-   * @var null|string
-   *
    * If non-null show the field only in the respective view, either
    * "participants" or "associates". If null show the field in either view.
    */
   #[ORM\Column(type: 'EnumParticipationContext', nullable: false, options: ['default' => 'unrestricted'])]
   private ParticipationContext $participationContext;
 
-  /**
-   * @var bool|null
-   */
-  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
-  private $encrypted = false;
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 0])]
+  private ?bool $encrypted = false;
 
   /**
-   * @var Types\EnumAccessPermission
-   *
    * A bit-field which determines whether this field is exported to the
    * corresponding participant for use in the cafevdbmembers-app.
    */
   #[ORM\Column(type: 'EnumAccessPermission', nullable: false, options: ['default' => 'none'])]
-  private $participantAccess;
+  private Types\EnumAccessPermission $participantAccess;
 
   /**
-   * @var Collection
+   * @var Collection<ProjectParticipantFieldDatum>
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
-  private $fieldData;
+  private Collection $fieldData;
 
-  /**
-   * @var null|ProjectEvent
-   */
   #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField', orphanRemoval: true)]
-  private $projectEvent;
+  private ?ProjectEvent $projectEvent = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -215,6 +172,9 @@ class ProjectParticipantField implements \ArrayAccess
     $this->id = null;
     $this->project = null;
     $this->defaultValue = null;
+    $this->dataType = Types\EnumParticipantFieldDataType::TEXT();
+    $this->participationContext = ParticipationContext::UNRESTRICTED();
+    $this->participantAccess = Types\EnumAccessPermission::NONE();
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
     $this->participantAccess = Types\EnumAccessPermission::NONE();

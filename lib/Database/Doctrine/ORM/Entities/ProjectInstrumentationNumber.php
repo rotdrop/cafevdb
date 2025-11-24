@@ -25,10 +25,9 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProjectInstrumentationNumber
@@ -53,24 +52,18 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   #[ORM\Id]
   private Instrument $instrument;
 
-  /**
-   * @var int
-   */
-  #[ORM\Column(type: 'integer', options: ['default' => '0', 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
+  #[ORM\Column(type: 'integer', options: ['default' => ProjectInstrument::UNVOICED, 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
   #[ORM\Id]
-  private $voice = ProjectInstrument::UNVOICED;
+  private int $voice = ProjectInstrument::UNVOICED;
 
-  /**
-   * @var int
-   */
-  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Number of required musicians for this instrument'])]
-  private $quantity = '1';
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 1, 'comment' => 'Number of required musicians for this instrument'])]
+  private int $quantity = 1;
 
   /**
    * @var Collection<ProjectInstrument>
    */
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
-  private $projectInstruments;
+  private Collection $projectInstruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?Project $project = null, ?Instrument $instrument = null, int $voice = ProjectInstrument::UNVOICED)

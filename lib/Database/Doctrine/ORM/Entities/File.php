@@ -26,13 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 /**
  * An entity which modesl a file-system file. While it is not always
@@ -58,54 +57,36 @@ class File implements \ArrayAccess
 
   const PATH_SEPARATOR = '/';
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected $id;
+  protected int $id;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 512, nullable: true)]
-  protected $fileName;
+  protected ?string $fileName;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
-  protected $mimeType;
+  protected string $mimeType;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
-  protected $size = -1;
+  protected int $size = -1;
 
   /**
-   * @var Collection
+   * @var Collection<FileData>
    *
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
    */
   #[ORM\OneToMany(targetEntity: FileData::class, mappedBy: 'file', cascade: ['all'], orphanRemoval: true, fetch: 'EXTRA_LAZY')]
-  protected $fileData;
+  protected Collection $fileData;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
-  protected $dataHash;
+  protected ?string $dataHash;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[Gedmo\Timestampable(on: ['update', 'change'], field: 'fileData')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeImmutable $updated;
+  protected ?DateTimeImmutable $updated = null;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null)
@@ -160,7 +141,7 @@ class File implements \ArrayAccess
   /**
    * Set fileName.
    *
-   * @param string|null $fileName
+   * @param ?string $fileName
    *
    * @return File
    */
