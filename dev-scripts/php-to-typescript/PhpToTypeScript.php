@@ -267,6 +267,12 @@ class PhpToTypeScript extends Command
           Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
           UuidInterface::class => new TypeScriptType('string'),
         ])
+        // try inject default TypeScriptTransformer
+        ->defaultInlineTypeReplacements([
+          // Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          // Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          // UuidInterface::class => new TypeScriptType('string'),
+        ])
         // file where TypeScript type definitions will be written
         ->outputFile($outputFile);
 
@@ -419,7 +425,7 @@ EOF;
                   array_pop($prefix);
                   if (!empty($prefix)) {
                     $prefix = implode('.', $prefix) . '.';
-                    $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
+                    // $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
                     $line = str_replace(' ' . $prefix, ' ', $line);
                   }
                   $up = str_repeat('../', count($selfNS));
