@@ -145,6 +145,8 @@ class phpMyEdit
 	const VAL_DELIM = ',';
 	const ESC_CHAR = '\\';
 
+	const MATCH_EMPTY_FILTER = '!=%';
+
 	const MAX_INPUT_LEN = 60;
 
 	// Class variables {{{
@@ -2339,6 +2341,7 @@ class phpMyEdit
 			}
 			$fqn_flags = $this->fdd[$k][self::OPERATION_FILTER]['flags'] ?? null;
 
+			// @todo: search-for-empty should be treated in a special way
 			if (is_array($m) || is_array($mi)) {
 				if (is_array($mi)) {
 					$fqn_flags = $fqn_flags ?? self::OMIT_DESC;
@@ -2359,6 +2362,9 @@ class phpMyEdit
 				$not = ($mc == '!' || strtoupper($mc) == 'NOT') || strtoupper($mc) == 'NEGATE';
 				if ($this->col_has_values($k) && $this->col_has_multiple($k)) {
 					foreach (array_keys($m) as $key) {
+						if ($m[$key] == self::MATCH_EMPTY_FILTER) {
+							$m[$key] = '';
+						}
 						$m[$key] = addslashes($m[$key]);
 					}
 					$fqn = $this->fqn($k, $fqn_flags);
@@ -2536,7 +2542,7 @@ class phpMyEdit
 						if ($afilter == '') {
 							$ar[] = [
 								'fqn' => $sqlKey,
-								'fqnTemplate' => "IFNULL('%s','')",
+								'fqnTemplate' => "IFNULL(%s,'')",
 								'oper' => 'LIKE',
 								'value' => "''",
 							];
@@ -4929,7 +4935,7 @@ EOT;
 				$valgrp		= $this->set_values($k, $from_table);
 				$vals		= [
 					'*' => '*',
-					'' => '[' . ($this->labels['empty'] ?? 'empty') . ']',
+					self::MATCH_EMPTY_FILTER => '[' . ($this->labels['empty'] ?? 'empty') . ']',
 				] + $valgrp['values'];
 				// $this->logInfo('FILTER VALUES ' . print_r($vals, true));
 				$groups     = $valgrp['groups'];
