@@ -240,13 +240,6 @@ class ProjectParticipantEntityListener
    */
   private function registerPreCommitAction(Entity $entity, bool $remove):void
   {
-    /** @var ContactsService $contactsService */
-    $contactsService = $this->appContainer->get(ContactsService::class);
-    $musician = $entity->getMusician();
-    if (!$contactsService->registerContactSynchronization($musician)) {
-      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
-    }
-
     $entityId = self::entityId($entity);
     if (!empty($this->preCommitActions[$entityId])) {
       // avoid recursion
@@ -254,12 +247,19 @@ class ProjectParticipantEntityListener
     }
     $this->preCommitActions[$entityId] = true;
 
+    /** @var ContactsService $contactsService */
+    $contactsService = $this->appContainer->get(ContactsService::class);
+    $musician = $entity->getMusician();
+    if (!$contactsService->registerContactSynchronization($musician)) {
+      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
+    }
+
     /** @var IConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(IConfig::class);
 
     $appName = $this->appContainer->get('appName');
-    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
     if (empty($orchestraGroupId)) {
       return;
     }
