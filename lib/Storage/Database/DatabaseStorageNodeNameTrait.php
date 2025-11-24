@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IL10N;
 
 use OCA\CAFEVDB\AppInfo\Application;
@@ -43,6 +45,7 @@ trait DatabaseStorageNodeNameTrait
    * @var IL10N
    * Personal localization settings based on the app settings.
    */
+  #[TSAttributes\Hidden]
   protected $appL10n;
 
   /** @return IL10N */
