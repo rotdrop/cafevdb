@@ -69,7 +69,7 @@ class ToolTipsDataService
         $parameter = fn(IL10N $l) => $l->t($text, $param);
       }
     }
-    return [ 'text' => $text, 'parameters' => $parameters ];
+    return [ 'text' => $text, 'parameters' => $parameters, 'options' => $options ];
   }
 
   private static $toolTipsData = null;
@@ -1072,6 +1072,7 @@ operators on the left. For text-fields
 <li>wildcards in quoted strings are ignored</li>
 <li>space around unquoted strings is removed</li>
 <li>single or double quotes have the same meaning</li>
+<li>strings not containing wildcards are treated as being enclosed in wildcars</li>
 </ul>
 Text-fields allow (in particular) for the following
 filter possibilities (meaning that <code>SOMETHING</code> is your example
@@ -1083,7 +1084,11 @@ search-string):
 <dt>SOME%%THING</dt>
 <dd>search for any expression starting with SOME and ending with THING</dd>
 <dt>&quot;SOME*THING&quot;</dt>
-<dd>search for exactly the expression SOME*THING, the wildcard &quot;*&quot; is not taken in to account</dd>
+<dd>search for the expression %%SOME*THING%%, the wildcard &quot;*&quot; is not taken into account</dd>
+<dt>=&quot;SOME*THING&quot;</dt>
+<dd>search for SOME*THING, the wildcard &quot;*;&quot; is not taken into account, no wildcards surrounding the search term.
+<dt>=SOME*THING</dt
+<dd>search for SOME%%THING (with wildcard in the middle), no wildcards surrounding the search term will be added.
 <dt>!SOMETHING</dt>
 <dd>match everything not being matched by SOMETHING</dd>
 </dl>
