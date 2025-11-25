@@ -907,13 +907,13 @@ GROUP BY t.id';
           'having' => true,
         ],
         'php' => function($totalAmount, $action, $k, $row, $recordId, PHPMyEdit $pme) {
-          $musicianId = $recordId['id'];
-          $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
           if ($totalAmount == 0.0) {
             return '';
           }
+          $musicianId = $recordId['id'];
+          $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
           $bval = $this->l->t(
-            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
+            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee->toDecimal(2) ]);
           $tip = $this->toolTipsService['musician-instrument-insurance'];
           $urlParameters = [
             'template' => 'instrument-insurance',

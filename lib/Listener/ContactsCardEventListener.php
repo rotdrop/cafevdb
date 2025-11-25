@@ -210,6 +210,11 @@ class ContactsCardEventListener implements IEventListener
           /** @var CardMovedEvent $event */
           // We only update the addressBookUri field here
           $addressBookUri = self::getAddressBookUri($event->getSourceShares());
+          if ($addressBookUri === null) {
+            throw new UnexpectedValueException(
+              'Unable to determine address book uri ' . print_r($event->getSourceShares(), true),
+            );
+          }
           $cardData = $event->getObjectData();
           /** @var VCard $vCard */
           $vCard = VObject\Reader::read($cardData['carddata']);
@@ -221,6 +226,11 @@ class ContactsCardEventListener implements IEventListener
           if ($musician !== null) {
             if (self::isAddressBookGroupWritable($event->getTargetShares(), $orchestraGroup)) {
               $addressBookUri = self::getAddressBookUri($event->getTargetShares());
+              if ($addressBookUri === null) {
+                throw new UnexpectedValueException(
+                  'Unable to determine address book uri ' . print_r($event->getTargetShares(), true),
+                );
+              }
             } else {
               $addressBookUri = null;
             }
@@ -239,6 +249,11 @@ class ContactsCardEventListener implements IEventListener
           // address book would not be suitable for import in order to reduce
           // the potential for broken addressbook links.
           $addressBookUri = self::getAddressBookUri($event->getAddressBookData());
+          if ($addressBookUri === null) {
+            throw new UnexpectedValueException(
+              'Unable to determine address book uri ' . print_r($event->getAddressBookData(), true),
+            );
+          }
           $cardData = $event->getCardData();
           /** @var VCard $vCard */
           $vCard = VObject\Reader::read($cardData['carddata']);
@@ -474,9 +489,15 @@ class ContactsCardEventListener implements IEventListener
    *
    * @return string
    */
-  private static function getAddressBookUri(array $addressBookData):string
+  private static function getAddressBookUri(array $addressBookData):?string
   {
-    list(,,$addressBookOwner) = explode('/', $addressBookData['principaluri']);
+    if (empty($addressBookData['principaluri'])) {
+      return null;
+    }
+    list(,,$addressBookOwner) = array_merge(explode('/', $addressBookData['principaluri']), [null, null, null]);
+    if ($addressBookOwner === null) {
+      return null;
+    }
     return $addressBookOwner . '/' . $addressBookData['uri'];
   }
 }
