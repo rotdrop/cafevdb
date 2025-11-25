@@ -239,7 +239,7 @@ class EmailFormController extends Controller
    *
    * @return string Rendered HTML template.
    */
-  private function templateEmailOptions(Composer $composer, ?string $currentTemplate):string
+  private function templateEmailOptions(Composer $composer, ?string $currentTemplate = null):string
   {
     $templateParamters = [
       'templateEmails' => $composer->templateEmails(),
@@ -823,7 +823,7 @@ class EmailFormController extends Controller
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $emailOptions = $topic + 'EmailOptions';
+        $emailOptions = $topic . 'EmailOptions';
         $requestData[$emailOptions] = $this->$emailOptions($composer);
         break;
       case 'validateEmailRecipients':
