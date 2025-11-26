@@ -57,7 +57,7 @@ class Transliterator
    *
    * @return Transliterate
    */
-  public function setLocale(string $locale):Transliterate
+  public function setLocale(string $locale):Transliterator
   {
     $this->locale = $locale;
 
