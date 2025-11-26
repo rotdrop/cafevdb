@@ -793,11 +793,29 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     $purpose = '';
     foreach ($subjects as $subject) {
       $parts = array_map(
-        fn($part) => Util::dashesToCamelCase(
-          preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $part),
-          capitalizeFirstCharacter: true,
-          dashes: ' -_',
-        ),
+        function(string $part) {
+          // This should remain human-readable, therefore "camel-casing"
+          // should only be performed on "real words".
+          $part = Util::normalizeSpaces($part);
+          $words = explode(' ', $part);
+          $result = '';
+          $prevIsWord = true;
+          foreach ($words as $word) {
+            $word = preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $word);
+            if (preg_match('/^[a-za-z-_]+$/', $word)) {
+              $word = Util::dashesToCamelCase($word, capitalizeFirstCharacter: true, dashes: '-_');
+              if (!$prevIsWord) {
+                $result .= ' ';
+              }
+              $prevIsWord = true;
+            } else {
+              $result .= ' ';
+              $prevIsWord = false;
+            }
+            $result .= $word;
+          }
+          return $result;
+        },
         Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED),
       );
       $prefix = $parts[0];
