@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 
 /**
  * General support service, kind of inconsequent glue between
@@ -41,6 +42,8 @@ class InstrumentationService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  private DatabaseConnection $connection;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
