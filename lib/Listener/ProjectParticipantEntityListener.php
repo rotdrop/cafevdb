@@ -250,8 +250,16 @@ class ProjectParticipantEntityListener
     /** @var ContactsService $contactsService */
     $contactsService = $this->appContainer->get(ContactsService::class);
     $musician = $entity->getMusician();
-    if (!$contactsService->registerContactSynchronization($musician)) {
-      $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
+    switch ($contactsService->registerContactSynchronization($musician)) {
+      case null:
+        $this->logInfo('Contacts synchronization is already scheduled for ' . $musician->getPublicName());
+        break;
+      case false:
+        $this->logError('Contacts-synchronization could not be registered for ' . $musician->getPublicName());
+        break;
+      default:
+        // be silent
+        break;
     }
 
     /** @var IConfig $cloudConfig */

@@ -936,15 +936,17 @@ class ContactsService
    * null, then this specifies the addressbook of a linked contact which is to
    * be unlinked.
    *
-   * @return void
+   * @return null|bool Return \null if a registration is already in progress,
+   * \false if there is no database transaction active and \true if it was
+   * otherwise possible and not redundant to register a pre-commit action.
    */
-  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null):void
+  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null): ?bool
   {
     if (!empty($this->contactSynchronizations[$musician->getId()])) {
-      return;
+      return false;
     }
     if (!$this->entityManager->isTransactionActive()) {
-      return;
+      return false;
     }
     $this->contactSynchronizations[$musician->getId()] = $musician;
     /** @var ContactsCardEventListener $listener */
@@ -1013,6 +1015,7 @@ class ContactsService
         }
       ),
     );
+    return true;
   }
 
   /**
