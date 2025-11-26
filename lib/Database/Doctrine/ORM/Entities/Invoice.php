@@ -52,7 +52,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.

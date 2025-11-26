@@ -51,7 +51,7 @@ class SepaBulkTransaction implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]

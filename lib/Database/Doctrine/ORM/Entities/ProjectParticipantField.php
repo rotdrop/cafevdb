@@ -58,7 +58,7 @@ class ProjectParticipantField implements \ArrayAccess
   use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
 
   #[ORM\Column(type: 'integer')]
@@ -166,11 +166,12 @@ class ProjectParticipantField implements \ArrayAccess
   private ?ProjectEvent $projectEvent = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
+  public function __construct(?Project $project = null)
   {
     $this->__wakeup();
-    $this->id = null;
-    $this->project = null;
+    if ($project !== null) {
+      $this->project = project;
+    }
     $this->defaultValue = null;
     $this->dataType = Types\EnumParticipantFieldDataType::TEXT();
     $this->participationContext = ParticipationContext::UNRESTRICTED();
@@ -215,7 +216,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getId():?int
   {
-    return $this->id;
+    return $this->id ?? null;
   }
 
   /**

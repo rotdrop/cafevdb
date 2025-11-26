@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 /** Field $created and setter/getter. */
 trait CreatedAt
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use DateTimeTrait;
 
   protected ?DateTimeImmutable $created = null;
 

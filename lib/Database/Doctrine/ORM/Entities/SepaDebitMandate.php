@@ -45,7 +45,7 @@ class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;

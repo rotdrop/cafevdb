@@ -50,7 +50,7 @@ class ProjectEvent implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * While it would be tempting to just use the calendar URI and event UID and

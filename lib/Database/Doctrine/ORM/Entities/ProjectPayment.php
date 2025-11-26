@@ -162,13 +162,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set projectParticipant.
    *
-   * @param null|ProjectParticipant $projectParticipant
+   * @param ProjectParticipant $projectParticipant
    *
    * @return ProjectPayment
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectPayment
+  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectPayment
   {
     $this->projectParticipant = $projectParticipant;
+    $this->project = $projectParticipant->getProject();
+    $this->musician = $projectParticipant->getMusician();
 
     return $this;
   }

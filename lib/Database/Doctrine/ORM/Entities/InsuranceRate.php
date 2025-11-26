@@ -45,7 +45,7 @@ class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   public const RATE_PRECISION = 4;
   public const RATE_SCALE = self::RATE_PRECISION;

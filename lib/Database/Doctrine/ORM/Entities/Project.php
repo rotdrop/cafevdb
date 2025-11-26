@@ -55,7 +55,7 @@ class Project implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   private const DATE_FORMAT = 'Ymd';
 

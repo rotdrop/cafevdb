@@ -59,7 +59,7 @@ class SepaBankAccount implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaBankAccounts', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]

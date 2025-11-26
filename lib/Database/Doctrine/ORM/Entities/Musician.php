@@ -62,7 +62,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
@@ -641,7 +641,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setBirthday($birthday):Musician
+  public function setBirthday(string|int|\DateTimeInterface $birthday):Musician
   {
     $this->birthday = self::convertToDateTime($birthday);
 
