@@ -83,6 +83,13 @@ class TransliteratorTest extends TestCase
       'separator' => '|',
       'wordSeparator' => '#',
     ],
+    'john#james|doe' => [
+      'names' => [ 'blah' => 'John James', 'blub' => 'Doe' ],
+      'locale' => 'C.UTF-8',
+      'preferred' => [ 'blah', 'blub' ],
+      'separator' => '|',
+      'wordSeparator' => '#',
+    ],
   ];
 
   /** @return void */
@@ -99,7 +106,18 @@ class TransliteratorTest extends TestCase
   {
     foreach (self::LOGIN_NAMES as $expected => $testData) {
       $result = call_user_func_array([ $this->transliterator, 'generateUserIdSlug' ], $testData);
+      $this->assertEquals($result, $expected);
     }
-    $this->assertEquals($result, $expected);
+  }
+
+  /** @return void */
+  public function testSetGetLocale():void
+  {
+    $locales = array_values(array_unique(array_map(fn(array $data) => $data['locale'], array_merge(self::TRANSLITERATIONS, self::LOGIN_NAMES))));
+    foreach ($locales as $locale) {
+      $this->transliterator->setLocale($locale);
+      $setLocale = $this->transliterator->getLocale();
+      $this->assertEquals($locale, $setLocale);
+    }
   }
 }

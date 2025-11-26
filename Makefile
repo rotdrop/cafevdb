@@ -49,6 +49,9 @@ WGET = $(shell which wget 2> /dev/null)
 TINYMCE_VERSION=7
 #
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
+# PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
+PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
+
 
 ###############################################################################
 #
@@ -532,7 +535,7 @@ updatesql: $(ABSSRCDIR)/vendor-wrapped
 
 .PHONY: test
 test: $(PHPUNIT)
-	$(PHPUNIT) -c phpunit.xml
+	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --coverage-html $(ABSBUILDDIR)/php-code-coverage
 	$(PHPUNIT) -c phpunit.integration.xml
 
 .PHONY: l10n

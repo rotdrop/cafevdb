@@ -5,5 +5,8 @@
   "sort-packages": true,
   "require-dev": {
     "phpunit/phpunit": "*"
+  },
+  "autoload-dev": {
+    "psr-4": { "OCA\\CAFEVDB\\Tests\\": "../../tests/" }
   }
 }

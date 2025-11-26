@@ -27,11 +27,13 @@ namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 // use OCP\AppFramework\App;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestDox;
 
 use OCA\CAFEVDB\Crypto\OpenSSLAsymmetricCryptor;
 
 /** Test the OpenSSLAsymmetricCryptor class. */
 #[CoversClass(OpenSSLAsymmetricCryptor::class)]
+#[TestDox('OpenSSL Asymmetric Cryptor')]
 class OpenSSLAsymmetricCryptorTest extends TestCase
 {
   /** @var string */

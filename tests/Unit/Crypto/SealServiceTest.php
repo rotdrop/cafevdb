@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Crypto;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes;
 
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
@@ -36,7 +36,8 @@ use OCA\CAFEVDB\Crypto\SealService;
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
 /** Test the SealService class. */
-#[CoversClass(SealService::class)]
+#[Attributes\CoversClass(SealService::class)]
+#[Attributes\UsesClass(CloudSymmetricCryptor::class)]
 class SealServiceTest extends TestCase
 {
   /** @var string */

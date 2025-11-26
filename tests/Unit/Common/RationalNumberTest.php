@@ -25,15 +25,16 @@
 namespace OCA\CAFEVDB\Tests\Unit\Common;
 
 use OutOfBoundsException;
+use InvalidArgumentException;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes;
 
 use MathPHP\Number\Rational;
 use OCA\CAFEVDB\Common\RationalNumber;
 
 /** Test the RationalNumber class. */
-#[CoversClass(RationalNumber::class)]
+#[Attributes\CoversClass(RationalNumber::class)]
 class RationalNumberTest extends TestCase
 {
   /**
@@ -66,6 +67,8 @@ class RationalNumberTest extends TestCase
       $number = RationalNumber::fromDecimal($decimal);
       $this->assertEquals($rationalAsString, (string)$number);
     }
+    $this->expectException(InvalidArgumentException::class);
+    RationalNumber::fromDecimal('hutzliputzli');
   }
 
   /** @return void */
@@ -90,7 +93,6 @@ class RationalNumberTest extends TestCase
       (new RationalNumber(0, 391, 1000))->toDecimal(-1) => '0.391',
       (new RationalNumber(0, 391, 1000))->toDecimal() => '0.391',
       (new RationalNumber(0, 18189, 20000))->toDecimal(-1, 0) => '0.90945',
-
     ];
     foreach ($rationals as $decimal => $givenDecimal) {
       $this->assertEquals($givenDecimal, $decimal);
@@ -105,10 +107,77 @@ class RationalNumberTest extends TestCase
     }
   }
 
+  const FLOATS = [
+    .1234,
+    -.1234,
+    12345.678,
+    -12345.678,
+    1234,
+    -1234,
+  ];
+
   /** @return void */
+  public function testFromFloat():void
+  {
+    foreach (self::FLOATS as $float) {
+      $number = RationalNumber::fromFloat($float)->toFloat();
+      $this->assertEquals($number, $float);
+    }
+  }
+
+  const SIGNS = [
+    '.1234' => 1,
+    '-.1234' => -1,
+    '0.0' => 0,
+  ];
+
+  /** @return void */
+  public function testSign():void
+  {
+    foreach (self::SIGNS as $decimal => $sign) {
+      $number = RationalNumber::fromDecimal($decimal)->sign();
+      $this->assertEquals($number, $sign);
+    }
+  }
+
+  /** @return void */
+  public function testZero():void
+  {
+    $this->assertEquals(RationalNumber::fromDecimal(0), RationalNumber::zero());
+    $this->assertEquals(RationalNumber::fromDecimal(0), RationalNumber::createZeroValue());
+  }
+
+
+  const CREATE_DATA = [
+    [ '¹/₂', 0.5 ],
+    [ '-¹/₂', -0.5],
+    [ '¹/₁₆', 1.0/16.0 ],
+    [ '-¹/₁₆', -1.0/16.0 ],
+    [ '¹/₂', '0.5' ],
+    [ '-¹/₂', '-0.5' ],
+  ];
+
+  /**
+   * Test generation from various stuff.
+   *
+   * @return void
+   */
   public function testCreate():void
   {
     $this->assertEquals(true, RationalNumber::create(1, 2, 3)->equals(new RationalNumber(1, 2, 3)));
+    foreach (self::CREATE_DATA as $pair) {
+      [$expected, $origin] = $pair;
+      $rational = RationalNumber::create($origin);
+      $this->assertEquals($expected, (string)$rational);
+      $this->assertEquals($expected, (string)RationalNumber::create($rational));
+      $this->assertEquals($expected, (string)RationalNumber::Create(new Rational(
+        $rational->getWholePart(),
+        $rational->getNumerator(),
+        $rational->getDenominator(),
+      )));
+    }
+    $this->expectException(InvalidArgumentException::class);
+    RationalNumber::create(0.5, 1, 2);
   }
 
   /** @return void */
@@ -135,6 +204,47 @@ class RationalNumberTest extends TestCase
       $this->assertEquals($tuple[3], round($float, $tuple[2])); // wrong
       $rational = RationalNumber::create(...$tuple[0])->multiply(RationalNumber::create(...$tuple[1]));
       $this->assertEquals(true, $rational->round($tuple[2])->equals(RationalNumber::create(...$tuple[4])));
+    }
+  }
+
+  /**
+   * Test some more arithmetic.
+   *
+   * @return void
+   */
+  public function testPow():void
+  {
+    $rationals = [
+      (string)RationalNumber::create(2)->pow(4) => '16',
+      (string)(new RationalNumber(2))->pow(-4) => '¹/₁₆',
+      (string)(new RationalNumber(0, 1, 3))->pow(4) => '¹/₈₁',
+      (string)(new RationalNumber(0, 1, 3))->pow(-4) => '81',
+      (string)(new RationalNumber(2))->pow(0) => '1',
+      (string)RationalNumber::zero()->pow(0) => '1',
+    ];
+    foreach ($rationals as $powString => $givenString) {
+      $this->assertEquals($givenString, $powString);
+    }
+  }
+
+  /**
+   * Test some more arithmetic.
+   *
+   * @return void
+   */
+  public function testMinMax():void
+  {
+    // first element is expected result.
+    $rationals = [
+      [ RationalNumber::create(1, 1, 2), RationalNumber::create(1, 1, 2), 'min' ],
+      [ RationalNumber::create(1, 1, 2), RationalNumber::create(1, 1, 2), 'max' ],
+      [ RationalNumber::create(1, 1, 2), RationalNumber::create(-1, 1, 2), 'max' ],
+      [ RationalNumber::create(-1, 1, 2), RationalNumber::create(1, 1, 2), 'min' ],
+      [ RationalNumber::create(1, 1, 2), RationalNumber::create(2, 1, 2), 'min' ],
+      [ RationalNumber::create(1, 1, 2)->negEq(), RationalNumber::create(2, 1, 2)->negEq(), 'max' ],
+    ];
+    foreach ($rationals as $testData) {
+      $this->assertEquals($testData[0], RationalNumber::{$testData[2]}($testData[0], $testData[1]));
     }
   }
 
