@@ -44,6 +44,11 @@ trait EntityGeneratorTrait
   protected Entities\Project $project;
   protected Entities\ProjectParticipant $participant;
 
+  protected const MUSICIAN_IBAN = 'DE02120300000000202051';
+  protected const MUSICIAN_BIC = 'BYLADEM1001';
+  protected const MUSICIAN_BLZ = '12030000';
+  protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber*in, Konto';
+
   /**
    * {@inheritdoc}
    *
@@ -65,10 +70,11 @@ trait EntityGeneratorTrait
     );
 
     $this->project = (new Entities\Project)
-      ->setId(0)
+      ->setId(1)
       ->setName('TestProject2099')
       ->setYear(2099);
     $this->musician = $instrumentationService->getDummyMusician($this->project, persist: false);
+    $this->musician->setId(1);
     $this->participant = $this->musician->getProjectParticipantOf($this->project);
   }
 
@@ -88,7 +94,7 @@ trait EntityGeneratorTrait
     $generator = (new Entities\ProjectParticipantFieldDataOption)
       ->setField($field)
       ->setKey(Entities\ProjectParticipantFieldDataOption::GENERATOR_KEY)
-      ->setLabel(Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL)
+       ->setLabel(Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL)
       ;
     $field
       ->setDefaultValue($generator)
@@ -120,5 +126,37 @@ trait EntityGeneratorTrait
     $compositePayment->updateSubject();
 
     return $compositePayment;
+  }
+
+  /**
+   * @return Entities\SepaBankTransfer
+   */
+  protected function generateSepaBankAccount(): Entities\SepaBankAccount
+  {
+    $entity = (new Entities\SepaBankAccount)
+      ->setMusician($this->musician)
+      ->setSequence(1)
+      ->setIban(self::MUSICIAN_IBAN)
+      ->setBic(self::MUSICIAN_BIC)
+      ->setBlz(self::MUSICIAN_BLZ)
+      ->setBankAccountOwner(self::MUSICIAN_BANK_ACCOUNT_OWNER)
+      ;
+    $this->musician->getSepaBankAccounts()->add($entity);
+    return $entity;
+  }
+
+  /**
+   * @return Entities\SepaBankTransfer
+   */
+  protected function generateSepaBankTransfer(): Entities\SepaBankTransfer
+  {
+    $entity = (new Entities\SepaBankTransfer)
+      ->setDueDate('2099-01-01');
+    $bankAccount = $this->generateSepaBankAccount();
+    $payment = $this->generateCompositePayment();
+    $payment->setSepaBankAccount($bankAccount);
+    $entity->getPayments()->set($this->musician->getId(), $payment);
+
+    return $entity;
   }
 }
