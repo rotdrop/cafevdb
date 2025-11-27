@@ -549,7 +549,7 @@ class EncryptionService
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
-    if (!empty(OldSettingsKeys::USER_KEYS[$key] && OldSettingsKeys::USER_KEYS[$key] != $key)) {
+    if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
       $default = $this->containerConfig->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
     }
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
