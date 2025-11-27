@@ -71,6 +71,7 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\UsesClass(Types\AbstractEnumType::class)]
 #[Attributes\UsesClass(Util::class)]
 #[Attributes\UsesClass(Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait;

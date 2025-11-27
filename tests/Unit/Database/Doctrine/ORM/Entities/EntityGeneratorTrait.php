@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Trait class in order to generate entities without database access. */
 trait EntityGeneratorTrait
@@ -54,18 +55,28 @@ trait EntityGeneratorTrait
    *
    * @return void
    */
-  public function setup():void
+  public function setup(bool $persist = false):void
   {
     parent::setup();
 
-    $entityManager = $this->getMockBuilder(EntityManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    /** @var MockProvider $mockProvider */
+    $mockProvider = \OCP\Server::get(MockProvider::class);
+
+    if ($persist) {
+      $entityManager = $mockProvider->getEntityManager($this);
+      $entityManager->getWrappedObject();
+    } else {
+      $entityManager = $this->getMockBuilder(EntityManager::class)
+        ->disableOriginalConstructor()
+        ->getMock();
+    }
+
+    $appContainer = $mockProvider->getAppContainer($this);
 
     /** @var InstrumentationService $instrumentationService */
     $instrumentationService = new InstrumentationService(
-      configService: \OCP\Server::get(ConfigService::class),
-      toolTipsService: \OCP\Server::get(ToolTipsService::class),
+      configService: $appContainer->get(ConfigService::class),
+      toolTipsService: $appContainer->get(ToolTipsService::class),
       entityManager: $entityManager,
     );
 
@@ -73,7 +84,7 @@ trait EntityGeneratorTrait
       ->setId(1)
       ->setName('TestProject2099')
       ->setYear(2099);
-    $this->musician = $instrumentationService->getDummyMusician($this->project, persist: false);
+    $this->musician = $instrumentationService->getDummyMusician($this->project, persist: $persist);
     $this->musician->setId(1);
     $this->participant = $this->musician->getProjectParticipantOf($this->project);
   }
