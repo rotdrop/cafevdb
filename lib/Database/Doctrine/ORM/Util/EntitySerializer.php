@@ -24,14 +24,19 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
+use UnexpectedValueException;
+use Throwable;
+
 use Psr\Log\LoggerInterface;
 
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
+use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 /**
  * The goal is to serialize entities (... to JSON ...)  such that the JS
@@ -46,7 +51,9 @@ class EntitySerializer
 
   private IdentifierFlattener $identifierFlattener;
 
-  private array $entites = [];
+  private array $entityDepths = [];
+
+  private array $entities = [];
 
   private array $repositories = [];
 
@@ -63,42 +70,158 @@ class EntitySerializer
   }
 
   /**
+   * Export the collected entities as DTO.
+   *
+   * @return EntityResponse
+   */
+  public function export(): EntityResponse
+  {
+    return new EntityResponse(
+      $this->entities,
+      $this->repositories,
+    );
+  }
+
+  /**
+   * @param ClassMetadataInterface $classMetaData
+   *
+   * @param array $id
+   *
+   * @return string
+   */
+  private function flattenIdentifier(ClassMetadataInterface $classMetaData, array $id): string
+  {
+    if ($classMetaData instanceof ClassMetadataDecorator) {
+      $classMetaData = $classMetaData->getWrappedObject();
+    }
+    $ids = $this->identifierFlattener->flattenIdentifier($classMetaData, $id);
+
+    return implode(':', $ids);
+  }
+
+  /**
    * Add one Doctrine ORM entity to the serialization structure.
    *
    * @param mixed $entity An entity instance known to the entity manager.
+   *
+   * @param int $depth Recursion depth, defaults to 1 meaning: fetch the
+   * top-level entity and all associated entities (including collections) but
+   * do not fetch associated entities of associated entities.
+   *
+   * @param bool $principal Whether to add the entity the the principle
+   * entities, or just include it as part of a repository.
    *
    * @return void
    *
    * @throws EntitySerializationException
    */
-  public function addEntity(mixed $entity): void
+  public function addEntity(mixed $entity, int $depth = 1, bool $principal = true): void
   {
     try {
-      $metaData = $this->entityManager->getClassMetadata($entity);
+      $metaData = $this->entityManager->getClassMetadata(get_class($entity));
+      $entityClassName = $metaData->getName();
       $id = $metaData->getIdentifierValues($entity);
-      if (!$id) {
+      if (empty($id)) {
         throw Exceptions\DatabaseMissingIdentifierException(
           $this->l->t('Unable to determine the identifier values for an instance of "%s".', get_class($entity)),
           get_class($entity),
         );
       }
-      if ($class->containsForeignIdentifier || $class->containsEnumIdentifier) {
-        $id = $this->identifierFlattener->flattenIdentifier($class, $id);
+      $flatIdentifier = $this->flattenIdentifier($metaData, $id);
+      $existing = false;
+      if (!empty($this->repositories[$entityClassName][$flatIdentifier])) {
+        if ($principal) {
+          if (empty($this->entities[$entityClassName])
+              || !in_array($flatIdentifier, $this->entities[$entityClassName])) {
+            $this->entities[$entityClassName][] = $flatIdentifier;
+          }
+        }
+        if ($this->entityDepths[$entityClassName][$flatIdentifier] == $depth) {
+          return;
+        }
+        $existing = true;
       }
-      $flatIdentity = $this->identifierFlattener->flattenIdentifier($metaData, $id);
 
-      $flatEntitiy = [];
+      $flatEntity = [];
 
       // ordinary non-associative fields
       /** @var Mapping\FieldMapping $mapping */
       foreach (array_keys($metaData->fieldMappings) as $field) {
-        $flatEntitiy[$field] = $metaData->getFieldValue($field);
+        $flatEntity[$field] = $metaData->getFieldValue($entity, $field);
       }
       /** @var Mapping\AssociationMapping $associationMapping */
-      foreach ($metaData->associationMappings as $associationMapping) {
+      foreach ($metaData->associationMappings as $field => $associationMapping) {
+        switch (true) {
+          case $associationMapping instanceof Mapping\ToOneAssociationMapping:
+            $targetEntity = $metaData->getFieldValue($entity, $field);
+            if ($targetEntity === null) {
+              $flatEntity[$field] = null;
+              break;
+            }
+            $targetClassName = $associationMapping->targetEntity;
+            $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+            $targetId = $targetMetaData->getIdentifierValues($targetEntity);
+            if (empty($targetId)) {
+              throw Exceptions\DatabaseMissingIdentifierException(
+                $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
+                $targetClassName,
+              );
+            }
+            $flatTargetIdentifier = $this->flattenIdentifier($targetMetaData, $targetId);
+            $flatEntity[$field] = new EntityReference(
+              flatIdentifier: $flatTargetIdentifier,
+              entityClassName: $targetClassName,
+            );
+            if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+              $this->addEntity($targetEntity, $depth - 1, false);
+            }
+            break;
+          case $associationMapping instanceof Mapping\ToManyAssociationMapping:
+            $targetCollection = $metaData->getFieldValue($entity, $field);
+            if (null === $targetCollection) {
+              throw new UnexpectedValueException($this->l->t('Collection "%1$s" in entity of type "%2$s" is null.', [
+                $field, $entityClassName,
+              ]));
+            }
+            $targetClassName = $associationMapping->targetEntity;
+            $flatCollection = [];
+            foreach ($targetCollection as $key => $targetEntity) {
+              /** @var Mapping\ClassMetadata $targetMetaData */
+              $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+              $targetId = $targetMetaData->getIdentifierValues($targetEntity);
+              if (empty($targetId)) {
+                throw Exceptions\DatabaseMissingIdentifierException(
+                  $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
+                  $targetClassName,
+                );
+              }
+              $entityName = $targetMetaData->getName();
+              if ($entityName == $targetClassName) {
+                $entityName = null;
+              }
+              $flatTargetIdentifier = $this->flattenIdentifier($targetMetaData, $targetId);
+              $flatCollection[$key] = new EntityReference(
+                flatIdentifier: $flatTargetIdentifier,
+                entityClassName: $entityName,
+              );
+              if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+                $this->addEntity($targetEntity, $depth - 1, false);
+              }
+            }
+            $flatEntity[$field] = new EntityReferenceCollection(
+              entityClassName: $targetClassName,
+              entities: $flatCollection,
+            );
+            break;
+        }
       }
-      // go on ...
-
+      $this->repositories[$entityClassName][$flatIdentifier] = $flatEntity;
+      if ($principal) {
+        if (!$existing) {
+          $this->entities[$entityClassName][] = $flatIdentifier;
+        }
+        $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
+      }
     } catch (Throwable $t) {
       throw new Exceptions\EntitySerializationException(
         $this->l->t('Unable to compute a serialization for an instance of "%s".', get_class($entity)),
