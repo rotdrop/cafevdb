@@ -33,6 +33,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Attributes;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX endpoints for reporting CSP violation errors. */
 class CspViolationController extends Controller
@@ -69,7 +70,7 @@ class CspViolationController extends Controller
       return self::grumble($this->l->t('Unknown Request'));
     }
     if (empty($cspFailureToken) ||
-        $this->config->getAppValue($this->appName, 'cspfailuretoken') !== $cspFailureToken) {
+        $this->config->getAppValue($this->appName, ConfigConstants::CSP_FAILURE_TOKEN_KEY) !== $cspFailureToken) {
       return (new Http\Response)->setStatus(Http::STATUS_PRECONDITION_FAILED);
     }
     $cspReportData = file_get_contents('php://input');

@@ -25,19 +25,15 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /**
- * DTO for orchestra phone numbers.
+ * DTO for the orchestra locale.
  */
-class PhoneNumberResponse extends MessagesResponse
+class ConfigCheckItem extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    string $message,
-    public readonly string $number,
-    public readonly string $meta,
-    public readonly bool $isMobile,
-    public readonly bool $valid,
+    public readonly bool $status,
+    public readonly string $message,
   ) {
-    parent::__construct([ $message ]);
   }
 
   /**
@@ -51,6 +47,6 @@ class PhoneNumberResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self($messsage, $number, $meta, $isMobile, $valid);
+    return new self(status: $status, message: $message);
   }
 }

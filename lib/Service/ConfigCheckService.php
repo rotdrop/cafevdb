@@ -38,6 +38,7 @@ use OCP\Share\IShare;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util; // some static helpers, only for explode
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\Database\MountProvider;
@@ -89,7 +90,7 @@ class ConfigCheckService
    * ```
    * [ 'summary',
    *   ConfigConstants::USER_GROUP_KEY,
-   *   'encryptionkey'
+   *   EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
    *   'orchestra',
    *   ConfigConstants::SHAREOWNER_KEY,
    *   'sharedfolder',
@@ -111,7 +112,7 @@ class ConfigCheckService
       ConfigConstants::SHAREOWNER_KEY,
       'sharedfolder',
       'database',
-      'encryptionkey',
+      EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
       'migrations',
       'sharedaddressbooks',
     ] as $key) {
@@ -126,7 +127,7 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'encryptionkey';
+    $key = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
     try {
       $result[$key]['status'] = $result[ConfigConstants::ORCHESTRA_NAME_KEY]['status'] && $this->encryptionKeyValid();
     } catch (Throwable $e) {

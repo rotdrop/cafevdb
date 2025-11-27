@@ -26,10 +26,11 @@ namespace OCA\CAFEVDB\PageRenderer\PME;
 
 use OCP\IURLGenerator;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Default Legacy PME options. */
 class Config extends DefaultOptions
@@ -44,9 +45,9 @@ class Config extends DefaultOptions
   ) {
     $this->l = $this->l10n();
 
-    $debugMode = $this->getConfigValue('debugmode', 0);
+    $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
     $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
-    $deselectInvisibleMiscRecs = $this->getUserValue('deselectInvisibleMiscRecs', false);
+    $deselectInvisibleMiscRecs = $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, false);
     $deselectInvisibleMiscRecs = filter_var($deselectInvisibleMiscRecs, FILTER_VALIDATE_BOOLEAN);
 
     $options = [
@@ -56,7 +57,7 @@ class Config extends DefaultOptions
       ],
       'page_name' => $urlGenerator->linkToRoute($this->appName() . '.vueApp.index'),
       'tooltips' => $toolTipsService,
-      'inc' => $this->getUserValue('pagerows', 20),
+      'inc' => $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20),
       'debug' => 0 != ($debugMode & ConfigConstants::DEBUG_QUERY),
       'misc' => [
         'css' => [ 'minor' => 'email tooltip-right' ],

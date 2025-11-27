@@ -78,38 +78,19 @@ trait InitialStateTrait
   {
     $l = $this->l10N();
 
-    $toolTipsEnabled = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value, $this->getUserValue('tooltips', 'on')),
-      FILTER_VALIDATE_BOOLEAN,
-    );
-    $directChange  = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE->value, $this->getUserValue('directchange', 'off')),
-      FILTER_VALIDATE_BOOLEAN,
-    );
-    $showDisabled = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED->value, $this->getUserValue('showdisabled', 'off')),
-      FILTER_VALIDATE_BOOLEAN,
-    );
-    $deselectInvisible = filter_var($this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value, 'off'), FILTER_VALIDATE_BOOLEAN);
-    $initialFilterVisibility = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value, $this->getUserValue('filtervisibility', 'on')),
-      FILTER_VALIDATE_BOOLEAN,
-    );
-    $wysiwygEditor = $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR->value, 'tinymce');
-    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value, $this->getUserValue('pagerows', 20));
+    $toolTipsEnabled = filter_var($this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on'), FILTER_VALIDATE_BOOLEAN);
+    $directChange  = filter_var($this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $showDisabled = filter_var($this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $deselectInvisible = filter_var($this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $initialFilterVisibility = filter_var($this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'on'), FILTER_VALIDATE_BOOLEAN);
+    $wysiwygEditor = $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce');
+    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20);
+    $restoreHistory = filter_var($this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $expertMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $financeMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
 
-    $restoreHistory = filter_var(
-      $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY->value, $this->getUserValue('restorehistory', 'off')),
-      FILTER_VALIDATE_BOOLEAN,
-    );
-    $expertMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE->value, 'off'), FILTER_VALIDATE_BOOLEAN);
-    $financeMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE->value, 'off'), FILTER_VALIDATE_BOOLEAN);
-
-    $debugModes = $this->getUserValue(
-      EnumPersonalSettingsKey::DEBUG_MODE->value,
-      $this->getUserValue('debugmode', 0),
-    );
-    $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER->value, '');
+    $debugModes = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
+    $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, '');
 
     $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 

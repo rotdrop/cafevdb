@@ -33,6 +33,7 @@ use OCP\Files\NotFoundException;
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -546,7 +547,7 @@ trait ParticipantFieldsTrait
                       'fieldId' => $field->getId(),
                       'optionKey' => $optionKey,
                       'entityField' => 'supportingDocument',
-                      'storage' => 'db',
+                      'storage' => EnumFileStorageBackend::DB->value,
                       'fileBase' => $fileBase,
                       'fileName' => $fileName,
                       'participantFolder' => $participantFolder,

@@ -31,6 +31,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Tool-tips management with translations. */
@@ -66,7 +67,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
     protected ILogger $logger,
   ) {
     try {
-      $debugMode = $appContainer->get(EncryptionService::class)->getConfigValue('debugmode', 0);
+      $debugMode = $appContainer->get(EncryptionService::class)->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
       if ($debugMode & ConfigConstants::DEBUG_TOOLTIPS) {
         $this->debug = true;
       }

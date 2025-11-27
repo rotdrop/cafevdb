@@ -49,10 +49,12 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Transliterator;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /**
  * Configuration do-it-all class.
@@ -433,17 +435,23 @@ class ConfigService
    */
 
   /**
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param mixed $default Default value.
    *
-   * @param null|string $userId Use the current user if null.
+   * @param ?string $userId Use the current user if null.
    *
    * @return mixed
    */
-  public function getUserValue(string $key, mixed $default = null, ?string $userId = null)
+  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
   {
+    if ($key instanceof EnumPersonalSettingsKey) {
+      $key = $key->value;
+    }
     empty($userId) && ($userId = $this->getUserId());
+    if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
+      $default = $this->getCloudConfig()->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
+    }
     return $this->getCloudConfig()->getUserValue($userId, $this->appName, $key, $default);
   }
 

@@ -200,9 +200,9 @@ class PersonalSettingsController extends Controller
         $this->setUserValue(EnumPersonalSettingsKey::DEBUG_MODE->value, $debug);
         if ($debug & ConfigConstants::DEBUG_CSP) {
           // generate a random magic key for sort-of authentication
-          $this->setUserValue('cspfailuretoken', $this->generateRandomBytes(128));
+          $this->setUserValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY, $this->generateRandomBytes(128));
         } else {
-          $this->deleteUserValue('cspfailuretoken');
+          $this->deleteUserValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY);
         }
         return (new DTO\ValueResponse(
           messages: [
@@ -233,13 +233,13 @@ class PersonalSettingsController extends Controller
 
       case EnumPersonalSettingsKey::ENCRYPTION_KEY:
         // Get data
-        if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
+        if (!is_array($value) || !isset($value[EnumPersonalSettingsKey::ENCRYPTION_KEY->value]) || !isset($value['loginpassword'])) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('Invalid request data: "%s".', [ print_r($value, true) ]),
           );
         }
         $password = $value['loginpassword'];
-        $encryptionkey = $value['encryptionkey'];
+        $encryptionKey = $value[EnumPersonalSettingsKey::ENCRYPTION_KEY->value];
 
         // Re-validate the user
         if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
@@ -249,7 +249,7 @@ class PersonalSettingsController extends Controller
         }
 
         // Then check whether the key is correct
-        if (!$this->encryptionKeyValid($encryptionkey)) {
+        if (!$this->encryptionKeyValid($encryptionKey)) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('Invalid encryption key.'),
           );
@@ -262,8 +262,8 @@ class PersonalSettingsController extends Controller
         // key-pair.
         try {
           $this->encryptionService()->initUserKeyPair(true);
-          $this->encryptionService()->setUserEncryptionKey($encryptionkey);
-          $this->encryptionService()->setAppEncryptionKey($encryptionkey);
+          $this->encryptionService()->setUserEncryptionKey($encryptionKey);
+          $this->encryptionService()->setAppEncryptionKey($encryptionKey);
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Unable to store the app encryption key for user "%s".', $this->userId()),
@@ -313,41 +313,49 @@ class PersonalSettingsController extends Controller
   public function setApp(string $parameter, mixed $value):Http\Response
   {
     switch ($parameter) {
-      case 'orchestraLocale': // could check for valid locale ...
+      case ConfigConstants::ORCHESTRA_LOCALE_KEY: // could check for valid locale ...
         $realValue = trim($value);
         $this->setConfigValue($parameter, $realValue);
-        return self::dataResponse([
-          'value' => $realValue,
-          'message' => $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
-          'localeInfo' => $this->generateLocaleInfo('app'),
-        ]);
-        // fall through
+        return (new OrchestraLocaleResponse(
+          value: $realValue,
+          message: $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
+          localeInfo: $this->generateLocaleInfo('app'),
+        ))->response();
+
       case ConfigConstants::ORCHESTRA_NAME_KEY:
         $value = strtolower(Util::removeSpaces($value));
         // fall through
-      case 'dbserver': // could check for valid hostname
-      case 'dbname':
-      case 'dbuser':
+      case ConfigConstants::APP_DB_SERVER: // could check for valid hostname
+      case ConfigConstants::APP_DB_NAME:
+      case ConfigConstants::APP_DB_USER:
         $realValue = trim($value);
         $this->setConfigValue($parameter, $realValue);
-        return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter, $realValue]));
-      case 'dbpassword':
+        return (new DTO\ValueResponse(
+          value: $realValue,
+          messages: [$this->l->t('"%s" set to "%s".', [$parameter, $realValue])],
+        ))->response();
+
+      case ConfigConstants::APP_DB_PASSWORD:
         try {
           if (!empty($value)) {
-            $oldDbPassword = $this->getConfigValue('dbpassword');
-            $this->setConfigValue('dbpassword', $value);
+            $oldDbPassword = $this->getConfigValue(ConfigConstants::APP_DB_PASSWORD);
+            $this->setConfigValue(ConfigConstants::APP_DB_PASSWORD, $value);
             if ($this->configCheckService->databaseAccessible(['password' => $value])) {
-              return self::response($this->l->t('DB-test passed and DB-password set.'));
+              return (new DTO\MessagesResponse([$this->l->t('DB-test passed and DB-password set.')]))->response();
             } else {
-              $this->setConfigValue('dbpassword', $oldDbPassword);
-              return self::grumble($this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'));
+              $this->setConfigValue(ConfigConstants::APP_DB_PASSWORD, $oldDbPassword);
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'),
+              );
             }
           } else {
             // Check with the stored password
             if ($this->configCheckService->databaseAccessible()) {
-              return self::response($this->l->t('DB-test passed with stored password (empty input ignored).'));
+              return (new DTO\MessagesResponse([$this->l->t('DB-test passed with stored password (empty input ignored).')]))->response();
             } else {
-              return self::grumble($this->l->t('DB-test failed with stored password (empty input ignored).'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('DB-test failed with stored password (empty input ignored).'),
+              );
             }
           }
         } catch (Throwable $t) {
@@ -356,6 +364,7 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
+
       case 'systemkey':
         foreach (['systemkey', 'oldkey'] as $key) {
           if (!isset($value[$key])) {
@@ -368,7 +377,7 @@ class PersonalSettingsController extends Controller
 
         $encryptionService = $this->encryptionService();
 
-        $storedKeyHash = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY);
+        $storedKeyHash = $encryptionService->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
         if (!$encryptionService->verifyHash($oldKey, $storedKeyHash)) {
           return self::grumble($this->l->t('Wrong old encryption key'));
         }
@@ -440,7 +449,7 @@ class PersonalSettingsController extends Controller
 
           // re-crypt the config-space
           $this->configService->encryptConfigValues([
-            EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
+            ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
           ]);
 
           // re-generate the private/public key pair
@@ -1623,8 +1632,8 @@ class PersonalSettingsController extends Controller
         return (new DTO\MessagesResponse($messages))->response($status);
 
       case 'emailtest':
-        $user = $this->getConfigValue('emailuser');
-        $password = $this->getConfigValue('emailpassword');
+        $user = $this->getConfigValue(ConfigConstants::EMAIL_USER);
+        $password = $this->getConfigValue(ConfigConstants::EMAIL_PASSWORD);
         $messages = [];
         $check = [];
         foreach (self::EMAIL_PROTO as $proto) {
@@ -2435,7 +2444,7 @@ class PersonalSettingsController extends Controller
     if (!empty($modifiedUsers)) {
       $messages[] = $this->l->t('Successfully distributed the app encryption key to %s.', implode(', ', $modifiedUsers));
     } else {
-      $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
+      $messages[] = $this->l->t('Unable to distribute the app encryption key to any user.');
     }
     if (!empty($noKeyUsers)) {
       $message = $this->l->t('Public key missing for %s, key distribution failed.', implode(', ', array_keys($noKeyUsers)));

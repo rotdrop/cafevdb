@@ -29,17 +29,18 @@ use Throwable;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 
-use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Exception;
-use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Socket;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client;
-use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Fetch;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Envelope;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Fetch;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Exception;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Fetch_Query;
 use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Search_Query;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Socket;
 
 /** Maybe clone the stuff, but for now we just (ab-)use it */
-use OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher;
 use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
+use OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * A wrapper around a given IMAP library in order to hide which one actually
@@ -53,11 +54,11 @@ class IMAPService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const CONFIG_KEYS = [
-    'host' => 'imapserver',
-    'port' => 'imapport',
-    'security' => 'imapsecurity',
-    'user' => 'emailuser',
-    'password' => 'emailpassword',
+    'host' => ConfigConstants::IMAP_SERVER,
+    'port' => ConfigConstants::IMAP_PORT,
+    'security' => ConfigConstants::IMAP_SECURITY,
+    'user' => ConfigConstants::EMAIL_USER,
+    'password' => ConfigConstants::EMAIL_PASSWORD,
   ];
 
   public const SPECIAL_USE_ALL = Horde_Imap_Client::SPECIALUSE_ALL;

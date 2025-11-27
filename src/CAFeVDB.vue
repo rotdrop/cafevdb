@@ -169,7 +169,7 @@
                                   :disabled="false"
                                   :submit-button="false"
           />
-          <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugModes & DEBUG_QUERY)"
+          <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugMode & DEBUG_QUERY)"
                                      :label="t(appId, 'SQL Filter')"
                                      :placeholder="t(appId, 'SQL filter regexp')"
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
@@ -330,7 +330,7 @@ import { AppError } from './types/errors.ts'
 import { options as tooltipOptions } from 'floating-vue'
 import md5 from 'blueimp-md5'
 import type { NavigationItem } from './types/ajax/navigation-items.d.ts'
-import type { ConfigCheckResult } from './types/ajax/config-check.d.ts'
+import type { ConfigCheckResponse } from '../build/ts-types/php-modules/Controller/DTO.ts'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
@@ -500,7 +500,7 @@ asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => {
 const configCheck = async () => {
   const url = generateAppUrl('a/config-check')
   try {
-    const response: AxiosResponse<ConfigCheckResult> = await axios.get(url)
+    const response: AxiosResponse<ConfigCheckResponse> = await axios.get(url)
     logger.debug('CONFIG CHECK RESULT', response)
     if (!response.data.summary) {
       const target = {
@@ -573,7 +573,7 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
   await nextTick()
   settingsLocked.value = false
 
-  vueDevTools({ enabled: !!(globalState.debugModes & DEBUG_VUE) })
+  vueDevTools({ enabled: !!(globalState.debugMode & DEBUG_VUE) })
 }
 
 const historyHasBeenSaved = computed(() => history.modificationTime === history.saveTime)
@@ -608,7 +608,7 @@ const reactifyGlobalState = function() {
   userPermissions.value = globalState.userPermissions
   watch(() => globalState.userPermissions, (value) => { userPermissions.value = value })
 
-  updateDebugModes(globalState.debugModes)
+  updateDebugModes(globalState.debugMode)
 
   // settings stuff
 
@@ -630,7 +630,7 @@ const reactifyGlobalState = function() {
     () => globalState.expertMode,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_EXPERT_MODE, value, oldValue),
   )
-  watch(() => globalState.debugModes, updateDebugModes)
+  watch(() => globalState.debugMode, updateDebugModes)
   watch(
     () => globalState.debugQuerySqlFilter,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_DEBUG_QUERY_SQL_FILTER, value, oldValue),

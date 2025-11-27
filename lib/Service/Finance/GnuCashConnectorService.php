@@ -101,9 +101,9 @@ FROM %2$s';
   ) {
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
-      $this->appDbName = $this->encryptionService->getConfigValue('dbname');
-      $this->appDbUser = $this->encryptionService->getConfigValue('dbuser');
-      $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
+      $this->appDbName = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_NAME);
+      $this->appDbUser = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_USER);
+      $this->appDbHost = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER);
     }
   }
   // phpcs:enable

@@ -26,14 +26,13 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use RuntimeException;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
@@ -48,6 +47,7 @@ use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
@@ -211,7 +211,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts = [];
 
-    $expertMode = $this->getUserValue('expertMode');
+    $expertMode = $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE);
 
     $projectMode  = $projectId > 0;
 

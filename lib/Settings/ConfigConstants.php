@@ -377,4 +377,32 @@ class ConfigConstants
 
   /** @var string */
   public const ORCHESTRA_NAME_KEY = 'orchestra';
+
+  /** @var string */
+  public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionKeyHash';
+
+  /** @var string */
+  public const CSP_FAILURE_TOKEN_KEY = 'cspfailuretoken';
+
+  /** @var string */
+  public const ORCHESTRA_LOCALE_KEY = 'orchestraLocale';
+
+  /** @var string */
+  public const APP_DB_NAME = 'dbname';
+
+  /** @var string */
+  public const APP_DB_USER = 'dbuser';
+
+  /** @var string */
+  public const APP_DB_PASSWORD = 'dbpassword';
+
+  /** @var string */
+  public const APP_DB_SERVER = 'dbserver';
+
+  public const APP_DB_KEYS = [
+    self::APP_DB_NAME,
+    self::APP_DB_PASSWORD,
+    self::APP_DB_SERVER,
+    self::APP_DB_USER,
+  ];
 }

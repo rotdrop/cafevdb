@@ -42,6 +42,7 @@ use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AssetService;
@@ -160,7 +161,7 @@ class FilesHooksListener implements IEventListener
       $projectsFolder = $encryptionService->getConfigValue(ConfigConstants::PROJECTS_FOLDER);
       $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
       $projectParticipantsFolder = $encryptionService->getConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER);
-      $debugMode = $encryptionService->getConfigValue(ConfigConstants::DEBUG_MODE_KEY);
+      $debugMode = $encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0, $userId);
 
       /** @var EntityManager $entityManager */
       $entityManager = $this->appContainer->get(EntityManager::class);
@@ -213,7 +214,7 @@ class FilesHooksListener implements IEventListener
         'contacts' => [
           'addressBooks' => self::flattenAddressBooks($contactsManager->getUserAddressBooks()),
         ],
-        ConfigConstants::DEBUG_MODE_KEY => $debugMode,
+        EnumPersonalSettingsKey::DEBUG_MODE->value => $debugMode,
       ]);
 
       // just admin contact and stuff to make the ajax error handlers work.

@@ -2461,8 +2461,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           break;
       }
       $phpMailer->SMTPAuth = true;
-      $phpMailer->Username = $this->getConfigValue('emailuser');
-      $phpMailer->Password = $this->getConfigValue('emailpassword');
+      $phpMailer->Username = $this->getConfigValue(ConfigConstants::EMAIL_USER);
+      $phpMailer->Password = $this->getConfigValue(ConfigConstants::EMAIL_PASSWORD);
     }
 
     return $phpMailer;
@@ -5334,7 +5334,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
   public function fromTag():string
   {
-    return $this->cgiValue('fromTag', $this->getUserValue('defaultEmailFromAddress', self::FROM_ORCHESTRA));
+    return $this->cgiValue('fromTag', $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, self::FROM_ORCHESTRA));
   }
 
   /**

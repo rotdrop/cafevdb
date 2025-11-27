@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 $css_pfx = $renderer->cssPrefix();
@@ -63,8 +64,9 @@ respective web-form in the application settings windows accessible
 through the settings-menu in the upper right corner. You need to be a
 group-admin, otherwise the application settings are not visible for
 you.',
-                      [$_[ConfigConstants::USER_GROUP_KEY]]),
-  'encryptionkey' => $l->t(
+    [$_[ConfigConstants::USER_GROUP_KEY]],
+  ),
+  EnumPersonalSettingsKey::ENCRYPTION_KEY->value => $l->t(
     'You may want to set an encryption key for encrypting configuration
 values and (in the future) sensitive data in the members- and project
 database.  You can do so through the respective web-form in the
@@ -73,7 +75,8 @@ upper right corner. You need to be a group-admin, otherwise the
 application settings are not visible for you. Note also that after
 installing a non-empty encryption key each user has to log-out and
 log-in again in order to be able to access the encrypted values.',
-                           [$_[ConfigConstants::USER_GROUP_KEY]]),
+    [$_[ConfigConstants::USER_GROUP_KEY]],
+  ),
   ];
 
 ?>
@@ -116,7 +119,7 @@ log-in again in order to be able to access the encrypted values.',
 $diagnosticItems = [
   ConfigConstants::USER_GROUP_KEY,
   'groupadmin',
-  'encryptionkey',
+  EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
   'orchestra',
   ConfigConstants::SHAREOWNER_KEY,
   'sharedfolder',
@@ -159,10 +162,10 @@ group-administrator for the group `%s\'.',
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
       break;
-    case 'encryptionkey':
-      $key = 'encryptionkey';
-      $encrkey = $encryptionkey;
-      $encrkeyhash = $encryptionkeyhash;
+    case EnumPersonalSettingsKey::ENCRYPTION_KEY->value:
+      $key = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
+      $encrkey = ${EnumPersonalSettingsKey::ENCRYPTION_KEY->value};
+      $encrkeyhash = ${ConfigConstants::ENCRYPTION_KEY_HASH_KEY};
       $error   = $cfgchk[$key]['message'];
 
       if (!empty($encrkey)) {

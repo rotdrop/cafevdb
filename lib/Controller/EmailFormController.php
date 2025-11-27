@@ -38,6 +38,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\Composer;
@@ -82,7 +83,7 @@ class EmailFormController extends Controller
   /** @return int Email draft auto-save interval in seconds. */
   private function getEmailDraftAutoSave():int
   {
-    return $this->getUserValue('email-draft-auto-save', 300);
+    return $this->getUserValue(EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE, 300);
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,35 +22,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
+namespace OCA\CAFEVDB\Settings;
+
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 
 /**
- * DTO for orchestra phone numbers.
+ * Compatibility stuff to keep for a while after changing some config keys to
+ * camel case or whatever.
  */
-class PhoneNumberResponse extends MessagesResponse
+class OldSettingsKeys
 {
-  /** {@inheritdoc} */
-  public function __construct(
-    string $message,
-    public readonly string $number,
-    public readonly string $meta,
-    public readonly bool $isMobile,
-    public readonly bool $valid,
-  ) {
-    parent::__construct([ $message ]);
-  }
+  public const USER_KEYS = [
+    EnumPersonalSettingsKey::DEBUG_MODE->value => 'debugmode',
+    EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => 'pagerows',
+    EnumPersonalSettingsKey::RESTORE_HISTORY->value => 'restorehistory',
+    EnumPersonalSettingsKey::DIRECT_CHANGE->value => 'directchange',
+    EnumPersonalSettingsKey::SHOW_DISABLED->value => 'showdisabled',
+    EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE->value => 'email-draft-auto-save',
+  ];
 
-  /**
-   * Initialize from the given array.
-   *
-   * @param array $data
-   *
-   * @return self
-   */
-  public static function fromArray(array $data): self
-  {
-    static::initKeys();
-    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self($messsage, $number, $meta, $isMobile, $valid);
-  }
+  public const APP_KEYS = [
+    ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => 'encryptionkeyhash',
+  ];
 }

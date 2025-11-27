@@ -118,7 +118,7 @@ class Registration
     $context->registerService(self::APP_LOCALE, function(ContainerInterface $container) {
       /** @var EncryptionService $encryptionService */
       $encryptionService = $container->get(EncryptionService::class);
-      $appLocale = $encryptionService->getConfigValue('orchestraLocale', $container->get(self::USER_LOCALE));
+      $appLocale = $encryptionService->getConfigValue(ConfigConstants::ORCHESTRA_LOCALE_KEY, $container->get(self::USER_LOCALE));
       if (strpos($appLocale, '.') === false) {
         $appLocale .= '.UTF-8';
       }

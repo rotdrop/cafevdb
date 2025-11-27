@@ -210,9 +210,9 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   ) {
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
-      $this->appDbName = $this->encryptionService->getConfigValue('dbname');
-      $this->appDbUser = $this->encryptionService->getConfigValue('dbuser');
-      $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
+      $this->appDbName = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_NAME);
+      $this->appDbUser = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_USER);
+      $this->appDbHost = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER);
     }
   }
   // phpcs:enable
@@ -255,7 +255,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   private function checkAndGetCloudDbUser():string
   {
     $cloudDbHost = $this->cloudConfig->getSystemValue('dbhost');
-    $cloudDbUser = $this->cloudConfig->getSystemValue('dbuser');
+    $cloudDbUser = $this->cloudConfig->getSystemValue(ConfigConstants::APP_DB_USER);
 
     if ($cloudDbHost !== $this->appDbHost) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
@@ -424,8 +424,8 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   private function generateUserSqlConfig(?string $dataBaseName = null, bool $withDbAuth = true):array
   {
     $cloudDbHost = $withDbAuth ? $this->cloudConfig->getSystemValue('dbhost') : '%system:dbhost%';
-    $cloudDbUser = $withDbAuth ? $this->cloudConfig->getSystemValue('dbuser') : '%system:dbuser%';
-    $cloudDbPass = $withDbAuth ? $this->cloudConfig->getSystemValue('dbpassword') : '%system:dbpassword%';
+    $cloudDbUser = $withDbAuth ? $this->cloudConfig->getSystemValue(ConfigConstants::APP_DB_USER) : '%system:dbuser%';
+    $cloudDbPass = $withDbAuth ? $this->cloudConfig->getSystemValue(ConfigConstants::APP_DB_PASSWORD) : '%system:dbpassword%';
 
     // Just use Argon2
     $cryptoClass = \OCA\UserSQL\Crypto\CryptArgon2id::class;

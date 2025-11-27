@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
@@ -181,7 +182,7 @@ $rowClasses = implode(' ', $rowClasses);
     'fieldId' => $fieldId,
     'optionKey' => $optionKey,
     'entityField' => 'supportingDocument',
-    'storage' => 'db',
+    'storage' => EnumFileStorageBackend::DB->value,
     'fileBase' => '',
     'fileName' => '',
   ]); ?>

@@ -40,6 +40,7 @@ import { showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -130,7 +131,7 @@ const afterLoad = function(container?: JQuery) {
   };
 
   // 'show password' checkbox
-  const encryptionKey = $('#userkey #encryptionkey');
+  const encryptionKey = $(`#userkey #${EnumPersonalSettingsKey.ENCRYPTION_KEY}`);
   const loginPassword = $('#userkey #password');
   showPassword(encryptionKey);
   showPassword(loginPassword);
@@ -146,9 +147,9 @@ const afterLoad = function(container?: JQuery) {
       return false;
     }
     $.post(
-      setPersonalUrl('encryptionkey'), {
+      setPersonalUrl(EnumPersonalSettingsKey.ENCRYPTION_KEY), {
         value: {
-          encryptionkey: encryptionKey.val(),
+          [EnumPersonalSettingsKey.ENCRYPTION_KEY]: encryptionKey.val(),
           loginpassword: loginPassword.val(),
         },
       })
@@ -221,8 +222,8 @@ const afterLoad = function(container?: JQuery) {
       });
 
     simpleSetValueHandler(
-      adminGeneral.find('select[name="orchestraLocale"]'), 'change', msg, {
-        success(_element, data, _value, _msg) {
+      adminGeneral.find<HTMLSelectElement>(`select[name="${ConfigConstants.ORCHESTRA_LOCALE_KEY}"]`), 'change', msg, {
+        success(_element, data: DTO.OrchestraLocaleResponse, _value, _msg) {
           if (data.localeInfo) {
             const $localeInfo = adminGeneral.find('.locale.information');
             $localeInfo.children().remove();
@@ -359,18 +360,18 @@ const afterLoad = function(container?: JQuery) {
 
     // DB-Password
     // 'show password' checkbox
-    const dbPassword = $(`fieldset.${appName}_dbpassword #${appPrefix('dbpassword')}`);
-    showPassword(dbPassword);
+    const $dbPassword = $(`fieldset.${appName}_dbpassword #${appPrefix(ConfigConstants.APP_DB_PASSWORD)}`);
+    showPassword($dbPassword);
 
     // test password
     simpleSetValueHandler(
-      $(`fieldset.${appName}_dbpassword input.button`), 'click', $(`fieldset.${appName}_dbpassword .statusmessage`), {
+      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} input.button`), 'click', $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} .statusmessage`), {
         success(_element, _data, _value) {
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
         },
         getValue(_element, msg) {
-          const val = { name: dbPassword.attr('name')!, value: dbPassword.val() };
+          const val = { name: $dbPassword.attr('name')!, value: $dbPassword.val() };
           if (val.value === '') {
             msg.html(t(appName, 'Empty password, trying to use configured credentials.')).show();
           }

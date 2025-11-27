@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -21,6 +21,11 @@
  * You should have received a copy of the GNU Affero General Public
  * License alogng with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Ȩntities;
 
 /*
  * @param int $fieldId
@@ -41,7 +46,7 @@
 
 echo $this->inc('fragments/participant-fields/attachment-file-upload-row', [
   'subDir' => '',
-  'dataStorage' => 'db',
+  'dataStorage' => EnumFileStorageBackend::DB->value,
   'entityField' => 'option-value',
-  'uploadPolicy' => 'replace',
+  'uploadPolicy' => Entities\DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE,
 ]);

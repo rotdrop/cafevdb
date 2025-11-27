@@ -177,19 +177,20 @@ class PageController extends Controller
     }
 
     // The most important ...
-    $encrkey = $this->getAppEncryptionKey();
+    $encryptionKey = $this->getAppEncryptionKey();
 
-    $showToolTips = $this->getUserValue('tooltips', 'on');
-    $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
-    $restoreHist  = $this->getUserValue('restorehistory', 'off');
-    $directChg    = $this->getUserValue('directchange', 'off');
-    $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', 'off');
-    $showDisabled = $this->getUserValue('showdisabled', 'off');
-    $expertMode   = $this->getUserValue('expertMode', false);
-    $financeMode   = $this->getUserValue('financeMode', false);
-    $pageRows     = $this->getUserValue('pagerows', 20);
+    $toolTipsEnabled = $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on');
+    $initialFilterVisibility = $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'off');
+    $directChange = $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE, 'off');
+    $deselectInvisibleMiscRecs = $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, 'off');
+    $showDisabled = $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, 'off');
+    $restoreHistory = $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off');
+    $expertMode = $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, false);
+    $financeMode = $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, false);
+    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20);
+    $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
 
-    $debugMode    = (int)$this->getConfigValue('debugmode', 0);
+    $encryptionKeyHash = $this->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
 
     $this->toolTipsService->debug(!!($debugMode & ConfigConstants::DEBUG_TOOLTIPS));
 
@@ -217,14 +218,20 @@ class PageController extends Controller
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
       Constants::RENDER_AS_USER => $this->userId(),
-      'expertMode' => $expertMode,
-      'financeMode' => $financeMode,
-      'showToolTips' => $showToolTips,
+      EnumPersonalSettingsKey::EXPERT_MODE->value => $expertMode,
+      EnumPersonalSettingsKey::FINANCE_MODE->value => $financeMode,
+      EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $toolTipsEnabled,
+      EnumPersonalSettingsKey::DEBUG_MODE->value => $debugMode,
+      EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $initialFilterVisibility,
+      EnumPersonalSettingsKey::DIRECT_CHANGE->value => $directChange,
+      EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $deselectInvisibleMiscRecs,
+      EnumPersonalSettingsKey::SHOW_DISABLED->value => $showDisabled,
+      EnumPersonalSettingsKey::RESTORE_HISTORY->value => $restoreHistory,
+      EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => $pageRowsDefault,
+      EnumPersonalSettingsKey::ENCRYPTION_KEY->value => $encryptionKey,
+      ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => $encryptionKeyHash,
       'toolTips' => $this->toolTipsService,
       'urlGenerator' => $this->urlGenerator,
-      'debugMode' => $debugMode,
-      'encryptionkey' => $encrkey,
-      'encryptionkeyhash' => $this->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY),
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'projectName' => $projectName,
@@ -233,12 +240,6 @@ class PageController extends Controller
       'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
       'timezone' => $this->getTimezone(),
       'requesttoken' => \OCP\Util::callRegister(),
-      'restorehistory' => $restoreHist,
-      'filtervisibility' => $usrFiltVis,
-      'directchange' => $directChg,
-      'deselectInvisibleMiscRecs' => $deselectInvisible,
-      'showdisabled' => $showDisabled,
-      'pagerows' => $pageRows,
     ];
 
     $templateParameters['omitEnvelope'] = true;

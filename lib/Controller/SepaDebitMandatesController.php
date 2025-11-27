@@ -1453,7 +1453,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       'extension' => $pathInfo['extension']??'',
       'fileName' => $pathInfo['filename'],
       'fileId'   => $writtenMandate->getId(),
-      'storageBackend'  => 'db',
+      'storageBackend'  => EnumFileStorageBackend::DB->value,
       'download' => $downloadLink,
       'filesApp' => $filesAppLink,
       'conflict' => $conflict,

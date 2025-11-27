@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Attributes;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 
 /**
@@ -62,6 +63,6 @@ class ConfigCheckController extends Controller
   #[Attributes\NoGroupMemberRequired]
   public function get(): DataResponse {
     $configCheck = $this->configCheckService->configured();
-    return self::dataResponse($configCheck);
+    return DTO\ConfigCheckResponse::fromArray($configCheck);
   }
 }

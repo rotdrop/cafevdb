@@ -50,4 +50,5 @@ enum EnumPersonalSettingsKey: string
   case SHOW_DISABLED = 'showDisabled';
   case TOOL_TIPS_ENABLED = 'toolTipsEnabled';
   case WYSIWYG_EDITOR = 'wysiwygEditor';
+  case DEFAULT_EMAIL_FROM_ADDRESS = 'defaultEmailFromAddress';
 }

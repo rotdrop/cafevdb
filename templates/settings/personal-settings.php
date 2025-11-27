@@ -32,7 +32,7 @@ $encryptionKey = $_[EnumPersonalSettingsKey::ENCRYPTION_KEY->value];
 $expertMode = $_[EnumPersonalSettingsKey::EXPERT_MODE->value];
 $financeMode = $_[EnumPersonalSettingsKey::FINANCE_MODE->value];
 $initialFilterVisibility = $_[EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value];
-$restoreHistory = $_[EnumPersonalSettingsKeyd::RESTORE_HISTORY->value];
+$restoreHistory = $_[EnumPersonalSettingsKey::RESTORE_HISTORY->value];
 $showDisabled = $_[EnumPersonalSettingsKey::SHOW_DISABLED->value];
 $toolTipsEnabled = $_[EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value];
 $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
@@ -148,7 +148,7 @@ $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
     <input id="expert-mode"
            type="checkbox"
            class="checkbox expert-mode <?php p($toolTipClass); ?>"
-           name="expertMode"<?php= ($expertMode == 'on') && print(' checked="checked"') ?>
+           name="expertMode"<?php ($expertMode == 'on') && print(' checked="checked"') ?>
     />
     <label for="expert-mode"
            class="<?php p($toolTipClass); ?>"
@@ -189,7 +189,7 @@ $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
                required="required"
                id="password"
                name="password"
-               title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
+               title="<?php p($toolTips["settings:personal:{$encryptionKey}:own-password"]); ?>"
                placeholder="<?= $l->t('Own Password');?>" data-typetoggle="#password-show"
         />
         <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
@@ -205,16 +205,20 @@ $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
       <div class="password-container">
         <input class="cafevdb-password tooltip-auto"
                type="password"
-               id="encryptionkey"
-               name="encryptionkey"
+               id="<?= $encryptionKey ?>"
+               name="<?= $encryptionKey ?>"
                value="<?= (true ? '' : $encryptionKey); ?>"
                placeholder="<?= $l->t('DB Encryption Key');?>"
-               title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
+               title="<?= $toolTips["settings:personal:{$encryptionKey}"] ?>"
                data-typetoggle="#userkey-show" />
         <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
         <label class="cafevdb-password-show" for="userkey-show"><?= $l->t('show');?></label>
       </div>
-      <input id="encryptionkey-button" class="button" type="button" value="<?= $l->t('Set Encryption Key');?>" />
+      <input id="<?= $encryptionKey ?>-button"
+             class="button"
+             type="button"
+             value="<?= $l->t('Set Encryption Key');?>"
+      />
     </fieldset>
     <div class="statusmessage changed"><?= $l->t('The encryption key has been set successfully.');?></div>
     <div class="statusmessage error"><?= $l->t('Unable to set the encryption key.');?></div>

@@ -21,8 +21,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-$off = $_['orchestra'] == '' ? 'disabled' : '';
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+
+$off = $_['orchestra'] == '' ? 'disabled' : '';
 
 list($appLocale,) = explode('.', $appLocale, 2);
 $displayLocale = $localeSymbol;
@@ -43,28 +48,28 @@ foreach ($locales as $localeInfo) {
 usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
 
 ?>
-<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
+<div id="tabs-<?= $_['tabNr']; ?>" class="personalblock admin">
   <!-- GENERAL CONFIGURATION STUFF -->
   <form id="admingeneral">
     <fieldset>
-      <legend><?php echo $l->t('General settings'); ?></legend>
+      <legend><?= $l->t('General settings'); ?></legend>
       <input type="text"
              id="orchestra"
              name="orchestra"
-             value="<?php echo $_['orchestra']; ?>"
+             value="<?= $_['orchestra']; ?>"
              required="required"
-             title="<?php echo $toolTips['settings:personal:general:orchestra:name']; ?>"
-             placeholder="<?php echo $l->t('name of orchestra'); ?>" />
+             title="<?= $toolTips['settings:personal:general:orchestra:name']; ?>"
+             placeholder="<?= $l->t('name of orchestra'); ?>" />
       <label for="orchestra"><?php p($l->t('name of orchestra')); ?></label>
       <br />
-      <select name="orchestraLocale"
-              id="orchestraLocale"
-              title="<?php echo $toolTips['settings:personal:general:orchestra:locale']; ?>"
+      <select name="<?= ConfigConstants::ORCHESTRA_LOCALE_KEY ?>"
+              id="<?= ConfigConstants::ORCHESTRA_LOCALE_KEY ?>"
+              title="<?= $toolTips['settings:personal:general:orchestra:locale']; ?>"
       >
-        <?php echo PageNavigation::selectOptions($localeOptions); ?>
+        <?= PageNavigation::selectOptions($localeOptions); ?>
       </select>
-      <label for="orchestraLocale"><?php p($l->t('locale of the orchestra')); ?></label>
-      <?php echo $this->inc('settings/part.locale-info', [
+      <label for="<?= ConfigConstants::ORCHESTRA_LOCALE_KEY ?>"><?php p($l->t('locale of the orchestra')); ?></label>
+      <?= $this->inc('settings/part.locale-info', [
         'infoLocaleSymbol' => $appLocale,
         'infoL10n' => $appL,
       ]); ?>
@@ -72,55 +77,55 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
   </form>
   <!-- ENCRYPTION-KEY -->
   <form id="systemkey">
-    <fieldset class="systemkey flex-container" <?php echo $off; ?> >
-      <legend><?php echo $l->t('Encryption settings'); ?></legend>
+    <fieldset class="systemkey flex-container" <?= $off; ?> >
+      <legend><?= $l->t('Encryption settings'); ?></legend>
       <div class="password-container">
         <input type="hidden"
                autocomplete="username"
                name="orchestraUserGroup"
                value="@<?php p($orchestraUserGroup); ?>"
         />
-        <input class="cafevdb-password"
+        <input class="<?= $appName ?>-password"
                type="password"
-               value="<?php false ? p($encryptionkey) : ''; ?>"
+               value="<?php false ? p(${EnumPersonalSettingsKey::ENCRYPTION_KEY->value}) : ''; ?>"
                id="oldkey"
                name="oldkey"
-               placeholder="<?php echo $l->t('Current Key');?>"
+               placeholder="<?= $l->t('Current Key');?>"
                data-typetoggle="#oldkey-show"
                autocomplete="current-password"
         />
-        <input class="cafevdb-password-show" type="checkbox" id="oldkey-show" name="show" />
-        <label class="cafevdb-password-show" for="oldkey-show"><?php echo $l->t('show');?></label>
+        <input class="<?= $appName ?>-password-show" type="checkbox" id="oldkey-show" name="show" />
+        <label class="<?= $appName ?>-password-show" for="oldkey-show"><?= $l->t('show');?></label>
       </div>
       <div class="password-container">
-        <input class="cafevdb-password randomkey"
+        <input class="<?= $appName ?>-password randomkey"
                type="password"
                id="key"
                name="systemkey"
-               placeholder="<?php echo $l->t('New Key');?>"
+               placeholder="<?= $l->t('New Key');?>"
                data-typetoggle="#systemkey-show"
                autocomplete="new-password"
         />
-        <input class="cafevdb-password-show" type="checkbox" id="systemkey-show" name="show" />
-        <label class="cafevdb-password-show" for="systemkey-show"><?php echo $l->t('show');?></label>
+        <input class="<?= $appName ?>-password-show" type="checkbox" id="systemkey-show" name="show" />
+        <label class="<?= $appName ?>-password-show" for="systemkey-show"><?= $l->t('show');?></label>
       </div>
-      <input name="keygenerate" id="keygenerate" type="button" value="<?php echo $l->t('Generate'); ?>" title="<?php echo $l->t('Generate a random encryption key');?>" />
-      <input id="keychangebutton" type="button" value="<?php echo $l->t('Change Encryption Key');?>" />
-      <!-- <span><?php p($encryptionkey); ?></span> -->
-      <div class="statusmessage changed"><?php echo $l->t('The encryption key was changed');?></div>
-      <div class="statusmessage error"><?php echo $l->t('Unable to change the encryption key');?></div>
-      <div class="statusmessage insecure"><?php echo $l->t('Data will be stored unencrypted');?></div>
-      <div class="statusmessage equal"><?php echo $l->t('The keys are the same and remain unchanged.');?></div>
-      <div class="statusmessage standby"><?php echo $l->t('Please standby, this action needs some seconds.');?></div>
+      <input name="keygenerate" id="keygenerate" type="button" value="<?= $l->t('Generate'); ?>" title="<?= $l->t('Generate a random encryption key');?>" />
+      <input id="keychangebutton" type="button" value="<?= $l->t('Change Encryption Key');?>" />
+      <!-- <span><?php p(${EnumPersonalSettingsKey::ENCRYPTION_KEY->value}); ?></span> -->
+      <div class="statusmessage changed"><?= $l->t('The encryption key was changed');?></div>
+      <div class="statusmessage error"><?= $l->t('Unable to change the encryption key');?></div>
+      <div class="statusmessage insecure"><?= $l->t('Data will be stored unencrypted');?></div>
+      <div class="statusmessage equal"><?= $l->t('The keys are the same and remain unchanged.');?></div>
+      <div class="statusmessage standby"><?= $l->t('Please standby, this action needs some seconds.');?></div>
       <div class="statusmessage general"></div>
     </fieldset>
     <!-- DISTRIBUTE ENCRYPTION-KEY -->
-    <fieldset class="keydistribute" <?php echo $off; ?> >
+    <fieldset class="keydistribute" <?= $off; ?> >
       <input id="keydistributebutton"
              type="button"
              name="keydistribute"
-             value="<?php echo $l->t('Distribute Encryption Key');?>"
-             title="<?php echo $l->t(
+             value="<?= $l->t('Distribute Encryption Key');?>"
+             title="<?= $l->t(
                     'Insert the data-base encryption key into the user preferences of all users belonging to the user group.'
                     . ' The data-base key will be encrypted by the respective user\'s public key.') ?>"
       />
@@ -129,49 +134,54 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
   </form>
   <!-- GENERAL DATA-BASE STUFF -->
   <form id="dbsettings">
-    <fieldset id="dbgeneral"  <?php echo $off; ?> ><legend><?php echo $l->t('Database settings'); ?></legend>
+    <fieldset id="dbgeneral"  <?= $off; ?> ><legend><?= $l->t('Database settings'); ?></legend>
       <input type="text"
              autocomplete="on"
-             name="dbserver"
-             id="dbserver"
-             value="<?php echo $_['dbserver']; ?>"
-             placeholder="<?php echo $l->t('Server');?>"
+             name="<?= ConfigConstants::APP_DB_SERVER ?>"
+             id="<?= ConfigConstants::APP_DB_SERVER ?>"
+             value="<?= $_[ConfigConstants::APP_DB_SERVER]; ?>"
+             placeholder="<?= $l->t('Server');?>"
       />
-      <label for="dbserver"><?php echo $l->t('Database Server');?></label>
+      <label for="<?= ConfigConstants::APP_DB_SERVER ?>"><?= $l->t('Database Server');?></label>
       <br/>
       <input type="text"
              autocomplete="on"
-             name="dbname"
-             id="dbname"
-             value="<?php echo $_['dbname']; ?>"
-             placeholder="<?php echo $l->t('Database Name');?>"
+             name="<?= ConfigConstants::APP_DB_NAME ?>"
+             id="<?= ConfigConstants::APP_DB_NAME ?>"
+             value="<?= $_[ConfigConstants::APP_DB_NAME]; ?>"
+             placeholder="<?= $l->t('Database Name');?>"
       />
-      <label for="dbname"><?php echo $l->t('Database Name');?></label>
+      <label for="<?= ConfigConstants::APP_DB_NAME ?>"><?= $l->t('Database Name');?></label>
       <br/>
       <input type="text"
-             name="dbuser"
-             id="dbuser"
-             value="<?php echo $_['dbuser']; ?>"
-             placeholder="<?php echo $l->t('User');?>"
+             name="<?= ConfigConstants::APP_DB_USER ?>"
+             id="<?= ConfigConstants::APP_DB_USER ?>"
+             value="<?= $_[ConfigConstants::APP_DB_USER]; ?>"
+             placeholder="<?= $l->t('User');?>"
              autocomplete="username"
       />
-      <label for="dbuser"><?php echo $l->t('Database User');?></label>
+      <label for="<?= ConfigConstants::APP_DB_USER ?>"><?= $l->t('Database User');?></label>
       <div id="msgplaceholder"><div class="statusmessage" id="msg"></div></div>
     </fieldset>
     <!-- DATA-BASE password -->
-    <fieldset class="cafevdb_dbpassword flex-container">
+    <fieldset class="<?= $appName ?>_<?= ConfigConstants::APP_DB_PASSWORD ?> flex-container">
       <div class="password-container">
-        <input class="cafevdb-password"
+        <input class="<?= $appName ?>-password"
                type="password"
-               id="cafevdb-dbpassword"
-               name="dbpassword"
-               placeholder="<?php echo $l->t('New Password');?>" data-typetoggle="#cafevdb-dbpassword-show"
+               id="<?= $appName ?>-<?= ConfigConstants::APP_DB_PASSWORD ?>"
+               name="<?= ConfigConstants::APP_DB_PASSWORD ?>"
+               placeholder="<?= $l->t('New Password');?>" data-typetoggle="#<?= $appName ?>-<?= ConfigConstants::APP_DB_PASSWORD ?>-show"
                autocomplete="current-password"
         />
-        <input class="cafevdb-password-show" type="checkbox" id="cafevdb-dbpassword-show" name="dbpassword-show" />
-        <label class="cafevdb-password-show" for="cafevdb-dbpassword-show"><?php echo $l->t('show');?></label>
+        <input class="<?= $appName ?>-password-show" type="checkbox" id="<?= $appName ?>-<?= ConfigConstants::APP_DB_PASSWORD ?>-show" name="<?= ConfigConstants::APP_DB_PASSWORD ?>-show" />
+        <label class="<?= $appName ?>-password-show" for="<?= $appName ?>-<?= ConfigConstants::APP_DB_PASSWORD ?>-show"><?= $l->t('show');?></label>
       </div>
-      <input id="database-password-test-button" class="button" type="button" title="<?php echo $toolTips['test-dbpassword']; ?>" value="<?php echo $l->t('Test Database Password');?>" />
+      <input id="database-password-test-button"
+             class="button"
+             type="button"
+             title="<?= $toolTips['test-dbpassword']; ?>"
+             value="<?= $l->t('Test Database Password');?>"
+      />
       <div class="statusmessage" id="dbteststatus"></div>
     </fieldset>
     <fieldset id="dbtesting">

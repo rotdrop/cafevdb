@@ -67,7 +67,7 @@ class Connection extends DBALConnection
     ?string $host = null,
   ):Connection {
     $params = $this->getParams();
-    $params['dbname'] = $database;
+    $params[ConfigConstants::APP_DB_NAME] = $database;
     if ($user !== null) {
       $params['user'] = $user;
     }

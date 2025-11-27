@@ -26,20 +26,20 @@ namespace OCA\CAFEVDB\Service;
 
 use Throwable;
 
-use OCP\IConfig;
-use OCP\IUserSession;
-use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUserSession;
+use OCP\Security\IHasher;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-
-use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /**
  * Handle some encryption tasks:
@@ -63,25 +63,24 @@ class EncryptionService
   public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
   private const USER_ENCRYPTION_KEY_KEY = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
-  public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
-
-  public const CONFIG_LOCK_KEY = 'configlock';
 
   const NEVER_ENCRYPT = [
+    // cloud app configuration keys
     'enabled',
     'installed_version',
     'types',
+    // own configuration keys
     ConfigConstants::USER_GROUP_KEY, // cloud-admin setting
     ConfigConstants::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
     ConfigConstants::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     ConfigConstants::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::WIKI_NAME_SPACE_KEY, // cloud-admin setting
-    'cspfailuretoken', // for public post route
-    'configlock', // better kept open
+    ConfigConstants::CSP_FAILURE_TOKEN_KEY, // for public post route
+    ConfigConstants::CONFIG_LOCK_KEY, // better kept open
     ConfigConstants::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
-    'orchestraLocale', // used in the member's app for consistent currencies etc.
-    self::APP_ENCRYPTION_KEY_HASH_KEY,
+    ConfigConstants::ORCHESTRA_LOCALE_KEY, // used in the member's app for consistent currencies etc.
+    ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
 
   /** @var Crypto\SymmetricCryptorInterface */
@@ -386,7 +385,7 @@ class EncryptionService
     }
 
     // compare the user-key with the stored encryption key hash
-    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    $sysDatabaseKeyHash = $this->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
       $failCount = 0;
       $numberOfTests = 1000;
@@ -483,7 +482,7 @@ class EncryptionService
       $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
     }
 
-    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    $sysDatabaseKeyHash = $this->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
 
     if (empty($sysDatabaseKeyHash) !== empty($encryptionKey)) {
       if (empty($sysDatabaseKeyHash)) {
@@ -534,16 +533,25 @@ class EncryptionService
   }
 
   /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param mixed $default Default value.
    *
+   * @param ?string $userId Use the current user if null.
+   *
    * @return mixed
    */
-  public function getUserValue(string $userId, string $key, mixed $default = null)
+  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
   {
+    if ($userId === null) {
+      $userId = $this->getUserId();
+    }
+    if ($key instanceof EnumPersonalSettingsKey) {
+      $key = $key->value;
+    }
+    if (!empty(OldSettingsKeys::USER_KEYS[$key] && OldSettingsKeys::USER_KEYS[$key] != $key)) {
+      $default = $this->containerConfig->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
+    }
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
@@ -591,7 +599,10 @@ class EncryptionService
     if (!$ignoreLock && !empty($this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
     }
-    $value  = $this->getAppValue($key, $default);
+    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && $key != OldSettingsKeys::APP_KEYS[$key]) {
+      $default = $this->getAppValue(OldSettingsKeys::APP_KEYS[$key], $default);
+    }
+    $value = $this->getAppValue($key, $default);
 
     if (in_array($key, self::NEVER_ENCRYPT) && $this->appCryptor->isEncrypted($value) === false) {
       // short-cut, no need to bail out or complain. The "not enecrypted"
