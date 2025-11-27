@@ -537,6 +537,11 @@ class EntityManager extends EntityManagerDecorator
         'password' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_PASSWORD),
         'host' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER),
       ];
+      if (str_contains(($this->databaseAccess['host'] ?? ''), '://')) {
+        $parser = new DBAL\Tools\DsnParser;
+        $parsedParams = $parser->parse($this->databaseAccess['host']);
+        $this->databaseAccess = array_merge($this->databaseAccess, $parsedParams);
+      }
     }
     $driverParams = [
       'driver' => 'pdo_mysql',
