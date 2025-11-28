@@ -174,6 +174,7 @@ class Project implements \ArrayAccess
     $this->sentEmail = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->webPages = new ArrayCollection();
+    $this->calendarEvents = new ArrayCollection();
     $this->type = Types\EnumProjectTemporalType::TEMPORARY();
   }
 
