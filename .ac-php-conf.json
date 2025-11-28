@@ -30,6 +30,7 @@
       "/dev-scripts/playground/**",
       "/vendor-bin/cs-fixer/**",
       "/vendor-bin/php-scoper/**",
+      "/vendor-bin/phpmd/**",
       "/vendor-bin/rector/**",
       "/vendor*/**/polyfill-php80/**/*.php",
       "/vendor*/**/polyfill-php81/**/*.php",
@@ -40,6 +41,7 @@
       "/vendor/*.php",
       "/vendor/composer/*.php",
       "/vendor/squizlabs/php_codesniffer/**/*.php",
+      "/vendor/tecnickcom/tcpdf/fonts/**",
       "#  -- end -- "
     ]
   }
