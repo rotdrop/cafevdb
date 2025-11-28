@@ -56,7 +56,9 @@ skip-networking
 
   private const SERVER_READY_STATEMENT = 'ready for connections';
 
-  private ?Process $databaseProcess;
+  private ?Process $databaseProcess = null;
+
+  private ?int $serverPid = null;
 
   private ?string $dbFolder;
 
@@ -148,6 +150,8 @@ skip-networking
       throw new RuntimeException('Unable to setup database server: ' . file_get_contents($serverErrorFile));
     }
 
+    $this->serverPid = (int)file_get_contents($this->dbFolder . '/server.pid');
+
     $dbUser = self::DATABASE_USER;
     $dbPassword = self::DATABASE_PASSWORD;
 
@@ -215,7 +219,11 @@ FLUSH PRIVILEGES;
     if (!empty($this->databaseProcess)) {
       // No need to be kind
       $this->databaseProcess->stop(0, SIGKILL);
+      posix_kill($this->serverPid, SIGKILL);
       $this->tempManager->clean();
+      $this->databaseProcess = null;
+      $this->dbFolder = null;
+      $this->serverPid = null;
     }
   }
 }
