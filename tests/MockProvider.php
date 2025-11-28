@@ -51,12 +51,15 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /** Provide a couple of important services, partially using mocked classes. */
 class MockProvider
 {
+  public const USER_GROUP_VALUE = 'orchestra_group';
+
   public const CONFIG_MOCK_VALUES = [
-    ConfigConstants::USER_GROUP_KEY => 'orchestra_group',
+    ConfigConstants::USER_GROUP_KEY => self::USER_GROUP_VALUE,
     ConfigConstants::CONFIG_LOCK_KEY => false,
   ];
 
@@ -67,6 +70,10 @@ class MockProvider
   private array $instances = [];
 
   private TestCase $mockOwner;
+
+  private array $appConfigValues = [];
+
+  private array $userConfigValues = [];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -79,34 +86,38 @@ class MockProvider
 
     $this->instances[LoggerInterface::class] = $logger;
 
-    $this->mockOwner = new class('Placeholder') extends TestCase {
+    $this->mockOwner = new class('Placeholder') extends TestCase
+    {
+      /**
+       * Make the mock-builder public.
+       *
+       * @param string $className
+       *
+       * @return MockBuilder
+       */
+      public function exportMockBuilder(string $className): MockBuilder
+      {
+        return $this->getMockBuilder($className);
+      }
     };
   }
 
   /**
-   * Use the ReflectionMethod class to get hold of the protected
-   * TestCase::getMockBuilder() method.
-   *
-   * @param TestCase $testCase The calling test-case.
-   *
    * @param string $className The name of the class to mock.
    *
-   * @return MockBuild An instance tied to $testCase.
+   * @return MockBuilder An instance tied to $this->mockOwner.
    */
-  protected static function getMockBuilder(TestCase $testCase, string $className):MockBuilder
+  protected function getMockBuilder(string $className):MockBuilder
   {
-    $method = new ReflectionMethod(get_class($testCase), 'getMockBuilder');
-    return $method->invoke($testCase, $className);
+    return $this->mockOwner->exportMockBuilder($className);
   }
 
   /**
    * Mock the cloud config provider.
    *
-   * @param TestCase $testCase
-   *
    * @return IConfig
    */
-  public function getCloudConfig(TestCase $testCase):IConfig
+  public function getCloudConfig():IConfig
   {
     $className = IConfig::class;
 
@@ -114,7 +125,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, $className)
+    $instance = $this->getMockBuilder($className)
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('setAppValue')->willReturnCallback(
@@ -123,7 +134,14 @@ class MockProvider
       },
     );
     $instance->method('getAppValue')->willReturnCallback(
-      function(string $appName, string $key, mixed $default): mixed {
+      function(string $appName, string $key, mixed $default = null): mixed {
+        if (isset($this->appConfigValues[$appName . $key])) {
+          return $this->appConfigValues[$appName . $key];
+        }
+        $newKey = array_search($key, OldSettingsKeys::APP_KEYS);
+        if ($newKey !== false) {
+          $key = $newKey;
+        }
         if (isset(self::CONFIG_MOCK_VALUES[$key])) {
           return self::CONFIG_MOCK_VALUES[$key];
         }
@@ -135,24 +153,49 @@ class MockProvider
             $dbConfig = $this->databaseProvider->getDatabaseConfig();
             return $dbConfig[$key] ?? null;
           case ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY:
-          case strtolower(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY):
+          case OldSettingsKeys::APP_KEYS[ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY]:
             return null;
+        }
+        if ($default !== null) {
+          return $default;
         }
         throw new UnexpectedValueException('Unexpected config key in test-suite: "' . $key .'".');
       }
     );
-
+    $instance->method('setAppValue')->willReturnCallback(
+      function(string $appName, string $key, mixed $value): void {
+        $this->appConfigValues[$appName . $key] = $value;
+      },
+    );
+    $instance->method('deleteAppValue')->willReturnCallback(
+      function(string $appName, string $key): void {
+        unset($this->appConfigValues[$appName . $key]);
+      },
+    );
+    $instance->method('getUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key, mixed $default = null) {
+        return $this->userConfigValues[$userId . $appName . $key] ?? $default;
+      },
+    );
+    $instance->method('setUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key, mixed $value) {
+        $this->userConfigValues[$userId . $appName . $key] = $value;
+      },
+    );
+    $instance->method('deleteUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key): void {
+        unset($this->userConfigValues[$userId . $appName . $key]);
+      },
+    );
     $this->instances[$className] = $instance;
 
     return $instance;
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return EntitiyManager
    */
-  public function getEntityManager(TestCase $testCase): EntityManager
+  public function getEntityManager(): EntityManager
   {
     $className = EntityManager::class;
 
@@ -161,23 +204,23 @@ class MockProvider
     }
 
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
-    $l = $this->getL10N($testCase);
+    $l = $this->getL10N();
     $cloudLogger = new Doctrine\DBAL\Logging\CloudLogger(
-      encryptionService: $this->getEncryptionService($testCase),
-      eventDispatcher: $this->getEventDispatcher($testCase),
-      logger: $this->getLoggerInterface($testCase),
+      encryptionService: $this->getEncryptionService(),
+      eventDispatcher: $this->getEventDispatcher(),
+      logger: $this->getLoggerInterface(),
       l: $l,
     );
     $instance = new EntityManager(
       deprecationLogger: $app->get(Doctrine\DeprecationLogger::class),
       sqlLogger: $cloudLogger,
-      encryptionService: $this->getEncryptionService($testCase),
+      encryptionService: $this->getEncryptionService(),
       l: $l,
-      request: $this->getRequest($testCase),
-      appContainer: $this->getAppContainer($testCase),
-      logger: $this->getLoggerInterface($testCase),
+      request: $this->getRequest(),
+      appContainer: $this->getAppContainer(),
+      logger: $this->getLoggerInterface(),
       appName: $this->appName,
-      cloudConfig: $this->getCloudConfig($testCase),
+      cloudConfig: $this->getCloudConfig(),
     );
 
     $this->instances[$className] = $instance;
@@ -186,11 +229,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return RepositoryFactory
    */
-  public function getRepositoryFactory(TestCase $testCase): RepositoryFactory
+  public function getRepositoryFactory(): RepositoryFactory
   {
     $className = RepositoryFactory::class;
 
@@ -199,7 +240,7 @@ class MockProvider
     }
 
     $instance = new RepositoryFactory(
-      appContainer: $this->getAppContainer($testCase),
+      appContainer: $this->getAppContainer(),
       logger: $this->logger,
     );
 
@@ -209,11 +250,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IRequest
    */
-  public function getRequest(TestCase $testCase): IRequest
+  public function getRequest(): IRequest
   {
     $className = IRequest::class;
 
@@ -221,7 +260,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, IRequest::class)
+    $instance = $this->getMockBuilder(IRequest::class)
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('getPathInfo')->willReturn('/apps/' . $this->appName . '/blahblah');
@@ -232,17 +271,15 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return LoggerInterface
    */
-  public function getLoggerInterface(TestCase $testCase): LoggerInterface
+  public function getLoggerInterface(): LoggerInterface
   {
     return $this->logger;
   }
 
   /** @return EncryptionService */
-  public function getEncryptionService(TestCase $testCase): EncryptionService
+  public function getEncryptionService(): EncryptionService
   {
     $className = EncryptionService::class;
 
@@ -253,15 +290,15 @@ class MockProvider
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
     $instance = new EncryptionService(
       appName: $app->get('appName'),
-      containerConfig: $this->getCloudConfig($testCase),
-      asymKeyService: $this->getAsymmetricKeyService($testCase),
+      cloudConfig: $this->getCloudConfig(),
+      asymKeyService: $this->getAsymmetricKeyService(),
       hasher: \OCP\Server::get(IHasher::class),
-      eventDispatcher: $this->getEventDispatcher($testCase),
-      logger: $this->getLoggerInterface($testCase),
-      authorization: $this->getAuthorizationService($testCase),
-      userSession: $this->getUserSession($testCase),
-      cryptoFactory: $this->getCryptoFactory($testCase),
-      credentialsStore: $this->getCredentialsStore($testCase),
+      eventDispatcher: $this->getEventDispatcher(),
+      logger: $this->getLoggerInterface(),
+      authorization: $this->getAuthorizationService(),
+      userSession: $this->getUserSession(),
+      cryptoFactory: $this->getCryptoFactory(),
+      credentialsStore: $this->getCredentialsStore(),
     );
 
     $this->instances[$className] = $instance;
@@ -270,11 +307,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return AsymmetricKeyService
    */
-  public function getAsymmetricKeyService(TestCase $testCase): Crypto\AsymmetricKeyService
+  public function getAsymmetricKeyService(): Crypto\AsymmetricKeyService
   {
     $className = Crypto\AsymmetricCryptorInterface::class;
 
@@ -282,7 +317,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, Crypto\AsymmetricKeyService::class)
+    $instance = $this->getMockBuilder(Crypto\AsymmetricKeyService::class)
       ->disableOriginalConstructor()
       ->getMock();
     // $instance->method('initEncryptionKeyPair')->willReturn();
@@ -360,11 +395,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return AuthorizationService
    */
-  public function getAuthorizationService(TestCase $testCase): AuthorizationService
+  public function getAuthorizationService(): AuthorizationService
   {
     $className = AuthorizationService::class;
 
@@ -372,7 +405,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, AuthorizationService::class)
+    $instance = $this->getMockBuilder(AuthorizationService::class)
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('getUserPermissions')->willReturnCallback(
@@ -392,11 +425,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return Crypro\CryptoFactoryInterface
    */
-  public function getCryptoFactory(TestCase $testCase): Crypto\CryptoFactoryInterface
+  public function getCryptoFactory(): Crypto\CryptoFactoryInterface
   {
     $className = Crypto\CryptoFactoryInterface::class;
 
@@ -404,7 +435,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = new Crypto\HaliteCryptoFactory($this->getAppContainer($testCase));
+    $instance = new Crypto\HaliteCryptoFactory($this->getAppContainer());
 
     $this->instances[$className] = $instance;
 
@@ -412,11 +443,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return ICredentialsStore
    */
-  public function getCredentialsStore(TestCase $testCase): ICredentialsStore
+  public function getCredentialsStore(): ICredentialsStore
   {
     $className = ICredentialsStore::class;
 
@@ -424,21 +453,24 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, ICredentialsStore::class)
+    $instance = $this->getMockBuilder(ICredentialsStore::class)
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('getLoginCredentials')->willReturn(
       new class implements ILoginCredentials {
         /** {@inheritdoc} */
-        public function getUID() {
+        public function getUID()
+        {
           return self::EXECUTIVE_BOARD_UID;
         }
         /** {@inheritdoc} */
-        public function getLoginName() {
+        public function getLoginName()
+        {
           return $this->getUID();
         }
         /** {@inheritdoc} */
-        public function getPassword() {
+        public function getPassword()
+        {
           return 'nothing';
         }
       }
@@ -450,11 +482,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IUser
    */
-  public function getUser(TestCase $testCase): IUser
+  public function getUser(): IUser
   {
     $className = IUser::class;
 
@@ -462,7 +492,7 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, IUser::class)
+    $instance = $this->getMockBuilder(IUser::class)
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -474,11 +504,9 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IUserSession
    */
-  public function getUserSession(TestCase $testCase): IUserSession
+  public function getUserSession(): IUserSession
   {
     $className = IUserSession::class;
 
@@ -486,10 +514,10 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, IUserSession::class)
+    $instance = $this->getMockBuilder(IUserSession::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $instance->method('getUser')->willReturn($this->getUser($testCase));
+    $instance->method('getUser')->willReturn($this->getUser());
 
     $this->instances[$className] = $instance;
 
@@ -497,15 +525,13 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IEventDispatcher
    */
-  public function getEventDispatcher(TestCase $testCase): IEventDispatcher
+  public function getEventDispatcher(): IEventDispatcher
   {
     $className = IEventDispatcher::class;
 
-    $instance = self::getMockBuilder($this->mockOwner, IEventDispatcher::class)
+    $instance = $this->getMockBuilder(IEventDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -515,34 +541,31 @@ class MockProvider
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IL10N
    */
-  public function getL10N(TestCase $testCase): IL10N
+  public function getL10N(): IL10N
   {
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
     return $app->get(IL10N::class);
   }
 
   /**
-   * @param TestCase $testCase
-   *
    * @return IAppContainer
    */
-  public function getAppContainer(TestCase $testCase): IAppContainer
+  public function getAppContainer(): IAppContainer
   {
     $className = IAppContainer::class;
 
-    if (false && $this->instances[$className]) {
+    if ($this->instances[$className]) {
       return $this->instances[$className];
     }
 
-    $instance = self::getMockBuilder($this->mockOwner, IAppContainer::class)
+    $instance = $this->getMockBuilder(IAppContainer::class)
       ->disableOriginalConstructor()
       ->getMock();
+
     $instance->method('get')->willReturnCallback(
-      function(string $service) use ($testCase) {
+      function(string $service) {
         // echo __CLASS__ . '::' . __METHOD__ . ': CALLED WITH ' . $service . PHP_EOL;
         if (!empty($this->instances[$service])) {
           // echo __CLASS__ . '::' . __METHOD__ . ': RETURNING CACHED ' . $service . PHP_EOL;
@@ -550,14 +573,14 @@ class MockProvider
         }
         switch ($service) {
           case IEventDispatcher::class:
-            return $this->getEventDispatcher($testCase);
+            return $this->getEventDispatcher();
           case RepositoryFactory::class:
-            return $this->getRepositoryFactory($testCase);
+            return $this->getRepositoryFactory();
           case UndoableRunQueue::class:
             return new UndoableRunQueue(
-              $this->getAppContainer($testCase),
-              $this->getLoggerInterface($testCase),
-              $this->getL10N($testCase),
+              $this->getAppContainer(),
+              $this->getLoggerInterface(),
+              $this->getL10N(),
             );
         }
         $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
