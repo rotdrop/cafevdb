@@ -65,6 +65,8 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
  */
 class ConfigService
 {
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
@@ -425,89 +427,6 @@ class ConfigService
     }
     $groupId = $this->getSubAdminGroupId();
     return $this->getGroupManager()->isInGroup($userId, $groupId);
-  }
-
-  /*
-   *-**************************************************************************
-   *
-   * unencrypted cloud config space
-   *
-   */
-
-  /**
-   * @param string|EnumPersonalSettingsKey $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @param ?string $userId Use the current user if null.
-   *
-   * @return mixed
-   */
-  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
-  {
-    if ($key instanceof EnumPersonalSettingsKey) {
-      $key = $key->value;
-    }
-    empty($userId) && ($userId = $this->getUserId());
-    if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
-      $default = $this->getCloudConfig()->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
-    }
-    return $this->getCloudConfig()->getUserValue($userId, $this->appName, $key, $default);
-  }
-
-  /**
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @param null|string $userId Use the current user if null.
-   *
-   * @return mixed
-   */
-  public function setUserValue(string $key, mixed $value, ?string $userId = null)
-  {
-    empty($userId) && ($userId = $this->getUserId());
-    return $this->getCloudConfig()->setUserValue($userId, $this->appName, $key, $value);
-  }
-
-  /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @return mixed
-   */
-  public function getAppValue(string $key, mixed $default = null)
-  {
-    return $this->getCloudConfig()->getAppValue($this->appName, $key, $default);
-  }
-
-  /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @return mixed
-   */
-  public function setAppValue(string $key, mixed $value)
-  {
-    return $this->getCloudConfig()->setAppValue($this->appName, $key, $value);
-  }
-
-  /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @return void
-   */
-  public function deleteAppValue(string $key):void
-  {
-    $this->getCloudConfig()->deleteAppValue($this->appName, $key);
   }
 
   /*

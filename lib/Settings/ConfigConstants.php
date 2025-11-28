@@ -307,7 +307,7 @@ class ConfigConstants
   public const EMAIL_TEST_MODE = 'emailtestmode';
 
   /** @var string Config-key for the global email account user-id */
-  public const EMAIL_USER = 'emailuser';
+  public const EMAIL_USER = 'emailUser';
 
   /** @var string Config-key for the global email account password */
   public const EMAIL_PASSWORD = 'emailpassword';
@@ -334,7 +334,7 @@ class ConfigConstants
   public const BULK_EMAIL_PRIVACY_NOTICE = 'bulkEmailPrivacyNotice';
 
   /** @var string */
-  public const USER_GROUP_KEY = 'usergroup';
+  public const USER_GROUP_KEY = 'userGroup';
 
   /** @var string */
   public const USER_AND_GROUP_BACKEND_KEY = 'userAndGroupBackend';

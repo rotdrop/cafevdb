@@ -43,5 +43,7 @@ class OldSettingsKeys
 
   public const APP_KEYS = [
     ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => 'encryptionkeyhash',
+    ConfigConstants::USER_GROUP_KEY => 'usergroup',
+    ConfigConstants::EMAIL_USER => 'emailuser',
   ];
 }

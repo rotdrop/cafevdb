@@ -31,7 +31,6 @@ use OCP\IUserManager;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
 /**
  * Rudimentary service which just checks if a user belongs to the
@@ -40,7 +39,8 @@ use OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
  */
 class AuthorizationService
 {
-  use LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
 
   public const MANAGEMENT = 'management';
   public const FRONTEND = 'frontend';
@@ -116,30 +116,30 @@ class AuthorizationService
   private $userGroupId;
 
   /**
-   * @param null|string $appName
-   *
    * @param null|string $userId Current logged on user id or null.
-   *
-   * @param IConfig $config
-   *
-   * @param IUserManager $userManager
    *
    * @param IGroupManager $groupManager
    *
    * @param IGroupSubAdminManager $groupSubAdminManager
    *
+   * @param IUserManager $userManager
+   *
+   * @param ?string $appName
+   *
+   * @param IConfig $cloudConfig
+   *
    * @param ILogger $logger In order to satisfy LoggerTrait.
    */
   public function __construct(
-    private ?string $appName,
     private ?string $userId,
-    protected IConfig $config,
-    private IUserManager $userManager,
     private IGroupManager $groupManager,
     private IGroupSubAdminManager $groupSubAdminManager,
+    private IUserManager $userManager,
+    protected string $appName,
+    protected IConfig $cloudConfig,
     protected ILogger $logger,
   ) {
-    $this->userGroupId = $this->config->getAppValue($this->appName, ConfigConstants::USER_GROUP_KEY);
+    $this->userGroupId = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
   }
 
   /**
@@ -214,7 +214,7 @@ class AuthorizationService
         break;
       }
     }
-    // $this->logPermissions($userId, $userPermissions);
+    $this->logPermissions($userId, $userPermissions, \OCP\ILogger::DEBUG);
     return $userPermissions;
   }
 

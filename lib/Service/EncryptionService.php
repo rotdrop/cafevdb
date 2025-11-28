@@ -58,6 +58,8 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
 class EncryptionService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   public const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
   public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
@@ -102,8 +104,8 @@ class EncryptionService
 
   /** {@inheritdoc} */
   public function __construct(
-    private string $appName,
-    private IConfig $containerConfig,
+    protected string $appName,
+    private IConfig $cloudConfig,
     private Crypto\AsymmetricKeyService $asymKeyService,
     private IHasher $hasher,
     private IEventDispatcher $eventDispatcher,
@@ -505,83 +507,6 @@ class EncryptionService
   }
 
   /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @return mixed
-   */
-  public function getAppValue(string $key, mixed $default = null)
-  {
-    return $this->containerConfig->getAppValue($this->appName, $key, $default);
-  }
-
-  /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @return mixed
-   */
-  public function setAppValue(string $key, mixed $value)
-  {
-    return $this->containerConfig->setAppValue($this->appName, $key, $value);
-  }
-
-  /**
-   * @param string|EnumPersonalSettingsKey $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @param ?string $userId Use the current user if null.
-   *
-   * @return mixed
-   */
-  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
-  {
-    if ($userId === null) {
-      $userId = $this->getUserId();
-    }
-    if ($key instanceof EnumPersonalSettingsKey) {
-      $key = $key->value;
-    }
-    if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
-      $default = $this->containerConfig->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
-    }
-    return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
-  }
-
-  /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @return mixed
-   */
-  public function setUserValue(string $userId, string $key, mixed $value)
-  {
-    return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
-  }
-
-  /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
-   *
-   * @return mixed
-   */
-  public function deleteUserValue(string $userId, string $key)
-  {
-    return $this->containerConfig->deleteUserValue($userId, $this->appName, $key);
-  }
-
-  /**
    * Fetch the value for the given key and possibly decrypt it.
    *
    * @param string $key
@@ -598,9 +523,6 @@ class EncryptionService
   {
     if (!$ignoreLock && !empty($this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
-    }
-    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && $key != OldSettingsKeys::APP_KEYS[$key]) {
-      $default = $this->getAppValue(OldSettingsKeys::APP_KEYS[$key], $default);
     }
     $value = $this->getAppValue($key, $default);
 
