@@ -352,7 +352,7 @@ class DocumentStorageUploadController extends Controller
         }
 
         $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-          'section' => 'database',
+          'section' => DownloadsController::SECTION_DATABASE,
           'object' => $fileNodeEntity->getId(),
         ])
           . '?requesttoken=' . urlencode(\OCP\Util::callRegister())

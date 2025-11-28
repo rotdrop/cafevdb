@@ -34,16 +34,21 @@ class OldSettingsKeys
 {
   public const USER_KEYS = [
     EnumPersonalSettingsKey::DEBUG_MODE->value => 'debugmode',
+    EnumPersonalSettingsKey::DIRECT_CHANGE->value => 'directchange',
+    EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE->value => 'email-draft-auto-save',
+    EnumPersonalSettingsKey::ENCRYPTION_KEY->value => 'encryptionkey',
     EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => 'pagerows',
     EnumPersonalSettingsKey::RESTORE_HISTORY->value => 'restorehistory',
-    EnumPersonalSettingsKey::DIRECT_CHANGE->value => 'directchange',
     EnumPersonalSettingsKey::SHOW_DISABLED->value => 'showdisabled',
-    EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE->value => 'email-draft-auto-save',
   ];
 
   public const APP_KEYS = [
     ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => 'encryptionkeyhash',
-    ConfigConstants::USER_GROUP_KEY => 'usergroup',
     ConfigConstants::EMAIL_USER => 'emailuser',
+    ConfigConstants::SHARED_ADDRESS_BOOKS => 'sharedAddressBooks',
+    ConfigConstants::SHARED_FOLDER => 'sharedfolder',
+    ConfigConstants::SHARE_OWNER_KEY => 'shareowner',
+    ConfigConstants::USER_GROUP_KEY => 'usergroup',
+    ConfigConstants::IS_GROUP_ADMIN => 'groupadmin',
   ];
 }

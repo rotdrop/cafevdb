@@ -68,12 +68,14 @@ class ConfigConstants
    * Some configuration constants
    *
    */
-  public const SHAREOWNER_KEY = 'shareowner';
-  public const SHAREOWNER_FOLDER_SERVICE_KEY = 'shareowner_folder';
-  public const SHAREOWNER_CALENDAR_SERVICE_KEY = 'shareowner_calendar';
-  public const SHAREOWNER_ADDRESSBOOK_SERVICE_KEY = 'shareowner_addressbook';
+  public const SHARE_OWNER_KEY = 'shareOwner';
+  public const SHARE_OWNER_FOLDER_SERVICE_KEY = 'shareowner_folder';
+  public const SHARE_OWNER_CALENDAR_SERVICE_KEY = 'shareowner_calendar';
+  public const SHARE_OWNER_ADDRESSBOOK_SERVICE_KEY = 'shareowner_addressbook';
 
-  public const SHARED_FOLDER = 'sharedfolder';
+  public const SHARED_ADDRESS_BOOKS = 'sharedAddressBooks';
+
+  public const SHARED_FOLDER = 'sharedFolder';
   public const PROJECTS_FOLDER = 'projectsfolder';
   public const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
   public const PROJECT_POSTERS_FOLDER = 'projectpostersfolder';
@@ -405,4 +407,13 @@ class ConfigConstants
     self::APP_DB_SERVER,
     self::APP_DB_USER,
   ];
+
+  /** @var string */
+  public const DATABASE_KEY = 'database';
+
+  /** @var string */
+  public const MIGRATIONS_KEY = 'migrations';
+
+  /** @var string */
+  public const IS_GROUP_ADMIN = 'isGgoupAdmin';
 }

@@ -91,10 +91,10 @@ class ConfigCheckService
    * [ 'summary',
    *   ConfigConstants::USER_GROUP_KEY,
    *   EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
-   *   'orchestra',
-   *   ConfigConstants::SHAREOWNER_KEY,
-   *   'sharedfolder',
-   *   'database',
+   *   ConfigConstants::ORCHESTRA_NAME_KEY,
+   *   ConfigConstants::SHARE_OWNER_KEY,
+   *   ConfigConstants::SHARED_FOLDER,
+   *   ConfigConstants::DATABASE_KEY,
    * ]
    * ```
    *
@@ -107,19 +107,19 @@ class ConfigCheckService
     $result = [];
 
     foreach ([
-      'orchestra',
+      ConfigConstants::ORCHESTRA_NAME_KEY,
       ConfigConstants::USER_GROUP_KEY,
-      ConfigConstants::SHAREOWNER_KEY,
-      'sharedfolder',
-      'database',
+      ConfigConstants::SHARE_OWNER_KEY,
+      ConfigConstants::SHARED_FOLDER,
+      ConfigConstants::DATABASE_KEY,
       EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
-      'migrations',
-      'sharedaddressbooks',
+      ConfigConstants::MIGRATIONS_KEY,
+      ConfigConstants::SHARED_ADDRESS_BOOKS,
     ] as $key) {
       $result[$key] = ['status' => false, 'message' => ''];
     }
 
-    $key ='orchestra';
+    $key = ConfigConstants::ORCHESTRA_NAME_KEY;
     try {
       $result[$key]['status'] = !empty($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY));
     } catch (Throwable $e) {
@@ -135,7 +135,7 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'database';
+    $key = ConfigConstants::DATABASE_KEY;
     try {
       $result[$key]['status'] = $result[ConfigConstants::ORCHESTRA_NAME_KEY]['status'] && $this->databaseAccessible();
     } catch (Throwable $e) {
@@ -143,9 +143,9 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'migrations';
+    $key = ConfigConstants::MIGRATIONS_KEY;
     try {
-      $result[$key]['status'] = $result['database']['status'] && $this->noUnappliedMigrations();
+      $result[$key]['status'] = $result[ConfigConstants::DATABASE_KEY]['status'] && $this->noUnappliedMigrations();
     } catch (Throwable $t) {
       $result[$key]['message'] = $t->getMessage();
     }
@@ -159,7 +159,7 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = ConfigConstants::SHAREOWNER_KEY;
+    $key = ConfigConstants::SHARE_OWNER_KEY;
     try {
       $result[$key]['status'] = $result[ConfigConstants::USER_GROUP_KEY]['status'] && $this->shareOwnerExists();
     } catch (Throwable $e) {
@@ -167,17 +167,17 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'sharedfolder';
+    $key = ConfigConstants::SHARED_FOLDER;
     try {
-      $result[$key]['status'] = $result[ConfigConstants::SHAREOWNER_KEY]['status'] && $this->sharedFolderExists();
+      $result[$key]['status'] = $result[ConfigConstants::SHARE_OWNER_KEY]['status'] && $this->sharedFolderExists();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'sharedaddressbooks';
+    $key = ConfigConstants::SHARED_ADDRESS_BOOKS;
     try {
-      $result[$key]['status'] = $result[ConfigConstants::SHAREOWNER_KEY]['status'] && $this->sharedAddressBooksExist();
+      $result[$key]['status'] = $result[ConfigConstants::SHARE_OWNER_KEY]['status'] && $this->sharedAddressBooksExist();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -408,7 +408,7 @@ class ConfigCheckService
   public function shareOwnerExists(?string $shareOwnerId = null)
   {
     $shareGroupId = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
-    empty($shareOwnerId) && $shareOwnerId = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    empty($shareOwnerId) && $shareOwnerId = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
     if (empty($shareOwnerId)) {
       return false;
@@ -529,7 +529,7 @@ class ConfigCheckService
   {
     if ($postfix === null) {
       // check whether the folder migrations has been run or not.
-      if ($this->getConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      if ($this->getConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, true)) {
         $postfix = '-testing'; // @todo remove after it has proven useful
       } else {
         $postfix = '';
@@ -537,7 +537,7 @@ class ConfigCheckService
     }
     // $this->logInfo('POSTFIX ' . $postfix);
 
-    $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
+    $sharedFolder == '' && $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER, '');
 
     if ($sharedFolder == '') {
       $this->logError('no folder');
@@ -591,12 +591,12 @@ class ConfigCheckService
     } catch (Throwable $t) {
       $result = false;
     }
-    if (!$this->getConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+    if (!$this->getConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, true)) {
       // migration has been performed, so do nothing else
       return $result;
     }
 
-    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, true));
+    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, true));
 
     if (!$this->shareOwnerExists()) {
       return false;
@@ -610,10 +610,10 @@ class ConfigCheckService
         $shareGroupIds[] = $shareGroup . $groupSuffix;
       }
     }
-    $shareOwner   = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    $shareOwner   = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
     // $groupadmin   = $this->userId();
 
-    $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
+    $sharedFolder == '' && $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER, '');
 
     if ($sharedFolder == '') {
       $this->logError('no folder');
@@ -664,7 +664,7 @@ class ConfigCheckService
   {
     if ($postfix === null) {
       // check whether the folder migrations has been run or not.
-      if ($this->getConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      if ($this->getConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, true)) {
         $postfix = '-testing'; // @todo remove after it has proven useful
       } else {
         $postfix = '';
@@ -753,7 +753,7 @@ class ConfigCheckService
       $this->logException($t, 'CANNOT CREATE OR UPDATTE GROUP SHARED FOLDER');
       $result = false;
     }
-    if (!$this->getConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+    if (!$this->getConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, true)) {
       // migration has been performed, so do nothing else
       return $result;
     }
@@ -780,7 +780,7 @@ class ConfigCheckService
       }
     }
     $groupAdmin = $this->userId();
-    $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
     foreach ($shareGroupIds as $shareGroupId) {
       if (!$this->isSubAdminOfGroup($groupAdmin, $shareGroupId)) {
@@ -863,7 +863,7 @@ class ConfigCheckService
 
     $shareGroup = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
     $groupAdmin = $this->userId();
-    $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
     if (!$this->isSubAdminOfGroup()) {
       $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
@@ -932,7 +932,7 @@ class ConfigCheckService
     }
 
     $shareGroup = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
-    // $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    // $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
     $groupAdmin = $this->userId();
 
     if (!$this->isSubAdminOfGroup()) {

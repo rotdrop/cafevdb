@@ -442,7 +442,7 @@ trait ConfigTrait
   /** @return null|string the User id of the share-owner, if configured. */
   protected function shareOwnerId():?string
   {
-    return $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    return $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
   }
 
   /**

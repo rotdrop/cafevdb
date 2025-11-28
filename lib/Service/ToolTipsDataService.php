@@ -401,7 +401,7 @@ give you the choice to select any musician as recipient.'),
               'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.', options: [ ToolTipsService::OPTION_HTML => true ]),
               'project-mailing-list' => self::t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
               'announcements-mailing-list' => self::t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
-              'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
+              ConfigConstants::DATABASE_KEY => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
 
             'participation-status' => self::t('Select recipients by member status. Normally, conductors and soloists
@@ -1446,7 +1446,7 @@ and contact the treasurer for further instructions.',
         ],
       ],
 
-      'sharedfolder' => self::t('Folder shared by the orchestra group.'),
+      ConfigConstants::SHARED_FOLDER => self::t('Folder shared by the orchestra group.'),
       'postboxfolder' => self::t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
       'documenttemplatesfolder' => self::t('Shared folder for document templates.'),
       'projectsfolder' => self::t('Shared folder for per-project data.'),
@@ -1490,7 +1490,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
         ],
         'personal' => [
           'general' => [
-            'orchestra' => [
+            ConfigConstants::ORCHESTRA_NAME_KEY => [
               'name' => self::t('Short descriptive name of the orchestra, e.g. use "camerata" instead of "camerata academica freiburg e.V.". The short name is used in various places. It should be lower-case and "handy", without spaces.'),
               'locale' => self::t('The locale of the orchestral organization. In particular, this determines the currency and the name of some directories in the file-system. Note that the timezone is always the same as the one used by the server the app runs on.'),
             ],

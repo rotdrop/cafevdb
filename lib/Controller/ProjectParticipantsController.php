@@ -932,7 +932,7 @@ class ProjectParticipantsController extends Controller
                 }
 
                 $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-                  'section' => 'database',
+                  'section' => DownloadsController::SECTION_DATABASE,
                   'object' => $dbDocument->getId(),
                 ])
                   . '?requesttoken=' . urlencode(\OCP\Util::callRegister())

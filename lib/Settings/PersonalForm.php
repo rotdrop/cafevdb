@@ -303,7 +303,7 @@ class PersonalForm
             ConfigConstants::APP_DB_USER => $this->getConfigValue(ConfigConstants::APP_DB_USER),
             ConfigConstants::APP_DB_PASSWORD => $this->getConfigValue(ConfigConstants::APP_DB_PASSWORD),
 
-            ConfigConstants::SHAREOWNER_KEY => $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, ''),
+            ConfigConstants::SHARE_OWNER_KEY => $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY, ''),
             'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
             'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
             'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),

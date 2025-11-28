@@ -27,7 +27,7 @@ use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
-$off = $_['orchestra'] == '' ? 'disabled' : '';
+$off = empty($_[ConfigConstants::ORCHESTRA_NAME_KEY]) ? 'disabled' : '';
 
 list($appLocale,) = explode('.', $appLocale, 2);
 $displayLocale = $localeSymbol;
@@ -54,13 +54,13 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
     <fieldset>
       <legend><?= $l->t('General settings'); ?></legend>
       <input type="text"
-             id="orchestra"
-             name="orchestra"
-             value="<?= $_['orchestra']; ?>"
+             id="<?= ConfigConstants::ORCHESTRA_NAME_KEY ?>"
+             name="<?= ConfigConstants::ORCHESTRA_NAME_KEY ?>"
+             value="<?= $_[ConfigConstants::ORCHESTRA_NAME_KEY]; ?>"
              required="required"
              title="<?= $toolTips['settings:personal:general:orchestra:name']; ?>"
              placeholder="<?= $l->t('name of orchestra'); ?>" />
-      <label for="orchestra"><?php p($l->t('name of orchestra')); ?></label>
+      <label for="<?= ConfigConstants::ORCHESTRA_NAME_KEY ?>"><?php p($l->t('name of orchestra')); ?></label>
       <br />
       <select name="<?= ConfigConstants::ORCHESTRA_LOCALE_KEY ?>"
               id="<?= ConfigConstants::ORCHESTRA_LOCALE_KEY ?>"

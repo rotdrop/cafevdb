@@ -554,18 +554,18 @@ class PersonalSettingsController extends Controller
         $this->setConfigValue($parameter, $realValue);
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         break;
-      case ConfigConstants::SHAREOWNER_KEY:
-        if (!isset($value[ConfigConstants::SHAREOWNER_KEY])
+      case ConfigConstants::SHARE_OWNER_KEY:
+        if (!isset($value[ConfigConstants::SHARE_OWNER_KEY])
             || !isset($value['shareowner-saved'])
             || !isset($value['shareowner-force'])) {
           return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
         }
-        $uid = $value[ConfigConstants::SHAREOWNER_KEY];
+        $uid = $value[ConfigConstants::SHARE_OWNER_KEY];
         $savedUid = $value['shareowner-saved'];
         $force = filter_var($value['shareowner-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         // first check consistency of $savedUid with stored UID.
-        $confUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, '');
+        $confUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY, '');
         if ($confUid != $savedUid) {
           return self::grumble($this->l->t(
             'Submitted "%s" != "%s" (stored)', [ $savedUid, $confUid ]));
@@ -1055,7 +1055,7 @@ class PersonalSettingsController extends Controller
         );
 
       case 'shareownerpassword':
-        $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+        $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwnerUid)) {
           return self::grumble($this->l->t('Please create the share-owner user first.'));
         }
@@ -1145,7 +1145,7 @@ class PersonalSettingsController extends Controller
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1221,7 +1221,7 @@ class PersonalSettingsController extends Controller
             $this->l->t('App user-group is not set.'),
           );
         }
-        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwner)) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('Share-owner is not set.'),

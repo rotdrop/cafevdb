@@ -33,12 +33,13 @@ use OCP\Files\NotFoundException;
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -441,7 +442,7 @@ trait ParticipantFieldsTrait
                   $fileName = $fileInfo['fileName'];
                   $downloadLink = $this->urlGenerator()
                     ->linkToRoute($this->appName().'.downloads.get', [
-                      'section' => 'database',
+                      'section' => DownloadsController::SECTION_DATABASE,
                       'object' => $invoice,
                     ])
                     . '?'
@@ -523,7 +524,7 @@ trait ParticipantFieldsTrait
                     $fileName = $fileInfo['fileName'];
                     $downloadLink = $this->urlGenerator()
                       ->linkToRoute($this->appName().'.downloads.get', [
-                        'section' => 'database',
+                        'section' => DownloadsController::SECTION_DATABASE,
                         'object' => $invoice,
                       ])
                       . '?'
@@ -1487,7 +1488,7 @@ trait ParticipantFieldsTrait
                       $fileName = $fileInfo['fileName'];
                       $downloadLink = $this->urlGenerator()
                         ->linkToRoute($this->appName().'.downloads.get', [
-                          'section' => 'database',
+                          'section' => DownloadsController::SECTION_DATABASE,
                           'object' => $invoices[$optionKey],
                         ])
                         . '?'
@@ -2243,7 +2244,7 @@ GROUP BY " . $fdAlias . ".option_key",
       $fileName = $fileInfo['fileName'];
       $downloadLink = $this->urlGenerator()
         ->linkToRoute($this->appName().'.downloads.get', [
-          'section' => 'database',
+          'section' => DownloadsController::SECTION_DATABASE,
           'object' => $invoices[$optionKey],
         ])
         . '?'

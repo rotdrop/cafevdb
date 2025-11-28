@@ -74,7 +74,7 @@ class EncryptionService
     // own configuration keys
     ConfigConstants::USER_GROUP_KEY, // cloud-admin setting
     ConfigConstants::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
-    ConfigConstants::SHAREOWNER_KEY, // needed as calendar principal in the member's app
+    ConfigConstants::SHARE_OWNER_KEY, // needed as calendar principal in the member's app
     ConfigConstants::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::WIKI_NAME_SPACE_KEY, // cloud-admin setting

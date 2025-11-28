@@ -27,8 +27,8 @@ namespace OCA\CAFEVDB;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
-$alloff = $_['orchestra'] == '' ? $alloff = 'disabled' : '';
-$off = $_['shareowner'] == '' ? 'disabled' : $alloff;
+$alloff = $_[ConfigConstants::ORCHESTRA_NAME_KEY] == '' ? $alloff = 'disabled' : '';
+$off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
 
 ?>
 <div id="tabs-<?= $_['tabNr']; ?>" class="personalblock admin sharing">
@@ -37,15 +37,15 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <!-- VIRTUAL USER -->
     <h4><?= $l->t('Share owner') ; ?></h4>
     <form id="shareownerform">
-      <fieldset id="shareowner" <?= $alloff; ?> >
-        <input type="hidden" id="user-saved" name="shareowner-saved" value="<?= $_['shareowner']; ?>" />
+      <fieldset id=<?= ConfigConstants::SHARE_OWNER_KEY ?> <?= $alloff; ?> >
+        <input type="hidden" id="user-saved" name="shareowner-saved" value="<?= $_[ConfigConstants::SHARE_OWNER_KEY]; ?>" />
         <input type="text"
                id="user"
-               name="shareowner"
-               placeholder="<?= $l->t('shareowner');?>"
-               value="<?= $_['shareowner']; ?>"
-               title="<?= $_['shareowner']; ?>"
-               <?= $_['shareowner'] != '' ? 'disabled' : '';?>
+               name=<?= ConfigConstants::SHARE_OWNER_KEY ?>
+               placeholder="<?= $l->t(ConfigConstants::SHARE_OWNER_KEY);?>"
+               value="<?= $_[ConfigConstants::SHARE_OWNER_KEY]; ?>"
+               title="<?= $_[ConfigConstants::SHARE_OWNER_KEY]; ?>"
+               <?= $_[ConfigConstants::SHARE_OWNER_KEY] != '' ? 'disabled' : '';?>
                autocomplete="username"
         />
         <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>

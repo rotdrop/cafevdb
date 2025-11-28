@@ -34,7 +34,7 @@ unset($this->vars['css-class']);
 $cfgchk = $_['configcheck'];
 
 $missingtext = [
-  'orchestra' => $l->t(
+  ConfigConstants::ORCHESTRA_NAME_KEY => $l->t(
     'You need to specify a name for the orchestra.  Please access the
 app-settings through the settings-menu in the upper right corner
 and specify a short-hand name for the orchestra in the
@@ -42,14 +42,14 @@ and specify a short-hand name for the orchestra in the
 user-ids and folders; it should be a short one-word identifier.'),
   ConfigConstants::USER_GROUP_KEY => $l->t('You need to create a dedicatd user group.
 You have to log-in as administrator to do so.'),
-  ConfigConstants::SHAREOWNER_KEY => $l->t(
+  ConfigConstants::SHARE_OWNER_KEY => $l->t(
     'You need to create a dummy-user which owns all shared resources
 (calendars, files etc.). You need to be a group-admin for the
 orchestra user group "%s" to do so. You can create the share-owner
 uid by setting the respective field in the application settings menu in the
 "Sharing"-tab).',
                         [$_[ConfigConstants::USER_GROUP_KEY]]),
-  'sharedfolder' => $l->t(
+  ConfigConstants::SHARED_FOLDER => $l->t(
     'You need to create a dedicated shared folder shared among the
 user-group "%s". You can do so through the respective web-form in the
 application settings windows accessible through the settings-menu in the
@@ -57,8 +57,8 @@ top-right corner. Choose the "Sharing"-tab in
 the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
                           [$_[ConfigConstants::USER_GROUP_KEY]]),
-  'sharedaddressbooks' => $l->t('Shared addressbooks do not exist or are inaccessible.'),
-  'database' => $l->t(
+  ConfigConstants::SHARED_ADDRESS_BOOKS => $l->t('Shared addressbooks do not exist or are inaccessible.'),
+  ConfigConstants::DATABASE_KEY => $l->t(
     'You need to configure the database access. You can do so through the
 respective web-form in the application settings windows accessible
 through the settings-menu in the upper right corner. You need to be a
@@ -118,14 +118,14 @@ log-in again in order to be able to access the encrypted values.',
 
 $diagnosticItems = [
   ConfigConstants::USER_GROUP_KEY,
-  'groupadmin',
+  ConfigConstants::IS_GROUP_ADMIN,
   EnumPersonalSettingsKey::ENCRYPTION_KEY->value,
-  'orchestra',
-  ConfigConstants::SHAREOWNER_KEY,
-  'sharedfolder',
-  'sharedaddressbooks',
-  'database',
-  'migrations',
+  ConfigConstants::ORCHESTRA_NAME_KEY,
+  ConfigConstants::SHARE_OWNER_KEY,
+  ConfigConstants::SHARED_FOLDER,
+  ConfigConstants::SHARED_ADDRESS_BOOKS,
+  ConfigConstants::DATABASE_KEY,
+  ConfigConstants::MIGRATIONS_KEY,
 ];
 
 $failedItems = [];
@@ -142,13 +142,13 @@ $diagnosticItems = $failedItems + $operationalItems;
 foreach ($diagnosticItems as $key) {
 
   switch ($key) {
-    case 'groupadmin':
-      $ok    = $_['groupadmin'] ? 'set' : 'missing';
-      $key   = 'groupadmin';
-      $value = ($_['groupadmin']
+    case ConfigConstants::IS_GROUP_ADMIN:
+      $ok    = $_[ConfigConstants::IS_GROUP_ADMIN] ? 'set' : 'missing';
+      $key   = ConfigConstants::IS_GROUP_ADMIN;
+      $value = ($_[ConfigConstants::IS_GROUP_ADMIN]
               ? $l->t('You are a group administrator.')
               : $l->t('You are not a group administrator.'));
-      $text = (!$_['groupadmin']
+      $text = (!$_[ConfigConstants::IS_GROUP_ADMIN]
         ? $l->t(
                  'Ask a user with group-administrator rights to perform the required
 settings or ask the Owncloud-administror to assign to you the rol of a
@@ -196,7 +196,7 @@ group-administrator for the group `%s\'.',
       <div class="'.$css_pfx.'-config-check comment"> '.$text.'</div>
     </li>';
       break;
-    case 'migrations':
+    case ConfigConstants::MIGRATIONS_KEY:
       $status = $cfgchk[$key]['status'];
       $ok     = $status ? 'set' : 'missing';
       $tok    = $status ? $l->t('not needed') : $l->t('data needs migration');

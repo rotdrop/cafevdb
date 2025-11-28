@@ -670,7 +670,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     if (!empty($writtenMandate)) {
       $writtenMandateId = $writtenMandate->getId();
       $writtenMandateDownloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-        'section' => 'database',
+        'section' => DownloadsController::SECTION_DATABASE,
         'object' => $writtenMandateId,
       ]);
       $writtenMandateFileName = $mandate->getMandateReference();
@@ -1405,7 +1405,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     }
 
     $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-      'section' => 'database',
+      'section' => DownloadsController::SECTION_DATABASE,
       'object' => $writtenMandate->getId(),
     ])
       . '?requesttoken=' . urlencode(\OCP\Util::callRegister())

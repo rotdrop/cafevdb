@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Ȩntities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /*
  * @param int $fieldId

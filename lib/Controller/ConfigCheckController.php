@@ -63,6 +63,6 @@ class ConfigCheckController extends Controller
   #[Attributes\NoGroupMemberRequired]
   public function get(): DataResponse {
     $configCheck = $this->configCheckService->configured();
-    return DTO\ConfigCheckResponse::fromArray($configCheck);
+    return DTO\ConfigCheckResponse::fromArray($configCheck)->response();
   }
 }

@@ -52,15 +52,15 @@ class DecryptShareOwner implements IMigration
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Decrypt the "%s" configuration value.', ConfigConstants::SHAREOWNER_KEY);
+    return $this->l->t('Decrypt the "%s" configuration value.', ConfigConstants::SHARE_OWNER_KEY);
   }
 
   /** {@inheritdoc} */
   public function execute():bool
   {
     try {
-      $shareOwner = $this->encryptionService->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
-      $this->encryptionService->setConfigValue(ConfigConstants::SHAREOWNER_KEY, $shareOwner);
+      $shareOwner = $this->encryptionService->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
+      $this->encryptionService->setConfigValue(ConfigConstants::SHARE_OWNER_KEY, $shareOwner);
     } catch (Throwable $t) {
       return false;
     }

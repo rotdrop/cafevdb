@@ -73,7 +73,7 @@ class SubAdminMiddleware extends Middleware
       }
     }
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\ServiceAccountRequired::class)) {
-      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigConstants::SHAREOWNER_KEY)) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigConstants::SHARE_OWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }

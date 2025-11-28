@@ -36,6 +36,7 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MigrationsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX end-points for database migrations. */
 class MigrationsController extends Controller
@@ -70,9 +71,9 @@ class MigrationsController extends Controller
   {
     switch ($what) {
       case self::ALL_MIGRATIONS:
-        return self::dataResponse([ 'migrations' => $this->migrationsService->getAll(), ]);
+        return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getAll(), ]);
       case self::UNAPPLIED_MIGRATIONS:
-        return self::dataResponse([ 'migrations' => $this->migrationsService->getUnapplied(), ]);
+        return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getUnapplied(), ]);
       case self::LATEST_MIGRATION:
         return self::dataResponse([ 'latest' => $this->migrationsService->getLatest(), ]);
     }
@@ -115,7 +116,7 @@ class MigrationsController extends Controller
                 $applied[] = $version;
               } catch (Throwable $t) {
                 $context = [
-                  'migrations' => [
+                  ConfigConstants::MIGRATIONS_KEY => [
                     'payload' => $unapplied,
                     'handled' => $applied,
                     'failing' => $version,
@@ -140,7 +141,7 @@ class MigrationsController extends Controller
               }
             }
             return self::dataResponse([
-              'migrations' => [
+              ConfigConstants::MIGRATIONS_KEY => [
                 'payload' => $unapplied,
                 'handled' => $applied,
                 'failing' => [],
@@ -153,7 +154,7 @@ class MigrationsController extends Controller
             } catch (\Throwable $t) {
               $description = $this->migrationsService->getDescription($version);
               $context = [
-                'migrations' => [
+                ConfigConstants::MIGRATIONS_KEY => [
                   'payload' => [ $version => $description, ],
                   'handled' => [],
                   'failing' => $version,
@@ -171,7 +172,7 @@ class MigrationsController extends Controller
               throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
             }
             return self::dataResponse([
-              'migrations' => [
+              ConfigConstants::MIGRATIONS_KEY => [
                 'payload' => [ $version, ],
                 'handled' => [ $version, ],
                 'failing' => [],

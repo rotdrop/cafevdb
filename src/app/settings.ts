@@ -438,7 +438,7 @@ const afterLoad = function(container?: JQuery) {
         },
         getValue(_element, _msg) { // getValue
           return {
-            name: 'shareowner',
+            name: ConfigConstants.SHARE_OWNER_KEY,
             value: {
               shareowner: shareOwner.val(),
               'shareowner-saved': shareOwnerSaved.val(),

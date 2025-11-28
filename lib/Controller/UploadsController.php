@@ -213,7 +213,7 @@ class UploadsController extends Controller
 
         $downloadLink = $this->urlGenerator()->linkToRoute(
           $this->appName().'.downloads.get', [
-            'section' => 'database',
+            'section' => DownloadsController::SECTION_DATABASE,
             'object' => $dbFile->getId(),
           ])
           . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
