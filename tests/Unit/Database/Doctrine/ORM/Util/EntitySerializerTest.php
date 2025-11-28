@@ -163,7 +163,6 @@ class EntitySerializerTest extends TestCase
     $this->assertArrayHasKey(Entities\Project::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
-    $json = json_encode($exportData, JSON_PRETTY_PRINT);
-    echo $json . PHP_EOL;
+    // $json = json_encode($exportData, JSON_PRETTY_PRINT);
   }
 }
