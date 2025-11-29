@@ -68,7 +68,8 @@ use DateTimeZone;
 
 use Sabre\VObject\Component\VCalendar;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCP\IL10N;
+use OCP\IUserSession;
 
 /*
  *
@@ -86,13 +87,13 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class OC_Calendar_Object
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\GetUserTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $configService,
+    protected IL10N $l,
+    protected IUserSession $userSession,
   ) {
-    $this->l = $this->l10n();
   }
   // phpcs:enable
 
