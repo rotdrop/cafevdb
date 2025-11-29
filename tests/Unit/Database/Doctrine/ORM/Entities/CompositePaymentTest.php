@@ -65,6 +65,7 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\UsesClass(Entities\DatabaseStorageFolder::class)]
 #[Attributes\UsesClass(Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(Listener\TranslationNotFoundListener::class)]
+#[Attributes\UsesClass(Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(RationalNumber::class)]
 #[Attributes\UsesClass(Service\AuthorizationService::class)]
 #[Attributes\UsesClass(Service\EncryptionService::class)]
