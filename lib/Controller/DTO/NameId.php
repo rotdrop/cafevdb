@@ -35,7 +35,7 @@ class NameId extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
   /** {@inheritdoc} */
   public function __construct(
     public readonly string $name,
-    public readonly int $value,
+    public readonly int $id,
   ) {
   }
 
@@ -50,6 +50,6 @@ class NameId extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self($name, $value);
+    return new self($name, $id);
   }
 }
