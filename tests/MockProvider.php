@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Database\Doctrine;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -135,6 +136,7 @@ class MockProvider
     );
     $instance->method('getAppValue')->willReturnCallback(
       function(string $appName, string $key, mixed $default = null): mixed {
+        // print_r($this->appConfigValues);
         if (isset($this->appConfigValues[$appName . $key])) {
           return $this->appConfigValues[$appName . $key];
         }
@@ -156,15 +158,13 @@ class MockProvider
           case OldSettingsKeys::APP_KEYS[ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY]:
             return null;
         }
-        if ($default !== null) {
-          return $default;
-        }
-        throw new UnexpectedValueException('Unexpected config key in test-suite: "' . $key .'".');
+        return $default;
       }
     );
     $instance->method('setAppValue')->willReturnCallback(
       function(string $appName, string $key, mixed $value): void {
         $this->appConfigValues[$appName . $key] = $value;
+        // print_r($this->appConfigValues);
       },
     );
     $instance->method('deleteAppValue')->willReturnCallback(
@@ -187,6 +187,29 @@ class MockProvider
         unset($this->userConfigValues[$userId . $appName . $key]);
       },
     );
+    $this->instances[$className] = $instance;
+
+    return $instance;
+  }
+
+  /**
+   * @return ConfigService
+   */
+  public function getConfigService(): ConfigService
+  {
+    $className = ConfigService::class;
+
+    if ($this->instances[$className]) {
+      return $this->instances[$className];
+    }
+
+    $instance = new ConfigService(
+      appName: $this->appName,
+      appContainer: $this->getAppContainer(),
+      logger: $this->getLoggerInterface(),
+      l: $this->getL10N(),
+    );
+
     $this->instances[$className] = $instance;
 
     return $instance;
@@ -566,14 +589,20 @@ class MockProvider
 
     $instance->method('get')->willReturnCallback(
       function(string $service) {
-        // echo __CLASS__ . '::' . __METHOD__ . ': CALLED WITH ' . $service . PHP_EOL;
         if (!empty($this->instances[$service])) {
-          // echo __CLASS__ . '::' . __METHOD__ . ': RETURNING CACHED ' . $service . PHP_EOL;
           return $this->instances[$service];
         }
         switch ($service) {
           case IEventDispatcher::class:
             return $this->getEventDispatcher();
+          case IUserSession::class:
+            return $this->getUserSession();
+          case ConfigService::class:
+            return $this->getConfigService();
+          case EncryptionService::class:
+            return $this->getEncryptionService();
+          case IConfig::class:
+            return $this->getCloudConfig();
           case RepositoryFactory::class:
             return $this->getRepositoryFactory();
           case UndoableRunQueue::class:
