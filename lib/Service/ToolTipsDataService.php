@@ -96,6 +96,8 @@ class ToolTipsDataService
   private static function generate():array
   {
     return [
+      ConfigConstants::GENERAL_ADDRESS_BOOK_KEY => self::t('Shared addressbook for general contacts, like business partners.'),
+      ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY => self::t('The name of the automatically generated addressbook which exports all musicians of the database as contacts.'),
       'mailmerge' => [
         'examples' => [
           'finance' => [
@@ -1396,9 +1398,9 @@ tablet or desktop computer.'),
 
       ],
 
-      'balancesfolder-force' => self::t('Force the re-creation of the folder where financial balances are stored.'),
+      ConfigConstants::BALANCES_FOLDER . '-force' => self::t('Force the re-creation of the folder where financial balances are stored.'),
 
-      'projectsfolder-force' => self::t('Force the re-creation of the folder where project data is stored.'),
+      ConfigConstants::PROJECTS_FOLDER . '-force' => self::t('Force the re-creation of the folder where project data is stored.'),
 
       'redaxo-archive' => self::t('Article category of the concert-archive inside the Redaxo CMS.'),
 
@@ -1447,19 +1449,18 @@ and contact the treasurer for further instructions.',
       ],
 
       ConfigConstants::SHARED_FOLDER => self::t('Folder shared by the orchestra group.'),
-      'postboxfolder' => self::t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
-      'documenttemplatesfolder' => self::t('Shared folder for document templates.'),
-      'projectsfolder' => self::t('Shared folder for per-project data.'),
-      'projectparticipantsfolder' => self::t('Shared folder for per-project per-participant data'),
-      'projectpostersfolder' => self::t('Shared folder for flyers and posters'),
-      'projectpublicdownloadsfolder' => self::t(
+      ConfigConstants::POSTBOX_FOLDER => self::t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
+      ConfigConstants::DOCUMENT_TEMPLATES_FOLDER => self::t('Shared folder for document templates.'),
+      ConfigConstants::PROJECTS_FOLDER => self::t('Shared folder for per-project data.'),
+      ConfigConstants::PROJECT_PARTICIPANTS_FOLDER => self::t('Shared folder for per-project per-participant data'),
+      ConfigConstants::PROJECT_POSTERS_FOLDER => self::t('Shared folder for flyers and posters'),
+      ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER => self::t(
         'Link-shared folder for data needed by participants.'
         . ' In particular, this can be used for music-sheet downloads.'
         . ' The folder is automatically created and shared when the project is created.'
         . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
       ),
-      'balancesfolder' => self::t('Shared folder for the financial balances, probably used after the project is finished.'),
-      'taxOfficeInTrayFolder' => self::t('Subfolder for incoming letters from the tax offices.'),
+      ConfigConstants::BALANCES_FOLDER => self::t('Shared folder for the financial balances, probably used after the project is finished.'),
       'taxExcemptionNoticeTemplate' => self::t('Template file name for tax excemption notices, may and probably should contain
 placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period in the file-name.'),
 
@@ -1511,7 +1512,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
 
       'settings-button' => self::t('Personal application settings.'),
 
-      'sharedfolder-force' => self::t('Force the re-creation of the root of the shared-folder hierarchy.'),
+      ConfigConstants::SHARED_FOLDER . '-force' => self::t('Force the re-creation of the root of the shared-folder hierarchy.'),
 
       'shareowner-force' => self::t('Re-create the share-owner.'),
 

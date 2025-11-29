@@ -42,6 +42,7 @@ use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -222,7 +223,7 @@ class ContactsService
   public function addEmailContact(array $emailContact, ?string $addressBookKey = null):?array
   {
     if (empty($addressBookKey)) {
-      $addressBookKey = $this->getConfigValue('generaladdressbookid', false);
+      $addressBookKey = $this->getConfigValue(ConfigConstants::GENERAL_ADDRESS_BOOK_ID_KEY, false);
       if (empty($addressBookKey)) {
         return null;
       }

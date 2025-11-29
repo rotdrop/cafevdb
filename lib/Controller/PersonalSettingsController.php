@@ -1054,27 +1054,28 @@ class PersonalSettingsController extends Controller
           $this->l->t('SETTING %s NOT YET IMPLEMENTED', $parameter),
         );
 
-      case 'shareownerpassword':
+      case ConfigConstants::SHARE_OWNER_PASSWORD_KEY:
         $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwnerUid)) {
-          return self::grumble($this->l->t('Please create the share-owner user first.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Please create the share-owner user first.'));
         }
         $shareOwner = $this->user($shareOwnerUid);
         if (empty($shareOwner)) {
-          return self::grumble($this->l->t('Share-owner does not seem to exist, please recreate.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Share-owner does not seem to exist, please recreate.'));
         }
         if (!$shareOwner->canChangePassword()) {
-          return self::grumble($this->l->t('Authentication backend does not support changing passwords.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Authentication backend does not support changing passwords.'));
         }
         $realValue = trim($value); // @@todo: check for valid password chars.
         if (empty($realValue)) {
-          return self::grumble($this->l->t('Password must not be empty'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Password must not be empty'));
         }
         if (!$shareOwner->setPassword($realValue)) {
-          return self::grumble($this->l->t('Unable to set password for "%s".', [$shareOwnerUid]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Unable to set password for "%s".', [$shareOwnerUid]));
         }
         $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
-        return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
+        return (new DTO\MessagesResponse([$this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid])]))->response();
+
       case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[substr($parameter, 0, -strlen('Delete'))]) ? $parameter : null):
         // Delete config value and file. The file can be undeleted in the cloud, if necessary.
 
@@ -1381,27 +1382,27 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-      case 'concertscalendar':
-      case 'rehearsalscalendar':
-      case 'othercalendar':
-      case 'managementcalendar':
-      case 'financecalendar':
+      case (array_shift(
+        array_filter(
+          array_keys(ConfigConstant::CALENDARS),
+          fn(string $uri) => $uri . ConfigConstants::CALENDAR_KEY_POSTFIX == $parameter),
+      ) ?? '') . ConfigConstants::CALENDAR_KEY_POSTFIX:
         $real = trim($value);
-        $uri = substr($parameter, 0, -strlen('calendar'));
-        //$saved = $value[$parameter.'-saved'];
-        //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        $uri = substr($parameter, 0, -strlen(ConfigConstants::CALENDAR_KEY_POSTFIX));
+        //$saved = $value[$parameter . '-saved'];
+        //$force = filter_var($value[$parameter . '-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         $actual = $this->getConfigValue($parameter);
-        $actualId = $this->getConfigValue($parameter.'id');
+        $actualId = $this->getConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX);
         try {
           $newId = $this->configCheckService->checkSharedCalendar($uri, $real, $actualId);
           if ($newId > 0) {
             $this->setConfigValue($parameter, $real);
-            $this->setConfigValue($parameter.'id', $newId);
+            $this->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $newId);
             return (new DTO\NameIdValueResponse(
-              $newId != $actualId
+              message: $newId != $actualId
               ? $this->l->t('Created and shared new calendar "%s".', [$real])
               : $this->l->t('Validated shared calendar "%s".', [$real]),
-              ['name' => $real, 'id' => $newId],
+              value: ['name' => $real, 'id' => $newId],
             ))->response();
           } else {
             return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
@@ -1412,23 +1413,26 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-      case 'generaladdressbook':
+      case ConfigConstants::GENERAL_ADDRESS_BOOK_KEY:
         $real = trim($value);
-        $uri = substr($parameter, 0, -strlen('addressbook'));
-        //$saved = $value[$parameter.'-saved'];
-        //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        $uri = substr($parameter, 0, -strlen(ConfigConstants::ADDRESS_BOOK_POSTFIX));
+        //$saved = $value[$parameter . '-saved'];
+        //$force = filter_var($value[$parameter . '-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         $actual = $this->getConfigValue($parameter);
-        $actualId = $this->getConfigValue($parameter.'id');
+        $actualId = $this->getConfigValue($parameter . ConfigConstants::ID_POSTFIX);
         try {
           $newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId);
           if ($newId <= 0) {
-            return self::grumble($this->l->t('Failed to create new shared address book "%s".', [$real]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Failed to create new shared address book "%s".', [$real]),
+            );
           }
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
-          return self::valueResponse(
-            ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new address book "%s".', $real));
+          return (new DTO\NameIdValueResponse(
+            message: $this->l->t('Created and shared new address book "%s".', $real),
+            value: ['name' => $real, 'id' => $newId],
+          ))->response();
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Failure checking address book "%s", caught an exception.', $real),
@@ -1436,30 +1440,33 @@ class PersonalSettingsController extends Controller
           );
         }
 
-      case 'musiciansaddressbook':
+      case ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY:
         $real = trim($value);
         $this->setConfigValue($parameter, $real);
         $addressBook = $this->appContainer->query(AddressBookProvider::class)->getContactsAddressBook();
-        $this->setConfigValue($parameter.'id', $addressBook->getKey());
+        $this->setConfigValue($parameter . ConfigConstants::ID_POSTFIX, $addressBook->getKey());
         if (empty($real)) {
+
           $real = $addressBook->getDisplayName();
           $message = $this->l->t('Display name of musicians-addressbook reset to "%s".', $real);
         } else {
           $message = $this->l->t('Display name of musicians-addressbook set to "%s".', $real);
         }
         if ($addressBook->getDisplayName() != $real) {
-          return self::grumble($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
         }
-        return self::valueResponse(
-          [ 'name' => $addressBook->getDisplayName(), 'id' => $addressBook->getKey() ],
-          $message);
-      case 'eventduration':
+        return (new DTO\NameIdValueResponse(
+          message: $message,
+          value: [ 'name' => $addressBook->getDisplayName(), 'id' => $addressBook->getKey() ],
+        ))->response();
+
+      case ConfigConstants::EVENT_DURATION_KEY:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
+        return (new DTO\MessagesResponse([$this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter])]))->response();
 
       case EnumSimpleSettingsKey::IMPORT_CLUB_MEMBERS_AS_CLOUD_USERS->value:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -1824,6 +1831,7 @@ class PersonalSettingsController extends Controller
           'Configured the Roundcube mailer for SSO using the current user\'s user-id and credentials with the configure email-domain "%1$s".',
           $emailFromDomain,
         );
+        // fallthrough
       case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY->value:
       case EnumSimpleSettingsKey::BULK_EMAIL_SUBJECT_TAG->value:
       case EnumSimpleSettingsKey::EMAIL_USER->value:
@@ -2349,8 +2357,9 @@ class PersonalSettingsController extends Controller
    * @param null|string $humanValue Human readable value for display in the
    * frontend (e.g. formatted floating point value, or boolean as text.
    *
-   * @param array $furtherData Further data to be mixed into the
-   * data-response data.
+   * @param array $messages "First-level" messages, to be displayed by toasts.
+   *
+   * @param array $hints Instructions, further info.
    *
    * @return Http\DataResponse
    */

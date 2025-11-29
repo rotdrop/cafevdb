@@ -304,15 +304,15 @@ class PersonalForm
             ConfigConstants::APP_DB_PASSWORD => $this->getConfigValue(ConfigConstants::APP_DB_PASSWORD),
 
             ConfigConstants::SHARE_OWNER_KEY => $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY, ''),
-            'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
-            'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
-            'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),
-            'managementcalendar' => $this->getConfigValue('managementcalendar', $this->l->t('Management')),
-            'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('Finance')),
-            'eventduration' => $this->getConfigValue('eventduration', '180'),
+            ConfigConstants::CONCERTS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::CONCERTS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Concerts')),
+            ConfigConstants::REHEARSALS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::REHEARSALS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Rehearsals')),
+            ConfigConstants::OTHER_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::OTHER_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Other')),
+            ConfigConstants::MANAGEMENT_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::MANAGEMENT_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Management')),
+            ConfigConstants::FINANCE_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::FINANCE_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Finance')),
+            ConfigConstants::EVENT_DURATION_KEY => $this->getConfigValue(ConfigConstants::EVENT_DURATION_KEY, '180'),
 
-            'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
-            'musiciansaddressbook' => $musiciansAddressBookName,
+            ConfigConstants::GENERAL_ADDRESS_BOOK_KEY => $this->getConfigValue(ConfigConstants::GENERAL_ADDRESS_BOOK_KEY, $this->l->t('Miscellaneous')),
+            ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY => $musiciansAddressBookName,
 
             ConfigConstants::SHARED_FOLDER => $sharedFolder,
             'sharedFolderLink' => $sharedFolderLink,

@@ -45,7 +45,6 @@ class OldSettingsKeys
   public const APP_KEYS = [
     ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => 'encryptionkeyhash',
     ConfigConstants::EMAIL_USER => 'emailuser',
-    ConfigConstants::SHARED_ADDRESS_BOOKS => 'sharedAddressBooks',
     ConfigConstants::SHARED_FOLDER => 'sharedfolder',
     ConfigConstants::SHARE_OWNER_KEY => 'shareowner',
     ConfigConstants::USER_GROUP_KEY => 'usergroup',

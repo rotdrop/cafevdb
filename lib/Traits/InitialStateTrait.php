@@ -143,8 +143,8 @@ trait InitialStateTrait
         EnumPersonalSettingsKey::RESTORE_HISTORY->value => $restoreHistory,
         'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
-        'sharedFolder' => $this->getSharedFolderPath(),
-        'projectsFolder' => $this->getProjectsFolderPath(),
+        ConfigConstants::SHARED_FOLDER => $this->getSharedFolderPath(),
+        ConfigConstants::PROJECTS_FOLDER => $this->getProjectsFolderPath(),
         Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);

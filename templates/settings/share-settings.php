@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,9 +36,9 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
   <div id="sharing-settings">
     <!-- VIRTUAL USER -->
     <h4><?= $l->t('Share owner') ; ?></h4>
-    <form id="shareownerform">
+    <form id="<? ConfigConstants::SHARE_OWNER_KEY ?>form">
       <fieldset id=<?= ConfigConstants::SHARE_OWNER_KEY ?> <?= $alloff; ?> >
-        <input type="hidden" id="user-saved" name="shareowner-saved" value="<?= $_[ConfigConstants::SHARE_OWNER_KEY]; ?>" />
+        <input type="hidden" id="user-saved" name="<? ConfigConstants::SHARE_OWNER_KEY ?>-saved" value="<?= $_[ConfigConstants::SHARE_OWNER_KEY]; ?>" />
         <input type="text"
                id="user"
                name=<?= ConfigConstants::SHARE_OWNER_KEY ?>
@@ -48,25 +48,25 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                <?= $_[ConfigConstants::SHARE_OWNER_KEY] != '' ? 'disabled' : '';?>
                autocomplete="username"
         />
-        <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>
-           <label for="shareowner-force" title="<?= $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
+        <input type="checkbox" id="<? ConfigConstants::SHARE_OWNER_KEY ?>-force" name="<? ConfigConstants::SHARE_OWNER_KEY ?>-force" class="checkbox"/>
+           <label for="<? ConfigConstants::SHARE_OWNER_KEY ?>-force" title="<?= $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
              <?= $l->t('force');?>
            </label>
-        <input name="shareownercheck" id="check" type="button" value="<?= $l->t('Check');?>" <?= $off; ?> />
+        <input name="<? ConfigConstants::SHARE_OWNER_KEY ?>check" id="check" type="button" value="<?= $l->t('Check');?>" <?= $off; ?> />
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
-      <fieldset class="shareownerpassword flex-container" <?= $off; ?> >
+      <fieldset class="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?> flex-container" <?= $off; ?> >
         <div class="password-container">
           <input type="password"
-                 id="shareownerpassword"
+                 id="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>"
                  class="randompassword"
-                 name="shareownerpassword"
+                 name="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>"
                  placeholder="<?= $l->t('Share-Password');?>"
-                 data-typetoggle="#shareownerpassword-show"
+                 data-typetoggle="#<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>-show"
                  autocomplete="current-password"
           />
-          <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
-          <label class="cafevdb-password-show" for="shareownerpassword-show"><?= $l->t('show');?></label>
+          <input class="<?= $appName ?>-password-show" type="checkbox" id="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>-show" name="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>-show" />
+          <label class="<?= $appName ?>-password-show" for="<?= ConfigConstants::SHARE_OWNER_PASSWORD_KEY ?>-show"><?= $l->t('show');?></label>
         </div>
         <input name="passwordgenerate" id="generate" type="button" value="<?= $l->t('Generate');?>" />
         <input name="passwordchange" id="change" type="button" value="<?= $l->t('Change');?>" />
@@ -79,35 +79,41 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
     <h4><?= $l->t('Calendars'); ?></h4>
     <form id="calendars">
       <fieldset  <?= $off; ?> >
-        <input type="text" id="concerts" name="concertscalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['concertscalendar']; ?>" />
-        <label for="concerts"><?= $l->t('Calendar for Concerts');?></label>
+        <input type="text" id="<?= ConfigConstants::CONCERTS_CALENDAR_URI ?>" name="<?= ConfigConstants::CONCERTS_CALENDAR_URI ?><?= ConfigConstants::CALENDAR_KEY_POSTFIX ?>" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['concerts' . ConfigConstants::CALENDAR_KEY_POSTFIX]; ?>" />
+        <label for="<?= ConfigConstants::CONCERTS_CALENDAR_URI ?>"><?= $l->t('Calendar for Concerts');?></label>
         <br/>
-        <input type="text" id="rehearsals" name="rehearsalscalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['rehearsalscalendar']; ?>" />
-        <label for="rehearsals"><?= $l->t('Calendar for Rehearsals');?></label>
+        <input type="text" id="<?= ConfigConstants::REHEARSALS_CALENDAR_URI ?>" name="<?= ConfigConstants::REHEARSALS_CALENDAR_URI ?><?= ConfigConstants::CALENDAR_KEY_POSTFIX ?>" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['rehearsals' . ConfigConstants::CALENDAR_KEY_POSTFIX]; ?>" />
+        <label for="<?= ConfigConstants::REHEARSALS_CALENDAR_URI ?>"><?= $l->t('Calendar for Rehearsals');?></label>
         <br/>
-        <input type="text" id="other" name="othercalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['othercalendar']; ?>" />
-        <label for="other"><?= $l->t('Calendar for other Events');?></label>
+        <input type="text" id="<?= ConfigConstants::OTHER_CALENDAR_URI ?>" name="<?= ConfigConstants::OTHER_CALENDAR_URI ?><?= ConfigConstants::CALENDAR_KEY_POSTFIX ?>" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['other' . ConfigConstants::CALENDAR_KEY_POSTFIX]; ?>" />
+        <label for="<?= ConfigConstants::OTHER_CALENDAR_URI ?>"><?= $l->t('Calendar for other Events');?></label>
         <br/>
-        <input type="text" id="management" name="managementcalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['managementcalendar']; ?>" />
-        <label for="management"><?= $l->t('Management-Calendar');?></label>
+        <input type="text" id="<?= ConfigConstants::MANAGEMENT_CALENDAR_URI ?>" name="<?= ConfigConstants::MANAGEMENT_CALENDAR_URI ?><?= ConfigConstants::CALENDAR_KEY_POSTFIX ?>" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['management' . ConfigConstants::CALENDAR_KEY_POSTFIX]; ?>" />
+        <label for="<?= ConfigConstants::MANAGEMENT_CALENDAR_URI ?>"><?= $l->t('Management-Calendar');?></label>
         <br/>
-        <input type="text" id="finance" name="financecalendar" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['financecalendar']; ?>" />
-        <label for="finance"><?= $l->t('Finance-Calendar');?></label>
+        <input type="text" id="<?= ConfigConstants::FINANCE_CALENDAR_URI ?>" name="<?= ConfigConstants::FINANCE_CALENDAR_URI ?><?= ConfigConstants::CALENDAR_KEY_POSTFIX ?>" placeholder="<?= $l->t('calendarname');?>" value="<?= $_['finance' . ConfigConstants::CALENDAR_KEY_POSTFIX]; ?>" />
+        <label for="<?= ConfigConstants::FINANCE_CALENDAR_URI ?>"><?= $l->t('Finance-Calendar');?></label>
         <br/>
 <!-- DEFAULT DURATION FOR EVENTS -->
-        <input type="number" min="0" id="duration" name="eventduration" placeholder="<?= $l->t('#Minutes');?>" value="<?= $_['eventduration']; ?>" />
-        <label for="duration"><?= $l->t('Default Duration for Events');?></label>
+        <input type="number"
+               min="0"
+               id="<?= ConfigConstants::EVENT_DURATION_KEY ?>"
+               name="<?= ConfigConstants::EVENT_DURATION_KEY ?>"
+               placeholder="<?= $l->t('#Minutes');?>"
+               value="<?= $_[ConfigConstants::EVENT_DURATION_KEY]; ?>"
+        />
+        <label for="<?= ConfigConstants::EVENT_DURATION_KEY ?>"><?= $l->t('Default Duration for Events');?></label>
       </fieldset>
     </form>
     <!-- Contacts, adressbooks -->
     <h4><?= $l->t('Contacts'); ?></h4>
     <form id="contacts">
       <fieldset  <?= $off; ?> >
-        <input type="text" id="generaladdressbook" name="generaladdressbook" placeholder="<?= $l->t('addressbook');?>" value="<?= $_['generaladdressbook']; ?>" />
-        <label for="generaladdressbook"><?= $l->t('General Addresbook');?></label>
+        <input type="text" id="<?= ConfigConstants::GENERAL_ADDRESS_BOOK_KEY ?>" name="<?= ConfigConstants::GENERAL_ADDRESS_BOOK_KEY ?>" placeholder="<?= $l->t('addressbook');?>" value="<?= $_[ConfigConstants::GENERAL_ADDRESS_BOOK_KEY]; ?>" />
+        <label for="<?= ConfigConstants::GENERAL_ADDRESS_BOOK_KEY ?>"><?= $l->t('General Addresbook');?></label>
         <br/>
-        <input type="text" id="musiciansaddressbook" name="musiciansaddressbook" placeholder="<?= $l->t('addressbook');?>" value="<?= $_['musiciansaddressbook']; ?>" />
-        <label for="musiciansaddressbook"><?= $l->t('Addresbook for Musicians');?></label>
+        <input type="text" id=<?= ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY ?> name=<?= ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY ?> placeholder="<?= $l->t('addressbook');?>" value="<?= $_[ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY]; ?>" />
+        <label for=<?= ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY ?>><?= $l->t('Addresbook for Musicians');?></label>
       </fieldset>
     </form>
     <!-- Shared folders -->
@@ -137,14 +143,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                 class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
                 <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" value="<?= $_['postboxfolder']; ?>" />
-        <input <?= $_['postboxfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::POSTBOX_FOLDER ?>-saved" value="<?= $_[ConfigConstants::POSTBOX_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::POSTBOX_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::POSTBOX_FOLDER ?>"
           name="<?= ConfigConstants::POSTBOX_FOLDER ?>"
           placeholder="<?= $l->t('Postbox-Folder'); ?>"
-          value="<?= $_['postboxfolder']; ?>"
-          title="<?= $toolTips['postboxfolder']; ?>"
+          value="<?= $_[ConfigConstants::POSTBOX_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::POSTBOX_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" name="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::POSTBOX_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::POSTBOX_FOLDER . '-force']; ?>" >

@@ -433,7 +433,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
     $cryptoMemoryCost = max($this->cloudConfig->getSystemValueInt('hashingMemoryCost', PASSWORD_ARGON2_DEFAULT_MEMORY_COST), $cryptoThreads * 8);
     $cryptoTimeCost = max($this->cloudConfig->getSystemValueInt('hashingTimeCost', PASSWORD_ARGON2_DEFAULT_TIME_COST), 1);
 
-    $catchAllGroup = $this->encryptionService->getConfigValue('musiciansaddressbook');
+    $catchAllGroup = $this->encryptionService->getConfigValue(ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY);
     if (empty($catchAllGroup)) {
       $orchestraName = ucfirst($this->encryptionService->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY));
       $catchAllGroup = $orchestraName . ' ' . $this->l->t('Musicians');

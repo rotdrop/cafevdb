@@ -69,23 +69,33 @@ class ConfigConstants
    *
    */
   public const SHARE_OWNER_KEY = 'shareOwner';
+  public const SHARE_OWNER_PASSWORD_KEY = self::SHARE_OWNER_KEY . 'Password';
   public const SHARE_OWNER_FOLDER_SERVICE_KEY = 'shareowner_folder';
   public const SHARE_OWNER_CALENDAR_SERVICE_KEY = 'shareowner_calendar';
   public const SHARE_OWNER_ADDRESSBOOK_SERVICE_KEY = 'shareowner_addressbook';
 
-  public const SHARED_ADDRESS_BOOKS = 'sharedAddressBooks';
+  public const ID_POSTFIX = 'Id';
 
-  public const SHARED_FOLDER = 'sharedFolder';
-  public const PROJECTS_FOLDER = 'projectsfolder';
-  public const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
-  public const PROJECT_POSTERS_FOLDER = 'projectpostersfolder';
-  public const PROJECT_PUBLIC_DOWNLOADS_FOLDER = 'projectpublicdownloadsfolder';
-  public const FINANCE_FOLDER = 'financefolder';
-  public const BALANCES_FOLDER = 'balancesfolder';
-  public const TRANSACTIONS_FOLDER = 'transactionsfolder';
-  public const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
-  public const POSTBOX_FOLDER = 'postboxfolder';
-  public const OUTBOX_FOLDER = 'outboxfolder';
+  public const ADDRESS_BOOK_POSTFIX = 'AddressBook';
+  public const SHARED_ADDRESS_BOOKS = 'shared' . self::ADDRESS_BOOK_POSTFIX . 's';
+
+  public const GENERAL_ADDRESS_BOOK_KEY = 'general' . self::ADDRESS_BOOK_POSTFIX;
+  public const GENERAL_ADDRESS_BOOK_ID_KEY = self::GENERAL_ADDRESS_BOOK_KEY . self::ID_POSTFIX;
+  public const MUSICIANS_ADDRESS_BOOK_KEY = 'musicians' . self::ADDRESS_BOOK_POSTFIX;
+  public const MUSICIANS_ADDRESS_BOOK_ID_KEY = self::MUSICIANS_ADDRESS_BOOK_KEY . self::ID_POSTFIX;
+
+  public const FOLDER_PREFIX = 'Folder';
+  public const SHARED_FOLDER = 'shared' . self::FOLDER_PREFIX;
+  public const PROJECTS_FOLDER = 'projects' . self::FOLDER_PREFIX;
+  public const PROJECT_PARTICIPANTS_FOLDER = 'projectParticipants' . self::FOLDER_PREFIX;
+  public const PROJECT_POSTERS_FOLDER = 'projectPosters' . self::FOLDER_PREFIX;
+  public const PROJECT_PUBLIC_DOWNLOADS_FOLDER = 'projectPublicDownloads' . self::FOLDER_PREFIX;
+  public const FINANCE_FOLDER = 'finance' . self::FOLDER_PREFIX;
+  public const BALANCES_FOLDER = 'balances' . self::FOLDER_PREFIX;
+  public const TRANSACTIONS_FOLDER = 'transactions' . self::FOLDER_PREFIX;
+  public const DOCUMENT_TEMPLATES_FOLDER = 'documentTemplates' . self::FOLDER_PREFIX;
+  public const POSTBOX_FOLDER = 'postbox' . self::FOLDER_PREFIX;
+  public const OUTBOX_FOLDER = 'outbox' . self::FOLDER_PREFIX;
   public const PROJECT_SKELETON_FOLDER = 'skeleton';
   public const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
   public const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
@@ -137,6 +147,9 @@ class ConfigConstants
     self::MANAGEMENT_CALENDAR_URI => [ 'uri' => self::MANAGEMENT_CALENDAR_URI, 'public' => false ],
     self::FINANCE_CALENDAR_URI => [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
   ];
+  public const CALENDAR_KEY_POSTFIX = 'Calendar';
+  public const CALENDAR_ID_KEY_POSTFIX = self::CALENDAR_KEY_POSTFIX . self::ID_POSTFIX;
+  public const EVENT_DURATION_KEY = 'eventDuration';
 
   public const STREET_ADDRESS_PREFIX = 'streetAddress';
   public const STREET_ADDRESS_NAME_01 = self::STREET_ADDRESS_PREFIX . 'Name01';

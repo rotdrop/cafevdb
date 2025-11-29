@@ -1093,7 +1093,7 @@ class ConfigCheckService
   {
     $configAddressBooks = [
       'general' => [
-        'key' => $this->getConfigValue('generaladdressbook'.'id', -1),
+        'key' => $this->getConfigValue(ConfigConstants::GENERAL_ADDRESS_BOOK_ID_KEY, -1),
         'found' => false,
       ],
       'musicians' => [

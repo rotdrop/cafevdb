@@ -208,12 +208,12 @@ const afterLoad = function(container?: JQuery) {
             $('div.personalblock.admin').find('fieldset').each(function() {
               $(this).removeAttr('disabled');
             });
-            if ($('#shareowner #user-saved').val() !== '') {
+            if ($(`#${ConfigConstants.SHARE_OWNER_KEY} #user-saved`).val() !== '') {
               $('div.personalblock.sharing').find('fieldset').each(function() {
                 $(this).removeAttr('disabled');
               });
             } else {
-              $('#shareownerform').find('fieldset').each(function() {
+              $(`#${ConfigConstants.SHARE_OWNER_KEY}form`).find('fieldset').each(function() {
                 $(this).removeAttr('disabled');
               });
             }
@@ -387,62 +387,62 @@ const afterLoad = function(container?: JQuery) {
    ***************************************************************************/
 
   const enableFieldSets = function() {
-    const shareOwnerSet = $('#shareowner').find('input#user').val() !== '';
+    const $shareOwnerSet = $(`#${ConfigConstants.SHARE_OWNER_KEY}`).find<HTMLInputElement>('input#user').val() !== '';
 
     $('#calendars, #contacts').find('fieldset').each(function() {
-      $(this).prop('disabled', !shareOwnerSet);
+      $(this).prop('disabled', !$shareOwnerSet);
     });
-    const sharedFolder = $('input#sharedfolder').val() !== '';
-    const projectsFolder = $('input#projectsfolder').val() !== '';
-    const financeFolder = $('input#financefolder').val() !== '';
-    $('#sharedfolder-form').find('fieldset').each(function(_i, element) {
+    const $sharedFolder = $(`input#${ConfigConstants.SHARED_FOLDER}`).val() !== '';
+    const $projectsFolder = $(`input#${ConfigConstants.PROJECTS_FOLDER}`).val() !== '';
+    const $financeFolder = $(`input#${ConfigConstants.FINANCE_FOLDER}`).val() !== '';
+    $(`#${ConfigConstants.SHARED_FOLDER}-form`).find('fieldset').each(function(_i, element) {
       const $element = $(element);
-      const disabled = (!shareOwnerSet
-                      || ($element.hasClass('needs-sharedfolder') && !sharedFolder)
-                      || ($element.hasClass('needs-projectsfolder') && !projectsFolder)
-                      || ($element.hasClass('needs-financefolder') && !financeFolder));
+      const disabled = (!$shareOwnerSet
+                      || ($element.hasClass(`needs-${ConfigConstants.SHARED_FOLDER}`) && !$sharedFolder)
+                      || ($element.hasClass(`needs-${ConfigConstants.PROJECTS_FOLDER}`) && !$projectsFolder)
+                      || ($element.hasClass(`needs-${ConfigConstants.FINANCE_FOLDER}`) && !$financeFolder));
       $element.prop('disabled', disabled);
     });
   };
 
   {
-    const container = $('#shareowner');
+    const container = $(`#${ConfigConstants.SHARE_OWNER_KEY}`);
     const msg = $('#shareownerform .statusmessage');
-    const shareOwner = container.find('#user') as JQuery<HTMLInputElement>;
-    const shareOwnerSaved = container.find('#user-saved') as JQuery<HTMLInputElement>;
-    const shareOwnerForce = container.find<HTMLInputElement>('#shareowner-force');
-    const shareOwnerCheck = container.find('#check');
+    const $shareOwner = container.find<HTMLInputElement>('#user');
+    const $shareOwnerSaved = container.find<HTMLInputElement>('#user-saved');
+    const $shareOwnerForce = container.find<HTMLInputElement>(`#${ConfigConstants.SHARE_OWNER_KEY}-force`);
+    const $shareOwnerCheck = container.find('#check');
 
-    shareOwnerForce.on('change', function(this: HTMLInputElement, _event) {
+    $shareOwnerForce.on('change', function(this: HTMLInputElement, _event) {
       msg.hide();
-      if (!$(this).is(':checked') && shareOwnerSaved.val() !== '') {
-        shareOwner.val(shareOwnerSaved.val()!);
-        shareOwner.prop('disabled', true);
+      if (!$(this).is(':checked') && $shareOwnerSaved.val() !== '') {
+        $shareOwner.val($shareOwnerSaved.val()!);
+        $shareOwner.prop('disabled', true);
       } else {
-        shareOwner.prop('disabled', false);
+        $shareOwner.prop('disabled', false);
       }
       return false;
     });
 
-    shareOwner.on('blur', function(_event) {
-      shareOwnerCheck.prop('disabled', shareOwner.val() === '');
+    $shareOwner.on('blur', function(_event) {
+      $shareOwnerCheck.prop('disabled', $shareOwner.val() === '');
       return false;
     });
 
     simpleSetValueHandler(
-      shareOwnerCheck, 'click', msg, {
+      $shareOwnerCheck, 'click', msg, {
         success(_element, _data, _value, _msg) { // done
-          shareOwnerSaved.val(shareOwner.val()!);
-          shareOwner.prop('disabled', true);
+          $shareOwnerSaved.val($shareOwner.val()!);
+          $shareOwner.prop('disabled', true);
           enableFieldSets();
         },
         getValue(_element, _msg) { // getValue
           return {
             name: ConfigConstants.SHARE_OWNER_KEY,
             value: {
-              shareowner: shareOwner.val(),
-              'shareowner-saved': shareOwnerSaved.val(),
-              'shareowner-force': shareOwnerForce.is(':checked'),
+              [ConfigConstants.SHARE_OWNER_KEY]: $shareOwner.val(),
+              [`${ConfigConstants.SHARE_OWNER_KEY}-saved`]: $shareOwnerSaved.val(),
+              [`${ConfigConstants.SHARE_OWNER_KEY}-force`]: $shareOwnerForce.is(':checked'),
             },
           };
         },
@@ -528,7 +528,7 @@ const afterLoad = function(container?: JQuery) {
       },
     );
 
-    container.find('#sharedfolder-form').on('submit', function() { return false; });
+    container.find(`#${ConfigConstants.SHARED_FOLDER}-form`).on('submit', function() { return false; });
 
     type CSSBase = typeof ConfigConstants.DEDICATED_FOLDERS[number];
     type CSSSaved<T extends CSSBase> = `${T}${'-saved'}`;
@@ -599,9 +599,9 @@ const afterLoad = function(container?: JQuery) {
         });
     };
 
-    sharedFolder('sharedfolder', function(_element, css, data, value, _msg) {
-      $('div#sharing-settings span.sharedfolder').html(value[css]); // update display
-      const $folderView = $('#sharedfolder-fieldset').find('a.sharedfolder-view');
+    sharedFolder(ConfigConstants.SHARED_FOLDER, function(_element, css, data, value, _msg) {
+      $(`div#sharing-settings span.${ConfigConstants.SHARED_FOLDER}`).html(value[css]); // update display
+      const $folderView = $(`#${ConfigConstants.SHARED_FOLDER}-fieldset`).find(`a.${ConfigConstants.SHARED_FOLDER}-view`);
       $folderView.attr('href', data.folderLink || '');
       if (data.folderLink) {
         $folderView.removeClass('hidden');
@@ -610,32 +610,31 @@ const afterLoad = function(container?: JQuery) {
       }
       enableFieldSets();
     });
-    sharedFolder('financefolder', function(_element, css, _data, value, _msg) {
-      // const emptyProjectsFolder = $('div#sharing-settings input[name="projectsfolder"]').val() === '';
-      $('div#sharing-settings span.financefolder').html(value[css] as string); // update
+    sharedFolder(ConfigConstants.FINANCE_FOLDER, function(_element, css, _data, value, _msg) {
+      // const emptyProjectsFolder = $(`div#sharing-settings input[name="${ConfigConstants.PROJECTS_FOLDER}"]`).val() === '';
+      $(`div#sharing-settings span.${ConfigConstants.FINANCE_FOLDER}`).html(value[css] as string); // update
       enableFieldSets();
     });
-    sharedFolder('projectsfolder', function(_element, css, _data, value, _msg) {
-      // const emptyFinanceFolder = $('div#sharing-settings input[name="financefolder"]').val() === '';
-      $('div#sharing-settings span.projectsfolder').html(value[css]); // update
+    sharedFolder(ConfigConstants.PROJECTS_FOLDER, function(_element, css, _data, value, _msg) {
+      // const emptyFinanceFolder = $(`div#sharing-settings input[name="${ConfigConstants.FINANCE_FOLDER}"]`).val() === '';
+      $(`div#sharing-settings span.${ConfigConstants.PROJECTS_FOLDER}`).html(value[css]); // update
       enableFieldSets();
     });
-    sharedFolder('projectparticipantsfolder');
-    sharedFolder('projectpostersfolder');
-    sharedFolder('projectpublicdownloadsfolder');
-    sharedFolder('transactionsfolder');
-    sharedFolder('balancesfolder');
-    sharedFolder('documenttemplatesfolder', function(_element, css, _data, value, _msg) {
+    sharedFolder(ConfigConstants.PROJECT_PARTICIPANTS_FOLDER);
+    sharedFolder(ConfigConstants.PROJECT_POSTERS_FOLDER);
+    sharedFolder(ConfigConstants.PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    sharedFolder(ConfigConstants.TRANSACTIONS_FOLDER);
+    sharedFolder(ConfigConstants.BALANCES_FOLDER);
+    sharedFolder(ConfigConstants.DOCUMENT_TEMPLATES_FOLDER, function(_element, css, _data, value, _msg) {
       $('fieldset.document-template input').prop('disabled', value[css] === '');
     });
-    sharedFolder('postboxfolder', function(_element, _css, data, _value, _msg) {
+    sharedFolder(ConfigConstants.POSTBOX_FOLDER, function(_element, _css, data, _value, _msg) {
       if (data.url) {
-        $('div.postboxfolder-sharelink').html(data.url);
+        $(`div.${ConfigConstants.POSTBOX_FOLDER}-sharelink`).html(data.url);
       }
     });
-    sharedFolder('outboxfolder');
+    sharedFolder(ConfigConstants.OUTBOX_FOLDER);
 
-    simpleSetValueHandler(container.find('#taxOfficeInTrayFolder'), 'blur', msg);
     simpleSetValueHandler(container.find('#taxExcemptionNoticeTemplate'), 'blur', msg);
 
     const $cloudUserForm = container.find('form.cloud-user');
@@ -1209,7 +1208,7 @@ const afterLoad = function(container?: JQuery) {
     const $autofillers = $fieldset.find('input.auto-fill-test') as JQuery<HTMLInputElement>;
     const $autofillersdata = $fieldset.find('input.auto-fill-test-data') as JQuery<HTMLInputElement>;
 
-    if ($('#documenttemplatesfolder').val() === '' || $('#sharedfolder').val() === '') {
+    if ($('#documenttemplatesfolder').val() === '' || $(`#${ConfigConstants.SHARED_FOLDER}`).val() === '') {
       $fieldset.find('input').prop('disabled', true);
     }
 
@@ -1227,7 +1226,7 @@ const afterLoad = function(container?: JQuery) {
     const moveIntoPlace = function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
-            '/' + $('#sharedfolder').val()
+            '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
             + '/' + $('#documenttemplatesfolder').val()
             + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
             + '/' + file.original_name;
