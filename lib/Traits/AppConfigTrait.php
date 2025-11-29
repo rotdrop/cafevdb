@@ -34,6 +34,24 @@ trait AppConfigTrait
   protected string $appName;
 
   /**
+   * Backwards compatibility support after converting stuff to camel case.
+   *
+   * @param string $key
+   *
+   * @return ?string
+   */
+  protected static function oldConfigKey(string $key): ?string
+  {
+    $oldConfigKey = null;
+    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && OldSettingsKeys::APP_KEYS[$key] != $key) {
+      $oldConfigKey = OldSettingsKeys::APP_KEYS[$key];
+    } elseif (strtolower($key) != $key) {
+      $oldConfigKey = strtolower($key);
+    }
+    return $oldConfigKey;
+  }
+
+  /**
    * A short-cut, redirecting to the stock functions for the app.
    *
    * @param string $key Config key.
@@ -45,8 +63,9 @@ trait AppConfigTrait
   public function getAppValue(string $key, mixed $default = null): mixed
   {
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
-    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && OldSettingsKeys::APP_KEYS[$key] != $key) {
-      $default = $cloudConfig->getAppValue($this->appName, OldSettingsKeys::APP_KEYS[$key], $default);
+    $oldConfigKey = self::oldConfigKey($key);
+    if ($oldConfigKey !== null) {
+      $default = $cloudConfig->getAppValue($this->appName, $oldConfigKey, $default);
     }
     return $cloudConfig->getAppValue($this->appName, $key, $default);
   }
@@ -64,8 +83,9 @@ trait AppConfigTrait
   {
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
     $cloudConfig->setAppValue($this->appName, $key, $value);
-    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && OldSettingsKeys::APP_KEYS[$key] != $key) {
-      $cloudConfig->deleteAppValue($this->appName, OldSettingsKeys::APP_KEYS[$key]);
+    $oldConfigKey = self::oldConfigKey($key);
+    if ($oldConfigKey !== null) {
+      $cloudConfig->deleteAppValue($this->appName, $oldConfigKey);
     }
   }
 
@@ -80,8 +100,9 @@ trait AppConfigTrait
   {
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
     $cloudConfig->deleteAppValue($this->appName, $key);
-    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && OldSettingsKeys::APP_KEYS[$key] != $key) {
-      $cloudConfig->deleteAppValue($this->appName, OldSettingsKeys::APP_KEYS[$key]);
+    $oldConfigKey = self::oldConfigKey($key);
+    if ($oldConfigKey !== null) {
+      $cloudConfig->deleteAppValue($this->appName, $oldConfigKey);
     }
   }
 }
