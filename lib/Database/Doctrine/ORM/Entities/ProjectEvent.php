@@ -85,7 +85,7 @@ class ProjectEvent implements \ArrayAccess
    * future" events.
    */
   #[ORM\Column(type: 'uuid_binary', nullable: true)]
-  private UuidInterface $seriesUid;
+  private ?UuidInterface $seriesUid = null;
 
   #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
   private string $eventUri;

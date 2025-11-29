@@ -69,10 +69,10 @@ class ChangeLog
   private ?string $col;
 
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
-  private ?string $oldval;
+  private /* resource */ $oldval;
 
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
-  private ?string $newval;
+  private /* resource */ $newval;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

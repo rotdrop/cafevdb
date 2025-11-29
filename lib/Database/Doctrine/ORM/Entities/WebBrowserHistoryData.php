@@ -53,7 +53,7 @@ class WebBrowserHistoryData implements \ArrayAccess
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   #[ORM\Column(type: 'blob', nullable: false, options: ['comment' => 'JSON encrypted'])]
-  protected string $data;
+  protected /* resource */ $data;
 
   /** {@inheritdoc} */
   public function __construct(string $hash, array $data)
