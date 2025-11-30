@@ -24,7 +24,9 @@
     "dev": "NODE_ENV=development webpack --progress --mode development --config webpack.config.js",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
     "prettier": "prettier",
-    "postinstall": "patch-package"
+    "jest": "jest",
+    "postinstall": "patch-package",
+    "test": "jest"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
@@ -76,6 +78,8 @@
     "@types/moment": "^2.11.29",
     "@types/object-hash": "^3.0.6",
     "@types/selectize": "^0.12.39",
+    "@vue/cli": "^5.0.9",
+    "@vue/test-utils": "^1.3.6",
     "@vue/tsconfig": "^0.4.0",
     "@vueuse/core": "^11.0.0",
     "axios": "^1.7.9",
@@ -112,6 +116,8 @@
     "https-browserify": "*",
     "imagesloaded": "^4.1.4",
     "is-plain-object": "^5.0.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "jquery": "^3.6.0",
     "jquery-datetimepicker": "^2.5.21",
     "jquery-ui": "^1.13.0",
@@ -157,6 +163,7 @@
     "vue-material-design-icons": "^5.3.0",
     "vue-multiselect": "*",
     "vue-router": "github:rotdrop/vue-router#feature/routing-completion-events",
+    "vue-template-compiler": "^2.7.16",
     "walkjs": "^6.0.1",
     "webpack": "^5.64.4",
     "webpack-bundle-analyzer": "^4.4.0",
@@ -175,7 +182,9 @@
   },
   "prettier": {
     "singleQuote": true,
-    "plugins": ["@prettier/plugin-php"],
+    "plugins": [
+      "@prettier/plugin-php"
+    ],
     "overrides": [
       {
         "files": "*.php",
