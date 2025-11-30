@@ -457,7 +457,7 @@ $(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.htm
 	mkdir -p $(GH_PAGES_JSDOC_HTML)
 	cp -a $(JSDOC_HTML)/. $(GH_PAGES_JSDOC_HTML)/.
 
-$(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH)
+$(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) Makefile
 	rm -rf $(JSDOC_HTML)
 	mkdir -p $(JSDOC_HTML)
 	$(NPM) run generate-docs
