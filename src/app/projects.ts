@@ -103,8 +103,9 @@ asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
 /**
  * Generate a popup-dialog for project related email.
  *
- * @param post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post Arguments object, may contain numereous further values.
+ * @param post.projectName Name of the project.
+ * @param post.projectId Database id of the project.
  *
  * @param reopen If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
@@ -129,8 +130,9 @@ const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false) {
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post Arguments object. May container numerous further properties.
+ * @param post.projectName Name of the project.
+ * @param post.projectId Database id of the project.
  */
 const instrumentationNumbersPopup = (containerSel: string, post: AsyncNextcloudEvents[typeof BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP]) => {
   // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The

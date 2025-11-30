@@ -1863,7 +1863,7 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
   );
   if (+musicianId > 0 && +projectId > 0) {
     // upload handlers
-    const tableOptions = parameters?.tableOptions ?? {} as Partial<TableDialogOptions>;
+    const tableOptions = parameters?.tableDialogOptions ?? {} as Partial<TableDialogOptions>;
     const ambientContainerSelector = tableOptions.ambientContainerSelector;
     const notifyUpload = ambientContainerSelector
       ? function<Event extends JQuery.Event>(event: Event) {

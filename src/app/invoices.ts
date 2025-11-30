@@ -124,8 +124,9 @@ type ItemPopupData = {
  * (i.e. the base page, or the div holding the dialog this one was
  * initiated from.
  *
- * @param post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post Arguments object.
+ * @param post.projectName Name of the project.
+ * @param post.projectId Database id of the project.
  */
 const invoiceItemPopup = (containerSel: string, post: ItemPopupData) => {
   // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
@@ -139,7 +140,7 @@ const invoiceItemPopup = (containerSel: string, post: ItemPopupData) => {
     templateRenderer: templateRenderer(template),
     Table: 'Invoices',
     projectId: post.projectId,
-    projectName: post.projectName,
+    projectName: post.projectName as string,
     // Now special options for the dialog popup
     initialViewOperation: false,
     initialName: pmeSys('operation'),
@@ -179,10 +180,10 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
 
     // AJAX download support
     $container
-      .on('click', 'a.download-link.ajax-download', function() {
+      .on('click', 'a.download-link.ajax-download', function(this: HTMLAnchorElement, _event) {
         const $this = $(this);
         const $pmeContainer = $this.closest(pmeFormSelector);
-        ajaxDownload(url, undefined, {
+        ajaxDownload($this.attr('href')!, undefined, {
           always() {
             setBusyIndicators(false, $pmeContainer, false);
           },
@@ -209,12 +210,12 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
       });
 
     $container
-      .on('change', 'select.debitor-id', function() {
+      .on('change', 'select.debitor-id', function(this: HTMLSelectElement, _event) {
         const $this = $(this);
-        const debitorId = $this.val();
+        const debitorId = $this.val() as undefined|string;
         const $receivables = $container.find('select.receivable') as JQuery<HTMLSelectElement>;
         const $receivableOptions = $receivables.find('option');
-        if (debitorId !== '') {
+        if (debitorId) {
           let $selectedReceivable: JQuery<HTMLOptionElement>;
           const $debitorOption = SelectUtils.optionByValue($this, debitorId);
           const debitorData = $debitorOption.data();
@@ -249,12 +250,12 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
       });
 
     $container
-      .on('change', 'select.receivable', function(_event: JQuery.EventBase) {
+      .on('change', 'select.receivable', function(this: HTMLSelectElement, _event) {
         const $this = $(this);
-        const receivableKey = $this.val();
+        const receivableKey = $this.val() as undefined|string;
         const $debitors = $container.find('select.debitor-id') as JQuery<HTMLSelectElement>;
         const $debitorsOptions = $debitors.find('option');
-        if (receivableKey !== '') {
+        if (receivableKey) {
           let $selectedDebitor: undefined|JQuery<HTMLOptionElement>;
           const $receivableOption = SelectUtils.optionByValue($this, receivableKey);
           $debitorsOptions.each(function() {
@@ -403,7 +404,7 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
 
   } // reason === 'dialogOpen'
 
-  const tableOptions = pmeParameters.tableOptions;
+  const tableOptions = pmeParameters.tableDialogOptions;
   if (tableOptions?.ambientContainerSelector) {
 
     const $pmeForm = (pmeParameters.reason === 'dialogClose')

@@ -222,7 +222,7 @@ const validateInstrumentChoices = (options: ValidInstrumentChoicesOptions) => {
  *
  * @param formData Data for hidden input elements which replace the
  * form's "native" data. Example:
- *
+ * @example
  * formData = {
  *   template: "project-participants",
  *   templateRenderer: "template:project-participants"
@@ -254,7 +254,7 @@ const loadPMETable = ($form: JQuery<HTMLFormElement>, formData: Record<string, u
  *
  * @param formData Data for hidden input elements which replace the
  * form's "native" data. Example:
- *
+ * @example
  * formData = {
  *   template: "project-participants",
  *   templateRenderer: "template:project-participants"
