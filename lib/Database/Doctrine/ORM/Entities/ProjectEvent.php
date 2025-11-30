@@ -95,14 +95,14 @@ class ProjectEvent implements \ArrayAccess
    * events have an id of 0.
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
-  private int $recurrenceId;
+  private int $recurrenceId = 0;
 
   /**
    * The SEQUENCE number tied to the event. We always use the highest
    * sequence, but technically this is part of the id.
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
-  private int $sequence;
+  private int $sequence = 0;
 
   #[ORM\Column(type: 'EnumVCalendarType', nullable: false)]
   private Types\EnumVCalendarType $type;
@@ -115,7 +115,7 @@ class ProjectEvent implements \ArrayAccess
    */
   #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', cascade: ['persist', 'remove'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(undelete: true)]
-  private ?ProjectParticipantField $absenceField;
+  private ?ProjectParticipantField $absenceField = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
