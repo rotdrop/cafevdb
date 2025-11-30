@@ -42,3 +42,6 @@
 [submodule "3rdparty/typescript-transformer"]
 	path = 3rdparty/typescript-transformer
 	url = git@github.com:rotdrop/typescript-transformer.git
+[submodule "3rdparty/vue-cli"]
+	path = 3rdparty/vue-cli
+	url = git@github.com:rotdrop/vue-cli.git

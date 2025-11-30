@@ -21,7 +21,8 @@
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
     "./src/*.ts",
-    "./src/*.vue"
+    "./src/*.vue",
+    "./tests/jest/**.ts"
   ],
   "compilerOptions": {
     "types": [
@@ -38,6 +39,7 @@
       "vue",
       "vue-router"
     ],
+    "traceResolution": false,
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
     "outDir": "./dist/",
     "target": "ESNext",
@@ -52,12 +54,14 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
+    "isolatedModules": true,
     "esModuleInterop": true
   },
   "vueCompilerOptions": {
     "target": 2.7
   },
   "ts-node": {
+    "esm": true,
     "compilerOptions": {
       "moduleResolution": "node",
       "module": "commonjs",
