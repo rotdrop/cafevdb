@@ -14,7 +14,7 @@ vendor-wrapped
 composer*.lock
 /composer.json
 stamp*
-build
+/build
 .clipassword
 doc/db-app/phpdoc/[!.]*
 doc/db-app/doxygen/[!.]*
