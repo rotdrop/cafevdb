@@ -63,9 +63,9 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\UsesClass(Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(Crypto\Registration::class)]
 #[Attributes\UsesClass(Entities\DatabaseStorageFolder::class)]
+#[Attributes\UsesClass(Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(Listener\TranslationNotFoundListener::class)]
-#[Attributes\UsesClass(Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(RationalNumber::class)]
 #[Attributes\UsesClass(Service\AuthorizationService::class)]
 #[Attributes\UsesClass(Service\EncryptionService::class)]
@@ -73,6 +73,7 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\UsesClass(Util::class)]
 #[Attributes\UsesClass(Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait;
