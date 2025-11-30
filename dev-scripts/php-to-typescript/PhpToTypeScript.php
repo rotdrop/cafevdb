@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
+use DateTime;
+use DateTimeImmutable;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,6 +66,9 @@ class PhpToTypeScript extends Command
   private const LINE_SEPARATOR = "\r\n";
   private const LINE_BUFFER_SIZE = 4096;
   private const NS_DECLARATION = 'declare namespace';
+  private const TYPE_DECLARATION = 'export type';
+  private const ROOT_NS = 'ROOT';
+  private const ROOT_MODULE = self::ROOT_NS . '.ts';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -263,8 +269,13 @@ class PhpToTypeScript extends Command
         ])
         // try inject default TypeScriptTransformer
         ->defaultTypeReplacements([
-          Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
-          Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          // Carbon actually just by default emits a simple strings
+          // Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          // Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          Carbon\CarbonImmutable::class => new TypeScriptType('string'),
+          Carbon\Carbon::class => new TypeScriptType('string'),
+          DateTime::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
+          DateTimeImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
           UuidInterface::class => new TypeScriptType('string'),
         ])
         // try inject default TypeScriptTransformer
@@ -290,6 +301,7 @@ class PhpToTypeScript extends Command
 
       $types = TypeScriptTransformer::create($config)->transform();
 
+      // strip the top-level namespace as requested and record "root" data types.
       $tsData = null;
       if (!empty($tsNameSpacePrefix)) {
         $tsData = str_replace(
@@ -305,7 +317,7 @@ class PhpToTypeScript extends Command
           ],
           file_get_contents($outputFile),
         );
-        // remove also namespace prefix pointing into the current namespace
+        // remove also a namespace prefix pointing into the current namespace
         if (str_starts_with($tsData, self::NS_DECLARATION)) {
           $offset = strlen(self::NS_DECLARATION) + 1;
           $len = strpos($tsData, '{') - 1 - $offset;
@@ -325,6 +337,7 @@ class PhpToTypeScript extends Command
         if ($tsData === null) {
           $tsData = file_get_contents($outputFile);
         }
+        $topLevelTypes = [];
         $currentModule = null;
         $currentFullNS = null;
         $allNameSpaces = [];
@@ -346,6 +359,10 @@ class PhpToTypeScript extends Command
               $output->writeln('Current FQ NameSpace ' . $currentFullNS);
               $allNameSpaces[] = $currentFullNS;
               $allNameSpaces = array_values(array_unique($allNameSpaces));
+            } elseif (str_starts_with($line, self::TYPE_DECLARATION)) {
+              [,, $type] = explode(' ', $line);
+              [, $typeDefinition] = explode('=', $line);
+              $topLevelTypes[$type] = $typeDefinition;
             }
           } elseif ($templateString) {
             $templateString = $backticksCount % 2 == 0;
@@ -353,6 +370,9 @@ class PhpToTypeScript extends Command
             $templateString = $backticksCount % 2 == 1;
           }
           $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
+        }
+        if (!empty($topLevelTypes)) {
+          $allNameSpaces[] = self::ROOT_NS;
         }
         // Second run: emit typedefs, replace namespaces as appropriate
         $templateString = false;
@@ -410,9 +430,14 @@ EOF;
               $currentFullNS = null;
               $headerData = [];
             } else {
+              foreach ($topLevelTypes as $type => $definition) {
+                if (str_contains($line, ': ' . $type)) {
+                  $line = str_replace(': ' . $type, ': ' . self::ROOT_NS . '.' . $type, $line);
+                }
+              }
               $line = str_replace($currentFullNS . '.', '', $line);
               foreach ($allNameSpaces as $existingNameSpace) {
-                if (str_contains($line, $existingNameSpace)) {
+                if (str_contains($line, ': ' . $existingNameSpace . '.')) {
                   $selfNS = explode('.', $currentFullNS);
                   $refNS = explode('.', $existingNameSpace);
                   $output->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace);
@@ -432,7 +457,7 @@ EOF;
                   $headerData[] = "import * as {$upNameSpace} from './{$up}{$upNameSpace}.ts';";
                 }
               }
-              $currentData .= substr($line, 2) . PHP_EOL;
+              $currentData .= $line . PHP_EOL;
             }
           } elseif ($templateString) {
             // just write the line as is
@@ -445,6 +470,11 @@ EOF;
           $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
         }
         fclose($tsFile);
+        if (!empty($currentData)) {
+          // Top-level types. We assume these come last, if this changes
+          // _this_ code thas to be adjusted.
+          file_put_contents($modulesDir . self::ROOT_MODULE, $currentData);
+        }
       }
 
       if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
