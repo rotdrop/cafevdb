@@ -37,6 +37,7 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\L10N\IFactory as L10NFactory;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;
@@ -59,9 +60,11 @@ class MockProvider
 {
   public const USER_GROUP_VALUE = 'orchestra_group';
 
+  /** Provide some overridable defaults. */
   public const CONFIG_MOCK_VALUES = [
     ConfigConstants::USER_GROUP_KEY => self::USER_GROUP_VALUE,
     ConfigConstants::CONFIG_LOCK_KEY => false,
+    ConfigConstants::ORCHESTRA_LOCALE_KEY => 'de_DE.UTF-8',
   ];
 
   public const EXECUTIVE_BOARD_UID = 'john.doe';
@@ -554,6 +557,10 @@ class MockProvider
   {
     $className = IEventDispatcher::class;
 
+    if ($this->instances[$className]) {
+      return $this->instances[$className];
+    }
+
     $instance = $this->getMockBuilder(IEventDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -568,8 +575,19 @@ class MockProvider
    */
   public function getL10N(): IL10N
   {
-    $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
-    return $app->get(IL10N::class);
+    $className = IL10N::class;
+
+    if ($this->instances[$className]) {
+      return $this->instances[$className];
+    }
+
+    /** @var L10NFactory $factory */
+    $factory = \OCP\Server::get(L10NFactory::class);
+    $instance = $factory->get($this->appName, 'de');
+
+    $this->instances[$className] = $instance;
+
+    return $instance;
   }
 
   /**
