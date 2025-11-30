@@ -30,9 +30,11 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCP\Calendar\IManager as CalendarManager;
+use OCP\AppFramework\IAppContainer;
 use OCP\Calendar\ICalendar;
+use OCP\Calendar\IManager as CalendarManager;
 use OCP\IDateTimeFormatter;
+use OCP\IL10N;
 
 use OCA\DAV\CalDAV\CalDavBackend;
 
@@ -56,9 +58,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractEnumType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
@@ -66,7 +70,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -88,9 +95,16 @@ class EventsServiceTest extends TestCase
    *
    * Some faked DB rows for generating calendar objects.
    */
-  const CALENDAROBJECTS = [];
+  private array $calendarObjects = [];
+
+  /**
+   * Flat array of fake database rows of calendar objects.
+   */
+  private array $calendarData = [];
 
   private $defaultCalendars = [];
+
+  private IAppContainer $appContainer;
 
   /**
    * {@inheritdoc}
@@ -103,6 +117,8 @@ class EventsServiceTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $mockProvider = \OCP\Server::get(MockProvider::class);
+
+    $this->appContainer = $mockProvider->getAppContainer();
 
     $l = $mockProvider->getL10N();
 
@@ -118,6 +134,13 @@ class EventsServiceTest extends TestCase
       ++$calendarId;
     }
 
+    $projectEventId = 1;
+    $this->calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
+    foreach ($this->calendarData as $index => $row) {
+      $this->calendarObjects[$row['calendarid']][$row['uri']] = $index;
+    }
+    self::addProjectEvents($this->project, $this->defaultCalendars);
+
     /** @var CalDavBackend $calDavBackend */
     $calDavBackend = $this->getMockBuilder(CalDavBackend::class)
       ->disableOriginalConstructor()
@@ -129,10 +152,12 @@ class EventsServiceTest extends TestCase
           $objectUri,
           int $calendarType = CalDavBackend::CALENDAR_TYPE_CALENDAR,
         ): ?array {
-          $row = self::CALENDAROBJECTS[$calendarId][$objectUri] ?? null;
-          if ($row) {
-            return $this->rowToCalendarObject($row);
+          $rowIndex = $this->calendarObjects[$calendarId][$objectUri] ?? null;
+          if ($rowIndex !== null) {
+            return $this->rowToCalendarObject($this->calendarData[$rowIndex]);
           }
+          echo 'NOT FOUND ' . $calendarId . ' ' . $objectUri . PHP_EOL;
+          print_r($this->calendarObjects);
           return null;
         },
       );
@@ -192,7 +217,11 @@ class EventsServiceTest extends TestCase
                 if (!isset($criteria['project']) || ($criteria['type'] ?? VCalendarType::VEVENT) != VCalendarType::VEVENT) {
                   throw new UnexpectedValueException('Can only fake search for VEVENT given a project or project-id.');
                 }
-                return [];
+                $projectOrId = $criteria['project'];
+                if ($projectOrId !== $this->project && $projectOrId != $this->project->getId()) {
+                  return [];
+                }
+                return $this->project->getCalendarEvents()->toArray();
               },
             );
             return $repository;
@@ -236,7 +265,7 @@ class EventsServiceTest extends TestCase
   {
     // @todo insert fake events, until then this must be empty.
     $events = $this->eventsService->events($this->project->getId());
-    $this->assertEquals([], $events);
+    $this->assertEquals($this->project->getCalendarEvents()->count(), count($events));
   }
 
   /** @return void */
@@ -253,11 +282,16 @@ class EventsServiceTest extends TestCase
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
     foreach ($matrix as $rowIndex => $matrixRow) {
-      $this->assertEquals([], $matrixRow['events']);
       if ($rowIndex == -1) {
+        $this->assertEquals([], $matrixRow['events']);
         continue;
       }
       $uri = $matrixRow['uri'];
+      $numEvents = $this->project->getCalendarEvents()->filter(
+        fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getCalendarUri() == $uri,
+      )->count();
+      $this->assertEquals($numEvents, count($matrixRow['events']));
+      $this->assertEquals($this->defaultCalendars[$uri], $rowIndex);
       $this->assertEquals($this->defaultCalendars[$uri], $matrixRow['calendarId']);
       $this->assertEquals(
         '/remote.php/dav/calendars/' . MockProvider::EXECUTIVE_BOARD_UID . '/' . $uri .  '_shared_by_calendar.owner/',
@@ -273,6 +307,16 @@ class EventsServiceTest extends TestCase
     $this->assertEquals($recordAbsence, EventsService::RECORD_ABSENCE_CATEGORY);
     $registrationCategory = $this->eventsService->getProjectRegistrationCategory(translate: false);
     $this->assertEquals($registrationCategory, EventsService::PROJECT_REGISTRATION_CATEGORY);
+  }
+
+  /** @return void */
+  public function testL10NCategories(): void
+  {
+    $appL10N = $this->appContainer->get(\OCA\CAFEVDB\Service\Registration::APP_L10N);
+    $recordAbsence = $this->eventsService->getRecordAbsenceCategory(translate: true);
+    $this->assertEquals($recordAbsence, $appL10N->t(EventsService::RECORD_ABSENCE_CATEGORY));
+    $registrationCategory = $this->eventsService->getProjectRegistrationCategory(translate: true);
+    $this->assertEquals($registrationCategory, $appL10N->t(EventsService::PROJECT_REGISTRATION_CATEGORY));
   }
 
   /**
