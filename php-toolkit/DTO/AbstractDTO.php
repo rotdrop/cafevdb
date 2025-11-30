@@ -28,6 +28,7 @@ use DateTime;
 use DateTimeImmutable;
 use ReflectionClass;
 use ReflectionProperty;
+use JsonSerializable;
 
 /**
  * Base class for DTOs.
