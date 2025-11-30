@@ -23,6 +23,7 @@
     "build": "NODE_ENV=production webpack --progress --mode production --config webpack.config.js",
     "dev": "NODE_ENV=development webpack --progress --mode development --config webpack.config.js",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
+    "prettier": "prettier",
     "postinstall": "patch-package"
   },
   "browserslist": [
@@ -58,6 +59,7 @@
     "@nextcloud/router": "^2.2.1",
     "@nextcloud/typings": "^1.9.1",
     "@nextcloud/vue": "^8.17.1",
+    "@prettier/plugin-php": "^0.24.0",
     "@rotdrop/async-nextcloud-event-bus": "github:rotdrop/async-nextcloud-event-bus#feature/async-emit",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop/nextcloud-vue-components",
@@ -129,7 +131,7 @@
     "path-browserify": "^1.0.1",
     "pinia": "^2.3.0",
     "popper.js": "^1.16.1",
-    "prettier": "3.6.2",
+    "prettier": "^3.6.2",
     "qs": "^6.10.5",
     "sanitize.css": "^12.0.1",
     "sass": "^1.81.1",
@@ -172,6 +174,15 @@
     "npm": "^10.0.0"
   },
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "plugins": ["@prettier/plugin-php"],
+    "overrides": [
+      {
+        "files": "*.php",
+        "options": {
+          "parser": "php"
+        }
+      }
+    ]
   }
 }
