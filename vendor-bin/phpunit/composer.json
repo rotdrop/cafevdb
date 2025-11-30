@@ -7,6 +7,6 @@
     "phpunit/phpunit": "*"
   },
   "autoload-dev": {
-    "psr-4": { "OCA\\CAFEVDB\\Tests\\": "../../tests/" }
+    "psr-4": { "OCA\\CAFEVDB\\Tests\\": "../../tests/phpunit/" }
   }
 }

@@ -24,10 +24,10 @@
 
 namespace OCA\CAFEVDB\Tests;
 
-require_once __DIR__ . '/../../../tests/bootstrap.php';
+require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../vendor-wrapped/autoload.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 
 $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
