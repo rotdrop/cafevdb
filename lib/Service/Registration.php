@@ -36,15 +36,15 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
 {
-  const MANAGEMENT_GROUP_ID = 'ManagementGroupId';
-  const LOCALE = 'Locale';
-  const LANGUAGE = 'Language';
-  const USER_LOCALE = 'UserLocale';
-  const USER_LANGUAGE = 'UserLanguage';
-  const USER_L10N = 'UserL10N';
-  const APP_LOCALE = 'AppLocale';
-  const APP_LANGUAGE = 'AppLanguage';
-  const APP_L10N = 'AppL10N';
+  public const MANAGEMENT_GROUP_ID = 'ManagementGroupId';
+  public const LOCALE = 'Locale';
+  public const LANGUAGE = 'Language';
+  public const USER_LOCALE = 'UserLocale';
+  public const USER_LANGUAGE = 'UserLanguage';
+  public const USER_L10N = 'UserL10N';
+  public const APP_LOCALE = 'AppLocale';
+  public const APP_LANGUAGE = 'AppLanguage';
+  public const APP_L10N = 'AppL10N';
 
   /**
    * Static service registration routine.
