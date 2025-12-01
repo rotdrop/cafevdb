@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -400,7 +400,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
     $anchor.attr('href', data.share ?? '').find('.content').html(data.share ?? '');
     $anchor.cafevTooltip('dispose').attr('title', tooltip).cafevTooltip();
     if (data.expires) {
-      const date = new Date(data.expires.date.substring(0, 10));
+      const date = new Date(data.expires.substring(0, 10));
       console.info('EXPIRES', date, date.toLocaleDateString());
       const $expires = $controlContainer.find('.share-expiration-date');
       $expires.val(date.toLocaleDateString());
