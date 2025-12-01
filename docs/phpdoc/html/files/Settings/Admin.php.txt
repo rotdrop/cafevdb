@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Settings;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Services\IInitialState;
@@ -39,6 +41,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** Admin settings class. */
+#[TSAttributes\TypeScript]
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -46,37 +49,42 @@ class Admin implements IDelegatedSettings
 
   const TEMPLATE = "admin-settings";
 
-  const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
-  const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
-  const ORCHESTRA_USER_GROUP_ADMINS_KEY = self::ORCHESTRA_USER_GROUP_KEY . 'Admins';
+  const INITIAL_STATE_SECTION = 'adminConfig';
+
+  const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
+  const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
+  const CLOUD_USER_BACKEND = 'cloudUserBackend';
+  const CLOUD_USER_BACKEND_RESTRICTIONS = 'cloudUserBackendRestrictions';
+  const DEFAULT_OFFICE_FONT_CONFIG = FontService::DEFAULT_OFFICE_FONT_CONFIG;
   const DEFAULT_USER_AND_GROUP_BACKEND = 'Database';
+  const EMAIL_CHALLENGE_SUFFIX = 'Challenge';
+  const EMAIL_VERIFICATION_SUFFIX = 'Verification';
+  const EMAIL_STATUS_SUFFIX = 'Status';
+  const GNU_CASH_ACCOUNTS_TREE_DATA_KEY = 'gnuCashAccountsTreeData';
+  const GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY = 'gnuCashInstrumentInsuranceBalancingAccount';
+  const GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY = 'gnuCashParticipantReceivablesAccount';
+  const HAVE_CLOUD_USER_BACKEND_CONFIG_KEY = 'haveCloudUserBackendConfig';
+  const IS_ADMIN = 'isAdmin';
+  const IS_SUB_ADMIN = 'isSubAdmin';
+  const OFFICE_FONTS = 'officeFonts';
+  const OFFICE_FONTS_FOLDER_CONFIG = FontService::OFFICE_FONTS_FOLDER_CONFIG;
+  const ORCHESTRA_USER_GROUP_ADMINS_KEY = self::ORCHESTRA_USER_GROUP_KEY . 'Admins';
+  const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
+  const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
+  const PROBLEM_REPORT_EMAIL_RECIPIENT_KEY = 'problemReportEmailRecipient';
+  const SETTINGS_PROPERTIES = 'settingsProperties';
+  const SHARED_FOLDER_KEY = 'sharedFolder';
+  const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
   const USER_AND_GROUP_BACKEND_KEY = ConfigConstants::USER_AND_GROUP_BACKEND_KEY;
   const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
   const WIKI_VERSION = 'wikiVersion';
-  const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
-  const CLOUD_USER_BACKEND = 'cloudUserBackend';
-  const CLOUD_USER_BACKEND_RESTRICTIONS = 'cloudUserBackendRestrictions';
-  const OFFICE_FONTS = 'officeFonts';
-  const SETTINGS_PROPERTIES = 'settingsProperties';
-  const IS_ADMIN = 'isAdmin';
-  const IS_SUB_ADMIN = 'isSubAdmin';
-  const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
-  const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
-  const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
-  const PROBLEM_REPORT_EMAIL_RECIPIENT_KEY = 'problemReportEmailRecipient';
-  const EMAIL_CHALLENGE_SUFFIX = 'Challenge';
-  const EMAIL_VERIFICATION_SUFFIX = 'Verification';
-  const GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY = 'gnuCashParticipantReceivablesAccount';
-  const GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY = 'gnuCashInstrumentInsuranceBalancingAccount';
-  const GNU_CASH_ACCOUNTS_TREE_DATA_KEY = 'gnuCashAccountsTreeData';
-  const SHARED_FOLDER_KEY = 'sharedFolder';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
   const SETTINGS_PROPERTY_VALUES = [
     self::ORCHESTRA_USER_GROUP_KEY => self::ADMIN_ONLY,
     self::WIKI_NAME_SPACE_KEY => self::DELEGATABLE,
-    self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
+    self::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
   ];
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
@@ -134,28 +142,21 @@ class Admin implements IDelegatedSettings
 
     $this->logInfo('BACKEND U / G ' . print_r($userAndGroupBackends, true));
 
-    $configData = [
-      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigConstants::USER_GROUP_KEY),
-      self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
-      self::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
-      self::WIKI_VERSION => $this->wikiRPC->version(),
+    $configData = AdminInitialState::fromArray([
+      self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
       self::CLOUD_USER_BACKEND => $cloudUserBackend,
-      self::CLOUD_USER_BACKEND_RESTRICTIONS => $cloudUserBackendRestrictions,
-      self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
-      FontService::OFFICE_FONTS_FOLDER_CONFIG => $this->fontService->getFontsFolderName(),
-      self::OFFICE_FONTS => $this->fontService->scanFontsFolder(),
-      FontService::DEFAULT_OFFICE_FONT_CONFIG => $this->fontService->getDefaultFontName(),
-      self::SETTINGS_PROPERTIES => self::SETTINGS_PROPERTY_VALUES,
+      self::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
       self::IS_ADMIN => $isAdmin,
       self::IS_SUB_ADMIN => $isSubAdmin,
-      self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
-      self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
-      self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY),
-      self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX => $this->getAppValue(self::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . self::EMAIL_VERIFICATION_SUFFIX),
+      self::OFFICE_FONTS => $this->fontService->scanFontsFolder(),
+      self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
       self::SHARED_FOLDER_KEY => $this->configService->getConfigValue(ConfigConstants::SHARED_FOLDER),
-    ];
+      self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
+      FontService::DEFAULT_OFFICE_FONT_CONFIG => $this->fontService->getDefaultFontName(),
+      FontService::OFFICE_FONTS_FOLDER_CONFIG => $this->fontService->getFontsFolderName(),
+    ]);
 
-    $this->initialState->provideInitialState('adminConfig', $configData);
+    $this->initialState->provideInitialState(self::INITIAL_STATE_SECTION, $configData);
 
     return $this->templateResponse(
       self::TEMPLATE,

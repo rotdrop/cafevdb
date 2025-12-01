@@ -29,11 +29,14 @@ use ReflectionClass;
 use ReflectionProperty;
 use Exception;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /** Generic \ArrayAccess implementation for entities. */
 trait ArrayTrait
 {
+  #[TSAttributes\Hidden]
   private $keys;
 
   /**

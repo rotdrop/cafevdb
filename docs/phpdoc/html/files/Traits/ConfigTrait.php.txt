@@ -46,6 +46,7 @@ use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -174,7 +175,7 @@ trait ConfigTrait
   }
 
   /**
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param mixed $default Default value.
    *
@@ -182,7 +183,7 @@ trait ConfigTrait
    *
    * @return mixed
    */
-  protected function getUserValue(string $key, mixed $default = null, ?string $userId = null)
+  protected function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
   {
     return $this->configService->getUserValue($key, $default, $userId);
   }
@@ -441,7 +442,7 @@ trait ConfigTrait
   /** @return null|string the User id of the share-owner, if configured. */
   protected function shareOwnerId():?string
   {
-    return $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    return $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
   }
 
   /**
@@ -1150,10 +1151,11 @@ trait ConfigTrait
   /** @return bool */
   protected function databaseConfigured():bool
   {
-    return !(empty($this->getConfigValue('dbname'))
-             || empty($this->getConfigValue('dbuser'))
-             || empty($this->getConfigValue('dbpassword'))
-             || empty($this->getConfigValue('dbserver')));
+    return array_reduce(
+      ConfigConstants::APP_DB_KEYS,
+      fn(bool $carry, string $key) => $carry && !empty($this->getConfigValue($key, null)),
+      true,
+    );
   }
 
   /**
@@ -1222,12 +1224,7 @@ trait ConfigTrait
    */
   protected function shouldDebug(int $flag):bool
   {
-    $debugMode = (int)$this->getConfigValue('debugmode', 0);
+    $debugMode = (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
     return ($debugMode & $flag) != 0;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

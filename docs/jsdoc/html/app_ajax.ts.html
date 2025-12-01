@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/ajax.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppError.html">AppError</a></li><li><a href="Console.html">Console</a></li><li><a href="JQueryAjaxError.html">JQueryAjaxError</a></li><li><a href="ProjectManagementFolderEntry.html">ProjectManagementFolderEntry</a></li><li><a href="ProjectParticipantFolderEntry.html">ProjectParticipantFolderEntry</a></li><li><a href="SupportingDocumentEntry.html">SupportingDocumentEntry</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$">$</a></li><li><a href="global.html#COMPONENT_NAME">COMPONENT_NAME</a></li><li><a href="global.html#ConflictResolutionFail">ConflictResolutionFail</a></li><li><a href="global.html#DEBUG_GENERAL">DEBUG_GENERAL</a></li><li><a href="global.html#DOKU_WIKI_WRAPPER">DOKU_WIKI_WRAPPER</a></li><li><a href="global.html#HistoryActionPush">HistoryActionPush</a></li><li><a href="global.html#MailMergeDataset">MailMergeDataset</a></li><li><a href="global.html#PERMISSION_NONE">PERMISSION_NONE</a></li><li><a href="global.html#RENDERER_TAG">RENDERER_TAG</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#__webpack_nonce__">__webpack_nonce__</a></li><li><a href="global.html#accountsAutocomplete">accountsAutocomplete</a></li><li><a href="global.html#actionMenu">actionMenu</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#addressItemUnknownLabel">addressItemUnknownLabel</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#appEventName">appEventName</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettingsPopup">appSettingsPopup</a></li><li><a href="global.html#autocompleteFocusHandler">autocompleteFocusHandler</a></li><li><a href="global.html#axiosFileDownload">axiosFileDownload</a></li><li><a href="global.html#busyIcon">busyIcon</a></li><li><a href="global.html#calendarStoreSetup">calendarStoreSetup</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#classSelector">classSelector</a></li><li><a href="global.html#classSelectors">classSelectors</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#cloudVersion">cloudVersion</a></li><li><a href="global.html#cloudWebRoot">cloudWebRoot</a></li><li><a href="global.html#confirm">confirm</a></li><li><a href="global.html#confirmedReceivablesUpdate">confirmedReceivablesUpdate</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#cryptoCache">cryptoCache</a></li><li><a href="global.html#cssTag">cssTag</a></li><li><a href="global.html#currentInstance">currentInstance</a></li><li><a href="global.html#data">data</a></li><li><a href="global.html#debounceInterval">debounceInterval</a></li><li><a href="global.html#decryptMasterKey">decryptMasterKey</a></li><li><a href="global.html#defaultOptions">defaultOptions</a></li><li><a href="global.html#defaultUploadUrls">defaultUploadUrls</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#deselectAll">deselectAll</a></li><li><a href="global.html#dialogAlert">dialogAlert</a></li><li><a href="global.html#dialogConfirm">dialogConfirm</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#dokuWikiSection">dokuWikiSection</a></li><li><a href="global.html#dokuWikiUrl">dokuWikiUrl</a></li><li><a href="global.html#dokuWikiUrlTarget">dokuWikiUrlTarget</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#emit">emit</a></li><li><a href="global.html#encrypt">encrypt</a></li><li><a href="global.html#ensureDropdownVisibility">ensureDropdownVisibility</a></li><li><a href="global.html#equals">equals</a></li><li><a href="global.html#failData">failData</a></li><li><a href="global.html#fetchSetting">fetchSetting</a></li><li><a href="global.html#fetchSettings">fetchSettings</a></li><li><a href="global.html#fileInfoToNode">fileInfoToNode</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#forceHeight">forceHeight</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#generateMasterKey">generateMasterKey</a></li><li><a href="global.html#generatePostHash">generatePostHash</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getEmitResult">getEmitResult</a></li><li><a href="global.html#getGnuCashAccountsAutcompleteData">getGnuCashAccountsAutcompleteData</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getMusician">getMusician</a></li><li><a href="global.html#getProjectParticipantFieldOptions">getProjectParticipantFieldOptions</a></li><li><a href="global.html#getProjectParticipantFields">getProjectParticipantFields</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getSidebarRoot">getSidebarRoot</a></li><li><a href="global.html#globalState">globalState</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#hasEditableData">hasEditableData</a></li><li><a href="global.html#hasSubscriptions">hasSubscriptions</a></li><li><a href="global.html#iFrameResize">iFrameResize</a></li><li><a href="global.html#idSelector">idSelector</a></li><li><a href="global.html#importAll">importAll</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#inputClassSelector">inputClassSelector</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invoiceItemPopup">invoiceItemPopup</a></li><li><a href="global.html#isAxiosError">isAxiosError</a></li><li><a href="global.html#isJQuery">isJQuery</a></li><li><a href="global.html#isJQuerySelect">isJQuerySelect</a></li><li><a href="global.html#isNextcloudLogEntry">isNextcloudLogEntry</a></li><li><a href="global.html#isSelectizedJQuery">isSelectizedJQuery</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#joinLiterals">joinLiterals</a></li><li><a href="global.html#jq">jq</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadMusicians">loadMusicians</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#logger">logger</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#markDialog">markDialog</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#mixin">mixin</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#navigationSelector">navigationSelector</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#onDocumentLoaded">onDocumentLoaded</a></li><li><a href="global.html#optionValues">optionValues</a></li><li><a href="global.html#options">options</a></li><li><a href="global.html#pageCleanup">pageCleanup</a></li><li><a href="global.html#pangram">pangram</a></li><li><a href="global.html#pmeAutocomplete">pmeAutocomplete</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeDestroyVueComponents">pmeDestroyVueComponents</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelectInputSelector">pmeSelectInputSelector</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeTextareaInputSelector">pmeTextareaInputSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pushCancellable">pushCancellable</a></li><li><a href="global.html#recordValue">recordValue</a></li><li><a href="global.html#refreshWidget">refreshWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#resetDropdownVisibility">resetDropdownVisibility</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#sanitizeTemplateParams">sanitizeTemplateParams</a></li><li><a href="global.html#saveConfirmedSetting">saveConfirmedSetting</a></li><li><a href="global.html#saveSimpleSetting">saveSimpleSetting</a></li><li><a href="global.html#scriptUrl">scriptUrl</a></li><li><a href="global.html#selectFromWidget">selectFromWidget</a></li><li><a href="global.html#selected">selected</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#selector">selector</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setBusyIndicators">setBusyIndicators</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setter">setter</a></li><li><a href="global.html#showErrorToast">showErrorToast</a></li><li><a href="global.html#showTemporary">showTemporary</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#stackTraceOptions">stackTraceOptions</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#storeId">storeId</a></li><li><a href="global.html#stringValue">stringValue</a></li><li><a href="global.html#submitOuterForm">submitOuterForm</a></li><li><a href="global.html#subscribe">subscribe</a></li><li><a href="global.html#sys">sys</a></li><li><a href="global.html#sysNameSelector">sysNameSelector</a></li><li><a href="global.html#sysNameSelectors">sysNameSelectors</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogLoadIndicator">tableDialogLoadIndicator</a></li><li><a href="global.html#tableDialogOpen">tableDialogOpen</a></li><li><a href="global.html#textLikeInputTypes">textLikeInputTypes</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toggleNavigation">toggleNavigation</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#triggerSubmit">triggerSubmit</a></li><li><a href="global.html#unTweak">unTweak</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#unsubscribe">unsubscribe</a></li><li><a href="global.html#unsubscribeAll">unsubscribeAll</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#usePersistentDataStore">usePersistentDataStore</a></li><li><a href="global.html#userInfoPopup">userInfoPopup</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#validateResponse">validateResponse</a></li><li><a href="global.html#vueConstructors">vueConstructors</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/ajax.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020 - 2025 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import $ from './jquery.ts';
+import { appName } from '../config.ts';
+import globalState from './globalstate.ts';
+import * as Dialogs from './dialogs.ts';
+// @ts-expect-error 2595 confused by multiple version probablyx
+import { isPlainObject } from 'is-plain-object';
+import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { getLanguage, translate as t } from '@nextcloud/l10n';
+import { emit as asyncEmit, hasSubscriptions } from '../services/async-event-bus.ts';
+import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
+import l10nHttpStatus from '@http-util/status-i18n';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
+import { type NextcloudExceptionLogEntry, isNextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
+import type Keyable from '../types/keyable.d.ts';
+import type { IException } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
+
+const cloudWebRoot = getCloudRootUrl() || '/';
+
+const httpStatusText = (code: number, lang?: string) => l10nHttpStatus(code, lang || globalState.cloudLanguage || getLanguage() || 'en_US') ?? t(appName, 'unknown');
+
+const stringifyTrace = (trace: NextcloudExceptionLogEntry['exception']['Trace']) => {
+  const traceAsString: string[] = [];
+  let count = 1;
+  for (const traceLine of trace) {
+    traceAsString.push(`${count++}. ${traceLine.file} - ${t(appName, 'line')} ${traceLine.line}: ${traceLine.class}${traceLine.type}${traceLine.function}()`);
+  }
+  return traceAsString.join('\n');
+};
+
+export interface AjaxFailData extends Partial&lt;NextcloudExceptionLogEntry> {
+  error: string,
+  status: string,
+  messages: string[],
+  xhr: JQuery.jqXHR,
+  info?: string,
+  html?: string,
+  parsed: boolean,
+  confirmation?: {
+    question: string,
+    override: string,
+    title?: string,
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any,
+}
+
+const isAjaxFailData = (arg: unknown): arg is AjaxFailData =>
+  !!arg &amp;&amp; typeof arg === 'object' &amp;&amp; (arg as Keyable).parsed !== undefined &amp;&amp; (arg as Keyable).error !== undefined &amp;&amp; (arg as Keyable).status !== undefined &amp;&amp; (arg as Keyable).messages !== undefined;
+
+type Callbacks = {
+  cleanup(data: AjaxFailData): void;
+  preProcess(data: AjaxFailData): void;
+};
+
+/**
+ * Generate some diagnostic output, mostly needed during application
+ * development. This is intended to be called from the fail()
+ * callback.
+ *
+ * @param xhr TBD.
+ *
+ * @param textStatus TBD.
+ *
+ * @param errorThrown TBD.
+ *
+ * @param [userCallbacks] An object with hook-functions:
+ *
+ * ```
+ * {
+ *   cleanup: function(data) { ... },
+ *   preProcess: function(data) { ... }
+ * ```
+ *
+ * The userCallbacks as well as the callback object itself is optional and
+ * defaults to "do nothing". The argument is the data possibly
+ * submitted by the server, as computed by ajaFailData().
+ */
+const ajaxHandleError = async (
+  xhr: JQuery.jqXHR,
+  textStatus: string,
+  errorThrown: string,
+  userCallbacks?: Callbacks['cleanup']|Partial&lt;Callbacks>,
+) => {
+  const defaultCallbacks: Callbacks = {
+    cleanup(_data) {},
+    preProcess(_data) {},
+  };
+  if (userCallbacks instanceof Function) {
+    userCallbacks = {
+      cleanup: userCallbacks,
+    };
+  }
+  const callbacks: Callbacks = { ...defaultCallbacks, ...userCallbacks };
+
+  const failData = ajaxFailData(xhr, textStatus, errorThrown);
+  callbacks.preProcess(failData);
+
+  let decodedStatus: string;
+  switch (textStatus) {
+    case 'cancelled':
+      decodedStatus = t(appName, 'Operation cancelled by user.');
+      break;
+    case 'abort':
+      decodedStatus = t(appName, 'Aborted');
+      break;
+    case 'notmodified':
+    case 'nocontent':
+    case 'error':
+    case 'timeout':
+    case 'parsererror':
+    case 'success': // this should not happen here
+    default:
+      decodedStatus = httpStatusText(xhr.status);
+      break;
+  }
+
+  const caption = t(appName, 'Error');
+  let info = '&lt;span class="bold toastify http-status error">' + decodedStatus + '&lt;/span>';
+  // console.info(xhr.status, info, errorThrown, textStatus);
+
+  switch (xhr.status) {
+    case HttpStatusCodes.OK:
+    case HttpStatusCodes.BAD_REQUEST:
+    case HttpStatusCodes.NOT_FOUND:
+    case HttpStatusCodes.CONFLICT:
+    case HttpStatusCodes.INTERNAL_SERVER_ERROR: {
+
+      if (hasSubscriptions(LEGACY_AJAX_ERROR)) {
+        let message = failData.messages?.join(' ') || '';
+        let html = failData.html || '';
+        if (!html &amp;&amp; message.startsWith('&lt;')) {
+          html = message;
+          message = '';
+          const $caption = $(html).find('.caption');
+          if ($caption.length > 0) {
+            message = $caption.text();
+          }
+        }
+        const eventData = {
+          xhr,
+          message,
+          html,
+        };
+        await asyncEmit(LEGACY_AJAX_ERROR, eventData);
+        console.info('RUNNING CLEANUP HOOKS', callbacks);
+        callbacks.cleanup(failData);
+      } else {
+        // no Vue code available, must use legacy code ...
+        if (failData.error &amp;&amp; decodedStatus !== t(appName, failData.error)) {
+          info += ': '
+            + '&lt;span class="bold error toastify name">'
+            + t(appName, failData.error)
+            + '&lt;/span>';
+        }
+        if (failData.messages) {
+          const classes = appName + (failData.exception ? ' exception' : '');
+          for (const msg of failData.messages) {
+            info += '&lt;div class="' + classes + ' error toastify">' + msg + '&lt;/div>';
+          }
+        }
+        if (isNextcloudExceptionLogEntry(failData)) {
+          // exception log entry
+          let exceptionData: IException|undefined = failData.exception;
+          const exception = exceptionData.Exception;
+          const trace = stringifyTrace(exceptionData.Trace);
+          info += '&lt;div class="exception error name">&lt;pre>' + exception + '&lt;/pre>&lt;/div>'
+            + '&lt;div class="exception error trace">&lt;pre>' + trace + '&lt;/pre>&lt;/div>';
+          while ((exceptionData = exceptionData.Previous)) {
+            const message = exceptionData.Message;
+            const exception = exceptionData.Exception;
+            const trace = stringifyTrace(exceptionData.Trace);
+            info += '&lt;div class="exception error toastify">&lt;span class="prefix">' + t(appName, 'Previous') + ': &lt;/span>&lt;span class="message">' + message + '&lt;/span>&lt;/div>';
+            info += '&lt;div class="exception error name">&lt;pre>' + exception + '&lt;/pre>&lt;/div>'
+              + '&lt;div class="exception error trace">&lt;pre>' + trace + '&lt;/pre>&lt;/div>';
+          }
+        }
+        if (failData.info) {
+          info += '&lt;div class="' + appName + ' error-page">' + failData.info + '&lt;/div>';
+        }
+        Dialogs.alert({
+          content: info,
+          title: caption,
+          callback() { callbacks.cleanup(failData); },
+          allowHtml: true,
+          modal: true,
+          dialogClasses: 'maximize-width',
+        });
+      }
+      break;
+    }
+    case HttpStatusCodes.PRECONDITION_FAILED:
+      // a simple page reload may help
+      callbacks.cleanup = () => {
+        window.location.reload();
+      };
+      if (failData.error &amp;&amp; httpStatusText(xhr.status) !== t(appName, failData.error)) {
+        info += ': '
+          + '&lt;span class="bold error toastify name">'
+          + t(appName, failData.error)
+          + '&lt;/span>';
+      }
+      if (failData.messages) {
+        for (const msg of failData.messages) {
+          info += '&lt;div class="' + appName + ' error toastify">' + msg + '&lt;/div>';
+        }
+      }
+      info += `&lt;div class="error general">
+This can happen when your device has been put to sleep (close the lid,
+switch off your phone or tablet) for a longer time. In this case a
+certain security token could not be refreshed regularly which may
+produce the error your see. A simple page reload may help. This is
+done automatically when cloud click "ok" or close this dialog window.
+&lt;/div>`;
+      Dialogs.alert({
+        content: info,
+        title: caption,
+        callback() { callbacks.cleanup(failData); },
+        allowHtml: true,
+        modal: true,
+        dialogClasses: 'maximize-width',
+      });
+      break;
+    case HttpStatusCodes.UNAUTHORIZED: {
+      // no point in continuing, direct the user to the login page
+      callbacks.cleanup = () => {
+        window.location.replace(cloudWebRoot);
+      };
+
+      let generalHint = t(appName, 'Something went wrong.');
+      generalHint += '&lt;br/>'
+        + t(appName, 'If it should be the case that you are already '
+          + 'logged in for a long time without interacting '
+          + 'with the web-app, then the reason for this '
+          + 'error is probably a simple timeout.');
+      generalHint += '&lt;br/>'
+        + t(appName, 'I any case it may help to logoff and logon again, as a '
+          + 'temporary work-around. You will be redirected to the '
+          + 'log-in page when you close this window.');
+      info += '&lt;div class="error general">' + generalHint + '&lt;/div>';
+      Dialogs.alert({
+        content: info,
+        title: caption,
+        callback() { callbacks.cleanup(failData); },
+        allowHtml: true,
+        modal: true,
+        dialogClasses: 'maximize-width',
+      });
+      break;
+    }
+  }
+
+  // console.info(info);
+  return failData;
+};
+
+/**
+ * Generate some diagnostic output, mostly needed during
+ * application development. This is intended to be called from the
+ * done() callback after a successful AJAX call.
+ *
+ * @param data The data passed to the callback to $.post()
+ *
+ * @param required List of required fields in data.data.
+ *
+ * @param [errorCB] TBD.
+ */
+const ajaxValidateResponse = &lt;T extends string|Record&lt;string, unknown> >(
+  data: T,
+  required: string[],
+  errorCB: (arg: T) => void = () => {},
+) => {
+  const dialogCallback = () => {
+    errorCB(data);
+  };
+  // error handling
+  if (typeof data === 'undefined' || !data) {
+    Dialogs.alert(
+      t(appName, 'Unrecoverable unknown internal error, '
+        + 'no further information available, sorry.'),
+      t(appName, 'Internal Error'), dialogCallback, true);
+    return false;
+  }
+  let missing = '';
+  for (let idx = 0; idx &lt; required.length; ++idx) {
+    if (typeof data[required[idx]] === 'undefined') {
+      missing += t(
+        appName, 'Field {RequiredField} not present in AJAX response.',
+        { RequiredField: required[idx] }) + '&lt;br>';
+    }
+  }
+  if (missing.length > 0) {
+    let info = '';
+    if (typeof data !== 'string' &amp;&amp; Array.isArray(data.messages)) {
+      info += data.messages.join(' ') + ' ';
+    }
+    info += t(appName, 'Missing data');
+    // Add missing fields only if no exception or setup-error was
+    // caught as in this case no regular data-fields have been
+    // constructed
+    info += '&lt;div class="missing error">' + missing + '&lt;/div>';
+
+    let caption = t(appName, 'Error');
+    if (!isPlainObject(data)) {
+      switch (typeof data) {
+        case 'string':
+          info += t(
+            appName,
+            'The submitted data "{stringValue}" seems to be a plain string, '
+              + 'but we need an object where the data is provided through above listed properties.',
+            { stringValue: data.substring(0, 32) + '...' });
+          caption = t(appName, 'Error: plain string received');
+          break;
+        default:
+          info += t(
+            appName,
+            'The submitted data is not a plain object, '
+              + 'and does not provide the properties listed above.',
+            { stringValue: ('' + data).substring(0, 32) + '...' });
+          caption = t(appName, 'Error: not a plain object');
+          break;
+      }
+    } else {
+      // Display additional debug info if any
+      Dialogs.debugPopup(data as Record&lt;string, unknown>);
+    }
+
+    Dialogs.alert(info, caption, dialogCallback, true, true);
+    return false;
+  }
+  return true;
+};
+
+/**
+ * Fetch data from an error response.
+ *
+ * @param xhr jqXHR, see fail() method of jQuery ajax.
+ *
+ * @param textStatus from jQuery, see fail() method of jQuery ajax.
+ *
+ * @param errorThrown see fail() method of jQuery ajax.
+ */
+const ajaxFailData = (
+  xhr: JQuery.jqXHR|AjaxFailData,
+  textStatus: string,
+  errorThrown: string,
+) => {
+  console.info('AJAX FAIL DATA ARGS', {
+    xhr,
+    textStatus,
+    errorThrown,
+  });
+  if (isAjaxFailData(xhr)) {
+    return xhr;
+  }
+  if (textStatus === 'error' &amp;&amp; xhr.status !== undefined) {
+    textStatus = httpStatusText(xhr.status);
+    // @ts-expect-error 2345
+    xhr.statusText = textStatus;
+  }
+  const data: AjaxFailData = {
+    error: errorThrown,
+    status: textStatus,
+    messages: [t(appName, 'Unknown JSON error response to AJAX call: {status} / {error}', { status: textStatus, error: errorThrown })],
+    xhr,
+    parsed: false,
+  };
+  const ct = xhr.getResponseHeader('content-type') || '';
+  if (!xhr.responseJSON &amp;&amp; xhr.responseText &amp;&amp; ct.indexOf('json') > -1) {
+    // this can happen during file-download as then jquery is forced
+    // to 'binary' mode and responseJSON is not set.
+    try {
+      xhr.responseJSON = JSON.parse(xhr.responseText);
+    } catch (e) {
+      console.error('Unable to parse as JSON', { ct, text: xhr.responseText });
+    }
+  }
+  if (xhr.responseJSON) {
+    Object.assign(data, xhr.responseJSON);
+    data.parsed = true;
+  } else {
+    if (ct.indexOf('html') > -1) {
+      console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
+      data.messages = [
+        t(
+          appName, 'HTTP error response to AJAX call: {code} / {text}',
+          { code: xhr.status, text: xhr.statusText },
+        ),
+      ];
+      data.info = $(xhr.responseText).find('main').html();
+      data.html = data.info;
+      data.parsed = true;
+    } else {
+      console.log('unknown response');
+    }
+  }
+  console.info('AJAX FAIL DATA RETURN', { data });
+  return data;
+};
+
+/**
+ * Generate some diagnostic output, mostly needed during application
+ * development.
+ *
+ * @param xhr jqXHR, see fail() method of jQuery ajax. For convenience
+   any already constructed AjaxFailData object is left unchanged and
+   may also be passed.
+ *
+ * @param textStatus from jQuery, see fail() method of jQuery ajax.
+ *
+ * @param errorThrown see fail() method of jQuery ajax.
+ */
+const ajaxFailMessage = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) =>
+  ajaxFailData(xhr, textStatus, errorThrown).messages.join(' ');
+
+const ajaxFailMessages = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, errorThrown: string) =>
+  ajaxFailData(xhr, textStatus, errorThrown).messages;
+
+$(Dialogs.attachDialogHandlers);
+
+export {
+  ajaxHandleError as handleError,
+  ajaxValidateResponse as validateResponse,
+  ajaxFailData as failData,
+  ajaxFailMessage as failMessage,
+  ajaxFailMessages as failMessages,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Dec 01 2025 09:05:36 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

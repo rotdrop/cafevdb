@@ -24,11 +24,13 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Throwable;
-use RegexIterator;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
+use Throwable;
 
 use PhpOffice\PhpSpreadsheet;
 
@@ -40,6 +42,7 @@ use OCA\CAFEVDB\Toolkit\Service\AppStorageDisclosure;
 use OCA\CAFEVDB\Constants;
 
 /** Office font-file locator, in particular for PhpOffice. */
+#[TSAttributes\TypeScript]
 class FontService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
@@ -57,10 +60,10 @@ class FontService
 
   public const FONT_FILE_NAMES = PhpSpreadsheet\Shared\Font::FONT_FILE_NAMES;
 
-  const CARLITO = 'Carlito-Regular.ttf';
-  const CARLITO_BOLD = 'Carlito-Bold.ttf';
-  const CARLITO_ITALIC = 'Carlito-Italic.ttf';
-  const CARLITO_BOLD_ITALIC = 'Carlito-BoldItalic.ttf';
+  private const CARLITO = 'Carlito-Regular.ttf';
+  private const CARLITO_BOLD = 'Carlito-Bold.ttf';
+  private const CARLITO_ITALIC = 'Carlito-Italic.ttf';
+  private const CARLITO_BOLD_ITALIC = 'Carlito-BoldItalic.ttf';
 
   public const FONT_STYLE_PLAIN = 'x';
   public const FONT_STYLE_BOLD = self::FONT_STYLE_PLAIN . 'b';
@@ -99,11 +102,11 @@ class FontService
   protected $systemFontDataCache = [];
 
   /**
-   *@var array
+   * @var array<string, DTO\FontFileNames>
    *
    * Cache the contents of the app's font-data directory for this request.
    */
-  protected $fontFolderEntries;
+  protected ?array $fontFolderEntries;
 
   /** @var string */
   protected $defaultFont;
@@ -198,7 +201,7 @@ class FontService
   {
     $fonts = $this->getFontFolderEntries();
     foreach (self::FONT_STYLES as $style) {
-      if (empty($fonts[$fontName][$style])) {
+      if (empty($fonts[$fontName]->{$style})) {
         return false;
       }
     }
@@ -222,26 +225,23 @@ class FontService
    * Scan the app's fonts folder and return the contents grouped by font
    * family.
    *
-   * @return array Return the array of found font-files, grouped by family.
+   * @return array<string, DTO\FontFileNames> Return the array of found font-files, grouped by family.
    */
   public function scanFontsFolder():array
   {
     $fontFolderEntries = scandir($this->getFontsFolderName());
-    $fonts = [];
+    $this->fontFolderEntries = [];
     foreach (self::FONT_FILE_NAMES as $family => $variants) {
-      $fonts[$family] = [ 'family' => $family ];
+      $font = [ 'family' => $family ];
       foreach ($variants as $variant => $fontFileName) {
         if (array_search($fontFileName, $fontFolderEntries) !== false) {
-          $fonts[$family][$variant] = $fontFileName;
-        } else {
-          $fonts[$family][$variant] = false;
+          $font[$variant] = $fontFileName;
         }
       }
+      $this->fontFolderEntries[$family] = DTO\FontFileNames::fromArray($font);
     }
 
-    $this->fontFolderEntries = $fonts;
-
-    return $fonts;
+    return $this->fontFolderEntries;
   }
 
   /**

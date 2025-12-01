@@ -64,13 +64,14 @@ class InsuranceRates extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      $configService,
-      $entityManager,
-      $request,
-      $pageNavigation,
-      $phpMyEdit,
-      $toolTipsService,
-      self::TEMPLATE,
+      template: self::TEMPLATE,
+      //
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->projectId = $this->getClubMembersProjectId();

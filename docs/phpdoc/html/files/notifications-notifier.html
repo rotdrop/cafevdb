@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/notifications-notifier.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -151,9 +151,7 @@ License along with this library.  If not, see <a href="http://www.gnu.org/licens
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/notifications-notifier.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -170,7 +168,6 @@ License along with this library.  If not, see <a href="http://www.gnu.org/licens
     </h4>
     <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Notifications-Notifier.html"><abbr title="\OCA\CAFEVDB\Notifications\Notifier">Notifier</abbr></a></dt><dd>Notification support class.</dd>    </dl>
-
 
 
 
@@ -219,6 +216,8 @@ License along with this library.  If not, see <a href="http://www.gnu.org/licens
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

@@ -62,48 +62,40 @@ class ProjectInstrument implements \ArrayAccess
     self::NON_INSTRUMENT_BUSINESS_PARTNER,
   ];
 
-  /** @var Project */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $project;
+  private Project $project;
 
-  /** @var Musician */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $musician;
+  private Musician $musician;
 
-  /** @var Instrument */
   #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $instrument;
+  private Instrument $instrument;
 
-  /** @var int */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '0', 'comment' => 'Voice specification if applicable, set to 0 if separation by voice is not needed'])]
   #[ORM\Id]
-  private $voice = self::UNVOICED;
+  private int $voice = self::UNVOICED;
 
-  /** @var bool */
   #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
-  private $sectionLeader = false;
+  private bool $sectionLeader = false;
 
-  /** @var ProjectParticipant */
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', onDelete: 'cascade')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', onDelete: 'cascade')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
-  private $projectParticipant;
+  private ProjectParticipant $projectParticipant;
 
-  /** @var MusicianInstrument */
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
   #[ORM\ManyToOne(targetEntity: MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
-  private $musicianInstrument;
+  private MusicianInstrument $musicianInstrument;
 
-  /** @var ProjectInstrumentationNumber */
   #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'projectInstruments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
   #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
   #[ORM\JoinColumn(name: 'voice', referencedColumnName: 'voice')]
-  private $instrumentationNumber;
+  private ProjectInstrumentationNumber $instrumentationNumber;
 
   /** {@inheritdoc} */
   public function __construct(

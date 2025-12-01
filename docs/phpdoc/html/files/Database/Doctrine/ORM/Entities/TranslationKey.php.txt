@@ -27,9 +27,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
 
 /**
  * TranslationKey
@@ -46,23 +46,14 @@ class TranslationKey implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'text', nullable: false, options: ['comment' => 'Keyword to be translated. Normally the untranslated text in locale en_US, but could be any unique tag'])]
-  private $phrase;
+  private string $phrase;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
   #[Gedmo\Slug(
     fields: ['phrase'],
@@ -70,13 +61,15 @@ class TranslationKey implements \ArrayAccess
     unique: true,
   )]
   #[Gedmo\SlugHandler(class: CAFEVDB\Listeners\Sluggable\HashHandler::class)]
-  private $phraseHash;
+  private ?string $phraseHash;
 
+  /** @var Collection<Translation> */
   #[ORM\OneToMany(targetEntity: Translation::class, mappedBy: 'translationKey', cascade: ['all'], fetch: 'EXTRA_LAZY')]
-  private $translations;
+  private Collection $translations;
 
+  /** @var Collection<TranslationLocation> */
   #[ORM\OneToMany(targetEntity: TranslationLocation::class, mappedBy: 'translationKey', cascade: ['all'])]
-  private $locations;
+  private Collection $locations;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

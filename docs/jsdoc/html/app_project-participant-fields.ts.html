@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/project-participant-fields.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppError.html">AppError</a></li><li><a href="Console.html">Console</a></li><li><a href="JQueryAjaxError.html">JQueryAjaxError</a></li><li><a href="ProjectManagementFolderEntry.html">ProjectManagementFolderEntry</a></li><li><a href="ProjectParticipantFolderEntry.html">ProjectParticipantFolderEntry</a></li><li><a href="SupportingDocumentEntry.html">SupportingDocumentEntry</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$">$</a></li><li><a href="global.html#COMPONENT_NAME">COMPONENT_NAME</a></li><li><a href="global.html#ConflictResolutionFail">ConflictResolutionFail</a></li><li><a href="global.html#DEBUG_GENERAL">DEBUG_GENERAL</a></li><li><a href="global.html#DOKU_WIKI_WRAPPER">DOKU_WIKI_WRAPPER</a></li><li><a href="global.html#HistoryActionPush">HistoryActionPush</a></li><li><a href="global.html#MailMergeDataset">MailMergeDataset</a></li><li><a href="global.html#PERMISSION_NONE">PERMISSION_NONE</a></li><li><a href="global.html#RENDERER_TAG">RENDERER_TAG</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#__webpack_nonce__">__webpack_nonce__</a></li><li><a href="global.html#accountsAutocomplete">accountsAutocomplete</a></li><li><a href="global.html#actionMenu">actionMenu</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#addressItemUnknownLabel">addressItemUnknownLabel</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#appEventName">appEventName</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettingsPopup">appSettingsPopup</a></li><li><a href="global.html#autocompleteFocusHandler">autocompleteFocusHandler</a></li><li><a href="global.html#axiosFileDownload">axiosFileDownload</a></li><li><a href="global.html#busyIcon">busyIcon</a></li><li><a href="global.html#calendarStoreSetup">calendarStoreSetup</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#classSelector">classSelector</a></li><li><a href="global.html#classSelectors">classSelectors</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#cloudVersion">cloudVersion</a></li><li><a href="global.html#cloudWebRoot">cloudWebRoot</a></li><li><a href="global.html#confirm">confirm</a></li><li><a href="global.html#confirmedReceivablesUpdate">confirmedReceivablesUpdate</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#cryptoCache">cryptoCache</a></li><li><a href="global.html#cssTag">cssTag</a></li><li><a href="global.html#currentInstance">currentInstance</a></li><li><a href="global.html#data">data</a></li><li><a href="global.html#debounceInterval">debounceInterval</a></li><li><a href="global.html#decryptMasterKey">decryptMasterKey</a></li><li><a href="global.html#defaultOptions">defaultOptions</a></li><li><a href="global.html#defaultUploadUrls">defaultUploadUrls</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#deselectAll">deselectAll</a></li><li><a href="global.html#dialogAlert">dialogAlert</a></li><li><a href="global.html#dialogConfirm">dialogConfirm</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#dokuWikiSection">dokuWikiSection</a></li><li><a href="global.html#dokuWikiUrl">dokuWikiUrl</a></li><li><a href="global.html#dokuWikiUrlTarget">dokuWikiUrlTarget</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#emit">emit</a></li><li><a href="global.html#encrypt">encrypt</a></li><li><a href="global.html#ensureDropdownVisibility">ensureDropdownVisibility</a></li><li><a href="global.html#equals">equals</a></li><li><a href="global.html#failData">failData</a></li><li><a href="global.html#fetchSetting">fetchSetting</a></li><li><a href="global.html#fetchSettings">fetchSettings</a></li><li><a href="global.html#fileInfoToNode">fileInfoToNode</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#forceHeight">forceHeight</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#generateMasterKey">generateMasterKey</a></li><li><a href="global.html#generatePostHash">generatePostHash</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getEmitResult">getEmitResult</a></li><li><a href="global.html#getGnuCashAccountsAutcompleteData">getGnuCashAccountsAutcompleteData</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getMusician">getMusician</a></li><li><a href="global.html#getProjectParticipantFieldOptions">getProjectParticipantFieldOptions</a></li><li><a href="global.html#getProjectParticipantFields">getProjectParticipantFields</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getSidebarRoot">getSidebarRoot</a></li><li><a href="global.html#globalState">globalState</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#hasEditableData">hasEditableData</a></li><li><a href="global.html#hasSubscriptions">hasSubscriptions</a></li><li><a href="global.html#iFrameResize">iFrameResize</a></li><li><a href="global.html#idSelector">idSelector</a></li><li><a href="global.html#importAll">importAll</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#inputClassSelector">inputClassSelector</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invoiceItemPopup">invoiceItemPopup</a></li><li><a href="global.html#isAxiosError">isAxiosError</a></li><li><a href="global.html#isJQuery">isJQuery</a></li><li><a href="global.html#isJQuerySelect">isJQuerySelect</a></li><li><a href="global.html#isNextcloudLogEntry">isNextcloudLogEntry</a></li><li><a href="global.html#isSelectizedJQuery">isSelectizedJQuery</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#joinLiterals">joinLiterals</a></li><li><a href="global.html#jq">jq</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadMusicians">loadMusicians</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#logger">logger</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#markDialog">markDialog</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#mixin">mixin</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#navigationSelector">navigationSelector</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#onDocumentLoaded">onDocumentLoaded</a></li><li><a href="global.html#optionValues">optionValues</a></li><li><a href="global.html#options">options</a></li><li><a href="global.html#pageCleanup">pageCleanup</a></li><li><a href="global.html#pangram">pangram</a></li><li><a href="global.html#pmeAutocomplete">pmeAutocomplete</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeDestroyVueComponents">pmeDestroyVueComponents</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelectInputSelector">pmeSelectInputSelector</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeTextareaInputSelector">pmeTextareaInputSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pushCancellable">pushCancellable</a></li><li><a href="global.html#recordValue">recordValue</a></li><li><a href="global.html#refreshWidget">refreshWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#resetDropdownVisibility">resetDropdownVisibility</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#sanitizeTemplateParams">sanitizeTemplateParams</a></li><li><a href="global.html#saveConfirmedSetting">saveConfirmedSetting</a></li><li><a href="global.html#saveSimpleSetting">saveSimpleSetting</a></li><li><a href="global.html#scriptUrl">scriptUrl</a></li><li><a href="global.html#selectFromWidget">selectFromWidget</a></li><li><a href="global.html#selected">selected</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#selector">selector</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setBusyIndicators">setBusyIndicators</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setter">setter</a></li><li><a href="global.html#showErrorToast">showErrorToast</a></li><li><a href="global.html#showTemporary">showTemporary</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#stackTraceOptions">stackTraceOptions</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#storeId">storeId</a></li><li><a href="global.html#stringValue">stringValue</a></li><li><a href="global.html#submitOuterForm">submitOuterForm</a></li><li><a href="global.html#subscribe">subscribe</a></li><li><a href="global.html#sys">sys</a></li><li><a href="global.html#sysNameSelector">sysNameSelector</a></li><li><a href="global.html#sysNameSelectors">sysNameSelectors</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogLoadIndicator">tableDialogLoadIndicator</a></li><li><a href="global.html#tableDialogOpen">tableDialogOpen</a></li><li><a href="global.html#textLikeInputTypes">textLikeInputTypes</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toggleNavigation">toggleNavigation</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#triggerSubmit">triggerSubmit</a></li><li><a href="global.html#unTweak">unTweak</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#unsubscribe">unsubscribe</a></li><li><a href="global.html#unsubscribeAll">unsubscribeAll</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#usePersistentDataStore">usePersistentDataStore</a></li><li><a href="global.html#userInfoPopup">userInfoPopup</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#validateResponse">validateResponse</a></li><li><a href="global.html#vueConstructors">vueConstructors</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/project-participant-fields.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import { globalState, appName } from './globals.ts';
+import $, { jq } from './jquery.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import * as Ajax from './ajax.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as Notification from './notification.ts';
+import { translate as t } from '@nextcloud/l10n';
+import * as SelectUtils from './select-utils.ts';
+import * as Dialogs from './dialogs.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import textareaResize from './textarea-resize.ts';
+import { rec as pmeRec } from './pme-record-id.ts';
+import './lock-input.ts';
+import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.ts';
+import {
+  data as pmeData,
+  inputSelector as pmeInputSelector,
+} from './pme-selectors.ts';
+import { showSuccess } from '@nextcloud/dialogs';
+import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
+import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import type { ProjectParticipant, ProjectParticipantField, ProjectParticipantFieldDataOption, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
+
+require('./jquery-readonly.ts');
+require('../legacy/nextcloud/jquery/octemplate.js');
+
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+
+require('./jquery-ui-progressbar.ts');
+require('./jquery-datetimepicker.ts');
+
+// NB: much of the visibility stuff is handled by CSS, e.g. which
+// input is shown for which multiplicity.
+require('project-participant-fields.scss');
+
+const balancingAccountsAutocompleteData = {
+  income: [],
+  expense: [],
+  default: [],
+};
+let balancingAccountsAutocompleteFlavour: 'default'|'income'|'expense' = 'default';
+
+const balancingAccountsAutocompleteOptions: JQueryUI.AutocompleteOptions = {
+  source: (request, response) => {
+    const dataArray = balancingAccountsAutocompleteData[balancingAccountsAutocompleteFlavour];
+    response($.ui.autocomplete.filter(dataArray, request.term));
+  },
+  position: { my: 'left bottom', at: 'left top', collision: 'none' },
+  minLength: 0,
+  select(event, ui) {
+    // trigger blur event for validation
+    const $input = $(event.target);
+    $input.val(ui.item.value);
+    $input.trigger('blur');
+  },
+};
+const updateBalancingAccountsAutocompleteData = (dataType?: EnumParticipantFieldDataType) => {
+  switch (dataType) {
+    case 'receivables':
+      balancingAccountsAutocompleteFlavour = 'income';
+      break;
+    case 'liabilities':
+      balancingAccountsAutocompleteFlavour = 'expense';
+      break;
+    default:
+      balancingAccountsAutocompleteFlavour = 'default';
+      break;
+  }
+};
+
+const fetchBalancingAccountsAutocompleteData = async (projectId: number, dataType?: EnumParticipantFieldDataType) => {
+  try {
+    const data = getBalancingAccountsAutocomplete(projectId);
+    Object.assign(balancingAccountsAutocompleteData, data);
+    updateBalancingAccountsAutocompleteData(dataType);
+  } catch (error) {
+    console.error('Fetching balancing accounts autocomplete failed.', { error });
+  }
+};
+
+const autocompleteFocusHandler = function(this: HTMLInputElement) {
+  const $this = $(this);
+  if (!$this.autocomplete('widget').is(':visible')
+      &amp;&amp; !$this.prop('disabled') &amp;&amp; !$this.prop('readonly')) {
+    $this.autocomplete('search', '');
+  }
+};
+
+/**
+ * @param projectId The id of the project.
+ *
+ * @param multiplicity If given restrict to the given multiplicity.
+ *
+ * @param type If given restrict to the given data-type.
+ */
+const getProjectParticipantFields = async (
+  projectId: number,
+  multiplicity?: EnumParticipantFieldMultiplicity,
+  type?: EnumParticipantFieldDataType,
+) => {
+  try {
+    const data: ProjectParticipantField[] = await $.get(generateAppUrl('projects/' + projectId + '/participant-fields'), {
+      multiplicity,
+      type,
+    }).promise();
+    return data;
+  } catch (error) {
+    const xhr = error as JQuery.jqXHR;
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
+  }
+};
+
+/**
+ * @param fieldId The id of the project.
+ */
+const getProjectParticipantFieldOptions = async (fieldId: number) => {
+  try {
+    const data: ProjectParticipantFieldDataOption[] = await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options')).promise();
+    return data;
+  } catch (error) {
+    const xhr = error as JQuery.jqXHR;
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
+  }
+};
+
+/**
+ * @param projectId The id of the project.
+ */
+const getProjectParticipants = async (projectId: number) => {
+  try {
+    const data: ProjectParticipant[] = await $.get(generateAppUrl('projects/' + projectId + '/participants')).promise();
+    return data;
+  } catch (error) {
+    const xhr = error as JQuery.jqXHR;
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
+  }
+};
+
+const receivableAccumulatorProperties = ['added', 'removed', 'changed', 'skipped'] as const;
+const receivableKeyedProperties = ['musicians', 'receivables', 'amounts'] as const;
+
+export type UpdateStrategy = typeof IRecurringReceivablesGenerator.UPDATE_STRATEGIES[number];
+
+/**
+ * Update the given receivables, display a progress bar, handle errors
+ * and user cancel.
+ *
+ * @param field The database id of the field to update.
+ *
+ * @param receivables Array of receivables to update.
+ *
+ * @param participants Arrray of participants to update.
+ *
+ * @param updateStrategy The conflict resolution strategy.
+ */
+const confirmedReceivablesUpdate = async (
+  field: Pick&lt;ProjectParticipantField, 'id'|'name'>,
+  receivables: Pick&lt;ProjectParticipantFieldDataOption, 'key'|'label'/* |'data'|'limit' */>[],
+  participants: Pick&lt;ProjectParticipant, 'musicianId'|'publicName'|'personalPublicName'>[],
+  updateStrategy: UpdateStrategy,
+) => {
+  console.info('RECEIVABLES', receivables);
+  let confirmed = true;
+  if (updateStrategy === 'replace') {
+    confirmed = await Dialogs.confirm(
+      t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', {
+        updateStrategy: t(appName, updateStrategy),
+      }),
+      t(appName, 'Overwrite Existing Records?'),
+    );
+  }
+  if (!confirmed) {
+    return false;
+  }
+
+  const single = receivables.length === 1 &amp;&amp; participants.length === 1;
+
+  const $progressWrapperTemplate = $('#progressWrapperTemplate') as JQuery&lt;HTMLScriptElement>;
+  const progressWrapperId = 'project-participant-fields-progress';
+  const $progressWrapper = $progressWrapperTemplate.octemplate({
+    wrapperId: progressWrapperId,
+    caption: '',
+    label: '',
+  });
+  const $oldProgressWrapper = $('#' + progressWrapperId);
+  if ($oldProgressWrapper.length === 0) {
+    $('body').append($progressWrapper);
+  } else {
+    $oldProgressWrapper.replaceWith($progressWrapper);
+  }
+  const $progressBar = $progressWrapper.find('span.progressbar');
+  $progressBar.progressbar({ value: 0, max: 100 });
+  const $label = $progressBar.find('.label');
+  let cancel: string|undefined;
+  if (!single) {
+    await new Promise&lt;void>((resolve) => {
+      $progressWrapper.cafevDialog({
+        title: t(appName, 'Updating recurring receivables'),
+        width: 'auto',
+        height: 'auto',
+        modal: true,
+        closeOnEscape: false,
+        resizable: false,
+        dialogClass: 'progress-status progress',
+        buttons: [
+          {
+            text: t(appName, 'cancel'),
+            title: t(appName, 'Cancel the operation in progress.'),
+            class: 'cancel',
+            click() {
+              cancel = t(appName, 'Cancelled by User');
+              $progressWrapper.dialog('close');
+            },
+          },
+        ],
+        open() {
+          const $dialogHolder = $progressWrapper;
+          DialogUtils.toBackButton($dialogHolder);
+          DialogUtils.customCloseButton($dialogHolder, function(_event, _container) {
+            $progressWrapper.dialog('widget').find('.cancel.ui-button').trigger('click');
+            return false;
+          });
+          resolve();
+        },
+        close() {
+          $progressWrapper.dialog('destroy');
+          $progressWrapper.hide();
+        },
+      } as JQueryUI.DialogOptions);
+    });
+  }
+
+  const fieldName = field.name;
+  const fieldId = field.id;
+  const totals = receivables.length * participants.length;
+  let current = 0;
+  const statistics = &lt;ReceivablesStatistics &amp; { cancel?: string }>{};
+  for (const key of receivableAccumulatorProperties) {
+    statistics[key] = 0;
+  }
+  for (const key of receivableKeyedProperties) {
+    statistics[key] = {};
+  }
+  for (const receivable of receivables) {
+    if (cancel) {
+      break;
+    }
+    const key = receivable.key;
+    const receivableLabel = receivable.label;
+    console.info('RECEIVABLE', key, receivableLabel);
+    for (const participant of participants) {
+      if (cancel) {
+        break;
+      }
+      const musicianId = participant.musicianId;
+      const musicianName = participant.personalPublicName;
+      console.info('MUSICIAN', musicianId, musicianName);
+
+      single || $progressWrapper.dialog(
+        'option',
+        'title',
+        t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
+          { fieldName, receivableLabel, musicianName }),
+      );
+
+      const request = 'option/regenerate';
+      try {
+        const data: ReceivablesStatistics = await $.post(
+          generateAppUrl('projects/participant-fields/' + request), {
+            data: {
+              fieldId,
+              key,
+              musicianId,
+              updateStrategy,
+            },
+          }).promise();
+        console.info(data);
+        for (const key of receivableAccumulatorProperties) {
+          statistics[key] += data[key];
+        }
+        for (const key of receivableKeyedProperties) {
+          Object.assign(statistics[key], data[key]);
+        }
+        ++current;
+        const currentPercentage = current / totals * 100.0;
+        single || $progressBar.progressbar('option', 'value', currentPercentage);
+        single || $label.html(currentPercentage.toFixed(1) + '%');
+        showSuccess(
+          t(appName, '{musicianName}, {receivableLabel}: "{message}".', {
+            musicianName, receivableLabel, message: data.messages.join('; '),
+          }),
+        );
+      } catch (error) {
+        const xhr = error as JQuery.jqXHR;
+        const failData = await new Promise&lt;Ajax.AjaxFailData>((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+        cancel = t(appName, 'Error');
+        single || $progressWrapper.dialog('close');
+        console.info('FAIL DATA', failData);
+        throw new Error(failData.error, { cause: failData.xhr });
+      }
+    }
+  }
+  statistics.cancel = cancel;
+  if (!cancel) {
+    single || $progressWrapper.dialog('close');
+  }
+  return statistics;
+};
+
+const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}) {
+  const $container = jq(selector);
+
+  // @todo Most of the stuff below is a no-op in list-view. We should
+  // bail-out early.
+  const viewOperation = !PHPMyEdit.hasEditableData($container);
+  if (viewOperation) {
+    resizeCB();
+    return;
+  }
+
+  const $tableTab = $container.find&lt;HTMLSelectElement>('select.tab');
+  const $newTab = $container.find&lt;HTMLInputElement>('input.new-tab');
+  $newTab.prop('readonly', !!SelectUtils.selected($tableTab));
+  $container.on('change', 'select.tab', function() {
+    $newTab.prop('readonly', !!SelectUtils.selected($tableTab));
+    return false;
+  });
+
+  const setFieldTypeCssClass = function(data?: {
+    multiplicity: EnumParticipantFieldMultiplicity,
+    dataType: EnumParticipantFieldDataType|'',
+    depositDueDate: 'set'|'unset',
+  }) {
+    if (!data) {
+      return;
+    }
+    const dataType = data.dataType;
+    const multiplicity = data.multiplicity;
+    const dueDate = data.depositDueDate;
+    const multiplicityClass = 'multiplicity-' + multiplicity;
+    const dataTypeClass = 'data-type-' + dataType;
+    const depositDueDateClass = 'deposit-due-date-' + dueDate;
+    $container.find('tr.multiplicity')
+      .removeClass(function(_index, className) {
+        return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
+      })
+      .addClass([multiplicityClass, dataTypeClass, depositDueDateClass]);
+    $container.find('tr.data-options table.data-options')
+      .removeClass(function(_index, className) {
+        return (className.match(/\b(multiplicity|data-type|deposit-due-date)-\S+/g) || []).join(' ');
+      })
+      .addClass([multiplicityClass, dataTypeClass]);
+
+    $container.find('[class*="-multiplicity-required"], [class*="-data-type-required"], [class*="-deposit-due-date-required"]').each(function() {
+      const $this = $(this);
+      let required = false;
+      for (const className of $this.attr('class')!.split(/\s+/)) {
+        switch (className) {
+          case multiplicity + '-multiplicity-required':
+          case dataType + '-data-type-required':
+          case dueDate + '-deposit-due-date-required':
+          case 'multiplicity-' + multiplicity + '-' + dueDate + '-deposit-due-date-required':
+            required = true;
+            break;
+          default:
+            break;
+        }
+        if (className === 'not-multiplicity-' + multiplicity + '-' + dueDate + '-deposit-due-date-required') {
+          required = false;
+          break; // kill-switch, bail out.
+        }
+        const onlyMultiplicityRequired = className.match(/only-multiplicity-(.*)-multiplicity-required/);
+        if (onlyMultiplicityRequired &amp;&amp; onlyMultiplicityRequired[1] !== multiplicity) {
+          required = false;
+          break; // kill-switch, bail out.
+        }
+      }
+      $this.prop('required', required);
+    });
+    $container.find('.data-type-html-disabled, .data-type-html-disabled *').prop('disabled', dataType === 'html');
+    $container.find('.not-data-type-html-disabled, .not-data-type-html-disabled *').prop('disabled', dataType !== 'html');
+
+    $container.find('.data-type-html-wysiwyg-editor').each(function() {
+      const $this = $(this);
+      if (dataType !== 'html') {
+        WysiwygEditor.removeEditor($this);
+      } else {
+        WysiwygEditor.addEditor($this, resizeCB);
+      }
+    });
+
+    const inputData = $container.find('table.data-options').data('size');
+    let $dataInputs = $container
+      .find(
+        'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
+          + ', '
+          + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator, .placeholder)')
+      .find('input.field-data, textarea.field-data')
+      .not(nonTextInputSelector);
+
+    const dateTimePickerSelector = 'body > .xdsoft_datetimepicker';
+    $dataInputs.each(function() {
+      const $this = $(this);
+      if ($this.hasClass('hasDatepicker')) {
+        $this.datepicker('destroy');
+      }
+      $this.datetimepicker('destroy');
+      if (inputData) {
+        const inputSize = inputData[dataType] || inputData.default;
+        if (inputSize) {
+          $this.attr('size', inputSize);
+        } else {
+          console.warn('No input size defined, even not the default', $this, inputData, dataType);
+        }
+      }
+    });
+    $(dateTimePickerSelector).remove();
+    if (multiplicity === 'recurring') {
+      // generated receivables use the data field for their own
+      // purposes, for our purposes it is just text, depending on the
+      // receivable generator it may be even unused.
+      $dataInputs
+        .filter('input')
+        .attr('type', 'text')
+        .removeAttr('step')
+        .prop('disabled', true);
+      $dataInputs
+        .filter('textarea')
+        .prop('disabled', false);
+    } else {
+      $dataInputs
+        .filter('textarea')
+        .prop('disabled', true);
+      $dataInputs = $dataInputs.filter('input');
+      $dataInputs.prop('disable', false);
+      switch (dataType) {
+        case 'receivables':
+        case 'liabilities':
+          $dataInputs
+            .attr('type', 'number')
+            .attr('step', '0.01');
+          break;
+        case 'date':
+          $dataInputs
+            .attr('type', 'text')
+            .removeAttr('step')
+            .datepicker({
+              minDate: '01.01.1940', // birthday
+            });
+          // $dataInputs
+          //   .off('change')
+          //   .on('change', function(event) {
+          //     const $this = $(this);
+          //     console.info('DATE', $this.datepicker('getDate'));
+          //   });
+          break;
+        case 'datetime':
+          $dataInputs
+            .attr('type', 'text')
+            .removeAttr('step')
+            .datetimepicker({
+              step: 5,
+            });
+          break;
+        default:
+          $dataInputs
+            .attr('type', 'text')
+            .removeAttr('step');
+          break;
+      }
+    }
+  };
+
+  const isMonetaryType = (dataType: EnumParticipantFieldDataType|'') => dataType === 'receivables' || dataType === 'liabilities';
+
+  const fieldTypeData = function() {
+    const $multiplicity = $container.find&lt;HTMLSelectElement>('select.multiplicity');
+    const $dataType = $container.find&lt;HTMLSelectElement>('select.data-type');
+    const $depositDueDate = $container.find&lt;HTMLInputElement>('input.deposit-due-date');
+    const dataType = $dataType.val() as EnumParticipantFieldDataType|'';
+    if ($multiplicity.length > 0 &amp;&amp; $dataType.length > 0) {
+      const data = {
+        multiplicity: $multiplicity.val() as EnumParticipantFieldMultiplicity,
+        dataType,
+        depositDueDate: (isMonetaryType(dataType) &amp;&amp; $depositDueDate.val() !== '') ? 'set' as const : 'unset' as const,
+      };
+      return data;
+    }
+    const elem = $container.find('td.pme-value.field-type .data');
+    if (elem.length &lt;= 0) {
+      return null;
+    }
+    return elem.data('data');
+  };
+
+  /**
+   * Hide the header for single choice options because in View and
+   * Delete mode the mult-value table is used as well.
+   */
+  const allowedHeaderVisibility = function() {
+    const allowedValuesTable = $container.find('table.data-options');
+    if (allowedValuesTable.hasClass('multiplicity-multiple')
+        || allowedValuesTable.hasClass('multiplicity-parallel')
+        || allowedValuesTable.hasClass('multiplicity-recurring')
+        || allowedValuesTable.hasClass('multiplicity-groups-of-people')
+        || allowedValuesTable.find('tbody tr:visible').length >= 1) {
+      allowedValuesTable.find('thead').show();
+    } else {
+      allowedValuesTable.find('thead').hide();
+    }
+  };
+
+  // Field-Type Selectors
+  $container.on(
+    'change', [
+      'select.multiplicity',
+      'select.data-type',
+      'input.deposit-due-date',
+    ].join(), function() {
+      const $depositDueDateInput = $container.find&lt;HTMLInputElement>('input.deposit-due-date');
+      const $multiplicitySelect = $container.find&lt;HTMLSelectElement>('select.multiplicity');
+      const $dataTypeSelect = $container.find&lt;HTMLSelectElement>('select.data-type');
+      const multiplicity = $multiplicitySelect.val() as EnumParticipantFieldMultiplicity;
+      const dataTypeMask = SelectUtils.optionByValue($multiplicitySelect, multiplicity).data('data');
+      let dataType = $dataTypeSelect.val() as EnumParticipantFieldDataType|'';
+      const enabledTypes: EnumParticipantFieldDataType[] = [];
+      $dataTypeSelect.find&lt;HTMLOptionElement>('option').each(function() {
+        const $option = $(this);
+        const value = $option.val() as undefined|''|EnumParticipantFieldDataType;
+        if (!value) {
+          return;
+        }
+        const enabled = dataTypeMask.indexOf(value) === -1;
+        if (enabled) {
+          enabledTypes.push(value);
+        }
+        $option.prop('disabled', !enabled);
+      });
+      // @ts-expect-error 2345
+      if (enabledTypes.indexOf(dataType) === -1) {
+        if (enabledTypes.length > 0) {
+          dataType = enabledTypes[0];
+          $dataTypeSelect.val(dataType);
+        } else {
+          dataType = '';
+          console.error('no data types left to enable');
+        }
+      }
+      $dataTypeSelect.trigger('chosen:updated');
+      const depositDueDate = (isMonetaryType(dataType) &amp;&amp; $depositDueDateInput.val() !== '') ? 'set' : 'unset';
+      setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
+      if (dataType !== '') {
+        updateBalancingAccountsAutocompleteData(dataType);
+      }
+      allowedHeaderVisibility();
+      console.debug('RESIZECB');
+      resizeCB();
+
+      $.fn.cafevTooltip.remove(); // remove left-overs
+
+      return false;
+    });
+
+  const $multiplicitySelect = $container.find('select.multiplicity.pme-input');
+  const $multiplicityLock = $container.find('#pme-field-multiplicity-lock');
+  const $dataTypeSelect = $container.find('select.data-type.pme-input');
+  const $dataTypeLock = $container.find('#pme-field-data-type-lock');
+
+  $multiplicitySelect.trigger('change');
+  const usage = $multiplicitySelect.data('fieldUsage');
+
+  $multiplicitySelect.readonly(usage > 0);
+  $multiplicityLock.prop('checked', usage > 0);
+
+  $dataTypeSelect.readonly(usage > 0);
+  $dataTypeLock.prop('checked', usage > 0);
+
+  $container.on('change', '#pme-field-multiplicity-lock', function() {
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the multiplicity is still possible in some cases, but generally irrevertible. The app will allow changes from checkboxes and multiple-choice fields to general "simple" free-form content and disallow any other changes. Selected choices will then be collected into the remaining free-form field. Mostly probably the outcome will be broken unless the data type is "text" or "HTML-text".'),
+        t(appName, 'Really allow changing the multiplicity?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+            $multiplicitySelect.readonly(checked);
+          },
+        },
+      );
+    } else {
+      const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+      $multiplicitySelect.readonly(checked);
+    }
+  });
+
+  $container.on('change', '#pme-field-data-type-lock', function() {
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the data-type is still possible in some cases, but does not always make sense. The app will allow changes between data-types and try to be smart, but please be prepared that the results might look unexpected.'),
+        t(appName, 'Really allow changing the data-type?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+            $dataTypeSelect.readonly(checked);
+          },
+        },
+      );
+    } else {
+      const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+      $dataTypeSelect.readonly(checked);
+    }
+  });
+
+  $container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {
+    const pressedKey = event.which;
+    if (pressedKey === 13) { // enter pressed
+      event.stopImmediatePropagation();
+      $(this).trigger('blur');
+      return false;
+    }
+    return true; // other key pressed
+  });
+
+  const $dataOptionsTable = $container.find('table.data-options');
+  $container.on('change', '#data-options-show-deleted', function() {
+    if ($(this).prop('checked')) {
+      $dataOptionsTable.addClass('show-deleted').removeClass('hide-deleted');
+    } else {
+      $dataOptionsTable.removeClass('show-deleted').addClass('hide-deleted');
+    }
+    $.fn.cafevTooltip.remove();
+    allowedHeaderVisibility();
+    resizeCB();
+    return false;
+  });
+
+  $container.on('change', '#data-options-show-data', function() {
+    if ($(this).prop('checked')) {
+      $dataOptionsTable.addClass('show-data').removeClass('hide-data');
+    } else {
+      $dataOptionsTable.removeClass('show-data').addClass('hide-data');
+    }
+    $.fn.cafevTooltip.remove();
+    allowedHeaderVisibility();
+    resizeCB();
+    return false;
+  });
+
+  $container.on('change', 'select.default-multi-value', function(this: HTMLSelectElement, _event) {
+    const $self = $(this);
+    $container.find&lt;HTMLInputElement>('input.pme-input.default-single-value').val(SelectUtils.selected($self) as string);
+    return false;
+  });
+
+  $container.on('blur', 'input.pme-input.default-single-value', function() {
+    const self = $(this);
+    const dfltSelect = $container.find('select.default-multi-value');
+    dfltSelect.children('option[value="' + self.val() + '"]').prop('selected', true);
+    dfltSelect.trigger('chosen:updated');
+    return false;
+  });
+
+  $container.on('click', 'tr.data-options input.regenerate', function() {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const field = {
+      id: +(pmeRec($container) as string),
+      name: $container.find&lt;HTMLInputElement>('input[name="' + pmeData('name') + '"]').val()!,
+    };
+    const receivable = {
+      key: $row.find&lt;HTMLInputElement>('input.field-key').val()!,
+      label: $row.find&lt;HTMLInputElement>('input.field-label').val()!,
+      data: $row.find&lt;HTMLInputElement>('input.field-data').val()!,
+      limit: +($row.find&lt;HTMLInputElement>('input.field-limit').val()!),
+    };
+    const projectId = +($container.find&lt;HTMLInputElement>('input[name="' + pmeData('project_id') + '"]').val() ?? 0);
+    (async () => {
+      const participants = await getProjectParticipants(projectId);
+      if (!participants) {
+        return;
+      }
+      const updateStrategy = $self.closest('table').find&lt;HTMLSelectElement>('select.recurring-receivables-update-strategy').val() as UpdateStrategy;
+
+      $self.addClass('busy');
+      confirmedReceivablesUpdate(field, [receivable], participants, updateStrategy)
+        .then(
+          function(...rest) {
+            console.info('SUCCESS', { ...rest });
+          },
+          function(...rest) {
+            console.info('ERROR', { ...rest });
+          },
+        )
+        .finally(() => $self.removeClass('busy'));
+    })();
+    return false;
+  });
+
+  $container.on('click', 'tr.data-options input.regenerate-all', async function() {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const field = {
+      id: $row.data('fieldId') as number,
+      name: $container.find&lt;HTMLInputElement>('input[name="' + pmeData('name') + '"]').val()!,
+    };
+    const updateStrategy = $row.find&lt;HTMLSelectElement>('select.recurring-receivables-update-strategy').val() as UpdateStrategy;
+    const projectId = +($container.find('input[name="' + pmeData('project_id') + '"]').val()!);
+    const participants = await getProjectParticipants(projectId);
+    if (!participants) {
+      return false;
+    }
+    console.info('PARTICIPANTS', participants);
+
+    // let options = await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options'));
+    // console.info('OPTIONS', options);
+
+    // or parse the Dom:
+    const receivables: Pick&lt;ProjectParticipantFieldDataOption, 'key'|'label'|'data'|'limit'>[] = [];
+    $row.closest('table').find('tr.data-option-row.active').each(function() {
+      const $row = $(this);
+      console.info('ROW', $row);
+      const receivable = {
+        key: $row.find&lt;HTMLInputElement>('input.field-key').val()!,
+        label: $row.find&lt;HTMLInputElement>('input.field-label').val()!,
+        data: $row.find&lt;HTMLInputElement>('input.field-data').val()!,
+        limit: +($row.find&lt;HTMLInputElement>('input.field-limit').val() ?? 0),
+      };
+      receivables.push(receivable);
+    });
+
+    $self.addClass('busy');
+    confirmedReceivablesUpdate(field, receivables, participants, updateStrategy)
+      .then(
+        function(...rest) {
+          console.info('SUCCESS', { ...rest });
+        },
+        function(...rest) {
+          console.info('ERROR', { ...rest });
+        },
+      )
+      .finally(() => $self.removeClass('busy'));
+    return false;
+  });
+
+  $container.on('click', 'tr.data-options input.generator-run', function() {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const fieldId = $row.data('fieldId');
+    // defer submit until after validation.
+    const submitDefer = PHPMyEdit.deferReload($container);
+    const cleanup = function() {
+      $self.removeClass('busy');
+      setFieldTypeCssClass(fieldTypeData());
+      submitDefer.resolve();
+    };
+    const request = 'generator/run';
+    const startDate = $self.closest('tr').find('.field-limit');
+    $self.addClass('busy');
+    $.post(
+      generateAppUrl('projects/participant-fields/' + request), {
+        data: {
+          fieldId,
+          startDate: startDate.val(),
+        },
+      })
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, cleanup);
+      })
+      .done(function(data) {
+        if (!Ajax.validateResponse(data, ['startDate', 'dataOptionFormInputs'], cleanup)) {
+          return;
+        }
+        const body = $self.closest('tbody');
+        body.find('tr').not('.generator, .placeholder').remove();
+        body.parents('table').find('thead').show();
+        const tail = body.children().first();
+        for (const input of data.dataOptionFormInputs) {
+          tail.before(input);
+        }
+        lockGeneratedValues($container);
+        startDate.val(data.startDate);
+        resizeCB();
+        cleanup();
+        Notification.messages(data.message);
+      });
+    return false;
+  });
+
+  $container.on('click', 'tr.data-options input.delete-undelete', function() {
+    const $self = $(this);
+    const $row = $self.closest('tr.data-options');
+    const dfltSelect = $container.find('select.default-multi-value');
+    let used = $row.data('used');
+    used = !(!used || used === 'unused');
+    if ($row.data('deleted') !== '') {
+      // undelete
+      $row.data('deleted', '');
+      $row.switchClass('deleted', 'active');
+      $row.find('input.field-deleted').val('');
+      $row.find('input' + textInputSelector + ':not(.field-key), textarea').prop('readonly', false);
+      $row.find('input.operation').prop('disabled', false);
+      const key = $row.find('input.field-key');
+      const label = $row.find('input.field-label');
+      const option = '&lt;option value="' + key.val() + '">' + label.val() + '&lt;/option>';
+      dfltSelect.children('option').first().after(option);
+    } else {
+      const key = $row.find('input.field-key').val();
+      if (!used) {
+        // just remove the row
+        $row.remove();
+      } else {
+        // must not delete, mark as inactive
+        $row.data('deleted', Date.now() / 1000.0);
+        $row.switchClass('active', 'deleted');
+        $row.find('input.field-deleted').val($row.data('deleted'));
+        $row.find('input' + textInputSelector + ', textarea').prop('readonly', true);
+        $row.find('input.operation.regenerate').prop('disabled', true);
+      }
+      dfltSelect.find('option[value="' + key + '"]').remove();
+    }
+    setTimeout(function() {
+      dfltSelect.trigger('chosen:updated');
+      $.fn.cafevTooltip.remove();
+      allowedHeaderVisibility();
+      resizeCB();
+    }, 400);
+    return false;
+  });
+
+  // validate monetary inputs
+  $container.on(
+    'blur',
+    [
+      'tr.multiplicity.data-type-receivables ~ tr.data-options-single input' + textInputSelector,
+      'tr.multiplicity.data-type-receivables:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
+      'tr.multiplicity.data-type-liabilities ~ tr.data-options-single input' + textInputSelector,
+      'tr.multiplicity.data-type-liabilities:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
+    ].join(),
+    function() {
+      const self = $(this);
+      if (self.prop('readonly')) {
+        return false;
+      }
+      const amount = self.val().trim();
+      if (amount === '') {
+        self.val('');
+        return false;
+      }
+
+      // defer submit until after validation.
+      const submitDefer = PHPMyEdit.deferReload($container);
+      self.prop('readonly', true);
+
+      const cleanup = function() {
+        self.prop('readonly', false);
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateAppUrl('validate/general/monetary-value'), { value: amount })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['amount'], cleanup)) {
+            return;
+          }
+          self.val(data.amount);
+          cleanup();
+        });
+      return false;
+    });
+
+  const lockGeneratedValuesRow = function($row: JQuery&lt;HTMLTableRowElement>) {
+    const $generated = $row.find&lt;HTMLInputElement>('input' + textInputSelector + ', textarea');
+    $generated.each(function() {
+      const $this = $(this);
+      if ((!$this.hasClass('expert-mode-only') &amp;&amp; !$this.hasClass('not-expert-mode-hidden'))
+          || (!$this.hasClass('finance-mode-only') &amp;&amp; !$this.hasClass('not-finance-mode-hidden'))) {
+        $this.lockUnlock({
+          locked: $this.val()!.trim() !== '',
+        });
+      }
+    });
+  };
+
+  const lockGeneratedValues = function($container: JQuery) {
+    // generated options
+    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
+    lockGeneratedValuesRow($container.find&lt;HTMLTableRowElement>(generatedSelector));
+  };
+
+  lockGeneratedValues($container);
+
+  // generator input
+  const generatorSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.generator input' + textInputSelector;
+  const $generator = $container.find&lt;HTMLInputElement>(generatorSelector);
+  $generator.each(function() {
+    const $this = $(this);
+    $this.lockUnlock({
+      locked: $this.val()!.trim() !== '',
+    });
+    if ($this.is('.field-limit')) {
+      $this.datepicker({
+        minDate: '01.01.2000', // no receivables before this time
+      });
+    }
+  });
+
+  // generated due date
+  const dueDate = $container.find&lt;HTMLInputElement>('tr.multiplicity-recurring ~ tr.due-date td.pme-value input').not(nonTextInputSelector);
+  if (dueDate.length > 0) {
+    dueDate.lockUnlock({
+      locked: dueDate.val()!.trim() !== '',
+    });
+  }
+
+  $container.on(
+    'blur',
+    generatorSelector + '.field-data',
+    function() {
+      const $self = $(this);
+      if ($self.prop('readonly')) {
+        return false;
+      }
+      const $row = $self.closest('tr.data-options');
+
+      const request = 'generator/define';
+      const data = { ...fieldTypeData(), ...$row.data() };
+      const allowed = $row.find(textElementSelector);
+      const postData = $.param({ request, data })
+            + '&amp;' + allowed.serialize();
+
+      // defer submit until after validation.
+      const submitDefer = PHPMyEdit.deferReload($container);
+      allowed.each(function() {
+        const $this = $(this);
+        $this.data('readonly-saved', $this.prop('readonly'));
+        $this.prop('readonly', true);
+      });
+      const cleanup = function() {
+        allowed.each(function() {
+          const $this = $(this);
+          $this.prop('readonly', $this.data('readonly-saved') || $this.hasClass('readonly'));
+          $this.removeData('readonly-saved');
+        });
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateAppUrl('projects/participant-fields/' + request),
+        postData)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data,
+            ['value', 'slug', 'operationLabels', 'availableUpdateStrategies'],
+            cleanup)) {
+            return;
+          }
+
+          if (data.value !== $self.val()) {
+            $self.val(data.value);
+          }
+
+          const fieldId = parseInt($row.data('fieldId'));
+          const empty = $self.val().trim() === '';
+          if (empty) {
+            $self.removeClass('readonly');
+          } else {
+            $self.addClass('readonly');
+          }
+          $self.lockUnlock('lock', !empty);
+          $row.find('.operation.generator-run').prop('disabled', empty || !(fieldId > 0));
+
+          const $table = $row.closest('table');
+          const oldGeneratorSlug = $row.data('generatorSlug');
+          $table.removeClass('recurring-generator-' + oldGeneratorSlug);
+          $table.addClass('recurring-generator-' + data.slug);
+          $row.data('generatorSlug', data.slug);
+          $row.removeClass('update-strategy-count-' + $row.data('availableUpdateStrategies').length);
+          $row.data('availableUpdateStrategies', data.availableUpdateStrategies);
+          $row.addClass('update-strategy-count-' + $row.data('availableUpdateStrategies').length);
+
+          const operationClass = (operation: string, value: boolean) => [
+            'recurring',
+            operation,
+            (value ? 'enabled' : 'disabled'),
+          ].join('-');
+          for (const [operation, value] of Object.entries(data.operationLabels as Record&lt;string, boolean>)) {
+            $table.removeClass([
+              operationClass(operation, true),
+              operationClass(operation, false),
+            ]);
+            $table.addClass(operationClass(operation, value));
+          }
+
+          // adjust update strategy options
+          const $updateStrategies = $row.find('select.recurring-receivables-update-strategy');
+          const defaultStrategy = $updateStrategies.data('defaultValue');
+          $updateStrategies.find('option').each(function() {
+            const $option = $(this);
+            const optionValue = $option.val();
+            if (optionValue !== '') {
+              $option.prop('disabled', data.availableUpdateStrategies.indexOf($option.val()) === -1);
+              if ($option.prop('disabled')) {
+                $option.prop('selected', false);
+              } else if (optionValue === defaultStrategy) {
+                $updateStrategies.val(defaultStrategy);
+              }
+            }
+          });
+          if (data.availableUpdateStrategies.length === 1) {
+            $updateStrategies.val(data.availableUpdateStrategies[0]);
+          }
+
+          Notification.messages(data.message);
+
+          cleanup();
+        });
+      return false;
+    });
+
+  // multi-field input matrix
+  $container.on(
+    'blur', [
+      'tr.data-options tr.data-line:not(.generator) input' + textInputSelector,
+      'tr.data-options tr.data-line textarea',
+    ].join(),
+    function() {
+      const self = $(this);
+      if (self.prop('readonly')) {
+        return false;
+      }
+      const $row = self.closest('tr.data-options');
+      const $table = $row.closest('table.data-options');
+      const placeHolder = $row.hasClass('placeholder');
+      if (placeHolder &amp;&amp; self.val().trim() === '') {
+        // don't add empty fields (but of course allow to remove field data)
+        self.val('');
+        return false;
+      }
+
+      // default data selector, if applicable
+      const dflt = $container.find('select.default-multi-value');
+
+      const request = 'option/define';
+      const data = Object.assign({ default: dflt.val() }, fieldTypeData(), $row.data());
+      const allowed = $row.find(textElementSelector);
+      const postData = $.param({ request, data })
+            + '&amp;' + allowed.serialize();
+
+      // defer submit until after validation.
+      const submitDefer = PHPMyEdit.deferReload($container);
+      allowed.prop('readonly', true);
+      const cleanup = function() {
+        if (!allowed.hasClass('readonly')) {
+          allowed.prop('readonly', false);
+        }
+        setFieldTypeCssClass(fieldTypeData());
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateAppUrl('projects/participant-fields/' + request),
+        postData)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data,
+            ['dataOptionSelectOption', 'dataOptionFormInputs'],
+            cleanup)) {
+            return;
+          }
+          const option = data.dataOptionSelectOption;
+          const input = data.dataOptionFormInputs;
+          $.fn.cafevTooltip.remove();
+          let $newRow: JQuery&lt;HTMLTableRowElement>;
+          if (placeHolder) {
+            $row.parents('table').find('thead').show();
+            $newRow = $row.before(input).prev();
+            self.val('');
+            $row.data('index', +$row.data('index') + 1); // next index
+            resizeCB();
+          } else {
+            const $nextRow = $row.next();
+            try { $row.find('.field-balancingAccount').autocomplete('destroy'); } catch (e) { /* ignore */ }
+            $row.replaceWith(input);
+            $newRow = $nextRow.prev();
+            if ($table.hasClass('multiplicity-recurring')) {
+              lockGeneratedValuesRow($newRow);
+            }
+          }
+          $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          $newRow.find('input, textarea').cafevTooltip({ placement: 'auto right' });
+          $newRow
+            .find&lt;HTMLInputElement>('.field-balancingAccount')
+            .autocomplete(balancingAccountsAutocompleteOptions)
+            .on('focus', autocompleteFocusHandler);
+
+          // get the key &lt;-> value connection right for the default selector
+          const newValue = $(option).val();
+          const oldOption = dflt.find('option[value="' + newValue + '"]');
+          if (oldOption.length > 0) {
+            oldOption.replaceWith(option);
+          } else {
+            dflt.children('option').first().after(option);
+          }
+          dflt.trigger('chosen:updated');
+
+          if (globalState.toolTipsEnabled) {
+            $.fn.cafevTooltip.enable();
+          } else {
+            $.fn.cafevTooltip.disable();
+          }
+
+          cleanup();
+        });
+      return false;
+    });
+
+  // When a reader-group is removed, we also deselect it from the
+  // writers. This -- of course -- only works if initially
+  // the readers and writers list is in a sane state ;)
+  $container.on('change', 'select.readers', function() {
+    console.log('readers change');
+    const $self = $(this);
+
+    let changed = false;
+    const $writers = $container.find&lt;HTMLSelectElement>('select.writers');
+    SelectUtils.options($self).not(':selected').each(function() {
+      const $writer = SelectUtils.optionByValue($writers, this.value);
+      if ($writer.prop('selected')) {
+        $writer.prop('selected', false);
+        changed = true;
+      }
+    });
+    if (changed) {
+      SelectUtils.refreshWidget($writers);
+    }
+    return false;
+  });
+
+  // When a writer-group is added, then add it to the
+  // readers as well ;)
+  $container.on('change', 'select.writers', function() {
+    const $self = $(this);
+
+    let changed = false;
+    const $readers = $container.find&lt;HTMLSelectElement>('select.readers');
+    SelectUtils.selectedOptions($self).each(function() {
+      const $reader = SelectUtils.optionByValue($readers, this.value);
+      if (!$reader.prop('selected')) {
+        $reader.prop('selected', true);
+        changed = true;
+      }
+    });
+    if (changed) {
+      SelectUtils.refreshWidget($readers);
+    }
+    return false;
+  });
+
+  const tableContainerId = PHPMyEdit.idSelector('table-container');
+
+  // TODO: check whether these are still necessary
+  $container.on('chosen:showing_dropdown', tableContainerId + ' select', function() {
+    console.log('chosen:showing_dropdown');
+    // const widget = $container.cafevDialog('widget');
+    // const tableContainer = $container.find(tableContainerId);
+    // widget.css('overflow', 'visible');
+    // $container.css('overflow', 'visible');
+    // tableContainer.css('overflow', 'visible');
+    return true;
+  });
+
+  // TODO: check whether these are still necessary
+  $container.on('chosen:hiding_dropdown', tableContainerId + ' select', function() {
+    console.log('chosen:hiding_dropdown');
+    // const widget = $container.cafevDialog('widget');
+    // const tableContainer = $container.find(tableContainerId);
+    // tableContainer.css('overflow', '');
+    // $container.css('overflow', '');
+    // widget.css('overflow', '');
+    return true;
+  });
+
+  $container.on('chosen:update', 'select.writers, select.readers', function() {
+    resizeCB();
+    return false;
+  });
+
+  const fieldType = fieldTypeData();
+  // Done by "trigger('change')" on multiplicity select
+  // setFieldTypeCssClass(fieldType);
+  // allowedHeaderVisibility();
+
+  // set autocomplete for generator selection
+  const generatorRow = $container.find('tr.data-options.generator');
+  const generators = generatorRow.data('generators');
+  generatorRow.find&lt;HTMLInputElement>('input.field-data')
+    .autocomplete({
+      source: generators,
+      position: { my: 'left bottom', at: 'left top', collision: 'none' },
+      minLength: 0,
+      select(event, ui) {
+        // trigger blur event for validation
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.trigger('blur');
+      },
+    })
+    .on('focus', autocompleteFocusHandler);
+
+  const projectId = +($container.find('input[name="' + pmeData('project_id') + '"]').val() ?? 0);
+  fetchBalancingAccountsAutocompleteData(projectId, fieldType.dataType);
+
+  const $balancingAccountInputs = $container.find&lt;HTMLInputElement>(pmeInputSelector + '.balancing-account, .field-balancingAccount');
+  console.info('BALANCING ACCOUNT INPUTS', { $balancingAccountInputs });
+  $balancingAccountInputs
+    .autocomplete(balancingAccountsAutocompleteOptions)
+    .on('focus', autocompleteFocusHandler);
+
+  // synthesize resize events for textareas.
+  // @todo use a resize observer instead of timers
+  textareaResize($container, 'textarea.field-tooltip, textarea.participant-field-tooltip, textarea.pme-input');
+  resizeCB();
+};
+
+const documentReady = function() {
+
+  CAFEVDB.addReadyCallback(async () => {
+    // const $container = PHPMyEdit.container();
+    // if (!$container.hasClass('project-participant-fields')) {
+    //   return; // not for us
+    // }
+    // ready(); // ????
+  });
+
+};
+
+export {
+  ready,
+  documentReady,
+  confirmedReceivablesUpdate,
+  getProjectParticipants,
+  getProjectParticipantFields,
+  getProjectParticipantFieldOptions,
+  receivableAccumulatorProperties,
+  receivableKeyedProperties,
+  balancingAccountsAutocompleteData,
+  fetchBalancingAccountsAutocompleteData,
+  autocompleteFocusHandler, // @todo: move somewhere else
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Dec 01 2025 09:05:36 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

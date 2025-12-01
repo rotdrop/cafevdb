@@ -45,52 +45,32 @@ class GeoPostalCode implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $country;
+  private string $country;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 3, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $stateProvince;
+  private ?string $stateProvince;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false)]
-  private $postalCode;
+  private string $postalCode;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 650, nullable: false)]
-  private $name;
+  private string $name;
 
-  /**
-   * @var double
-   */
   #[ORM\Column(type: 'float', nullable: false)]
-  private $latitude;
+  private float $latitude;
 
-  /**
-   * @var double
-   */
   #[ORM\Column(type: 'float', nullable: false)]
-  private $longitude;
+  private float $longitude;
 
+  /** @var Collection<GeoPostalCodeTranslation> */
   #[ORM\OneToMany(targetEntity: GeoPostalCodeTranslation::class, mappedBy: 'geoPostalCode', cascade: ['all'])]
-  private $translations;
+  private Collection $translations;
 
   /** {@inheritdoc} */
   public function __construct()

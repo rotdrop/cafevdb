@@ -38,6 +38,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\Composer;
@@ -82,7 +83,7 @@ class EmailFormController extends Controller
   /** @return int Email draft auto-save interval in seconds. */
   private function getEmailDraftAutoSave():int
   {
-    return $this->getUserValue('email-draft-auto-save', 300);
+    return $this->getUserValue(EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE, 300);
   }
 
   /**
@@ -239,7 +240,7 @@ class EmailFormController extends Controller
    *
    * @return string Rendered HTML template.
    */
-  private function templateEmailOptions(Composer $composer, ?string $currentTemplate):string
+  private function templateEmailOptions(Composer $composer, ?string $currentTemplate = null):string
   {
     $templateParamters = [
       'templateEmails' => $composer->templateEmails(),
@@ -823,7 +824,7 @@ class EmailFormController extends Controller
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $emailOptions = $topic + 'EmailOptions';
+        $emailOptions = $topic . 'EmailOptions';
         $requestData[$emailOptions] = $this->$emailOptions($composer);
         break;
       case 'validateEmailRecipients':
@@ -1153,6 +1154,7 @@ class EmailFormController extends Controller
 
           // We emulate an uploaded file here:
           $fileRecord = [
+            'origin' => EnumFileUploadOrigin::CLOUD,
             'name' => $path,
             'error' => 0,
             'tmp_name' => $node->getStorage()->getLocalFile($node->getInternalPath()),
@@ -1170,7 +1172,7 @@ class EmailFormController extends Controller
           $fileRecord['max_human_file_size']  = $maxHumanFileSize;
           $files[] = $fileRecord;
         }
-        return self::dataResponse($files);
+        break;
       case AttachmentOrigin::UPLOAD:
         $files = $this->request->files[self::UPLOAD_KEY];
         if (empty($files)) {
@@ -1208,6 +1210,7 @@ class EmailFormController extends Controller
             ]);
           }
 
+          $file['origin'] = EnumFileUploadOrigin::UPLOAD;
           $file['upload_max_file_size'] = $maxUploadFileSize;
           $file['max_human_file_size']  = $maxHumanFileSize;
           $file['original_name'] = $file['name']; // clone
@@ -1224,7 +1227,15 @@ class EmailFormController extends Controller
             continue;
           }
         }
-        return self::dataResponse($files);
+        break;
+      defaults:
+        $files = null;
+        break;
+    }
+    if ($files !== null) {
+      return new DataResponse(
+        array_map(fn(array $file) => DTO\UploadFileData::fromArray($file), $files),
+      );
     }
     return self::grumble($this->l->t('Unknown attachment source: "%s".', $source));
   }

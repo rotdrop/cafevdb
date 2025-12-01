@@ -42,6 +42,7 @@ use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -222,7 +223,7 @@ class ContactsService
   public function addEmailContact(array $emailContact, ?string $addressBookKey = null):?array
   {
     if (empty($addressBookKey)) {
-      $addressBookKey = $this->getConfigValue('generaladdressbookid', false);
+      $addressBookKey = $this->getConfigValue(ConfigConstants::GENERAL_ADDRESS_BOOK_ID_KEY, false);
       if (empty($addressBookKey)) {
         return null;
       }
@@ -936,15 +937,17 @@ class ContactsService
    * null, then this specifies the addressbook of a linked contact which is to
    * be unlinked.
    *
-   * @return void
+   * @return null|bool Return \null if a registration is already in progress,
+   * \false if there is no database transaction active and \true if it was
+   * otherwise possible and not redundant to register a pre-commit action.
    */
-  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null):void
+  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null): ?bool
   {
     if (!empty($this->contactSynchronizations[$musician->getId()])) {
-      return;
+      return false;
     }
     if (!$this->entityManager->isTransactionActive()) {
-      return;
+      return false;
     }
     $this->contactSynchronizations[$musician->getId()] = $musician;
     /** @var ContactsCardEventListener $listener */
@@ -1013,6 +1016,7 @@ class ContactsService
         }
       ),
     );
+    return true;
   }
 
   /**

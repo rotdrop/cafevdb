@@ -24,12 +24,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
-use OCA\CAFEVDB\Constants;
 
 /**
  * Generic directory entry for a database-backed file.
@@ -50,26 +49,17 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /** @var string */
   protected static $type = DirEntryType::GENERIC;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected $id;
+  protected int $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256)]
-  protected $name;
+  protected string $name;
 
-  /**
-   * @var DatabaseStorageFolder
-   */
   #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, inversedBy: 'directoryEntries', cascade: ['persist'])]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
-  protected $parent;
+  protected ?DatabaseStorageFolder $parent = null;
 
   /** {@inheritdoc} */
   public function __construct()

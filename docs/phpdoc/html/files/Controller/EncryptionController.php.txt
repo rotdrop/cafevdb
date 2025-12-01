@@ -210,11 +210,11 @@ class EncryptionController extends OCSController
         $appEncryptionKey = $this->recryptForUser($userId);
       } catch (Throwable $t) {
         if ($allowFailure) {
-          return new DataResponse([
-            'userId' => $userId,
-            'status' => 'failure',
-            'message' => $t->getMessage(),
-          ]);
+          return new DTO\UserRecryptionResponse(
+            userId: $userId,
+            status: EnumRecryptionStatus::FAILURE,
+            message: $t->getMessage(),
+          )->response();
         }
         throw $t;
       }
@@ -225,11 +225,11 @@ class EncryptionController extends OCSController
       $this->keyService->removeRecryptionRequestDeniedNotification($userId);
       $this->keyService->removeRecryptionRequestNotification($userId);
 
-      return new DataResponse([
-        'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
-        'userId' => $userId,
-        'status' => 'granted',
-      ]);
+      return new DTO\UserRecryptionResponse(
+        userId: $userId,
+        keyStatus: empty($appEncryptionKey) ? EnumSetUnset::UNSET : EnumSetUnset::SET,
+        status: EnumRecryptionStatus::GRANTED,
+      )->response();
 
     } catch (Exceptions\RecryptionRequestNotFoundException $e) {
       throw new OCS\OCSNotFoundException($this->l->t('Recryption-request for user "%s" not found.', $userId), $e);
@@ -278,7 +278,7 @@ class EncryptionController extends OCSController
 
     $orderBy = [ 'surName' => 'ASC', 'firstName' => 'ASC', 'userIdSlug' => 'ASC' ];
 
-    if ($limit == 0 && $limit == 0) {
+    if ($offset == 0 && $limit == 0) {
       return self::dataResponse([
         'count' => $musiciansRepository->count($criteria),
       ]);
@@ -289,10 +289,10 @@ class EncryptionController extends OCSController
           try {
             $userId = $musician->getUserIdSlug();
             $this->recryptForUser($userId);
-            return [ 'userId' => $userId, 'status' => $grantAccess ? 'granted' : 'revoked' ];
+            return new DTO\UserRecryptionResponse(userId: $userId, status: $grantAccess ? EnumRecryptionStatus::GRANTED : EnumRecryptionStatus::REVOKED);
           } catch (Throwable $t) {
             $this->logException($t);
-            return [ 'userId' => $userId, 'status' => 'failure' ];
+            return new DTO\UserRecryptionResponse(userId: $userId, status: EnumRecryptionStatus::FAILURE);
           }
         }, $musicians)
       );

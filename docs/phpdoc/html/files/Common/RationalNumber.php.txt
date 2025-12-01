@@ -29,11 +29,15 @@ use OutOfBoundsException;
 
 use MathPHP\Number\Rational;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * Rational numbers, exact fractions. This is mainly useful in a context where
  * the possible denominator are well known, which often is the case in a
  * monetary context.
  */
+#[TSAttributes\TypeScript]
+#[TSAttributes\LiteralTypeScriptType('string')]
 class RationalNumber extends Rational
 {
   /**

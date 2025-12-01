@@ -325,14 +325,14 @@ class OpenDocumentFiller
 
     $substitutions['org'] = [
       'addr' => [
-        'name1' => $this->getConfigValue('streetAddressName01'),
-        'name2' => $this->getConfigValue('streetAddressName02'),
-        'street' => $this->getConfigValue('streetAddressStreet'),
-        'streetNumber' => $this->getConfigValue('streetAddressHouseNumber'),
-        'streetAndNumber' => $this->getConfigValue('streetAddressStreet') . ' ' . $this->getConfigValue('streetAddressHouseNumber'),
-        'city' => $this->getConfigValue('streetAddressCity'),
-        'postalCode' => $this->getConfigValue('streetAddressZIP'),
-        'country' => $this->getConfigValue('streetAddressCountry'),
+        'name1' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01),
+        'name2' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_02),
+        'street' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET),
+        'streetNumber' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER),
+        'streetAndNumber' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET) . ' ' . $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER),
+        'city' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_CITY),
+        'postalCode' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_ZIP),
+        'country' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
         'email' => $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY),
       ],
     ];

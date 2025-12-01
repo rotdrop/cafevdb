@@ -26,15 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-
+use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-
-use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectEvents
@@ -53,11 +50,9 @@ class ProjectEvent implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
-   * @var int
-   *
    * While it would be tempting to just use the calendar URI and event UID and
    * perhaps the recurrence id as composite key it turns out that this is
    * complicated for repeating events: calendar apps may choose to split
@@ -69,74 +64,50 @@ class ProjectEvent implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var Project
-   */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
-  private $calendarId;
+  private int $calendarId;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
-  private $calendarUri;
+  private string $calendarUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['collation' => 'ascii_general_ci'])]
-  private $eventUid;
+  private string $eventUid;
 
   /**
-   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   *
    * A unique identifier which links RELATED-TO events. This occurs if
    * recurring event series are split but applying changes to "this and
    * future" events.
    */
   #[ORM\Column(type: 'uuid_binary', nullable: true)]
-  private $seriesUid;
+  private ?UuidInterface $seriesUid = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
-  private $eventUri;
+  private string $eventUri;
 
   /**
-   * @var int
-   *
    * The recurrence-id of the event instance as Unix timestamp. Non-recurring
    * events have an id of 0.
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
-  private $recurrenceId;
+  private int $recurrenceId = 0;
 
   /**
-   * @var int
    * The SEQUENCE number tied to the event. We always use the highest
    * sequence, but technically this is part of the id.
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
-  private $sequence;
+  private int $sequence = 0;
 
-  /**
-   * @var null|Types\EnumVCalendarType
-   */
   #[ORM\Column(type: 'EnumVCalendarType', nullable: false)]
-  private $type;
+  private Types\EnumVCalendarType $type;
 
   /**
-   * @var ProjectParticipantField
    * Linked ProjectParticipantField entities which can be used to record
    * absence from rehearsals or other calendar events. As calendar events are
    * possibly repeating or we need a list of linked fields in order to record
@@ -144,7 +115,7 @@ class ProjectEvent implements \ArrayAccess
    */
   #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', cascade: ['persist', 'remove'], orphanRemoval: true)]
   #[Gedmo\SoftDeleteableCascade(undelete: true)]
-  private $absenceField;
+  private ?ProjectParticipantField $absenceField = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

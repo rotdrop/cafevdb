@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,26 +43,17 @@ class GnuCashBook implements \ArrayAccess
   //   `root_account_guid` varchar(32) NOT NULL,
   //   `root_template_guid` varchar(32) NOT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
   private string $guid;
 
-  /**
-   * @var GnuCashAccount
-   */
   #[ORM\JoinColumn(name: 'root_account_guid', referencedColumnName: 'guid', nullable: false)]
   #[ORM\OneToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
-  private string $rootAccount;
+  private GnuCashAccount $rootAccount;
 
-  /**
-   * @var GnuCashAccount
-   */
   #[ORM\JoinColumn(name: 'root_template_guid', referencedColumnName: 'guid', nullable: false)]
   #[ORM\OneToOne(targetEntity: GnuCashAccount::class, fetch: 'EXTRA_LAZY')]
-  private string $rootTemplate;
+  private GnuCashAccount $rootTemplate;
 
   /** {@inheritdoc} */
   public function __construct()

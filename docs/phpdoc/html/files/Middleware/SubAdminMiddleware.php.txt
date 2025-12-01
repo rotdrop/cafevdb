@@ -67,13 +67,13 @@ class SubAdminMiddleware extends Middleware
   {
     $reflectionMethod = new ReflectionMethod($controller, $methodName);
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\SubAdminRequired::class)) {
-      $this->logInfo('Middleware attribute match');
+      // $this->logInfo('Middleware attribute match');
       if (!$this->configService->isSubAdminOfGroup()) {
         throw new NotAdminException($this->l->t('Logged in user must be a sub-admin of the orchestra group'));
       }
     }
     if ($this->hasAnnotationOrAttribute($reflectionMethod, Attributes\ServiceAccountRequired::class)) {
-      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigConstants::SHAREOWNER_KEY)) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigConstants::SHARE_OWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }

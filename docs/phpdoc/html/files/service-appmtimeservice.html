@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/service-appmtimeservice.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/service-appmtimeservice.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -171,7 +169,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-AppMTimeService.html"><abbr title="\OCA\CAFEVDB\Service\AppMTimeService">AppMTimeService</abbr></a></dt><dd>Register some extra mime-types, in particuluar in order to have custom
 folder icons for the database storage. Nextcloud uses the `dir-MOUNTTYPE`
 pseudo mime-type in order to select icons for directories.</dd>    </dl>
-
 
 
 
@@ -220,6 +217,8 @@ pseudo mime-type in order to select icons for directories.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

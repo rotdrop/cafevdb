@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,36 +34,22 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class SepaDebitNote extends SepaBulkTransaction
 {
   /**
-   * @var \DateTimeImmutable
-   *
    * Latest date for the pre-notification of the debitors
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $preNotificationDeadline;
+  private ?DateTimeImmutable $preNotificationDeadline;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
-  private $preNotificationEventUri;
+  private ?string $preNotificationEventUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
-  private $preNotificationEventUid;
+  private ?string $preNotificationEventUid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object URI'])]
-  private $preNotificationTaskUri;
+  private ?string $preNotificationTaskUri;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Cloud Calendar Object UID'])]
-  private $preNotificationTaskUid;
+  private ?string $preNotificationTaskUid;
 
   /**
    * Set preNotificationDeadline.

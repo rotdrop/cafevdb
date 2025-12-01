@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/project-payments.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AppError.html">AppError</a></li><li><a href="Console.html">Console</a></li><li><a href="JQueryAjaxError.html">JQueryAjaxError</a></li><li><a href="ProjectManagementFolderEntry.html">ProjectManagementFolderEntry</a></li><li><a href="ProjectParticipantFolderEntry.html">ProjectParticipantFolderEntry</a></li><li><a href="SupportingDocumentEntry.html">SupportingDocumentEntry</a></li></ul><h3>Global</h3><ul><li><a href="global.html#$">$</a></li><li><a href="global.html#COMPONENT_NAME">COMPONENT_NAME</a></li><li><a href="global.html#ConflictResolutionFail">ConflictResolutionFail</a></li><li><a href="global.html#DEBUG_GENERAL">DEBUG_GENERAL</a></li><li><a href="global.html#DOKU_WIKI_WRAPPER">DOKU_WIKI_WRAPPER</a></li><li><a href="global.html#HistoryActionPush">HistoryActionPush</a></li><li><a href="global.html#MailMergeDataset">MailMergeDataset</a></li><li><a href="global.html#PERMISSION_NONE">PERMISSION_NONE</a></li><li><a href="global.html#RENDERER_TAG">RENDERER_TAG</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#__webpack_nonce__">__webpack_nonce__</a></li><li><a href="global.html#accountsAutocomplete">accountsAutocomplete</a></li><li><a href="global.html#actionMenu">actionMenu</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#addressItemUnknownLabel">addressItemUnknownLabel</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#appEventName">appEventName</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettingsPopup">appSettingsPopup</a></li><li><a href="global.html#autocompleteFocusHandler">autocompleteFocusHandler</a></li><li><a href="global.html#axiosFileDownload">axiosFileDownload</a></li><li><a href="global.html#busyIcon">busyIcon</a></li><li><a href="global.html#calendarStoreSetup">calendarStoreSetup</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#children">children</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#classSelector">classSelector</a></li><li><a href="global.html#classSelectors">classSelectors</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#cloudVersion">cloudVersion</a></li><li><a href="global.html#cloudWebRoot">cloudWebRoot</a></li><li><a href="global.html#confirm">confirm</a></li><li><a href="global.html#confirmedReceivablesUpdate">confirmedReceivablesUpdate</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#cryptoCache">cryptoCache</a></li><li><a href="global.html#cssTag">cssTag</a></li><li><a href="global.html#currentInstance">currentInstance</a></li><li><a href="global.html#data">data</a></li><li><a href="global.html#debounceInterval">debounceInterval</a></li><li><a href="global.html#decryptMasterKey">decryptMasterKey</a></li><li><a href="global.html#defaultOptions">defaultOptions</a></li><li><a href="global.html#defaultUploadUrls">defaultUploadUrls</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#deselectAll">deselectAll</a></li><li><a href="global.html#dialogAlert">dialogAlert</a></li><li><a href="global.html#dialogConfirm">dialogConfirm</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#dokuWikiSection">dokuWikiSection</a></li><li><a href="global.html#dokuWikiUrl">dokuWikiUrl</a></li><li><a href="global.html#dokuWikiUrlTarget">dokuWikiUrlTarget</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#emit">emit</a></li><li><a href="global.html#encrypt">encrypt</a></li><li><a href="global.html#ensureDropdownVisibility">ensureDropdownVisibility</a></li><li><a href="global.html#equals">equals</a></li><li><a href="global.html#failData">failData</a></li><li><a href="global.html#fetchSetting">fetchSetting</a></li><li><a href="global.html#fetchSettings">fetchSettings</a></li><li><a href="global.html#fileInfoToNode">fileInfoToNode</a></li><li><a href="global.html#filename">filename</a></li><li><a href="global.html#forceHeight">forceHeight</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#generateMasterKey">generateMasterKey</a></li><li><a href="global.html#generatePostHash">generatePostHash</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getEmitResult">getEmitResult</a></li><li><a href="global.html#getGnuCashAccountsAutcompleteData">getGnuCashAccountsAutcompleteData</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getMusician">getMusician</a></li><li><a href="global.html#getProjectParticipantFieldOptions">getProjectParticipantFieldOptions</a></li><li><a href="global.html#getProjectParticipantFields">getProjectParticipantFields</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getSidebarRoot">getSidebarRoot</a></li><li><a href="global.html#globalState">globalState</a></li><li><a href="global.html#handleError">handleError</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#hasEditableData">hasEditableData</a></li><li><a href="global.html#hasSubscriptions">hasSubscriptions</a></li><li><a href="global.html#iFrameResize">iFrameResize</a></li><li><a href="global.html#idSelector">idSelector</a></li><li><a href="global.html#importAll">importAll</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#inputClassSelector">inputClassSelector</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invoiceItemPopup">invoiceItemPopup</a></li><li><a href="global.html#isAxiosError">isAxiosError</a></li><li><a href="global.html#isJQuery">isJQuery</a></li><li><a href="global.html#isJQuerySelect">isJQuerySelect</a></li><li><a href="global.html#isNextcloudLogEntry">isNextcloudLogEntry</a></li><li><a href="global.html#isSelectizedJQuery">isSelectizedJQuery</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#joinLiterals">joinLiterals</a></li><li><a href="global.html#jq">jq</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadMusicians">loadMusicians</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#logger">logger</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#markDialog">markDialog</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#mixin">mixin</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#navigationSelector">navigationSelector</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#onDocumentLoaded">onDocumentLoaded</a></li><li><a href="global.html#optionValues">optionValues</a></li><li><a href="global.html#options">options</a></li><li><a href="global.html#pageCleanup">pageCleanup</a></li><li><a href="global.html#pangram">pangram</a></li><li><a href="global.html#pmeAutocomplete">pmeAutocomplete</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeDestroyVueComponents">pmeDestroyVueComponents</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelectInputSelector">pmeSelectInputSelector</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeTextareaInputSelector">pmeTextareaInputSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pushCancellable">pushCancellable</a></li><li><a href="global.html#recordValue">recordValue</a></li><li><a href="global.html#refreshWidget">refreshWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#resetDropdownVisibility">resetDropdownVisibility</a></li><li><a href="global.html#routes">routes</a></li><li><a href="global.html#sanitizeTemplateParams">sanitizeTemplateParams</a></li><li><a href="global.html#saveConfirmedSetting">saveConfirmedSetting</a></li><li><a href="global.html#saveSimpleSetting">saveSimpleSetting</a></li><li><a href="global.html#scriptUrl">scriptUrl</a></li><li><a href="global.html#selectFromWidget">selectFromWidget</a></li><li><a href="global.html#selected">selected</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#selector">selector</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setBusyIndicators">setBusyIndicators</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setter">setter</a></li><li><a href="global.html#showErrorToast">showErrorToast</a></li><li><a href="global.html#showTemporary">showTemporary</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#stackTraceOptions">stackTraceOptions</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#storeId">storeId</a></li><li><a href="global.html#stringValue">stringValue</a></li><li><a href="global.html#submitOuterForm">submitOuterForm</a></li><li><a href="global.html#subscribe">subscribe</a></li><li><a href="global.html#sys">sys</a></li><li><a href="global.html#sysNameSelector">sysNameSelector</a></li><li><a href="global.html#sysNameSelectors">sysNameSelectors</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogLoadIndicator">tableDialogLoadIndicator</a></li><li><a href="global.html#tableDialogOpen">tableDialogOpen</a></li><li><a href="global.html#textLikeInputTypes">textLikeInputTypes</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toggleNavigation">toggleNavigation</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#triggerSubmit">triggerSubmit</a></li><li><a href="global.html#unTweak">unTweak</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#unsubscribe">unsubscribe</a></li><li><a href="global.html#unsubscribeAll">unsubscribeAll</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#usePersistentDataStore">usePersistentDataStore</a></li><li><a href="global.html#userInfoPopup">userInfoPopup</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#validateResponse">validateResponse</a></li><li><a href="global.html#vueConstructors">vueConstructors</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/project-payments.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import $, { jq } from './jquery.ts';
+import { appName } from './config.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import * as PHPMyEdit from './pme.ts';
+import { translate as t } from '@nextcloud/l10n';
+import * as SelectUtils from './select-utils.ts';
+import { templateRenderer } from './template-renderer.ts';
+import * as Dialogs from './dialogs.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import ajaxDownload from './file-download.ts';
+import { pageRenderer, type TableDialogCallbackData, type TableDialogOptions } from './pme-state.ts';
+import setBusyIndicators from './busy-indicators.ts';
+import { filename } from './path.ts';
+import {
+  valueSelector as pmeValueSelector,
+  sys as pmeSys,
+  data as pmeData,
+  formSelector as pmeFormSelector,
+} from './pme-selectors.ts';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.ts';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '../services/async-event-bus.ts';
+import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import actionMenu from './vue-action-menu.ts';
+import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+
+require('project-payments.scss');
+require('project-participant-fields-display.scss');
+
+const isCompositeRow = (rowTag: string) => rowTag.startsWith('0;');
+
+const findByName = &lt;T extends HTMLElement = HTMLFormElement>($container: string|JQuery, name: string) =>
+  jq($container).find&lt;T>('[name="' + name + '"]').filter('input, select, textarea');
+
+const ppAmountName = pmeData('ProjectPayments:amount');
+const ppSubjectName = pmeData('ProjectPayments:subject');
+
+const template = filename(__filename);
+
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]) => {
+  const entityId = data.entityId;
+  const tableOptions = {
+    dialogHolderCSSId: template + '-overview',
+    ambientContainerSelector: containerSel,
+    template,
+    templateRenderer: templateRenderer(template),
+    // Now special options for the dialog popup
+    initialViewOperation: true,
+    initialName: pmeSys('operation'),
+    initialValue: 'View',
+    reloadName: pmeSys('operation'),
+    reloadValue: 'View',
+    [pmeSys('rec')]: { id: entityId },
+    [pmeSys('groupby_rec')]: {
+      id: entityId,
+      // eslint-disable-next-line camelcase
+      ProjectPayments__master_key_: '0;' + entityId,
+    },
+    [pmeSys('mrec_rec')]: {
+      id: data.entityId,
+      // eslint-disable-next-line camelcase
+      ProjectPayments__master_key_: '0;' + entityId,
+    },
+    projectId: data.projectId,
+    projectName: data.projectName,
+    modalDialog: true,
+    modified: false,
+  };
+  return PHPMyEdit.tableDialogOpen(tableOptions);
+};
+
+/**
+ * Generate a popup in order to add a new split-transaction, i.e. a
+ * ProjectPayment entity which is always subordinate to a
+ * CompositePayment entity.
+ *
+ * @param container The ambient element of the container
+ * (i.e. the base page, or the div holding the dialog this one was
+ * initiated from.
+ *
+ * @param post Post arguments.
+ */
+const projectPaymentPopup = (container: string|JQuery, post: JQuery.PlainObject) => {
+  // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
+  // instrumentation numbers are somewhat nasty and require too
+  // many options.
+
+  const tableOptions = {
+    ambientContainerSelector: PHPMyEdit.selector(container),
+    dialogHolderCSSId: template + '-dialog',
+    template,
+    templateRenderer: templateRenderer(template),
+    Table: 'CompositePayments',
+    projectId: post.projectId,
+    projectName: post.projectName,
+    // Now special options for the dialog popup
+    initialViewOperation: false,
+    initialName: pmeSys('operation'),
+    initialValue: 'Change',
+    reloadName: pmeSys('operation'),
+    reloadValue: 'Change',
+    // reloadMode: 'discard',
+    [pmeSys('operation')]: 'Change',
+    modalDialog: false,
+    modified: false,
+  };
+  return PHPMyEdit.tableDialogOpen({ ...tableOptions, ...post });
+};
+
+const backgroundDecryption = function(container: string|JQuery) {
+  const $container = PHPMyEdit.container(container);
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
+};
+
+const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, resizeCB: () => void = () => {}) => {
+
+  const $container = jq(selector);
+
+  if (pmeParameters.reason !== 'dialogClose') {
+    backgroundDecryption($container);
+  }
+
+  if (pmeParameters.reason === 'dialogOpen') {
+
+    actionMenu($container, template, PROJECT_PAYMENT_ACTIONS_MENU);
+
+    // AJAX download support
+    $container
+      .on('click', 'a.download-link.ajax-download', function() {
+        const $this = $(this);
+        const $pmeContainer = $this.closest(pmeFormSelector);
+        ajaxDownload($this.attr('href')!, undefined, {
+          always() {
+            setBusyIndicators(false, $pmeContainer, false);
+          },
+          setup() {
+            setBusyIndicators(true, $pmeContainer, false);
+          },
+        });
+      });
+
+    $container
+      .on('contextmenu', 'table.pme-main tr.composite-payment.first td', function(event) {
+        if (event.ctrlKey || $(event.target).closest('.dropdown-content').length > 0) {
+          return; // let the user see the normal context menu
+        }
+        const $row = $(this).closest('tr.composite-payment.first');
+        event.stopImmediatePropagation();
+        $row.toggleClass('following-hidden');
+        $row.find('input.expanded-marker').val($row.hasClass('following-hidden') ? 0 : 1);
+        return false;
+      });
+
+    $container
+      .on('change', 'select.instrumentation-id', function() {
+        const $this = $(this);
+        const musicianId = $this.val();
+        const $receivables = $container.find&lt;HTMLSelectElement>('select.receivable');
+        const $receivableOptions = $receivables.find('option');
+        if (musicianId !== '') {
+          const $musicianOption = SelectUtils.optionByValue($this, musicianId);
+          const musicianData = $musicianOption.data();
+          const allowedOptionKeys = musicianData.keys;
+          $receivableOptions.each(function() {
+            const $option = $(this);
+            if ($option.val()! !== '') {
+              $option.prop('disabled', allowedOptionKeys.indexOf($option.val()) &lt; 0);
+            }
+          });
+          const receivableKey = $receivables.val() as string;
+          if (receivableKey !== '') {
+            const $amountInput = findByName($container, ppAmountName);
+            if (!(+$amountInput.val()!) || $amountInput.hasClass('auto-filled')) {
+              const value = musicianData.values?.[receivableKey] || '';
+              $amountInput.val(value);
+              $amountInput.addClass('auto-filled');
+            }
+          }
+        } else {
+          $receivableOptions.prop('disabled', false);
+        }
+        SelectUtils.refreshWidget($receivables);
+      });
+
+    $container
+      .on('change', 'select.receivable', function() {
+        const $this = $(this);
+        const receivableKey = $this.val();
+        const $musicians = $container.find&lt;HTMLSelectElement>('select.instrumentation-id');
+        const $musiciansOptions = $musicians.find&lt;HTMLOptionElement>('option');
+        if (receivableKey !== '') {
+          let $selectedMusician: undefined|JQuery&lt;HTMLOptionElement>;
+          $musiciansOptions.each(function() {
+            const $option = $(this);
+            if ($option.val() !== '') {
+              $option.prop('disabled', $option.data('keys').indexOf(receivableKey) &lt; 0);
+            }
+            if ($option.is(':selected') &amp;&amp; !$option.prop('disabled')) {
+              $selectedMusician = $option;
+            }
+          });
+          if ($selectedMusician) {
+            const musicianData = $selectedMusician.data();
+            const $amountInput = findByName($container, ppAmountName);
+            if (!(+$amountInput.val()!) || $amountInput.hasClass('auto-filled')) {
+              const value = musicianData.values?.[receivableKey];
+              if (value) {
+                $amountInput.val(value);
+                $amountInput.addClass('auto-filled');
+              }
+            }
+          }
+          const $subjectInput = findByName($container, ppSubjectName);
+          if ($subjectInput.val() === '' || $subjectInput.hasClass('auto-filled')) {
+            const $receivableOption = SelectUtils.optionByValue($this, receivableKey);
+            const receivableText = $receivableOption.text();
+            $subjectInput.val(receivableText);
+            $subjectInput.addClass('auto-filled');
+          }
+        } else {
+          $musiciansOptions.prop('disabled', false);
+        }
+        SelectUtils.refreshWidget($musicians);
+      });
+
+    $container
+      .on('change', '[name="' + ppAmountName + '"]', function() {
+        $(this).removeClass('auto-filled');
+      });
+
+    $container
+      .on('change', '[name="' + ppSubjectName + '"]', function() {
+        $(this).removeClass('auto-filled');
+      });
+
+    $container
+      .on('change', 'select.payment-id', function() {
+        const $this = $(this);
+
+        // deselect action option
+        const $actionOption = SelectUtils.optionByValue($this, -1);
+        if ($actionOption.is(':selected')) {
+          $actionOption.prop('selected', false);
+          SelectUtils.refreshWidget($this);
+
+          let musicianIds: number[] = [];
+          let projectIds: number[] = [];
+          $this.find('option').each(function() {
+            const $option = $(this);
+            if ($option.is($actionOption)) {
+              return;
+            }
+            const optionData: {
+              musicianId: number,
+              projectId: number,
+            } = $option.data('data');
+            musicianIds.push(optionData.musicianId);
+            projectIds.push(optionData.projectId);
+          });
+          musicianIds = [...new Set(musicianIds)];
+          projectIds = [...new Set(projectIds)];
+
+          if (projectIds.length > 1) {
+            Dialogs.alert({
+              title: t(appName, 'Too many Projects'),
+              content: t(appName, 'Currently merging composite-payments for different projects ({projects}) is not supported, sorry.',
+                { projects: projectIds.join(', ') },
+              ),
+              modal: true,
+              allowHtml: false,
+            });
+          }
+          if (musicianIds.length > 1) {
+            Dialogs.alert({
+              title: t(appName, 'Too many Musicians'),
+              content: t(appName, 'Internal error: splits of composite-payments cannot belong to different musicians ({musicians}).',
+                { musicians: musicianIds.join(', ') },
+              ),
+              modal: true,
+              allowHtml: false,
+            });
+          }
+          const projectId = projectIds[0];
+          const musicianId = musicianIds[0];
+
+          const recordId = $actionOption.data('data').recordId;
+          const compositePaymentId = recordId.id;
+
+          projectPaymentPopup(selector, {
+            projectId,
+            musicianId,
+            [pmeData('id')]: compositePaymentId,
+            [pmeData('Musicians:id')]: musicianId,
+            [pmeSys('rec')]: recordId,
+            [pmeSys('groupby_rec')]: { id: compositePaymentId, ['ProjectPayments' + pageRenderer.masterFieldSuffix]: 0 },
+          });
+
+          return false;
+        }
+        return false;
+      });
+
+    // upload supporting document(s)
+    const musicianId = findByName&lt;HTMLInputElement>($container, pmeData('Musicians:id')).val()!;
+    $container
+      .find('tr.supporting-document td.pme-value .file-upload-row')
+      .each(function() {
+        initFileUploadRow.call(
+          this,
+          -1, // projectId
+          +musicianId,
+          resizeCB, {
+            upload: 'documents/finance/' + template + '/upload',
+            delete: 'documents/finance/' + template + '/delete',
+          });
+        const ambientContainerSelector = pmeParameters?.tableDialogOptions?.ambientContainerSelector;
+        if (ambientContainerSelector) {
+          $(this).on('pme:upload-done pme:upload-deleted', (event) => {
+            event.stopImmediatePropagation();
+            $(ambientContainerSelector).trigger('pmedialog:changed');
+            PHPMyEdit.submitOuterFormNoThrow(ambientContainerSelector);
+          });
+        }
+      });
+
+    $container
+      .on('change', 'select.project-balance-documents', function() {
+        const $this = $(this);
+        const $option = SelectUtils.selectedOptions($this);
+        const $cell = $this.closest(pmeValueSelector);
+        const $filesAppAnchor = $cell.find('.open-parent');
+        const filesAppLink = $filesAppAnchor.data('parent-link');
+        if ($option.length > 0) {
+          $filesAppAnchor.attr('href', filesAppLink + '/' + $option.data('data'));
+        } else {
+          $filesAppAnchor.attr('href', filesAppLink);
+        }
+        return false;
+      });
+
+  } // reason === 'dialogOpen'
+
+  const tableOptions: Partial&lt;TableDialogOptions> = pmeParameters.tableDialogOptions ?? {};
+  if (tableOptions.ambientContainerSelector) {
+
+    const $pmeForm = (pmeParameters.reason === 'dialogClose')
+      ? $(pmeParameters.htmlResponse ?? '').find(pmeFormSelector)
+      : $container.find(pmeFormSelector);
+
+    const paymentsRowTagName = pmeData('ProjectPayments:row_tag');
+    const rowTag = findByName&lt;HTMLInputElement>($pmeForm, paymentsRowTagName).val()!;
+
+    // Make sure the current payment is present in the "master"
+    // form. Otherwise a form submit would delete the current payment
+    // again.
+    if (rowTag &amp;&amp; !isCompositeRow(rowTag)) {
+      const $ambientContainer = $(tableOptions.ambientContainerSelector);
+      const $ambientForm = $ambientContainer.find(pmeFormSelector);
+      const paymentsIdName = pmeData('ProjectPayments:id[]');
+      const $paymentOption = findByName($ambientContainer, paymentsIdName).find('option[value="' + rowTag + '"]');
+      if ($paymentOption.length === 0) {
+        $ambientForm.append('&lt;input type="hidden" name="' + paymentsIdName + '" value="' + rowTag + '"/>');
+        const $amountInput = findByName($ambientForm, ppAmountName);
+        $amountInput.val($amountInput.val() + ',' + rowTag + ':' + findByName($pmeForm, ppAmountName).val());
+        const $subjectInput = findByName($ambientForm, ppSubjectName);
+        $subjectInput.val($subjectInput.val() + ',' + rowTag + ':' + findByName($pmeForm, ppSubjectName).val());
+      }
+    }
+  }
+
+  resizeCB();
+};
+
+const documentReady = function() {
+
+  CAFEVDB.addReadyCallback(async () => {
+
+    const $container = PHPMyEdit.container();
+
+    if (!$container.hasClass(template)) {
+      return;
+    }
+
+    ready($container, { reason: 'dialogOpen' }, function() {});
+  });
+
+};
+
+export {
+  backgroundDecryption,
+  ready,
+  documentReady,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Dec 01 2025 09:05:36 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

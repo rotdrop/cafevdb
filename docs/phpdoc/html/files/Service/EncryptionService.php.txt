@@ -26,19 +26,20 @@ namespace OCA\CAFEVDB\Service;
 
 use Throwable;
 
-use OCP\IConfig;
-use OCP\IUserSession;
-use OCP\Security\IHasher;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUserSession;
+use OCP\Security\IHasher;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-
-use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /**
  * Handle some encryption tasks:
@@ -57,34 +58,31 @@ use OCA\CAFEVDB\Crypto;
 class EncryptionService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   public const PUBLIC_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PUBLIC_ENCRYPTION_KEY_CONFIG;
   public const PRIVATE_ENCRYPTION_KEY = Crypto\AsymmetricKeyService::PRIVATE_ENCRYPTION_KEY_CONFIG;
 
-  public const USER_ENCRYPTION_KEY_KEY = 'encryptionkey';
-  public const APP_ENCRYPTION_KEY_HASH_KEY = 'encryptionkeyhash';
-
-  public const CONFIG_LOCK_KEY = 'configlock';
+  private const USER_ENCRYPTION_KEY_KEY = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
 
   const NEVER_ENCRYPT = [
+    // cloud app configuration keys
     'enabled',
     'installed_version',
     'types',
+    // own configuration keys
     ConfigConstants::USER_GROUP_KEY, // cloud-admin setting
     ConfigConstants::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
-    ConfigConstants::SHAREOWNER_KEY, // needed as calendar principal in the member's app
+    ConfigConstants::SHARE_OWNER_KEY, // needed as calendar principal in the member's app
     ConfigConstants::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
     ConfigConstants::WIKI_NAME_SPACE_KEY, // cloud-admin setting
-    'cspfailuretoken', // for public post route
-    'configlock', // better kept open
+    ConfigConstants::CSP_FAILURE_TOKEN_KEY, // for public post route
+    ConfigConstants::CONFIG_LOCK_KEY, // better kept open
     ConfigConstants::ORCHESTRA_NAME_KEY, // used in the member's app for the front-page announcement
-    'orchestraLocale', // used in the member's app for consistent currencies etc.
-    self::APP_ENCRYPTION_KEY_HASH_KEY,
-  ];
-
-  const SHARED_PRIVATE_VALUES = [
-    self::USER_ENCRYPTION_KEY_KEY,
+    ConfigConstants::ORCHESTRA_LOCALE_KEY, // used in the member's app for consistent currencies etc.
+    ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY,
   ];
 
   /** @var Crypto\SymmetricCryptorInterface */
@@ -106,8 +104,8 @@ class EncryptionService
 
   /** {@inheritdoc} */
   public function __construct(
-    private string $appName,
-    private IConfig $containerConfig,
+    protected string $appName,
+    private IConfig $cloudConfig,
     private Crypto\AsymmetricKeyService $asymKeyService,
     private IHasher $hasher,
     private IEventDispatcher $eventDispatcher,
@@ -344,7 +342,10 @@ class EncryptionService
   /** @return null|string */
   public function getUserEncryptionKey():?string
   {
-    return $this->getSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, null);
+    return $this->getSharedPrivateValue(
+      self::USER_ENCRYPTION_KEY_KEY,
+      $this->getSharedPrivateValue(strtolower(self::USER_ENCRYPTION_KEY_KEY), null),
+    );
   }
 
   /**
@@ -386,7 +387,7 @@ class EncryptionService
     }
 
     // compare the user-key with the stored encryption key hash
-    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    $sysDatabaseKeyHash = $this->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
     if (!$this->verifyHash($userDatabaseKey, $sysDatabaseKeyHash)) {
       $failCount = 0;
       $numberOfTests = 1000;
@@ -483,7 +484,7 @@ class EncryptionService
       $this->logWarn('Provided encryption-key is empty, encryption is switched off.');
     }
 
-    $sysDatabaseKeyHash = $this->getConfigValue(self::APP_ENCRYPTION_KEY_HASH_KEY);
+    $sysDatabaseKeyHash = $this->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
 
     if (empty($sysDatabaseKeyHash) !== empty($encryptionKey)) {
       if (empty($sysDatabaseKeyHash)) {
@@ -506,74 +507,6 @@ class EncryptionService
   }
 
   /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @return mixed
-   */
-  public function getAppValue(string $key, mixed $default = null)
-  {
-    return $this->containerConfig->getAppValue($this->appName, $key, $default);
-  }
-
-  /**
-   * A short-cut, redirecting to the stock functions for the app.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @return mixed
-   */
-  public function setAppValue(string $key, mixed $value)
-  {
-    return $this->containerConfig->setAppValue($this->appName, $key, $value);
-  }
-
-  /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $default Default value.
-   *
-   * @return mixed
-   */
-  public function getUserValue(string $userId, string $key, mixed $default = null)
-  {
-    return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
-  }
-
-  /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
-   *
-   * @param mixed $value Value to set.
-   *
-   * @return mixed
-   */
-  public function setUserValue(string $userId, string $key, mixed $value)
-  {
-    return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
-  }
-
-  /**
-   * @param string $userId Use the current user if null.
-   *
-   * @param string $key Config key.
-   *
-   * @return mixed
-   */
-  public function deleteUserValue(string $userId, string $key)
-  {
-    return $this->containerConfig->deleteUserValue($userId, $this->appName, $key);
-  }
-
-  /**
    * Fetch the value for the given key and possibly decrypt it.
    *
    * @param string $key
@@ -591,7 +524,7 @@ class EncryptionService
     if (!$ignoreLock && !empty($this->getAppValue(ConfigConstants::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
     }
-    $value  = $this->getAppValue($key, $default);
+    $value = $this->getAppValue($key, $default);
 
     if (in_array($key, self::NEVER_ENCRYPT) && $this->appCryptor->isEncrypted($value) === false) {
       // short-cut, no need to bail out or complain. The "not enecrypted"

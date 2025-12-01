@@ -41,28 +41,19 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 class WebBrowserHistoryData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\EncryptionContextTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'string', length: 64, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
-  protected $hash;
+  protected string $hash;
 
+  /** @var Collection<string, WebBrowserHistoryEntry> */
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
   protected Collection $entries;
 
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   #[ORM\Column(type: 'blob', nullable: false, options: ['comment' => 'JSON encrypted'])]
-  protected $data;
-
-  /**
-   * @var array
-   *
-   * In memory encryption context to support multi user encryption. This is a
-   * multi-field encryption context indexed by the property name.
-   */
-  protected array $encryptionContext = [];
+  protected /* resource */ $data;
 
   /** {@inheritdoc} */
   public function __construct(string $hash, array $data)
@@ -153,48 +144,11 @@ class WebBrowserHistoryData implements \ArrayAccess
   }
 
   /**
-   * Add a user-id or group-id to the list of "encryption identities",
-   * i.e. the list of identities which can read and write this entry.
-   *
-   * @param string $personality
-   *
-   * @return WebBrowserHistoryData
-   */
-  public function addEncryptionIdentity(string $personality):WebBrowserHistoryData
-  {
-    if (empty($this->encryptionContext)) {
-      $this->encryptionContext = [];
-    }
-    if (!in_array($personality, $this->encryptionContext)) {
-      $this->encryptionContext[] = $personality;
-    }
-    return $this;
-  }
-
-  /**
-   * Remove a user-id or group-id to the list of "encryption identities",
-   * i.e. the list of identities which can read and write this entry.
-   *
-   * @param string $personality
-   *
-   * @return WebBrowserHistoryData
-   */
-  public function removeEncryptionIdentity(string $personality):WebBrowserHistoryData
-  {
-    $pos = array_search($personality, $this->encryptionContext??[]);
-    if ($pos !== false) {
-      unset($this->encryptionContext[pos]);
-      $this->encryptionContext = array_values($this->encryptionContext);
-    }
-    return $this;
-  }
-
-  /**
    * Ensure that the encryptionContext contains the user-id of the history owner.
    *
    * @return void
    */
-  private function sanitizeEncryptionContext()
+  protected function sanitizeEncryptionContext()
   {
     /** @var WebBrowserHistoryEntry $entry */
     foreach ($this->entries as $entry) {

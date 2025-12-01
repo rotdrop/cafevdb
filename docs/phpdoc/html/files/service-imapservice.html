@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/service-imapservice.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/service-imapservice.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -173,7 +171,6 @@ is used. This is quite simplistic and only supports the things needed by
 the email form, i.e. copying messages, searching for a given message-id and
 retrieving messages in order to keep the SentEmails table consistent with
 the IMAP server</dd>    </dl>
-
 
 
 
@@ -222,6 +219,8 @@ the IMAP server</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

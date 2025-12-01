@@ -24,15 +24,15 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
-
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
 
 /** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements SQLLogger
@@ -44,6 +44,11 @@ class CloudLogger implements SQLLogger
 
   /** @var array|null */
   private $currentQuery = null;
+
+  /**
+   * A regular expression. If set only matching queries will be logger.
+   */
+  private ?string $sqlFilter = null;
 
   /** @var float|null */
   public $start = null;
@@ -57,19 +62,22 @@ class CloudLogger implements SQLLogger
   ) {
     $this->enabled = false;
     if ($this->encryptionService->bound()) {
-      $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
-      $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
-      $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
+      $this->setup();
     } else {
       $this->eventDispatcher->addListener(
         Events\EntityManagerBoundEvent::class,
-        function(Events\EntityManagerBoundEvent $event) {
-          $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
-          $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
-          $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
-        }
+        fn(Events\EntityManagerBoundEvent $event) => $this->setup(),
       );
     }
+  }
+
+  /** @return void */
+  private function setup(): void
+  {
+    $debugMode = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
+    $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
+    $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
+    $this->sqlFilter = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, null);
   }
 
   /**
@@ -97,6 +105,22 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * @param ?string $sqlFilter
+   *
+   * @return void
+   */
+  public function setSqlFilter(?string $sqlFilter): void
+  {
+    $this->sqlFilter = $sqlFilter;
+  }
+
+  /** @return ?string */
+  public function getSqlFilter(): ?string
+  {
+    return $this->sqlFilter;
+  }
+
+  /**
    * {@inheritdoc}
    *
    * Logs a SQL statement somewhere.
@@ -112,6 +136,10 @@ class CloudLogger implements SQLLogger
   public function startQuery($sql, ?array $params = null, ?array $types = null)
   {
     if (!$this->enabled) {
+      return;
+    }
+
+    if (!empty($this->sqlFilter) && !preg_match($this->sqlFilter, $sql)) {
       return;
     }
 

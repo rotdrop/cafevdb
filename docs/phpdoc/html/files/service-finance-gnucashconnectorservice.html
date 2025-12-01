@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/service-finance-gnucashconnectorservice.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/service-finance-gnucashconnectorservice.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -173,7 +171,6 @@ realized by hijacking the accounts, books, commodities, slots, splits and
 transactions tables of an existing GnuCash database, moving the tables to
 the cafevdb database and replacing the original tables by views with
 security definer.</dd>    </dl>
-
 
 
 
@@ -222,6 +219,8 @@ security definer.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

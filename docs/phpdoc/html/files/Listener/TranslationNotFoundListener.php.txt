@@ -31,6 +31,7 @@ use OCP\EventDispatcher\IEventListener;
 use OC\L10N\Events\TranslationNotFound as HandledEvent;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -75,7 +76,7 @@ class TranslationNotFoundListener implements IEventListener
 
     $debugMode = ConfigConstants::DEBUG_NONE;
     try {
-      $debugMode = (int)$encryptionService->getConfigValue('debugmode', ConfigConstants::DEBUG_NONE);
+      $debugMode = (int)$encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, ConfigConstants::DEBUG_NONE);
     } catch (\Throwable $t) {
       // just ignore
     }

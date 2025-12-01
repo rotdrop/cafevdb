@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,32 +42,20 @@ class ProjectWebPage implements \ArrayAccess
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'webPages', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var int
-   */
-  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   #[ORM\Id]
-  private $articleId = '-1';
+  private int $articleId = -1;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 128, nullable: false, options: ['default' => ''])]
-  private $articleName = '';
+  private string $articleName = '';
 
-  /**
-   * @var int
-   */
-  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
-  private $categoryId = '-1';
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
+  private int $categoryId = -1;
 
-  /**
-   * @var int
-   */
-  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
-  private $priority = '-1';
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
+  private int $priority = -1;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

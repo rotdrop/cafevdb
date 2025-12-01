@@ -961,7 +961,7 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+      $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
       // try to create or use the folder and share it by a public link
       ['files_sharing' => $url,] = $sharingService->linkShare(
@@ -1395,7 +1395,7 @@ class ProjectService
   * [[Listenpunkt]]
   */
     $orchestra = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
-    $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
+    $orchestra = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01, $orchestra);
 
     $projects = [];
     foreach (ProjectType::toArray() as $projectType) {
@@ -1684,6 +1684,7 @@ Whatever.',
       if (is_array($pages)) {
         foreach ($pages as $idx => $article) {
           $article['categoryName'] = $category['name'];
+          $article = PageRenderer\DTO\ProjectWebPage::fromArray($article);
           if (isset($articleIds[$article['articleId']])) {
             $projectPages[] = $article;
           } else {

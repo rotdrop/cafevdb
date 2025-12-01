@@ -113,6 +113,7 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-service-dto.html"><abbr title="\OCA\CAFEVDB\Service\DTO">DTO</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-service-finance.html"><abbr title="\OCA\CAFEVDB\Service\Finance">Finance</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-service-imap.html"><abbr title="\OCA\CAFEVDB\Service\IMAP">IMAP</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-service-l10n.html"><abbr title="\OCA\CAFEVDB\Service\L10N">L10N</abbr></a></dt>
@@ -196,6 +197,8 @@ that class and constructing it more light weight.</dd>            <dt class="php
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

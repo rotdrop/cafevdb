@@ -116,10 +116,8 @@
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Traits-ContactsTrait.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -184,7 +182,7 @@
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">flattenAddressBooks</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;int, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$addressBooks</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, array&lt;string|int, mixed&gt;&gt;</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">flattenAddressBooks</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;int, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$addressBooks</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;int, array&lt;string|int, mixed&gt;&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -193,8 +191,8 @@
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$addressBooks</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;int, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$addressBooks</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;int, <abbr title="\OCP\IAddressBook">IAddressBook</abbr>&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -203,8 +201,8 @@
 
     
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;int, array&lt;string|int, mixed&gt;&gt;</span>
@@ -253,6 +251,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

@@ -107,6 +107,14 @@
 </h3>
 
 
+<h4 id="namespaces">
+    Namespaces
+    <a href="namespaces/oca-cafevdb-controller.html#namespaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-controller-dto.html"><abbr title="\OCA\CAFEVDB\Controller\DTO">DTO</abbr></a></dt>
+    </dl>
 
 
     <h4 id="toc-classes">
@@ -141,7 +149,11 @@ location in the app-storage area.</dd>            <dt class="phpdocumentor-table
 
     </h4>
     <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html"><abbr title="\OCA\CAFEVDB\Controller\EnumValidateInstrumentsContext">EnumValidateInstrumentsContext</abbr></a></dt><dd>Playing around with PHP enums, this is the first use in this project.</dd></dl>
+            <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumAddDocumentConflictAction.html"><abbr title="\OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction">EnumAddDocumentConflictAction</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumFileStorageBackend.html"><abbr title="\OCA\CAFEVDB\Controller\EnumFileStorageBackend">EnumFileStorageBackend</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumFileUploadMode.html"><abbr title="\OCA\CAFEVDB\Controller\EnumFileUploadMode">EnumFileUploadMode</abbr></a></dt><dd>Upload origin, arguably the origin &quot;cloud&quot; is not an upload origin,
+however, the idea is to provide &quot;upload from local machine&quot; as well as
+&quot;choose from cloud&quot;.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumFileUploadOrigin.html"><abbr title="\OCA\CAFEVDB\Controller\EnumFileUploadOrigin">EnumFileUploadOrigin</abbr></a></dt><dd>Upload origin, arguably the origin &quot;cloud&quot; is not an upload origin,
+however, the idea is to provide &quot;upload from local machine&quot; as well as
+&quot;choose from cloud&quot;.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a></dt><dd>(Some) personal settings keys.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumProjectWebPagesAction.html"><abbr title="\OCA\CAFEVDB\Controller\EnumProjectWebPagesAction">EnumProjectWebPagesAction</abbr></a></dt><dd>Actions for manipulating project webpages.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumProjectWebPagesParam.html"><abbr title="\OCA\CAFEVDB\Controller\EnumProjectWebPagesParam">EnumProjectWebPagesParam</abbr></a></dt><dd>Actions for manipulating project webpages.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumRecryptionStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumRecryptionStatus">EnumRecryptionStatus</abbr></a></dt><dd>Recryption status enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationAction.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationAction">EnumSepaDebitMandateRevocationAction</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateValidationParam.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateValidationParam">EnumSepaDebitMandateValidationParam</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSetUnset.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSetUnset">EnumSetUnset</abbr></a></dt><dd>Recryption status enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSharedCalendarUri.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSharedCalendarUri">EnumSharedCalendarUri</abbr></a></dt><dd>Export the calendar URIs as enum in order to have a type for a DTO.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumSimpleSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSimpleSettingsKey">EnumSimpleSettingsKey</abbr></a></dt><dd>Simple setting as enum.</dd>        <dt class="phpdocumentor-table-of-contents__entry -enum"><a href="classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html"><abbr title="\OCA\CAFEVDB\Controller\EnumValidateInstrumentsContext">EnumValidateInstrumentsContext</abbr></a></dt><dd>Playing around with PHP enums, this is the first use in this project.</dd></dl>
 
 
 
@@ -187,6 +199,8 @@ location in the app-storage area.</dd>            <dt class="phpdocumentor-table
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

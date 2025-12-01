@@ -834,7 +834,7 @@ class ProjectParticipantsController extends Controller
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
-                $storageBackend = 'cloud';
+                $storageBackend = EnumFileStorageBackend::CLOUD;
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
                 if ($dataType == FieldDataType::CLOUD_FOLDER) {
@@ -874,7 +874,7 @@ class ProjectParticipantsController extends Controller
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
-                $storageBackend = 'db';
+                $storageBackend = EnumFileStorageBackend::DB;
 
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
@@ -932,7 +932,7 @@ class ProjectParticipantsController extends Controller
                 }
 
                 $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-                  'section' => 'database',
+                  'section' => DownloadsController::SECTION_DATABASE,
                   'object' => $dbDocument->getId(),
                 ])
                   . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
@@ -971,7 +971,7 @@ class ProjectParticipantsController extends Controller
             }
             $file['name'] = $filePath;
 
-            $file['meta'] = [
+            $file['meta'] = DTO\UploadFileMetaData::fromArray([
               'musicianId' => $musicianId,
               'projectId' => $projectId,
               'dirName' => $pathInfo['dirname'],
@@ -984,7 +984,7 @@ class ProjectParticipantsController extends Controller
               'filesApp' => $filesAppLink,
               'conflict' => $conflict,
               'messages' => $messages,
-            ];
+            ]);
 
             $this->flush();
 
@@ -1006,7 +1006,7 @@ class ProjectParticipantsController extends Controller
             }
             throw new RuntimeException($this->l->t('Unable to store uploaded data'), $t->getCode(), $t);
           }
-          $uploads[] = $file;
+          $uploads[] = DTO\UploadFileData::fromArray($file);
         }
         return self::dataResponse($uploads);
       default:

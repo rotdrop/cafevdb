@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,37 +44,22 @@ class EmailTemplate implements \ArrayAccess
   use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
   use CAFEVDB\Traits\TranslatableTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var string
-   */
   #[Gedmo\Translatable(untranslated: 'untranslatedTag')]
   #[ORM\Column(type: 'string', length: 128, unique: true, nullable: false)]
-  private $tag;
+  private string $tag;
 
-  /**
-   * @var string
-   */
-  private $untranslatedTag;
+  private ?string $untranslatedTag = null;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
-  private $subject;
+  private string $subject;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'text', length: 0, nullable: true)]
-  private $contents;
+  private ?string $contents = null;
 
   /**
    * Get id.

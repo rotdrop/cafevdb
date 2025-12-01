@@ -50,10 +50,17 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     false => 'following',
   ];
 
+  private string $iban;
+
+  private ?string $bic;
+
+  private string $owner;
+
+  private string $ci;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ConfigService $configService,
-    private FinanceService $financeService,
   ) {
     $this->l = $this->l10n();
 

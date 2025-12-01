@@ -946,7 +946,8 @@ class SepaBulkTransactionsController extends Controller
 
     return new RedirectResponse(
       $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
-        'section' => 'database', 'object' => $exportFile->getId()
+        'section' => DownloadsController::SECTION_DATABASE,
+        'object' => $exportFile->getId(),
       ])
       . '?fileName=' . urlencode($exportFile->getFileName())
       . '&requesttoken=' . urlencode(\OCP\Util::callRegister())

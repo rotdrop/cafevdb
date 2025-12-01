@@ -114,6 +114,7 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-toolkit-backend.html"><abbr title="\OCA\CAFEVDB\Toolkit\Backend">Backend</abbr></a></dt>
+            <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-toolkit-dto.html"><abbr title="\OCA\CAFEVDB\Toolkit\DTO">DTO</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-toolkit-exceptions.html"><abbr title="\OCA\CAFEVDB\Toolkit\Exceptions">Exceptions</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-toolkit-listener.html"><abbr title="\OCA\CAFEVDB\Toolkit\Listener">Listener</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-toolkit-response.html"><abbr title="\OCA\CAFEVDB\Toolkit\Response">Response</abbr></a></dt>
@@ -169,6 +170,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

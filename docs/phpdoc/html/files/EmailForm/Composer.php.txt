@@ -2461,8 +2461,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           break;
       }
       $phpMailer->SMTPAuth = true;
-      $phpMailer->Username = $this->getConfigValue('emailuser');
-      $phpMailer->Password = $this->getConfigValue('emailpassword');
+      $phpMailer->Username = $this->getConfigValue(ConfigConstants::EMAIL_USER);
+      $phpMailer->Password = $this->getConfigValue(ConfigConstants::EMAIL_PASSWORD);
     }
 
     return $phpMailer;
@@ -3755,18 +3755,24 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /**
    * Generate a stream-context for use in link validation.
    *
+   * @param bool $sslVerify If \null use the global config-value for the
+   * default.
+   *
    * @return mixed
    */
-  private function linkValidationContext():mixed
+  private function linkValidationContext(?bool $sslVerify = null):mixed
   {
+    if ($sslVerify === null) {
+      $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+    }
     return stream_context_create([
       'http' => [
         'method' => 'HEAD',
         'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       ],
       'ssl' => [
-        'verify_peer' => false,
-        'verify_peer_name' => false,
+        'verify_peer' => $sslVerify,
+        'verify_peer_name' => $sslVerify,
       ],
     ]);
   }
@@ -3847,7 +3853,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
 
       try {
-        $headers = get_headers($share);
+        $headers = get_headers($share, context: $this->linkValidationContext());
       } catch (Throwable $t) {
         $headers = null;
       }
@@ -3898,7 +3904,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
       try {
-        $headers = get_headers($url);
+        $headers = get_headers($url, context: $this->linkValidationContext());
       } catch (Throwable $t) {
         $headers = null;
       }
@@ -4416,12 +4422,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function streetAddress():string
   {
     return
-      $this->getConfigValue('streetAddressName01')."<br/>\n".
-      $this->getConfigValue('streetAddressName02')."<br/>\n".
-      $this->getConfigValue('streetAddressStreet')."&nbsp;".
-      $this->getConfigValue('streetAddressHouseNumber')."<br/>\n".
-      $this->getConfigValue('streetAddressZIP')."&nbsp;".
-      $this->getConfigValue('streetAddressCity');
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_02)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET)."&nbsp;".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER)."<br/>\n".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_ZIP)."&nbsp;".
+      $this->getConfigValue(ConfigConstants::STREET_ADDRESS_CITY);
   }
 
   /** @return string The formatted bank account of the orchestra. */
@@ -5328,7 +5334,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
   public function fromTag():string
   {
-    return $this->cgiValue('fromTag', $this->getUserValue('defaultEmailFromAddress', self::FROM_ORCHESTRA));
+    return $this->cgiValue('fromTag', $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, self::FROM_ORCHESTRA));
   }
 
   /**
@@ -5449,6 +5455,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function validateMessageHtml(?string $message = null):bool
   {
     $message = $message ?? $this->messageContents;
+    $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+    $enforceHttps = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, true);
 
     $linkStatus = [];
     $hasErrors = false;
@@ -5480,6 +5488,19 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
       if (!str_starts_with($href, 'http')) {
         $href = $this->urlGenerator()->getAbsoluteUrl($href);
+      } elseif ($enforceHttps && !str_starts_with($href, 'https')) {
+        $explanations = $this->l->t(
+          'Web-references in emails are required to use "https", i.e. only SSL-encrypted web-sites may be referred to. Suggestion: replace "%1$s" by "%2$s".',
+          [ $href, 'https:' . substr($href, strlen('http:')) ],
+        );
+        $linkStatus[] = [
+          'url' => $href,
+          'text' => $text,
+          'status' => false,
+          'explanations' => $explanations,
+        ];
+        $hasErrors = true;
+        continue;
       }
       $this->logInfo('CHECK HREF ' . $href);
       if (!empty($downloadsShare) && str_starts_with($href, $baseUrl . '/s/')) {
@@ -5505,7 +5526,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             } else {
               $explanation = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
             }
-            $explanation .= ' ' . $this->l->t(
+            $explanations .= ' ' . $this->l->t(
               'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
 to your user name and will be invalidated in the unfortunate case that you leave the executive board.', [
                 '${GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE') . '}' . ($level > 0 ? '?dir=' . $path : ''),
@@ -5515,33 +5536,40 @@ to your user name and will be invalidated in the unfortunate case that you leave
               'url' => $href,
               'text' => $text,
               'status' => false,
-              'explanations' => $explanation,
+              'explanations' => $explanations,
             ];
             $hasErrors = true;
             continue;
           }
         }
       }
+      $explanations = null;
       $originalUserAgent = ini_get('user_agent');
       // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
       ini_set('user_agent', 'Orgacloud/1.0');
       try {
-        $context = stream_context_create([
-          'http' => [
-            'method' => 'HEAD',
-            'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          ],
-          'ssl' => [
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-          ],
-        ]);
-        $headers = get_headers($href, false, $context);
+        $headers = get_headers($href, context: $this->linkValidationContext());
       } catch (Throwable $t) {
         $headers = null;
       }
+      if ($headers === null && $sslVerify) {
+        // retry without SSL for diagnostics
+        try {
+          $headers = get_headers($href, context: $this->linkValidationContext(sslVerify: false));
+        } catch (Throwable $t) {
+          $headers = null;
+        }
+        if (!empty($headers)) {
+          $this->logInfo('NO-SSL STATUS HEADER ' . $headers[0]);
+          $code = (int)substr($headers[0], 9, 3);
+          if ($code >= 200 && $code < 400) {
+            $explanations = $this->l->t('SSL validation failed. The external site is misconfigured.');
+          }
+        }
+        $headers = null;
+      }
       ini_set('user_agent', $originalUserAgent);
-      if ($headers && count($headers) > 0) {
+      if (!empty($headers)) {
         $this->logInfo('STATUS HEADER ' . $headers[0]);
         $code = (int)substr($headers[0], 9, 3);
         if ($code >= 200 && $code < 400) {
@@ -5554,7 +5582,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
         'url' => $href,
         'text' => $text,
         'status' => $thisLinkGood,
-        'explanations' => $thisLinkGood ?: $this->l->t('The link could not be opened.'),
+        'explanations' => $thisLinkGood ?: $explanations ?? $this->l->t('The link could not be opened.'),
       ];
       $hasErrors = $hasErrors || !$thisLinkGood;
     }

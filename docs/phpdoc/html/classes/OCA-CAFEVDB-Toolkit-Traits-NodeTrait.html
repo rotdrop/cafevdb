@@ -101,6 +101,9 @@
     <article class="phpdocumentor-element -trait">
         <h2 class="phpdocumentor-content__title">
     NodeTrait
+            <span class="phpdocumentor-trait__extends">
+            uses
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait">trait:short</abbr></a>                    </span>
     </h2>
 
         <aside class="phpdocumentor-element-found-in">
@@ -117,10 +120,8 @@
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -142,6 +143,12 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_appName">$appName</a>
+    <span>
+                        &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_previewManager">$previewManager</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IPreview">IPreview</abbr>            </span>
@@ -154,9 +161,21 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userFolder">$userFolder</a>
+    <span>
+                        &nbsp;: null|<abbr title="\OCP\Files\Folder">Folder</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_userId">$userId</a>
     <span>
                         &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userRootFolder">$userRootFolder</a>
+    <span>
+                        &nbsp;: null|<abbr title="\OCP\Files\Folder">Folder</abbr>            </span>
 </dt>
 
     </dl>
@@ -167,6 +186,45 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_folderWalk">folderWalk()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Walk the given $pathOrFolder and apply the callable to each found node.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserAppFolder">getUserAppFolder()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolder">getUserFolder()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolderPath">getUserFolderPath()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserRootFolder">getUserRootFolder()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserTopLevelFolder">getUserTopLevelFolder()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>    </span>
+</dt>
+<dd>Return the name top-level folder as Folder instance. The folder is
+created if it does not exist.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#method_formatNode">formatNode()</a>
     <span>
@@ -193,14 +251,55 @@
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_appName">
+        $appName
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_appName" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">44</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">$appName</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Note that this must not be types as it needs to remain compatible with
+the Nextcloud Controller class.</p>
+</section>
+
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_previewManager">
         $previewManager
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_previewManager" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/NodeTrait.php"><a href="files/toolkit-traits-nodetrait.html"><abbr title="Toolkit/Traits/NodeTrait.php">NodeTrait.php</abbr></a></abbr>
@@ -213,8 +312,8 @@
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IPreview">IPreview</abbr></span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IPreview">IPreview</abbr></span>
     <span class="phpdocumentor-signature__name">$previewManager</span>
     </code>
 
@@ -222,7 +321,8 @@
     
     
 
-    
+        
+        
 
 </article>
                     <article
@@ -230,14 +330,14 @@
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_rootFolder">
         $rootFolder
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_rootFolder" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/NodeTrait.php"><a href="files/toolkit-traits-nodetrait.html"><abbr title="Toolkit/Traits/NodeTrait.php">NodeTrait.php</abbr></a></abbr>
@@ -250,8 +350,8 @@
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
     <span class="phpdocumentor-signature__name">$rootFolder</span>
     </code>
 
@@ -259,7 +359,8 @@
     
     
 
-    
+        
+        
 
 </article>
                     <article
@@ -267,14 +368,52 @@
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_userFolder">
+        $userFolder
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">56</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">null|<abbr title="\OCP\Files\Folder">Folder</abbr></span>
+    <span class="phpdocumentor-signature__name">$userFolder</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_userId">
         $userId
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_userId" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/NodeTrait.php"><a href="files/toolkit-traits-nodetrait.html"><abbr title="Toolkit/Traits/NodeTrait.php">NodeTrait.php</abbr></a></abbr>
@@ -287,8 +426,8 @@
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">string</span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$userId</span>
     </code>
 
@@ -296,7 +435,46 @@
     
     
 
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_userRootFolder">
+        $userRootFolder
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userRootFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
     
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">null|<abbr title="\OCP\Files\Folder">Folder</abbr></span>
+    <span class="phpdocumentor-signature__name">$userRootFolder</span>
+    </code>
+
+    
+    
+    
+
+        
+        
 
 </article>
             </section>
@@ -307,6 +485,323 @@
             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_folderWalk">
+        folderWalk()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_folderWalk" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">130</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Walk the given $pathOrFolder and apply the callable to each found node.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">folderWalk</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<abbr title="\OCP\Files\Folder">Folder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pathOrFolder</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|callable&nbsp;</span><span class="phpdocumentor-signature__argument__name">$callback</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$depth</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$pathOrFolder</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|<abbr title="\OCP\Files\Folder">Folder</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Folder-path or Folder instance. If a
+path then it must be relative to the user folder.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$callback</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|callable</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The callback receives two arguments, the
+current file system node and the recursion depth. If the current node is
+a folder then the callback is invoked before traversing its directory
+entries.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$depth</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">0</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Internal recursion depth parameters. The $callback
+receives it as second argument.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The number of files found during the walk.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserAppFolder">
+        getUserAppFolder()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserAppFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">77</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUserAppFolder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The app folder in the user's root-storage</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserFolder">
+        getUserFolder()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">59</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUserFolder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The user-folder</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserFolderPath">
+        getUserFolderPath()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolderPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">109</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUserFolderPath</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The user-id. If null then $this-&gt;userId is used.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Just the name of the user folder without recursing to the
+file system. Thus the returned folder-name does not neccessarily point to
+an existing folder. The returned path is relative to the root-folder
+without a leading slash, e.g. &quot;jane.doe/files&quot;.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserRootFolder">
+        getUserRootFolder()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserRootFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">68</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUserRootFolder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The parent of the user-folder.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getUserTopLevelFolder">
+        getUserTopLevelFolder()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserTopLevelFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">90</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Toolkit/Traits/UserRootFolderTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return the name top-level folder as Folder instance. The folder is
+created if it does not exist.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUserTopLevelFolder</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$name</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+            </section>
+
+</article>
                     <article
         class="phpdocumentor-element
             -method
@@ -330,7 +825,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">formatNode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\Node">Node</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$node</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">formatNode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\Files\Node">Node</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$node</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -339,8 +834,8 @@
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$node</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\Node">Node</abbr></span>
+                <span class="phpdocumentor-argument-list__argument__name">$node</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\Files\Node">Node</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -372,8 +867,8 @@
                                     </dd>
                                             </dl>
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
@@ -418,6 +913,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 
@@ -492,14 +989,23 @@
                                     <li class="phpdocumentor-on-this-page-section__title">Properties</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_appName">$appName</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_previewManager">$previewManager</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_rootFolder">$rootFolder</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userFolder">$userFolder</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#property_userId">$userId</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userRootFolder">$userRootFolder</a></li>
                                     </ul>
             </li>
                                     <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_folderWalk">folderWalk()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserAppFolder">getUserAppFolder()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolder">getUserFolder()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserFolderPath">getUserFolderPath()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserRootFolder">getUserRootFolder()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#method_getUserTopLevelFolder">getUserTopLevelFolder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-NodeTrait.html#method_formatNode">formatNode()</a></li>
                                     </ul>
             </li>

@@ -100,14 +100,12 @@
             <p class="phpdocumentor-summary">SPDX-FileCopyrightText: 2017 Nextcloud GmbH and Nextcloud contributors
 SPDX-License-Identifier: AGPL-3.0-or-later</p>
 
+        
+        
+        
 
 
-
-
-
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/service-imap-addresslist.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -124,7 +122,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later</p>
     </h4>
     <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-IMAP-AddressList.html"><abbr title="\OCA\CAFEVDB\Service\IMAP\AddressList">AddressList</abbr></a></dt>    </dl>
-
 
 
 
@@ -173,6 +170,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later</p>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

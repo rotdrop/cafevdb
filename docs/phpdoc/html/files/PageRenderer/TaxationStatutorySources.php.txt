@@ -34,6 +34,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /** Table generator for Instruments table. */
@@ -211,7 +212,7 @@ class TaxationStatutorySources extends PMETableViewBase
       'select' => 'D',
       'input' => 'M',
       'sort' => true,
-      'default' => $this->getConfigValue('streetAddressCountry'),
+      'default' => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
       'values2' => $countries,
       'valueGroups' => $countryGroups,
     ];

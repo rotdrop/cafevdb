@@ -99,9 +99,9 @@
 
             <p class="phpdocumentor-summary">A collection of reusable traits classes for Nextcloud apps.</p>
 
-
-
-
+        
+        
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/toolkit-traits-appnametrait.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -148,9 +148,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/toolkit-traits-appnametrait.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -169,7 +167,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
     <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -trait"><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AppNameTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\AppNameTrait">AppNameTrait</abbr></a></dt><dd>Trait which extracts the app-name from the info.xml file for cases where it
 cannot be supplied by the cloud.</dd>    </dl>
-
 
 
 
@@ -217,6 +214,8 @@ cannot be supplied by the cloud.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

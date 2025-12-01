@@ -128,14 +128,12 @@
 
             <p class="phpdocumentor-summary">Playing around with PHP enums, this is the first use in this project.</p>
 
+        
+        
+        
 
 
-
-
-
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Controller-EnumValidateInstrumentsContext.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -173,7 +171,6 @@
 
 
 
-
             <section class="phpdocumentor-cases">
         <h3 class="phpdocumentor-elements__header" id="cases">
             Cases
@@ -205,9 +202,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article
         class="
             phpdocumentor-element
@@ -233,9 +229,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
             </section>
 
         
@@ -275,6 +270,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

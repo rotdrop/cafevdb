@@ -32,7 +32,7 @@ use OCP\L10N\ILanguageIterator;
 use OCA\CAFEVDB\Exceptions;
 
 /**
- * A decoratory which strips the encoding suffix from a given locale as
+ * A decorator which strips the encoding suffix from a given locale as
  * Nextcloud L10N stuff cannot deal with that.
  */
 class L10NFactory implements IL10NFactory

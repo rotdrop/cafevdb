@@ -164,20 +164,21 @@ class MountProvider implements IMountProvider
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
-        $storage,
-        UserStorage::PATH_SEP . implode(
+        storage: $storage,
+        mountpoint: UserStorage::PATH_SEP . implode(
           UserStorage::PATH_SEP,
           [ $userId, 'files', $this->getBankTransactionsPath(), ]
         ),
-        null,
-        $loader,
-        [
+        arguments: null,
+        loader: $loader,
+        mountOptions: [
           'filesystem_check_changes' => 1,
           'readonly' => true,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
-        ]
+        ],
+        mountProvider: MountProvider::class,
       ) extends MountPoint
       {
         /** {@inheritdoc} */

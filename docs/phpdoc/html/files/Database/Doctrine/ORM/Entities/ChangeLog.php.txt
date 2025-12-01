@@ -28,7 +28,7 @@ use Throwable;
 use DateTime;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,67 +42,37 @@ class ChangeLog
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
-  /**
-   * @var \DateTime
-   */
   #[ORM\Column(type: 'datetime_immutable')]
-  private $updated;
+  private DateTimeImmutable $updated;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $user;
+  private ?string $user;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $host;
+  private ?string $host;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $operation;
+  private ?string $operation;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $tab;
+  private ?string $tab;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $rowkey;
+  private ?string $rowkey;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $col;
+  private ?string $col;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
-  private $oldval;
+  private /* resource */ $oldval;
 
-  /**
-   * @var string|null
-   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
-  private $newval;
+  private /* resource */ $newval;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

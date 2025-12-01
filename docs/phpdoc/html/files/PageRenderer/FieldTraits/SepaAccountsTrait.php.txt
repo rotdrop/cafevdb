@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as ParentClass;
 
 /** SEPA bank account. */
@@ -181,7 +182,7 @@ trait SepaAccountsTrait
               $values = Util::explode(',', $value);
               foreach ($values as &$value) {
                 $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . md5($value) . '"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '="' . md5($value) . '"
       title="' . $this->l->t('Fetching decrypted values in the background.') . '"
 >'
                   . $this->l->t('please wait')
@@ -229,7 +230,7 @@ trait SepaAccountsTrait
             'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
             'postfix' => '</div></div>',
             'attributes' => [
-              'data-meta-data' => 'iban',
+              'data-' . DataConstants::DATA_META_DATA => 'iban',
             ],
           ],
           'sort' => true,
@@ -240,13 +241,13 @@ trait SepaAccountsTrait
             'grouped' => true,
             'orderby' => '$table.musician_id ASC, $table.sequence ASC',
             'data' => [
-              'crypto-hash' => 'MD5($table.$column)',
-              'meta-data' => '"iban"', // SQL STRING
+              DataConstants::DATA_CRYPTO_HASH => 'MD5($table.$column)',
+              DataConstants::DATA_META_DATA => '"iban"', // SQL STRING
             ],
           ],
           'values2glue' => '<br/>',
           'css' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', ], ],
-          'css|LF' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', 'lazy-decryption', 'meta-data-popup', ] ],
+          'css|LF' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', DataConstants::CLASS_LAZY_DECRYPTION, DataConstants::CLASS_META_DATA_POPUP, ] ],
         ]);
       if (!empty($projectId)) {
         $fdd[$ibanName]['values|LF'] = $fdd[$ibanName]['values'];

@@ -26,9 +26,10 @@ namespace OCA\CAFEVDB\Middleware;
 
 use Throwable;
 
-use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Middleware;
 
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
@@ -58,7 +59,7 @@ class DebugModeMiddleware extends Middleware
     }
 
     try {
-      $debugMode = (int)$this->getConfigValue('debugmode', ConfigConstants::DEBUG_NONE);
+      $debugMode = (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, ConfigConstants::DEBUG_NONE);
     } catch (Throwable $t) {
       // ignore
       return $response;
@@ -67,7 +68,7 @@ class DebugModeMiddleware extends Middleware
     if ($debugMode & ConfigConstants::DEBUG_CSP) {
       $reportLocation = $this->getConfigValue('cspfailurereporting', null);
       if (empty($this->reportLocation)) {
-        $cspFailureToken = $this->getAppValue('cspfailuretoken');
+        $cspFailureToken = $this->getAppValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY);
         $reportLocation = $this->urlGenerator()->linkToRoute($this->appName().'.csp_violation.post', ['operation' => 'report']);
         $reportLocation .= '?cspFailureToken=' . urlencode($cspFailureToken);
       }

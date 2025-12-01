@@ -28,11 +28,10 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
-
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Although a donation in principle is just a payment there is some meta-data
@@ -60,17 +59,12 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    */
   public const NOTIFICATION_EMAIL_TEMPLATE = 'donation-receipt-notification';
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private ?int $id = null;
+  private int $id;
 
   /**
-   * @var CompositePayment
-   *
    * The associated payment.
    */
   #[ORM\JoinColumn(name: 'donation_id', referencedColumnName: 'id', nullable: false)]
@@ -78,8 +72,6 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   private CompositePayment $donation;
 
   /**
-   * @var TaxExemptionNotice
-   *
    * The associated notice of tax exemption with legalizes this donation
    * receipt.
    */
@@ -87,21 +79,17 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   private TaxExemptionNotice $taxExemptionNotice;
 
   /**
-   * @var DatabaseStorageFile
-   *
    * An electronic copy of the probably hand-signed original.
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
-  private $supportingDocument;
+  private ?DatabaseStorageFile $supportingDocument = null;
 
   /**
-   * @var \DateTimeImmutable|null
-   *
    * Date when this donation receipt has been sent out to the donator. If non
    * null the donation receipt must not be deleted.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $mailingDate = null;
+  private ?DateTimeImmutable $mailingDate = null;
 
   /**
    * @var string

@@ -118,7 +118,7 @@ class GroupSharedOrchestraFolder implements IMigration
       . ' Please note that this may be a long running operation, depending on the size of the shared orchestra folder.'
       . ' Please note also that the old folder is not removed by this automatic migration step.'
       . ' This also implies that there must be enough storage space left on the server in order to hold the new copy.',
-      $this->encryptionService->getConfigValue(ConfigConstants::SHAREOWNER_KEY)
+      $this->encryptionService->getConfigValue(ConfigConstants::SHARE_OWNER_KEY)
     );
   }
 
@@ -138,7 +138,7 @@ class GroupSharedOrchestraFolder implements IMigration
       //
       // - rename the new group share to FOLDERNAME
 
-      $shareOwner = $this->encryptionService->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+      $shareOwner = $this->encryptionService->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
       $sharedFolder = $this->encryptionService->getConfigValue(ConfigConstants::SHARED_FOLDER, false);
       if (empty($sharedFolder)) {
         throw new Exceptions\EnduserNotificationException(
@@ -304,7 +304,7 @@ class GroupSharedOrchestraFolder implements IMigration
       );
 
       // Remember that we do no longer need the folder from the share-owner
-      $this->encryptionService->setConfigValue(ConfigConstants::SHAREOWNER_FOLDER_SERVICE_KEY, false);
+      $this->encryptionService->setConfigValue(ConfigConstants::SHARE_OWNER_FOLDER_SERVICE_KEY, false);
 
     } catch (Throwable $t) {
       $this->logException($t);

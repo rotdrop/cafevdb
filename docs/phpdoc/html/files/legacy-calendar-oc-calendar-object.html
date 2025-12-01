@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/legacy-calendar-oc-calendar-object.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -141,9 +141,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/legacy-calendar-oc-calendar-object.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -160,7 +158,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
     </h4>
     <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Legacy-Calendar-OC-Calendar-Object.html"><abbr title="\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object">OC_Calendar_Object</abbr></a></dt><dd>This class manages our calendar objects</dd>    </dl>
-
 
 
 
@@ -209,6 +206,8 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/controller-musicianvalidationcontroller.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/controller-musicianvalidationcontroller.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -169,7 +167,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
     </h4>
     <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Controller-MusicianValidationController.html"><abbr title="\OCA\CAFEVDB\Controller\MusicianValidationController">MusicianValidationController</abbr></a></dt><dd>Validation controller for some personal input fields.</dd>    </dl>
-
 
 
 
@@ -218,6 +215,8 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

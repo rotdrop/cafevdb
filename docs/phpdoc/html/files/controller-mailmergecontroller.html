@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/controller-mailmergecontroller.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/controller-mailmergecontroller.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -171,7 +169,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Controller-MailMergeController.html"><abbr title="\OCA\CAFEVDB\Controller\MailMergeController">MailMergeController</abbr></a></dt><dd>Make the stored personal data accessible for the web-interface. This is
 meant for newer parts of the web-interface in contrast to the legacy PME
 stuff.</dd>    </dl>
-
 
 
 
@@ -220,6 +217,8 @@ stuff.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

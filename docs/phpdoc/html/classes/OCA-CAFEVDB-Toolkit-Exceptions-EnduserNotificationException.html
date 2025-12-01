@@ -140,10 +140,8 @@ EnduserNotificationExceptions and display their error text only.</p>
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Toolkit-Exceptions-EnduserNotificationException.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -203,6 +201,8 @@ EnduserNotificationExceptions and display their error text only.</p>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

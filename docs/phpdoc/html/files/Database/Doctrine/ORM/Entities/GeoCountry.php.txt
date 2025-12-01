@@ -46,36 +46,29 @@ class GeoCountry implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   #[ORM\Id]
-  private $iso;
+  private string $iso;
 
   /**
-   * @var string
-   *
     * Translation target ISO code.
    */
   #[ORM\Id]
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
-  private $target;
+  private string $target;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
-  private $l10nName;
+  private string $l10nName;
 
   #[ORM\JoinColumn(name: 'continent_code', referencedColumnName: 'code')]
   #[ORM\JoinColumn(name: 'target', referencedColumnName: 'target')]
   #[ORM\ManyToOne(targetEntity: GeoContinent::class, inversedBy: 'countries', fetch: 'EAGER')]
-  private $continent;
+  private GeoContinent $continent;
 
+  /** @var Collection <string, GeoStateProvince> */
   #[ORM\OneToMany(targetEntity: GeoStateProvince::class, mappedBy: 'country', indexBy: 'code', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['l10nName' => 'ASC'])]
-  private $statesProvinces;
+  private Collection $statesProvinces;
 
   /** {@inheritdoc} */
   public function __construct()

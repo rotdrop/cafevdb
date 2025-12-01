@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\Calendar\Service\CalendarInitialStateService;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Documents\TemplateService;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -77,20 +78,19 @@ trait InitialStateTrait
   {
     $l = $this->l10N();
 
-    $tooltips   = filter_var($this->getUserValue('tooltips', 'on'), FILTER_VALIDATE_BOOLEAN);
-    $directChg  = filter_var($this->getUserValue('directchange', 'off'), FILTER_VALIDATE_BOOLEAN);
-    $showDisabled = filter_var($this->getUserValue('showdisabled', 'off'), FILTER_VALIDATE_BOOLEAN);
-    $deselectInvisible = filter_var($this->getUserValue('deselectInvisibleMiscRecs', 'off'), FILTER_VALIDATE_BOOLEAN);
-    $initialFilterVisibility = filter_var($this->getUserValue('filtervisibility', 'on'), FILTER_VALIDATE_BOOLEAN);
-    $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
-    $pageRows   = $this->getUserValue('pagerows', 20);
+    $toolTipsEnabled = filter_var($this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on'), FILTER_VALIDATE_BOOLEAN);
+    $directChange  = filter_var($this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $showDisabled = filter_var($this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $deselectInvisible = filter_var($this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $initialFilterVisibility = filter_var($this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'on'), FILTER_VALIDATE_BOOLEAN);
+    $wysiwygEditor = $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce');
+    $pageRowsDefault = $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20);
+    $restoreHistory = filter_var($this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $expertMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
+    $financeMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
 
-    $restoreHistory = filter_var($this->getUserValue('restorehistory', 'off'), FILTER_VALIDATE_BOOLEAN);
-    $expertMode = $this->getUserValue('expertMode');
-    $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
-
-    $financeMode = $this->getUserValue('financeMode');
-    $financeMode = filter_var($financeMode, FILTER_VALIDATE_BOOLEAN);
+    $debugModes = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
+    $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, '');
 
     $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 
@@ -126,8 +126,8 @@ trait InitialStateTrait
         // TRANSLATORS: default value for unconfigured setting.
         ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
         'orchestraLogo' => $orchestraLogo ?? '',
-        'toolTipsEnabled' => $tooltips,
-        'wysiwygEditor' => $editor,
+        EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $toolTipsEnabled,
+        EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $wysiwygEditor,
         'language' => $languageShort,
         'cloudLanguage' => $languageComplete,
         'locale' => $locale,
@@ -136,14 +136,15 @@ trait InitialStateTrait
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'serverRoot' => \OC::$SERVERROOT,
-        'expertMode' => $expertMode,
-        'financeMode' => $financeMode,
-        'debugModes' => $this->getConfigValue('debugmode', 0),
-         'restoreHistory' => $restoreHistory,
+        EnumPersonalSettingsKey::EXPERT_MODE->value => $expertMode,
+        EnumPersonalSettingsKey::FINANCE_MODE->value => $financeMode,
+        EnumPersonalSettingsKey::DEBUG_MODE->value => $debugMode,
+        EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER->value => $debugQuerySqlFilter,
+        EnumPersonalSettingsKey::RESTORE_HISTORY->value => $restoreHistory,
         'userPermissions' => $authorizationService->getUserPermissions($this->userId()),
         'isGroupAdmin' => $authorizationService->isAdmin($this->userId()),
-        'sharedFolder' => $this->getSharedFolderPath(),
-        'projectsFolder' => $this->getProjectsFolderPath(),
+        ConfigConstants::SHARED_FOLDER => $this->getSharedFolderPath(),
+        ConfigConstants::PROJECTS_FOLDER => $this->getProjectsFolderPath(),
         Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
       ]);
@@ -152,11 +153,11 @@ trait InitialStateTrait
       $this->appName,
       'PHPMyEdit',
       [
-        'directChange' => $directChg,
-        'showDisabled' => $showDisabled,
-        'deselectInvisibleMiscRecs' => $deselectInvisible,
-        'initialFilterVisibility' => $initialFilterVisibility,
-        'pageRowsDefault' => $pageRows,
+        EnumPersonalSettingsKey::DIRECT_CHANGE->value => $directChange,
+        EnumPersonalSettingsKey::SHOW_DISABLED->value => $showDisabled,
+        EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $deselectInvisible,
+        EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $initialFilterVisibility,
+        EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => $pageRowsDefault,
         'selectChosen' => true,
         'filterSelectPlaceholder' => $l->t("Select a filter option."),
         'filterSelectNoResult' => $l->t("No values match."),

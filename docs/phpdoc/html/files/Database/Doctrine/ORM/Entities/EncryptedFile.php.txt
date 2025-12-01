@@ -38,17 +38,17 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 class EncryptedFile extends File
 {
   /**
-   * @var Collection
+   * @var Collection<Musician>
    */
   #[ORM\ManyToMany(targetEntity: Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
-  private $owners;
+  private Collection $owners;
 
   /**
-   * @var Collection
+   * @var Collection<DatabaseStorageFile>
    */
   #[ORM\OneToMany(targetEntity: DatabaseStorageFile::class, mappedBy: 'file', cascade: ['persist'])]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
-  private $databaseStorageDirEntries;
+  private Collection $databaseStorageDirEntries;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null)

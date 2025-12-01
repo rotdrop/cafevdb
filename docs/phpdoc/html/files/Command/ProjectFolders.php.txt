@@ -195,7 +195,7 @@ class ProjectFolders extends Command
     if ($group) {
       $groupMembers = array_map(fn(IUSER $user) => $user->getUID(), $this->groupManager->get($group)->getUsers());
       $sharingService = $this->appContainer->get(SimpleSharingService::class);
-      $shareOwner = $this->appConfig->getValueString($this->appName, ConfigConstants::SHAREOWNER_KEY);
+      $shareOwner = $this->appConfig->getValueString($this->appName, ConfigConstants::SHARE_OWNER_KEY);
     } else {
       $groupMembers = [];
     }

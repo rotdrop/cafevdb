@@ -31,6 +31,7 @@ use OCP\IInitialStateService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
@@ -109,11 +110,11 @@ class PersonalForm
         'CAFEVDB',
         [
           'appName' => $this->appName(),
-          'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
-          'language' => $this->getUserValue('lang', 'en'),
-          'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
-          'expertMode' => $this->getUserValue('expertMode'),
-          'financeMode' => $this->getUserValue('financeMode'),
+          EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED, 'on'),
+          'language' => $this->configService->getCloudConfig()->getUserValue($this->userId(), 'core', 'lang', 'en'),
+          EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, 'tinymce'),
+          EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE),
+          EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
       $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
@@ -171,19 +172,19 @@ class PersonalForm
         'dateTimeZone' => $this->getDateTimeZone(),
         //
         'adminsettings' => $isGroupAdmin,
-        'encryptionkey' => $this->getAppEncryptionKey(),
-        'showToolTips' => $this->getUserValue('tooltips', 'on'),
-        'debugMode' => (int)$this->getConfigValue('debugmode', 0), // @todo depend on group admin
-        'pagerows' => $this->getUserValue('pagerows', 20),
+        EnumPersonalSettingsKey::ENCRYPTION_KEY->value => $this->getAppEncryptionKey(),
+        EnumPersonalSettingsKey::TOOL_TIPS_ENABLED->value => $this->getUserValue(EnumPersonalSettingsKey::TOOL_TIPS_ENABLED),
+        EnumPersonalSettingsKey::DEBUG_MODE->value => (int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0),
+        EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => (int)$this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20),
+        EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'off'),
+        EnumPersonalSettingsKey::RESTORE_HISTORY->value => $this->getUserValue(EnumPersonalSettingsKey::RESTORE_HISTORY, 'off'),
+        EnumPersonalSettingsKey::DIRECT_CHANGE->value => $this->getUserValue(EnumPersonalSettingsKey::DIRECT_CHANGE, 'off'),
+        EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, 'off'),
+        EnumPersonalSettingsKey::SHOW_DISABLED->value => $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, 'off'),
+        EnumPersonalSettingsKey::EXPERT_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, 'off'),
+        EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, 'off'),
+        EnumPersonalSettingsKey::WYSIWYG_EDITOR->value => $this->getUserValue(EnumPersonalSettingsKey::WYSIWYG_EDITOR, self::DEFAULT_EDITOR),
         'toolTips' => $this->toolTipsService(),
-        'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
-        'restorehistory' => $this->getUserValue('restorehistory', 'off'),
-        'directchange' => $this->getUserValue('directchange', 'off'),
-        'deselectInvisibleMiscRecs' => $this->getUserValue('deselectInvisibleMiscRecs', 'off'),
-        'showdisabled' => $this->getUserValue('showdisabled', 'off'),
-        'expertMode' => $this->getUserValue('expertMode', 'off'),
-        'financeMode' => $this->getUserValue('financeMode', 'off'),
-        'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigConstants::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
         'webPageTemplates' => $webPageTemplates,
@@ -265,13 +266,13 @@ class PersonalForm
           $templateParameters,
           [
             Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigConstants::USER_GROUP_KEY),
-            'streetAddressName01' => $this->getConfigValue('streetAddressName01'),
-            'streetAddressName02' => $this->getConfigValue('streetAddressName02'),
-            'streetAddressStreet' => $this->getConfigValue('streetAddressStreet'),
-            'streetAddressHouseNumber' => $this->getConfigValue('streetAddressHouseNumber'),
-            'streetAddressCity' => $this->getConfigValue('streetAddressCity'),
-            'streetAddressZIP' => $this->getConfigValue('streetAddressZIP'),
-            'streetAddressCountry' => $this->getConfigValue('streetAddressCountry'),
+            ConfigConstants::STREET_ADDRESS_NAME_01 => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01),
+            ConfigConstants::STREET_ADDRESS_NAME_02 => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_02),
+            ConfigConstants::STREET_ADDRESS_STREET => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_STREET),
+            ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER),
+            ConfigConstants::STREET_ADDRESS_CITY => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_CITY),
+            ConfigConstants::STREET_ADDRESS_ZIP => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_ZIP),
+            ConfigConstants::STREET_ADDRESS_COUNTRY => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
             'registerName' => $this->getConfigValue('registerName'),
             'registerNumber' => $this->getConfigValue('registerNumber'),
 
@@ -297,21 +298,21 @@ class PersonalForm
             'cloudUserViewsDatabase' => $this->getConfigValue('cloudUserViewsDatabase'),
             'musicianPersonalizedViews' => $this->getConfigValue('musicianPersonalizedViews'),
 
-            'dbserver' => $this->getConfigValue('dbserver'),
-            'dbname' => $this->getConfigValue('dbname'),
-            'dbuser' => $this->getConfigValue('dbuser'),
-            'dbpassword' => $this->getConfigValue('dbpassword'),
+            ConfigConstants::APP_DB_SERVER => $this->getConfigValue(ConfigConstants::APP_DB_SERVER),
+            ConfigConstants::APP_DB_NAME => $this->getConfigValue(ConfigConstants::APP_DB_NAME),
+            ConfigConstants::APP_DB_USER => $this->getConfigValue(ConfigConstants::APP_DB_USER),
+            ConfigConstants::APP_DB_PASSWORD => $this->getConfigValue(ConfigConstants::APP_DB_PASSWORD),
 
-            ConfigConstants::SHAREOWNER_KEY => $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, ''),
-            'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
-            'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
-            'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),
-            'managementcalendar' => $this->getConfigValue('managementcalendar', $this->l->t('Management')),
-            'financecalendar' => $this->getConfigValue('financecalendar', $this->l->t('Finance')),
-            'eventduration' => $this->getConfigValue('eventduration', '180'),
+            ConfigConstants::SHARE_OWNER_KEY => $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY, ''),
+            ConfigConstants::CONCERTS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::CONCERTS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Concerts')),
+            ConfigConstants::REHEARSALS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::REHEARSALS_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Rehearsals')),
+            ConfigConstants::OTHER_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::OTHER_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Other')),
+            ConfigConstants::MANAGEMENT_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::MANAGEMENT_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Management')),
+            ConfigConstants::FINANCE_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX => $this->getConfigValue(ConfigConstants::FINANCE_CALENDAR_URI . ConfigConstants::CALENDAR_KEY_POSTFIX, $this->l->t('Finance')),
+            ConfigConstants::EVENT_DURATION_KEY => $this->getConfigValue(ConfigConstants::EVENT_DURATION_KEY, '180'),
 
-            'generaladdressbook' => $this->getConfigValue('generaladdressbook', $this->l->t('Miscellaneous')),
-            'musiciansaddressbook' => $musiciansAddressBookName,
+            ConfigConstants::GENERAL_ADDRESS_BOOK_KEY => $this->getConfigValue(ConfigConstants::GENERAL_ADDRESS_BOOK_KEY, $this->l->t('Miscellaneous')),
+            ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY => $musiciansAddressBookName,
 
             ConfigConstants::SHARED_FOLDER => $sharedFolder,
             'sharedFolderLink' => $sharedFolderLink,
@@ -383,8 +384,8 @@ class PersonalForm
             $this->parameterFromConfig($templateParameters, $proto.$key);
           }
         }
-        foreach (['user', 'password', 'fromname', 'fromaddress', 'fromdomain', 'testname', 'testaddress', 'testmode'] as $key) {
-          $this->parameterFromConfig($templateParameters, 'email'.$key);
+        foreach (['user', 'password', 'fromname', 'fromaddress', 'FromDomain', 'testname', 'testaddress', 'testmode'] as $key) {
+          $this->parameterFromConfig($templateParameters, 'email' . $key);
         }
         $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $announcementsMailingListName = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY);

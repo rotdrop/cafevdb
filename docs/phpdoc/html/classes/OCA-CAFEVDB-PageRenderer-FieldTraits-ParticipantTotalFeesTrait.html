@@ -101,6 +101,9 @@
     <article class="phpdocumentor-element -trait">
         <h2 class="phpdocumentor-content__title">
     ParticipantTotalFeesTrait
+            <span class="phpdocumentor-trait__extends">
+            uses
+                            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait">trait:short</abbr></a>,                             <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\ParticipantFieldsCgiNameTrait">trait:short</abbr></a>,                             <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-SubstituteSQLFragmentTrait.html"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\SubstituteSQLFragmentTrait">trait:short</abbr></a>                    </span>
     </h2>
 
         <aside class="phpdocumentor-element-found-in">
@@ -118,10 +121,8 @@ participants</p>
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -182,6 +183,25 @@ participants</p>
 <dd>Move the search request from the summary to the respective detail field.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryField">joinQueryField()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryFieldIndex">joinQueryFieldIndex()</a>
+    <span>
+                                &nbsp;: null|int    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryIndexField">joinQueryIndexField()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Compute the key in to the PME $row array for the given column.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#method_makeTotalFeesField">makeTotalFeesField()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -199,6 +219,57 @@ positive, values to pay to participants are negative.</dd>
 <dd>Generate three distinct columns for the total invoice amount, the amount
 already transferred and the open amount which still needs to be
 transferred.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldKeyFieldName">participantFieldKeyFieldName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldOptionsTableName">participantFieldOptionsTableName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldTableName">participantFieldTableName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldValueFieldName">participantFieldValueFieldName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryField">queryField()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryFieldIndex">queryFieldIndex()</a>
+    <span>
+                                &nbsp;: null|int    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryIndexField">queryIndexField()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Compute the key in to the PME $row array for the given column.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-SubstituteSQLFragmentTrait.html#method_substituteSQLFragment">substituteSQLFragment()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\The">The</abbr>    </span>
+</dt>
+<dd>Replace $join_table etc. replacements by their proper table and column
+aliases, base on the ordering defined in $fdd.</dd>
 
     </dl>
 
@@ -219,14 +290,14 @@ transferred.</dd>
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_l">
         $l
         <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php"><a href="files/pagerenderer-fieldtraits-participanttotalfeestrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php">ParticipantTotalFeesTrait.php</abbr></a></abbr>
@@ -239,8 +310,8 @@ transferred.</dd>
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
     <span class="phpdocumentor-signature__name">$l</span>
     </code>
 
@@ -248,7 +319,8 @@ transferred.</dd>
     
     
 
-    
+        
+        
 
 </article>
                     <article
@@ -256,14 +328,14 @@ transferred.</dd>
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_pme">
         $pme
         <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#property_pme" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php"><a href="files/pagerenderer-fieldtraits-participanttotalfeestrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php">ParticipantTotalFeesTrait.php</abbr></a></abbr>
@@ -276,8 +348,8 @@ transferred.</dd>
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
     <span class="phpdocumentor-signature__name">$pme</span>
     </code>
 
@@ -285,7 +357,8 @@ transferred.</dd>
     
     
 
-    
+        
+        
 
 </article>
                     <article
@@ -293,14 +366,14 @@ transferred.</dd>
             phpdocumentor-element
             -property
             -protected
-            -static                                            "
+            -static                                                        "
 >
     <h4 class="phpdocumentor-element__name" id="property_toolTipsPrefix">
         $toolTipsPrefix
         <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#property_toolTipsPrefix" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php"><a href="files/pagerenderer-fieldtraits-participanttotalfeestrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php">ParticipantTotalFeesTrait.php</abbr></a></abbr>
@@ -313,8 +386,8 @@ transferred.</dd>
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-    <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">string</span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__static">static</span>    <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$toolTipsPrefix</span>
      = <span class="phpdocumentor-signature__default-value">&#039;page-renderer:participant-fields:display&#039;</span></code>
 
@@ -322,7 +395,8 @@ transferred.</dd>
     
     
 
-    
+        
+        
 
 </article>
                     <article
@@ -330,14 +404,14 @@ transferred.</dd>
             phpdocumentor-element
             -property
             -protected
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_toolTipsService">
         $toolTipsService
         <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#property_toolTipsService" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php"><a href="files/pagerenderer-fieldtraits-participanttotalfeestrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantTotalFeesTrait.php">ParticipantTotalFeesTrait.php</abbr></a></abbr>
@@ -350,8 +424,8 @@ transferred.</dd>
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"><abbr title="\OCA\CAFEVDB\Service\ToolTipsService">ToolTipsService</abbr></a></span>
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"><abbr title="\OCA\CAFEVDB\Service\ToolTipsService">ToolTipsService</abbr></a></span>
     <span class="phpdocumentor-signature__name">$toolTipsService</span>
     </code>
 
@@ -359,7 +433,8 @@ transferred.</dd>
     
     
 
-    
+        
+        
 
 </article>
             </section>
@@ -393,7 +468,7 @@ transferred.</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">totalFeesPreFilterTrigger</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pme</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$op</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$step</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">totalFeesPreFilterTrigger</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pme</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$op</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$step</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -402,22 +477,22 @@ transferred.</dd>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$pme</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
+                <span class="phpdocumentor-argument-list__argument__name">$pme</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$op</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$op</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$step</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$step</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -426,11 +501,207 @@ transferred.</dd>
 
     
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_joinQueryField">
+        joinQueryField()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">96</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">joinQueryField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tableInfo</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$column</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$tableInfo</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$column</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_joinQueryFieldIndex">
+        joinQueryFieldIndex()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryFieldIndex" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">55</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">joinQueryFieldIndex</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tableInfo</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$column</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$tableInfo</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Table-description-data.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$column</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string|array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>the numeric field description index</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_joinQueryIndexField">
+        joinQueryIndexField()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryIndexField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">113</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Compute the key in to the PME $row array for the given column.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">joinQueryIndexField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tableInfo</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$column</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$tableInfo</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string|array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Table-description-data.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$column</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryIndexField#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\joinTableFieldName()">joinTableFieldName()</abbr></span>
+                                        
+                                             
+                                    </dd>
+                            <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\queryIndexField()">queryIndexField()</abbr></span>
+                                        
+                                             
+                                    </dd>
+                                            </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
 </article>
@@ -460,7 +731,7 @@ positive, values to pay to participants are negative.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">makeTotalFeesField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$fdd</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">iterable&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$monetaryFields</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$financeTab</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">makeTotalFeesField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$fdd</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">iterable&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$monetaryFields</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$financeTab</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -469,8 +740,8 @@ positive, values to pay to participants are negative.</p>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$fdd</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$fdd</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Field description data.</p>
@@ -478,15 +749,15 @@ positive, values to pay to participants are negative.</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$monetaryFields</span>
-                : <span class="phpdocumentor-signature__argument__return-type">iterable&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$monetaryFields</span>
+                : <span class="phpdocumentor-argument-list__argument__type">iterable&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$financeTab</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$financeTab</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The tab to move the field to.</p>
@@ -512,8 +783,8 @@ positive, values to pay to participants are negative.</p>
                                     </dd>
                                             </dl>
 
+        
     
-
     
 </article>
                     <article
@@ -541,7 +812,7 @@ transferred.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">makeTotalFeesFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$fdd</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subTotals</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$financeTab</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">makeTotalFeesFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$fdd</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subTotals</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$financeTab</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -550,8 +821,8 @@ transferred.</p>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$fdd</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$fdd</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Field description data, will be modified in place.</p>
@@ -559,20 +830,19 @@ transferred.</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$subTotals</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$subTotals</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Array of SQL selectable expressions as
 returned by the renderer-callback returned by
-ParticipantFieldsTrait::renderParticipantFields().
 ParticipantFieldsTrait::renderParticipantFields().</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$financeTab</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$financeTab</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The tab to move the field to.</p>
@@ -583,9 +853,469 @@ ParticipantFieldsTrait::renderParticipantFields().</p>
 
     
 
+        
     
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_participantFieldKeyFieldName">
+        participantFieldKeyFieldName()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldKeyFieldName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php"><a href="files/pagerenderer-fieldtraits-participantfieldscginametrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php">ParticipantFieldsCgiNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">55</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php.txt"></a>
+    </aside>
 
     
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">participantFieldKeyFieldName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_participantFieldOptionsTableName">
+        participantFieldOptionsTableName()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldOptionsTableName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php"><a href="files/pagerenderer-fieldtraits-participantfieldscginametrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php">ParticipantFieldsCgiNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">65</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">participantFieldOptionsTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_participantFieldTableName">
+        participantFieldTableName()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldTableName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php"><a href="files/pagerenderer-fieldtraits-participantfieldscginametrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php">ParticipantFieldsCgiNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">35</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">participantFieldTableName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_participantFieldValueFieldName">
+        participantFieldValueFieldName()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldValueFieldName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php"><a href="files/pagerenderer-fieldtraits-participantfieldscginametrait.html"><abbr title="PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php">ParticipantFieldsCgiNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/ParticipantFieldsCgiNameTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">participantFieldValueFieldName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_queryField">
+        queryField()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">queryField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>PHPMyEdit::QUERY_FIELD . N where N is determined by a
+lookup table of PHPMyEdit.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_queryFieldIndex">
+        queryFieldIndex()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryFieldIndex" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">queryFieldIndex</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$column</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$column</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>the numeric field description index</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_queryIndexField">
+        queryIndexField()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryIndexField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">79</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Compute the key in to the PME $row array for the given column.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">queryIndexField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>PHPMyEdit::QUERY_FIELD . N . PHPMyEdit::QUERY_FIELD_IDX
+where N is determined by a lookup table of PHPMyEdit.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_substituteSQLFragment">
+        substituteSQLFragment()
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-SubstituteSQLFragmentTrait.html#method_substituteSQLFragment" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/SubstituteSQLFragmentTrait.php"><a href="files/pagerenderer-fieldtraits-substitutesqlfragmenttrait.html"><abbr title="PageRenderer/FieldTraits/SubstituteSQLFragmentTrait.php">SubstituteSQLFragmentTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">54</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/SubstituteSQLFragmentTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Replace $join_table etc. replacements by their proper table and column
+aliases, base on the ordering defined in $fdd.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">substituteSQLFragment</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fdd</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sql</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fieldIndex</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\The">The</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fdd</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Field description data.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldName</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The field name which defines the pivot for the
+replacements.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$sql</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>SQL fragment with replacements.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$fieldIndex</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Field index if known, if not given array_search() is used.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-SubstituteSQLFragmentTrait.html#method_substituteSQLFragment#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\UnexpectedValueException">UnexpectedValueException</abbr></span>
+                                                            
+                                                 <section class="phpdocumentor-description"><p>Thrown if $fieldName is not found in $fdd.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\PageRenderer\FieldTraits\The">The</abbr></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>result of the substitutions.</p>
+</section>
+
+            </section>
+
 </article>
             </section>
 
@@ -625,6 +1355,8 @@ ParticipantFieldsTrait::renderParticipantFields().</p>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 
@@ -709,8 +1441,19 @@ ParticipantFieldsTrait::renderParticipantFields().</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#method_totalFeesPreFilterTrigger">totalFeesPreFilterTrigger()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryField">joinQueryField()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryFieldIndex">joinQueryFieldIndex()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_joinQueryIndexField">joinQueryIndexField()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#method_makeTotalFeesField">makeTotalFeesField()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantTotalFeesTrait.html#method_makeTotalFeesFields">makeTotalFeesFields()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldKeyFieldName">participantFieldKeyFieldName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldOptionsTableName">participantFieldOptionsTableName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldTableName">participantFieldTableName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-ParticipantFieldsCgiNameTrait.html#method_participantFieldValueFieldName">participantFieldValueFieldName()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryField">queryField()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryFieldIndex">queryFieldIndex()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-QueryFieldTrait.html#method_queryIndexField">queryIndexField()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-SubstituteSQLFragmentTrait.html#method_substituteSQLFragment">substituteSQLFragment()</a></li>
                                     </ul>
             </li>
                     </ul>

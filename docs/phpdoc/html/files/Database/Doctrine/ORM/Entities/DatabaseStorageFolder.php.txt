@@ -49,18 +49,20 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public const ADD_DOCUMENT_CONFLICT_FAIL = 'fail';
   public const ADD_DOCUMENT_CONFLICT_REPLACE = 'replace';
   public const ADD_DOCUMENT_CONFLICT_RENAME = 'rename';
+  public const ADD_DOCUMENT_CONFLICTS = [
+    self::ADD_DOCUMENT_CONFLICT_FAIL,
+    self::ADD_DOCUMENT_CONFLICT_REPLACE,
+    self::ADD_DOCUMENT_CONFLICT_RENAME,
+  ];
 
-  /**
-   * @var MusicianRowAccessToken
-   */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, mappedBy: 'root')]
-  protected $storage;
+  protected DatabaseStorage $storage;
 
   /**
-   * @var Collection
+   * @var Collection<DatabaseStorageDirEntry>
    */
   #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, cascade: ['all'], mappedBy: 'parent')]
-  protected $directoryEntries;
+  protected Collection $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

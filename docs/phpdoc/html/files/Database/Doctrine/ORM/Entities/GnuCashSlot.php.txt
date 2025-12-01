@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use DateTimeInterface;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,81 +40,45 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class GnuCashSlot implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private int $id;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $objGuid;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 4096, nullable: false)]
   private string $name;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   private int $slotType;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: true, name: 'int64_val')]
   private int $int64Val;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private string $stringVal;
 
-  /**
-   * @var double
-   */
   #[ORM\Column(type: 'float', nullable: true)]
-  private $doubleVal;
+  private float $doubleVal;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  private $timespecVal;
+  private ?DateTimeImmutable $timespecVal;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $guidVal;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: true)]
   private int $numericValNum;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', length: 20, nullable: true)]
   private int $numericValDenom;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $gdateVal;
+  private ?DateTimeImmutable $gdateVal;
 
 // CREATE TABLE `slots` (
 //   `id` int(11) NOT NULL,
@@ -254,9 +220,9 @@ class GnuCashSlot implements \ArrayAccess
    *
    * @param \DateTime|null $gdateVal
    *
-   * @return CompositePayment
+   * @return GnuCashSlot
    */
-  public function setGdateVal($gdateVal = null):CompositePayment
+  public function setGdateVal($gdateVal = null):GnuCashSlot
   {
     $this->gdateVal = self::convertToDateTime($gdateVal);
 
@@ -378,9 +344,9 @@ class GnuCashSlot implements \ArrayAccess
    *
    * @param \DateTime|null $timespecVal
    *
-   * @return CompositePayment
+   * @return GnuCashSlot
    */
-  public function setTimespecVal($timespecVal = null):CompositePayment
+  public function setTimespecVal($timespecVal = null):GnuCashSlot
   {
     $this->timespecVal = self::convertToDateTime($timespecVal);
 

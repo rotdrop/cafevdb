@@ -29,6 +29,7 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
@@ -37,6 +38,7 @@ use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -132,7 +134,7 @@ class BlogController extends Controller
     );
     $html = $tmpl->render();
 
-    $responseData = [
+    return DTO\BlogResponse::fromArray([
       'content' => $html,
       'author' => $author,
       'blogId' => $blogId,
@@ -142,9 +144,7 @@ class BlogController extends Controller
       'popup' => $popup,
       'reader' => $reader,
       'message' => $content.' '.$blogId.' '.$inReplyTo
-    ];
-
-    return self::dataResponse($responseData);
+    ])->response();
   }
 
   /**
@@ -242,10 +242,16 @@ class BlogController extends Controller
       $html = $tmpl->render();
     }
 
-    $responseData = [
+    return DTO\BlogResponse::fromArray([
       'content' => $html,
-    ];
-
-    return self::dataResponse($responseData);
+      'author' => $author,
+      'blogId' => $blogId,
+      'inReplyTo' => $inReplyTo,
+      'text' => $content,
+      'priority' => $priority,
+      'popup' => $popup,
+      'reader' => $reader,
+      'message' => $content.' '.$blogId.' '.$inReplyTo
+    ])->response();
   }
 }

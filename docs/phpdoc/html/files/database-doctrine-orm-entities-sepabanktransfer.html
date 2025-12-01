@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/database-doctrine-orm-entities-sepabanktransfer.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/database-doctrine-orm-entities-sepabanktransfer.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -172,7 +170,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
 a scheduled bank transfer although the backend may choose to
 generate just a simple transfer in order to relax missed submission
 dead-lines.</dd>    </dl>
-
 
 
 
@@ -221,6 +218,8 @@ dead-lines.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

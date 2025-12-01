@@ -119,7 +119,7 @@
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-AppL10N.html"><abbr title="\OCA\CAFEVDB\Service\L10N\AppL10N">AppL10N</abbr></a></dt><dd>AppL10N for the sake of dependency injection is defined as registerd
 service which simply return an instance of IL10N which reads the app&#039;s
 config space in order to have a IL10N instance bound to the configured
-orchestra locale.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-BiDirectionalL10N.html"><abbr title="\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N">BiDirectionalL10N</abbr></a></dt><dd>Simple bidectional translations fetch from a CSV file.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-L10NFactory.html"><abbr title="\OCA\CAFEVDB\Service\L10N\L10NFactory">L10NFactory</abbr></a></dt><dd>A decoratory which strips the encoding suffix from a given locale as
+orchestra locale.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-BiDirectionalL10N.html"><abbr title="\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N">BiDirectionalL10N</abbr></a></dt><dd>Simple bidectional translations fetch from a CSV file.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-L10NFactory.html"><abbr title="\OCA\CAFEVDB\Service\L10N\L10NFactory">L10NFactory</abbr></a></dt><dd>A decorator which strips the encoding suffix from a given locale as
 Nextcloud L10N stuff cannot deal with that.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Service-L10N-TranslationService.html"><abbr title="\OCA\CAFEVDB\Service\L10N\TranslationService">TranslationService</abbr></a></dt><dd>Runtime translation service for recording untranslated phrases in a
 database.</dd>    </dl>
 
@@ -169,6 +169,8 @@ database.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

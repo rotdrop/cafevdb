@@ -99,9 +99,9 @@
 
             <p class="phpdocumentor-summary">Some PHP utility functions for Nextcloud apps.</p>
 
-
-
-
+        
+        
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/toolkit-listener-beforemessageloggedeventlistener.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -148,9 +148,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/toolkit-listener-beforemessageloggedeventlistener.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -168,7 +166,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
     <dl class="phpdocumentor-table-of-contents">
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Toolkit-Listener-BeforeMessageLoggedEventListener.html"><abbr title="\OCA\CAFEVDB\Toolkit\Listener\BeforeMessageLoggedEventListener">BeforeMessageLoggedEventListener</abbr></a></dt><dd>Listener foŕ log-entries in order to provide the formatted log-entry to
 controllers.</dd>    </dl>
-
 
 
 
@@ -217,6 +214,8 @@ controllers.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

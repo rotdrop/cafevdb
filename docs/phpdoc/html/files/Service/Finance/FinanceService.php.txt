@@ -684,7 +684,7 @@ class FinanceService
           ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
           ConfigConstants::BANK_ACCOUNT_IBAN => $bankAccount->getIban(),
           ConfigConstants::BANK_ACCOUNT_BIC => $bankAccount->getBic(),
-          'bankAccountBank' => $bank,
+          ConfigConstants::BANK_ACCOUNT_BANK_NAME => $bank,
         ]);
       }
 
@@ -1335,6 +1335,7 @@ class FinanceService
    *   'blz' => BLZ,
    *   'account' => BANK_ACCOUNT_NR,
    *   'bank' => NAME_OF_BANK,
+   *   'country' => COUNTRY_OF_BANK,
    * ]
    * ```
    */

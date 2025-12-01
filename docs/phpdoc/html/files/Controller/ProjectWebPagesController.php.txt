@@ -77,14 +77,16 @@ class ProjectWebPagesController extends Controller
 
     if (count($articleData) > 0 &&
         $articleId >= 0 &&
-        $articleData['articleId'] != $articleId) {
+        $articleData[EnumProjectWebPageParam::ARTICLE_ID->value] != $articleId) {
       return self::grumble(
         $this->l->t(
           'Submitted article id "%1$d" does not match the id "%2$d" stored in the article-data.',
-          [ $articleId, $articleData['articleId'] ]));
+          [ $articleId, $articleData[EnumProjectWebPageParam::ARTICLE_ID->value] ]));
     }
 
-    if ($topic != 'add' && $topic != 'ping') {
+    $topic = EnumProjectWebPagesAction::get($topic);
+
+    if ($topic != EnumProjectWebPagesAction::ADD && $topic != EnumProjectWebPagesAction::PING) {
       // require both, articleId and articleData
       if ($articleId < 0) {
         return self::grumble($this->l->t('Invalid or unset article-id: "%s".', [ $articleId ]));
@@ -99,14 +101,14 @@ class ProjectWebPagesController extends Controller
     }
 
     switch ($topic) {
-      case 'ping':
+      case EnumProjectWebPagesAction::PING:
         if ($this->projectService->pingWebPages() === false) {
           return self::grumble($this->l->t('Unable to ping project web-pages CMS'));
         } else {
           return self::response('OK');
         }
         break;
-      case 'add':
+      case EnumProjectWebPagesAction::ADD:
         try {
           // This simply means: create a new page for the project.
           $article = $this->projectService->createProjectWebPage($projectId);
@@ -119,7 +121,7 @@ class ProjectWebPagesController extends Controller
         }
         $message = $this->l->t(
           'Created a new public web page with name "%1$s" and id "%2$d" for the project with id "%3$d".',
-          [ $article['articleName'], $article['articleId'], $projectId ],
+          [ $article['articleName'], $article[EnumProjectWebPageParam::ARTICLE_ID->value], $projectId ],
         );
         // If there is no rehearsal page attached to the project, then attach one
         $rehearsalsCat = $this->getConfigValue('redaxoRehearsals');
@@ -145,7 +147,7 @@ class ProjectWebPagesController extends Controller
           }
         }
         return self::response($message);
-      case 'link':
+      case EnumProjectWebPagesAction::LINK:
         try {
           $this->projectService->attachProjectWebPage($projectId, $articleData);
         } catch (Throwable $t) {
@@ -162,7 +164,7 @@ class ProjectWebPagesController extends Controller
           $this->l->t(
             'Linked the existing public web-article "%1$s" (id "%2$d") to the project with id "%3$d".',
             [ $articleData['articleName'], $articleId, $projectId ]));
-      case 'unlink':
+      case EnumProjectWebPagesAction::UNLINK:
         try {
           $this->projectService->detachProjectWebPage($projectId, $articleId);
         } catch (Throwable $t) {
@@ -180,7 +182,7 @@ class ProjectWebPagesController extends Controller
             'Detached the public web-article "%1$s" (id "%2$d") from the project with id "%3$d".',
             [ $articleData['articleName'], $articleId, $projectId ],
           ));
-      case 'delete':
+      case EnumProjectWebPagesAction::DELETE:
         try {
           $this->projectService->deleteProjectWebPage($projectId, $articleData);
         } catch (Throwable $t) {

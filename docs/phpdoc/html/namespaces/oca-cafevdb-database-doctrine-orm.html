@@ -123,6 +123,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-database-doctrine-orm-proxies.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Proxies">Proxies</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-database-doctrine-orm-repositories.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories">Repositories</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-database-doctrine-orm-traits.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits">Traits</abbr></a></dt>
+            <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-database-doctrine-orm-util.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Util">Util</abbr></a></dt>
     </dl>
 
 
@@ -173,6 +174,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

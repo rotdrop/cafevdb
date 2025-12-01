@@ -26,16 +26,16 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use OCP\IRequest;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** TBD. */
 class SepaBulkTransactions extends PMETableViewBase
@@ -427,8 +427,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'postfix' => [
             'bank-account-iban',
             'squeeze-subsequent-lines',
-            'lazy-decryption',
-            'meta-data-popup',
+            DataConstants::CLASS_LAZY_DECRYPTION,
+            DataConstants::CLASS_META_DATA_POPUP,
           ],
         ],
         'select' => 'M',
@@ -443,7 +443,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
           'description' => [
             'columns' => 'CONCAT("<span class=\"iban encryption-placeholder\"
-      data-crypto-hash=\"", $table.crypto_hash, "\"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '=\"", $table.crypto_hash, "\"
       title=\"' . $this->l->t('Fetching decrypted values in the background.') . '\"
 >'
             . $this->l->t('please wait')
@@ -452,9 +452,9 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
             'cast' => [ false ],
           ],
           'data' => [
-            'crypto-hash' => '$table.crypto_hash',
-            'sealed-value' => '$table.sealed_value',
-            'meta-data' => "'iban'",
+            DataConstants::DATA_CRYPTO_HASH => '$table.crypto_hash',
+            DataConstants::DATA_SEALED_VALUE => '$table.sealed_value',
+            DataConstants::DATA_META_DATA => "'iban'",
           ],
         ],
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
@@ -463,7 +463,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           foreach ($values as &$value) {
             // $value = $this->ormDecrypt($value);
             $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . $value . '"
+      data-' . DataConstants::DATA_CRYPTO_HASH . '="' . $value . '"
       title="' . $this->l->t('Fetching decrypted values in the background.') . '"
 >'
             . $this->l->t('please wait')
@@ -476,7 +476,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'postfix' => '</div></div>',
           'popup' => 'data',
           'attributes' => [
-            'data-meta-data' => 'iban',
+            'data-' . DataConstants::DATA_META_DATA => 'iban',
           ],
         ],
       ]);

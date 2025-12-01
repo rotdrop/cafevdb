@@ -132,10 +132,8 @@
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-Util.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -225,8 +223,8 @@ Doctrine\ORM\EntityRepository::findBy() to an instance of Collections\Criteria.<
     
     
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span>
@@ -265,8 +263,8 @@ Doctrine\ORM\EntityRepository::findBy() to an instance of Collections\Criteria.<
     
     
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ExpressionBuilder">ExpressionBuilder</abbr></span>
@@ -297,7 +295,7 @@ Doctrine\ORM\EntityRepository::findBy() to an instance of Collections\Criteria.<
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">criteriaWhere</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arrayCriteria</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">criteriaWhere</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arrayCriteria</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -306,8 +304,8 @@ Doctrine\ORM\EntityRepository::findBy() to an instance of Collections\Criteria.<
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$arrayCriteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$arrayCriteria</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Array of FIELD =&gt; VALUE pairs. FIELD support
@@ -322,7 +320,6 @@ paren may be omitted. Example:</p>
   'optionValue' =&gt; null   // option_value is NULL
   ')' =&gt; IGNORED_VALUE    // close the OR-group
 ],
-```.
 ```.
 </code></pre>
 </section>
@@ -349,8 +346,8 @@ OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().</p>
                                     </dd>
                                             </dl>
 
+        
     
-
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span>
@@ -395,6 +392,8 @@ OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().</p>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

@@ -1172,7 +1172,7 @@ class MailingListsService
    */
   public function ensureTemplateFolder(string $folderName):?string
   {
-    $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+    $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
     $folderPath = $folderName[0] != '/'
       ? $folderPath = $this->templateFolderPath($folderName)
       : $folderName;

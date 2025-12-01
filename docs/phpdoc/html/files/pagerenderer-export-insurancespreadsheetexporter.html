@@ -99,11 +99,11 @@
 
             <p class="phpdocumentor-summary">Orchestra member, musician and project management application.</p>
 
-
-    <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
+        
+            <section class="phpdocumentor-description"><p>CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.</p>
 </section>
 
-
+        
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
         <a href="files/pagerenderer-export-insurancespreadsheetexporter.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
@@ -150,9 +150,7 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                         </dl>
 
 
-
-
-
+        
 <h3 id="toc">
     Table of Contents
     <a href="files/pagerenderer-export-insurancespreadsheetexporter.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -171,7 +169,6 @@ along with this program. If not, see <a href="http://www.gnu.org/licenses/">http
                     <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-PageRenderer-Export-InsuranceSpreadsheetExporter.html"><abbr title="\OCA\CAFEVDB\PageRenderer\Export\InsuranceSpreadsheetExporter">InsuranceSpreadsheetExporter</abbr></a></dt><dd>Exporter for the instrument insurances. This is special as it must only
 contain official data and should be in a ready-to-send state in order to
 just hand it on to the insurance brokers.</dd>    </dl>
-
 
 
 
@@ -220,6 +217,8 @@ just hand it on to the insurance brokers.</dd>    </dl>
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

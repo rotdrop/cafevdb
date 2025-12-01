@@ -22,11 +22,12 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Controller\ProjectParticipantsController;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\ProjectParticipantsController;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Field-trait for reusable field definitions. */
 trait MailingListsTrait

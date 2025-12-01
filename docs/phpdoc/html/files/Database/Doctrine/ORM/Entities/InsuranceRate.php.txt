@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -44,7 +45,7 @@ class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   public const RATE_PRECISION = 4;
   public const RATE_SCALE = self::RATE_PRECISION;
@@ -53,40 +54,24 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\JoinColumn(referencedColumnName: 'short_name')]
   #[ORM\ManyToOne(targetEntity: InsuranceBroker::class, inversedBy: 'insuranceRates', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private $broker;
+  private InsuranceBroker $broker;
 
-  /**
-   * @var Types\EnumGeographicalScope
-   */
   #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
   #[ORM\Id]
-  private $geographicalScope;
+  private Types\EnumGeographicalScope $geographicalScope;
 
-  /**
-   * @var string
-   *
-   * The rate as fraction between 0 and 1. Common values are .0051 or .0043.
-   */
   #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
   private RationalNumber $rate;
 
-  /**
-   * @var \DateTimeImmutable
-   */
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'start of the yearly insurance period'])]
-  private $dueDate;
+  private DateTimeImmutable $dueDate;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private $policyNumber;
+  private ?string $policyNumber;
 
-  /**
-   * @var Collection
-   */
+  /** @var Collection<InstrumentInsurance> */
   #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
-  private $instrumentInsurances;
+  private Collection $instrumentInsurances;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

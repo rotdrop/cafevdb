@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Traits;
 
-use OCP\IUserManager;
+use OCP\IUserSession;
 use OCP\IUser;
 
 /**
@@ -32,7 +32,7 @@ use OCP\IUser;
  */
 trait GetUserTrait
 {
-  protected IUserManager $userManager;
+  protected IUserSession $userSession;
 
   protected ?IUser $user = null;
 

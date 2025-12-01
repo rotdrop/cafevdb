@@ -29,12 +29,13 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Listen to renamed and deleted events in order to keep the

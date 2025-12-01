@@ -34,15 +34,16 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Connection;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
@@ -101,9 +102,9 @@ FROM %2$s';
   ) {
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
-      $this->appDbName = $this->encryptionService->getConfigValue('dbname');
-      $this->appDbUser = $this->encryptionService->getConfigValue('dbuser');
-      $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
+      $this->appDbName = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_NAME);
+      $this->appDbUser = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_USER);
+      $this->appDbHost = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER);
     }
   }
   // phpcs:enable

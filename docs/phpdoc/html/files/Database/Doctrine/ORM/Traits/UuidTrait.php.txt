@@ -38,11 +38,8 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 trait UuidTrait
 {
-  /**
-   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
-   */
   #[ORM\Column(type: 'uuid_binary', unique: true)]
-  private $uuid;
+  private UuidInterface $uuid;
 
   /**
    * Set uuid.

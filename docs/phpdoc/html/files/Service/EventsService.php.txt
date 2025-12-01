@@ -1125,7 +1125,7 @@ class EventsService
       if ($public && !$cal['public']) {
         continue;
       }
-      $result[$cal['uri']] = $this->getConfigValue($cal['uri'].'calendar'.'id');
+      $result[$cal['uri']] = $this->getConfigValue($cal['uri'] . ConfigConstants::CALENDAR_ID_KEY_POSTFIX);
     }
     return $result;
   }

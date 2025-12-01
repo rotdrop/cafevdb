@@ -33,6 +33,7 @@ use UnexpectedValueException;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
@@ -41,6 +42,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -221,14 +223,15 @@ class EntityManager extends EntityManagerDecorator
 
   /** {@inheritdoc} */
   public function __construct(
-    protected string $appName,
-    private EncryptionService $encryptionService,
-    protected IAppContainer $appContainer,
-    private CloudLogger $sqlLogger,
     DeprecationLogger $deprecationLogger,
-    private IRequest $request,
-    protected ILogger $logger,
+    private CloudLogger $sqlLogger,
+    private EncryptionService $encryptionService,
     private IL10N $l,
+    private IRequest $request,
+    protected IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected string $appName,
+    protected IConfig $cloudConfig,
   ) {
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = [];
@@ -290,10 +293,10 @@ class EntityManager extends EntityManagerDecorator
     $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
-      $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);
-      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+      $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
+      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
-      $this->showSoftDeleted = $this->encryptionService->getUserValue($this->userId, 'showdisabled') === 'on';
+      $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';
       $this->decorateClassMetadata = true;
     }
     parent::__construct($this->getEntityManager());
@@ -421,7 +424,7 @@ class EntityManager extends EntityManagerDecorator
     }
     $params = $connection->getParams();
     $impossible = false;
-    foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
+    foreach ([ 'host', 'user', 'password', ConfigConstants::APP_DB_NAME ] as $key) {
       if (empty($params[$key])) {
         $impossible = true;
       }
@@ -439,7 +442,7 @@ class EntityManager extends EntityManagerDecorator
       }
     } catch (Throwable $t) {
       if (str_contains($this->request->getPathInfo(), 'apps/' . $this->appName)) {
-        $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
+        $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params[ConfigConstants::APP_DB_NAME]);
       }
       return false;
     }
@@ -507,6 +510,8 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Override datetime stuff
+      Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetime', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetime_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetimetz', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
@@ -527,11 +532,16 @@ class EntityManager extends EntityManagerDecorator
   {
     if (empty($this->databaseAccess)) {
       $this->databaseAccess = [
-        'dbname' => $this->encryptionService->getConfigValue('dbname'),
-        'user' => $this->encryptionService->getConfigValue('dbuser'),
-        'password' => $this->encryptionService->getConfigValue('dbpassword'),
-        'host' => $this->encryptionService->getConfigValue('dbserver'),
+        'dbname' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_NAME),
+        'user' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_USER),
+        'password' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_PASSWORD),
+        'host' => $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER),
       ];
+      if (str_contains(($this->databaseAccess['host'] ?? ''), '://')) {
+        $parser = new DBAL\Tools\DsnParser;
+        $parsedParams = $parser->parse($this->databaseAccess['host']);
+        $this->databaseAccess = array_merge($this->databaseAccess, $parsedParams);
+      }
     }
     $driverParams = [
       'driver' => 'pdo_mysql',

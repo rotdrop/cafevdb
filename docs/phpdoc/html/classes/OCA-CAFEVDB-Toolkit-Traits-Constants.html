@@ -132,10 +132,8 @@
 
 
 
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-Constants.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -287,9 +285,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_CSS">
         CSS
@@ -319,9 +316,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT">
         DEFAULT_ADMIN_ARCHIVE_SIZE_LIMIT
@@ -351,9 +347,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_HASH">
         HASH
@@ -383,9 +378,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_INFO_FILE">
         INFO_FILE
@@ -415,9 +409,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_JS">
         JS
@@ -447,9 +440,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_PATH_SEPARATOR">
         PATH_SEPARATOR
@@ -477,14 +469,12 @@
 
     
         <section class="phpdocumentor-description"><p>File-path separator.</p>
-<p>File-path separator.</p>
 </section>
 
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_BASE">
         RENDER_AS_BASE
@@ -514,9 +504,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_BLANK">
         RENDER_AS_BLANK
@@ -546,9 +535,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_ERROR">
         RENDER_AS_ERROR
@@ -578,9 +566,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_GUEST">
         RENDER_AS_GUEST
@@ -610,9 +597,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_PUBLIC">
         RENDER_AS_PUBLIC
@@ -642,9 +628,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_RENDER_AS_USER">
         RENDER_AS_USER
@@ -674,9 +659,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_USER_FOLDER_PREFIX">
         USER_FOLDER_PREFIX
@@ -706,9 +690,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_WEB_ASSET_META">
         WEB_ASSET_META
@@ -738,9 +721,8 @@
     
     
 
-    
-
-</article>
+        
+    </article>
             </section>
 
         
@@ -782,6 +764,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

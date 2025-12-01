@@ -32,6 +32,8 @@ use Exception;
 use PHP_IBAN;
 use Throwable;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -72,6 +74,7 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */
+#[TSAttributes\TypeScript]
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -139,33 +142,47 @@ class PersonalSettingsController extends Controller
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
-    switch ($parameter) {
-      case 'tooltips':
-      case 'restorehistory':
-      case 'filtervisibility':
-      case 'directchange':
-      case 'deselectInvisibleMiscRecs':
-      case 'showdisabled':
-      case 'expertMode':
-      case 'financeMode':
+    try {
+      $key = EnumPersonalSettingsKey::get($parameter);
+    } catch (Throwable $t) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unknown configuration key "%s".', $parameter),
+      );
+    }
+    switch ($key) {
+      case EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS:
+      case EnumPersonalSettingsKey::DIRECT_CHANGE:
+      case EnumPersonalSettingsKey::EXPERT_MODE:
+      case EnumPersonalSettingsKey::FINANCE_MODE:
+      case EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY:
+      case EnumPersonalSettingsKey::RESTORE_HISTORY:
+      case EnumPersonalSettingsKey::SHOW_DISABLED:
+      case EnumPersonalSettingsKey::TOOL_TIPS_ENABLED:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]),
+          );
         }
         $stringValue = $realValue ? 'on' : 'off';
         $this->setUserValue($parameter, $stringValue);
-        return self::response($this->l->t('Switching %2$s %1$s', [
-          $this->l->t($stringValue),
-          $this->l->t($parameter),
-        ]));
-      case 'pagerows':
+        return (new DTO\MessagesResponse([
+          $this->l->t('Switching %2$s %1$s', [ $this->l->t($stringValue), $this->l->t($parameter), ]),
+        ]))->response();
+
+      case EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
         if ($realValue === false) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]),
+          );
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
-      case 'debugmode':
+        return (new DTO\MessagesResponse([
+          $this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]),
+        ]))->respones();
+
+      case EnumPersonalSettingsKey::DEBUG_MODE:
         if (!is_array($value)) {
           $debugModes = [];
         } else {
@@ -176,41 +193,66 @@ class PersonalSettingsController extends Controller
           $debug |= $item['value'];
         }
         if ($debug > ConfigConstants::DEBUG_ALL) {
-          return grumble($this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown debug modes in request: %s$s', [print_r($debugModes, true)]),
+          );
         }
-        $this->setConfigValue('debugmode', $debug);
+        $this->setUserValue(EnumPersonalSettingsKey::DEBUG_MODE->value, $debug);
         if ($debug & ConfigConstants::DEBUG_CSP) {
           // generate a random magic key for sort-of authentication
-          $this->setAppValue('cspfailuretoken', $this->generateRandomBytes(128));
+          $this->setUserValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY, $this->generateRandomBytes(128));
         } else {
-          $this->deleteAppValue('cspfailuretoken');
+          $this->deleteUserValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY);
         }
-        return new DataResponse([
-          'message' => $this->l->t('Setting %2$s to %1$s', [$debug, 'debug']),
-          'value' => $debug
-        ]);
-      case 'wysiwygEditor':
+        return (new DTO\ValueResponse(
+          messages: [
+            $this->l->t('Setting %2$s to %1$d', [$debug, $key->value]),
+          ],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER:
+        $realValue = Util::normalizeSpaces($value);
+        $this->setUserValue(EnumSimpleSettingsKey::DEBUG_QUERY_SQL_FILTER, $realValue);
+        return (new DTO\ValueResponse(
+          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::WYSIWYG_EDITOR:
         if (!isset(ConfigConstants::WYSIWYG_EDITORS[$value])) {
-          return grumble($this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown WYSIWYG-editor: %s$s', [ $value ]),
+          );
         }
         $this->setUserValue($parameter, $value);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$value, $parameter]));
-      case 'encryptionkey':
+        return (new DTO\ValueResponse(
+          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          value: $debug
+        ))->response();
+
+      case EnumPersonalSettingsKey::ENCRYPTION_KEY:
         // Get data
-        if (!is_array($value) || !isset($value['encryptionkey']) || !isset($value['loginpassword'])) {
-          return self::grumble($this->l->t('Invalid request data: "%s".', [ print_r($value, true) ]));
+        if (!is_array($value) || !isset($value[EnumPersonalSettingsKey::ENCRYPTION_KEY->value]) || !isset($value['loginpassword'])) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid request data: "%s".', [ print_r($value, true) ]),
+          );
         }
         $password = $value['loginpassword'];
-        $encryptionkey = $value['encryptionkey'];
+        $encryptionKey = $value[EnumPersonalSettingsKey::ENCRYPTION_KEY->value];
 
         // Re-validate the user
         if ($this->userManager()->checkPassword($this->userId(), $password) === false) {
-          return self::grumble($this->l->t('Invalid password for "%s".', [$this->userId()]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid password for "%s".', [$this->userId()]),
+          );
         }
 
         // Then check whether the key is correct
-        if (!$this->encryptionKeyValid($encryptionkey)) {
-          return self::grumble($this->l->t('Invalid encryption key.'));
+        if (!$this->encryptionKeyValid($encryptionKey)) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid encryption key.'),
+          );
         }
 
         // So generate a new key-pair and store the key. This will only
@@ -220,8 +262,8 @@ class PersonalSettingsController extends Controller
         // key-pair.
         try {
           $this->encryptionService()->initUserKeyPair(true);
-          $this->encryptionService()->setUserEncryptionKey($encryptionkey);
-          $this->encryptionService()->setAppEncryptionKey($encryptionkey);
+          $this->encryptionService()->setUserEncryptionKey($encryptionKey);
+          $this->encryptionService()->setAppEncryptionKey($encryptionKey);
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Unable to store the app encryption key for user "%s".', $this->userId()),
@@ -229,7 +271,7 @@ class PersonalSettingsController extends Controller
           );
         }
         return self::response($this->l->t('Encryption key stored.'));
-      case 'emailDraftAutoSave':
+      case EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -238,14 +280,19 @@ class PersonalSettingsController extends Controller
           } elseif ($realValue === false) {
             $realValue = 0;
           } else {
-            return self::grumble($this->l->t('Value "%1$s" for set "%2$s" must be a non-negative integer or false.', [$value, $parameter]));
+            throw new Exceptiosn\EnduserNotificationException(
+              $this->l->t('Value "%1$s" for set "%2$s" must be a non-negative integer or false.', [$value, $parameter]),
+            );
           }
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]));
+        return (new DTO\MessagesResponse(
+          [$this->l->t('Setting %2$s to %1$s', [$realValue, $parameter])],
+        ))->response();
+
       default:
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    throw new Exceptions\EnduserNotificationException($this->l->t('Unknown Request'));
   }
 
   /**
@@ -266,41 +313,49 @@ class PersonalSettingsController extends Controller
   public function setApp(string $parameter, mixed $value):Http\Response
   {
     switch ($parameter) {
-      case 'orchestraLocale': // could check for valid locale ...
+      case ConfigConstants::ORCHESTRA_LOCALE_KEY: // could check for valid locale ...
         $realValue = trim($value);
         $this->setConfigValue($parameter, $realValue);
-        return self::dataResponse([
-          'value' => $realValue,
-          'message' => $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
-          'localeInfo' => $this->generateLocaleInfo('app'),
-        ]);
-        // fall through
+        return (new OrchestraLocaleResponse(
+          value: $realValue,
+          message: $this->l->t('"%s" set to "%s".', [$parameter, $realValue]),
+          localeInfo: $this->generateLocaleInfo('app'),
+        ))->response();
+
       case ConfigConstants::ORCHESTRA_NAME_KEY:
         $value = strtolower(Util::removeSpaces($value));
         // fall through
-      case 'dbserver': // could check for valid hostname
-      case 'dbname':
-      case 'dbuser':
+      case ConfigConstants::APP_DB_SERVER: // could check for valid hostname
+      case ConfigConstants::APP_DB_NAME:
+      case ConfigConstants::APP_DB_USER:
         $realValue = trim($value);
         $this->setConfigValue($parameter, $realValue);
-        return self::valueResponse($realValue, $this->l->t('"%s" set to "%s".', [$parameter, $realValue]));
-      case 'dbpassword':
+        return (new DTO\ValueResponse(
+          value: $realValue,
+          messages: [$this->l->t('"%s" set to "%s".', [$parameter, $realValue])],
+        ))->response();
+
+      case ConfigConstants::APP_DB_PASSWORD:
         try {
           if (!empty($value)) {
-            $oldDbPassword = $this->getConfigValue('dbpassword');
-            $this->setConfigValue('dbpassword', $value);
+            $oldDbPassword = $this->getConfigValue(ConfigConstants::APP_DB_PASSWORD);
+            $this->setConfigValue(ConfigConstants::APP_DB_PASSWORD, $value);
             if ($this->configCheckService->databaseAccessible(['password' => $value])) {
-              return self::response($this->l->t('DB-test passed and DB-password set.'));
+              return (new DTO\MessagesResponse([$this->l->t('DB-test passed and DB-password set.')]))->response();
             } else {
-              $this->setConfigValue('dbpassword', $oldDbPassword);
-              return self::grumble($this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'));
+              $this->setConfigValue(ConfigConstants::APP_DB_PASSWORD, $oldDbPassword);
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('DB-test failed. Check the account settings. Check was performed with the new password.'),
+              );
             }
           } else {
             // Check with the stored password
             if ($this->configCheckService->databaseAccessible()) {
-              return self::response($this->l->t('DB-test passed with stored password (empty input ignored).'));
+              return (new DTO\MessagesResponse([$this->l->t('DB-test passed with stored password (empty input ignored).')]))->response();
             } else {
-              return self::grumble($this->l->t('DB-test failed with stored password (empty input ignored).'));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('DB-test failed with stored password (empty input ignored).'),
+              );
             }
           }
         } catch (Throwable $t) {
@@ -309,6 +364,7 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
+
       case 'systemkey':
         foreach (['systemkey', 'oldkey'] as $key) {
           if (!isset($value[$key])) {
@@ -321,7 +377,7 @@ class PersonalSettingsController extends Controller
 
         $encryptionService = $this->encryptionService();
 
-        $storedKeyHash = $encryptionService->getConfigValue(EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY);
+        $storedKeyHash = $encryptionService->getConfigValue(ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY);
         if (!$encryptionService->verifyHash($oldKey, $storedKeyHash)) {
           return self::grumble($this->l->t('Wrong old encryption key'));
         }
@@ -393,7 +449,7 @@ class PersonalSettingsController extends Controller
 
           // re-crypt the config-space
           $this->configService->encryptConfigValues([
-            EncryptionService::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
+            ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY => (empty($systemKey) ? '' : $this->computeHash($systemKey)),
           ]);
 
           // re-generate the private/public key pair
@@ -485,31 +541,31 @@ class PersonalSettingsController extends Controller
             'keyStatus' => Http::STATUS_OK,
           ],
           Http::STATUS_OK);
-      case 'streetAddressName01':
-      case 'streetAddressName02':
-      case 'streetAddressStreet':
-      case 'streetAddressHouseNumber':
-      case 'streetAddressCity':
-      case 'streetAddressZIP':
-      case 'streetAddressCountry':
+      case ConfigConstants::STREET_ADDRESS_NAME_01:
+      case ConfigConstants::STREET_ADDRESS_NAME_02:
+      case ConfigConstants::STREET_ADDRESS_STREET:
+      case ConfigConstants::STREET_ADDRESS_HOUSE_NUMBER:
+      case ConfigConstants::STREET_ADDRESS_CITY:
+      case ConfigConstants::STREET_ADDRESS_ZIP:
+      case ConfigConstants::STREET_ADDRESS_COUNTRY:
       case 'registerName':
       case 'registerNumber':
         $realValue = trim($value);
         $this->setConfigValue($parameter, $realValue);
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         break;
-      case ConfigConstants::SHAREOWNER_KEY:
-        if (!isset($value[ConfigConstants::SHAREOWNER_KEY])
+      case ConfigConstants::SHARE_OWNER_KEY:
+        if (!isset($value[ConfigConstants::SHARE_OWNER_KEY])
             || !isset($value['shareowner-saved'])
             || !isset($value['shareowner-force'])) {
           return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
         }
-        $uid = $value[ConfigConstants::SHAREOWNER_KEY];
+        $uid = $value[ConfigConstants::SHARE_OWNER_KEY];
         $savedUid = $value['shareowner-saved'];
         $force = filter_var($value['shareowner-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         // first check consistency of $savedUid with stored UID.
-        $confUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY, '');
+        $confUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY, '');
         if ($confUid != $savedUid) {
           return self::grumble($this->l->t(
             'Submitted "%s" != "%s" (stored)', [ $savedUid, $confUid ]));
@@ -547,15 +603,18 @@ class PersonalSettingsController extends Controller
           $number['valid'] = true;
           $this->setConfigValue($parameter, $number['number']);
           return self::dataResponse(array_merge($number, [
-            'message' => $this->l->t('Orchestra Phone Number set to %s', $number['number']),
+            'messages' => $this->l->t('Orchestra Phone Number set to %s', $number['number']),
           ]));
         } else {
           return self::grumble($this->l->t(
             'The phone number %s does not appear to be a valid phone number. ', [ $realValue, ]));
         }
         break;
-      case ConfigConstants::BANK_ACCOUNT_BANK_HOLIDAYS:
-        return $this->setSimpleConfigValue($parameter, $value);
+      case EnumSimpleSettingsKey::BANK_ACCOUNT_BANK_HOLIDAYS->value:
+        return $this->setSimpleConfigValue(
+          EnumSimpleSettingsKey::BANK_ACCOUNT_BANK_HOLIDAYS,
+          $value,
+        );
       case ConfigConstants::BANK_ACCOUNT_OWNER:
       case ConfigConstants::BANK_ACCOUNT_BLZ:
       case ConfigConstants::BANK_ACCOUNT_IBAN:
@@ -581,7 +640,7 @@ class PersonalSettingsController extends Controller
         }
         switch ($parameter) {
           case ConfigConstants::BANK_ACCOUNT_OWNER:
-            $address = $this->getConfigValue('streetAddressName01');
+            $address = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01);
             if ($realValue !== $address) {
               $data['suggestions'] = [ $address, ];
             }
@@ -754,7 +813,7 @@ class PersonalSettingsController extends Controller
         $currentProjectName = $this->getConfigValue($parameter, '');
         $currentProjectId = $this->getConfigValue($parameter.'Id', null);
         $data = [
-          'message' => [],
+          'messages' => [],
           'project' =>  $currentProjectName,
           'projectId' => $currentProjectId,
           'feedback' => false,
@@ -850,7 +909,7 @@ class PersonalSettingsController extends Controller
         $currentProjectName = $this->getConfigValue($projectParameter, '');
         $currentProjectId = $this->getConfigValue($projectParameter.'Id', null);
 
-        $data = [ 'message' => [] ];
+        $data = [ 'messages' => [] ];
 
         if ((int)$currentProjectId != (int)$projectId) {
           return self::grumble(
@@ -874,9 +933,13 @@ class PersonalSettingsController extends Controller
           }
 
           $data = [
-            'message' => [
+            'project' => $projectName,
+            'projectId' => $project->getId(),
+            'newName' => $projectName,
+            'messages' => [
               $this->l->t('Created Project "%s" with id "%d".', [
-                $project['name'], $project['id'] ]) ],
+                $project['name'], $project['id'] ])
+            ],
             'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
           ];
 
@@ -896,10 +959,17 @@ class PersonalSettingsController extends Controller
               previous: $t,
             );
           }
-          $data['message'][] = $this->l->t('Project "%s" successfully validated.', $project->getName());
+
+          $data = [
+            'project' => $projec->getName(),
+            'projectId' => $project->getId(),
+            'messages' => [
+              $this->l->t('Project "%s" successfully validated.', $project->getName()),
+            ],
+          ];
         }
 
-        return self::dataResponse($data);
+        return DTO\SpecialProjectsResponse::fromArray($data)->response();
       case 'memberProjectDelete':
       case 'executiveBoardProjectDelete':
         try {
@@ -958,18 +1028,18 @@ class PersonalSettingsController extends Controller
           );
         }
         break;
-      case 'presidentUserId':
-      case 'secretaryUserId':
-      case 'treasurerUserId':
-      case 'presidentId':
-      case 'secretaryId':
-      case 'treasurerId':
-      case 'presidentGroupId':
-      case 'secretaryGroupId':
-      case 'treasurerGroupId':
-      case 'presidentEmail':
-      case 'secretaryEmail':
-      case 'treasurerEmail':
+      case EnumSimpleSettingsKey::PRESIDENT_USER_ID->value:
+      case EnumSimpleSettingsKey::SECRETARY_USER_ID->value:
+      case EnumSimpleSettingsKey::TREASURER_USER_ID->value:
+      case EnumSimpleSettingsKey::PRESIDENT_ID->value:
+      case EnumSimpleSettingsKey::SECRETARY_ID->value:
+      case EnumSimpleSettingsKey::TREASURER_ID->value:
+      case EnumSimpleSettingsKey::PRESIDENT_GROUP_ID->value:
+      case EnumSimpleSettingsKey::SECRETARY_GROUP_ID->value:
+      case EnumSimpleSettingsKey::TREASURER_GROUP_ID->value:
+      case EnumSimpleSettingsKey::PRESIDENT_EMAIL->value:
+      case EnumSimpleSettingsKey::SECRETARY_EMAIL->value:
+      case EnumSimpleSettingsKey::TREASURER_EMAIL->value:
         $executiveBoardMembers = ['president', 'secretary', 'treasurer'];
         foreach ($executiveBoardMembers as $prefix) {
           foreach (['Id', 'UserId', 'GroupId', 'Email'] as $postfix) {
@@ -980,30 +1050,32 @@ class PersonalSettingsController extends Controller
             }
           }
         }
-        return self::grumble($this->l->t('SETTING %s NOT YET IMPLEMENTED', $parameter));
-        break;
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('SETTING %s NOT YET IMPLEMENTED', $parameter),
+        );
 
-      case 'shareownerpassword':
-        $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+      case ConfigConstants::SHARE_OWNER_PASSWORD_KEY:
+        $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwnerUid)) {
-          return self::grumble($this->l->t('Please create the share-owner user first.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Please create the share-owner user first.'));
         }
         $shareOwner = $this->user($shareOwnerUid);
         if (empty($shareOwner)) {
-          return self::grumble($this->l->t('Share-owner does not seem to exist, please recreate.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Share-owner does not seem to exist, please recreate.'));
         }
         if (!$shareOwner->canChangePassword()) {
-          return self::grumble($this->l->t('Authentication backend does not support changing passwords.'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Authentication backend does not support changing passwords.'));
         }
         $realValue = trim($value); // @@todo: check for valid password chars.
         if (empty($realValue)) {
-          return self::grumble($this->l->t('Password must not be empty'));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Password must not be empty'));
         }
         if (!$shareOwner->setPassword($realValue)) {
-          return self::grumble($this->l->t('Unable to set password for "%s".', [$shareOwnerUid]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Unable to set password for "%s".', [$shareOwnerUid]));
         }
         $this->setConfigValue($parameter, $realValue); // remember for remote API perhaps
-        return self::response($this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid]));
+        return (new DTO\MessagesResponse([$this->l->t('Successfully changed passsword for "%s".', [$shareOwnerUid])]))->response();
+
       case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[substr($parameter, 0, -strlen('Delete'))]) ? $parameter : null):
         // Delete config value and file. The file can be undeleted in the cloud, if necessary.
 
@@ -1015,12 +1087,12 @@ class PersonalSettingsController extends Controller
         // fallthrough
       case (!empty(ConfigConstants::DOCUMENT_TEMPLATES[$parameter]) ? $parameter : null):
         $oldFileName = $this->getConfigValue($parameter);
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
           return self::grumble($this->l->t(
             'Shared folder is not configured, cannot store templates.'));
         }
-        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        $templatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
         if (empty($templatesFolder)) {
           return self::grumble($this->l->t(
             'Document template folder is not configured, cannot store templates.'));
@@ -1069,12 +1141,12 @@ class PersonalSettingsController extends Controller
         return self::dataResponse([
           'message' => $messages,
         ]);
-      case 'sharedfolder':
+      case ConfigConstants::SHARED_FOLDER:
         $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1103,11 +1175,11 @@ class PersonalSettingsController extends Controller
               } catch (Throwable $t) {
                 // don't care
               }
-              return self::dataResponse([
-                'value' => $real,
+              return DTO\FolderValueResponse::fromArray([
                 'message' => $this->l->t('Created and shared new folder "%s".', [$real]),
+                'value' => $real,
                 'folderLink' => $folderLink,
-              ]);
+              ])->response();
             } else {
               return self::grumble($this->l->t('Failed to create new shared folder "%s".', [$real]));
             }
@@ -1119,11 +1191,11 @@ class PersonalSettingsController extends Controller
             } catch (Throwable $t) {
               // don't care
             }
-            return self::dataResponse([
-              'value' => $actual,
+            return DTO\FolderValueResponse::fromArray([
               'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
+              'value' => $actual,
               'folderLink' => $folderLink,
-            ]);
+            ])->response();
           } else {
             return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', [$actual]));
           }
@@ -1146,57 +1218,75 @@ class PersonalSettingsController extends Controller
       case ConfigConstants::PROJECTS_FOLDER:
         $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
-          return self::grumble($this->l->t('App user-group is not set.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('App user-group is not set.'),
+          );
         }
-        $shareOwner = $this->getConfigValue(ConfigConstants::SHAREOWNER_KEY);
+        $shareOwner = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
         if (empty($shareOwner)) {
-          return self::grumble($this->l->t('Share-owner is not set.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Share-owner is not set.'),
+          );
         }
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
-          return self::grumble($this->l->t('Shared folder is not set.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Shared folder is not set.'),
+          );
         }
         $sharedFolder .= UserStorage::PATH_SEP;
         if (!isset($value[$parameter])
             || !isset($value[$parameter.'-saved'])
             || !isset($value[$parameter.'-force'])) {
-          return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Invalid request parameters: ') . print_r($value, true),
+          );
         }
         $real = trim($value[$parameter]);
         $saved = $value[$parameter.'-saved'];
         $force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         $actual = $this->getConfigValue($parameter);
         if (empty($real)) {
-          return self::grumble($this->l->t('Folder must not be empty.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Folder must not be empty.'),
+          );
         }
         if ($actual != $saved) {
-          return self::grumble($this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Submitted "%s" != "%s" (stored)', [$saved, $actual]),
+          );
         }
         // shortcut for participants and posters folder, which only exist as subdirectory
+        $okMessage = null;
         switch ($parameter) {
           case ConfigConstants::PROJECT_PARTICIPANTS_FOLDER:
-            $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Participants-folder set to "%s".', $real));
+            $okMessage = $this->l->t('Participants-folder set to "%s".', $real);
+            break;
           case ConfigConstants::PROJECT_POSTERS_FOLDER:
-            $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
+            $okMessage = $this->l->t('Posters-folder set to "%s".', $real);
+            break;
           case ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
-            $this->setConfigValue($parameter, $real);
-            return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
+            $okMessage = $this->l->t('Participants downloads-folder set to "%s".', $real);
+            break;
           case ConfigConstants::BALANCES_FOLDER:
           case ConfigConstants::TRANSACTIONS_FOLDER:
             $prefixFolder = $this->getConfigValue(ConfigConstants::FINANCE_FOLDER);
             if (empty($prefixFolder)) {
-              return self::grumble(
+              throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
                   '"%s" has to be defined first before defining "%s".',
-                  [ ConfigConstants::FINANCE_FOLDER, $parameter ]));
+                  [ ConfigConstants::FINANCE_FOLDER, $parameter ]),
+              );
             }
             $prefixFolder .= UserStorage::PATH_SEP;
             break;
           default:
             $prefixFolder = '';
             break;
+        }
+        if ($okMessage !== null) {
+          $this->setConfigValue($parameter, $real);
+          return (new DTO\ValueResponse(value: $real, messages: [$okMessage]))->response();
         }
         try {
           $url = null;
@@ -1231,17 +1321,21 @@ class PersonalSettingsController extends Controller
                   $this->configCheckService->checkProjectFolder($taxOfficeFolder);
                   break;
               }
-              return self::dataResponse([
+              return DTO\FolderValueResponse::fromArray([
                 'value' => $real,
                 'url' => $url,
                 'message' => $this->l->t('Created and shared new folder "%s".', $prefixFolder . $real),
                 'folderLink' => $folderLink,
-              ]);
+              ])->response();
             } else {
-              return self::grumble($this->l->t('Failed to create new shared folder "%s".', $prefixFolder . $real));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Failed to create new shared folder "%s".', $prefixFolder . $real),
+              );
             }
           } elseif ($real != $saved) {
-            return self::grumble($saved . ' != ' . $real);
+            throw new Exceptions\EnduserNotificationException(
+              $saved . ' != ' . $real,
+            );
           } elseif ($this->configCheckService->checkProjectFolder($prefixFolder . $actual)) {
             try {
               $folderLink = $this->userStorage->getFilesAppLink($sharedFolder . $prefixFolder . $actual);
@@ -1271,14 +1365,16 @@ class PersonalSettingsController extends Controller
                 $this->configCheckService->checkProjectFolder($taxOfficeFolder);
                 break;
             }
-            return self::dataResponse([
+            return DTO\FolderValueResponse::fromArray([
               'value' => $actual,
               'url' => $url,
               'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $prefixFolder . $actual]),
               'folderLink' => $folderLink,
-            ]);
+            ])->response();
           } else {
-            return self::grumble($this->l->t('"%s" does not exist or is unaccessible.', $prefixFolder . $actual));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('"%s" does not exist or is unaccessible.', $prefixFolder . $actual),
+            );
           }
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
@@ -1286,28 +1382,28 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-      case 'concertscalendar':
-      case 'rehearsalscalendar':
-      case 'othercalendar':
-      case 'managementcalendar':
-      case 'financecalendar':
+      case (array_shift(
+        array_filter(
+          array_keys(ConfigConstant::CALENDARS),
+          fn(string $uri) => $uri . ConfigConstants::CALENDAR_KEY_POSTFIX == $parameter),
+      ) ?? '') . ConfigConstants::CALENDAR_KEY_POSTFIX:
         $real = trim($value);
-        $uri = substr($parameter, 0, -strlen('calendar'));
-        //$saved = $value[$parameter.'-saved'];
-        //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        $uri = substr($parameter, 0, -strlen(ConfigConstants::CALENDAR_KEY_POSTFIX));
+        //$saved = $value[$parameter . '-saved'];
+        //$force = filter_var($value[$parameter . '-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         $actual = $this->getConfigValue($parameter);
-        $actualId = $this->getConfigValue($parameter.'id');
+        $actualId = $this->getConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX);
         try {
           $newId = $this->configCheckService->checkSharedCalendar($uri, $real, $actualId);
           if ($newId > 0) {
             $this->setConfigValue($parameter, $real);
-            $this->setConfigValue($parameter.'id', $newId);
-            return self::valueResponse(
-              ['name' => $real, 'id' => $newId],
-              ($newId != $actualId
-               ? $this->l->t('Created and shared new calendar "%s".', [$real])
-               : $this->l->t('Validated shared calendar "%s".', [$real]))
-            );
+            $this->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $newId);
+            return (new DTO\NameIdValueResponse(
+              message: $newId != $actualId
+              ? $this->l->t('Created and shared new calendar "%s".', [$real])
+              : $this->l->t('Validated shared calendar "%s".', [$real]),
+              value: ['name' => $real, 'id' => $newId],
+            ))->response();
           } else {
             return self::grumble($this->l->t('Failed to create new shared calendar "%s".', [$real]));
           }
@@ -1317,23 +1413,26 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-      case 'generaladdressbook':
+      case ConfigConstants::GENERAL_ADDRESS_BOOK_KEY:
         $real = trim($value);
-        $uri = substr($parameter, 0, -strlen('addressbook'));
-        //$saved = $value[$parameter.'-saved'];
-        //$force = filter_var($value[$parameter.'-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        $uri = substr($parameter, 0, -strlen(ConfigConstants::ADDRESS_BOOK_POSTFIX));
+        //$saved = $value[$parameter . '-saved'];
+        //$force = filter_var($value[$parameter . '-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         $actual = $this->getConfigValue($parameter);
-        $actualId = $this->getConfigValue($parameter.'id');
+        $actualId = $this->getConfigValue($parameter . ConfigConstants::ID_POSTFIX);
         try {
           $newId = $this->configCheckService->checkSharedAddressBook($uri, $real, $actualId);
           if ($newId <= 0) {
-            return self::grumble($this->l->t('Failed to create new shared address book "%s".', [$real]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Failed to create new shared address book "%s".', [$real]),
+            );
           }
           $this->setConfigValue($parameter, $real);
           $this->setConfigValue($parameter.'id', $newId);
-          return self::valueResponse(
-            ['name' => $real, 'id' => $newId],
-            $this->l->t('Created and shared new address book "%s".', $real));
+          return (new DTO\NameIdValueResponse(
+            message: $this->l->t('Created and shared new address book "%s".', $real),
+            value: ['name' => $real, 'id' => $newId],
+          ))->response();
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Failure checking address book "%s", caught an exception.', $real),
@@ -1341,32 +1440,35 @@ class PersonalSettingsController extends Controller
           );
         }
 
-      case 'musiciansaddressbook':
+      case ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY:
         $real = trim($value);
         $this->setConfigValue($parameter, $real);
         $addressBook = $this->appContainer->query(AddressBookProvider::class)->getContactsAddressBook();
-        $this->setConfigValue($parameter.'id', $addressBook->getKey());
+        $this->setConfigValue($parameter . ConfigConstants::ID_POSTFIX, $addressBook->getKey());
         if (empty($real)) {
+
           $real = $addressBook->getDisplayName();
           $message = $this->l->t('Display name of musicians-addressbook reset to "%s".', $real);
         } else {
           $message = $this->l->t('Display name of musicians-addressbook set to "%s".', $real);
         }
         if ($addressBook->getDisplayName() != $real) {
-          return self::grumble($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
         }
-        return self::valueResponse(
-          [ 'name' => $addressBook->getDisplayName(), 'id' => $addressBook->getKey() ],
-          $message);
-      case 'eventduration':
+        return (new DTO\NameIdValueResponse(
+          message: $message,
+          value: [ 'name' => $addressBook->getDisplayName(), 'id' => $addressBook->getKey() ],
+        ))->response();
+
+      case ConfigConstants::EVENT_DURATION_KEY:
         $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
         if ($realValue === false) {
-          return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
+          throw new Exceptions\EnduserNotificationException($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
         }
         $this->setUserValue($parameter, $realValue);
-        return self::response($this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter]));
+        return (new DTO\MessagesResponse([$this->l->t('Setting %2$s to %1$s minutes.', [$realValue, $parameter])]))->response();
 
-      case 'importClubMembersAsCloudUsers':
+      case EnumSimpleSettingsKey::IMPORT_CLUB_MEMBERS_AS_CLOUD_USERS->value:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
@@ -1410,7 +1512,6 @@ class PersonalSettingsController extends Controller
         }
         return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
           'messages' => $hints,
-          'message' => $hints,
           'hints' => $hints,
         ]);
 
@@ -1445,12 +1546,9 @@ class PersonalSettingsController extends Controller
           [ $this->l->t('Cloud-user-views have been regenerated successfully.'), ],
           $hints,
         );
-        return self::dataResponse([
-          'message' => $messages,
-          'hints' => $hints,
-        ]);
+        return (new DTO\MessagesResponse(messages: $messages, hints: $hints))->response();
 
-      case 'cloudUserViewsDatabase':
+      case EnumSimpleSettingsKey::CLOUD_USER_VIEWS_DATABASE->value:
         $newValue = Util::normalizeSpaces($value);
         $oldValue = $this->getConfigValue($parameter, null);
         $this->logInfo('OLD / NEW ' . $oldValue . ' / ' . $newValue);
@@ -1473,13 +1571,14 @@ class PersonalSettingsController extends Controller
             );
           }
         }
-        return $this->setSimpleConfigValue($parameter, $value, furtherData: [
-          'messages' => $hints,
-          'message' => $hints,
-          'hints' => $hints,
-        ]);
+        return $this->setSimpleConfigValue(
+          $parameter,
+          $value,
+          messages: $hints,
+          hints: $hints,
+        );
 
-      case 'musicianPersonalizedViews':
+      case EnumSimpleSettingsKey::MUSICIAN_PERSONALIZED_VIEWS->value:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
@@ -1504,11 +1603,12 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-        return $this->setSimpleConfigValue($parameter, $stringValue, furtherData: [
-          'messages' => $hints,
-          'message' => $hints,
-          'hints' => $hints,
-        ]);
+        return $this->setSimpleConfigValue(
+          $parameter,
+          value: $stringValue,
+          messages: $hints,
+          hints: $hints,
+        );
 
       case 'musicianPersonalizedViewsRecreateViews':
         $hints = '';
@@ -1528,56 +1628,19 @@ class PersonalSettingsController extends Controller
           [ $this->l->t('Personalized single-row database-views have been regenerated successfully.'), ],
           $hints,
         );
-        return self::dataResponse([
-          'messages' => $messages,
-          'message' => $messages,
-          'hints' => $hints,
-        ]);
+        return (new DTO\MessagesResponse(
+          messages: $messages,
+          hints: $hints,
+        ))->response();
 
       case 'keydistribute':
         list('status' => $status, 'messages' => $messages) = $this->distributeEncryptionKey();
         $this->logInfo('STATUS ' . (int)$status . ' ' . print_r($messages, true));
-        return self::dataResponse([ 'message' => $messages ], $status);
-      case 'emaildistribute':
-        $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
-        $emailUser = $this->getConfigValue('emailuser');
-        $emailPassword = $this->getConfigValue('emailpassword');
-        $noEmailUsers = [];
-        $fatalUsers = [];
-        $modifiedUsers = [];
-        foreach ($this->group()->getUsers() as $user) {
-          $userId = $user->getUID();
-          try {
-            $roundCubeConfig->setEmailCredentials($userId, $emailUser, $emailPassword);
-            $modifiedUsers[] = $userId;
-          } catch (Exception $e) {
-            $noEmailUsers[$userId] = $e->getMessage();
-          } catch (Throwable $t) {
-            $fatalUsers[$userId] = $t->getMessage();
-          }
-        }
-        $messages = [];
-        if (!empty($modifiedUsers)) {
-          $messages[] = $this->l->t('Successfully distributed the email credentials for %s.', implode(', ', $modifiedUsers));
-        } else {
-          $messages[] = $this->l->t('Unable to distribute the email credentials to any user.');
-        }
-        if (!empty($noEmailUsers)) {
-          $messages[] = $this->l->t('Email credentials could not be set for %s.', implode(', ', array_keys($noEmailUsers)));
-        }
-        foreach ($noEmailUsers as $userId => $message) {
-          $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
-        }
-        foreach ($fatalUsers as $userId => $message) {
-          $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
-        }
-        $status = empty($fatalUsers) && !empty($modifiedUsers)
-          ? Http::STATUS_OK
-          : Http::STATUS_BAD_REQUEST;
-        return self::dataResponse([ 'message' => $messages ], $status);
+        return (new DTO\MessagesResponse($messages))->response($status);
+
       case 'emailtest':
-        $user = $this->getConfigValue('emailuser');
-        $password = $this->getConfigValue('emailpassword');
+        $user = $this->getConfigValue(ConfigConstants::EMAIL_USER);
+        $password = $this->getConfigValue(ConfigConstants::EMAIL_PASSWORD);
         $messages = [];
         $check = [];
         foreach (self::EMAIL_PROTO as $proto) {
@@ -1598,12 +1661,12 @@ class PersonalSettingsController extends Controller
         } else {
           return self::grumble($message);
         }
-      case 'smtpserver':
-      case 'imapserver':
-      case 'smtpport':
-      case 'imapport':
-      case 'smtpsecurity':
-      case 'imapsecurity':
+      case EnumSimpleSettingsKey::SMTP_SERVER->value:
+      case EnumSimpleSettingsKey::IMAP_SERVER->value:
+      case EnumSimpleSettingsKey::SMTP_PORT->value:
+      case EnumSimpleSettingsKey::IMAP_PORT->value:
+      case EnumSimpleSettingsKey::SMTP_SECURITY->value:
+      case EnumSimpleSettingsKey::IMAP_SECURITY->value:
         $realValue = Util::normalizeSpaces($value);
         $proto = substr($parameter, 0, 4);
         $key = substr($parameter, 4);
@@ -1613,6 +1676,7 @@ class PersonalSettingsController extends Controller
               return self::grumble($this->l->t('Server name "%s" has neither an IPV4 nor an IPV6 address', $realValue));
             }
             return $this->setSimpleConfigValue($parameter, $realValue);
+
           case 'port':
             if (empty($realValue)) {
               $security = $this->getConfigValue($proto.'security');
@@ -1626,6 +1690,7 @@ class PersonalSettingsController extends Controller
                   '"%s" is not an integral number in the range [%d, %d]', [ $realValue, 1, 65535 ]));
             }
             return $this->setSimpleConfigValue($parameter, $realValue);
+
           case 'security':
             if (empty($realValue)) {
               return $this->setSimpleConfigValue($parameter, $realValue);
@@ -1637,21 +1702,24 @@ class PersonalSettingsController extends Controller
             $this->setConfigValue($parameter, $realValue);
             $this->setConfigValue($proto.'port', $port);
             return self::dataResponse([
-              'message' => $this->l->t(
-                'Using transport security "%s" for protocol "%s".',
-                [ $realValue, $proto ]),
+              'messages' => [
+                $this->l->t(
+                  'Using transport security "%s" for protocol "%s".',
+                  [ $realValue, $proto ],
+                )],
               'proto' => $proto,
               'port' => $port,
             ]);
         }
         break;
-      case 'emailtestmode':
+      case EnumSimpleSettingsKey::EMAIL_TEST_MODE->value:
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%s" for set "%s" is not convertible to boolean.', [$value, $parameter]));
         }
         $stringValue = $realValue ? 'on' : 'off';
         return $this->setSimpleConfigValue($parameter, $stringValue);
+
       case 'announcementsMailingListAutoconf':
         /** @var MailingListsService $listsService */
         $listsService = $this->di(MailingListsService::class);
@@ -1666,7 +1734,7 @@ class PersonalSettingsController extends Controller
         $moderators = array_filter([ $this->getConfigValue(ConfigConstants::MAILING_LIST_CONFIG['moderator']) ]);
         $posters = $moderators;
         $listInfo = $listsService->getListInfo($announcementsMailingList);
-        if ($listInfo === null)  {
+        if ($listInfo === null) {
           $listsService->createList($announcementsMailingList);
         }
         $listsService->configureAnnouncementsList($announcementsMailingList, $announcementsMailingListName, $owners, $moderators, $posters);
@@ -1680,9 +1748,10 @@ class PersonalSettingsController extends Controller
             empty($templates) ? $this->l->t('none') : implode(', ', $templates),
           ])
         );
-      case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
-      case ConfigConstants::EMAIL_TEST_ADDRESS_KEY:
-      case ConfigConstants::EMAIL_FROM_ADDRESS_KEY:
+
+      case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_KEY->value:
+      case EnumSimpleSettingsKey::EMAIL_TEST_ADDRESS_KEY->value:
+      case EnumSimpleSettingsKey::EMAIL_FROM_ADDRESS_KEY->value:
         $realValue = Util::normalizeSpaces($value);
         try {
           $parsedEmail = $this->emailAddressService->parseAddressString($realValue);
@@ -1694,18 +1763,18 @@ class PersonalSettingsController extends Controller
         }
         $realValue = array_key_first($parsedEmail);
         $displayName = reset($parsedEmail);
-        $furtherData = [ 'message' => [] ];
+        $messages = [];
         if (!empty($displayName)) {
+          $humanValue = $displayName . ' <' . $realValue . '>';
           switch ($parameter) {
-            case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY:
-              $this->setSimpleConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName, responseData: $furtherData);
-              $reportValue = $displayName . ' <' . $realValue . '>';
+            case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_KEY->value:
+              $this->setConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY, $displayName);
               break;
-            case ConfigConstants::EMAIL_TEST_ADDRESS_KEY:
-              $this->setSimpleConfigValue(ConfigConstants::EMAIL_TEST_NAME_KEY, $displayName, responseData: $furtherData);
+            case EnumSimpleSettingsKey::EMAIL_TEST_ADDRESS_KEY->value:
+              $this->setConfigValue(ConfigConstants::EMAIL_TEST_NAME_KEY, $displayName);
               break;
-            case ConfigConstants::EMAIL_FROM_ADDRESS_KEY:
-              $this->setSimpleConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, $displayName, responseData: $furtherData);
+            case EnumSimpleSettingsKey::EMAIL_FROM_ADDRESS_KEY->value:
+              $this->setConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, $displayName);
               break;
           }
         }
@@ -1723,28 +1792,57 @@ class PersonalSettingsController extends Controller
             $this->logException($t, $logMessage);
             /** @var MailingListsService $listsService */
             $listsService = $this->di(MailingListsService::class);
-            $furtherData = Util::arrayMergeRecursive($furtherData, [
-              'message' => [ $logMessage ],
-            ]);
+            $messages[] = $logMessage;
           }
           // try to create the template folder even if the list does not exist
           $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
 
-          $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+          $messages = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
           $this->logInfo('SHARE URI ' . $shareUri);
         }
-        // fall through
-      case ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY:
-      case 'bulkEmailSubjectTag':
-      case 'emailuser':
-      case 'emailpassword':
-      case ConfigConstants::EMAIL_FROM_NAME_KEY:
-      case ConfigConstants::EMAIL_TEST_NAME_KEY:
-      case ConfigConstants::EMAIL_FROM_DOMAIN_KEY:
-        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
-      case 'bulkEmailPrivacyNotice':
+        $key = EnumSimpleSettingsKey::get($parameter);
+        $this->setSimpleConfigValue($key, $realValue, $humanValue, $messages);
+        return (new DTO\SimpleSetValueResponse(
+          key: $key,
+          value: $humanValue,
+          messages: $messages,
+        ))->response();
+
+      case EnumSimpleSettingsKey::EMAIL_FROM_DOMAIN_KEY->value:
+        $emailFromDomain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
+        if (empty($emailFromDomain)) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Please first configure the email domain you intend to send messages form.'),
+          );
+        }
+        $messages = [];
+        // Nowadays we use SSO, so make sure RCmail has the correct domain and
+        // is configured to use SSO.
+        $roundCubeConfig = $this->appContainer->get(RoundCubeConfig::class);
+        $roundCubeConfig->setAppValue(
+          RoundCubeConfig::EMAIL_ADDRESS_CHOICE,
+          RoundCubeConfig::EMAIL_ADDRESS_CHOICE_USER_ID,
+        );
+        $roundCubeConfig->setAppValue(
+          RoundCubeConfig::EMAIL_DEFAULT_DOMAIN,
+          $emailFromDomain,
+        );
+        $messages[] = $this->l->t(
+          'Configured the Roundcube mailer for SSO using the current user\'s user-id and credentials with the configure email-domain "%1$s".',
+          $emailFromDomain,
+        );
+        // fallthrough
+      case EnumSimpleSettingsKey::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY->value:
+      case EnumSimpleSettingsKey::BULK_EMAIL_SUBJECT_TAG->value:
+      case EnumSimpleSettingsKey::EMAIL_USER->value:
+      case EnumSimpleSettingsKey::EMAIL_PASSWORD->value:
+        $messages = $messags ?? [];
+        return $this->setSimpleConfigValue($parameter, $realValue ?? $value, humanValue: $humanValue ?? null, messages: $messages);
+
+      case EnumSimpleSettingsKey::BULK_EMAIL_PRIVACY_NOTICE->value:
         $value = $this->fuzzyInputService->purifyHTML($value);
         return $this->setSimpleConfigValue($parameter, $value);
+
       case ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS:
       case ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY:
       case ConfigConstants::CLOUD_ATTACHMENT_ALWAYS_LINK:
@@ -1758,7 +1856,8 @@ class PersonalSettingsController extends Controller
           $this->l->t($stringValue),
           $this->l->t($parameter),
         ]));
-      case ConfigConstants::ATTACHMENT_LINK_EXPIRATION_LIMIT:
+
+      case EnumSimpleSettingsKey::ATTACHMENT_LINK_EXPIRATION_LIMIT->value:
         $interval = $this->fuzzyInputService->dateIntervalValue($value);
         if (!empty($interval)) {
           // try to at least have some slightly useful number of days for things
@@ -1766,17 +1865,18 @@ class PersonalSettingsController extends Controller
           $now = new DateTimeImmutable;
           $realValue = $now->diff($now->add($interval))->format('%a');
           // $realValue = $interval->total('days');
-          $reportValue = $this->l->t('%d days', $realValue);
+          $humanValue = $this->l->t('%d days', $realValue);
         } else {
-          $realValue = $reportValue = null;
+          $realValue = $humanValue = null;
         }
-        return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
-      case ConfigConstants::ATTACHMENT_LINK_SIZE_LIMIT:
+        return $this->setSimpleConfigValue($parameter, $realValue, $humanValue);
+
+      case EnumSimpleSettingsKey::ATTACHMENT_LINK_SIZE_LIMIT->value:
         $realValue = $this->fuzzyInputService->storageValue($value);
-        $reportValue = empty($realValue)
+        $humanValue = empty($realValue)
           ? null
           : $this->humanFileSize($realValue);
-        return $this->setSimpleConfigValue($parameter, $realValue, $reportValue);
+        return $this->setSimpleConfigValue($parameter, $realValue, $humanValue);
 
       case (in_array($parameter, ConfigConstants::MAILING_LIST_CONFIG) ? $parameter : null):
         return $this->setSimpleConfigValue($parameter, $value);
@@ -1794,7 +1894,7 @@ class PersonalSettingsController extends Controller
             break;
           }
         }
-        $furtherData = [];
+        $messages = [];
         if ($all) {
           $oldValue = $this->getConfigValue($parameter);
           $this->setConfigValue($parameter, ${$parameter});
@@ -1818,14 +1918,14 @@ class PersonalSettingsController extends Controller
           // try to generate the template directories
           // try to create the template folder even if the list does not exist
           $shareUri = $listsService->ensureTemplateFolder($this->l->t('announcements'));
-          $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
+          $messages[] = $this->l->t('Link-shared auto-responses directory for the announcements mailing list is "%s".', $shareUri);
           $this->logInfo('SHARE URI ' . $shareUri);
 
           $shareUri = $listsService->ensureTemplateFolder($this->l->t('projects'));
-          $furtherData['message'][] = $this->l->t('Link-shared auto-responses directory for project mailing lists is "%s".', $shareUri);
+          $messages[] = $this->l->t('Link-shared auto-responses directory for project mailing lists is "%s".', $shareUri);
           $this->logInfo('SHARE URI ' . $shareUri);
         }
-        return $this->setSimpleConfigValue($parameter, $value, furtherData: $furtherData);
+        return $this->setSimpleConfigValue($parameter, $value, messages: $messages);
 
       case 'translation':
         if (empty($value['key']) || empty($value['language'])) {
@@ -1926,12 +2026,12 @@ class PersonalSettingsController extends Controller
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
-      case 'documenttemplatesfolder':
-        $sharedFolder = $this->getConfigValue('sharedfolder');
+      case ConfigConstants::DOCUMENT_TEMPLATES_FOLDER:
+        $sharedFolder = $this->getConfigValue(ConfigConstants::SHARED_FOLDER);
         if (empty($sharedFolder)) {
           return self::grumble($this->l->t('Shared folder is not configured.'));
         }
-        $templatesFolder = $this->getConfigValue('documenttemplatesfolder');
+        $templatesFolder = $this->getConfigValue(ConfigConstants::DOCUMENT_TEMPLATES_FOLDER);
         if (empty($templatesFolder)) {
           return self::grumble($this->l->t('Document template folder is not configured.'));
         }
@@ -2250,53 +2350,69 @@ class PersonalSettingsController extends Controller
   }
 
   /**
-   * @param string $key Config key to set.
+   * @param string|EnumSimpleSettingsKey $key Config key to set.
    *
-   * @param mixed $value Value to set. If empty config entry will be deleted.
+   * @param null|string $value Value to set. If empty config entry will be deleted.
    *
-   * @param mixed $reportValue Human readable value for display in the
+   * @param null|string $humanValue Human readable value for display in the
    * frontend (e.g. formatted floating point value, or boolean as text.
    *
-   * @param array $furtherData Further data to be mixed into the
-   * data-response data.
+   * @param array $messages "First-level" messages, to be displayed by toasts.
    *
-   * @param null|array $responseData The data wrapped into the return
-   * value. Will be set if specified.
+   * @param array $hints Instructions, further info.
    *
    * @return Http\DataResponse
    */
   private function setSimpleConfigValue(
-    string $key,
-    mixed $value,
-    mixed $reportValue = null,
-    array $furtherData = [],
-    ?array &$responseData = null
+    string|EnumSimpleSettingsKey $key,
+    ?string $value,
+    ?string $humanValue = null,
+    ?array &$messages = null,
+    ?array $hints = null,
   ):Http\DataResponse {
+    try {
+      $key = EnumSimpleSettingsKey::get($key);
+    } catch (Throwable $t) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Configuration key "%1$s" is not known. This is an internal error, please contact the server administrator.', $key),
+        previous: $t,
+        httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+      );
+    }
+
     $realValue = Util::normalizeSpaces($value);
-    if (empty($reportValue)) {
-      $reportValue = $realValue;
+    if (empty($humanValue)) {
+      $humanValue = $realValue;
+    }
+
+    if ($messages === null) {
+      $messages = [];
     }
 
     if (empty($realValue)) {
-      $this->deleteConfigValue($key);
-      return self::dataResponse(
-        $responseData = Util::arrayMergeRecursive([
-          'message' => [ $this->l->t('Erased config value for parameter "%s".', $key), ],
-          $key => $value,
-        ], $furtherData)
-      );
+      $this->deleteConfigValue($key->value);
+      array_unshift($messages, $this->l->t('Erased config value for parameter "%s".', $key->value));
+      return (new DTO\SimpleSetValueResponse(
+        key: $key,
+        value: null,
+        messages: $messages,
+        hints: $hints,
+      ))->response();
     } else {
-      $this->setConfigValue($key, $realValue);
+      $this->setConfigValue($key->value, $realValue);
 
-      if (preg_match('/.*password.*/i', $key)) {
-        $reportValue = $realValue = $realValue[0] . '••••••••';
+      if (preg_match('/.*password.*/i', $key->value)) {
+        $humanValue = $realValue = $realValue[0] . '••••••••';
       }
-      return self::dataResponse(
-        $responseData = Util::arrayMergeRecursive([
-          'message' => [ htmlspecialchars($this->l->t('Value for "%1$s" set to "%2$s"', [ $key, $reportValue ])), ],
-          $key => $reportValue,
-          $key.'Raw' => $realValue,
-        ], $furtherData));
+      $humanValue = htmlspecialchars($humanValue);
+      array_unshift($messages, $this->l->t('Value for "%1$s" set to "%2$s"', [ $key->value, $humanValue ]));
+      return (new DTO\SimpleSetValueResponse(
+        key: $key,
+        messages: $messages,
+        hints: $hints,
+        value: $realValue,
+        humanValue: $humanValue,
+      ))->response();
     }
   }
 
@@ -2337,7 +2453,7 @@ class PersonalSettingsController extends Controller
     if (!empty($modifiedUsers)) {
       $messages[] = $this->l->t('Successfully distributed the app encryption key to %s.', implode(', ', $modifiedUsers));
     } else {
-      $messages[] = $this->l->t('Unable to distribute the app encryptionkey to any user.');
+      $messages[] = $this->l->t('Unable to distribute the app encryption key to any user.');
     }
     if (!empty($noKeyUsers)) {
       $message = $this->l->t('Public key missing for %s, key distribution failed.', implode(', ', array_keys($noKeyUsers)));

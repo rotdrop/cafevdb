@@ -27,8 +27,10 @@ namespace OCA\CAFEVDB\Service;
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * Data provider for the ToolTipsService in order to make loading of
@@ -69,7 +71,7 @@ class ToolTipsDataService
         $parameter = fn(IL10N $l) => $l->t($text, $param);
       }
     }
-    return [ 'text' => $text, 'parameters' => $parameters ];
+    return [ 'text' => $text, 'parameters' => $parameters, 'options' => $options ];
   }
 
   private static $toolTipsData = null;
@@ -94,6 +96,8 @@ class ToolTipsDataService
   private static function generate():array
   {
     return [
+      ConfigConstants::GENERAL_ADDRESS_BOOK_KEY => self::t('Shared addressbook for general contacts, like business partners.'),
+      ConfigConstants::MUSICIANS_ADDRESS_BOOK_KEY => self::t('The name of the automatically generated addressbook which exports all musicians of the database as contacts.'),
       'mailmerge' => [
         'examples' => [
           'finance' => [
@@ -374,7 +378,7 @@ of this button.'),
           ],
           'validation' => [
             'external-links' => [
-              'ssl' => self::t('Reject external web-links for valid SSL certificates. This can be disable in a testing environment, but should be left enabled in production mode.'),
+              'ssl' => self::t('Test external web-links for valid SSL certificates. This can be disabled in a testing environment, but should be left enabled in production mode.'),
               'enforce-ssl' => self::t('Reject external links using the unencrypted http protocol, i.e. reject links starting with "http://" vs. "https://".'),
             ],
           ],
@@ -399,7 +403,7 @@ give you the choice to select any musician as recipient.'),
               'except-project' => self::t('Choose among all musicians currently <b>NOT</b> registered for this project.', options: [ ToolTipsService::OPTION_HTML => true ]),
               'project-mailing-list' => self::t('Send the email to the project-mailing list. The project mailing-list is an open discussion list where all CONFIRMED project members are subscribed (unless they changed it by themselves). Replies to such emails normally end up again in the list and are thus also delivered to all project participants.'),
               'announcements-mailing-list' => self::t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
-              'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
+              ConfigConstants::DATABASE_KEY => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
 
             'participation-status' => self::t('Select recipients by member status. Normally, conductors and soloists
@@ -1072,6 +1076,7 @@ operators on the left. For text-fields
 <li>wildcards in quoted strings are ignored</li>
 <li>space around unquoted strings is removed</li>
 <li>single or double quotes have the same meaning</li>
+<li>strings not containing wildcards are treated as being enclosed in wildcars</li>
 </ul>
 Text-fields allow (in particular) for the following
 filter possibilities (meaning that <code>SOMETHING</code> is your example
@@ -1083,7 +1088,11 @@ search-string):
 <dt>SOME%%THING</dt>
 <dd>search for any expression starting with SOME and ending with THING</dd>
 <dt>&quot;SOME*THING&quot;</dt>
-<dd>search for exactly the expression SOME*THING, the wildcard &quot;*&quot; is not taken in to account</dd>
+<dd>search for the expression %%SOME*THING%%, the wildcard &quot;*&quot; is not taken into account</dd>
+<dt>=&quot;SOME*THING&quot;</dt>
+<dd>search for SOME*THING, the wildcard &quot;*;&quot; is not taken into account, no wildcards surrounding the search term.
+<dt>=SOME*THING</dt
+<dd>search for SOME%%THING (with wildcard in the middle), no wildcards surrounding the search term will be added.
 <dt>!SOMETHING</dt>
 <dd>match everything not being matched by SOMETHING</dd>
 </dl>
@@ -1389,9 +1398,9 @@ tablet or desktop computer.'),
 
       ],
 
-      'balancesfolder-force' => self::t('Force the re-creation of the folder where financial balances are stored.'),
+      ConfigConstants::BALANCES_FOLDER . '-force' => self::t('Force the re-creation of the folder where financial balances are stored.'),
 
-      'projectsfolder-force' => self::t('Force the re-creation of the folder where project data is stored.'),
+      ConfigConstants::PROJECTS_FOLDER . '-force' => self::t('Force the re-creation of the folder where project data is stored.'),
 
       'redaxo-archive' => self::t('Article category of the concert-archive inside the Redaxo CMS.'),
 
@@ -1439,20 +1448,19 @@ and contact the treasurer for further instructions.',
         ],
       ],
 
-      'sharedfolder' => self::t('Folder shared by the orchestra group.'),
-      'postboxfolder' => self::t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
-      'documenttemplatesfolder' => self::t('Shared folder for document templates.'),
-      'projectsfolder' => self::t('Shared folder for per-project data.'),
-      'projectparticipantsfolder' => self::t('Shared folder for per-project per-participant data'),
-      'projectpostersfolder' => self::t('Shared folder for flyers and posters'),
-      'projectpublicdownloadsfolder' => self::t(
+      ConfigConstants::SHARED_FOLDER => self::t('Folder shared by the orchestra group.'),
+      ConfigConstants::POSTBOX_FOLDER => self::t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
+      ConfigConstants::DOCUMENT_TEMPLATES_FOLDER => self::t('Shared folder for document templates.'),
+      ConfigConstants::PROJECTS_FOLDER => self::t('Shared folder for per-project data.'),
+      ConfigConstants::PROJECT_PARTICIPANTS_FOLDER => self::t('Shared folder for per-project per-participant data'),
+      ConfigConstants::PROJECT_POSTERS_FOLDER => self::t('Shared folder for flyers and posters'),
+      ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER => self::t(
         'Link-shared folder for data needed by participants.'
         . ' In particular, this can be used for music-sheet downloads.'
         . ' The folder is automatically created and shared when the project is created.'
         . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
       ),
-      'balancesfolder' => self::t('Shared folder for the financial balances, probably used after the project is finished.'),
-      'taxOfficeInTrayFolder' => self::t('Subfolder for incoming letters from the tax offices.'),
+      ConfigConstants::BALANCES_FOLDER => self::t('Shared folder for the financial balances, probably used after the project is finished.'),
       'taxExcemptionNoticeTemplate' => self::t('Template file name for tax excemption notices, may and probably should contain
 placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period in the file-name.'),
 
@@ -1483,7 +1491,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
         ],
         'personal' => [
           'general' => [
-            'orchestra' => [
+            ConfigConstants::ORCHESTRA_NAME_KEY => [
               'name' => self::t('Short descriptive name of the orchestra, e.g. use "camerata" instead of "camerata academica freiburg e.V.". The short name is used in various places. It should be lower-case and "handy", without spaces.'),
               'locale' => self::t('The locale of the orchestral organization. In particular, this determines the currency and the name of some directories in the file-system. Note that the timezone is always the same as the one used by the server the app runs on.'),
             ],
@@ -1495,7 +1503,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
               'separate-database' => self::t('In order to isolate the SQL-views for the cloud-user-backend from the rest of the database tables it is possible to put them into their own separate database. Please note that it is neccessary that the app\'s database account has all -- and in particular: GRANT -- privileges on that dedicated database.'),
             ],
           ],
-          'encryptionkey' => [
+          EnumPersonalSettingsKey::ENCRYPTION_KEY->value => [
             'default' => self::t('Optionally parts of the data-base and some configuration settings can be stored encrypted. If you are confronted with error messages about a missing encryption key, then you can re-install the encryption key here (if you know it). In order to authorize the change you have also to enter your login-password in the password-field.'),
             'own-password' => self::t('Changing the encryption key needs your login-password. Please enter it here before trying to save the changed encryption key.'),
           ],
@@ -1504,7 +1512,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
 
       'settings-button' => self::t('Personal application settings.'),
 
-      'sharedfolder-force' => self::t('Force the re-creation of the root of the shared-folder hierarchy.'),
+      ConfigConstants::SHARED_FOLDER . '-force' => self::t('Force the re-creation of the root of the shared-folder hierarchy.'),
 
       'shareowner-force' => self::t('Re-create the share-owner.'),
 

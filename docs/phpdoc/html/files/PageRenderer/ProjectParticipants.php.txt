@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
@@ -1074,11 +1075,11 @@ GROUP BY t.id';
         'default' => null,
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVDF' => [
-          0 => '',
+          '' => '',
           1 => '&#10004;',
         ],
         'align|LF' => 'center',
-        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, "")',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-deactivated'],
         'display' => [ 'popup' => 'tooltip' ],
       ]);
@@ -1091,14 +1092,14 @@ GROUP BY t.id';
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
         'sort' => true,
-        'default' => null,
+        'default' => 1,
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVDF' => [
-          0 => '',
+          '' => '',
           1 => '&#10004;',
         ],
         'align|LF' => 'center',
-        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'sql|LVDF' => 'COALESCE($join_col_fqn, "")',
         'tooltip' => $this->toolTipsService['page-renderer:musicians:cloud-account-disabled'],
         'display' => [ 'popup' => 'tooltip' ],
       ]);
@@ -1272,7 +1273,7 @@ GROUP BY t.id';
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'select'   => 'D',
         'maxlen'   => 128,
-        'default'  => $this->getConfigValue('streetAddressCountry'),
+        'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
         'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
         'values2'     => $countries,
         'valueGroups' => $countryGroups,

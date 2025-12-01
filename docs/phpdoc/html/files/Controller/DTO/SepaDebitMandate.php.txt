@@ -1,0 +1,80 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2025 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller\DTO;
+
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus;
+
+/**
+ * DTO for a debit mandate, only the bare minimum of data.
+ */
+class SepaDebitMandate extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+{
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly int $projectId,
+    public readonly int $musicianId,
+    public readonly int $bankAccountSequence,
+    public readonly bool $bankAccountDeleted,
+    public readonly int $mandateSequence,
+    public readonly bool $mandateDeleted,
+    public readonly string $mandateReference,
+    public readonly ?EnumSepaDebitMandateRevocationStatus $state,
+    public readonly ?string $contents,
+    /** @var string[] */
+    public readonly ?array $messages,
+  ) {
+  }
+
+  /**
+   * @param array $data
+   *
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract($data);
+    try {
+      if ($state !== null) {
+        $state = EnumSepaDebitMandateRevocationStatus::get($state);
+      }
+    } catch (InvalidArgumentException $e) {
+      throw $e;
+    }
+    return new self(
+      $projectId,
+      $musicianId,
+      $bankAccountSequence,
+      $bankAccountDeleted,
+      $mandateSequence,
+      $mandateDeleted,
+      $mandateReference,
+      $state ?? null,
+      $contents ?? null,
+      $messages ?? null,
+    );
+  }
+}

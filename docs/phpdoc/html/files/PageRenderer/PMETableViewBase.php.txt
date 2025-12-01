@@ -34,6 +34,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -136,11 +137,11 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   const TAX_EXEMPTION_ITEMS_TABLE = 'TaxExemptionItems';
   const TAXATION_STATUTORY_SOURCES_TABLE = 'TaxationStatutorySources';
 
-  const VALUES_SEP = ',';
-  const JOIN_FIELD_NAME_SEPARATOR = ':';
-  const JOIN_KEY_SEP = ':';
-  const COMP_KEY_SEP = '-';
-  const VALUES_TABLE_SEP = '@';
+  const VALUES_SEP = DataConstants::VALUES_SEP;
+  const JOIN_FIELD_NAME_SEPARATOR = DataConstants::JOIN_FIELD_NAME_SEPARATOR;
+  const JOIN_KEY_SEP = DataConstants::JOIN_KEY_SEP;
+  const COMP_KEY_SEP = DataConstants::COMP_KEY_SEP;
+  const VALUES_TABLE_SEP = DataConstants::VALUES_TABLE_SEP;
 
   const MASTER_FIELD_SUFFIX = '__master_key_';
 
@@ -258,12 +259,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
     $this->pmeBare = false;
     $this->pmeRecordId = $this->pme->getCGIRecordId();
-    $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
-    $this->expertMode = $this->getUserValue('expertMode', false) === 'on';
-    $this->financeMode = $this->getUserValue('financeMode', false) === 'on';
-    $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
+    $this->showDisabled = $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED, false) === 'on';
+    $this->expertMode = $this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, false) === 'on';
+    $this->financeMode = $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, false) === 'on';
+    $this->filterVisibility = $this->getUserValue(EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY, 'off') == 'on';
 
-    $this->debugRequests = 0 != ((int)$this->getConfigValue('debugmode', 0) & ConfigConstants::DEBUG_REQUEST);
+    $this->debugRequests = 0 != ((int)$this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0) & ConfigConstants::DEBUG_REQUEST);
 
     $this->membersProjectId = $this->getClubMembersProjectId();
 
@@ -274,7 +275,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'musicianId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectId' => fn($value):?int => $value === null ? null : (int)$value,
       'projectName' => fn($value):string => (string)($value ?? ''),
-      'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue('pagerows', 20)),
+      'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue(EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT, 20)),
     ];
 
     foreach ($cgiDefault as $key => $default) {

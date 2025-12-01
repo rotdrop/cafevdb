@@ -125,6 +125,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-emailform.html"><abbr title="\OCA\CAFEVDB\EmailForm">EmailForm</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-events.html"><abbr title="\OCA\CAFEVDB\Events">Events</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-exceptions.html"><abbr title="\OCA\CAFEVDB\Exceptions">Exceptions</abbr></a></dt>
+            <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-legacy.html"><abbr title="\OCA\CAFEVDB\Legacy">Legacy</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-listener.html"><abbr title="\OCA\CAFEVDB\Listener">Listener</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-maintenance.html"><abbr title="\OCA\CAFEVDB\Maintenance">Maintenance</abbr></a></dt>
             <dt class="phpdocumentor-table-of-contents__entry -namespace"><a href="namespaces/oca-cafevdb-middleware.html"><abbr title="\OCA\CAFEVDB\Middleware">Middleware</abbr></a></dt>
@@ -193,6 +194,8 @@
                         if (xhr.status < 400 && xhr.responseText) {
                             code.textContent = xhr.responseText;
                             Prism.highlightElement(code);
+                            d=document.getElementsByClassName("line-numbers");
+                            d[0].scrollTop = d[0].children[1].offsetTop;
                             return;
                         }
 

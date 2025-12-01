@@ -40,17 +40,12 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
-  /**
-   * @var int
-   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private $id;
+  private int $id;
 
   /**
-   * @var string
-   *
    * Project payments are actually also expenses in which case the sign of the
    * payment is negative. Receptions are positive.
    */
@@ -58,23 +53,16 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private RationalNumber $amount;
 
   /**
-   * @var bool
-   *
    * Flags the payment as a donation. The supporting document of the
    * corresponding receivable will be the corresponding certificate.
    */
-  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
-  private $isDonation;
+  #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => 0])]
+  private bool $isDonation = false;
 
-  /**
-   * @var string
-   */
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
-  private $subject;
+  private ?string $subject = null;
 
   /**
-   * @var ProjectParticipantFieldDatum
-   *
    * Each project payment must be backed by a "receivable".
    */
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
@@ -82,51 +70,38 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'option_key', nullable: false)]
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
-  private $receivable;
+  private ProjectParticipantFieldDatum $receivable;
 
-  /**
-   * @var ProjectParticipantFieldDataOption
-   */
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
   #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'key', nullable: false)]
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
-  private $receivableOption;
+  private ProjectParticipantFieldDataOption $receivableOption;
 
   /**
-   * @var CompositePayment
-   *
    * Composite payments group several payments together.
    */
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
   #[Gedmo\Timestampable(on: ['update', 'create', 'delete'], timestampField: 'updated')]
-  private $compositePayment;
+  private CompositePayment $compositePayment;
 
-  /**
-   * @var Project
-   */
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'payments', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-  private $project;
+  private Project $project;
 
-  /**
-   * @var Musician
-   */
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
-  private $musician;
+  private Musician $musician;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, fetch: 'EXTRA_LAZY')]
-  private $projectParticipant;
+  private ProjectParticipant $projectParticipant;
 
   /**
-   * @var DatabaseStorageFolder
-   *
    * Project payments may be supported by documents below the project balance,
    * or by individual supporting documents which are tied to the receivables.
    */
   #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, fetch: 'EXTRA_LAZY')]
-  private $balanceDocumentsFolder;
+  private ?DatabaseStorageFolder $balanceDocumentsFolder = null;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -187,13 +162,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set projectParticipant.
    *
-   * @param null|ProjectParticipant $projectParticipant
+   * @param ProjectParticipant $projectParticipant
    *
    * @return ProjectPayment
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectPayment
+  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectPayment
   {
     $this->projectParticipant = $projectParticipant;
+    $this->project = $projectParticipant->getProject();
+    $this->musician = $projectParticipant->getMusician();
 
     return $this;
   }
