@@ -442,7 +442,8 @@ class AsymmetricKeyService
   }
 
   /**
-   * Push a new recryption-request notification and record the request int the user preferences.
+   * Push a new recryption-request notification and record the request int the
+   * user preferences. The request-data is just the current timestamp.
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
