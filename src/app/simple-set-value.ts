@@ -39,7 +39,7 @@ export interface GetValueResult<T extends HTMLElement = HTMLElement, Value = Def
 
 export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value> > {
   /**
-   *Setup function called before placing the AJAX call. If false is
+   * Setup function called before placing the AJAX call. If false is
    * returned the AJAX call will not be placed and the cleanup
    * function is called.
    */
@@ -62,9 +62,7 @@ export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value 
  * @param [userCallbacks] If a function: success callback. If
  *    an object: partial object with keys 'setup', 'success', 'fail',
  *    'cleanup', 'getValue', each pointing to a function performing
- *    the respective task. The callback 'getValue' computes the value
- *    to be communication via Ajax to the server as payload { value:
- *    VALUE }.
+ *    the respective task.
  */
 const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value> >(
   $element: JQuery<Element>,

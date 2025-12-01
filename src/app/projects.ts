@@ -173,7 +173,8 @@ const instrumentationNumbersPopup = (containerSel: string, post: AsyncNextcloudE
  * initiated from.
  *
  * @param post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post.projectName Name of the project.
+ * @param post.projectId Database id of the project.
  */
 const participantFieldsPopup = (
   containerSel: string,
@@ -217,7 +218,8 @@ const participantFieldsPopup = (
  * initiated from.
  *
  * @param post Arguments object:
- * { projectName: 'NAME', projectId: XX }
+ * @param post.projectName Name of the project.
+ * @param post.projectId Database id of the project.
  */
 const projectViewPopup = async function(
   containerSel: string,
@@ -1096,8 +1098,9 @@ const tableLoadCallback = function(
   /**
    * Update the instrument-voices select with data from an Ajax call
    *
-   * @param [additionalVoices] Record of additional voices to add
-   * in the form { INSTRUMENT: VOICE }.
+   * @param [additionalVoices] Record of additional voices to add.
+   * @example
+   * { INSTRUMENT: VOICE }.
    */
   const updateInstrumentVoices = function(additionalVoices?: Record<string, number>) {
     const $instrumentsSelect = $container.find<HTMLSelectElement>('select.projects--instrumentation');
