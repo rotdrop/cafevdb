@@ -23,7 +23,7 @@
 
 import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
-import Console from './console.js';
+import Console from './console.ts';
 import type { AxiosResponse } from 'axios';
 
 export const logger = new Console('TOOLTIPS');
