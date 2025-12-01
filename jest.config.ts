@@ -5,7 +5,11 @@
 
 import deepmerge from 'deepmerge';
 import preset from '@vue/cli-plugin-unit-jest/presets/typescript-and-babel/jest-preset.js';
+import cwd from 'cwd';
 import type { Config } from 'jest';
+
+const APP_ROOT = cwd();
+const JEST_ARTIFACTS = `${APP_ROOT}/build/artifacts/tests/jest`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (preset as any).testURL;
@@ -116,7 +120,10 @@ const config: Config = deepmerge(
     // globalTeardown: undefined,
 
     // A set of global variables that need to be available in all test environments
-    // globals: {},
+    globals: {
+      APP_ROOT,
+      JEST_ARTIFACTS,
+    },
 
     // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
     // maxWorkers: "50%",
@@ -143,8 +150,7 @@ const config: Config = deepmerge(
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
       '\\.(s?css|less)$': 'identity-obj-proxy',
-    }
-,
+    },
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
 
@@ -192,7 +198,6 @@ const config: Config = deepmerge(
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: [
-
       './tests/jest/setup.ts',
     ],
 

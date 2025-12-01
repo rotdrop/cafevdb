@@ -21,31 +21,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { expect, beforeAll } from '@jest/globals';
 import type { DownloadsShareResponse } from '../../../../../build/ts-types/php-modules/Controller/DTO.ts';
+import { spawnSync } from 'child_process';
+import path from 'path';
+import fs from 'fs';
 
-const data: DownloadsShareResponse = JSON.parse(`{
-  "expires": "2025-11-04T01:02:03.000000Z",
-  "messages": [
-    "MESSAGE"
-    ],
-  "share": "SHARE",
-  "folder": "FOLDER"
-}`);
+declare global {
+  const APP_ROOT: string;
+  const JEST_ARTIFACTS: string;
+}
+
+let dto: DownloadsShareResponse;
+
+beforeAll(async () => {
+  spawnSync(path.join(__dirname, 'dto-generator.php'), ['DownloadsShareResponse', JEST_ARTIFACTS]);
+  const dtoJSON = fs.readFileSync(path.join(JEST_ARTIFACTS, 'DownloadsShareResponse' + '.json'));
+  dto = JSON.parse(dtoJSON.toString());
+  console.info('DTP', { dto, json: dtoJSON.toString() });
+});
 
 describe('DownloadsShareResponse', () => {
   it('should have a plain string as expires date', () => {
-    expect(typeof data.expires).toBe('string');
+    expect(typeof dto.expires).toBe('string');
   });
 });
 
 describe('DownloadsShareResponse', () => {
   it('should have an expires string which is convertible to a Date instance', () => {
-    expect(new Date(data.expires)).toBeInstanceOf(Date);
+    expect(new Date(dto.expires!)).toBeInstanceOf(Date);
   });
 });
 
 describe('DownloadsShareResponse', () => {
   it('should have an expires string of the form YYYY-MM-DD', () => {
-    expect(data.expires.match(/^\d{4}-\d{2}-\d{2}/)[0]).toBe(data.expires.substring(0, 10));
+    expect(dto!.expires!.match(/^\d{4}-\d{2}-\d{2}/)[0]).toBe(dto.expires!.substring(0, 10));
   });
 });
