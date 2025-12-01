@@ -242,7 +242,7 @@ const config: Config = deepmerge(
 
     // A map from regular expressions to paths to transformers
     transform: {
-      '^.+\\.tsx?$': ['ts-jest', { babelConfig: true, useESM: true }],
+      '^.+\\.tsx?$': ['ts-jest', { babelConfig: true, useESM: true, tsconfig: './tsconfig.jest.json' }],
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation

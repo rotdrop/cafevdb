@@ -54,6 +54,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
+    "isolatedModules": true,
     "esModuleInterop": true
   },
   "vueCompilerOptions": {
