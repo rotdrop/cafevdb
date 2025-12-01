@@ -430,31 +430,41 @@ EOF;
               $currentFullNS = null;
               $headerData = [];
             } else {
+              [,$typeSpec] = explode(':', $line);
               foreach ($topLevelTypes as $type => $definition) {
-                if (str_contains($line, ': ' . $type)) {
-                  $line = str_replace(': ' . $type, ': ' . self::ROOT_NS . '.' . $type, $line);
+                if (preg_match('/[[:^alnum:]]' . $type . '[[:^alnum:]]/', $typeSpec)) {
+                  $line = str_replace($type, self::ROOT_NS . '.' . $type, $line);
                 }
               }
               $line = str_replace($currentFullNS . '.', '', $line);
+              [,$typeSpec] = explode(':', $line);
               foreach ($allNameSpaces as $existingNameSpace) {
-                if (str_contains($line, ': ' . $existingNameSpace . '.')) {
+                if (preg_match('/[[:^alnum:]]' . preg_quote($existingNameSpace . '.') . '/', $typeSpec)) {
                   $selfNS = explode('.', $currentFullNS);
                   $refNS = explode('.', $existingNameSpace);
                   $output->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace);
                   $prefix = [];
                   do {
                     array_shift($selfNS);
-                    $upNameSpace = array_shift($refNS);
-                    $prefix[] = $upNameSpace;
+                    $importNameSpace = array_shift($refNS);
+                    $prefix[] = $importNameSpace;
                   } while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS));
                   array_pop($prefix);
-                  if (!empty($prefix)) {
-                    $prefix = implode('.', $prefix) . '.';
-                    // $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
-                    $line = str_replace(' ' . $prefix, ' ', $line);
+                  if (empty($prefix)) {
+                    $erasePrefix = '';
+                  } else {
+                    $erasePrefix = implode('.', $prefix) . '.';
                   }
                   $up = str_repeat('../', count($selfNS));
-                  $headerData[] = "import * as {$upNameSpace} from './{$up}{$upNameSpace}.ts';";
+                  $importPath = "./{$up}{$importNameSpace}";
+                  while (!empty($refNS)) {
+                    $erasePrefix .= $importNameSpace . '.';
+                    $importNameSpace = array_shift($refNS);
+                    $importPath .= '/' . $importNameSpace;
+                  }
+                  // $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
+                  $line = str_replace($erasePrefix . $importNameSpace . '.', $importNameSpace . '.', $line);
+                  $headerData[] = "import * as {$importNameSpace} from '{$importPath}.ts';";
                 }
               }
               $currentData .= $line . PHP_EOL;

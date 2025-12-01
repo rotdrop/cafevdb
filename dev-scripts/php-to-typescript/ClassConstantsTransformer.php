@@ -108,6 +108,9 @@ class ClassConstantsTransformer implements Transformer
         // array reduce does not give access to keys ...
         foreach ($value as $key => $member) {
           $member = self::convertValueToTypeScript($member, $level + 1);
+          if (str_contains($key, ' ')) {
+            $key = "['{$key}']";
+          }
           $result .= str_pad('', ($level + 1) * 2) . "{$key}: {$member} as const," . PHP_EOL;
         }
         $result .= str_pad('', $level * 2) . '}';
