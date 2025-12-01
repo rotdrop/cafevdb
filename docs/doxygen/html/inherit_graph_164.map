@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,139,32"/>
-<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_response_1_1_pre_rendered_template_response.html" title="A template response which optionally pre&#45;renders its content." alt="" coords="187,5,396,32"/>
-<area shape="poly" id="edge566_Node000000_Node000001" title=" " alt="" coords="154,16,186,16,186,21,154,21"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,92,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html" title="DBAL logger implementation which logs to the cloud log." alt="" coords="140,5,234,32"/>
+<area shape="poly" id="edge589_Node000000_Node000001" title=" " alt="" coords="107,16,139,16,139,21,107,21"/>
 </map>

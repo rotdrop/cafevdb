@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['initialstatetrait_0',['InitialStateTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4aa2f4528bedbf95618fbb6b764c6d1c',1,'OCA::CAFEVDB::Traits']]],
-  ['instrumentstrait_1',['InstrumentsTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#ae5d7924baf6e301c0074e52bae451cf2',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]]
+  ['hasannotationorattributetrait_0',['HasAnnotationOrAttributeTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a8145445ae34c0c84d600b47ce31fa3a9',1,'OCA::CAFEVDB::Toolkit::Traits']]]
 ];

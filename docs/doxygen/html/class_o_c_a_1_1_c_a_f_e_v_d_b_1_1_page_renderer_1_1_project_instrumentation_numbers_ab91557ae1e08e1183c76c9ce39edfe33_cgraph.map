@@ -1,71 +1,14 @@
 <map id="render" name="render">
-<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,419,63,445"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="494,40,699,83"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="34,418,41,354,56,263,78,175,92,141,109,118,149,89,194,66,241,51,290,40,340,35,389,34,478,39,478,44,389,39,340,40,291,46,243,56,196,71,152,93,113,122,97,144,83,177,61,264,47,354,39,418"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="508,119,684,161"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="35,418,44,363,59,289,81,217,94,190,109,171,152,143,200,123,250,110,302,103,354,100,404,102,494,114,493,119,403,108,354,106,302,108,251,115,202,128,155,148,112,175,99,192,86,219,64,290,49,364,40,418"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="154,511,371,569"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="64,443,186,501,184,506,62,448"/>
-<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="795,789,971,832"/>
-<area shape="poly" id="edge32_Node000001_Node000012" title=" " alt="" coords="43,445,84,545,120,620,168,703,225,789,294,870,332,907,373,940,417,970,463,995,535,1023,566,1030,596,1033,626,1030,657,1023,729,995,774,965,812,925,842,882,863,844,868,847,846,885,816,928,778,969,732,1000,659,1029,627,1036,596,1038,566,1036,534,1028,461,1000,414,975,370,945,329,911,290,873,221,792,163,706,116,623,79,548,38,447"/>
-<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="465,185,727,228"/>
-<area shape="poly" id="edge34_Node000001_Node000018" title=" " alt="" coords="48,416,75,392,109,368,203,320,280,290,461,237,487,230,488,235,463,243,282,295,205,325,112,373,78,396,51,420"/>
-<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a61a318b7b87e25880772a49534c096ff" title="Define a basic join&#45;structure for phpMyEdit by using the information from self\$joinStructure." alt="" coords="132,383,392,425"/>
-<area shape="poly" id="edge29_Node000001_Node000023" title=" " alt="" coords="63,426,116,419,117,425,63,431"/>
-<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="160,989,365,1032"/>
-<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="38,445,40,548,49,706,58,788,71,864,89,927,100,951,113,969,128,983,147,993,144,998,125,987,109,972,96,954,84,929,66,866,53,789,43,706,34,548,33,446"/>
-<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a540e76a933fa4da984bb45cc629a47b1" title="Create the base options array for phpMyEdit." alt="" coords="148,1056,376,1115"/>
-<area shape="poly" id="edge33_Node000001_Node000025" title=" " alt="" coords="38,446,38,560,45,740,53,835,67,922,87,994,99,1021,113,1042,136,1061,133,1065,109,1046,94,1024,82,996,62,923,48,835,39,741,32,561,32,446"/>
-<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a1f1e3a7628fefdebfcff97c388d72bb1" title="Join with an in&#45;database translation table." alt="" coords="111,1139,414,1181"/>
-<area shape="poly" id="edge35_Node000001_Node000026" title=" " alt="" coords="39,446,45,584,60,801,82,1011,97,1085,105,1110,113,1125,114,1126,110,1130,109,1128,100,1112,91,1087,77,1012,54,802,40,584,33,446"/>
-<area shape="rect" id="Node000028" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a4bc3294be95e06a40ae3bdc7d5419749" title="Generate a join&#45;table field, given join&#45;table and field name." alt="" coords="131,185,394,228"/>
-<area shape="poly" id="edge37_Node000001_Node000028" title=" " alt="" coords="36,417,59,349,80,308,109,271,137,249,169,232,172,237,140,254,113,275,84,311,63,351,41,419"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="1036,5,1241,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="682,37,778,20,837,16,883,16,988,20,1020,21,1020,26,988,25,883,21,837,21,779,25,682,42"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="778,35,988,77"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="699,57,763,56,763,61,699,62"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="988,41,1020,38,1020,43,989,47"/>
-<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="784,125,982,168"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="684,139,769,141,769,147,684,145"/>
-<area shape="poly" id="edge7_Node000006_Node000006" title=" " alt="" coords="835,125,833,115,841,106,858,101,883,99,910,101,927,107,925,112,909,106,883,104,859,106,844,111,838,117,840,124"/>
-<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ad92070c3daaf56e870af042e4ebf3b78" title="Slice the given entity id by the given keys and return a composite key joined with self\COMP_KEY_SEP." alt="" coords="466,335,726,377"/>
-<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="311,508,361,474,412,435,435,410,445,398,461,387,471,382,474,386,463,392,448,402,439,413,416,439,364,479,314,512"/>
-<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="780,460,986,503"/>
-<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="371,517,462,504,620,490,765,482,765,488,620,495,462,509,372,522"/>
-<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="472,401,721,444"/>
-<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="335,508,461,460,503,447,505,452,463,465,337,513"/>
-<area shape="poly" id="edge14_Node000007_Node000012" title=" " alt="" coords="372,556,599,596,731,622,776,655,813,696,844,738,866,774,861,777,839,740,809,699,772,659,729,626,598,601,371,561"/>
-<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a224e0cc0562d0f2642f19e9f8fb03596" title="Explode a string of the form." alt="" coords="508,636,684,679"/>
-<area shape="poly" id="edge17_Node000007_Node000014" title=" " alt="" coords="337,567,463,615,505,628,503,633,461,620,335,572"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a1c7326cf6f827db64c27bbb89f64dd7d" title="Explode a string of the form." alt="" coords="508,943,684,985"/>
-<area shape="poly" id="edge19_Node000007_Node000015" title=" " alt="" coords="272,569,293,643,329,740,355,792,385,842,422,889,464,929,495,946,493,951,460,933,418,892,381,845,350,795,324,743,287,644,267,571"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a5974458d91d622f2f455643f17af9417" title="Find the recursion end&#45;point for a nested join description." alt="" coords="462,727,730,769"/>
-<area shape="poly" id="edge21_Node000007_Node000016" title=" " alt="" coords="299,568,373,627,463,688,523,718,521,723,461,693,369,631,296,572"/>
-<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a52152c1de369b4179e8e391899eca24a" title="Inverse of self\joinTableFieldName()." alt="" coords="482,793,710,836"/>
-<area shape="poly" id="edge23_Node000007_Node000017" title=" " alt="" coords="282,568,310,615,351,673,403,730,432,757,463,779,472,784,469,788,461,784,429,761,399,734,347,676,306,618,277,571"/>
-<area shape="poly" id="edge24_Node000007_Node000018" title=" " alt="" coords="326,508,373,477,394,458,412,436,426,409,432,384,431,335,430,311,432,287,441,263,460,238,463,236,466,240,464,242,446,265,437,288,435,311,436,335,437,384,431,411,416,439,398,461,376,481,329,512"/>
-<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="476,252,716,311"/>
-<area shape="poly" id="edge26_Node000007_Node000020" title=" " alt="" coords="322,508,369,476,412,436,428,406,433,377,440,349,447,335,460,321,463,318,467,322,464,325,452,338,445,351,438,378,433,407,416,439,373,480,325,512"/>
-<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#ac2f42dfc2f9ac43830897947d86cf3bc" title="Enable or disable writing to the change&#45;log table." alt="" coords="507,860,685,919"/>
-<area shape="poly" id="edge27_Node000007_Node000021" title=" " alt="" coords="277,569,303,627,342,702,396,780,428,815,464,846,494,863,491,868,460,850,425,819,392,783,338,705,298,630,272,571"/>
-<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a62e9094de93176fae4478b7eae96d61f" title="Unset all array elements with value $value." alt="" coords="508,519,684,561"/>
-<area shape="poly" id="edge28_Node000007_Node000022" title=" " alt="" coords="372,537,493,537,493,543,372,543"/>
-<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="704,442,766,455,765,460,703,447"/>
-<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="795,393,971,436"/>
-<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="721,417,780,415,780,420,721,422"/>
-<area shape="poly" id="edge15_Node000012_Node000012" title=" " alt="" coords="835,789,833,779,841,770,858,765,883,763,910,765,927,771,925,776,909,770,883,768,859,770,844,775,838,781,840,788"/>
-<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="1051,789,1226,832"/>
-<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="971,808,1035,808,1035,813,971,813"/>
-<area shape="poly" id="edge18_Node000014_Node000012" title=" " alt="" coords="685,671,731,688,766,708,798,731,851,777,848,781,795,735,763,712,729,693,684,676"/>
-<area shape="poly" id="edge20_Node000015_Node000012" title=" " alt="" coords="684,945,729,928,763,909,795,886,848,841,851,845,798,891,766,913,731,933,685,950"/>
-<area shape="poly" id="edge22_Node000016_Node000016" title=" " alt="" coords="542,727,540,717,549,707,568,702,596,700,627,702,645,709,643,714,626,708,596,705,569,707,552,712,545,718,548,725"/>
-<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="795,192,971,235"/>
-<area shape="poly" id="edge25_Node000018_Node000019" title=" " alt="" coords="728,207,780,208,780,214,728,212"/>
-<area shape="poly" id="edge30_Node000023_Node000020" title=" " alt="" coords="313,380,461,320,480,314,482,319,463,325,315,385"/>
-<area shape="rect" id="Node000027" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a71f870e11d154559adae09425756b2b6" title="We have this Nextcloud convention that de means &quot;German personal Du&quot; and de_DE means &quot;German formal S..." alt="" coords="481,1131,711,1189"/>
-<area shape="poly" id="edge36_Node000026_Node000027" title=" " alt="" coords="414,1157,465,1157,465,1163,414,1163"/>
-<area shape="poly" id="edge38_Node000028_Node000002" title=" " alt="" coords="302,182,375,144,461,104,509,86,511,91,463,109,377,149,304,187"/>
-<area shape="poly" id="edge39_Node000028_Node000005" title=" " alt="" coords="372,182,492,158,494,163,373,187"/>
-<area shape="poly" id="edge40_Node000028_Node000018" title=" " alt="" coords="395,204,449,204,449,209,395,209"/>
-<area shape="poly" id="edge41_Node000028_Node000020" title=" " alt="" coords="362,226,462,249,461,254,361,231"/>
+<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,104,63,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="137,29,312,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,101,110,82,129,75,131,80,112,86,64,106"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="122,96,328,139"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="63,115,107,115,107,120,63,120"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a540e76a933fa4da984bb45cc629a47b1" title="Create the base options array for phpMyEdit." alt="" coords="111,163,339,221"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="64,128,112,148,127,154,125,159,110,153,62,133"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="392,29,589,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="313,48,376,48,376,53,313,53"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="441,29,439,19,447,10,464,5,491,3,519,5,536,11,534,16,518,10,491,8,465,10,450,15,444,21,446,28"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7c872230ae003c93d82e0e6de31f6212" title="Set table&#45;navigation enable/disable." alt="" coords="387,96,594,139"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="328,115,372,115,372,120,328,120"/>
 </map>

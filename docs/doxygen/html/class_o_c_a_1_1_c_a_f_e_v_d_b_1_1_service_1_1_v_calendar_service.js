@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a45c1f4d8e8c55add03b938bd3be46209", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#adfbe2d1539a4c760a771ceead76daa9b", null ],
     [ "addParticipants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aabb41dada7b7f42283e1fe61bab0a887", null ],
     [ "addRelations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae752a1150511a5891f344e73105d901d", null ],
     [ "addVAlarmsFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19", null ],
@@ -17,6 +17,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service =
     [ "getVObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a304fb17fd89d3a9ab0517d50bb7ab3", null ],
     [ "getVObjectType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a74115b9298d21b9cbf1ef88796d1b1b7", null ],
     [ "isEventRecurring", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a9cf53613b1df4a77e0905d0b2f30a969", null ],
+    [ "legacyEventObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a867ef783d0c7b2fad9ad8a2edfcde4a8", null ],
     [ "setCategories", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a72a7419a45e317c5c17d513c0f12fc71", null ],
     [ "setDescription", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a5eadc354fe61d457e2e074427426989e", null ],
     [ "setSummary", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#afc403f39a368a0b656f85737cb75cf71", null ],

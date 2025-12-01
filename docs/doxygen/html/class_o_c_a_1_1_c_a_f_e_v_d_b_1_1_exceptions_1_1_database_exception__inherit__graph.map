@@ -1,31 +1,33 @@
 <map id="DatabaseException" name="DatabaseException">
-<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="288,316,423,343"/>
+<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="288,341,423,368"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="487,5,687,48"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,300,369,248,390,183,422,116,444,85,470,58,486,46,489,51,473,62,448,89,427,119,395,185,374,250,364,301"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="357,326,366,270,386,198,401,160,419,123,442,88,470,58,485,46,488,51,473,62,446,92,424,125,405,162,391,199,372,271,362,327"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="474,72,700,99"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="361,300,374,257,396,205,427,153,447,129,470,109,490,97,492,101,473,113,451,133,432,156,401,207,379,259,366,302"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="359,326,371,278,392,219,424,159,445,132,470,109,489,97,492,101,473,113,449,136,429,162,397,221,376,279,364,327"/>
 <area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="471,123,703,149"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="366,300,382,267,404,229,434,191,470,159,492,148,494,152,473,164,438,195,409,232,386,270,370,303"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="363,326,378,287,400,242,430,197,470,159,490,148,493,152,473,163,435,200,405,245,383,290,368,327"/>
 <area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="497,173,677,216"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="377,303,418,263,470,226,496,214,498,219,473,230,421,267,381,306"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="372,327,413,275,440,249,470,226,496,213,498,218,473,230,443,253,417,279,376,330"/>
 <area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="486,240,688,267"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="396,307,470,276,512,265,513,270,472,281,398,312"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="384,329,423,301,470,276,504,265,506,270,472,281,426,306,387,334"/>
 <area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_legacy_exception.html" title="Legacy PHPMyEdit exception, no prepared statements, just plain SQL and a line number." alt="" coords="498,291,676,317"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="439,318,498,311,498,316,439,323"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="434,335,522,315,523,321,435,340"/>
 <area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="493,341,681,368"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="439,336,493,342,492,347,438,341"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="439,352,492,352,492,357,439,357"/>
 <area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_missing_identifier_exception.html" title="Thrown if an identifier is missing trying to fetch an entity." alt="" coords="501,392,673,435"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="401,347,472,378,506,389,504,394,470,382,399,352"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="426,370,501,389,500,394,425,375"/>
 <area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_not_connected_exception.html" title="Thrown when EntityManager\getConnection() is called when there is no connection." alt="" coords="477,459,697,485"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="377,354,418,401,444,425,473,444,499,456,497,460,470,449,440,429,414,405,373,357"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="382,377,423,412,473,444,503,456,501,461,470,449,419,417,379,381"/>
 <area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="492,509,682,536"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="370,356,386,389,409,427,438,464,473,495,494,506,492,511,470,500,434,468,404,430,382,391,366,358"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="373,381,413,440,441,470,473,495,496,506,494,511,470,500,437,474,409,443,369,384"/>
 <area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_rollback_only_exception.html" title="Maybe thrown if &quot;rollback&#45;only&quot; is detected." alt="" coords="480,560,694,587"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="366,357,379,400,401,451,432,503,451,526,473,546,492,557,490,562,470,550,447,530,427,506,396,454,374,402,361,359"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="368,382,383,420,405,464,435,509,473,546,493,557,490,562,470,550,430,512,400,467,378,422,363,384"/>
 <area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="485,611,689,653"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="364,357,374,409,395,473,427,540,448,570,473,597,489,608,486,612,470,601,444,574,422,543,390,475,369,410,358,359"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,316,240,343"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,327,288,327,288,332,256,332"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,316,113,343"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,327,160,327,160,332,128,332"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="365,382,377,429,398,487,430,546,450,573,473,597,490,608,487,612,470,601,446,577,425,549,393,489,372,431,360,384"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_entity_serialization_exception.html" title="Exception thrown by OCA\CAFEVDB\Database\Doctrine\ORM\UtilntitySerializer." alt="" coords="495,677,679,704"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="361,383,369,442,387,519,402,558,421,597,444,633,473,663,496,677,493,682,470,667,440,636,416,600,397,560,382,520,364,443,356,384"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,341,240,368"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,352,288,352,288,357,256,357"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,341,113,368"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,352,160,352,160,357,128,357"/>
 </map>

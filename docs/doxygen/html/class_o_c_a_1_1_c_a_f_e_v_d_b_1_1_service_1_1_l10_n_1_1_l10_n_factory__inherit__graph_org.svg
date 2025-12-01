@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="A decoratory which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal...">
+<g id="a_Node000001"><a xlink:title="A decorator which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal ...">
 <polygon fill="#999999" stroke="#666666" points="73.75,-20 1.5,-20 1.5,0 73.75,0 73.75,-20"/>
 <text text-anchor="middle" x="37.62" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">L10NFactory</text>
 </a>

@@ -1,5 +1,9 @@
 <map id="getState" name="getState">
-<area shape="rect" id="Node000001" title=" " alt="" coords="232,29,302,56"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="5,5,184,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,45,184,45,184,40,216,40"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="484,29,555,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="258,5,436,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="469,45,437,45,437,40,469,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="143,29,210,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,45,211,45,211,40,243,40"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#a2444bf58f53e352d397b831ecd85303f" title="{}" alt="" coords="5,29,95,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="127,45,95,45,95,40,127,40"/>
 </map>

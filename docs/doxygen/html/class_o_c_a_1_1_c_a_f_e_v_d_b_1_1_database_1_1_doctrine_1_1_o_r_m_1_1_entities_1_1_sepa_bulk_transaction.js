@@ -35,5 +35,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSubmissionTaskUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a951324d968df496e734ecc49353f5a88", null ],
     [ "setSubmitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a871220d595693ec53a364ee4b85e0974", null ],
     [ "totals", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#ad00aef3585d6bbf4514b2d9505791ac1", null ],
-    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
+    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
+    [ "$dueDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a43af8e382cc3584a9c627597bb50b8b2", null ],
+    [ "$submissionDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a8fe2dfd40c341611813b0d8ef1f6da8a", null ],
+    [ "$submitDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a9189041839fd8c28f66efff35745e38b", null ]
 ];

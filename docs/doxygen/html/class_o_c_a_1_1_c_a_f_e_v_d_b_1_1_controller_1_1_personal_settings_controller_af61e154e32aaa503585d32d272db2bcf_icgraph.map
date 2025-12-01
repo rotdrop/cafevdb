@@ -1,5 +1,7 @@
 <map id="generateLocaleInfo" name="generateLocaleInfo">
-<area shape="rect" id="Node000001" title=" " alt="" coords="93,5,224,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html#a1dfbe71398e7f2c750ec96519e2e35a9" title="Get some stuff." alt="" coords="5,5,45,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,21,45,21,45,16,77,16"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="290,5,421,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html#a1dfbe71398e7f2c750ec96519e2e35a9" title="Get some stuff." alt="" coords="203,5,242,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="274,21,243,21,243,16,274,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html#a3fcc14c81371390afd6cbcde9f35d934" title=" " alt="" coords="5,5,155,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="187,21,155,21,155,16,187,16"/>
 </map>

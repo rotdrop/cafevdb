@@ -1,5 +1,11 @@
 <map id="GeoStateProvince" name="GeoStateProvince">
-<area shape="rect" id="Node000001" title="GeoStatesProvinces, localized first&#45;level administrative regions, states, provinces etc." alt="" coords="5,80,133,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="21,5,117,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,48,72,80,66,80,66,48"/>
+<area shape="rect" id="Node000001" title="GeoStatesProvinces, localized first&#45;level administrative regions, states, provinces etc." alt="" coords="5,279,133,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="50,5,146,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,48,76,180,72,278,66,278,70,180,90,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_country.html" title="GeoCountries." alt="" coords="85,180,176,207"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="106,47,131,179,125,180,101,48"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_continent.html" title="GeoContinents." alt="" coords="136,81,237,108"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="126,40,173,79,170,83,123,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="117,221,79,280,75,277,112,218"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="174,123,140,181,135,178,169,120"/>
 </map>

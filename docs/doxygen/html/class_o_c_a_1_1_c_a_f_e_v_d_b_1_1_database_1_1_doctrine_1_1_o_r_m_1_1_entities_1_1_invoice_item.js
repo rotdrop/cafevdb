@@ -23,5 +23,10 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203", null ],
     [ "setReceivable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a2d19d53b87c2858af94e5caffe240a7e", null ],
     [ "setReceivableOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a54a861ce6e1e1a04d4342fe65958ab6b", null ],
-    [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a3bf78a815e53a0b9effb9467601f3fe4", null ]
+    [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a3bf78a815e53a0b9effb9467601f3fe4", null ],
+    [ "$amount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#accd665f2532410dbc489337e11ff7948", null ],
+    [ "$balanceDocumentsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#acc6bc51a5fd5b725e81e144243675369", null ],
+    [ "$invoice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a0fef976433d083c789c19ac8deaf875d", null ],
+    [ "$receivable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a1f6c98397f432d7b3cb3f705aec33bf3", null ],
+    [ "$subject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_invoice_item.html#a6f8306c425a912f301d653dea3bd3725", null ]
 ];

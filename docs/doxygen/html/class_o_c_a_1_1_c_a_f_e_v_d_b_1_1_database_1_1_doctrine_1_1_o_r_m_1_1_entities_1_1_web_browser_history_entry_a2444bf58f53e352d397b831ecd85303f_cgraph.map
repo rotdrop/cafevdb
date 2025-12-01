@@ -1,5 +1,11 @@
 <map id="__construct" name="__construct">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="5,5,95,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="143,5,210,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,127,16,127,21,95,21"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,95,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="143,31,210,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,41,127,41,127,47,95,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="258,7,436,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="210,41,242,41,242,47,210,47"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="488,5,551,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="436,28,472,23,473,28,437,33"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="484,56,555,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="437,55,469,59,468,65,436,60"/>
 </map>

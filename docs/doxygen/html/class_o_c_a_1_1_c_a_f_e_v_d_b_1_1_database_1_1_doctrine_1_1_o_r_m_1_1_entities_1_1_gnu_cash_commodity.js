@@ -18,6 +18,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setNamespace", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#a08df81eea767d57277e59c064c98f6d5", null ],
     [ "setQuoteFlag", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#a69dfdc358d483ca06a4317e3e79a7f66", null ],
     [ "setQuoteSource", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#a0ec33df0c7d6e57c24533c1d6f42a187", null ],
-    [ "setQuoteTz", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#afda63f2c9057bd031afbdd610b8b8ac4", null ],
-    [ "$guid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#a8d760d88b9a19c02e085fbae8c31454c", null ]
+    [ "setQuoteTz", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html#afda63f2c9057bd031afbdd610b8b8ac4", null ]
 ];

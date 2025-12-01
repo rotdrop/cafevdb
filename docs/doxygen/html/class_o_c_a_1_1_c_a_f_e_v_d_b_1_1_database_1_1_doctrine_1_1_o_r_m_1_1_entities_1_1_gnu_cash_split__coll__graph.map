@@ -1,5 +1,16 @@
 <map id="GnuCashSplit" name="GnuCashSplit">
-<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="5,80,108,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="8,5,105,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,48,59,80,54,80,54,48"/>
+<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="41,279,144,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="55,5,151,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,46,44,105,25,142,11,181,8,194,11,206,23,227,40,247,74,276,71,280,36,251,19,230,6,208,3,194,6,179,20,139,40,102,80,43"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_transaction.html" title="Link to the Gnucash accounts table." alt="" coords="20,180,165,207"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="90,47,76,82,74,109,77,136,90,179,85,180,72,137,69,109,71,81,85,45"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html" title="Link to the GnuCash commodities table." alt="" coords="86,81,229,108"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="123,43,151,79,146,83,119,46"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html" title="Link to the Gnucash accounts table." alt="" coords="189,180,313,207"/>
+<area shape="poly" id="edge7_Node000005_Node000002" title=" " alt="" coords="167,35,207,53,243,79,260,97,270,114,274,133,271,157,261,181,256,179,266,155,268,133,265,116,256,100,240,83,204,58,165,40"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,222,95,278,90,278,90,222"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="110,118,96,133,90,157,92,179,87,180,85,156,92,131,106,115"/>
+<area shape="poly" id="edge8_Node000005_Node000004" title=" " alt="" coords="170,121,191,154,224,177,221,182,187,158,165,124"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="229,219,178,257,128,281,126,276,175,252,225,215"/>
+<area shape="poly" id="edge9_Node000005_Node000005" title=" " alt="" coords="330,184,340,193,332,202,314,205,313,200,329,197,335,193,327,189"/>
 </map>

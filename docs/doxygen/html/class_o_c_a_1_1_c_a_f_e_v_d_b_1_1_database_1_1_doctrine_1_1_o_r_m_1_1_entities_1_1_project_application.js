@@ -11,5 +11,8 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#a6c6bdf687a0e29ba44bad9e15aaf99a2", null ],
     [ "setPasswordHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#ad75c3ee0423d5913bbb2bfb8b498c028", null ],
     [ "setProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#a1416519f7adc9edc6d2941bf430220d9", null ],
-    [ "$email", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#aa5809edde76526314aef4529d7d285e9", null ]
+    [ "$email", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#aa5809edde76526314aef4529d7d285e9", null ],
+    [ "$musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#a402a1261eca63ebf5ef4c4af11c1a648", null ],
+    [ "$passwordHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#a7160ef3b934b379e08afd4281519317b", null ],
+    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_application.html#a0b225308f220616a04f6afc6e41bf50d", null ]
 ];

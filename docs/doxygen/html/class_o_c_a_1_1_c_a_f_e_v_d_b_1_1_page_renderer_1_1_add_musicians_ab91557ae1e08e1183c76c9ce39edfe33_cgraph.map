@@ -1,9 +1,7 @@
 <map id="render" name="render">
-<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,51,63,77"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="121,5,326,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,56,105,47,106,53,63,61"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aacd3616b156f66da2a7f9fab49c2f1b5" title=" " alt="" coords="111,72,337,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="63,67,96,73,95,79,62,72"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7c872230ae003c93d82e0e6de31f6212" title="Set table&#45;navigation enable/disable." alt="" coords="385,80,592,123"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="337,99,369,99,369,104,337,104"/>
+<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,13,63,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="111,5,316,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,24,95,24,95,29,63,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7c872230ae003c93d82e0e6de31f6212" title="Set table&#45;navigation enable/disable." alt="" coords="364,5,571,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="317,24,348,24,348,29,317,29"/>
 </map>

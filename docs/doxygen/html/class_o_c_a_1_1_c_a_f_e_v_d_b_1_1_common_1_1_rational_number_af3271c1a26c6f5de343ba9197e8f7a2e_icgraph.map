@@ -1,9 +1,7 @@
 <map id="abs" name="abs">
-<area shape="rect" id="Node000001" title="{}" alt="" coords="377,31,419,57"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aac7e1447574f95c30f77d1922d096f60" title="Make the current number non&#45;negative in&#45;place." alt="" coords="260,5,318,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="361,38,318,28,319,23,363,33"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a210a20534373b3f3b2774f4d63a6b01a" title="Return a correctly rounded floating point string with the given number of fractional digits." alt="" coords="249,56,329,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="363,55,330,63,329,57,361,50"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a5d3ce4d2e652478ce4154fdc0e84c986" title="Set optionValue." alt="" coords="5,32,201,107"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="233,72,201,72,201,67,233,67"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="134,31,176,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#aac7e1447574f95c30f77d1922d096f60" title="Make the current number non&#45;negative in&#45;place." alt="" coords="16,5,75,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,38,75,28,76,23,119,33"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_rational_number.html#a210a20534373b3f3b2774f4d63a6b01a" title="Return a correctly rounded floating point string with the given number of fractional digits." alt="" coords="5,56,86,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,55,87,63,86,57,118,50"/>
 </map>

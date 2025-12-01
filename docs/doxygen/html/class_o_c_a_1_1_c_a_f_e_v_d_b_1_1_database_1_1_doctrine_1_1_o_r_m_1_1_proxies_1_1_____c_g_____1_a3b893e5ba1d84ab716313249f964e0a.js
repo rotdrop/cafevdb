@@ -50,6 +50,9 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setUntranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#ad2c0d6b31348448f895e810c4af7c99f", null ],
     [ "setUntranslatedTab", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#a8db4963c8dafcd675d9dded05c83f497", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$untranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#a24bb14b084c9abcbb9d8a11de38d382e", null ],
-    [ "$untranslatedTab", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#a7b4608572d2045f99b6d61cb742f9297", null ]
+    [ "$balancingAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#a21aa87d7105d979ada90062a241cd4e3", null ],
+    [ "$participantAccess", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#a81097fc479253156bfa311d328ac8cc0", null ],
+    [ "$participationContext", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#ab9dff9c8b1ce01a5c190dcd21fa6a20d", null ],
+    [ "$untranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#ac08d43a8323aca11a6c71f04d6f9355f", null ],
+    [ "$untranslatedTab", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#ac4b6630fa16fcbd43b6b560b9c23051a", null ]
 ];

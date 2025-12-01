@@ -1,0 +1,5 @@
+<map id="getUserIdSlug" name="getUserIdSlug">
+<area shape="rect" id="Node000001" title="Get userIdSlug." alt="" coords="232,21,336,48"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a4e07b4cc97e0f2d0fcf7a543a86c2dc6" title="Ensure that the encryptionContext contains the user&#45;id of the given musician." alt="" coords="5,5,184,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,37,184,37,184,32,216,32"/>
+</map>

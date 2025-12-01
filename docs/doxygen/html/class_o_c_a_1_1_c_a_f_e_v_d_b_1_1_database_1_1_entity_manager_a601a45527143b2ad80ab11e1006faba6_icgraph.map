@@ -1,0 +1,9 @@
+<map id="isOwnTransactionActive" name="isOwnTransactionActive">
+<area shape="rect" id="Node000001" title="Return the transaction status of this decorator." alt="" coords="343,31,506,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a1c95b7d310f140b648d46b4e7905f57b" title="Explicitly execute the registered actions in case that the order of execution matters." alt="" coords="118,5,295,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="327,35,295,32,296,26,328,30"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad7721cdc28e9f5c47447a875fdf155a8" title="Register a pre&#45;commit action and optionally an associated undo&#45;action." alt="" coords="123,56,290,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="328,58,291,62,290,57,327,53"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af5674c27d4a92f6228565010eacbb9cb" title="Commit the currently pending transaction in the following order:" alt="" coords="5,5,70,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,21,70,21,70,16,102,16"/>
+</map>

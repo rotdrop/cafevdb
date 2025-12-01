@@ -1,5 +1,22 @@
 <map id="ProjectInstrumentationNumber" name="ProjectInstrumentationNumber">
-<area shape="rect" id="Node000001" title="ProjectInstrumentationNumber." alt="" coords="5,80,204,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="56,5,153,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,48,107,80,102,80,102,48"/>
+<area shape="rect" id="Node000001" title="ProjectInstrumentationNumber." alt="" coords="339,452,537,479"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="348,157,445,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="438,190,491,227,516,253,535,283,545,309,549,332,545,355,535,381,521,405,502,425,463,454,459,449,498,421,516,401,530,379,540,353,543,332,540,310,530,285,512,256,488,231,435,194"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="212,353,274,380"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="338,192,301,210,267,235,249,256,242,277,240,300,242,329,244,352,239,353,237,330,235,300,237,276,245,254,263,231,298,206,336,187"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="277,233,399,260"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="380,198,350,235,346,231,375,194"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html" title="Instrumente." alt="" coords="448,293,532,320"/>
+<area shape="poly" id="edge11_Node000009_Node000002" title=" " alt="" coords="416,195,483,291,479,294,412,198"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="283,385,414,449,411,454,281,390"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html" title=" " alt="" coords="5,233,183,260"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="113,272,135,300,164,327,188,342,213,353,211,358,185,347,160,331,131,304,108,275"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="28,157,160,184"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="97,199,97,233,91,233,91,199"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="52,81,136,108"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="97,123,97,157,91,157,91,123"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="41,5,147,32"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="97,47,97,81,91,81,91,47"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="280,270,262,286,253,302,248,320,245,353,240,353,242,319,248,300,258,282,277,266"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="471,334,459,354,445,408,441,452,436,451,440,407,454,352,467,331"/>
 </map>

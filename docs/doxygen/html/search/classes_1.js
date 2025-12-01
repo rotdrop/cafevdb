@@ -13,5 +13,6 @@ var searchData=
   ['blog_10',['Blog',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html',1,'Blog'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_blog.html',1,'Blog']]],
   ['blogcontroller_11',['BlogController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html',1,'OCA::CAFEVDB::Controller']]],
   ['blogmapper_12',['BlogMapper',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html',1,'OCA::CAFEVDB::Database::Cloud::Mapper']]],
-  ['bulkupdategeocoding_13',['BulkUpdateGeoCoding',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html',1,'OCA::CAFEVDB::BackgroundJob']]]
+  ['blogresponse_13',['BlogResponse',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_blog_response.html',1,'OCA::CAFEVDB::Controller::DTO']]],
+  ['bulkupdategeocoding_14',['BulkUpdateGeoCoding',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html',1,'OCA::CAFEVDB::BackgroundJob']]]
 ];

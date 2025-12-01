@@ -1,7 +1,14 @@
 <map id="DatabaseStorageFolder" name="DatabaseStorageFolder">
-<area shape="rect" id="Node000001" title="Folder entry for a database&#45;backed file." alt="" coords="11,155,170,181"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,80,176,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,122,93,154,88,154,88,122"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="42,5,139,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,48,93,80,88,80,88,48"/>
+<area shape="rect" id="Node000001" title="Folder entry for a database&#45;backed file." alt="" coords="5,180,164,207"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="191,81,362,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,123,246,142,226,158,196,173,165,183,163,178,194,168,223,154,243,138,258,119"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html" title="Folder entry for a database&#45;backed file." alt="" coords="197,180,356,207"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="279,124,279,180,274,180,274,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="142,5,238,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,40,264,79,260,83,214,44"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="45,81,167,108"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="166,44,122,83,118,79,163,40"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="286,165,289,156,289,132,280,109,285,107,294,132,294,156,291,166"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="86,121,80,133,78,157,82,179,77,180,72,157,75,131,81,119"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="142,114,255,177,253,182,140,118"/>
 </map>

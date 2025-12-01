@@ -24,5 +24,12 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setTaxationStatutorySources", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a9c9a9237133e36ac41a031fdabdf3090", null ],
     [ "setTaxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#affa3df8bc6701158fd95cde9c794d9ac", null ],
     [ "setTaxOffice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ae71c1f7a2d48731670d719bdc0ca760f", null ],
-    [ "setWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a3fbbecd118806bbe50e1ea923915598b", null ]
+    [ "setWrittenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a3fbbecd118806bbe50e1ea923915598b", null ],
+    [ "$assessmentPeriodEnd", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a2d422164252ff2a5007e907bbefce98e", null ],
+    [ "$assessmentPeriodStart", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ad4dfafbb9469858065893753e0007d60", null ],
+    [ "$beneficiaryPurpose", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ac6c452ec2647d9387b73798e9e3fa308", null ],
+    [ "$dateIssued", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a6d5b6f728affa6c88a8c1523d83596f7", null ],
+    [ "$membershipFeesAreDonations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a70b51e05af5bd994eb5549c808d9e347", null ],
+    [ "$taxNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#a796e076c5dd9851b0888ff3f1dfe2602", null ],
+    [ "$writtenNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_tax_exemption_notice.html#ad123d42288fe44ab896182f162593a83", null ]
 ];

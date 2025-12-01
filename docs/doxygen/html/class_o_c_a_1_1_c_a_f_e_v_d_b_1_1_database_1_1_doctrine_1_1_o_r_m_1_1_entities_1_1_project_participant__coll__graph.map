@@ -1,5 +1,36 @@
 <map id="ProjectParticipant" name="ProjectParticipant">
-<area shape="rect" id="Node000001" title="Entity for project participants." alt="" coords="5,80,130,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="19,5,116,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,48,70,80,65,80,65,48"/>
+<area shape="rect" id="Node000001" title="Entity for project participants." alt="" coords="706,452,831,479"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="726,157,822,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="776,200,772,452,766,451,771,200"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="990,353,1052,380"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="838,174,894,185,954,204,983,218,1011,236,1035,257,1055,283,1062,306,1055,330,1038,354,1034,351,1050,328,1057,306,1050,285,1031,261,1008,240,981,223,952,209,892,190,837,180"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="812,233,934,260"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="805,191,858,231,855,235,801,196"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html" title="Musician." alt="" coords="221,353,295,380"/>
+<area shape="poly" id="edge11_Node000009_Node000002" title=" " alt="" coords="710,176,661,181,605,192,549,209,497,236,474,258,462,283,449,308,425,332,393,348,359,358,296,367,295,362,357,353,391,343,422,327,445,305,457,280,469,255,494,231,547,204,604,187,660,176,710,171"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html" title="MusicianRowAccessToken." alt="" coords="266,452,445,479"/>
+<area shape="poly" id="edge16_Node000012_Node000002" title=" " alt="" coords="755,197,721,237,686,285,663,329,649,368,630,401,614,416,593,430,567,440,530,448,446,459,445,454,529,442,565,435,590,426,611,412,626,398,645,365,659,327,681,283,717,234,751,193"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="976,388,803,454,801,449,974,383"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html" title=" " alt="" coords="508,233,685,260"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="641,264,723,296,820,327,895,340,970,351,990,355,989,360,970,356,894,345,819,332,721,301,639,269"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="284,157,416,184"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="408,186,555,230,554,235,406,191"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gender.html" title=" " alt="" coords="5,233,103,260"/>
+<area shape="poly" id="edge14_Node000011_Node000005" title=" " alt="" coords="285,191,104,236,103,231,284,186"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participation_status.html" title=" " alt="" coords="267,233,433,260"/>
+<area shape="poly" id="edge19_Node000013_Node000005" title=" " alt="" coords="353,199,353,233,347,233,347,199"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="308,81,392,108"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="353,123,353,157,347,157,347,123"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="297,5,403,32"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="353,47,353,81,347,81,347,47"/>
+<area shape="poly" id="edge21_Node000001_Node000008" title=" " alt="" coords="863,275,790,429,778,453,773,450,785,427,858,273"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="869,276,868,303,871,316,877,327,990,355,988,360,874,331,866,318,863,304,863,275"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="310,373,463,401,558,425,707,452,706,457,557,431,461,407,309,379"/>
+<area shape="poly" id="edge17_Node000012_Node000009" title=" " alt="" coords="252,395,251,412,256,427,269,440,286,449,283,454,266,444,251,429,245,413,246,395"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="126,233,243,260"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="197,273,226,328,246,351,242,355,221,331,192,276"/>
+<area shape="poly" id="edge13_Node000009_Node000011" title=" " alt="" coords="75,270,105,300,141,327,182,345,222,356,220,361,180,350,139,332,101,304,72,274"/>
+<area shape="poly" id="edge15_Node000009_Node000012" title=" " alt="" coords="344,439,336,421,324,406,308,393,290,383,293,378,311,389,328,402,340,419,349,436"/>
+<area shape="poly" id="edge20_Node000001_Node000013" title=" " alt="" coords="389,265,746,449,743,454,387,270"/>
+<area shape="poly" id="edge18_Node000009_Node000013" title=" " alt="" coords="273,270,256,286,250,302,249,320,256,352,251,354,243,320,244,301,252,282,269,266"/>
 </map>

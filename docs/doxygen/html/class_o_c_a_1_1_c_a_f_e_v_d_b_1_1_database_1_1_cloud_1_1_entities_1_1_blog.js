@@ -50,6 +50,14 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog =
     [ "sumInvoiceItemsAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a87e0a5474b9500b0d65c98c87e553d75", null ],
     [ "updateSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a860ca58f7b2332d44f16da17c9345fe1", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$invoiceNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#acf0174257004ac08778b159cb4a4d451", null ],
+    [ "$amount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#accd665f2532410dbc489337e11ff7948", null ],
+    [ "$invoiceDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a33aaac774be703cdd03de51dcc19bafc", null ],
+    [ "$notificationEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a8e604cbb41499c8a55542cdcb4f8a103", null ],
+    [ "$originator", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#aa3f8e65424ce776e5897a693348f822b", null ],
+    [ "$purpose", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#ac6d94d491f61fd5f47cbf3670fa40267", null ],
+    [ "$sepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#acedc5eb8c4a4a17215c0b9ac4d19ace0", null ],
+    [ "$sepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#aa1df806d5ca7a1d9fe117e1fd8c4e59e", null ],
+    [ "$sepaTransaction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a5a410bf0185591613e20b1a39d17143a", null ],
+    [ "$subject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#a6f8306c425a912f301d653dea3bd3725", null ],
     [ "$taxationStatutorySource", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html#af0271b30dcdfbd6735434402c7edbf3c", null ]
 ];

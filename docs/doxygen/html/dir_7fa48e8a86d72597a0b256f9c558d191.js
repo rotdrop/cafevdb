@@ -7,5 +7,6 @@ var dir_7fa48e8a86d72597a0b256f9c558d191 =
     [ "Mapping", "dir_9a31e8755dc80391facf01be30b9d04b.html", "dir_9a31e8755dc80391facf01be30b9d04b" ],
     [ "Proxies", "dir_28240e3985eba6bf92b0a70db73bd22c.html", "dir_28240e3985eba6bf92b0a70db73bd22c" ],
     [ "Repositories", "dir_7c5484f53e1e862865fb716789176b6f.html", "dir_7c5484f53e1e862865fb716789176b6f" ],
-    [ "Traits", "dir_e75b0226dd36d379087cfd5fc2d20161.html", "dir_e75b0226dd36d379087cfd5fc2d20161" ]
+    [ "Traits", "dir_e75b0226dd36d379087cfd5fc2d20161.html", "dir_e75b0226dd36d379087cfd5fc2d20161" ],
+    [ "Util", "dir_980a6290fed99c7fd514c812843dcd01.html", "dir_980a6290fed99c7fd514c812843dcd01" ]
 ];

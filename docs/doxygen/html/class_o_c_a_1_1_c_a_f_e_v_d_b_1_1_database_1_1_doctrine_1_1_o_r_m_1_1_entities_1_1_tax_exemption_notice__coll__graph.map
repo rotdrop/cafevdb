@@ -1,7 +1,18 @@
 <map id="TaxExemptionNotice" name="TaxExemptionNotice">
-<area shape="rect" id="Node000001" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="58,80,200,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,122,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,42,120,78,116,81,83,45"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="146,5,242,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,45,142,81,138,78,171,42"/>
+<area shape="rect" id="Node000001" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="88,279,231,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,180,122,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,216,149,277,145,280,85,220"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="234,5,330,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,41,209,59,187,83,174,108,165,135,157,191,157,242,160,278,155,278,151,242,151,191,160,134,169,106,183,80,205,55,233,37"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="197,81,367,108"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="285,47,285,81,280,81,280,47"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="392,81,514,108"/>
+<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="326,36,425,78,423,83,324,41"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html" title=" " alt="" coords="197,180,340,207"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="245,219,176,280,172,276,242,215"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="281,124,273,180,268,179,276,123"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html" title="Folder entry for a database&#45;backed file." alt="" coords="364,180,523,207"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="302,118,319,137,340,154,365,167,391,177,389,182,362,172,337,158,315,141,298,122"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="408,174,302,111,305,106,411,169"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="453,124,447,180,442,179,447,124"/>
 </map>

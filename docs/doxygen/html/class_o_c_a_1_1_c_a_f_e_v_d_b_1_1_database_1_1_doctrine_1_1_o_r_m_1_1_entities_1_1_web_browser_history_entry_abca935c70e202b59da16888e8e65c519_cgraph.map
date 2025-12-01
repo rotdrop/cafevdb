@@ -1,11 +1,9 @@
 <map id="setData" name="setData">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,99,73,125"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="121,77,300,147"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,109,108,109,108,115,74,115"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#a25de72071f2c2518b9906a2bf6a58bc6" title="Add a user&#45;id or group&#45;id to the list of &quot;encryption identities&quot;, i.e." alt="" coords="348,5,527,75"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="300,81,334,70,336,75,301,86"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="406,99,469,125"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="301,109,392,109,392,115,301,115"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="402,149,473,174"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="301,129,389,148,388,153,300,134"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,73,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="121,7,299,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,41,105,41,105,47,73,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#ad40c766ec8aced9770fe6ae269a1e781" title=" " alt="" coords="351,5,413,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,28,335,23,336,28,300,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#afbf787ced76807989fb3093e1772c5a1" title=" " alt="" coords="347,56,417,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="300,55,332,59,331,65,299,60"/>
 </map>

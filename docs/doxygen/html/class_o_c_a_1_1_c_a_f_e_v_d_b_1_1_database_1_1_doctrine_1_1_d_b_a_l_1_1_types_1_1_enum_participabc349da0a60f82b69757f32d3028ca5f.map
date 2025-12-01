@@ -1,7 +1,9 @@
 <map id="EnumParticipantFieldMultiplicity" name="EnumParticipantFieldMultiplicity">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,213,181"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="67,80,151,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,122,112,154,106,154,106,122"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="56,5,162,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,48,112,80,106,80,106,48"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,213,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="43,155,175,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,197,112,229,106,229,106,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="67,80,151,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,122,112,154,106,154,106,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="56,5,162,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="112,48,112,80,106,80,106,48"/>
 </map>

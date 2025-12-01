@@ -18,5 +18,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setTaxType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#ad2232648d3b791c8384bedb8e3438f96", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
     [ "$country", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a40ac1973a558490bc2a8b8669c8abffc", null ],
+    [ "$hint", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a341bb072d7151677382b3ae8d3193afb", null ],
+    [ "$law", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a77c0ffac013fbbd2f9bf5630987c8100", null ],
     [ "$rate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_af28f6778e8d7f3b404b20ccf8cc6fb5.html#a9e90bbe291813c4e9dbdb58db928a814", null ]
 ];

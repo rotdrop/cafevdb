@@ -42,5 +42,12 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a3bf78a815e53a0b9effb9467601f3fe4", null ],
     [ "setSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a6d47bcc55b6b3917a8fe364af61ab527", null ],
     [ "sumPaymentsAmount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a7a4baea6578468d4ebd178a5a2f3e876", null ],
-    [ "updateSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a860ca58f7b2332d44f16da17c9345fe1", null ]
+    [ "updateSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a860ca58f7b2332d44f16da17c9345fe1", null ],
+    [ "$amount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#accd665f2532410dbc489337e11ff7948", null ],
+    [ "$notificationMessageId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#adc863a62e1203f9a91c9df074248d4ae", null ],
+    [ "$preNotificationEmail", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a0d4174f19aaacd513bc16b92455aa27a", null ],
+    [ "$sepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#acedc5eb8c4a4a17215c0b9ac4d19ace0", null ],
+    [ "$sepaDebitMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#aa1df806d5ca7a1d9fe117e1fd8c4e59e", null ],
+    [ "$subject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a6f8306c425a912f301d653dea3bd3725", null ],
+    [ "$supportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a9f04362663e73c61a3d62b61e4e1a543", null ]
 ];

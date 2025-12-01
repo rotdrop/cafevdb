@@ -1,0 +1,8 @@
+<map id="prepareFindBy" name="prepareFindBy">
+<area shape="rect" id="Node000001" title="Parse the criteria." alt="" coords="5,5,111,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,5,212,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,25,143,25,143,30,111,30"/>
+<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="158,14,126,12,127,7,158,9"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="260,5,409,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,16,245,16,245,21,213,21"/>
+</map>

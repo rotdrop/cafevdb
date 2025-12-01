@@ -1,5 +1,9 @@
 <map id="getUser" name="getUser">
-<area shape="rect" id="Node000001" title="Get the currently active user." alt="" coords="132,5,199,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="5,5,84,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,21,84,21,84,16,116,16"/>
+<area shape="rect" id="Node000001" title="Get the currently active user." alt="" coords="296,31,363,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="170,31,248,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="280,47,248,47,248,41,280,41"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a9e3596aa0c9e19092ff39a215c94d792" title=" " alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="154,37,121,31,122,26,155,32"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a60dd3d006328cdaa749369a4a1933730" title=" " alt="" coords="14,56,113,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="155,56,114,63,113,58,154,51"/>
 </map>

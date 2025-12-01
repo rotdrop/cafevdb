@@ -19,5 +19,9 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setNotificationMessage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#ab746c3be8a804d9ef4bdcb15866f741f", null ],
     [ "setSupportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a6d47bcc55b6b3917a8fe364af61ab527", null ],
     [ "setTaxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a746c8cc3ac3f773b787620609367ebb7", null ],
-    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
+    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
+    [ "$donation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a1d42cd97f0f4b5c15c31da57777c49d3", null ],
+    [ "$mailingDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a4ffd812542b62a393e56ffd1b874826d", null ],
+    [ "$supportingDocument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a9f04362663e73c61a3d62b61e4e1a543", null ],
+    [ "$taxExemptionNotice", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_donation_receipt.html#a813376f326cc5dd7ed061a4608362103", null ]
 ];

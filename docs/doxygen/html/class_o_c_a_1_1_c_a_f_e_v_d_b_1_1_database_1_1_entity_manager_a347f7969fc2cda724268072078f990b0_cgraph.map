@@ -1,0 +1,8 @@
+<map id="persist" name="persist">
+<area shape="rect" id="Node000001" title="Persist an entity after performing some special tweaks:" alt="" coords="5,29,66,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a99544f0d74c7ffa77e5189056be8c0ac" title="{}" alt="" coords="114,29,241,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,40,98,40,98,45,66,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a59a737e766c664731fa838025a01dcd1" title="Switch metadata&#45;decoration on and off." alt="" coords="289,29,448,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,40,273,40,273,45,241,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="336,30,330,21,334,11,347,5,369,3,392,5,404,12,401,16,390,10,369,8,349,10,338,15,336,20,341,27"/>
+</map>

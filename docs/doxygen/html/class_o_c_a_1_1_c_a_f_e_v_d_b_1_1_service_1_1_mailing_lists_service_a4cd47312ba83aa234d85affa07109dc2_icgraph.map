@@ -1,9 +1,5 @@
 <map id="combinedVersion" name="combinedVersion">
-<area shape="rect" id="Node000001" title="MAJOR.MINOR.REVISION." alt="" coords="407,5,529,32"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="231,5,359,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="391,21,360,21,360,16,391,16"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="106,5,183,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="215,21,183,21,183,16,215,16"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="5,5,58,32"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,21,58,21,58,16,90,16"/>
+<area shape="rect" id="Node000001" title="MAJOR.MINOR.REVISION." alt="" coords="182,5,303,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="5,5,134,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,21,134,21,134,16,166,16"/>
 </map>

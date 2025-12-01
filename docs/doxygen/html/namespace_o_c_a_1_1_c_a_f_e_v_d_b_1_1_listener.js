@@ -10,6 +10,7 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener =
     [ "CalendarObjectMovedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_moved_event_listener.html", null ],
     [ "CalendarObjectUpdatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_updated_event_listener.html", null ],
     [ "CalendarUpdatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_updated_event_listener.html", null ],
+    [ "CloudUserRegistrationConfirmationListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_cloud_user_registration_confirmation_listener.html", null ],
     [ "CompositePaymentEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_composite_payment_entity_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_composite_payment_entity_listener" ],
     [ "ContactsCardEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_contacts_card_event_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_contacts_card_event_listener" ],
     [ "DatabaseStorageFileEntityListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_database_storage_file_entity_listener.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_database_storage_file_entity_listener" ],

@@ -1,5 +1,6 @@
 var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service =
 [
+    [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_d_t_o" ],
     [ "Finance", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance" ],
     [ "IMAP", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_i_m_a_p" ],
     [ "L10N", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n" ],

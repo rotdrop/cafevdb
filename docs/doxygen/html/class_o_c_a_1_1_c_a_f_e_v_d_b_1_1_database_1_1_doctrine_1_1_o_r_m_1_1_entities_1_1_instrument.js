@@ -17,6 +17,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setProjectInstrumentationNumbers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#ab244aaa09063638e7d100b4edd628a00", null ],
     [ "setProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#ae2becd97351e58291e8694f84a4d5ee3", null ],
     [ "setSortOrder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#af41bffb8736fa02ae868dad10c7125b0", null ],
-    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$untranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#ac08d43a8323aca11a6c71f04d6f9355f", null ]
+    [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html#afe55eae96aed06d16232a3b56fcf1ad3", null ]
 ];

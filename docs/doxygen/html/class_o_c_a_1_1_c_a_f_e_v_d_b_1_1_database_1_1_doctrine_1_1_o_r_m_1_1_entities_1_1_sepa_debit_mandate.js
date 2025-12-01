@@ -26,5 +26,9 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setSequence", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#afcfc8a3893d58791970cf1873181ad07", null ],
     [ "setWrittenMandate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a70bc2e360483b009b7c8483f8bb5a083", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a26a7d69cd5cc291d752925dd312b5d1c", null ]
+    [ "$preNotificationBusinessDays", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a1f440315b4611265b4fa14a7a09318b4", null ],
+    [ "$preNotificationCalendarDays", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#ab9b51735f4492136a01437e9fa8424f1", null ],
+    [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a0b225308f220616a04f6afc6e41bf50d", null ],
+    [ "$sepaBankAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#acedc5eb8c4a4a17215c0b9ac4d19ace0", null ],
+    [ "$sequence", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a6a7105969841fb85263c66d024409c19", null ]
 ];

@@ -1,5 +1,8 @@
 <map id="TranslationLocation" name="TranslationLocation">
-<area shape="rect" id="Node000001" title="TranslationLocations." alt="" coords="5,80,140,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="24,5,121,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,48,75,80,70,80,70,48"/>
+<area shape="rect" id="Node000001" title="TranslationLocations." alt="" coords="5,180,140,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="19,5,115,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,47,75,180,69,180,65,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_translation_key.html" title="TranslationKey." alt="" coords="89,81,197,108"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="93,41,132,79,129,83,89,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,122,84,181,79,178,123,119"/>
 </map>

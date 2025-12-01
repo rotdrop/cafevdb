@@ -1,5 +1,12 @@
 <map id="GnuCashBook" name="GnuCashBook">
-<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="5,80,112,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="10,5,107,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,48,61,80,56,80,56,48"/>
+<area shape="rect" id="Node000001" title="Link to the Gnucash accounts table." alt="" coords="5,300,112,327"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="40,5,136,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,48,65,180,61,300,56,300,60,180,80,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_account.html" title="Link to the Gnucash accounts table." alt="" coords="75,180,199,207"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="98,46,136,179,131,180,93,48"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_commodity.html" title="Link to the GnuCash commodities table." alt="" coords="126,81,269,108"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="120,39,180,79,177,83,117,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,221,69,301,65,298,118,218"/>
+<area shape="poly" id="edge6_Node000003_Node000003" title=" " alt="" coords="216,184,226,193,218,202,200,205,199,200,216,197,221,193,213,189"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="183,123,147,181,143,178,179,120"/>
 </map>

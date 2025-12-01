@@ -1,5 +1,6 @@
 var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller =
 [
+    [ "DTO", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o.html", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o" ],
     [ "AccountingController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_accounting_controller" ],
     [ "AdminSettingsController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller" ],
     [ "BackgroundJobController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller" ],
@@ -36,9 +37,21 @@ var namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller =
     [ "ValidationController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller" ],
     [ "VueAppController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_vue_app_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_vue_app_controller" ],
     [ "WebBrowserHistoryController", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_web_browser_history_controller.html", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_web_browser_history_controller" ],
-    [ "EnumValidateInstrumentsContext", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a7a40072b278729b374a3e37f9dd53cef", [
-      [ "PROJECT", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a7a40072b278729b374a3e37f9dd53cefa27d5e6e2e38089805b568b424d86587d", null ]
-    ] ],
+    [ "EnumAddDocumentConflictAction", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#af63200d9d044d9d201097d20ab52ae1a", null ],
+    [ "EnumFileStorageBackend", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#aa9885485829c3a997589c2e3865a106a", null ],
+    [ "EnumFileUploadMode", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#aea0f8c770d51f9bccb4c6854f141112c", null ],
+    [ "EnumFileUploadOrigin", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a55c024f0e4ab8f6f8436f2aae654423b", null ],
+    [ "EnumPersonalSettingsKey", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#ac6122469490d50e9877166aab08b5a77", null ],
+    [ "EnumProjectWebPagesAction", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#af2dc6b1dc3e668e6e6d8e54043f457d8", null ],
+    [ "EnumProjectWebPagesParam", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#ab91779f7bdcfc74bde80b4023e15a061", null ],
+    [ "EnumRecryptionStatus", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#afe359c2156687894584f0c13dbfca04e", null ],
+    [ "EnumSepaDebitMandateRevocationAction", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a4aaffa23561cfa5304453678ce32a9f7", null ],
+    [ "EnumSepaDebitMandateRevocationStatus", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a36c8015db4646e64fa8b39991dd324ef", null ],
+    [ "EnumSepaDebitMandateValidationParam", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#ae57f4dea844482985ec0fe3fca38b67f", null ],
+    [ "EnumSetUnset", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#abefb9c40486e8da6eb2d4f62d64aeccf", null ],
+    [ "EnumSharedCalendarUri", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a634951596ea23f2a6ad80bc5392924d1", null ],
+    [ "EnumSimpleSettingsKey", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a714e949555bfc3e0988a46a29b148f2f", null ],
+    [ "EnumValidateInstrumentsContext", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a7a40072b278729b374a3e37f9dd53cef", null ],
     [ "getPrefixParams", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a9d71d8372097a3bac555c2c9015a0e74", null ],
     [ "prepareUploadInfo", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a951bd240beff63a2246ad6917a3ddf1b", null ],
     [ "FileUploadRowTrait", "namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a3e38e8d1030858c40318e01ca4915c86", null ],

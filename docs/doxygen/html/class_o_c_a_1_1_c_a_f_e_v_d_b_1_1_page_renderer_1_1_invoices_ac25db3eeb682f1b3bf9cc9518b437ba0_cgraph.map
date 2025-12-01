@@ -1,7 +1,5 @@
 <map id="isCompositeRow" name="isCompositeRow">
-<area shape="rect" id="Node000001" title="Decide whether the current row refers to the composite payment or to a &quot;split&quot; invoice&#45;item." alt="" coords="5,39,127,65"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="223,5,366,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,41,207,29,208,34,128,46"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="175,56,414,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,58,160,63,159,68,127,63"/>
+<area shape="rect" id="Node000001" title="Decide whether the current row refers to the composite payment or to a &quot;split&quot; invoice&#45;item." alt="" coords="5,5,127,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_invoices.html#a159fbf8c9b2dbe629fb79eb5faa58fd6" title=" " alt="" coords="175,5,317,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,16,159,16,159,21,127,21"/>
 </map>

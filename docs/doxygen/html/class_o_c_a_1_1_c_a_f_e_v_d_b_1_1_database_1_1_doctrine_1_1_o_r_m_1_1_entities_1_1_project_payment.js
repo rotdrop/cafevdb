@@ -20,8 +20,13 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setIsDonation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#af7551e40eebdc7067b690a1b7e7ffb22", null ],
     [ "setMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#abe7189da7e60469034725fe8a41b48bb", null ],
     [ "setProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a832ef68f68a949a5cebdbded384a4486", null ],
-    [ "setProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a50b40d1e3c4caa0ea5fe7dcca6e3e203", null ],
+    [ "setProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a8413454e6ddfb601e6585d9b45fc121b", null ],
     [ "setReceivable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a2d19d53b87c2858af94e5caffe240a7e", null ],
     [ "setReceivableOption", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a54a861ce6e1e1a04d4342fe65958ab6b", null ],
-    [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a3bf78a815e53a0b9effb9467601f3fe4", null ]
+    [ "setSubject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a3bf78a815e53a0b9effb9467601f3fe4", null ],
+    [ "$amount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#accd665f2532410dbc489337e11ff7948", null ],
+    [ "$balanceDocumentsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#acc6bc51a5fd5b725e81e144243675369", null ],
+    [ "$compositePayment", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#ab5f029c77a524a6b97e7b4aaa0273f11", null ],
+    [ "$isDonation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a420305d55f5ce0f50abe62adefd97394", null ],
+    [ "$receivable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_payment.html#a1f6c98397f432d7b3cb3f705aec33bf3", null ]
 ];

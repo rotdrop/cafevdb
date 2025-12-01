@@ -1,18 +1,29 @@
 <map id="InsuranceBrokers" name="InsuranceBrokers">
-<area shape="rect" id="Node000001" title="Table generator for Instruments table." alt="" coords="116,332,239,359"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="46,233,186,260"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,272,172,330,167,333,130,274"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="23,157,176,184"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,199,116,232,111,234,103,200"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,81,80,108"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,118,92,155,88,159,59,122"/>
-<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="61,5,139,32"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="83,46,54,83,50,79,79,42"/>
-<area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,81,213,108"/>
-<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="121,42,151,79,147,83,117,46"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="141,122,112,159,108,155,137,118"/>
-<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="215,233,278,260"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="231,275,188,333,184,330,226,271"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="201,157,297,184"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="251,199,250,233,244,233,246,199"/>
+<area shape="rect" id="Node000001" title="Table generator for Instruments table." alt="" coords="122,452,246,479"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="52,353,193,380"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,392,178,450,174,453,136,394"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_abstract_page_renderer.html" title="Abstract page&#45;renderer base class." alt="" coords="23,233,176,260"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,275,123,352,117,353,103,276"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,157,80,184"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,194,92,231,88,235,59,198"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="62,81,140,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="84,122,54,159,50,155,80,118"/>
+<area shape="rect" id="Node000006" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,157,213,184"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="122,118,151,155,147,159,118,122"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="141,198,112,235,108,231,137,194"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html" title="Projects." alt="" coords="230,353,292,380"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="244,394,196,453,192,450,239,391"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="240,157,336,184"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="265,197,252,215,242,234,237,267,241,300,258,352,253,354,236,301,232,266,237,233,248,212,261,194"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage.html" title="&quot;Join table&quot; which connects storage names to their root directory entry." alt="" coords="252,233,374,260"/>
+<area shape="poly" id="edge14_Node000013_Node000008" title=" " alt="" coords="299,197,311,232,306,234,294,199"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_project_temporal_type.html" title=" " alt="" coords="398,233,575,260"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="484,276,474,305,453,331,424,345,382,354,293,366,293,360,381,349,423,340,450,327,469,303,479,274"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="420,157,553,184"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="489,199,489,233,484,233,484,199"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="445,81,528,108"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="489,123,489,157,484,157,484,123"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="433,5,540,32"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="489,47,489,81,484,81,484,47"/>
+<area shape="poly" id="edge13_Node000007_Node000013" title=" " alt="" coords="287,272,277,285,266,321,264,353,258,353,261,320,272,283,282,269"/>
 </map>

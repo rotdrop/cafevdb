@@ -1,0 +1,40 @@
+<map id="bind" name="bind">
+<area shape="rect" id="Node000001" title="Initialize the wrapper if the EncryptionService has been bound to a user and password." alt="" coords="5,181,51,208"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa69c8bf1f1dcf4e72552efff1fe3e87e" title="{}" alt="" coords="152,5,204,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="30,180,51,118,70,81,97,49,116,35,136,26,138,31,118,40,100,53,75,84,56,120,35,182"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a784e976615f077aeaf77bcdae028c21c" title=" " alt="" coords="342,11,446,37"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="33,180,56,136,75,113,97,92,138,74,198,57,326,32,327,37,199,62,140,79,100,97,78,116,61,139,37,182"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a166cb1f72761ff7c95d5d24055fe03f5" title="Check for a valid database connection." alt="" coords="138,107,219,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="44,179,68,161,97,143,121,133,124,138,100,148,71,165,47,183"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a59a737e766c664731fa838025a01dcd1" title="Switch metadata&#45;decoration on and off." alt="" coords="99,181,258,208"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="51,192,83,192,83,197,51,197"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa81dfb608c86263213acf2c1d3507e96" title=" " alt="" coords="117,232,240,259"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="52,200,100,217,119,224,118,229,98,223,50,205"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a6f9cd2445e02a75dd6d7992676bd9684" title="Register the needed additional DBAL types." alt="" coords="129,283,228,309"/>
+<area shape="poly" id="edge20_Node000001_Node000018" title=" " alt="" coords="41,207,65,238,100,268,115,276,113,281,97,273,61,242,36,210"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,17,326,20,326,25,205,22"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ab7a0a080d0e721c656eef11cd641638b" title="{}" alt="" coords="342,73,447,100"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="219,111,325,94,326,100,220,116"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="152,182,148,173,151,163,161,157,178,155,197,157,206,164,203,168,195,162,178,160,163,162,155,166,153,172,157,180"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a73942c1c2fcc48c4814c80222edab7e0" title=" " alt="" coords="318,124,470,151"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="235,229,256,218,271,204,280,190,289,175,304,161,314,155,316,160,308,165,293,178,284,193,275,207,260,222,237,234"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a086688b4505910ea5ee775a2efe5dc2c" title=" " alt="" coords="306,175,482,201"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="231,229,326,203,327,208,232,234"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad5c19dc6ba7e3526e72b701af4cda0df" title=" " alt="" coords="307,225,481,252"/>
+<area shape="poly" id="edge12_Node000007_Node000011" title=" " alt="" coords="240,241,291,239,291,245,240,246"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a28e1316a3f88f109f7b8a6ab9988ab45" title="{}" alt="" coords="346,276,442,303"/>
+<area shape="poly" id="edge17_Node000007_Node000015" title=" " alt="" coords="241,255,332,274,331,279,240,260"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a35786ae67d1230c5597b97d6f3a42b4a" title="Call ENTITY\__wakeup() if it exists." alt="" coords="357,327,431,353"/>
+<area shape="poly" id="edge18_Node000007_Node000016" title=" " alt="" coords="234,257,259,268,274,280,284,291,293,302,307,312,343,327,341,332,305,317,290,306,280,295,271,284,257,273,232,262"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a7984f7d6aa742402230589f04f293738" title=" " alt="" coords="310,377,478,404"/>
+<area shape="poly" id="edge19_Node000007_Node000017" title=" " alt="" coords="241,257,260,269,278,293,284,318,291,341,308,363,313,367,310,372,304,367,286,343,279,319,273,295,256,273,239,262"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af6b90e06cd35934fd70d5139bc2aa13c" title="Compute the locale code from an IL10N object." alt="" coords="530,175,639,201"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="483,185,515,185,515,191,483,191"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a199fece8e17ee7055b5d0beb07ce2eda" title="{}" alt="" coords="540,327,629,353"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="455,250,484,262,524,287,559,314,556,318,521,291,481,266,453,255"/>
+<area shape="poly" id="edge14_Node000012_Node000001" title=" " alt="" coords="573,355,536,389,511,406,483,419,435,431,395,434,355,429,305,419,242,404,192,389,147,364,97,323,76,300,59,273,36,224,41,221,64,271,80,297,101,319,150,360,194,384,243,399,307,413,356,424,395,429,434,426,481,413,508,401,532,385,569,351"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ac00a76ffe038ef8a433357bd4114bb52" title=" " alt="" coords="752,293,808,320"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="629,330,737,311,738,317,630,335"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html#a8c7b2638d50a1858603b6fabfaa09642" title=" " alt="" coords="687,344,874,403"/>
+<area shape="poly" id="edge16_Node000012_Node000014" title=" " alt="" coords="630,345,672,352,671,357,629,350"/>
+</map>

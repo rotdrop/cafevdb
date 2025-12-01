@@ -1,5 +1,6 @@
 var dir_b621ee44905c992051223dc1f6640b7b =
 [
+    [ "AppConfigTrait.php", "_app_config_trait_8php_source.html", null ],
     [ "ConfigTrait.php", "_config_trait_8php_source.html", null ],
     [ "ContactsTrait.php", "_contacts_trait_8php_source.html", null ],
     [ "EnsureEntityTrait.php", "_ensure_entity_trait_8php_source.html", null ],
@@ -10,5 +11,6 @@ var dir_b621ee44905c992051223dc1f6640b7b =
     [ "InitialStateTrait.php", "_initial_state_trait_8php_source.html", null ],
     [ "SessionTrait.php", "_session_trait_8php_source.html", null ],
     [ "SloppyTrait.php", "_sloppy_trait_8php_source.html", null ],
-    [ "TimeStampTrait.php", "_time_stamp_trait_8php_source.html", null ]
+    [ "TimeStampTrait.php", "_time_stamp_trait_8php_source.html", null ],
+    [ "UserPreferencesTrait.php", "_user_preferences_trait_8php_source.html", null ]
 ];

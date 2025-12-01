@@ -1,0 +1,7 @@
+<map id="AdminInitialState" name="AdminInitialState">
+<area shape="rect" id="Node000001" title="Initialstate&#45;DTO for admin&#45;settings." alt="" coords="5,155,126,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="16,80,115,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,122,68,154,63,154,63,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="7,5,124,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,48,68,80,63,80,63,48"/>
+</map>

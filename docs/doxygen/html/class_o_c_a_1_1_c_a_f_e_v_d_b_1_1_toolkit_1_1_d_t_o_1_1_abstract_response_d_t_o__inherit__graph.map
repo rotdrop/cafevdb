@@ -1,0 +1,61 @@
+<map id="AbstractResponseDTO" name="AbstractResponseDTO">
+<area shape="rect" id="Node000001" title="Base class for DTOs." alt="" coords="316,487,473,513"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_admin_settings_response.html" title="Reponse emitted by the AdminSettingsController." alt="" coords="533,5,698,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="398,471,413,375,440,246,457,182,476,123,497,75,519,42,536,30,539,35,523,46,501,78,481,125,462,183,445,248,419,376,403,472"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_blog_response.html" title="DTO document storage file uploads meta data." alt="" coords="562,56,669,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="393,471,398,396,416,294,432,240,454,186,483,136,520,93,539,79,561,72,563,77,541,84,523,97,487,140,458,189,437,241,421,295,404,396,399,471"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_config_check_response.html" title="DTO for the orchestra locale." alt="" coords="537,107,694,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="395,470,403,404,423,316,439,269,460,223,486,181,520,143,536,132,539,136,523,147,491,184,464,226,444,271,428,317,408,404,400,471"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_downloads_share_response.html" title="DTO upload file data as reported by PHP, a bit enhanced." alt="" coords="526,157,705,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="397,470,408,412,430,338,446,299,466,260,490,225,520,194,538,182,540,187,523,198,494,228,470,263,450,301,435,340,413,413,402,471"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_i_b_a_n_meta_data.html" title="DTO for IBAN meta&#45;data." alt="" coords="560,208,671,235"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="399,471,413,422,437,361,471,298,494,270,520,245,538,233,559,226,561,231,541,238,523,249,498,273,476,301,441,363,418,424,404,473"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_messages_response.html" title="Base DTO containing messages." alt="" coords="545,259,686,285"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="403,471,420,431,444,384,478,336,520,295,544,282,546,287,523,299,482,339,449,387,424,434,408,473"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_name_id.html" title="DTO for lazy decryption endpoint." alt="" coords="582,309,649,336"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="409,472,453,408,484,374,520,346,550,332,581,324,582,329,552,337,523,350,488,378,457,412,413,475"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_progress_response.html" title="DTO for progress status reporting." alt="" coords="549,360,682,387"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="418,474,463,434,520,396,548,385,550,390,523,401,466,438,421,478"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_project_option.html" title="DTO for an options description for a project selection." alt="" coords="565,411,666,437"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="440,478,520,447,564,434,565,439,522,452,442,483"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_project_participant.html" title="DTO for brief project participant info." alt="" coords="553,461,678,488"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="488,487,553,479,553,484,489,492"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_project_participant_field.html" title="DTO for ProejctParticipantField retrieval." alt="" coords="539,512,692,539"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="489,508,539,514,538,519,488,513"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_project_participant_field_data_option.html" title="DTO for ProejctParticipantField retrieval." alt="" coords="525,563,706,605"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="444,517,522,548,553,560,551,565,520,553,442,522"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_receivables_statistics.html" title="DTO for receivables statistics during recomputation." alt="" coords="541,629,690,656"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="418,523,463,570,492,595,523,615,549,626,547,631,520,620,489,599,460,574,414,527"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_sepa_debit_mandate.html" title="DTO for a debit mandate, only the bare minimum of data." alt="" coords="549,680,682,707"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="411,526,455,597,486,634,523,666,550,679,548,684,520,670,482,638,450,600,407,529"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_sepa_debit_mandate_validation.html" title="DTO for a debit mandate, only the bare minimum of data." alt="" coords="521,731,710,757"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="407,527,422,570,447,621,480,673,500,696,523,717,542,728,540,732,520,721,496,700,476,676,442,624,417,572,402,529"/>
+<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_unsealed_data.html" title="DTO for lazy decryption endpoint." alt="" coords="563,781,668,808"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="404,528,416,579,439,644,474,711,497,741,523,767,542,779,564,786,562,792,540,784,520,771,493,744,470,714,434,646,411,581,398,529"/>
+<area shape="rect" id="Node000027" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_upload_file_data.html" title="DTO upload file data as reported by PHP, a bit enhanced." alt="" coords="560,832,671,859"/>
+<area shape="poly" id="edge26_Node000001_Node000027" title=" " alt="" coords="401,529,411,589,432,667,448,709,468,749,493,786,523,818,540,829,560,837,558,842,538,834,520,822,489,789,464,751,443,711,427,669,406,590,396,529"/>
+<area shape="rect" id="Node000028" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_upload_file_meta_data.html" title="DTO document storage file uploads meta data." alt="" coords="545,883,686,909"/>
+<area shape="poly" id="edge27_Node000001_Node000028" title=" " alt="" coords="400,529,407,598,426,690,441,738,463,786,490,830,523,869,546,883,543,888,520,873,485,833,458,788,436,740,420,691,401,599,394,529"/>
+<area shape="rect" id="Node000029" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_user_recryption_response.html" title="Reponse emitted by the AdminSettingsController." alt="" coords="530,933,701,960"/>
+<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="398,529,402,606,419,712,435,768,457,823,486,874,523,919,539,931,536,935,520,923,481,877,452,825,430,770,414,713,397,607,393,529"/>
+<area shape="rect" id="Node000030" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_util_1_1_entity_response.html" title="A collection of entities without duplicates." alt="" coords="558,984,673,1011"/>
+<area shape="poly" id="edge29_Node000001_Node000030" title=" " alt="" coords="402,528,418,627,444,760,461,827,480,888,501,937,523,970,539,982,559,989,557,994,537,986,519,974,496,940,475,889,456,828,439,761,413,628,397,529"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="170,487,268,513"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="284,497,315,497,315,503,284,503"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,487,122,513"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,497,169,497,169,503,137,503"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_folder_value_response.html" title="DTO for lazy decryption endpoint." alt="" coords="771,107,920,133"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="698,252,708,245,719,233,725,221,731,196,737,169,744,156,756,143,774,132,777,136,759,147,748,159,742,171,736,197,730,223,723,236,711,249,701,256"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_name_id_value_response.html" title="DTO for lazy decryption endpoint." alt="" coords="766,157,924,184"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="698,250,708,244,723,232,732,220,741,207,756,194,781,182,783,187,759,198,745,210,736,223,727,236,711,249,700,255"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_orchestra_locale_response.html" title="DTO for the orchestra locale." alt="" coords="758,208,933,235"/>
+<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="694,252,781,233,782,238,695,257"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_phone_number_response.html" title="DTO for orchestra phone numbers." alt="" coords="764,259,927,285"/>
+<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="701,269,763,269,763,275,701,275"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_simple_set_value_response.html" title="DTO for lazy decryption endpoint." alt="" coords="759,309,932,336"/>
+<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="695,287,782,306,781,311,694,292"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_special_projects_response.html" title="DTO special projects config (members, executive board)." alt="" coords="760,360,931,387"/>
+<area shape="poly" id="edge14_Node000009_Node000015" title=" " alt="" coords="700,289,711,295,727,308,736,321,745,334,759,346,783,357,781,362,756,350,741,337,732,324,723,312,708,300,698,294"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_d_t_o_1_1_value_response.html" title="DTO for as simple response containing one value and optional messages and hints.x." alt="" coords="789,411,902,437"/>
+<area shape="poly" id="edge15_Node000009_Node000016" title=" " alt="" coords="701,288,711,295,723,308,730,321,736,347,742,373,748,385,759,397,790,413,788,418,756,401,744,388,737,375,731,348,725,323,719,311,708,299,698,292"/>
+</map>

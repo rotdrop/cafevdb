@@ -9,6 +9,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service =
     [ "populateFontsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a6b55501d93b01c9bb65dea8c403db037", null ],
     [ "purgeFontsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a7c3d0f3a25e3212aaf9c467682244f42", null ],
     [ "scanFontsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a11370c328f78412deb89ea3a113e01dc", null ],
-    [ "$fontFolderEntries", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a39ada8018a1ca58fbcc9e94cfd7dca0e", null ],
+    [ "$fontFolderEntries", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#abae127e8b0f3d4439fd0a1523bb328b3", null ],
     [ "$systemFontDataCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ac4a3c9b192c6d40494b18c74c9dd2fb0", null ]
 ];

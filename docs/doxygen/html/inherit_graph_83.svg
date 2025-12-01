@@ -20,16 +20,16 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html" target="_top" xlink:title="A decoratory which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal...">
+<g id="a_Node000001"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html" target="_top" xlink:title="A decorator which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal ...">
 <polygon fill="white" stroke="#666666" points="183.5,-20 111.25,-20 111.25,0 183.5,0 183.5,-20"/>
 <text text-anchor="middle" x="147.38" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">L10NFactory</text>
 </a>
 </g>
 </g>
 <!-- Node0&#45;&gt;Node1 -->
-<g id="edge371_Node000000_Node000001" class="edge">
+<g id="edge395_Node000000_Node000001" class="edge">
 <title>Node0&#45;&gt;Node1</title>
-<g id="a_edge371_Node000000_Node000001"><a xlink:title=" ">
+<g id="a_edge395_Node000000_Node000001"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M86.97,-10C95.07,-10 103.35,-10 111.04,-10"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="87.22,-6.5 77.22,-10 87.22,-13.5 87.22,-6.5"/>
 </a>

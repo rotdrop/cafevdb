@@ -47,6 +47,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setWebPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a1281a338a54161359b8ec574578da7f5", null ],
     [ "setYear", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a6b2fcf24b8917f101ef4cd23c82893bb", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$participantFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ab32c9ee7fffada3f02ea3006b4720c34", null ],
-    [ "$webPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ad7506687c1988ddf9961a54a0a3e39e5", null ]
+    [ "$mailingListId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ae3b94b78bf3a34c1e799c293532b0a70", null ],
+    [ "$registrationDeadline", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a57e909ae05defe5e21f505ac293deed8", null ],
+    [ "$registrationStartDate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a48f4de4fedd105d3ea24c348b9631f3c", null ]
 ];

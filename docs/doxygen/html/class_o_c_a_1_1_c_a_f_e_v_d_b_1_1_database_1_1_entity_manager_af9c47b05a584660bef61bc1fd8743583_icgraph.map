@@ -1,0 +1,7 @@
+<map id="executePreFlushActions" name="executePreFlushActions">
+<area shape="rect" id="Node000001" title="Explicitly execute the registered actions in case that the order of execution matters." alt="" coords="118,31,281,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af5674c27d4a92f6228565010eacbb9cb" title="Commit the currently pending transaction in the following order:" alt="" coords="5,5,70,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,31,70,26,70,21,103,26"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a7751f77b5263bcf940ece6e824a05b38" title="{}" alt="" coords="13,56,62,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,62,63,68,62,63,102,57"/>
+</map>

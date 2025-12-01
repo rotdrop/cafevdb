@@ -1,17 +1,17 @@
 <map id="getInstrument" name="getInstrument">
-<area shape="rect" id="Node000001" title="Get instrument." alt="" coords="1564,195,1666,221"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="1322,121,1516,196"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1549,194,1516,186,1518,181,1550,189"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="1324,220,1515,295"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1550,227,1516,236,1515,230,1548,222"/>
+<area shape="rect" id="Node000001" title="Get instrument." alt="" coords="1564,221,1666,248"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" title=" " alt="" coords="1322,99,1516,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1572,216,1493,176,1496,172,1574,212"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" title="Get projectInstruments." alt="" coords="1324,197,1515,272"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1549,237,1515,237,1515,232,1549,232"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3f355c18b48094196f104adf263143aa" title="Set musicianInstrument." alt="" coords="1342,319,1496,345"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="1574,258,1518,286,1449,321,1447,316,1515,282,1572,253"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8468e7235b577417fef77625a966d352" title=" " alt="" coords="1029,100,1272,159"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1327,214,1320,210,1297,191,1273,173,1249,162,1251,157,1275,168,1300,187,1324,206,1330,210"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1321,193,1273,173,1242,162,1244,157,1275,168,1323,188"/>
 <area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a3f568edcfe4fe4820ff96e69d3e7fcde" title=" " alt="" coords="1028,183,1274,241"/>
-<area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="1308,241,1274,235,1275,230,1308,236"/>
+<area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="1308,228,1274,225,1275,220,1308,223"/>
 <area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#afb93799095b3938fd9a48bbc6ad10916" title="Remove the given instrument." alt="" coords="1043,265,1259,340"/>
-<area shape="poly" id="edge17_Node000003_Node000014" title=" " alt="" coords="1309,279,1260,287,1259,282,1308,273"/>
-<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" title="Set the principal parent entity." alt="" coords="1080,364,1222,391"/>
-<area shape="poly" id="edge18_Node000003_Node000015" title=" " alt="" coords="1360,306,1319,332,1275,354,1223,370,1222,365,1273,350,1317,328,1357,302"/>
+<area shape="poly" id="edge17_Node000003_Node000014" title=" " alt="" coords="1309,265,1260,278,1259,273,1308,260"/>
 <area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a8d166cbf9d3d0fcb09238cf2ac36640e" title="Determine if $this is only an associated member or business contact without double&#45;role as musician." alt="" coords="745,100,980,159"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1014,132,980,132,980,127,1014,127"/>
 <area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a095a4327094e520317f2cac30c767348" title="Determine if $this is only a musician without double&#45;role as associated member or business contact." alt="" coords="752,183,973,241"/>
@@ -32,6 +32,6 @@
 <area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="737,216,676,217,676,212,737,211"/>
 <area shape="poly" id="edge15_Node000013_Node000005" title=" " alt="" coords="1031,180,967,162,968,157,1032,175"/>
 <area shape="poly" id="edge16_Node000013_Node000012" title=" " alt="" coords="1012,215,974,215,974,209,1012,209"/>
-<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="818,364,907,391"/>
-<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="1064,380,908,380,908,375,1064,375"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" title="{}" alt="" coords="1106,364,1196,391"/>
+<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="1328,350,1197,372,1196,367,1327,345"/>
 </map>

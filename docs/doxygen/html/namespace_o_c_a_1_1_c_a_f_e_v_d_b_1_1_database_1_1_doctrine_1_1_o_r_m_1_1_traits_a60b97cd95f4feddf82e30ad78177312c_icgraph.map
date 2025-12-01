@@ -1,0 +1,10 @@
+<map id="generateFindBySelect" name="generateFindBySelect">
+<area shape="rect" id="Node000001" title="Compute the select&#45;part of the findBy() query." alt="" coords="260,56,409,83"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="159,56,212,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,72,212,72,212,67,245,67"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="13,5,103,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="143,56,93,35,95,30,145,51"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="5,56,111,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="143,81,111,81,111,76,143,75"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="126,58,158,59,158,65,126,63"/>
+</map>

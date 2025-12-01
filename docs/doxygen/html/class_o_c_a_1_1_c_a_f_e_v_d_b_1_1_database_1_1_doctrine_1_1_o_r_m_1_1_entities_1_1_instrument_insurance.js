@@ -24,5 +24,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setManufacturer", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a0305e64c7873ff142b1e5068a828112d", null ],
     [ "setObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a8146cd71c6ca0fc46caf6f86e0eaa936", null ],
     [ "setStartOfInsurance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a7f0485fdf716420cefa8038c132f0fea", null ],
-    [ "setYearOfConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a116e547e7a7a786da4e8730194192146", null ]
+    [ "setYearOfConstruction", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a116e547e7a7a786da4e8730194192146", null ],
+    [ "$billToParty", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#aa6e5b2f4e82c0875e5f171214356fefa", null ],
+    [ "$instrumentOwner", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#a94cf6d8dafc4d61bcb36fed3c2e21b25", null ]
 ];

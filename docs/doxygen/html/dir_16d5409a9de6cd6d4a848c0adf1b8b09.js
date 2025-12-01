@@ -25,6 +25,7 @@ var dir_16d5409a9de6cd6d4a848c0adf1b8b09 =
     [ "EncryptionFailedException.php", "_encryption_failed_exception_8php_source.html", null ],
     [ "EncryptionKeyException.php", "_encryption_key_exception_8php_source.html", null ],
     [ "EnduserNotificationException.php", "_exceptions_2_enduser_notification_exception_8php_source.html", null ],
+    [ "EntitySerializationException.php", "_entity_serialization_exception_8php_source.html", null ],
     [ "Exception.php", "_exceptions_2_exception_8php_source.html", null ],
     [ "FilterFailedException.php", "_filter_failed_exception_8php_source.html", null ],
     [ "MigrationException.php", "_migration_exception_8php_source.html", null ],

@@ -31,5 +31,9 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "setTooltip", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a7a7b520c37a72b7e223b75ed5391037f", null ],
     [ "setUntranslatedLabel", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a8a2e67f3708f499def73c9a71a55f73d", null ],
     [ "usage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#afe55eae96aed06d16232a3b56fcf1ad3", null ],
-    [ "$untranslatedLabel", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a2ab113e698b224df3595d53e71f48a38", null ]
+    [ "$balancingAccount", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a21aa87d7105d979ada90062a241cd4e3", null ],
+    [ "$data", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#ab2d82c4ef8c784c3f903bdef82e36a8f", null ],
+    [ "$field", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a26399a5a34a9641854d7db49000c829a", null ],
+    [ "$limit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a06fd4ebfa4dcd0254e7c1f6513f136d5", null ],
+    [ "$untranslatedLabel", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a47726c053b784a7a6515e09ab9c02b6c", null ]
 ];

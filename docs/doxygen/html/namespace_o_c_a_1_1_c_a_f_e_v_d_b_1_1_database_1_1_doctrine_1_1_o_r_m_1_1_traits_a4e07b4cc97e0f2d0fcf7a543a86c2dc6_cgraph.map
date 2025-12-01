@@ -1,0 +1,5 @@
+<map id="sanitizeEncryptionContext" name="sanitizeEncryptionContext">
+<area shape="rect" id="Node000001" title="Ensure that the encryptionContext contains the user&#45;id of the given musician." alt="" coords="5,21,180,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#aacf441eceead4b81407f3a2f48195ff4" title="Get userIdSlug." alt="" coords="228,5,406,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,32,212,32,212,37,180,37"/>
+</map>

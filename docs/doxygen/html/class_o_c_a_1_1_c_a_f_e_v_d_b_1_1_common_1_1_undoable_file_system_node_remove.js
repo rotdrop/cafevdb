@@ -1,6 +1,5 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html#a09b09b14ab3fd30b5e1c49cc53abb8a3", null ],
     [ "do", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html#abc7aec4383c36f876c7c3b382154ed81", null ],
     [ "getSortOrder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html#af31b5ed3a2aa6a5ec810793e2bf1ce59", null ],
     [ "initialize", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html#a3427bb0dbdc6772146fee311824df800", null ],

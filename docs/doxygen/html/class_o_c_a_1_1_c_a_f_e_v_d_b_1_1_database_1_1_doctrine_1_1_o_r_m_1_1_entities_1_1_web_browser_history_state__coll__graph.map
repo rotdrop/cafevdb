@@ -1,15 +1,12 @@
 <map id="WebBrowserHistoryState" name="WebBrowserHistoryState">
-<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,279,174,305"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="233,5,330,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,28,188,34,158,45,130,61,108,83,93,107,84,133,78,189,82,241,89,278,84,279,76,241,73,189,79,132,89,105,103,80,127,57,156,40,187,29,217,22"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="148,180,316,207"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="294,46,300,76,297,109,288,131,276,151,248,181,244,178,271,148,284,128,292,107,294,76,289,47"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="215,279,383,305"/>
-<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="307,42,315,55,331,102,336,141,336,230,338,243,336,256,318,280,313,277,331,254,333,243,331,231,331,141,326,103,310,57,302,45"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="118,81,283,108"/>
-<area shape="poly" id="edge8_Node000005_Node000002" title=" " alt="" coords="258,45,216,83,212,79,255,41"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,218,110,280,107,276,200,213"/>
-<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="226,222,226,238,230,253,242,266,257,276,255,280,239,270,226,256,220,239,221,222"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="286,265,267,232,246,209,250,205,272,229,291,263"/>
-<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="212,122,231,179,226,181,207,123"/>
+<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,180,174,207"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="163,5,259,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,42,140,60,117,83,104,107,97,134,92,180,87,179,92,133,99,105,113,80,136,55,164,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="127,81,295,108"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="214,47,214,81,208,81,208,47"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html" title="Generic directory entry for a database&#45;backed file." alt="" coords="197,180,366,207"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="261,37,288,55,309,80,318,100,320,118,311,157,296,181,291,178,306,155,315,118,313,101,305,83,284,59,258,41"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,119,156,134,104,181,100,177,153,130,175,114"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="202,123,199,140,204,155,216,168,232,177,229,182,213,172,199,157,194,140,196,122"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="264,168,241,134,221,110,225,107,245,130,269,165"/>
 </map>

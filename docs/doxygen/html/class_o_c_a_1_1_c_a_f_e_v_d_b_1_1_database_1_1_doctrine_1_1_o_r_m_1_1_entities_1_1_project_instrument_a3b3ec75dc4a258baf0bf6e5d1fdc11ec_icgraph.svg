@@ -59,8 +59,8 @@ var sectionId = 'dynsection-3';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Get instrument.">
-<polygon fill="#999999" stroke="#666666" points="1245.25,-147 1169.25,-147 1169.25,-127 1245.25,-127 1245.25,-147"/>
-<text text-anchor="middle" x="1207.25" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">getInstrument</text>
+<polygon fill="#999999" stroke="#666666" points="1245.25,-127 1169.25,-127 1169.25,-107 1245.25,-107 1245.25,-127"/>
+<text text-anchor="middle" x="1207.25" y="-113.5" font-family="Helvetica,sans-Serif" font-size="10.00">getInstrument</text>
 </a>
 </g>
 </g>
@@ -68,11 +68,11 @@ var sectionId = 'dynsection-3';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abe10d7b2125ddae4e2bd88edfb260b81" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1133.25,-202 987.5,-202 987.5,-146 1133.25,-146 1133.25,-202"/>
-<text text-anchor="start" x="995.5" y="-188.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
-<text text-anchor="start" x="995.5" y="-176.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Doctrine\ORM\Entities</text>
-<text text-anchor="start" x="995.5" y="-164.5" font-family="Helvetica,sans-Serif" font-size="10.00">\ProjectParticipant\addProject</text>
-<text text-anchor="middle" x="1060.38" y="-152.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instrument</text>
+<polygon fill="white" stroke="#666666" points="1133.25,-219 987.5,-219 987.5,-163 1133.25,-163 1133.25,-219"/>
+<text text-anchor="start" x="995.5" y="-205.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
+<text text-anchor="start" x="995.5" y="-193.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Doctrine\ORM\Entities</text>
+<text text-anchor="start" x="995.5" y="-181.5" font-family="Helvetica,sans-Serif" font-size="10.00">\ProjectParticipant\addProject</text>
+<text text-anchor="middle" x="1060.38" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instrument</text>
 </a>
 </g>
 </g>
@@ -80,8 +80,8 @@ var sectionId = 'dynsection-3';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1157.9,-149.35C1150.12,-151.33 1141.93,-153.43 1133.74,-155.52"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1158.65,-152.77 1167.47,-146.9 1156.92,-145.99 1158.65,-152.77"/>
+<path fill="none" stroke="#63b8ff" d="M1175.86,-132.52C1158.81,-141.23 1137.01,-152.36 1117.02,-162.58"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1177.14,-135.8 1184.45,-128.13 1173.95,-129.57 1177.14,-135.8"/>
 </a>
 </g>
 </g>
@@ -89,11 +89,11 @@ var sectionId = 'dynsection-3';
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a578e8c33654a919b7bee8fa4f37323b9" target="_top" xlink:title="Get projectInstruments.">
-<polygon fill="white" stroke="#666666" points="1132.12,-128 988.62,-128 988.62,-72 1132.12,-72 1132.12,-128"/>
-<text text-anchor="start" x="996.62" y="-114.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
-<text text-anchor="start" x="996.62" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Doctrine\ORM\Entities</text>
-<text text-anchor="start" x="996.62" y="-90.5" font-family="Helvetica,sans-Serif" font-size="10.00">\ProjectParticipant\getProject</text>
-<text text-anchor="middle" x="1060.38" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instruments</text>
+<polygon fill="white" stroke="#666666" points="1132.12,-145 988.62,-145 988.62,-89 1132.12,-89 1132.12,-145"/>
+<text text-anchor="start" x="996.62" y="-131.5" font-family="Helvetica,sans-Serif" font-size="10.00">OCA\CAFEVDB\Database</text>
+<text text-anchor="start" x="996.62" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00">\Doctrine\ORM\Entities</text>
+<text text-anchor="start" x="996.62" y="-107.5" font-family="Helvetica,sans-Serif" font-size="10.00">\ProjectParticipant\getProject</text>
+<text text-anchor="middle" x="1060.38" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instruments</text>
 </a>
 </g>
 </g>
@@ -101,8 +101,26 @@ var sectionId = 'dynsection-3';
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1157.82,-124.63C1149.71,-122.56 1141.15,-120.37 1132.61,-118.19"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1156.92,-128.01 1167.47,-127.1 1158.65,-121.23 1156.92,-128.01"/>
+<path fill="none" stroke="#63b8ff" d="M1157.54,-117C1149.52,-117 1141.05,-117 1132.61,-117"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1157.43,-120.5 1167.43,-117 1157.43,-113.5 1157.43,-120.5"/>
+</a>
+</g>
+</g>
+<!-- Node15 -->
+<g id="Node000015" class="node">
+<title>Node15</title>
+<g id="a_Node000015"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3f355c18b48094196f104adf263143aa" target="_top" xlink:title="Set musicianInstrument.">
+<polygon fill="white" stroke="#666666" points="1117.88,-54 1002.88,-54 1002.88,-34 1117.88,-34 1117.88,-54"/>
+<text text-anchor="middle" x="1060.38" y="-40.5" font-family="Helvetica,sans-Serif" font-size="10.00">setMusicianInstrument</text>
+</a>
+</g>
+</g>
+<!-- Node1&#45;&gt;Node15 -->
+<g id="edge18_Node000001_Node000015" class="edge">
+<title>Node1&#45;&gt;Node15</title>
+<g id="a_edge18_Node000001_Node000015"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M1175.89,-101.57C1162.78,-94.92 1147.27,-87.06 1133.25,-80 1116.05,-71.33 1096.51,-61.55 1082.15,-54.37"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="1173.96,-104.52 1184.46,-105.92 1177.13,-98.27 1173.96,-104.52"/>
 </a>
 </g>
 </g>
@@ -121,8 +139,8 @@ var sectionId = 'dynsection-3';
 <g id="edge3_Node000003_Node000004" class="edge">
 <title>Node3&#45;&gt;Node4</title>
 <g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M992.34,-133.98C990.7,-134.98 989.09,-135.99 987.5,-137 970.42,-147.91 969.35,-155.39 951.5,-165 945.75,-168.1 939.63,-170.97 933.39,-173.62"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="993.79,-137.19 1000.64,-129.1 990.24,-131.15 993.79,-137.19"/>
+<path fill="none" stroke="#63b8ff" d="M987.74,-149.97C975.72,-155.19 963.31,-160.38 951.5,-165 944.01,-167.93 936.12,-170.85 928.24,-173.66"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="989.04,-153.22 996.79,-146 986.23,-146.81 989.04,-153.22"/>
 </a>
 </g>
 </g>
@@ -141,8 +159,8 @@ var sectionId = 'dynsection-3';
 <g id="edge14_Node000003_Node000013" class="edge">
 <title>Node3&#45;&gt;Node13</title>
 <g id="a_edge14_Node000003_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M977.03,-114.05C968.68,-115.48 960.17,-116.93 951.73,-118.37"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="977.52,-117.52 986.79,-112.39 976.35,-110.62 977.52,-117.52"/>
+<path fill="none" stroke="#63b8ff" d="M977.03,-124.03C968.68,-124.74 960.17,-125.46 951.73,-126.18"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="977.11,-127.53 986.78,-123.19 976.52,-120.56 977.11,-127.53"/>
 </a>
 </g>
 </g>
@@ -162,26 +180,8 @@ var sectionId = 'dynsection-3';
 <g id="edge17_Node000003_Node000014" class="edge">
 <title>Node3&#45;&gt;Node14</title>
 <g id="a_edge17_Node000003_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M977.3,-85.99C965.2,-83.93 952.75,-81.81 940.68,-79.75"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="976.35,-89.38 986.79,-87.61 977.52,-82.48 976.35,-89.38"/>
-</a>
-</g>
-</g>
-<!-- Node15 -->
-<g id="Node000015" class="node">
-<title>Node15</title>
-<g id="a_Node000015"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a8413454e6ddfb601e6585d9b45fc121b" target="_top" xlink:title="Set the principal parent entity.">
-<polygon fill="white" stroke="#666666" points="912.5,-20 805.75,-20 805.75,0 912.5,0 912.5,-20"/>
-<text text-anchor="middle" x="859.12" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">setProjectParticipant</text>
-</a>
-</g>
-</g>
-<!-- Node3&#45;&gt;Node15 -->
-<g id="edge18_Node000003_Node000015" class="edge">
-<title>Node3&#45;&gt;Node15</title>
-<g id="a_edge18_Node000003_Node000015"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M1014.77,-65.17C996.11,-52.1 973.64,-38.19 951.5,-29 939.38,-23.97 925.78,-20.22 912.85,-17.44"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="1012.48,-67.83 1022.64,-70.81 1016.55,-62.14 1012.48,-67.83"/>
+<path fill="none" stroke="#63b8ff" d="M977.3,-95.99C965.2,-92.9 952.75,-89.71 940.68,-86.62"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="976.26,-99.34 986.82,-98.43 978,-92.56 976.26,-99.34"/>
 </a>
 </g>
 </g>
@@ -387,8 +387,8 @@ var sectionId = 'dynsection-3';
 <g id="Node000016" class="node">
 <title>Node16</title>
 <g id="a_Node000016"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a858693df385e90259d79a6dc17cf9974" target="_top" xlink:title="{}">
-<polygon fill="white" stroke="#666666" points="676.38,-20 609.38,-20 609.38,0 676.38,0 676.38,-20"/>
-<text text-anchor="middle" x="642.88" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">__construct</text>
+<polygon fill="white" stroke="#666666" points="892.62,-20 825.62,-20 825.62,0 892.62,0 892.62,-20"/>
+<text text-anchor="middle" x="859.12" y="-6.5" font-family="Helvetica,sans-Serif" font-size="10.00">__construct</text>
 </a>
 </g>
 </g>
@@ -396,8 +396,8 @@ var sectionId = 'dynsection-3';
 <g id="edge19_Node000015_Node000016" class="edge">
 <title>Node15&#45;&gt;Node16</title>
 <g id="a_edge19_Node000015_Node000016"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M794.27,-10C755.59,-10 707.85,-10 676.67,-10"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="793.93,-13.5 803.93,-10 793.93,-6.5 793.93,-13.5"/>
+<path fill="none" stroke="#63b8ff" d="M991.5,-32.42C958.26,-26.75 919.76,-20.18 893.06,-15.62"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="990.61,-35.82 1001.05,-34.05 991.78,-28.92 990.61,-35.82"/>
 </a>
 </g>
 </g>

@@ -1,0 +1,8 @@
+<map id="propertiesByAnnotation" name="propertiesByAnnotation">
+<area shape="rect" id="Node000001" title="Return a list of properties tagged by the given annotation." alt="" coords="5,29,162,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a99544f0d74c7ffa77e5189056be8c0ac" title="{}" alt="" coords="210,29,337,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,40,194,40,194,45,162,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a59a737e766c664731fa838025a01dcd1" title="Switch metadata&#45;decoration on and off." alt="" coords="385,29,544,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="337,40,369,40,369,45,337,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="432,30,426,21,430,11,443,5,465,3,488,5,500,12,497,16,486,10,465,8,445,10,434,15,432,20,437,27"/>
+</map>

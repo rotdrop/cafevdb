@@ -24,7 +24,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "setObjGuid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#a6054786bb412852f4408e41fa18b7fd8", null ],
     [ "setSlotType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#ae87ea9b3cf7ae2a3d9c48eaeaab445c5", null ],
     [ "setStringVal", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#a4113850ae1c97f4acf4d7cc807b71520", null ],
-    [ "setTimespecVal", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#acdb067470ddb0de8f58bc34ebf9d7921", null ],
-    [ "$guidVal", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#a761a7bd49b4df24e0beb9ebcb1f12965", null ],
-    [ "$objGuid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#a7c7e1265803dd760b11ecf0798b33db5", null ]
+    [ "setTimespecVal", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_gnu_cash_slot.html#acdb067470ddb0de8f58bc34ebf9d7921", null ]
 ];

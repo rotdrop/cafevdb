@@ -1,0 +1,32 @@
+<map id="getConnection" name="getConnection">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="963,129,1068,155"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a1eebdeaf111ea004e0139f41eabacdb0" title=" " alt="" coords="762,53,915,79"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="967,125,870,82,873,77,970,120"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a166cb1f72761ff7c95d5d24055fe03f5" title="Check for a valid database connection." alt="" coords="798,129,879,155"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="948,145,879,145,879,139,948,139"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#accec9beff2ce6cd137d37f5f902a42b1" title="{}" alt="" coords="794,179,882,206"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="952,163,884,183,882,178,951,158"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af5674c27d4a92f6228565010eacbb9cb" title="Commit the currently pending transaction in the following order:" alt="" coords="412,27,476,54"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="797,48,757,31,713,18,664,10,625,8,537,18,477,32,476,27,536,13,625,3,665,5,714,13,759,26,799,43"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a1c95b7d310f140b648d46b4e7905f57b" title="Explicitly execute the registered actions in case that the order of execution matters." alt="" coords="536,27,714,54"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="746,58,714,54,715,49,747,52"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af9c47b05a584660bef61bc1fd8743583" title="Explicitly execute the registered actions in case that the order of execution matters." alt="" coords="543,78,707,105"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="747,80,708,84,707,79,746,74"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="521,43,476,43,476,38,521,38"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="559,76,475,52,477,47,561,71"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a7751f77b5263bcf940ece6e824a05b38" title="{}" alt="" coords="419,78,468,105"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="527,94,469,94,469,89,527,89"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#adbfe2d3a1d0de813eca7f57d95f9b6c1" title="Initialize the wrapper if the EncryptionService has been bound to a user and password." alt="" coords="602,154,648,181"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="783,151,649,167,648,162,782,146"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a199fece8e17ee7055b5d0beb07ce2eda" title="{}" alt="" coords="399,129,488,155"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="586,165,489,151,489,146,587,159"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ac14fbe24da920616c0e5ae6e79172f75" title="Reopen the entity&#45;manager after it has been closed, e.g." alt="" coords="414,179,474,206"/>
+<area shape="poly" id="edge14_Node000008_Node000012" title=" " alt="" coords="587,175,475,191,474,186,586,170"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad5c19dc6ba7e3526e72b701af4cda0df" title=" " alt="" coords="177,129,351,155"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="383,145,351,145,351,139,383,139"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa81dfb608c86263213acf2c1d3507e96" title=" " alt="" coords="5,179,129,206"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="195,162,122,181,121,176,193,157"/>
+<area shape="poly" id="edge13_Node000011_Node000008" title=" " alt="" coords="132,207,177,215,265,226,333,231,401,228,488,215,550,197,601,176,603,181,552,203,489,221,402,233,333,236,264,231,176,221,131,213"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#afa549adf79e3f8c09fe8f903dd5fbfa7" title="Rollback the currently failed transactions, afterwards executed the undo&#45;queues of the callback&#45;queue..." alt="" coords="231,179,297,206"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="398,195,297,195,297,190,398,190"/>
+</map>

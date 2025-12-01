@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,120,85,154,122,177,119,182,81,158,54,123"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="15,5,71,32"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="46,47,46,81,40,81,40,47"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html" title="A decoratory which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal..." alt="" coords="104,81,200,108"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_l10_n_1_1_l10_n_factory.html" title="A decorator which strips the encoding suffix from a given locale as Nextcloud L10N stuff cannot deal ..." alt="" coords="104,81,200,108"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="155,124,155,180,150,180,150,124"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="102,5,202,32"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="155,47,155,81,150,81,150,47"/>

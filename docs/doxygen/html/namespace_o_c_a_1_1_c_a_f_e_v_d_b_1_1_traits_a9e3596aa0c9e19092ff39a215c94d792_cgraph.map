@@ -1,0 +1,14 @@
+<map id="deleteUserValue" name="deleteUserValue">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,122,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="296,5,373,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,36,280,21,280,26,122,41"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="170,56,248,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="123,52,155,57,154,62,122,57"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="516,31,616,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="374,20,500,34,500,40,373,26"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae81b7186fb97a7c6457edcc68c9aa2ef" title="Get the currently active user." alt="" coords="301,56,368,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="248,67,285,67,285,72,248,72"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a5a4242e631a8146a621343f49290b458" title=" " alt="" coords="421,56,468,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="369,67,406,67,406,72,369,72"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="468,62,500,55,501,60,469,67"/>
+</map>

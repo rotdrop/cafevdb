@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['nodetrait_0',['NodeTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a56d21da2c5a37154377d4b27c9330a0d',1,'OCA::CAFEVDB::Toolkit::Traits']]]
+  ['mailingliststrait_0',['MailingListsTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a536e79e7a91156e12d8ef481b7791f7e',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['musicianavatartrait_1',['MusicianAvatarTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a787780fb616c231b4f9e56bc48b2506e',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['musicianemailstrait_2',['MusicianEmailsTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a9a765a8f37dd30a591918b0aad0580cc',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['musicianfromrowtrait_3',['MusicianFromRowTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a12188701654b51ebd14d4f0917367a63',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['musiciangendertrait_4',['MusicianGenderTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#aa90c1dfc498021947e388e7fb6949a34',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]]
 ];

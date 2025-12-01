@@ -1,0 +1,9 @@
+<map id="SepaDebitMandate" name="SepaDebitMandate">
+<area shape="rect" id="Node000001" title="DTO for a debit mandate, only the bare minimum of data." alt="" coords="18,229,150,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="5,155,163,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,197,87,229,81,229,81,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="35,80,133,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,122,87,154,81,154,81,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="26,5,142,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,48,87,80,81,80,81,48"/>
+</map>

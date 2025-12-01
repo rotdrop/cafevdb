@@ -10,6 +10,7 @@ var dir_8732a88a49b83212234194eaa7a5b67b =
     [ "CalendarObjectMovedEventListener.php", "_calendar_object_moved_event_listener_8php_source.html", null ],
     [ "CalendarObjectUpdatedEventListener.php", "_calendar_object_updated_event_listener_8php_source.html", null ],
     [ "CalendarUpdatedEventListener.php", "_calendar_updated_event_listener_8php_source.html", null ],
+    [ "CloudUserRegistrationConfirmationListener.php", "_cloud_user_registration_confirmation_listener_8php_source.html", null ],
     [ "CompositePaymentEntityListener.php", "_composite_payment_entity_listener_8php_source.html", null ],
     [ "ContactsCardEventListener.php", "_contacts_card_event_listener_8php_source.html", null ],
     [ "DatabaseStorageFileEntityListener.php", "_database_storage_file_entity_listener_8php_source.html", null ],

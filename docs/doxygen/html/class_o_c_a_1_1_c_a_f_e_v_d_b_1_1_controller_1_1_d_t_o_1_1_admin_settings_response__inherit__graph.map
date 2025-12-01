@@ -1,0 +1,9 @@
+<map id="AdminSettingsResponse" name="AdminSettingsResponse">
+<area shape="rect" id="Node000001" title="Reponse emitted by the AdminSettingsController." alt="" coords="5,229,171,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_response_d_t_o.html" title="Base class for DTOs." alt="" coords="9,155,167,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,197,91,229,85,229,85,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_d_t_o_1_1_abstract_d_t_o.html" title="Base class for DTOs." alt="" coords="39,80,137,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,122,91,154,85,154,85,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="30,5,146,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,48,91,80,85,80,85,48"/>
+</map>

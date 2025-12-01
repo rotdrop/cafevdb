@@ -1,5 +1,25 @@
 <map id="MusicianEmailAddress" name="MusicianEmailAddress">
-<area shape="rect" id="Node000001" title="Email address for persons." alt="" coords="5,80,160,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="34,5,131,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,48,85,80,80,80,80,48"/>
+<area shape="rect" id="Node000001" title="Email address for persons." alt="" coords="424,431,578,457"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="457,233,554,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="507,276,504,431,499,430,502,275"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html" title="Musician." alt="" coords="253,332,326,359"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="477,271,408,310,367,326,327,338,326,333,365,321,406,306,474,267"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html" title="MusicianRowAccessToken." alt="" coords="200,431,379,457"/>
+<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="503,276,484,350,471,385,456,409,426,423,380,434,379,429,424,418,453,405,466,383,479,349,497,274"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="332,363,475,428,473,433,330,368"/>
+<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="292,374,292,430,287,430,287,374"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="195,233,312,260"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="266,274,287,331,282,333,261,276"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gender.html" title=" " alt="" coords="335,233,433,260"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="363,273,303,334,300,330,359,269"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="168,157,301,184"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="275,189,360,230,357,235,273,194"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participation_status.html" title=" " alt="" coords="5,233,171,260"/>
+<area shape="poly" id="edge13_Node000010_Node000006" title=" " alt="" coords="197,194,114,235,112,230,195,189"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="193,81,276,108"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="237,123,237,157,232,157,232,123"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="182,5,288,32"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="237,47,237,81,232,81,232,47"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="183,432,160,424,143,413,136,399,143,381,161,369,188,360,252,348,253,353,190,365,163,374,147,384,141,399,147,410,163,419,185,427"/>
+<area shape="poly" id="edge12_Node000003_Node000010" title=" " alt="" coords="88,275,91,292,99,306,124,319,164,329,252,339,252,345,164,334,122,324,95,310,86,294,83,276"/>
 </map>

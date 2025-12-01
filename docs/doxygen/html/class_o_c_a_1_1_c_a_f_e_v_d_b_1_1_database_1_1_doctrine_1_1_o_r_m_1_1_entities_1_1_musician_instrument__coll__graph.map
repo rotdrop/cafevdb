@@ -1,5 +1,28 @@
 <map id="MusicianInstrument" name="MusicianInstrument">
-<area shape="rect" id="Node000001" title="MusicianInstruments." alt="" coords="5,80,141,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="25,5,121,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,48,76,80,70,80,70,48"/>
+<area shape="rect" id="Node000001" title="MusicianInstruments." alt="" coords="66,431,201,457"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="86,233,182,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,276,136,430,131,430,131,276"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html" title="Musician." alt="" coords="289,332,362,359"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="174,265,302,329,299,334,171,270"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_row_access_token.html" title="MusicianRowAccessToken." alt="" coords="236,431,415,457"/>
+<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="150,273,155,283,167,320,173,350,182,377,205,405,224,418,246,428,244,433,221,423,201,409,178,380,168,351,162,321,150,285,145,275"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument.html" title="Instrumente." alt="" coords="5,332,89,359"/>
+<area shape="poly" id="edge15_Node000011_Node000002" title=" " alt="" coords="114,274,60,334,56,330,110,270"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="285,368,249,385,158,433,155,428,247,380,283,363"/>
+<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="325,375,324,383,324,407,326,430,321,430,319,407,319,383,319,374"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="206,233,322,260"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="283,272,320,330,316,333,278,274"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_gender.html" title=" " alt="" coords="346,233,444,260"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="379,275,337,333,332,330,375,271"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_abstract_enum_type.html" title="Abstract base class for providing some common services." alt="" coords="406,157,538,184"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="450,197,410,235,406,231,447,193"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_participation_status.html" title=" " alt="" coords="468,233,634,260"/>
+<area shape="poly" id="edge13_Node000010_Node000006" title=" " alt="" coords="499,193,540,231,536,235,495,197"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="431,81,514,108"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="475,123,475,157,470,157,470,123"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="419,5,526,32"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="475,47,475,81,470,81,470,47"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="377,421,391,405,395,395,391,384,379,370,362,360,364,355,382,366,396,381,400,395,396,408,381,424"/>
+<area shape="poly" id="edge12_Node000003_Node000010" title=" " alt="" coords="515,270,429,310,364,335,362,330,427,306,513,265"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="38,374,37,390,41,405,54,418,71,428,68,433,51,423,37,408,31,391,33,373"/>
 </map>

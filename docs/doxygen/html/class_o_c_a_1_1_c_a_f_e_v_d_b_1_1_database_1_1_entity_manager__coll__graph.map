@@ -1,5 +1,14 @@
 <map id="EntityManager" name="EntityManager">
-<area shape="rect" id="Node000001" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="34,80,139,107"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,168,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,48,89,80,84,80,84,48"/>
+<area shape="rect" id="Node000001" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="82,279,187,305"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,168,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,123,68,163,68,185,72,206,81,227,95,246,122,276,118,280,90,249,77,229,67,207,62,185,63,163,73,122"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="82,180,187,207"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="102,121,131,179,126,181,97,123"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html" title="Override the default listener to use a modified event subscriber which also queries other sources of ..." alt="" coords="214,81,394,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="310,124,308,166,302,188,290,208,264,233,235,253,176,280,174,276,232,249,261,229,286,205,297,186,303,165,305,123"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="260,117,224,134,152,182,149,177,222,130,257,112"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="235,5,373,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="306,47,306,81,301,81,301,47"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="137,222,137,278,132,278,132,222"/>
+<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="204,184,214,193,206,202,188,205,187,200,203,197,209,193,201,188"/>
 </map>

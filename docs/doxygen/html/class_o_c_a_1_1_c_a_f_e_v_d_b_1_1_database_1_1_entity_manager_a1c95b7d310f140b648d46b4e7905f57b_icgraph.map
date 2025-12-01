@@ -1,0 +1,5 @@
+<map id="executePreCommitActions" name="executePreCommitActions">
+<area shape="rect" id="Node000001" title="Explicitly execute the registered actions in case that the order of execution matters." alt="" coords="118,5,295,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#af5674c27d4a92f6228565010eacbb9cb" title="Commit the currently pending transaction in the following order:" alt="" coords="5,5,70,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,21,70,21,70,16,102,16"/>
+</map>

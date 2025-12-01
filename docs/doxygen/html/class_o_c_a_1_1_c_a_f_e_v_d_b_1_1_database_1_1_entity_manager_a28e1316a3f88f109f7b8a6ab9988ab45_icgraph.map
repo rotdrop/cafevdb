@@ -1,0 +1,16 @@
+<map id="postConnect" name="postConnect">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="630,81,725,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa81dfb608c86263213acf2c1d3507e96" title=" " alt="" coords="458,81,582,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="614,97,582,97,582,92,614,92"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#adbfe2d3a1d0de813eca7f57d95f9b6c1" title="Initialize the wrapper if the EncryptionService has been bound to a user and password." alt="" coords="365,56,410,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="442,83,410,76,411,71,444,77"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a199fece8e17ee7055b5d0beb07ce2eda" title="{}" alt="" coords="228,56,317,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="349,72,317,72,317,67,349,67"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ac14fbe24da920616c0e5ae6e79172f75" title="Reopen the entity&#45;manager after it has been closed, e.g." alt="" coords="242,5,302,32"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="350,56,302,34,304,29,352,51"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad5c19dc6ba7e3526e72b701af4cda0df" title=" " alt="" coords="5,81,180,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="212,80,180,85,180,80,212,75"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="195,92,458,92,458,97,195,97"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#afa549adf79e3f8c09fe8f903dd5fbfa7" title="Rollback the currently failed transactions, afterwards executed the undo&#45;queues of the callback&#45;queue..." alt="" coords="59,5,126,32"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="226,21,126,21,126,16,226,16"/>
+</map>

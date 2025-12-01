@@ -1,7 +1,9 @@
 <map id="projectWebPages" name="projectWebPages">
-<area shape="rect" id="Node000001" title="Fetch all articles known to the system." alt="" coords="5,55,129,81"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ab7bb543843040401661c023b701bb5f1" title="Get webPages." alt="" coords="177,5,355,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,55,161,50,162,55,130,60"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5bc5d043588dd30488680d5e78bf67eb" title="Lazy getter for WebPagesRPC." alt="" coords="210,88,322,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,76,195,87,194,92,129,81"/>
+<area shape="rect" id="Node000001" title="Fetch all articles known to the system." alt="" coords="5,88,129,115"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_d_t_o_1_1_project_web_page.html#a03af6452b3ff02618dfef97106d6f30c" title="Create an instance from a data array." alt="" coords="177,5,392,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,85,176,57,196,51,198,56,178,63,104,90"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#ab7bb543843040401661c023b701bb5f1" title="Get webPages." alt="" coords="195,72,374,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,99,180,99,180,104,129,104"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5bc5d043588dd30488680d5e78bf67eb" title="Lazy getter for WebPagesRPC." alt="" coords="229,155,340,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="103,113,177,140,214,150,213,155,176,145,101,118"/>
 </map>

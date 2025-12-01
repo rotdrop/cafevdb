@@ -1,0 +1,9 @@
+<map id="register" name="register">
+<area shape="rect" id="Node000001" title="Register the given action in the run&#45;queue." alt="" coords="276,104,340,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a90b7302f64cf763a99db8914d2f2b7ab" title="Register a post&#45;commit action to be executed after the final data&#45;base commit succeeded,..." alt="" coords="25,5,208,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,99,227,78,199,67,201,62,229,74,270,94"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ad7721cdc28e9f5c47447a875fdf155a8" title="Register a pre&#45;commit action and optionally an associated undo&#45;action." alt="" coords="5,88,228,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="260,120,228,120,228,115,260,115"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ab4135e336795afa5ab7f539ed77aceb3" title=" " alt="" coords="12,171,221,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="270,141,229,161,201,173,199,168,227,156,268,136"/>
+</map>

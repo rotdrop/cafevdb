@@ -4,9 +4,11 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,101,110,82,129,75,131,80,112,86,64,106"/>
 <area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="122,96,328,139"/>
 <area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="63,115,107,115,107,120,63,120"/>
-<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a540e76a933fa4da984bb45cc629a47b1" title="Create the base options array for phpMyEdit." alt="" coords="111,163,339,221"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="64,128,112,148,127,154,125,159,110,153,62,133"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="387,29,584,72"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="313,48,372,48,372,53,313,53"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="436,29,435,19,443,10,460,5,486,3,513,5,530,11,528,16,512,10,486,8,461,10,446,15,440,21,442,28"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a540e76a933fa4da984bb45cc629a47b1" title="Create the base options array for phpMyEdit." alt="" coords="111,163,339,221"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="64,128,112,148,127,154,125,159,110,153,62,133"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="392,29,589,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="313,48,376,48,376,53,313,53"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="441,29,439,19,447,10,464,5,491,3,519,5,536,11,534,16,518,10,491,8,465,10,450,15,444,21,446,28"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7c872230ae003c93d82e0e6de31f6212" title="Set table&#45;navigation enable/disable." alt="" coords="387,96,594,139"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="328,115,372,115,372,120,328,120"/>
 </map>

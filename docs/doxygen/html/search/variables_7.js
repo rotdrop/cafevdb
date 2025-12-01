@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['get_5fcalendar_5fevents_0',['GET_CALENDAR_EVENTS',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#a78b98bc2514d2706bb98f431233f7580',1,'OCA::CAFEVDB::Controller::ProjectsController']]],
-  ['get_5fevent_5fmatrix_1',['GET_EVENT_MATRIX',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#a11bd8a8c43f09ede9d08c683f6e8f903',1,'OCA::CAFEVDB::Controller::ProjectsController']]],
-  ['get_5fparticipant_5ffields_2',['GET_PARTICIPANT_FIELDS',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#af67cc38959386defc24eb9da1ee100b7',1,'OCA::CAFEVDB::Controller::ProjectsController']]],
-  ['get_5fparticipants_3',['GET_PARTICIPANTS',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#a15955f6a8d36c0202cb034080bec270d',1,'OCA::CAFEVDB::Controller::ProjectsController']]],
-  ['getprefixparamstrait_4',['GetPrefixParamsTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a5f57ade957f0c3555e525c9f18bf7e4d',1,'OCA::CAFEVDB::Controller']]],
-  ['getusertrait_5',['GetUserTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab0635b5baa780274effca9539886e53e',1,'OCA::CAFEVDB::Traits']]]
+  ['file_5ftypes_0',['FILE_TYPES',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_abstract_spreadsheet_exporter.html#a6f8841d391377cb0ce1497582a5871dd',1,'OCA::CAFEVDB::PageRenderer::Export::AbstractSpreadsheetExporter']]],
+  ['fileuploadrowtrait_1',['FileUploadRowTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html#a3e38e8d1030858c40318e01ca4915c86',1,'OCA::CAFEVDB::Controller']]],
+  ['financemodenavigationitemtrait_2',['FinanceModeNavigationItemTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a68c89c65651e83c093b47b80b18d903e',1,'OCA::CAFEVDB::PageRenderer::FieldTraits']]],
+  ['findliketrait_3',['FindLikeTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a0909e608b66d1e97bb0aa79876308dab',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Traits']]],
+  ['flattenentitytrait_4',['FlattenEntityTrait',['../namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a0a2c39ee05788b1e72e72db27db8f677',1,'OCA::CAFEVDB::Traits']]]
 ];

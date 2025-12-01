@@ -1,5 +1,12 @@
 <map id="findOneLike" name="findOneLike">
-<area shape="rect" id="Node000001" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,5,96,32"/>
-<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a06f67eea0335f8c49d4c9fe997d92f8d" title="Find entities by given wild&#45;card criteria." alt="" coords="144,5,210,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,16,128,16,128,21,96,21"/>
+<area shape="rect" id="Node000001" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,81,96,108"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#ad737d9a33cc49b8fceb6f4a932b24d0d" title="Add some &quot;missing&quot; convenience stuff to findBy()." alt="" coords="150,56,204,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,83,134,75,136,80,97,88"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a06f67eea0335f8c49d4c9fe997d92f8d" title="Find entities by given wild&#45;card criteria." alt="" coords="144,107,210,133"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="97,101,129,108,128,113,96,106"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a60b97cd95f4feddf82e30ad78177312c" title="Compute the select&#45;part of the findBy() query." alt="" coords="258,5,407,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="203,58,274,35,276,40,205,63"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a6ea72852e98c959c63b2edd0389d5bcb" title="Parse the criteria." alt="" coords="280,56,385,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="204,74,265,76,264,81,204,79"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="280,63,219,64,219,59,280,58"/>
 </map>

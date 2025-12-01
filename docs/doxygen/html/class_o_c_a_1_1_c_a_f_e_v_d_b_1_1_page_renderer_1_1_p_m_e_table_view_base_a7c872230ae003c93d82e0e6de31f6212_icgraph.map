@@ -1,9 +1,23 @@
 <map id="navigation" name="navigation">
-<area shape="rect" id="Node000001" title="Set table&#45;navigation enable/disable." alt="" coords="451,47,531,73"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aacd3616b156f66da2a7f9fab49c2f1b5" title=" " alt="" coords="259,47,403,73"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="435,63,404,63,404,57,435,57"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,211,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,50,211,45,212,39,243,44"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,72,211,115"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="243,76,212,81,211,75,243,70"/>
+<area shape="rect" id="Node000001" title="Set table&#45;navigation enable/disable." alt="" coords="418,280,498,307"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="303,280,370,307"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="403,296,370,296,370,291,403,291"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_add_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,5,233,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,265,325,220,312,165,289,109,273,84,253,62,232,47,235,43,256,58,277,81,294,107,317,163,330,219,336,264"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_all_musicians.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,72,233,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="327,266,317,234,302,197,281,160,253,129,232,115,235,111,256,125,285,157,307,194,322,232,332,264"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,139,233,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="318,268,291,230,273,211,253,196,232,184,234,180,256,191,277,207,295,227,322,265"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,205,233,248"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="289,276,254,263,217,251,219,246,256,257,291,271"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,272,233,315"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="287,296,233,296,233,291,287,291"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,339,233,381"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="291,316,256,329,219,341,217,336,254,324,289,311"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,405,233,448"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="322,322,295,360,277,379,256,396,234,407,232,402,253,391,273,375,291,357,318,319"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,472,255,515"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="332,322,322,355,307,392,285,430,256,462,239,474,236,469,253,458,281,427,302,390,317,353,327,321"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_taxation_statutory_sources.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="22,539,238,581"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="336,323,330,368,317,423,294,480,277,506,256,529,240,541,236,537,253,525,273,503,289,477,312,422,325,367,331,322"/>
 </map>

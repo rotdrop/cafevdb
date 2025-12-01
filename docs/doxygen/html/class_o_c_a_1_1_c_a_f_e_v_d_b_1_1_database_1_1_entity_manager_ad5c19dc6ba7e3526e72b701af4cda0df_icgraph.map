@@ -1,0 +1,14 @@
+<map id="createSimpleConfiguration" name="createSimpleConfiguration">
+<area shape="rect" id="Node000001" title=" " alt="" coords="522,31,696,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#aa81dfb608c86263213acf2c1d3507e96" title=" " alt="" coords="350,5,474,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="506,33,473,29,474,24,506,28"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#adbfe2d3a1d0de813eca7f57d95f9b6c1" title="Initialize the wrapper if the EncryptionService has been bound to a user and password." alt="" coords="257,5,302,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,21,303,21,303,16,335,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#a199fece8e17ee7055b5d0beb07ce2eda" title="{}" alt="" coords="120,56,209,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="244,37,198,58,196,53,242,32"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#ac14fbe24da920616c0e5ae6e79172f75" title="Reopen the entity&#45;manager after it has been closed, e.g." alt="" coords="134,5,194,32"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="241,21,195,21,195,16,241,16"/>
+<area shape="poly" id="edge4_Node000004_Node000001" title=" " alt="" coords="224,63,521,46,521,52,224,69"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_entity_manager.html#afa549adf79e3f8c09fe8f903dd5fbfa7" title="Rollback the currently failed transactions, afterwards executed the undo&#45;queues of the callback&#45;queue..." alt="" coords="5,5,72,32"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="119,21,72,21,72,16,119,16"/>
+</map>

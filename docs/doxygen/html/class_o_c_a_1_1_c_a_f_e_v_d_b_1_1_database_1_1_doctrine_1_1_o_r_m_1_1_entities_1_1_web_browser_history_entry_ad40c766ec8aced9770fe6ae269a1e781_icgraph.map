@@ -1,9 +1,13 @@
 <map id="getKey" name="getKey">
-<area shape="rect" id="Node000001" title=" " alt="" coords="232,128,294,155"/>
-<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html#a535b12c6e37a139b7752b71b34df4019" title=" " alt="" coords="5,5,184,80"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,122,182,94,163,83,165,78,185,90,229,117"/>
-<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="5,104,184,179"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,144,184,144,184,139,216,139"/>
-<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#ad09951905330cb39a53f8a29d5f2a014" title=" " alt="" coords="5,203,184,277"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="229,165,185,193,165,204,163,200,182,188,226,161"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="484,128,547,155"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_state.html#a535b12c6e37a139b7752b71b34df4019" title=" " alt="" coords="258,5,436,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="479,122,435,94,415,83,418,78,438,90,482,117"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#aafb49e3e395ddb439cc58c49eced0de6" title=" " alt="" coords="258,104,436,179"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="469,144,437,144,437,139,469,139"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_data.html#ad09951905330cb39a53f8a29d5f2a014" title=" " alt="" coords="258,203,436,277"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="482,165,438,193,418,204,415,200,435,188,479,161"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#abca935c70e202b59da16888e8e65c519" title=" " alt="" coords="143,128,210,155"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="243,144,211,144,211,139,243,139"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_web_browser_history_entry.html#a2444bf58f53e352d397b831ecd85303f" title="{}" alt="" coords="5,128,95,155"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,144,95,144,95,139,127,139"/>
 </map>
