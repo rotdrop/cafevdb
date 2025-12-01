@@ -43,7 +43,7 @@ class Logger extends AbstractLogger
   public function __construct(
     ILogFactory $logFactory,
   ) {
-    $logFolder = realpath(__DIR__ . '/../build') . '/log/';
+    $logFolder = realpath(__DIR__ . '/../../build') . '/log/';
     if (!file_exists($logFolder)) {
       mkdir($logFolder, 0777, true);
     }
