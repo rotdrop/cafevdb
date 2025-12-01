@@ -24,32 +24,17 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
+use DateTimeImmutable;
+
 /**
- * DTO for as simple response containing one value and optional messages and hints.x
+ * DTO for the orchestra locale.
  */
-class ValueResponse extends MessagesResponse
+class CalendarEvent extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    array $messages,
-    /** @var string|int|float|array<int|float|string|object>|array<string, int|float|string|object> */
-    public readonly int|float|string|array|\JsonSerializable $value,
-    ?array $hints = null,
+    public readonly DateTimeImmutable $blah,
   ) {
-    parent::__construct($messages, $hints);
-  }
-
-  /** {@inheritdoc} */
-  public static function create(
-    int|float|string|array|\JsonSerializable $value,
-    null|string|array $messages = null,
-    ?array $hints = null,
-  ): self {
-    return new self(
-      messages: is_array($messages) ? $messages : [$messages ?? ''],
-      value: $value,
-      hints: $hints ?? null,
-    );
   }
 
   /**
@@ -63,13 +48,7 @@ class ValueResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    if (empty($messages) && !empty($data['message'])) {
-      $messages = [$data['message']];
-    }
     return new self(
-      messages: $messsages,
-      hints: $hints ?? null,
-      value: $value,
     );
   }
 }

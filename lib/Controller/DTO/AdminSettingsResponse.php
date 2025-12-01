@@ -24,32 +24,25 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-/**
- * DTO for as simple response containing one value and optional messages and hints.x
- */
-class ValueResponse extends MessagesResponse
-{
-  /** {@inheritdoc} */
-  public function __construct(
-    array $messages,
-    /** @var string|int|float|array<int|float|string|object>|array<string, int|float|string|object> */
-    public readonly int|float|string|array|\JsonSerializable $value,
-    ?array $hints = null,
-  ) {
-    parent::__construct($messages, $hints);
-  }
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-  /** {@inheritdoc} */
-  public static function create(
-    int|float|string|array|\JsonSerializable $value,
-    null|string|array $messages = null,
-    ?array $hints = null,
-  ): self {
-    return new self(
-      messages: is_array($messages) ? $messages : [$messages ?? ''],
-      value: $value,
-      hints: $hints ?? null,
-    );
+/**
+ * Reponse emitted by the AdminSettingsController.
+ */
+class AdminSettingsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+{
+  public readonly ?PermanentTransientMessages $messages;
+
+    /** {@inheritdoc} */
+  public function __construct(
+    /** @var string|int|float|array<int|float|string|object>|array<string, int|float|string|object> */
+    #[TSAttributes\Optional]
+    public readonly null|int|float|string|array|\JsonSerializable $value = null,
+    null|array|PermanentTransientMessages $messages = null,
+    public readonly ?string $status = null,
+    public readonly ?string $feedback = null,
+  ) {
+    $this->messages = is_array($messages) ? PermanentTransientMessages::fromArray($messages) : $messages;
   }
 
   /**
@@ -63,13 +56,11 @@ class ValueResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    if (empty($messages) && !empty($data['message'])) {
-      $messages = [$data['message']];
-    }
     return new self(
-      messages: $messsages,
-      hints: $hints ?? null,
       value: $value,
+      messages: $messages,
+      status: $status,
+      feedback: $feedback,
     );
   }
 }

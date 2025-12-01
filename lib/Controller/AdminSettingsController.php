@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\AuthorizedAdminSetting;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Attributes;
@@ -53,7 +54,7 @@ class AdminSettingsController extends Controller
 
   public const POST_REQUEST_FONT_CACHE = 'font-cache';
   public const DELEGATABLE_POST_REQUESTS = [
-    AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY,
+    AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY,
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY,
     AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX,
     AdminSettings::WIKI_NAME_SPACE_KEY,
@@ -89,11 +90,11 @@ class AdminSettingsController extends Controller
   /**
    * @param string $parameter
    *
-   * @return DataResponse
+   * @return DataResponse|JSONResponse
    */
   #[AuthorizedAdminSetting(settings: AdminSettings::class)]
   #[Attributes\NoGroupMemberRequired]
-  public function get(string $parameter):DataResponse
+  public function get(string $parameter): DataResponse|JSONResponse
   {
     $value = null;
     switch ($parameter) {
@@ -101,7 +102,7 @@ class AdminSettingsController extends Controller
       case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX:
         $value = $this->getAppValue($parameter, '');
         break;
-      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . 'Status':
+      case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_STATUS_SUFFIX:
         $email = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY, '');
         $verification = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX, '');
         $challenge =  $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_CHALLENGE_SUFFIX, '');
@@ -141,7 +142,7 @@ class AdminSettingsController extends Controller
       case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
         $value = $this->getAppValue($parameter);
         break;
-      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+      case AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
         break;
       case FontService::OFFICE_FONTS_FOLDER_CONFIG:
@@ -163,7 +164,7 @@ class AdminSettingsController extends Controller
       default:
         return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
     }
-    return new DataResponse([ 'value' => $value ]);
+    return DTO\ValueResponse::create(value: $value)->response();
   }
 
   /**
@@ -176,7 +177,7 @@ class AdminSettingsController extends Controller
    * @throw Exceptions\EnduserNotificationException
    */
   #[Attributes\NoGroupMemberRequired]
-  public function postAdminOnly(string $parameter, mixed $value):DataResponse
+  public function postAdminOnly(string $parameter, mixed $value): DataResponse|JSONResponse
   {
     return $this->post($parameter, $value);
   }
@@ -194,7 +195,7 @@ class AdminSettingsController extends Controller
    */
   #[AuthorizedAdminSetting(settings: AdminSettings::class)]
   #[Attributes\NoGroupMemberRequired]
-  public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
+  public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null): DataResponse|JSONResponse
   {
     if (array_search($parameter, self::DELEGATABLE_POST_REQUESTS) !== false) {
       return $this->post($parameter, $value, $operation);
@@ -215,7 +216,7 @@ class AdminSettingsController extends Controller
    *
    * @throw Exceptions\EnduserNotificationException
    */
-  private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
+  private function post(string $parameter, mixed $value = null, ?string $operation = null): DataResponse|JSONResponse
   {
     $wikiNameSpace = $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY);
     $orchestraUserGroup = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
@@ -245,22 +246,18 @@ class AdminSettingsController extends Controller
           $this->deleteAppValue($parameter . AdminSettings::EMAIL_CHALLENGE_SUFFIX);
           $this->deleteAppValue($parameter);
         }
-        $result = [
-          'value' => $value,
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting the problem report email recipient to "%s".', $value),
-            ],
-            'permanent' => [
-              $this->l->t(
-                'A verification email has been sent to "%s".
+        return new DTO\AdminSettingsResponse(
+          value: $value,
+          messages: new DTO\PermanentTransientMessages(
+            permanent: $this->l->t(
+              'A verification email has been sent to "%s".
 Please enter the confirmation code contained in the email into the admin-settings form.',
-                $value,
-              )
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+              $value,
+            ),
+            transient: $this->l->t('Setting the problem report email recipient to "%s".', $value),
+          ),
+        )->response();
+
       case AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX:
         $value = Util::normalizeSpaces($value);
         $challenge = $this->getAppValue(AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_CHALLENGE_SUFFIX, '');
@@ -271,27 +268,23 @@ Please enter the confirmation code contained in the email into the admin-setting
             $this->l->t('Submitted verification code "%s" differs from sent email challenge.', $value),
           );
         }
-        $result = [
-          'value' => $value,
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting the problem report email verification code to "%s".', [$value]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          value: $value,
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting the problem report email verification code to "%s".', [$value]),
+          ),
+        )->response();
+
       case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
         // @todo something has to be done if this is really set to something
         // and we want to support that.
         $this->setAppValue(AdminSettings::USER_AND_GROUP_BACKEND_KEY, $value);
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
+          ),
+        )->response();
+
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
         $realValue = trim($value);
         if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
@@ -308,14 +301,11 @@ Please enter the confirmation code contained in the email into the admin-setting
           $result[AdminSettings::WIKI_NAME_SPACE_KEY] = $wikiNameSpace;
         }
         $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting orchestra group to "%s". Please login as group administrator and configure the Camerata DB application.', [$realValue]),
+          ),
+        )->response();
 
       case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
         if (!is_array($value)) {
@@ -354,13 +344,12 @@ Please enter the confirmation code contained in the email into the admin-setting
             $failure[] = $this->t->t('Failed to delete "%1$s" as sub-admin from "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
           }
         }
-        $result = [
-          'messages' => [
-            'transient' => $success,
-            'permanent' => $failure,
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $success,
+            permanent: $failure,
+          ),
+        )->response();
 
       case AdminSettings::WIKI_NAME_SPACE_KEY:
         if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
@@ -374,43 +363,33 @@ Please enter the confirmation code contained in the email into the admin-setting
         if (!empty($orchestraUserGroup)) {
           $this->grantWikiAccess($wikiNameSpace, $orchestraUserGroup);
         }
-
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting wiki name-space to "%s".', [$realValue]),
+          ),
+        )->response();
 
       case AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY:
         $balancingAccount = trim($value);
         $this->setAppValue(AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY, $balancingAccount);
         $result[AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY] = $balancingAccount;
 
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting the GnuCash instrument insurance balancing account to "%s".', [$balancingAccount]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting the GnuCash instrument insurance balancing account to "%s".', [$balancingAccount]),
+          ),
+        )->response();
 
       case AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY:
         $receivablesAccount = trim($value);
         $this->setAppValue(AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY, $receivablesAccount);
         $result[AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY] = $receivablesAccount;
 
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting the GnuCash participant receivables account to "%s".', [$receivablesAccount]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting the GnuCash participant receivables account to "%s".', [$receivablesAccount]),
+          ),
+        )->response();
 
       case AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY:
         $value = trim($value);
@@ -421,16 +400,13 @@ Please enter the confirmation code contained in the email into the admin-setting
           $this->gnuCashConnectorService->generateAccountsAutocompleteData();
         }
 
-        $result = [
-          'messages' => [
-            'transient' => [
-              $this->l->t('Setting the GnuCash accounts tree data file to "%s".', [$value]),
-            ],
-          ],
-        ];
-        return self::dataResponse($result);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $this->l->t('Setting the GnuCash accounts tree data file to "%s".', [$value]),
+          ),
+        )->response();
 
-      case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
+      case AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY:
         $delete = $value !== null && $value !== '' && filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) === false;
         $messages = [];
         /** @var CloudUserConnectorService $cloudUserConnector */
@@ -456,12 +432,13 @@ Please enter the confirmation code contained in the email into the admin-setting
           '<a class="external settings" href="' . $cloudUserBackendSettings . '" target="' . \md5($cloudUserBackendSettings) . '">' . CloudUserConnectorService::CLOUD_USER_BACKEND . '</a>',
           CloudUserConnectorService::CLOUD_USER_BACKEND,
         ]);
-        return self::dataResponse([
-          'messages' => [
-            'transient' => $messages,
-            'permanent' => [ $settingsHint, ],
-          ],
-        ]);
+        return new DTO\AdminSettingsResponse(
+          messages: new DTO\PermanentTransientMessages(
+            transient: $messages,
+            permanent: $settingsHint,
+          ),
+        )->response();
+
       case FontService::DEFAULT_OFFICE_FONT_CONFIG:
         if (empty($value)) {
           $this->deleteAppValue($parameter);
@@ -475,10 +452,13 @@ Please enter the confirmation code contained in the email into the admin-setting
           $transient = [ $this->l->t('Default office font set to "%s".', $value), ];
         }
 
-        return self::dataResponse([
-          'messages' => [ 'transient' => $transient, ],
-          'value' => $value,
-        ]);
+        return new DTO\AdminSettingsResponse(
+          value: $value,
+          messages: new DTO\PermanentTransientMessages(
+            transient: $transient,
+          ),
+        )->response();
+
       case self::POST_REQUEST_FONT_CACHE:
         return $this->fontCache($operation);
       default:

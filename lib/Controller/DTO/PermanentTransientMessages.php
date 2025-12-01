@@ -25,31 +25,22 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 /**
- * DTO for as simple response containing one value and optional messages and hints.x
+ * Used by the AdminSettingsResponse.
  */
-class ValueResponse extends MessagesResponse
+class PermanentTransientMessages extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  /** {@inheritdoc} */
-  public function __construct(
-    array $messages,
-    /** @var string|int|float|array<int|float|string|object>|array<string, int|float|string|object> */
-    public readonly int|float|string|array|\JsonSerializable $value,
-    ?array $hints = null,
-  ) {
-    parent::__construct($messages, $hints);
-  }
+  /** @var array<string> */
+  public readonly ?array $permanent;
+  /** @var array<string> */
+  public readonly ?array $transient;
 
   /** {@inheritdoc} */
-  public static function create(
-    int|float|string|array|\JsonSerializable $value,
-    null|string|array $messages = null,
-    ?array $hints = null,
-  ): self {
-    return new self(
-      messages: is_array($messages) ? $messages : [$messages ?? ''],
-      value: $value,
-      hints: $hints ?? null,
-    );
+  public function __construct(
+    null|string|array $permanent = null,
+    null|string|array $transient = null,
+  ) {
+    $this->permanent = is_string($permanent) ? [$permanent] : $permanent;
+    $this->transient = is_string($transient) ? [$transient] : $transient;
   }
 
   /**
@@ -63,13 +54,9 @@ class ValueResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    if (empty($messages) && !empty($data['message'])) {
-      $messages = [$data['message']];
-    }
     return new self(
-      messages: $messsages,
-      hints: $hints ?? null,
-      value: $value,
+      permanent: $permanent,
+      transient: $transient,
     );
   }
 }

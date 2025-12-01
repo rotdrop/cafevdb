@@ -136,8 +136,8 @@
         <button type="button"
                 name="cloudUserBackendConfig"
                 value="update"
-                :disabled="!config.cloudUserBackendConfig"
-                @click="saveSetting('cloudUserBackendConfig')"
+                :disabled="!config.haveCloudUserBackendConfig"
+                @click="saveSetting('haveCloudUserBackendConfig')"
         >
           {{ t(appId, 'Autoconfigure "{cloudUserBackend}" app', { cloudUserBackend: config.cloudUserBackend }) }}
         </button>
@@ -512,6 +512,10 @@ import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
 import { joinLiterals } from '../toolkit/util/string-literals.ts'
 import { vueDevTools as setVueDevTools } from '../toolkit/util/vue-devtools.ts'
+import type { AdminInitialState } from '../../build/ts-types/php-modules/Settings.ts'
+import * as SettingsKeys from '../../build/ts-types/php-modules/Settings/Admin.ts'
+import type { AdminSettingsResponse, UserRecryptionResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import type { FontFileNames } from '../../build/ts-types/php-modules/Service/DTO.ts'
 
 const IconCancel = IconEmailVerificationFailed
 
@@ -529,67 +533,39 @@ type Project = {
   id: number,
 }
 
-type FontFiles = {
-  family: string,
-  x?: string,
-  xb?: string,
-  xi?: string,
-  xbi?: string,
-}
+type InitialState = AdminInitialState;
 
-interface InitialState {
-  authorizationGroupSuffixes: string[],
-  isAdmin: boolean,
-  isSubAdmin: boolean,
-  officeFonts: Record<string, FontFiles>
-  officeFontsFolder: string,
-  personalAppSettingsLink: string,
-  userAndGroupBackends: string[],
-  cloudUserBackendConfig: boolean,
-  cloudUserBackend: string,
-  sharedFolder: string,
-}
+const problemReportEmailRecipientVerificationKey = `${SettingsKeys.PROBLEM_REPORT_EMAIL_RECIPIENT_KEY}${SettingsKeys.EMAIL_VERIFICATION_SUFFIX}` as const
+const problemReportEmailRecipientStatusKey = `${SettingsKeys.PROBLEM_REPORT_EMAIL_RECIPIENT_KEY}${SettingsKeys.EMAIL_STATUS_SUFFIX}` as const
 
 interface AppAdminSettings {
-  userAndGroupBackend: string,
-  orchestraUserGroup: string,
-  orchestraUserGroupAdmins: string[],
-  wikiNameSpace: string,
-  cloudUserBackendConfig: string,
-  defaultOfficeFont: string,
-  problemReportEmailRecipient: string;
-  problemReportEmailRecipientVerification: string;
-  problemReportEmailRecipientStatus: string;
-  gnuCashParticipantReceivablesAccount: string;
-  gnuCashInstrumentInsuranceBalancingAccount: string;
-  gnuCashAccountsTreeData: string;
+  [SettingsKeys.USER_AND_GROUP_BACKEND_KEY]: string,
+  [SettingsKeys.ORCHESTRA_USER_GROUP_KEY]: string,
+  [SettingsKeys.ORCHESTRA_USER_GROUP_ADMINS_KEY]: string[],
+  [SettingsKeys.WIKI_NAME_SPACE_KEY]: string,
+  [SettingsKeys.HAVE_CLOUD_USER_BACKEND_CONFIG_KEY]: boolean,
+  [SettingsKeys.DEFAULT_OFFICE_FONT_CONFIG]: string,
+  [SettingsKeys.PROBLEM_REPORT_EMAIL_RECIPIENT_KEY]: string;
+  [problemReportEmailRecipientVerificationKey]: string;
+  [problemReportEmailRecipientStatusKey]: string;
+  [SettingsKeys.GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY]: string,
+  [SettingsKeys.GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY]: string,
+  [SettingsKeys.GNU_CASH_ACCOUNTS_TREE_DATA_KEY]: string,
 }
 
 type CloudUserGetResponse = AxiosResponse<OCSResponse<CloudUser> >
 type RecryptionGetResponse = AxiosResponse<OCSResponse<{ requests: Record<string, number>}> >
 
 type BulkRecryptionCountResponse = AxiosResponse<OCSResponse<{ count: number }> >
-type RecryptionStatus = 'granted' | 'revoked' | 'failure'
-type BulkRecryptionResponse = AxiosResponse<OCSResponse<{ userId: string, status: RecryptionStatus}[]> >
+type BulkRecryptionResponse = AxiosResponse<OCSResponse<UserRecryptionResponse[]> >
 
-type UserRecryptionResponse = AxiosResponse<OCSResponse<{
-  keyStatus: string,
-  userId: string,
-  status: 'granted' | 'failure',
-  message?: string,
-}> >
+type UserRecryptionPostResponse = AxiosResponse<OCSResponse<UserRecryptionResponse> >
 
-type AdminSettingPostResponse = AxiosResponse<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value?: any,
-  messages?: {
-    transient?: string[],
-    permanent?: string[],
-  }
-  status?: string,
-  feedback?: string,
-}>
+type AdminSettingPostResponse = AxiosResponse<AdminSettingsResponse>
 
+/**
+ * Internal structure for remembering recryption request.
+ */
 type RecryptionRequest = {
   id: string,
   timeStamp: number,
@@ -639,7 +615,7 @@ const store = useCloudUsersGroupsStore()
 const vueDevTools = ref(false)
 watch(vueDevTools, (value) => setVueDevTools({ enabled: value }))
 
-const defaultOfficeFont = ref<FontFiles|undefined>(undefined)
+const defaultOfficeFont = ref<FontFileNames|undefined>(undefined)
 const loading = reactive({
   general: true,
   recryption: true,
@@ -649,23 +625,25 @@ const loading = reactive({
   groups: true,
 })
 
-const settings: AppAdminSettings = reactive({
-  userAndGroupBackend: '',
+const settings: AppAdminSettings = reactive<AppAdminSettings>({
+  haveCloudUserBackendConfig: false,
+  defaultOfficeFont: '',
+  gnuCashAccountsTreeData: '',
+  gnuCashInstrumentInsuranceBalancingAccount: '',
+  gnuCashParticipantReceivablesAccount: '',
   orchestraUserGroup: '',
   orchestraUserGroupAdmins: [],
-  wikiNameSpace: '',
-  cloudUserBackendConfig: '',
-  defaultOfficeFont: '',
   problemReportEmailRecipient: '',
-  problemReportEmailRecipientVerification: '',
   problemReportEmailRecipientStatus: '',
-  gnuCashParticipantReceivablesAccount: '',
-  gnuCashInstrumentInsuranceBalancingAccount: '',
-  gnuCashAccountsTreeData: '',
+  problemReportEmailRecipientVerification: '',
+  userAndGroupBackend: '',
+  wikiNameSpace: '',
 })
 
 const problemReportRecipientVerificationInput = ref(false)
 
+// const settingsBackup = reactive(<AppAdminSettings>{})
+// const orchestraGroups = reactive(<Record<string, GroupType> >{})
 const settingsBackup = reactive({} as AppAdminSettings)
 const orchestraGroups = reactive({} as Record<string, GroupType>)
 const config = reactive(initialState)
@@ -844,12 +822,12 @@ const getSettingsData = async (settingsKeys: (keyof AppAdminSettings)[] = []) =>
   Object.assign(settingsBackup, settings)
   loading.settings = false
 }
-const saveSetting = async (settingsKey: string, value?: string) => {
+const saveSetting = async (settingsKey: keyof AppAdminSettings, inputValue?: string) => {
+  let value: undefined|AppAdminSettings[keyof AppAdminSettings]
   try {
-    if (value === undefined) {
-      value = settings[settingsKey]
-    } else {
-      logger.info('VALUE vs VMODEL', value, settings[settingsKey])
+    let value = inputValue ?? settings[settingsKey]
+    if (inputValue === undefined) {
+      logger.info('VALUE vs VMODEL', { inputValue, value })
     }
     const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
     const responseData = response.data
@@ -859,7 +837,7 @@ const saveSetting = async (settingsKey: string, value?: string) => {
         text: responseData.feedback as string,
       })
       if (answer === true) {
-        saveSetting(settingsKey, value)
+        saveSetting(settingsKey, value as string)
       } else {
         showInfo(t(appId, 'Unconfirmed, reverting to old value.'))
         getSettingsData()
@@ -869,14 +847,14 @@ const saveSetting = async (settingsKey: string, value?: string) => {
       const transient = messages.transient || []
       const permanent = messages.permanent || []
       if (responseData.value) {
-        value = responseData.value
+        value = responseData.value as AppAdminSettings[keyof AppAdminSettings]
       }
       if (permanent.length === 0 && transient.length === 0) {
-        if (Array.isArray(value)) {
-          value = value.join(', ')
-        }
-        if (value) {
-          transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
+        const displayValue = Array.isArray(value)
+          ? value.join(', ')
+          : (typeof value === 'string') ? value : t(appName, value ? 'true' : 'false')
+        if (displayValue) {
+          transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value: displayValue }))
         } else {
           transient.push(t(appId, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
         }
@@ -887,6 +865,7 @@ const saveSetting = async (settingsKey: string, value?: string) => {
       for (const message of permanent) {
         showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true })
       }
+      // @ts-expect-error 2322
       settingsBackup[settingsKey] = value
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -897,10 +876,10 @@ const saveSetting = async (settingsKey: string, value?: string) => {
       console.error('RESPONSE', e.response)
     }
     if (value !== undefined) {
-      if (Array.isArray(value)) {
-        value = value.join(', ')
-      }
-      showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      const displayValue = Array.isArray(value)
+        ? value.join(', ')
+        : (typeof value === 'string') ? value : t(appName, value ? 'true' : 'false')
+      showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value: displayValue, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
     } else {
       showError(t(appId, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
     }
@@ -1034,11 +1013,11 @@ const doHandleRecryptionRequest = (userId: string, silent = false, allowFailure 
   return axios.post(url + '?format=json', {
     notifyUser: silent !== true,
     allowFailure,
-  }) as Promise<UserRecryptionResponse>
+  }) as Promise<UserRecryptionPostResponse>
 }
 const handleRecryptionRequest = (userId: string, silent = false) =>
   awaitRecryptionRequestPromise(userId, doHandleRecryptionRequest(userId, silent))
-const awaitRecryptionRequestPromise = async (userId: string, promise: Promise<UserRecryptionResponse>) => {
+const awaitRecryptionRequestPromise = async (userId: string, promise: Promise<UserRecryptionPostResponse>) => {
   try {
     await promise
     showInfo(t(appId, 'Successfully handled recryption request for {userId}.', { userId }))
@@ -1096,7 +1075,7 @@ const doRevokeCloudAccess = (userId: string/*, allowFailure */) => {
 const handleMarkedRecrytpionRequests = async () => {
   const allRequests = Object.values(recryption.requests)
   const marked = allRequests.filter(request => request.marked)
-  const recryptionPromises: Record<string, Promise<UserRecryptionResponse>> = {}
+  const recryptionPromises: Record<string, Promise<UserRecryptionPostResponse>> = {}
   for (const request of marked) {
     const userId = request.id
     recryptionPromises[userId] = doHandleRecryptionRequest(userId)

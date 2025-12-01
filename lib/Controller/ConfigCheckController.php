@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 
@@ -61,7 +61,7 @@ class ConfigCheckController extends Controller
    */
   #[NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
-  public function get(): DataResponse {
+  public function get(): JSONResponse {
     $configCheck = $this->configCheckService->configured();
     return DTO\ConfigCheckResponse::fromArray($configCheck)->response();
   }
