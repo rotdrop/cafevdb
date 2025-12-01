@@ -71,7 +71,8 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OCP: any;
   }
-  // var __webpack_public_path__: string;
+  // eslint-disable-next-line
+  var __webpack_public_path__: string;
 }
 
 // eslint-disable-next-line

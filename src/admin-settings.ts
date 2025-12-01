@@ -34,6 +34,11 @@ Vue.directive('tooltip', Tooltip);
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
+declare global {
+  // eslint-disable-next-line
+  var __webpack_public_path__: string;
+}
+
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
 
