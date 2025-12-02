@@ -29,7 +29,7 @@ import {
 import { createTestingPinia } from '@pinia/testing';
 import AdminSettings from '../../../../src/components/AdminSettings.vue';
 // import { loadState } from '@nextcloud/initial-state';
-import { jest } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { INITIAL_STATE_SECTION, AUTHORIZATION_GROUP_SUFFIXES } from '../../../../build/ts-types/php-modules/Settings/Admin.ts';
 import type { AdminInitialState } from '../../../../build/ts-types/php-modules/Settings.ts';
 import { Tooltip } from '@nextcloud/vue';

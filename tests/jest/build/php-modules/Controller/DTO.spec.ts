@@ -26,6 +26,7 @@ import type { DownloadsShareResponse } from '../../../../../build/ts-types/php-m
 import { spawnSync } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import { DateTime } from 'luxon';
 
 declare global {
   const APP_ROOT: string;
@@ -37,8 +38,8 @@ let dto: DownloadsShareResponse;
 beforeAll(async () => {
   spawnSync(path.join(__dirname, 'dto-generator.php'), ['DownloadsShareResponse', JEST_ARTIFACTS]);
   const dtoJSON = fs.readFileSync(path.join(JEST_ARTIFACTS, 'DownloadsShareResponse' + '.json'));
-  dto = JSON.parse(dtoJSON.toString());
-  console.info('DTP', { dto, json: dtoJSON.toString() });
+  dto = JSON.parse(dtoJSON.toString()) as DownloadsShareResponse;
+  // console.info('DTO', { dto, json: dtoJSON.toString() });
 });
 
 describe('DownloadsShareResponse', () => {
@@ -49,12 +50,26 @@ describe('DownloadsShareResponse', () => {
 
 describe('DownloadsShareResponse', () => {
   it('should have an expires string which is convertible to a Date instance', () => {
-    expect(new Date(dto.expires!)).toBeInstanceOf(Date);
+    expect(dto?.expires ? new Date(dto.expires) : false).toBeInstanceOf(Date);
+  });
+});
+
+describe('DownloadsShareResponse', () => {
+  it('should have an expires string which is convertible to a Luxon DateTime instance', () => {
+    expect(dto?.expires ? DateTime.fromISO(dto.expires) : false).toBeInstanceOf(DateTime);
+  });
+});
+
+describe('DownloadsShareResponse', () => {
+  it('should have an expires string which is correctly convertible to a Luxon DateTime instance', () => {
+    const stringValue = dto?.expires ? DateTime.fromISO(dto.expires, { setZone: true }).toISO() ?? 'XXXX' : 'XXXX';
+    const expiresValue = (dto?.expires ?? 'WWWW');
+    expect(stringValue).toBe(expiresValue.substring(0, 23) + expiresValue.substring(26));
   });
 });
 
 describe('DownloadsShareResponse', () => {
   it('should have an expires string of the form YYYY-MM-DD', () => {
-    expect(dto!.expires!.match(/^\d{4}-\d{2}-\d{2}/)[0]).toBe(dto.expires!.substring(0, 10));
+    expect(((dto?.expires ?? '').match(/^\d{4}-\d{2}-\d{2}/) ?? [''])[0]).toBe((dto?.expires ?? 'XXXXXXXXXXX').substring(0, 10));
   });
 });

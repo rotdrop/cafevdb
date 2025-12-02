@@ -36,7 +36,7 @@ if (count($argv) != 3) {
 }
 
 $dtoName = $argv[1];
-$outputDir = $argv[2];
+$outputDir = rtrim($argv[2], '/');
 
 switch ($dtoName) {
   case array_pop(explode('\\', DTO\DownloadsShareResponse::class)):
@@ -52,4 +52,4 @@ switch ($dtoName) {
 }
 
 mkdir($outputDir, 0700, recursive: true);
-file_put_contents($outputDir . $name . '.json', json_encode($dto, JSON_PRETTY_PRINT) . PHP_EOL);
+file_put_contents($outputDir . '/' . $dtoName . '.json', json_encode($dto, JSON_PRETTY_PRINT) . PHP_EOL);
