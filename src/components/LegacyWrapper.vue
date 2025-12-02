@@ -315,7 +315,7 @@ const onUserManualPopup = () => {
   logger.debug('USER MANUAL POPUP')
   return asyncEmit(WIKI_POPUP, {
     wikiPage: wikiManualSection.value,
-    popupTitle: t(appName, 'User Manual: {section}', { section: shortTitle.value }, 0, { escape: false }),
+    popupTitle: t(appName, 'User Manual: {section}', { section: shortTitle.value }, { escape: false }),
   })
 }
 
@@ -459,7 +459,8 @@ const doLoadLegacy = async () => {
       post: { ...post },
       e,
     })
-    await loadTranslations('logreader', () => logger.debug('LOGREADER L10N'))
+    await loadTranslations('logreader')
+    logger.debug('LOGREADER L10N')
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
