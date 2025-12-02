@@ -591,6 +591,24 @@ class MockProvider
   }
 
   /**
+   * Register a class instance to be returned by the app-container.
+   *
+   * @param string $className
+   *
+   * @param mixed $instance
+   *
+   * @return void
+   */
+  public function registerClassInstance(string $className, mixed $instance): void
+  {
+    if ($instance === null) {
+      unset($this->instances[$className]);
+    } else {
+      $this->instances[$className] = $instance;
+    }
+  }
+
+  /**
    * @return IAppContainer
    */
   public function getAppContainer(): IAppContainer
