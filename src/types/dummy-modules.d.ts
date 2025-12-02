@@ -18,3 +18,5 @@
  */
 
 declare module '@vue/cli-plugin-unit-jest/presets/typescript-and-babel/jest-preset.js';
+declare module '@nextcloud/app-calendar/src/store/calendarObjectInstance.js';
+declare module '@nextcloud/app-calendar/src/store/calendarObjects.js';
