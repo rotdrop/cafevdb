@@ -54,6 +54,7 @@ module.exports = {
       // allows custom xxxx:xxx events formats
       ignores: ['/^[a-z]+(?:-[a-z]+)*:[a-z]+(?:-[a-z]+)*$/u'],
     }],
+    'vue/valid-v-model': 'error',
     //
     // other
     //
@@ -114,6 +115,7 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         semi: ['error', 'never'],
+        'vue/no-v-model-argument': 'off',
       },
     },
     {
