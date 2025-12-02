@@ -24,17 +24,16 @@ import * as ncAuth from '@nextcloud/auth';
 import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
 import getInitialState from '../toolkit/util/initial-state.ts';
 import { appName, appPrefix, appNameTag } from '../config.ts';
-import type { GlobalState } from './globalstate.ts';
-import type { PHPMyEditState } from './pme-state.ts';
+import type { CAFEVDBInitialState, PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 const initialState = {
   appName,
-  CAFEVDB: {} as GlobalState,
-  PHPMyEdit: {} as PHPMyEditState,
+  CAFEVDB: {} as CAFEVDBInitialState,
+  PHPMyEdit: {} as PMEInitialState,
 };
 
 try {
-  const state = getInitialState<GlobalState>({ section: 'CAFEVDB', onError: 'throw' });
+  const state = getInitialState<CAFEVDBInitialState>({ section: 'CAFEVDB', onError: 'throw' });
   initialState.CAFEVDB = state!;
   console.debug('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (appName !== initialState.CAFEVDB.appName) {
@@ -44,7 +43,7 @@ try {
   console.error('Failed to load initial state for CAFEVDB', error);
 }
 try {
-  const state = getInitialState<PHPMyEditState>({ section: 'PHPMyEdit', onError: 'throw' });
+  const state = getInitialState<PMEInitialState>({ section: 'PHPMyEdit', onError: 'throw' });
   initialState.PHPMyEdit = state!;
   console.debug('PHPMyEdit INITIAL STATE', initialState.PHPMyEdit);
 } catch (error) {

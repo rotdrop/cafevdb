@@ -220,10 +220,6 @@ class FilesHooksListener implements IEventListener
       // just admin contact and stuff to make the ajax error handlers work.
       // @todo Replace by more lightweight stuff
       $this->groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
-      $initialState->provideInitialState('CAFEVDB', [
-        'adminContact' => $this->getCloudAdminContacts(implode: true),
-        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
-      ]);
     }
 
     /** @var AssetService $assetService */

@@ -61,7 +61,7 @@ require('config-check.scss');
 // need some global state which is accessible in all or most modules.
 
 if (!globalState.initialized) {
-  jQuery.extend(globalState, initialState.CAFEVDB);
+  Object.assign(globalState, initialState.CAFEVDB);
   // @TODO the nonce in principle could go to the initial-state
   const requestToken = getRequestToken();
   globalState.nonce = requestToken ? btoa(requestToken) : null;

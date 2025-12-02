@@ -24,15 +24,16 @@
 
 import type { PHPMyEditState } from './pme-state.ts';
 import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
-import { showMessage } from '@nextcloud/dialogs';
+import type { showMessage } from '@nextcloud/dialogs';
 import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import type { CAFEVDBInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 type Toastify = ReturnType<typeof showMessage>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ReadyCallback = () => Promise<any>;
 
-export interface GlobalState {
+export interface GlobalState extends CAFEVDBInitialState {
   appName: string,
   PHPMyEdit: PHPMyEditState,
   vueMode?: boolean,
@@ -41,7 +42,7 @@ export interface GlobalState {
   wikiNameSpace: string,
   toolTipsEnabled: boolean,
   userPermissions: number,
-  uploadMaxFileSize?: number,
+  uploadMaxFileSize: number,
   [EnumPersonalSettingsKey.FINANCE_MODE]: boolean,
   [EnumPersonalSettingsKey.DEBUG_MODE]: number,
   [EnumPersonalSettingsKey.DEBUG_QUERY_SQL_FILTER]: string,
@@ -56,7 +57,7 @@ export interface GlobalState {
 
   initialized?: boolean,
 
-  wysiwygEditor?: string,
+  wysiwygEditor: string,
 
   creditsTimer?: NodeJS.Timeout,
 

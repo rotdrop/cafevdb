@@ -33,8 +33,11 @@ use OCP\IL10N;
 use OCA\Calendar\Service\CalendarInitialStateService;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\EnumInitialStateKey;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Documents\TemplateService;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -89,7 +92,7 @@ trait InitialStateTrait
     $expertMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::EXPERT_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
     $financeMode = filter_var($this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE, 'off'), FILTER_VALIDATE_BOOLEAN);
 
-    $debugModes = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
+    $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
     $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, '');
 
     $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
@@ -120,8 +123,8 @@ trait InitialStateTrait
 
     $initialStateService->provideInitialState(
       $this->appName,
-      'CAFEVDB',
-      [
+      EnumInitialStateKey::CAFEVDB->value,
+      DTO\CAFEVDBInitialState::fromArray([
         'appName' => $this->appName,
         // TRANSLATORS: default value for unconfigured setting.
         ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY, $this->l->t('unconfigured')),
@@ -131,10 +134,11 @@ trait InitialStateTrait
         'language' => $languageShort,
         'cloudLanguage' => $languageComplete,
         'locale' => $locale,
+        // app-locale
         'currencySymbol' => $this->currencySymbol(),
         'currencyCode' => $this->currencyCode(),
-        'adminContact' => $adminContact,
-        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
+        'appLocale' => $this->appLocale(),
+        //
         'serverRoot' => \OC::$SERVERROOT,
         EnumPersonalSettingsKey::EXPERT_MODE->value => $expertMode,
         EnumPersonalSettingsKey::FINANCE_MODE->value => $financeMode,
@@ -147,12 +151,13 @@ trait InitialStateTrait
         ConfigConstants::PROJECTS_FOLDER => $this->getProjectsFolderPath(),
         Admin::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
         'uploadMaxFileSize' => Util::maxUploadSize(),
-      ]);
+      ]),
+    );
 
     $initialStateService->provideInitialState(
       $this->appName,
-      'PHPMyEdit',
-      [
+      EnumInitialStateKey::PHP_MY_EDIT->value,
+      DTO\PMEInitialState::fromArray([
         EnumPersonalSettingsKey::DIRECT_CHANGE->value => $directChange,
         EnumPersonalSettingsKey::SHOW_DISABLED->value => $showDisabled,
         EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => $deselectInvisible,
@@ -170,14 +175,9 @@ trait InitialStateTrait
         'inputSelectChosenTitle' => $l->t("Select from the pull-down menu. ".
                                           "The pull-down can be closed by clicking ".
                                           "anywhere outside the menu."),
-        'pageRenderer' => [
-          'masterFieldSuffix' => PMETableViewBase::MASTER_FIELD_SUFFIX,
-          'valuesTableSep' => PMETableViewBase::VALUES_TABLE_SEP,
-          'joinKeySep' => PMETableViewBase::JOIN_KEY_SEP,
-          'compKeySep' => PMETableViewBase::COMP_KEY_SEP,
-          'joinFieldNameSeparator' => PMETableViewBase::JOIN_FIELD_NAME_SEPARATOR,
-        ],
-      ]);
+        'pageRenderer' => DataConstants::PAGE_RENDERER,
+      ]),
+    );
 
     /** @var CalendarInitialStateService $calendarInitialStateService */
     $calendarInitialStateService = $this->appContainer->get(CalendarInitialStateService::class);

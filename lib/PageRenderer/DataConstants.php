@@ -48,4 +48,12 @@ class DataConstants
 
   const DATA_DATA_KEY = 'data';
   const DATA_VALUES_KEY = 'values';
+
+  const PAGE_RENDERER = [
+    'masterFieldSuffix' => PMETableViewBase::MASTER_FIELD_SUFFIX,
+    'valuesTableSep' => PMETableViewBase::VALUES_TABLE_SEP,
+    'joinKeySep' => PMETableViewBase::JOIN_KEY_SEP,
+    'compKeySep' => PMETableViewBase::COMP_KEY_SEP,
+    'joinFieldNameSeparator' => PMETableViewBase::JOIN_FIELD_NAME_SEPARATOR,
+  ];
 }

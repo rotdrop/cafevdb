@@ -28,6 +28,10 @@
 
 import globalState from './globalstate.ts';
 import { initialState, appName } from './config.ts';
+import type { PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
 
 export type TableDialogOptions = {
   ambientContainerSelector: string;
@@ -80,7 +84,7 @@ export type TableLoadCallback = {
   context?: unknown,
 }
 
-export interface PHPMyEditState {
+export interface PHPMyEditState extends PMEInitialState {
   directChange: boolean,
   filterSelectPlaceholder: string,
   filterSelectNoResult: string,
@@ -99,13 +103,7 @@ export interface PHPMyEditState {
 
   stopped: boolean,
 
-  pageRenderer: {
-    masterFieldSuffix: string,
-    valuesTableSep: string,
-    joinKeySep: string,
-    compKeySep: string,
-    joinFieldNameSeparator: string,
-  },
+  pageRenderer: typeof PAGE_RENDERER,
 
   pageRowsDefault: number,
   deselectInvisibleMiscRecs: boolean,

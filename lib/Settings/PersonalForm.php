@@ -117,7 +117,6 @@ class PersonalForm
           EnumPersonalSettingsKey::FINANCE_MODE->value => $this->getUserValue(EnumPersonalSettingsKey::FINANCE_MODE),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
-      $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
 
       // Are we a group-admin?
       $isGroupAdmin = $this->isSubAdminOfGroup() && $this->encryptionKeyValid();

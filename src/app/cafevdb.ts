@@ -38,6 +38,7 @@ import {
 } from './jquery-cafevdb-tooltips.ts';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
+import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 
 require('cafevdb.scss');
 
@@ -49,12 +50,11 @@ Object.assign(
   Object.assign(
     {
       appName,
-      toolTipsEnabled: true,
-      wysiwygEditor: 'tinymce',
+      [EnumPersonalSettingsKey.TOOL_TIPS_ENABLED]: true,
+      [EnumPersonalSettingsKey.WYSIWYG_EDITOR]: 'tinymce',
       language: 'en',
       readyCallbacks: [], // quasi-document-ready-callbacks
       creditsTimer: -1,
-      adminContact: t(appName, 'unknown'),
       phpUserAgent: t(appName, 'unknown'),
       subscribe: {},
     },
