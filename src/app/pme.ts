@@ -107,7 +107,6 @@ const PHPMyEdit = PMEState.PHPMyEdit;
 const pmeDefaultSelector = PMEState.defaultSelector;
 const pmePrefix = PMEState.prefix;
 const pmeOpenDialogs = PMEState.openDialogs;
-const pmePageRenderer = PMEState.pageRenderer;
 
 /**
  * Cleanup vue-component when replacing parts of the DOM.
@@ -2286,7 +2285,6 @@ export {
   pmeInputSelector as inputSelector,
   pmeIsHalted as halted,
   pmeOpenRowDialog as openRowDialog,
-  pmePageRenderer as pageRenderer,
   pmePushCancellable as pushCancellable,
   pmeSelectInputSelector as selectInputSelector,
   pmeSelector as selector,

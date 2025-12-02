@@ -47,8 +47,6 @@ class PMEInitialState extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     public readonly string $inputSelectPlaceholder,
     public readonly string $inputSelectNoResult,
     public readonly string $inputSelectChosenTitle,
-    #[TSAttributes\LiteralTypeScriptType('typeof PageRenderer.DataConstants.PAGE_RENDERER')]
-    public readonly array $pageRenderer,
   ) {
   }
 
@@ -73,7 +71,6 @@ class PMEInitialState extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
       inputSelectChosenTitle: $inputSelectChosenTitle,
       inputSelectNoResult: $inputSelectNoResult,
       inputSelectPlaceholder: $inputSelectPlaceholder,
-      pageRenderer: $pageRenderer,
       pageRowsDefault: $pageRowsDefault,
       selectChosen: $selectChosen,
       showDisabled: $showDisabled,

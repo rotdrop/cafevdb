@@ -40,7 +40,7 @@ import * as PHPMyEdit from './pme.ts';
 import * as SelectUtils from './select-utils.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import pmeExportMenu from './pme-export.ts';
-import { pageRenderer, type TableDialogCallbackData, type TableDialogOptions, type TableLoadCallback } from './pme-state.ts';
+import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
 import {
   lazyDecrypt,
   reject as rejectDecryptionPromise,
@@ -53,6 +53,7 @@ import {
   token as pmeToken,
 } from './pme-selectors.ts';
 import type { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 // import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
 // import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
@@ -758,8 +759,8 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     const fieldId = nameParts[1];
     // const column = nameParts[2];
     const groupFieldName = label
-          + pageRenderer.valuesTableSep + fieldId
-          + pageRenderer.joinFieldNameSeparator + 'option_key';
+          + PAGE_RENDERER.valuesTableSep + fieldId
+          + PAGE_RENDERER.joinFieldNameSeparator + 'option_key';
     console.log('group id name', groupFieldName);
     $self.data('groupField', $form.find('[name="' + groupFieldName + '"]'));
     $self.data('fieldId', fieldId);

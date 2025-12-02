@@ -30,7 +30,7 @@ import { templateRenderer } from './template-renderer.ts';
 import * as Dialogs from './dialogs.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import ajaxDownload from './file-download.ts';
-import { pageRenderer, type TableDialogCallbackData } from './pme-state.ts';
+import type { TableDialogCallbackData } from './pme-state.ts';
 import setBusyIndicators from './busy-indicators.ts';
 import { translate as t } from '@nextcloud/l10n';
 import { filename } from './path.ts';
@@ -54,6 +54,7 @@ import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 
 require('./jquery-readonly.ts');
 require('invoices.scss');
@@ -356,7 +357,7 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
             [pmeData('id')]: invoiceId,
             [pmeData('Musicians:id')]: debitorId,
             [pmeSys('rec')]: recordId,
-            [pmeSys('groupby_rec')]: { id: invoiceId, ['InvoiceItems' + pageRenderer.masterFieldSuffix]: 0 },
+            [pmeSys('groupby_rec')]: { id: invoiceId, [`InvoiceItems${PAGE_RENDERER.masterFieldSuffix}`]: 0 },
           });
 
           return false;

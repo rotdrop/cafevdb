@@ -103,8 +103,6 @@ export interface PHPMyEditState extends PMEInitialState {
 
   stopped: boolean,
 
-  pageRenderer: typeof PAGE_RENDERER,
-
   pageRowsDefault: number,
   deselectInvisibleMiscRecs: boolean,
   showDisabled: boolean,
@@ -136,14 +134,6 @@ const PHPMyEditDefault = {
   openDialogs: {},
 
   stopped: false,
-
-  pageRenderer: {
-    masterFieldSuffix: '__master_key',
-    valuesTableSep: '@',
-    joinKeySep: ':',
-    compKeySep: '-',
-    joinFieldNameSeparator: ':',
-  },
 };
 
 /****************************************************************************
@@ -174,7 +164,6 @@ const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;
 const PMEPrefix = pmePrefix.toUpperCase();
 const pmeOpenDialogs = PHPMyEdit.openDialogs;
-const pmePageRenderer = PHPMyEdit.pageRenderer;
 
 export {
   globalState,
@@ -184,5 +173,4 @@ export {
   pmePrefix as prefix,
   PMEPrefix as ucPrefix,
   pmeOpenDialogs as openDialogs,
-  pmePageRenderer as pageRenderer,
 };

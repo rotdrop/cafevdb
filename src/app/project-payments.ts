@@ -31,7 +31,7 @@ import { templateRenderer } from './template-renderer.ts';
 import * as Dialogs from './dialogs.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import ajaxDownload from './file-download.ts';
-import { pageRenderer, type TableDialogCallbackData, type TableDialogOptions } from './pme-state.ts';
+import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 import setBusyIndicators from './busy-indicators.ts';
 import { filename } from './path.ts';
 import {
@@ -53,6 +53,7 @@ import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 
 require('project-payments.scss');
 require('project-participant-fields-display.scss');
@@ -337,7 +338,7 @@ const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, 
             [pmeData('id')]: compositePaymentId,
             [pmeData('Musicians:id')]: musicianId,
             [pmeSys('rec')]: recordId,
-            [pmeSys('groupby_rec')]: { id: compositePaymentId, ['ProjectPayments' + pageRenderer.masterFieldSuffix]: 0 },
+            [pmeSys('groupby_rec')]: { id: compositePaymentId, [`ProjectPayments${PAGE_RENDERER.masterFieldSuffix}`]: 0 },
           });
 
           return false;
