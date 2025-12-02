@@ -55,6 +55,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 /** Test the CSV export for AqBanking. */
 #[Attributes\CoversClass(CalDavService::class)]
 #[Attributes\CoversClass(EventsService::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventTimes::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\HumanDateTime::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
@@ -70,10 +75,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -283,19 +288,19 @@ class EventsServiceTest extends TestCase
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
     foreach ($matrix as $rowIndex => $matrixRow) {
       if ($rowIndex == -1) {
-        $this->assertEquals([], $matrixRow['events']);
+        $this->assertEquals([], $matrixRow->events);
         continue;
       }
-      $uri = $matrixRow['uri'];
+      $uri = $matrixRow->uri;
       $numEvents = $this->project->getCalendarEvents()->filter(
         fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getCalendarUri() == $uri,
       )->count();
-      $this->assertEquals($numEvents, count($matrixRow['events']));
+      $this->assertEquals($numEvents, count($matrixRow->events));
       $this->assertEquals($this->defaultCalendars[$uri], $rowIndex);
-      $this->assertEquals($this->defaultCalendars[$uri], $matrixRow['calendarId']);
+      $this->assertEquals($this->defaultCalendars[$uri], $matrixRow->calendarId);
       $this->assertEquals(
         '/remote.php/dav/calendars/' . MockProvider::EXECUTIVE_BOARD_UID . '/' . $uri .  '_shared_by_calendar.owner/',
-        $matrixRow['urlPath'],
+        $matrixRow->urlPath,
       );
     }
   }

@@ -35,6 +35,9 @@ import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import useErrorHandler from './error-handler.ts';
 import type { AnyPromise } from '../types/promise.d.ts';
+import type { EventMatrixEvent } from '../../build/ts-types/php-modules/Service/DTO.ts';
+
+export { type EventMatrixEvent };
 
 const storeId = 'app-data';
 const logger = new Console(storeId);
@@ -75,53 +78,6 @@ interface ProjectEventEntity {
   sequence: number,
   type: 'VEVENT'|'VTODO'|'VJOURNAL'|'VCARD',
   absenceFieldId: null|number,
-}
-
-// Date from PHP
-interface SerializedPHPDate {
-  date: string, // e.g 2014-03-29 11:30:00.000000
-  timezone_type: number, // e.g. 3
-  timezone: string, // e.g. UTC
-}
-
-interface EventTimes {
-  timezone: string,
-  locale: string,
-  allday: boolean,
-  start: {
-    stamp: number, // timestamp
-    date: string, // short date string
-    time: string,
-  },
-  end: {
-    stamp: number,
-    date: string, // end date at last day of allday events
-    time: string, // time with 00:00 -> 24:00
-  },
-}
-
-export interface EventMatrixEvent {
-  instanceId: string,
-  projectId: number,
-  deleted?: string|null,
-  uri: string,
-  uid: string,
-  calendarId: number,
-  calendarUri: string,
-  sequence: number,
-  recurrenceId: number,
-  seriesUid: string,
-  absenceField: number|null|undefined,
-  allday: boolean,
-  summary: string,
-  description: string,
-  location: string,
-  categories: string[],
-  urlPath: string,
-  start: SerializedPHPDate,
-  end: SerializedPHPDate,
-  seriesStart: SerializedPHPDate,
-  times: EventTimes,
 }
 
 export type CalendarUris = 'concerts'|'rehearsals'|'other'|'management'|'finance';
@@ -234,11 +190,6 @@ const usePrivateState = defineStore(storeId + '-private', {
         const response: AxiosResponse<ProjectEventMatrix> = await axios.get(url, { signal: abortController.signal });
         logger.debug('FETCH EVENT MATRIX RESPONSE', response);
         vueSet(project, 'eventMatrix', response.data);
-        for (const entry of Object.values(project.eventMatrix!.matrix)) {
-          for (const event of entry.events) {
-            event.instanceId = event.uri + (event.recurrenceId ? '@' + event.recurrenceId : '');
-          }
-        }
         return response.data;
       } catch (e) {
         this.handleError(e, { action: 'getEventMatrix', projectId, url }, errorHandler);

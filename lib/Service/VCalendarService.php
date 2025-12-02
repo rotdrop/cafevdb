@@ -112,7 +112,7 @@ class VCalendarService
    *   'categories' => $categories, // optional
    *   'description' => $description, // optional
    *   'calendar' => $calendarId, // required
-   *   'allday' => true, // optional
+   *   'allDay' => true, // optional
    *   'alarm' => $alarm,
    * ]; // optional
    * ```.
@@ -147,7 +147,7 @@ class VCalendarService
       $timezone = $this->getDateTimeZone($start->getTimestamp());
       $start = $start->setTimezone($timezone);
       $objectData['from'] = $objectData['start']->format('d-m-Y');
-      if (!isset($objectData['allday'])) {
+      if (!isset($objectData['allDay'])) {
         $objectData['fromtime'] = $start->format('H:i:s');
       }
     }
@@ -157,7 +157,7 @@ class VCalendarService
       $timezone = $this->getDateTimeZone($end->getTimestamp());
       $end = $end->setTimezone($timezone);
       $objectData['to'] = $objectData['end']->format('d-m-Y');
-      if (!isset($objectData['allday'])) {
+      if (!isset($objectData['allDay'])) {
         $objectData['totime'] = $end->format('H:i:s');
       }
     }
@@ -712,7 +712,7 @@ class VCalendarService
    *   'categories' => $categories, // optional
    *   'description' => $description, // optional
    *   'calendar' => $calendarId, // required
-   *   'allday' => true, // optional
+   *   'allDay' => true, // optional
    *   'alarm' => $alarm,
    * ]; // optional
    * ```.
@@ -757,7 +757,7 @@ class VCalendarService
    *   'categories' => $categories, // optional
    *   'description' => $description, // optional
    *   'calendar' => $calendarId, // required
-   *   'allday' => true, // optional
+   *   'allDay' => true, // optional
    *   'alarm' => $alarm,
    * ]; // optional
    * ```.
@@ -780,7 +780,7 @@ class VCalendarService
 
     if (!empty($request['due'])) {
       $due = new DateTimeImmutable($request['due'], $timezone);
-      if ($request['allday']) {
+      if ($request['allDay']) {
         $due = $due->setTime(0, 0, 0);
         $vTodo->DUE = $due;
         $vTodo->DUE['VALUE'] = 'DATE';
@@ -790,7 +790,7 @@ class VCalendarService
     }
     if (!empty($request['start'])) {
       $dtStart = new DateTimeImmutable($request['start'], $timezone);
-      if ($request['allday']) {
+      if ($request['allDay']) {
         $dtStart = $dtStart->setTime(0, 0, 0);
         $vTodo->DTSTART = $dtStart;
         $vTodo->DTSTART['VALUE'] = 'DATE';

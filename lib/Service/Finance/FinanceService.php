@@ -799,21 +799,20 @@ class FinanceService
     iterable $payments = [],
     array $related = [],
   ): ?array {
-    $eventKind = 'finance';
+    $eventKind = ConfigConstants::FINANCE_CALENDAR_URI;
     $categories = '';
     if ($project) {
       // This triggers adding the event to the respective project when added
       $categories .= $project->getName().',';
     }
-    $categories .= $this->l->t('finance');
-    $calKey       = $eventKind.'calendar';
-    $calendarId   = $this->getConfigValue($calKey.'id', false);
+    $categories .= $this->l->t(ConfigConstants::FINANCE_CALENDAR_URI);
+    $calendarId = $this->getConfigValue($eventKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
 
     $eventData = [
       'summary' => $title,
       'from' => $start->format('d-m-Y'),
       'to' => ($start ?? $end)->format('d-m-Y'),
-      'allday' => true,
+      'allDay' => true,
       'location' => 'Cyber-Space',
       'categories' => $categories,
       'description' => $description,
@@ -871,21 +870,20 @@ class FinanceService
     iterable $payments = [],
     array $related = [],
   ): ?array {
-    $taskKind = 'finance';
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
     $categories = '';
     if ($project) {
       // This triggers adding the task to the respective project when added
       $categories .= $project->getName().',';
     }
-    $categories .= $this->l->t('finance');
-    $calKey       = $taskKind.'calendar';
-    $calendarId   = $this->getConfigValue($calKey.'id', false);
+    $categories .= $this->l->t(ConfigConstants::FINANCE_CALENDAR_URI);
+    $calendarId = $this->getConfigValue($eventKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
 
     $taskData = [
       'summary' => $title,
       'due' => $due->format('d-m-Y'),
       'start' => ($start ?? $due)->format('d-m-Y'),
-      'allday' => true,
+      'allDay' => true,
       'status' => EventsService::TASK_NEEDS_ACTION,
       'location' => 'Cyber-Space',
       'categories' => $categories,
@@ -914,9 +912,8 @@ class FinanceService
    */
   public function deleteFinanceCalendarEntry(mixed $objectIdentifier):void
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     if (!is_array($objectIdentifier)) {
       $objectIdentifier = [ $objectIdentifier ];
     }
@@ -940,9 +937,8 @@ class FinanceService
    */
   public function findFinanceCalendarEntry(string $localUri)
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     return $this->eventsService->findCalendarEntry($calendarId, $localUri);
   }
 
@@ -969,9 +965,8 @@ class FinanceService
    */
   public function updateFinanceCalendarEntry(array $event):void
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     $this->eventsService->udpateCalendarEntry($calendarId, $event);
   }
 

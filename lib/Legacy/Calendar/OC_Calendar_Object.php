@@ -22,7 +22,7 @@
  */
 
 /*
- * Copyright (c) 2020, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2020, 2021, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *               Copied and stripped down for my orchestra admin app.
  *
  * Copyright (c) 2011 Jakob Sack <mail@jakobsack.de>
@@ -374,7 +374,7 @@ class OC_Calendar_Object
       $errarr['from'] = 'true';
       $errnum++;
     }
-    $allday = isset($request['allday']);
+    $allday = isset($request['allDay']);
     if (!$allday && $this->checkTime(urldecode($request['fromtime']))) {
       $errarr['fromtime'] = 'true';
       $errnum++;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,18 +22,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
+namespace OCA\CAFEVDB\Service\DTO;
 
-use DateTimeImmutable;
+use DateTimeInterface;
+
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
- * DTO for the orchestra locale.
+ * DTO for the event matrix rows
  */
-class CalendarEvent extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly DateTimeImmutable $blah,
+    /** Displayname. */
+    public readonly string $name,
+    public readonly int $calendarId,
+    public readonly string $uri,
+    public readonly string $urlPath,
+    /** @var array<int, EventMatrixEvent> */
+    public readonly array $events,
   ) {
   }
 
@@ -49,6 +59,16 @@ class CalendarEvent extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self(
+      name: $name,
+      uri: $uri,
+      calendarId: $calendarId,
+      urlPath: $urlPath ?? '',
+      events: array_map(
+        fn(array|EventMatrixEvent $event) => is_array($event)
+        ? EventMatrixEvent::fromArray($event)
+        : $event,
+        $events,
+      ),
     );
   }
 }

@@ -238,7 +238,7 @@ class SepaBulkTransactionService
               $submissionEvent, [
                 'start' => $submitDate,
                 'end' => $submitDate,
-                'allday' => true,
+                'allDay' => true,
                 'alarm' => 0,
                 'summary' => $summary,
                 'description' => $description,

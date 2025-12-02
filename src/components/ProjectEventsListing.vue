@@ -155,12 +155,12 @@
               </NcButton>
             </template>
           </NcListItem>
-          <NcListItem v-if="matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri]).length > 1"
+          <NcListItem v-if="matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri] ?? {}).length > 1"
                       v-show="showCalendarEvent(matrixEntry)"
           >
             <template #details>
               <NcSelect v-model="matrixEntryYear[matrixEntry.uri]"
-                        :options="Object.keys(eventsByYear[matrixEntry.uri])"
+                        :options="Object.keys(eventsByYear[matrixEntry.uri] ?? {})"
                         :placeholder="t(appName, 'select a year')"
               />
             </template>
@@ -200,13 +200,13 @@
                       :class="'event-uid-' + eventSeries[event.uid]"
                 ><span>{{ eventSeriesIndicator(event) }}</span></span>
                 <span v-tooltip="hints['projectevents:event:event-series-uid']"
-                      :class="'event-series-uid-' + eventRelations[event.seriesUid]"
+                      :class="'event-series-uid-' + eventRelations[event.seriesUid ?? '']"
                 ><span>{{ eventRelationsIndicator(event) }}</span></span>
               </div>
             </template>
             <template #actions>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
-                             v-model="actionScope[event.uid]"
+                             v-model:model-value="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:single']"
                              value="single"
                              :name="'action-scope-' + event.uid"
@@ -216,7 +216,7 @@
                 {{ t(appId, 'act only on this event') }}
               </NcActionRadio>
               <NcActionRadio v-if="eventSeries[event.uid]"
-                             v-model="actionScope[event.uid]"
+                             v-model:model-value="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:series']"
                              value="series"
                              :name="'action-scope-' + event.uid"
@@ -226,7 +226,7 @@
                 {{ t(appId, 'act on the event series') }}
               </NcActionRadio>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
-                             v-model="actionScope[event.uid]"
+                             v-model:model-value="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:related']"
                              value="related"
                              :name="'action-scope-' + event.uid"
@@ -406,6 +406,7 @@ import {
   onBeforeRouteUpdate,
 } from 'vue-router/composables'
 import type {
+  Location,
   RouteRecord,
 } from 'vue-router'
 import capitalize from 'capitalize'
@@ -440,6 +441,8 @@ import {
   PROJECT_EVENTS_LISTING_NAME,
 } from '../router/calendar-routes.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
+import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
+import appTranslate from '../services/app-l10n.ts'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -585,16 +588,16 @@ const onUserManualPopup = async () => {
   isWikiLoading.value = true
   await asyncEmit(WIKI_POPUP, {
     wikiPage: wikiManualSection.value,
-    popupTitle: t(appName, 'User Manual: {section}', { section: t(appName, 'Project Events') }, 0, { escape: false }),
+    popupTitle: t(appName, 'User Manual: {section}', { section: t(appName, 'Project Events') }, { escape: false }),
   })
   isWikiLoading.value = false
 }
 
-interface CalendarEditLocation {
+interface CalendarEditLocation extends Location {
   name: string,
   params: {
     object: string,
-    recurrenceId: number,
+    recurrenceId: string,
     context: string,
   },
   query: Record<string, string>,
@@ -710,12 +713,12 @@ const syncProjectData = async (projectName: string) => {
         }
         vueSet(eventsByYear, entry.uri, {})
         for (const event of entry.events) {
-          const eventStartDate = DateTime.fromSQL(event.start.date + ' ' + event.start.timezone).toISODate()
+          const eventStartDate = DateTime.fromISO(event.start).toISODate()!
           const eventYear = eventStartDate.substring(0, 4)
           if (eventsByYear[entry.uri]![eventYear]) {
             eventsByYear[entry.uri]![eventYear].push(event)
           } else {
-            vueSet(eventsByYear[entry.uri], eventYear, [event])
+            vueSet(eventsByYear[entry.uri]!, eventYear, [event])
           }
           vueSet(yearsByEvent, event.instanceId, eventYear)
           vueSet(hasAbsenceField.value, event.instanceId, +(event.absenceField || 0) > 0)
@@ -743,7 +746,7 @@ const syncProjectData = async (projectName: string) => {
           }
           vueSet(calendarAppEventEdit.value, event.instanceId, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
 
-          if (event.seriesUid) {
+          if (event.seriesUid !== UUID_NIL) {
             if (eventRelations.value[event.seriesUid] === undefined) {
               vueSet(eventRelations.value, event.seriesUid, relationsCounter++)
               relatedEvents[event.seriesUid] = []
@@ -754,10 +757,7 @@ const syncProjectData = async (projectName: string) => {
             if (eventSeries.value[event.uid] === undefined) {
               vueSet(eventSeries.value, event.uid, seriesCounter++)
               seriesEvents[event.uid] = []
-              calendarAppUrlParams.recurrenceId = DateTime.fromSQL(
-                event.seriesStart.date + ' ' + event.seriesStart.timezone,
-                { setZone: true },
-              ).toUnixInteger()
+              calendarAppUrlParams.recurrenceId = DateTime.fromISO(event.seriesStart, { setZone: true }).toUnixInteger()
               vueSet(calendarAppEventEditSeries.value, event.uid, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
             }
             seriesEvents[event.uid].push(event)
@@ -799,13 +799,13 @@ const syncProjectData = async (projectName: string) => {
 const toggleCalendarVisibility = (entry: EventMatrixEntry) => {
   expandedState.value[entry.uri] = !expandedState.value[entry.uri]
 }
-const showCalendarEvent = (matrixEntry: EventMatrixEntry, event: EventMatrixEvent) => {
+const showCalendarEvent = (matrixEntry: EventMatrixEntry, event?: EventMatrixEvent) => {
   const show = !!expandedState.value[matrixEntry.uri]
   if (!event) {
     return show
   }
-  if (matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri]).length > 1) {
-    return show && (+matrixEntryYear[matrixEntry.uri] === +yearsByEvent[event.instanceId])
+  if (matrixEntry.events.length > 20 && Object.keys(eventsByYear[matrixEntry.uri]!).length > 1) {
+    return show && (+matrixEntryYear[matrixEntry.uri]! === +yearsByEvent[event.instanceId])
   } else {
     return show
   }
@@ -814,7 +814,7 @@ const showCalendarEvent = (matrixEntry: EventMatrixEntry, event: EventMatrixEven
 const briefEventDate = (event: EventMatrixEvent) => {
   const times = event.times
   if (times.start.date === times.end.date) {
-    if (times.allday) {
+    if (times.allDay) {
       return times.start.date
     }
     if (times.start.time === '00:00') {
@@ -832,7 +832,7 @@ const updateActionScope = (event: EventMatrixEvent, scope: ActionScope) => {
   // transition to related: all related events have their scope set to related
   switch (scope) {
   case 'single':
-    if (!event.seriesUid) {
+    if (event.seriesUid === UUID_NIL) {
       return
     }
     for (const related of relatedEvents[event.seriesUid]) {
@@ -1063,7 +1063,7 @@ calendarStoreSetup().then((_arg) => {
 const setCalendarObjectInstance = (event: EventMatrixEvent) => {
   return calendarObjectInstanceStore.getCalendarObjectInstanceByObjectIdAndRecurrenceId({
     objectId: routerEventEdit.value[event.instanceId].params.object,
-    recurrenceId: routerEventEdit.value[event.instanceId].params.recurrenceId,
+    recurrenceId: +routerEventEdit.value[event.instanceId].params.recurrenceId,
   })
 }
 
@@ -1093,12 +1093,13 @@ const mutateCategory = async (event: EventMatrixEvent, category: string, enable:
 }
 
 const mutateAbsenceField = async (event: EventMatrixEvent, enable: boolean) => {
+  logger.info('APP TRANSLATE', { recordAbsence: appTranslate(projectEventMatrix.value!.categories.C.recordAbsence) })
   await mutateCategory(event, projectEventMatrix.value!.categories.L10N.recordAbsence, enable)
   if (enable) {
     event.absenceField = 9999
     hasAbsenceField.value[event.instanceId] = true
   } else {
-    event.absenceField = null
+    event.absenceField = 0
     hasAbsenceField.value[event.instanceId] = false
   }
 }
@@ -1136,7 +1137,7 @@ const toggleAbsenceField = async (event: EventMatrixEvent) => {
 const singleEventProjectLink = async (event: EventMatrixEvent, linkToProject: boolean) => {
   await mutateCategory(event, project.value!.name, linkToProject)
   if (linkToProject) {
-    event.deleted = null
+    event.deleted = undefined
   } else {
     event.deleted = (new Date()).toISOString()
   }
@@ -1204,7 +1205,7 @@ const deleteSingleEvent = async (matrixEntry: EventMatrixEntry, event: EventMatr
   }
 
   matrixEntry.events.splice(matrixEntry.events.indexOf(event), 1)
-  if (event.seriesUid) {
+  if (event.seriesUid !== UUID_NIL) {
     relatedEvents[event.seriesUid].splice(relatedEvents[event.seriesUid].indexOf(event), 1)
     if (+event.recurrenceId > 0) {
       seriesEvents[event.uid].splice(seriesEvents[event.uid].indexOf(event), 1)
@@ -1261,7 +1262,7 @@ const eventSeriesIndicator = (event: EventMatrixEvent) =>
     : String.fromCharCode('A'.charCodeAt(0) + eventSeries.value[event.uid] - 1)
 
 const eventRelationsIndicator = (event: EventMatrixEvent) =>
-  event.seriesUid
+  event.seriesUid !== UUID_NIL
     ? String.fromCharCode('α'.charCodeAt(0) + eventRelations.value[event.seriesUid] - 1)
     : ''
 
@@ -1276,8 +1277,8 @@ watch(syncEventListTrigger, async (value) => {
   }
   // the the start date has changen the we probably have to chance the route
   if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
-    const recurrenceId = Math.round(calendarObjectInstanceStore.calendarObjectInstance!.startDate.getTime() / 1000)
-    if (+currentRoute.params.recurrenceId !== recurrenceId) {
+    const recurrenceId = '' + Math.round(calendarObjectInstanceStore.calendarObjectInstance!.startDate.getTime() / 1000)
+    if (currentRoute.params.recurrenceId !== recurrenceId) {
       const location: CalendarEditLocation = {
         name: currentRoute.name!,
         params: {
@@ -1288,7 +1289,7 @@ watch(syncEventListTrigger, async (value) => {
         query: currentRoute.query,
       }
       // @ts-expect-error: 2769
-      await router.replace(location)
+      await router.replace(location as RawLocation)
     }
   }
   await syncProjectData(props.projectName)
