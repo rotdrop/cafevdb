@@ -132,7 +132,7 @@ class ProjectService
     } catch (Throwable $t) {
       $this->logError('HELLO');
       /** @var \OCP\IRequest $request */
-      $request = \OC::$server->query(\OCP\IRequest::class);
+      $request = $this->configService->getAppContainer()->get(\OCP\IRequest::class);
       $this->logError('HELLO2');
       $userId = $this->userId();
       if ($request) {
