@@ -30,6 +30,7 @@ import {
   APP_SETTINGS_POPUP,
   EMAIL_POPUP,
   GET_VUE_COMPONENT,
+  GLOBAL_STATE_INITIALIZED,
   HISTORY_GO_REQUEST,
   LEGACY_AJAX_ERROR,
   LEGACY_PAGE_CLEANUP,
@@ -64,6 +65,7 @@ import {
 import type { ComponentProps, PropsData } from '../mountable-component-names.ts';
 
 import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
+import type { GlobalState } from '../app/globalstate.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
@@ -94,6 +96,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
       name: keyof ComponentPorps,
       propsData: PropsData<keyof ComponentProps>,
     }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
+    [GLOBAL_STATE_INITIALIZED]: GlobalState,
     [HISTORY_GO_REQUEST]: { level: number },
     [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string },
     [LEGACY_PAGE_CLEANUP]: undefined,

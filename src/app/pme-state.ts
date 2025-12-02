@@ -152,6 +152,8 @@ const PHPMyEditDefault = {
  *
  */
 
+const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initialized;
+
 const PHPMyEdit: PHPMyEditState = Object.assign(
   globalState.PHPMyEdit,
   Object.assign(
@@ -163,6 +165,10 @@ const PHPMyEdit: PHPMyEditState = Object.assign(
   ));
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
+
+if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initialized) {
+  asyncEmit(GLOBAL_STATE_INITIALIZED, globalState);
+}
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;

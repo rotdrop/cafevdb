@@ -45,6 +45,8 @@ require('cafevdb.scss');
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
 
+const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initialized;
+
 Object.assign(
   globalState,
   Object.assign(
@@ -62,6 +64,10 @@ Object.assign(
     { initialized: true },
   ),
 );
+
+if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initialized) {
+  asyncEmit(BusEvents.GLOBAL_STATE_INITIALIZED, globalState);
+}
 
 /**
  * Register callbacks which are run after partial page reload in

@@ -40,6 +40,7 @@ export const PUSH_BUSY_STATE = appEventName('push-busy-state');
 export const SET_BUSY_FLAG = appEventName('set-busy-flag');
 export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
 export const WIKI_POPUP = appEventName('wiki-popup');
+export const GLOBAL_STATE_INITIALIZED = appEventName('global-state-initialized');
 
 export const SET_DEBUG_MODES = appEventName('set-debug-modes');
 export const SET_DEBUG_QUERY_SQL_FILTER = appEventName('set-debug_query-sql-filter');
