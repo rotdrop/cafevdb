@@ -90,27 +90,7 @@ export interface EventMatrixEntry {
   events: EventMatrixEvent[],
 }
 
-export interface SpecialCategories {
-  recordAbsence: string,
-  projectRegistration: string,
-}
-
-export interface ProjectEventMatrix {
-  calendars: {
-    [Key in CalendarUris]: {
-      uri: Key,
-      public: boolean,
-    };
-  },
-  categories: {
-    // some meta data ...
-    C: SpecialCategories,
-    L10N: SpecialCategories,
-  },
-  matrix: {
-    [key: number]: EventMatrixEntry,
-  }
-}
+export type ProjectEventMatrix = Record<number, EventMatrixEntry>;
 
 export interface Project {
   id: number,

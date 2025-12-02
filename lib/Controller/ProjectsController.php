@@ -30,6 +30,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -436,7 +437,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
+  public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse|JSONResponse
   {
     if (!($projectId > 0)) {
       throw new Exceptions\EnduserNotificationException(
@@ -534,22 +535,7 @@ class ProjectsController extends Controller
         $events = $eventsService->events($projectId);
         $dfltIds = $eventsService->defaultCalendars();
         $eventMatrix = $eventsService->eventMatrix($events, $dfltIds);
-        // provide also some meta-info in order to avoid further bloats to the initial-state data.
-        $data = [
-          'calendars' => ConfigConstants::CALENDARS,
-          'categories' => [
-            'C' => [
-              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: false),
-              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: false),
-            ],
-            'L10N' => [ // app-locale
-              'recordAbsence' => $eventsService->getRecordAbsenceCategory(translate: true),
-              'projectRegistration' => $eventsService->getProjectRegistrationCategory(translate: true),
-            ],
-          ],
-          'matrix' => $eventMatrix,
-        ];
-        return self::dataResponse($data);
+        return new JSONResponse($eventMatrix);
 
       case self::GET_PROJECT_FOLDER:
         switch ($subTopic) {

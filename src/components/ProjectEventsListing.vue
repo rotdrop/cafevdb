@@ -239,7 +239,7 @@
               <NcActionButton v-tooltip="hints['projectevents:event:absence-field:check']"
                               type="checkbox"
                               :close-after-click="true"
-                              :disabled="!mutationsAllowed || !!event.deleted || !projectEventMatrix?.calendars?.[matrixEntry.uri]?.public"
+                              :disabled="!mutationsAllowed || !!event.deleted || !CALENDARS[matrixEntry.uri]?.public"
                               @click="toggleAbsenceField(event)"
               >
                 <template #icon>
@@ -442,11 +442,15 @@ import {
 } from '../router/calendar-routes.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
+import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
+import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
 import appTranslate from '../services/app-l10n.ts'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
 const logger = new Console(COMPONENT_NAME)
+
+const recordAbsenceCategory = appTranslate(RECORD_ABSENCE_CATEGORY)
 
 const errorHandlerProvider = useErrorHandlerStore()
 
@@ -531,7 +535,7 @@ emptyEventMatrix.sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri
 const eventMatrix = computed<EventMatrixEntry[]>(
   () => !projectEventMatrix.value
     ? emptyEventMatrix
-    : Object.values(projectEventMatrix.value.matrix).sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri]),
+    : Object.values(projectEventMatrix.value).sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri]),
 )
 
 // const popOverActive = computed(() => currentRoute.path.includes('/popover/'))
@@ -681,7 +685,7 @@ const syncProjectData = async (projectName: string) => {
       let seriesCounter = 1
       let relationsCounter = 1
       const calendarNames: { [Key in CalendarUris | '']?: string } = {}
-      for (const entry of Object.values(projectEventMatrix.value.matrix)) {
+      for (const entry of Object.values(projectEventMatrix.value)) {
         vueSet(expandedState.value, entry.uri, false || expandedState.value?.[entry.uri])
         calendarNames[entry.uri] = entry.name
         if (entry.uri !== '') {
@@ -693,7 +697,7 @@ const syncProjectData = async (projectName: string) => {
             title: label + ', ' + project.value.name,
           }
           if (entry.uri === 'rehearsals') {
-            context.categories.push(projectEventMatrix.value.categories.L10N.recordAbsence)
+            context.categories.push(recordAbsenceCategory)
           }
           const nowSeconds = Math.round(Date.now() / 1000 / 3600) * 3600
           const params = {
@@ -926,7 +930,7 @@ const markAllEvents = (mark: boolean) => {
   if (!projectEventMatrix.value) {
     return
   }
-  for (const entry of Object.values(projectEventMatrix.value.matrix)) {
+  for (const entry of Object.values(projectEventMatrix.value)) {
     for (const event of entry.events) {
       updateAttachmentMark(event, mark && !event.deleted)
     }
@@ -1093,8 +1097,7 @@ const mutateCategory = async (event: EventMatrixEvent, category: string, enable:
 }
 
 const mutateAbsenceField = async (event: EventMatrixEvent, enable: boolean) => {
-  logger.info('APP TRANSLATE', { recordAbsence: appTranslate(projectEventMatrix.value!.categories.C.recordAbsence) })
-  await mutateCategory(event, projectEventMatrix.value!.categories.L10N.recordAbsence, enable)
+  await mutateCategory(event, recordAbsenceCategory, enable)
   if (enable) {
     event.absenceField = 9999
     hasAbsenceField.value[event.instanceId] = true
