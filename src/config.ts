@@ -23,20 +23,20 @@
 
 import type { AppName } from '../build/ts-types/app-config.ts';
 import { appName } from '../build/ts-types/app-config.ts';
-import { type JoinLiterals, joinLiterals } from './toolkit/util/string-literals.ts';
 
-function appPrefix<T extends string>(id: T): JoinLiterals<[AppName, T], '-'>;
-function appPrefix<T1 extends string, T2 extends string>(id: T1, join: T2): JoinLiterals<[AppName, T1], T2>;
+function appPrefix<T extends string>(id: T): `${AppName}-${T}`;
+function appPrefix<T1 extends string, T2 extends string>(id: T1, join: T2): `${AppName}${T2}${T1}`;
 /**
  * @param id Custom postfix appended to the app-name with the separator join.
  *
  * @param join Separator between app-name and id.
  */
 function appPrefix<T extends string>(id: T, join = '-') {
-  return joinLiterals(join)(appName, id);
+  // return joinLiterals(join)(appName, id);
+  return `${appName}${join}${id}` as const;
 }
 
-const appNameTag = joinLiterals('-')('app', appName);
+const appNameTag = `app-${appName}` as const;
 
 export type {
   AppName,

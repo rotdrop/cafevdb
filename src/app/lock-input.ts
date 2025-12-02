@@ -30,10 +30,9 @@ import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import generateId from './generate-id.ts';
-import { joinLiterals } from '../toolkit/util/string-literals.ts';
 
-const dataLockUnlockId = joinLiterals('')(appName, 'LockUnlockId');
-const lockUnlockVictim = joinLiterals('-')(appName, 'lock-unlock-victim');
+const dataLockUnlockId = `${appName}LockUnlockId` as const;
+const lockUnlockVictim = `${appName}-lock-unlock-victim` as const;
 
 $('body').on('change', 'input[type="checkbox"].' + appName + '-lock-input-widget', function() {
   const $self = $(this);

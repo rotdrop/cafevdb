@@ -23,11 +23,10 @@
 
 import { appName } from '../config.ts';
 import $ from './jquery.ts';
-import { joinLiterals } from '../toolkit/util/string-literals.ts';
 
 const delay = 50000; // ms
-const nameSpacedEvent = <T extends string>(eventName: T) => joinLiterals('')(eventName, '.', appName, 'TextAreaResize');
-const events = joinLiterals(' ')(nameSpacedEvent('mouseup'), nameSpacedEvent('mousemove'));
+const nameSpacedEvent = <T extends string>(eventName: T) => `${eventName}.${appName}TextAreaResize` as const;
+const events = `${nameSpacedEvent('mouseup')} ${nameSpacedEvent('mousemove')}` as const;
 
 console.debug('RESIZE EVENTS', { events });
 

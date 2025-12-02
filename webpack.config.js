@@ -185,6 +185,7 @@ module.exports = {
         'src/toolkit/util/nextcloud-sidebar-root.ts',
         'src/toolkit/util/pangram.ts',
         'src/toolkit/util/settings-sync.ts',
+        'src/toolkit/util/string-literals.ts',
         // false positive (TS or Vue problem)
         'src/types/ajax/page-load-response.ts',
       ],

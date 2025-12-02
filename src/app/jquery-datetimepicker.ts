@@ -23,7 +23,6 @@
 
 import { appName } from '../config.ts';
 import $, { jq } from './jquery.ts';
-import { joinLiterals } from '../toolkit/util/string-literals.ts';
 import { globalState } from './globals.ts';
 
 function importAll(r: webpack.Context) {
@@ -41,7 +40,7 @@ require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
 const jQueryUiDatePicker = $.fn.datepicker;
 const onselectDatePickerReason = appName + ' datepicker onselect';
 const datePickerInterceptEvents = ['focusout', 'blur'].map(x => x + '.' + appName).join(' ');
-const datePickerOldValue = joinLiterals('')(appName, 'OldValue');
+const datePickerOldValue = `${appName}OldValue` as const;
 
 type DatePickerOptions = JQueryUI.DatepickerOptions;
 

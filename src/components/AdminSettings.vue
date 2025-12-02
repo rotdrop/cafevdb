@@ -510,7 +510,6 @@ import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import Console from '../util/console.ts'
-import { joinLiterals } from '../toolkit/util/string-literals.ts'
 import { vueDevTools as setVueDevTools } from '../toolkit/util/vue-devtools.ts'
 import type { AdminInitialState } from '../../build/ts-types/php-modules/Settings.ts'
 import * as SettingsKeys from '../../build/ts-types/php-modules/Settings/Admin.ts'
@@ -892,17 +891,17 @@ const saveProblemReportEmailRecipient = async () => {
   const requestedValue = settings[key]
   await saveSetting(key)
   if (requestedValue === settings[key]) {
-    getSettingsData([joinLiterals()(key, 'Verification'), joinLiterals()(key, 'Status')])
+    getSettingsData([`${key}Verification`, `${key}Status`])
   }
   problemReportRecipientVerificationInput.value = false
 }
 const saveProblemReportEmailRecipientVerification = async () => {
   const baseKey = 'problemReportEmailRecipient'
-  const key = joinLiterals()(baseKey, 'Verification')
+  const key = `${baseKey}Verification`
   const requestedValue = settings[key]
   await saveSetting(key)
   if (requestedValue === settings[key]) {
-    getSettingsData([joinLiterals()(baseKey, 'Status')])
+    getSettingsData([`${baseKey}Status`])
   }
   problemReportRecipientVerificationInput.value = false
 }
@@ -915,7 +914,7 @@ const cancelProblemReportEmailRecipientVerification = async () => {
       return
     }
   }
-  getSettingsData([...keys, joinLiterals()(keys[0], 'Status')])
+  getSettingsData([...keys, `${keys[0]}Status`])
   problemReportRecipientVerificationInput.value = false
 }
 const getRecryptionRequests = async () => {

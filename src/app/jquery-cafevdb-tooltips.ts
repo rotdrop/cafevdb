@@ -31,7 +31,6 @@ import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import toolTipProvider from 'bootstrap/js/dist/tooltip.js';
 import { translate as t } from '@nextcloud/l10n';
-import { joinLiterals } from '../toolkit/util/string-literals.ts';
 import type Tooltip from 'bootstrap/js/dist/tooltip.js';
 
 require('tooltips.scss');
@@ -43,8 +42,8 @@ type TooltipOptions = Tooltip.Options & {
 
 const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
 const vendorOriginalTitleAttribute = 'data-bs-original-title' as const;
-const appTitleKey = joinLiterals('')(appName, 'Title');
-const appTitleAttribute = joinLiterals('')('data-', appName, '-title');
+const appTitleKey = `${appName}Title` as const;
+const appTitleAttribute = `data-${appName}-title` as const;
 
 const toolTipJobInitialTimeOut = 100; // ms
 const toolTipJobRunnerTimeOut = 0; // ms
