@@ -281,4 +281,36 @@ trait SetupEventsServiceTrait
       '{' . \OCA\DAV\DAV\Sharing\Plugin::NS_NEXTCLOUD . '}deleted-at' => $row['deleted_at'] === null ? $row['deleted_at'] : (int)$row['deleted_at'],
     ];
   }
+
+  /**
+   * Perform basic tests with the event-matrix output.
+   *
+   * @param array $matrix
+   *
+   * @return void
+   */
+  private function eventMatrixTest(array $matrix): void
+  {
+    foreach ($matrix as $rowIndex => $matrixRow) {
+      if ($rowIndex == -1) {
+        $this->assertEquals([], $matrixRow->events ?? []);
+        continue;
+      }
+      $uri = $matrixRow->uri;
+      if ($uri === null) {
+        print_r($matrixRow);
+        exit(1);
+      }
+      $numEvents = $this->project->getCalendarEvents()->filter(
+        fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getCalendarUri() == $uri,
+      )->count();
+      $this->assertEquals($numEvents, count($matrixRow->events ?? []));
+      $this->assertEquals($this->defaultCalendars[$uri], $rowIndex);
+      $this->assertEquals($this->defaultCalendars[$uri], $matrixRow->calendarId);
+      $this->assertEquals(
+        '/remote.php/dav/calendars/' . MockProvider::EXECUTIVE_BOARD_UID . '/' . $uri .  '_shared_by_calendar.owner/',
+        $matrixRow->urlPath,
+      );
+    }
+  }
 }

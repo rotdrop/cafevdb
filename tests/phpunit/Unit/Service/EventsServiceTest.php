@@ -112,23 +112,7 @@ class EventsServiceTest extends TestCase
     $events = $this->eventsService->events($this->project->getId());
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
-    foreach ($matrix as $rowIndex => $matrixRow) {
-      if ($rowIndex == -1) {
-        $this->assertEquals([], $matrixRow->events);
-        continue;
-      }
-      $uri = $matrixRow->uri;
-      $numEvents = $this->project->getCalendarEvents()->filter(
-        fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getCalendarUri() == $uri,
-      )->count();
-      $this->assertEquals($numEvents, count($matrixRow->events));
-      $this->assertEquals($this->defaultCalendars[$uri], $rowIndex);
-      $this->assertEquals($this->defaultCalendars[$uri], $matrixRow->calendarId);
-      $this->assertEquals(
-        '/remote.php/dav/calendars/' . MockProvider::EXECUTIVE_BOARD_UID . '/' . $uri .  '_shared_by_calendar.owner/',
-        $matrixRow->urlPath,
-      );
-    }
+    $this->eventMatrixTest($matrix);
   }
 
   /** @return void */
@@ -148,29 +132,5 @@ class EventsServiceTest extends TestCase
     $this->assertEquals($recordAbsence, $appL10N->t(EventsService::RECORD_ABSENCE_CATEGORY));
     $registrationCategory = $this->eventsService->getProjectRegistrationCategory(translate: true);
     $this->assertEquals($registrationCategory, $appL10N->t(EventsService::PROJECT_REGISTRATION_CATEGORY));
-  }
-
-  /**
-   * This has been copied from the original OCA\DAV\CalDAV\CalDavBackend.
-   *
-   * @param array $row Database row.
-   *
-   * @return array
-   */
-  private static function rowToCalendarObject(array $row): array
-  {
-    return [
-      'id' => $row['id'],
-      'uri' => $row['uri'],
-      'uid' => $row['uid'],
-      'lastmodified' => $row['lastmodified'],
-      'etag' => '"' . $row['etag'] . '"',
-      'calendarid' => $row['calendarid'],
-      'size' => (int)$row['size'],
-      'calendardata' => $row['calendardata'],
-      'component' => strtolower($row['componenttype']),
-      'classification' => (int)$row['classification'],
-      '{' . \OCA\DAV\DAV\Sharing\Plugin::NS_NEXTCLOUD . '}deleted-at' => $row['deleted_at'] === null ? $row['deleted_at'] : (int)$row['deleted_at'],
-    ];
   }
 }

@@ -32,6 +32,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller\ProjectsController;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\DTO\EventMatrixRow;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -139,10 +140,13 @@ class ProjectsControllerTest extends TestCase
   /** @return void */
   public function testGetEventMatrix(): void
   {
-    $this->expectNotToPerformAssertions();
-    $this->projectsController->get(
+    $response = $this->projectsController->get(
       $this->project->getId(),
       ProjectsController::GET_EVENT_MATRIX,
     );
+    $matrix = $response->render();
+    $matrix = json_decode($matrix, true);
+    $matrix = array_map(fn(array $row) => EventMatrixRow::fromArray($row), $matrix);
+    $this->eventMatrixTest($matrix);
   }
 }
