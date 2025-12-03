@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * Orchestra member, musician and project management application.
