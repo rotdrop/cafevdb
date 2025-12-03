@@ -39,6 +39,7 @@ use OCP\IL10N;
 use OCA\DAV\CalDAV\CalDavBackend;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
@@ -50,7 +51,6 @@ use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 
 /**
  * Mock around s.t. the EventsService class can be instantiated and used.
@@ -83,6 +83,12 @@ trait SetupEventsServiceTrait
 
   private IAppContainer $appContainer;
 
+  private ConfigService $configService;
+
+  private EntityManager $entityManager;
+
+  private MockProvider $mockProvider;
+
   /**
    * {@inheritdoc}
    *
@@ -93,7 +99,7 @@ trait SetupEventsServiceTrait
     $this->entitySetup(persist: false);
 
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $this->mockProvider = $mockProvider = \OCP\Server::get(MockProvider::class);
 
     $this->appContainer = $mockProvider->getAppContainer();
 
@@ -101,12 +107,11 @@ trait SetupEventsServiceTrait
 
     $cloudConfig = $mockProvider->getCloudConfig();
 
-    /** @var ConfigService $configService */
-    $configService = $mockProvider->getConfigService();
+    $this->configService = $mockProvider->getConfigService();
     $calendarId = 1;
     foreach (array_keys(ConfigConstants::CALENDARS) as $uri) {
-      $configService->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $l->t('uri'));
-      $configService->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $calendarId);
+      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $l->t('uri'));
+      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $calendarId);
       $this->defaultCalendars[$uri] = $calendarId;
       ++$calendarId;
     }
@@ -158,7 +163,7 @@ trait SetupEventsServiceTrait
       ->getMock();
     $calendarManager->method('getCalendars')
       ->willReturnCallback(
-        function() use($l) : array {
+        function() use ($l) : array {
           $calendars = [];
           foreach ($this->defaultCalendars as $uri => $id) {
             $calendar = $this->getMockBuilder(ICalendar::class)
@@ -173,16 +178,16 @@ trait SetupEventsServiceTrait
       );
 
     $calDavService = new CalDavService(
-      configService: $configService,
+      configService: $this->configService,
       calendarManager: $calendarManager,
       calDavBackend: $calDavBackend,
     );
 
-    /** @var EntityManager $entityManager */
-    $entityManager = $this->getMockBuilder(EntityManager::class)
+    $this->entityManager = $this->getMockBuilder(EntityManager::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $entityManager->method('getRepository')->willReturnCallback(
+    $this->entityManager->method('getWrappedObject')->willReturn($this->entityManager);
+    $this->entityManager->method('getRepository')->willReturnCallback(
       function(string $className) {
         switch ($className) {
           case Entities\ProjectEvent::class:
@@ -201,7 +206,19 @@ trait SetupEventsServiceTrait
                 return $this->project->getCalendarEvents()->toArray();
               },
             );
+            $repository->method('getEntityManager')->willReturn($this->entityManager);
             return $repository;
+
+          case Entities\Project::class:
+            $repository = $this->getMockBuilder(EntityRepository::class)
+              ->disableOriginalConstructor()
+              ->getMock();
+            $repository->method('find')->willReturnCallback(
+              fn(int $projectId) => $this->project->getId() == $projectId ? $this->project : null,
+            );
+            $repository->method('getEntityManager')->willReturn($this->entityManager);
+            return $repository;
+
         }
         return null;
       },
@@ -223,7 +240,7 @@ trait SetupEventsServiceTrait
     $this->eventsService = new EventsService(
       userSession: $mockProvider->getUserSession(),
       configService: $mockProvider->getConfigService(),
-      entityManager: $entityManager,
+      entityManager: $this->entityManager,
       projectService: $projectService,
       calDavService: $calDavService,
       vCalendarService: $vCalendarService,
@@ -239,5 +256,29 @@ trait SetupEventsServiceTrait
   public function testSetup(): void
   {
     $this->expectNotToPerformAssertions();
+  }
+
+  /**
+   * This has been copied from the original OCA\DAV\CalDAV\CalDavBackend.
+   *
+   * @param array $row Database row.
+   *
+   * @return array
+   */
+  private static function rowToCalendarObject(array $row): array
+  {
+    return [
+      'id' => $row['id'],
+      'uri' => $row['uri'],
+      'uid' => $row['uid'],
+      'lastmodified' => $row['lastmodified'],
+      'etag' => '"' . $row['etag'] . '"',
+      'calendarid' => $row['calendarid'],
+      'size' => (int)$row['size'],
+      'calendardata' => $row['calendardata'],
+      'component' => strtolower($row['componenttype']),
+      'classification' => (int)$row['classification'],
+      '{' . \OCA\DAV\DAV\Sharing\Plugin::NS_NEXTCLOUD . '}deleted-at' => $row['deleted_at'] === null ? $row['deleted_at'] : (int)$row['deleted_at'],
+    ];
   }
 }

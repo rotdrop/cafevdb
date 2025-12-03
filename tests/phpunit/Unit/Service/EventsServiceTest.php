@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 
-/** Test the CSV export for AqBanking. */
+/** Test the EventsService class. */
 #[Attributes\CoversClass(CalDavService::class)]
 #[Attributes\CoversClass(EventsService::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
