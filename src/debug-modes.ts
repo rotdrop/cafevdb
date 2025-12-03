@@ -23,29 +23,35 @@
 
 import { appName } from './config.ts';
 import { translate as t } from '@nextcloud/l10n';
+import {
+  // DEBUG_ALL,
+  DEBUG_CSP,
+  DEBUG_EMAILFORM,
+  DEBUG_GENERAL,
+  DEBUG_GEOCODING,
+  DEBUG_L10N,
+  // DEBUG_NONE,
+  DEBUG_QUERY,
+  DEBUG_REQUEST,
+  DEBUG_SMAPS,
+  DEBUG_TOOLTIPS,
+  DEBUG_VUE,
+} from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
-export const DEBUG_GENERAL = (1 << 0);
-export const DEBUG_QUERY = (1 << 1);
-export const DEBUG_CSP = (1 << 2);
-export const DEBUG_L10N = (1 << 3);
-export const DEBUG_REQUEST = (1 << 4);
-export const DEBUG_TOOLTIPS = (1 << 5);
-export const DEBUG_EMAILFORM = (1 << 6);
-export const DEBUG_GEOCODING = (1 << 7);
-export const DEBUG_VUE = (1 << 8);
-export const DEBUG_SMAPS = (1 << 9);
-export const DEBUG_ALL = DEBUG_GENERAL
-  | DEBUG_QUERY
-  | DEBUG_CSP
-  | DEBUG_L10N
-  | DEBUG_REQUEST
-  | DEBUG_TOOLTIPS
-  | DEBUG_EMAILFORM
-  | DEBUG_GEOCODING
-  | DEBUG_VUE
-  | DEBUG_SMAPS
-;
-export const DEBUG_NONE = 0;
+export {
+  DEBUG_ALL,
+  DEBUG_CSP,
+  DEBUG_EMAILFORM,
+  DEBUG_GENERAL,
+  DEBUG_GEOCODING,
+  DEBUG_L10N,
+  DEBUG_NONE,
+  DEBUG_QUERY,
+  DEBUG_REQUEST,
+  DEBUG_SMAPS,
+  DEBUG_TOOLTIPS,
+  DEBUG_VUE,
+} from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
 export const debugOptions = {
   [DEBUG_GENERAL]: t(appName, 'General Information'),
