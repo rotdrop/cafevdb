@@ -31,6 +31,7 @@ import {
   DEBUG_GEOCODING,
   DEBUG_L10N,
   // DEBUG_NONE,
+  DEBUG_ORM,
   DEBUG_QUERY,
   DEBUG_REQUEST,
   DEBUG_SMAPS,
@@ -46,6 +47,7 @@ export {
   DEBUG_GEOCODING,
   DEBUG_L10N,
   DEBUG_NONE,
+  DEBUG_ORM,
   DEBUG_QUERY,
   DEBUG_REQUEST,
   DEBUG_SMAPS,
@@ -54,16 +56,17 @@ export {
 } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
 export const debugOptions = {
-  [DEBUG_GENERAL]: t(appName, 'General Information'),
-  [DEBUG_QUERY]: t(appName, 'SQL Queries'),
   [DEBUG_CSP]: t(appName, 'CSP Violations'),
-  [DEBUG_L10N]: t(appName, 'L10N'),
-  [DEBUG_REQUEST]: t(appName, 'HTTP Requests'),
-  [DEBUG_TOOLTIPS]: t(appName, 'Missing Context Help'),
   [DEBUG_EMAILFORM]: t(appName, 'Mass Email Form'),
+  [DEBUG_GENERAL]: t(appName, 'General Information'),
   [DEBUG_GEOCODING]: t(appName, 'GeoCoding'),
-  [DEBUG_VUE]: t(appName, 'Vue JS Frontend'),
+  [DEBUG_L10N]: t(appName, 'L10N'),
+  [DEBUG_ORM]: t(appName, 'ORM (disable caching)'),
+  [DEBUG_QUERY]: t(appName, 'SQL Queries'),
+  [DEBUG_REQUEST]: t(appName, 'HTTP Requests'),
   [DEBUG_SMAPS]: t(appName, 'Resolve JS Sourceode'),
+  [DEBUG_TOOLTIPS]: t(appName, 'Missing Context Help'),
+  [DEBUG_VUE]: t(appName, 'Vue JS Frontend'),
 };
 
 export default debugOptions;

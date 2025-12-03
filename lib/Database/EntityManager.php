@@ -96,8 +96,6 @@ class EntityManager extends EntityManagerDecorator
   const ENTITY_PATHS = [
     __DIR__ . "/Doctrine/ORM/Entities",
   ];
-  const PROXY_DIR = __DIR__ . "/Doctrine/ORM/Proxies";
-  const DEV_MODE = true;
 
   /**
    * @var string
@@ -146,8 +144,11 @@ class EntityManager extends EntityManagerDecorator
   /** @var string */
   private $userId;
 
-  /** @var bool */
-  private $debug;
+  /** Enable SQL query logging */
+  private bool $debug = false;
+
+  /** Disable on-disk caching of ORM. */
+  private bool $devMode = false;
 
   /** @var bool */
   private $showSoftDeleted;
@@ -296,6 +297,7 @@ class EntityManager extends EntityManagerDecorator
       $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
+      $this->devMode = 0 != ($debugMode & ConfigConstants::DEBUG_ORM);
       $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';
       $this->decorateClassMetadata = true;
     }
@@ -587,13 +589,6 @@ class EntityManager extends EntityManagerDecorator
       ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
 
-
-    if (self::DEV_MODE) {
-      $config->setAutoGenerateProxyClasses(true);
-    } else {
-      $config->setAutoGenerateProxyClasses(false);
-    }
-
     $this->registerCustomFunctions($config);
 
     $config->addCustomHydrationMode('COLUMN_HYDRATOR', ColumnHydrator::class);
@@ -642,7 +637,8 @@ class EntityManager extends EntityManagerDecorator
   private function createSimpleConfiguration():array
   {
     $cache = null;
-    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache);
+    $config = ORMSetup::createAttributeMetadataConfig(self::ENTITY_PATHS, $this->devMode);
+    $config->enableNativeLazyObjects(true);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
       public function __construct(
@@ -699,12 +695,6 @@ class EntityManager extends EntityManagerDecorator
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
     $driverChain->addDriver($attributeDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
-
-    // general ORM configuration
-    //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
-    $config->setProxyDir(self::PROXY_DIR);
-    $config->setProxyNamespace('OCA\CAFEVDB\Database\Doctrine\ORM\Proxies');
-    $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
 
     // register metadata driver
     $config->setMetadataDriverImpl($driverChain);

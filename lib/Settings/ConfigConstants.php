@@ -46,7 +46,9 @@ class ConfigConstants
   public const DEBUG_GEOCODING = (1 << 7);
   public const DEBUG_VUE       = (1 << 8);
   public const DEBUG_SMAPS     = (1 << 9);
-  public const DEBUG_ALL       = self::DEBUG_GENERAL
+  public const DEBUG_ORM       = (1 << 10);
+  public const DEBUG_ALL       = 0
+    |self::DEBUG_GENERAL
     |self::DEBUG_QUERY
     |self::DEBUG_CSP
     |self::DEBUG_L10N
@@ -56,6 +58,7 @@ class ConfigConstants
     |self::DEBUG_GEOCODING
     |self::DEBUG_VUE
     |self::DEBUG_SMAPS
+    |self::DEBUG_ORM
     ;
   public const DEBUG_NONE      = 0;
 
