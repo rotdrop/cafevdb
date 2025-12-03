@@ -47,7 +47,7 @@ import type { NewMenuEntry } from '@nextcloud/files';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
-import type { FilesInitialState } from './types/initial-state.d.ts';
+import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
 import Console from './util/console.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import { UPLOAD_MODE_MOVE as UploadModeMove, ConflictResolutionRename } from './types/ajax/upload.ts';

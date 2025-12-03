@@ -28,7 +28,7 @@ import { getRequestToken } from '@nextcloud/auth';
 import { translate as t } from '@nextcloud/l10n';
 import logoSvg from '../img/cafevdb.svg?raw';
 import type { LegacyFileInfo } from '@nextcloud/files';
-import type { FilesInitialState } from './types/initial-state.d.ts';
+import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken() || '');

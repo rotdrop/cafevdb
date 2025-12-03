@@ -211,7 +211,7 @@ import type { Project } from '../stores/app-data.ts'
 import type { Contact, AddressBook, Musician } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import { tooltips } from '../util/tooltips.ts'
-import type { FilesInitialState as InitialState } from '../types/initial-state.d.ts'
+import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 import {
   MailMergeDataset,
   MailMergeDownload,

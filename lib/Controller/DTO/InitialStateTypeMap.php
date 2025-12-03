@@ -36,6 +36,7 @@ class InitialStateTypeMap extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
   public function __construct(
     public readonly CAFEVDBInitialState $CAFEVDB,
     public readonly PMEInitialState $PHPMyEdit,
+    public readonly FilesInitialState $files,
   ) {
   }
 }

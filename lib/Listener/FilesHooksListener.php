@@ -42,6 +42,7 @@ use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\DTO\FilesInitialState;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -186,7 +187,7 @@ class FilesHooksListener implements IEventListener
       $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
       $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('donation-receipts');
 
-      $initialState->provideInitialState('files', [
+      $initialState->provideInitialState('files', FilesInitialState::fromArray([
         'sharing' => [
           'files' => [
             'folders' => [
@@ -215,7 +216,7 @@ class FilesHooksListener implements IEventListener
           'addressBooks' => self::flattenAddressBooks($contactsManager->getUserAddressBooks()),
         ],
         EnumPersonalSettingsKey::DEBUG_MODE->value => $debugMode,
-      ]);
+      ]));
 
       // just admin contact and stuff to make the ajax error handlers work.
       // @todo Replace by more lightweight stuff

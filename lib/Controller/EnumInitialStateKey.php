@@ -41,4 +41,5 @@ enum EnumInitialStateKey: string
   case I_FRAME_CONTENT_SCRIPT = 'iFrameContentScript';
   case HISTORY_POST_DATA = 'historyPostData';
   case ADMIN_CONFIG = Admin::INITIAL_STATE_SECTION;
+  case FILES = 'files';
 }

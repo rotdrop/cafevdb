@@ -32,10 +32,18 @@ use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
-/** Test consistency of the PME intial statue DTO. */
-#[Attributes\CoversClass(DTO\PMEInitialState::class)]
-class PMEInitialStateTest extends TestCase
+/** Test consistency of the files initial state DTO. */
+#[Attributes\CoversClass(DTO\FilesInitialState::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStateContacts::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStatePersonal::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStateSharing::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStateSharingFiles::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStateSharingFilesFolders::class)]
+#[Attributes\CoversClass(DTO\FilesInitialStateSharingFilesSubFolders::class)]
+class FilesInitialStateTest extends TestCase
 {
   /**
    * {@inheritdoc}
@@ -53,19 +61,33 @@ class PMEInitialStateTest extends TestCase
 
     // test construction from an array in order to check consistency of the
     // used keys (constants). The actual values do not matter.
-    DTO\PMEInitialState::fromArray([
-      EnumPersonalSettingsKey::DIRECT_CHANGE->value => true,
-      EnumPersonalSettingsKey::SHOW_DISABLED->value => true,
-      EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value => true,
-      EnumPersonalSettingsKey::INITIAL_FILTER_VISIBILITY->value => true,
-      EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT->value => 20,
-      'selectChosen' => true,
-      'filterSelectPlaceholder' => '',
-      'filterSelectNoResult' => '',
-      'filterSelectChosenTitle' => '',
-      'inputSelectPlaceholder' => '',
-      'inputSelectNoResult' => '',
-      'inputSelectChosenTitle' => '',
+    DTO\FilesInitialState::fromArray([
+      'sharing' => [
+        'files' => [
+          'folders' => [
+            'root' => 'STRING',
+            'balances' => 'STRING',
+            'donationReceipts' => 'STRING',
+            'finance' => 'STRING',
+            'invoices' => 'STRING',
+            'projectBalances' => 'STRING',
+            'projectManagement' => 'STRING',
+            'templates' => 'STRING',
+          ],
+          'subFolders' => [
+            'supportingDocuments' => 'STRING',
+            'projectParticipants' => 'STRING',
+          ],
+        ],
+      ],
+      'personal' => [
+        'userId' => 'STRING',
+        'musicianId' => 1,
+      ],
+      'contacts' => [
+        'addressBooks' => ['THIS IS AN ARRAY'],
+      ],
+      EnumPersonalSettingsKey::DEBUG_MODE->value => ConfigConstants::DEBUG_ALL,
     ]);
   }
 }

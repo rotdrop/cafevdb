@@ -52,7 +52,7 @@ import getInitialState from '../toolkit/util/initial-state.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import type { AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
-import type { FilesInitialState as InitialState } from '../types/initial-state.d.ts'
+import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 
 const COMPONENT_NAME = 'SelectAddressBooks'
 const logger = new Console(COMPONENT_NAME)
