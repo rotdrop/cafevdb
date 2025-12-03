@@ -183,7 +183,7 @@ trait ConfigTrait
    *
    * @return mixed
    */
-  protected function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
+  protected function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null): mixed
   {
     return $this->configService->getUserValue($key, $default, $userId);
   }
@@ -195,11 +195,23 @@ trait ConfigTrait
    *
    * @param null|string $userId Use the current user if null.
    *
-   * @return mixed
+   * @return void
    */
-  protected function setUserValue(string $key, mixed $value, ?string $userId = null)
+  protected function setUserValue(string $key, mixed $value, ?string $userId = null): void
   {
-    return $this->configService->setUserValue($key, $value, $userId);
+    $this->configService->setUserValue($key, $value, $userId);
+  }
+
+  /**
+   * @param string $key Config key.
+   *
+   * @param null|string $userId Use the current user if null.
+   *
+   * @return void
+   */
+  protected function deleteUserValue(string $key, ?string $userId = null): void
+  {
+    $this->configService->deleteUserValue($key, $userId);
   }
 
   /**
