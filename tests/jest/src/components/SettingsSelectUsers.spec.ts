@@ -27,11 +27,9 @@ import {
   createLocalVue,
 } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import AdminSettings from '../../../../src/components/AdminSettings.vue';
+import VueComponent from '../../../../src/components/SettingsSelectUsers.vue';
 // import { loadState } from '@nextcloud/initial-state';
 import { expect, jest } from '@jest/globals';
-import { INITIAL_STATE_SECTION, AUTHORIZATION_GROUP_SUFFIXES } from '../../../../build/ts-types/php-modules/Settings/Admin.ts';
-import type { AdminInitialState } from '../../../../build/ts-types/php-modules/Settings.ts';
 import { Tooltip } from '@nextcloud/vue';
 
 jest.mock('@nextcloud/initial-state', () => {
@@ -49,26 +47,26 @@ jest.mock('@nextcloud/initial-state', () => {
             default:
               return null;
           }
-        case appName:
-          switch (section) {
-            case INITIAL_STATE_SECTION: {
-              const result: AdminInitialState = {
-                officeFonts: {},
-                authorizationGroupSuffixes: AUTHORIZATION_GROUP_SUFFIXES,
-                cloudUserBackend: 'LDAP',
-                haveCloudUserBackendConfig: false,
-                isAdmin: false,
-                isSubAdmin: false,
-                officeFontsFolder: '',
-                personalAppSettingsLink: '',
-                sharedFolder: '',
-                userAndGroupBackends: [],
-              };
-              return result;
-            }
-            default:
-              return null;
-          }
+        // case appName:
+        //   switch (section) {
+        //     case INITIAL_STATE_SECTION: {
+        //       const result: AdminInitialState = {
+        //         officeFonts: {},
+        //         authorizationGroupSuffixes: AUTHORIZATION_GROUP_SUFFIXES,
+        //         cloudUserBackend: 'LDAP',
+        //         haveCloudUserBackendConfig: false,
+        //         isAdmin: false,
+        //         isSubAdmin: false,
+        //         officeFontsFolder: '',
+        //         personalAppSettingsLink: '',
+        //         sharedFolder: '',
+        //         userAndGroupBackends: [],
+        //       };
+        //       return result;
+        //     }
+        //     default:
+        //       return null;
+        //   }
         default:
           return null;
       }
@@ -81,9 +79,18 @@ localVue.directive('tooltip', Tooltip);
 // @ts-expect-error 2769
 localVue.use(createTestingPinia());
 
-describe('AdminSettings component', () => {
+describe('SettingsSelectUsers component', () => {
+  const propsData = {
+    label: 'LABEL',
+    value: ['user1', 'user2'],
+    disabled: false,
+    loading: false,
+    loadingIndicator: true,
+  };
+
   it('should be a Vue instance', () => {
-    const wrapper = mount(AdminSettings, {
+    const wrapper = mount(VueComponent, {
+      propsData,
       localVue,
     });
     expect(wrapper.vm).toBeTruthy();
