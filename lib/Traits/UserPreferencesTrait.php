@@ -87,9 +87,9 @@ trait UserPreferencesTrait
    *
    * @param null|string $userId Use the current user if null.
    *
-   * @return mixed
+   * @return void
    */
-  public function deleteUserValue(string $key, ?string $userId = null)
+  public function deleteUserValue(string $key, ?string $userId = null): void
   {
     if ($userId === null) {
       $userId = method_exists($this, 'getUserId') ? $this->getUserId() : $this->userId;
