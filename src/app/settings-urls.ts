@@ -50,7 +50,7 @@ const generateSettingsUrl = (
  * @param [urlOptions] TBD.
  */
 const setPersonalUrl = (
-  url: EnumPersonalSettingsKey,
+  url: EnumPersonalSettingsKey|`${EnumPersonalSettingsKey}`,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
 ) => generateSettingsUrl('personal/set/' + url, urlParams, urlOptions);

@@ -74,12 +74,12 @@ export default defineStore(storeId, () => {
     }
   };
 
-  const failedTooltipMessage = (key: string) => (globalState.debugModes & DEBUG_TOOLTIPS)
+  const failedTooltipMessage = (key: string) => (globalState.debugMode & DEBUG_TOOLTIPS)
     ? t(appName, 'No information available, fetching the tooltip with key "{key}" failed.', { key })
     : ''; // shut up
 
   watch(
-    () => globalState.debugModes,
+    () => globalState.debugMode,
     () => {
       for (const key of failedKeys.value) {
         if (tooltipsData[key] !== undefined) {

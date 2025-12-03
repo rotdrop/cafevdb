@@ -61,7 +61,7 @@ const setter = (
       .done(async function(data) {
         showMessage(data.messages);
         console.log(data);
-        globalState.debugModes = data.value;
+        globalState.debugMode = data.value;
         resolve(data);
       })
       .fail(async function(xhr, status, errorThrown) {
