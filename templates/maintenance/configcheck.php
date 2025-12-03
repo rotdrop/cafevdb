@@ -165,7 +165,7 @@ group-administrator for the group `%s\'.',
     case EnumPersonalSettingsKey::ENCRYPTION_KEY->value:
       $key = EnumPersonalSettingsKey::ENCRYPTION_KEY->value;
       $encrkey = ${EnumPersonalSettingsKey::ENCRYPTION_KEY->value};
-      $encrkeyhash = ${ConfigConstants::ENCRYPTION_KEY_HASH_KEY};
+      $encrkeyhash = ${ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY};
       $error   = $cfgchk[$key]['message'];
 
       if (!empty($encrkey)) {
