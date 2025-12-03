@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "../../../../custom.d.ts",
+    "../../build/ts-types/**.ts",
+    "../../node_modules/is-plain-object/**.ts",
+    "../../node_modules/@nextcloud/**.ts",
+    "../../node_modules/@types/**.d.ts",
+    "../../node_modules/@files/**.ts",
+    "../../node_modules/@dialogs/**.ts",
+    "../../node_modules/@iframe-resizer/**.ts",
+    "../../node_modules/axios/**.ts",
+    "../../node_modules/camelcase/**.ts",
+    "../../node_modules/ckeditor5/**.ts",
+    "../../node_modules/moment/**.ts",
+    "../../node_modules/pinia/**.ts",
+    "../../node_modules/vue-router/**.ts",
+    "../../node_modules/vue/**.ts",
+    "../../node_modules/webpack/**.ts",
+    "../../src/**/*.ts",
+    "../../src/**/*.vue",
+    "../../src/*-shim.d.ts",
+    "../../src/*.ts",
+    "../../src/*.vue",
+    "./**.ts",
+    "./**/**.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "jest"
+    ],
+    "paths": {
+      "@/*": ["../../*"]
+    },
+    "isolatedModules": true
+  },
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "verbatimModuleSyntax": false
+    }
+  }
+}

@@ -21,8 +21,7 @@
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
     "./src/*.ts",
-    "./src/*.vue",
-    "./tests/jest/**.ts"
+    "./src/*.vue"
   ],
   "compilerOptions": {
     "types": [

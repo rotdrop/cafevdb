@@ -533,10 +533,20 @@ verifydb: $(ABSSRCDIR)/vendor-wrapped
 updatesql: $(ABSSRCDIR)/vendor-wrapped
 	$(ORM_CLI) orm:schema-tool:update --dump-sql
 
-.PHONY: test
-test: $(PHPUNIT)
+#@@ Runs integration test for PHP code
+phpunit: $(PHPUNIT)
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --coverage-html $(ABSBUILDDIR)/php-code-coverage
 	$(PHPUNIT) -c phpunit.integration.xml
+.PHONY: phpunit
+
+#@@ Runs integration test for TypeScript code
+jest: dev-setup
+	npm run jest
+.PHONY: jest
+
+#@@ Runs integration test for PHP and TypeScript code
+test: phpunit jest
+.PHONY: test
 
 .PHONY: l10n
 l10n: translationfiles/update.sh translationfiles/templates/cafevdb.pot
