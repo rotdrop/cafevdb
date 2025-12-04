@@ -28,36 +28,21 @@
  * @phpcs:disable Squiz.Commenting.FunctionComment.Missing
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
+namespace OCA\CAFEVDB\Controller\DTO\FilesInitialState;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Sharing;
-use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Personal;
-use OCA\CAFEVDB\Controller\DTO\FilesInitialState\Contacts;
 use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
 
-/**
- * Intial state emitted for key "files". Consistency between class members
- * and config / enum keys is ensured by unit testing with the fromArray
- * method.
- */
-class FilesInitialState extends AbstractDTO
+#[TSAttributes\InlineTypeScriptType]
+class Contacts extends AbstractDTO
 {
-  public readonly Sharing $sharing;
-  public readonly Personal $personal;
-  public readonly Contacts $contacts;
-
   /** {@inheritdoc} */
   public function __construct(
-    array|Sharing $sharing,
-    array|Personal $personal,
-    array|Contacts $contacts,
-    public readonly int $debugMode,
+    // @todo Also generate type AddressBookInfo via DTO.
+    #[TSAttributes\LiteralTypeScriptType('Record<number, AddressBookInfo>')]
+    public readonly array $addressBooks,
   ) {
-    $this->sharing = is_array($sharing) ? Sharing::fromArray($sharing) : $sharing;
-    $this->personal = is_array($personal) ? Personal::fromArray($personal) : $personal;
-    $this->contacts = is_array($contacts) ? Contacts::fromArray($contacts) : $contacts;
   }
 
   /**
@@ -72,10 +57,7 @@ class FilesInitialState extends AbstractDTO
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self(
-      sharing: $sharing,
-      personal: $personal,
-      contacts: $contacts,
-      debugMode: $debugMode,
+      addressBooks: $addressBooks,
     );
   }
 }

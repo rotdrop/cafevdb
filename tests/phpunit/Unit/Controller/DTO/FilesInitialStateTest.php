@@ -37,12 +37,12 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Test consistency of the files initial state DTO. */
 #[Attributes\CoversClass(DTO\FilesInitialState::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStateContacts::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStatePersonal::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStateSharing::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStateSharingFiles::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStateSharingFilesFolders::class)]
-#[Attributes\CoversClass(DTO\FilesInitialStateSharingFilesSubFolders::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\Contacts::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\Personal::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\Sharing::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\SharingFiles::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\SharingFilesFolders::class)]
+#[Attributes\CoversClass(DTO\FilesInitialState\SharingFilesSubFolders::class)]
 class FilesInitialStateTest extends TestCase
 {
   /**
