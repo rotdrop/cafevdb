@@ -53,7 +53,6 @@
     "guzzlehttp/promises": "2.2.0",
     "guzzlehttp/psr7": "2.7.1",
     "paragonie/constant_time_encoding": "v2.6.3",
-    "symfony/polyfill-php83": "v1.32.0",
     "symfony/translation-contracts": "v3.4.2",
     "symfony/translation": "v6.4.4"
   },
@@ -66,6 +65,11 @@
     "classmap": [
       "3rdparty/phpMyEdit/."
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OCA\\CAFEVDB\\DevScripts\\PhpToTypeScript\\": "dev-scripts/php-to-typescript"
+    }
   },
   "repositories": [
     {

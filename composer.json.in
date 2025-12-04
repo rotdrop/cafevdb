@@ -59,6 +59,9 @@
   "autoload": {
     "classmap": ["3rdparty/phpMyEdit/."]
   },
+  "autoload-dev": {
+    "psr-4": { "OCA\\CAFEVDB\\DevScripts\\PhpToTypeScript\\": "dev-scripts/php-to-typescript" }
+  },
   "repositories": [
     {
       "type": "path",
