@@ -93,6 +93,7 @@ class SealServiceTest extends TestCase
     $this->cloudCryptor->expects($this->never())->method('decrypt');
     $this->cryptoFactory->expects($this->atLeastOnce())->method('getSymmetricCryptor');
     $this->cryptoFactory->expects($this->never())->method('getAsymmetricCryptor');
+
     $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $this->assertInstanceOf(SealService::class, $sealService);
   }
@@ -101,18 +102,18 @@ class SealServiceTest extends TestCase
   public function testSealing():void
   {
     $this->cloudCryptor
-      ->expects($this->any())
+      ->expects($this->atLeastOnce())
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
     $this->cloudCryptor
-      ->expects($this->any())
+      ->expects($this->atLeastOnce())
       ->method('encrypt')
       ->willReturn(self::CLOUD_ENCRYPTED_BYTES);
 
     $cloudSymmetricCryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
 
     $this->cryptoFactory
-      ->expects($this->any())
+      ->expects($this->atLeastOnce())
       ->method('getSymmetricCryptor')
       ->willReturn($cloudSymmetricCryptor);
 
@@ -120,7 +121,7 @@ class SealServiceTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
     $keyCryptor
-      ->expects($this->any())
+      ->expects($this->atLeastOnce())
       ->method('encrypt')
       ->willReturn(self::ENCRYPTED_BYTES);
     $keyCryptor
@@ -147,8 +148,11 @@ class SealServiceTest extends TestCase
   /** @return void */
   public function testSealValidation():void
   {
+    $this->cryptoFactory->expects($this->atLeastOnce())->method('getSymmetricCryptor');
+    $this->cryptoFactory->expects($this->never())->method('getAsymmetricCryptor');
+
     $this->cloudCryptor
-      ->expects($this->any())
+      ->expects($this->never())
       ->method('encrypt')
       ->willReturn(self::ENCRYPTED_BYTES);
 
@@ -156,11 +160,11 @@ class SealServiceTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
     $keyCryptor
-      ->expects($this->any())
+      ->expects($this->atMost(2))
       ->method('encrypt')
       ->willReturn(self::ENCRYPTED_BYTES);
     $keyCryptor
-      ->expects($this->any())
+      ->expects($this->never())
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
 

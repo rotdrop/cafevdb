@@ -64,12 +64,10 @@ trait EntityGeneratorTrait
     $mockProvider = \OCP\Server::get(MockProvider::class);
 
     if ($persist) {
-      $entityManager = $mockProvider->getEntityManager($this);
-      $entityManager->getWrappedObject();
+      $entityManager = $mockProvider->getEntityManager($this)
+        ->getWrappedObject();
     } else {
-      $entityManager = $this->getMockBuilder(EntityManager::class)
-        ->disableOriginalConstructor()
-        ->getMock();
+      $entityManager = $this->createStub(EntityManager::class);
     }
 
     $appContainer = $mockProvider->getAppContainer($this);

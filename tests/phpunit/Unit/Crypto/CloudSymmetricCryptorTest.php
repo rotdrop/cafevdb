@@ -64,8 +64,9 @@ class CloudSymmetricCryptorTest extends TestCase
   /** @return void */
   public function testConstruction():void
   {
+    // dummy expectation.
+    $this->cloudCryptor->expects($this->never())->method('encrypt');
     $cryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
-
     $this->assertInstanceOf(CloudSymmetricCryptor::class, $cryptor);
   }
 

@@ -114,6 +114,7 @@ class AqBankingBulkTransactionExporterTest extends TestCase
         return self::CONFIG_MOCK[$configKey];
       },
     );
+    $configService->expects($this->atLeastOnce())->method('getConfigValue');
 
      $this->exporter = new Service\Finance\AqBankingBulkTransactionExporter(
        $configService,

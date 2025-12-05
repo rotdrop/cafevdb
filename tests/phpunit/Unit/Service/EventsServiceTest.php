@@ -94,7 +94,9 @@ class EventsServiceTest extends TestCase
   /** @return void */
   public function testEvents(): void
   {
-    // @todo insert fake events, until then this must be empty.
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
     $events = $this->eventsService->events($this->project->getId());
     $this->assertEquals($this->project->getCalendarEvents()->count(), count($events));
   }
@@ -102,6 +104,10 @@ class EventsServiceTest extends TestCase
   /** @return void */
   public function testDefaultCalendars(): void
   {
+    $this->entityManager->expects($this->never())->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->never())->method('getCalendarObject');
+
     $calendars = $this->eventsService->defaultCalendars();
     $this->assertEquals($this->defaultCalendars, $calendars);
   }
@@ -109,6 +115,10 @@ class EventsServiceTest extends TestCase
   /** @return void */
   public function testEventMatrix(): void
   {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->atLeastOnce())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
+
     $events = $this->eventsService->events($this->project->getId());
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
@@ -118,6 +128,10 @@ class EventsServiceTest extends TestCase
   /** @return void */
   public function testCategories(): void
   {
+    $this->entityManager->expects($this->never())->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->never())->method('getCalendarObject');
+
     $recordAbsence = $this->eventsService->getRecordAbsenceCategory(translate: false);
     $this->assertEquals($recordAbsence, EventsService::RECORD_ABSENCE_CATEGORY);
     $registrationCategory = $this->eventsService->getProjectRegistrationCategory(translate: false);
@@ -127,6 +141,10 @@ class EventsServiceTest extends TestCase
   /** @return void */
   public function testL10NCategories(): void
   {
+    $this->entityManager->expects($this->never())->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->never())->method('getCalendarObject');
+
     $appL10N = $this->appContainer->get(\OCA\CAFEVDB\Service\Registration::APP_L10N);
     $recordAbsence = $this->eventsService->getRecordAbsenceCategory(translate: true);
     $this->assertEquals($recordAbsence, $appL10N->t(EventsService::RECORD_ABSENCE_CATEGORY));

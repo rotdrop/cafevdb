@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller\ProjectsController;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\DTO\EventMatrixRow;
 use OCA\CAFEVDB\Service\EventsService;
@@ -97,30 +98,20 @@ class ProjectsControllerTest extends TestCase
     $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
 
     /** @var IRequest $request */
-    $request = $this->getMockBuilder(IRequest::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $request = $this->createStub(IRequest::class);
     $this->mockProvider->registerClassInstance(IRequest::class, $request);
 
     /** @var PHPMyEdit $pme */
-    $pme = $this->getMockBuilder(PHPMyEdit::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $pme = $this->createStub(PHPMyEdit::class);
 
     /** @var UserStorage $userStorage */
-    $userStorage = $this->getMockBuilder(UserStorage::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $userStorage = $this->createStub(UserStorage::class);
 
     /** @var ProjectParticipantFieldsService $projectParticipantFieldsService */
-    $projectParticipantFieldsService = $this->getMockBuilder(ProjectParticipantFieldsService::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $projectParticipantFieldsService = $this->createStub(ProjectParticipantFieldsService::class);
 
     /** @var MusicianService $musiciansService */
-    $musiciansService = $this->getMockBuilder(MusicianService::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $musiciansService = $this->createStub(MusicianService::class);
 
     $projectService = new ProjectService(
       configService: $this->configService,
@@ -144,6 +135,9 @@ class ProjectsControllerTest extends TestCase
   /** @return void */
   public function testGetEventMatrix(): void
   {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->atLeastOnce())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
     $response = $this->projectsController->get(
       $this->project->getId(),
       ProjectsController::GET_EVENT_MATRIX,

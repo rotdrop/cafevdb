@@ -89,6 +89,10 @@ trait SetupEventsServiceTrait
 
   private MockProvider $mockProvider;
 
+  private CalDavBackend $calDavBackend;
+
+  private CalendarManager $calendarManager;
+
   /**
    * {@inheritdoc}
    *
@@ -123,11 +127,11 @@ trait SetupEventsServiceTrait
     }
     self::addProjectEvents($this->project, $this->defaultCalendars);
 
-    /** @var CalDavBackend $calDavBackend */
-    $calDavBackend = $this->getMockBuilder(CalDavBackend::class)
+    /** @var CalDavBackend $this->calDavBackend */
+    $this->calDavBackend = $this->getMockBuilder(CalDavBackend::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $calDavBackend->method('getCalendarObject')
+    $this->calDavBackend->method('getCalendarObject')
       ->willReturnCallback(
         function(
           $calendarId,
@@ -143,7 +147,7 @@ trait SetupEventsServiceTrait
           return null;
         },
       );
-    $calDavBackend->method('getCalendarById')
+    $this->calDavBackend->method('getCalendarById')
       ->willReturnCallback(
         function(int $calendarId): ?array {
           if ($calendarId < 1 || $calendareId > count($this->defaultCalendars)) {
@@ -158,17 +162,18 @@ trait SetupEventsServiceTrait
       );
 
     /** @var CalendarManager $calendarManager */
-    $calendarManager = $this->getMockBuilder(CalendarManager::class)
+    $this->calendarManager = $this->getMockBuilder(CalendarManager::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $calendarManager->method('getCalendars')
+    $this->calendarManager->method('getCalendars')
       ->willReturnCallback(
         function() use ($l) : array {
           $calendars = [];
           foreach ($this->defaultCalendars as $uri => $id) {
-            $calendar = $this->getMockBuilder(ICalendar::class)
-              ->disableOriginalConstructor()
-              ->getMock();
+            $calendar = $this->createStub(ICalendar::class);
+            // $calendar = $this->getMockBuilder(ICalendar::class)
+            //   ->disableOriginalConstructor()
+            //   ->getMock();
             $calendar->method('getKey')->willReturn((string)$id);
             $calendar->method('getdisplayName')->willReturn($l->t(ucfirst($uri) . ' (calendar.owner)'));
             $calendars[] = $calendar;
@@ -179,8 +184,8 @@ trait SetupEventsServiceTrait
 
     $calDavService = new CalDavService(
       configService: $this->configService,
-      calendarManager: $calendarManager,
-      calDavBackend: $calDavBackend,
+      calendarManager: $this->calendarManager,
+      calDavBackend: $this->calDavBackend,
     );
 
     $this->entityManager = $this->getMockBuilder(EntityManager::class)
@@ -207,6 +212,7 @@ trait SetupEventsServiceTrait
               },
             );
             $repository->method('getEntityManager')->willReturn($this->entityManager);
+            $repository->expects($this->never())->method('getEntityManager');
             return $repository;
 
           case Entities\Project::class:
@@ -216,7 +222,7 @@ trait SetupEventsServiceTrait
             $repository->method('find')->willReturnCallback(
               fn(int $projectId) => $this->project->getId() == $projectId ? $this->project : null,
             );
-            $repository->method('getEntityManager')->willReturn($this->entityManager);
+            $repository->expects($this->never())->method('getEntityManager')->willReturn($this->entityManager);
             return $repository;
 
         }
@@ -225,9 +231,7 @@ trait SetupEventsServiceTrait
     );
 
     /** @var ProjectService $projectService */
-    $projectService = $this->getMockBuilder(ProjectService::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $projectService = $this->createStub(ProjectService::class);
 
     $vCalendarService = new VCalendarService(
       configService: $mockProvider->getConfigService(),
@@ -255,7 +259,10 @@ trait SetupEventsServiceTrait
    */
   public function testSetup(): void
   {
-    $this->expectNotToPerformAssertions();
+    $this->entityManager->expects($this->never())->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->never())->method('getCalendarObject');
+    // $this->expectNotToPerformAssertions();
   }
 
   /**
