@@ -119,10 +119,10 @@ skip-networking
       '--log-error=' . $serverErrorFile,
     ]);
     $this->databaseProcess->start();
-    $timeout = 1000;
+    $timeout = 10000;
     while (!file_exists($serverErrorFile) && $timeout > 0) {
       --$timeout;
-      usleep(1);
+      usleep(10);
     }
     if (!file_exists($serverErrorFile)) {
       throw new RuntimeException('Server might not have been started successfully ' . $this->databaseProcess->getErrorOutput() . ' ' . $timeout);
