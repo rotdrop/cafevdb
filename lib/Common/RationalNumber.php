@@ -70,7 +70,9 @@ class RationalNumber extends Rational
 
   /**
    * Generator method. If called with only one argument try to gracefully
-   * convert the argument to RationalNumber.
+   * convert the argument to RationalNumber. Passing even null as first
+   * argument will create a representation of zero as RationalNumber. Empty
+   * strings will also generate a zero.
    *
    * @param int|float|string|RationalNumber $integralPartOrAny
    *
@@ -81,7 +83,7 @@ class RationalNumber extends Rational
    * @return RationalNumber
    */
   public static function create(
-    int|float|string|Rational $integralPartOrAny,
+    null|int|float|string|Rational $integralPartOrAny = null,
     ?int $numerator = null,
     ?int $denominator = null,
   ):RationalNumber {
@@ -95,12 +97,14 @@ class RationalNumber extends Rational
       }
       if (is_float($integralPartOrAny)) {
         return static::fromFloat($integralPartOrAny);
-      } elseif (is_string($integralPartOrAny)) {
+      } elseif (!empty($integralPartOrAny) && is_string($integralPartOrAny)) {
         return static::fromDecimal($integralPartOrAny);
       } elseif ($integralPartOrAny instanceof RationalNumber) {
         return clone $integralPartOrAny;
       } elseif ($integralPartOrAny instanceof Rational) {
         return self::fromRational($integralPartOrAny);
+      } elseif (empty($integralPartOrAny)) {
+        return self::zero();
       }
     }
     return new RationalNumber($integralPartOrAny, $numerator ?? 0, $denominator ?? 1);
