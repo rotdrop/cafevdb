@@ -80,6 +80,7 @@ class SealServiceTest extends TestCase
     $this->cloudLogger = $this->getMockBuilder(LoggerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
+    $this->cloudLogger->expects($this->never())->method('error');
 
     $this->cloudCryptor = $this->getMockBuilder(ICrypto::class)
       ->disableOriginalConstructor()
@@ -89,6 +90,9 @@ class SealServiceTest extends TestCase
   /** @return void */
   public function testConstruction():void
   {
+    $this->cloudCryptor->expects($this->never())->method('decrypt');
+    $this->cryptoFactory->expects($this->atLeastOnce())->method('getSymmetricCryptor');
+    $this->cryptoFactory->expects($this->never())->method('getAsymmetricCryptor');
     $sealService = new SealService($this->cryptoFactory, $this->cloudLogger);
     $this->assertInstanceOf(SealService::class, $sealService);
   }
