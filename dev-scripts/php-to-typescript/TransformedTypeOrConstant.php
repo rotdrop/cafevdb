@@ -64,6 +64,7 @@ class TransformedTypeOrConstant extends TransformedType
     bool $inline = false,
     string $keyword = 'type',
     bool $trailingSemicolon = true,
+    ?array $templateTypes = null,
   ): self {
     return new self($class, $name, $transformed, $missingSymbols ?? new MissingSymbolsCollection(), $inline, $keyword, $trailingSemicolon);
   }
