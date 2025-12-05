@@ -24,12 +24,13 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+
 use InvalidArgumentException;
 use OutOfBoundsException;
 
 use MathPHP\Number\Rational;
-
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
  * Rational numbers, exact fractions. This is mainly useful in a context where
@@ -38,6 +39,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
  */
 #[TSAttributes\TypeScript]
 #[TSAttributes\LiteralTypeScriptType('string')]
+#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
 class RationalNumber extends Rational
 {
   /**
