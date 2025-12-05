@@ -30,7 +30,7 @@ use UnexpectedValueException;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\ORM as AppORM;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -58,10 +58,10 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\HasLifecycleCallbacks]
 class CompositePayment implements \ArrayAccess, \JsonSerializable
 {
-  use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\DateTimeTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use AppORM\Traits\ArrayTrait;
+  use AppORM\Traits\FactoryTrait;
+  use AppORM\Traits\DateTimeTrait;
+  use AppORM\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   const SUBJECT_PREFIX_LIMIT = 16;
@@ -85,7 +85,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * field?
    */
   #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
-  private RationalNumber $amount;
+  private \OCA\CAFEVDB\Common\RationalNumber $amount;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]
   private ?DateTimeImmutable $dateOfReceipt = null;

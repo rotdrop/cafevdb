@@ -68,9 +68,19 @@ class ChangeLog
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private ?string $col;
 
+  /**
+   * @var string
+   *
+   * This is actually serialized PHP data so in principle 'blob' is not necessary.
+   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private /* resource */ $oldval;
 
+  /**
+   * @var string
+   *
+   * This is actually serialized PHP data so in principle 'blob' is not necessary.
+   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private /* resource */ $newval;
 

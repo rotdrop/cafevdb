@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -85,7 +86,15 @@ class FileData implements \ArrayAccess
   )]
   protected $dataHash;
 
+  /**
+   * @var resource
+   *
+   * Although this is a resource the type-hint helps the type-script
+   * transformer to generate a useful type. In principle this finally should
+   * yield an ArrayBuffer, probably.
+   */
   #[ORM\Column(type: 'blob', nullable: false)]
+  #[TSAttributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

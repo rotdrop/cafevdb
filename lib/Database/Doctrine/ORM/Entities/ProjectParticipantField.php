@@ -100,9 +100,6 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'Due-date of deposit for financial fields.'])]
   private ?DateTimeImmutable $depositDueDate = null;
 
-  /**
-   * @var null|ProjectParticipantFieldDataOption
-   */
   #[ORM\JoinColumn(name: 'id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'default_value', referencedColumnName: 'key', nullable: true)]
   #[ORM\OneToOne(targetEntity: ProjectParticipantFieldDataOption::class, cascade: ['persist'])]
