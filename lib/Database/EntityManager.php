@@ -443,7 +443,7 @@ class EntityManager extends EntityManagerDecorator
         }
       }
     } catch (Throwable $t) {
-      if (str_contains($this->request->getPathInfo(), 'apps/' . $this->appName)) {
+      if (str_contains($this->request->getPathInfo() ?? '', 'apps/' . $this->appName)) {
         $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params[ConfigConstants::APP_DB_NAME]);
       }
       return false;
