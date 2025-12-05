@@ -25,6 +25,8 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 
+ini_set('display_errors', 'stderr');
+
 /*-****************************************************************************
  *
  * Inject NC app setup

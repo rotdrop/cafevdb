@@ -32,7 +32,9 @@ use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
@@ -40,7 +42,6 @@ use Spatie\TypeScriptTransformer\TypeScriptTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Types\TypeScriptType;
 
-use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Wrapped\Carbon;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
@@ -245,11 +246,6 @@ class PhpToTypeScript extends Command
       }
     }
 
-    $stripNameSpaceSection = $output->section();
-    ($modulesSection = $output->section())->setMaxHeight(1);
-    ($metaDataSection = $output->section())->setMaxHeight(10);
-    $summarySection = $output->section();
-
     foreach ($this->configInfo as $outputName => $outputInfo) {
       $outputFile = $outputPrefix . self::PHP_PREFIX . $outputName . self::OUTPUT_SUFFIX;
 
@@ -287,6 +283,8 @@ class PhpToTypeScript extends Command
         ])
         // try inject default TypeScriptTransformer
         ->defaultInlineTypeReplacements([
+          // 'mixed' => 'unknown',
+          // 'array' => new TypeScriptType('Record<string|number, unknown>'),
           // Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
           // Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
           // UuidInterface::class => new TypeScriptType('string'),
@@ -309,31 +307,38 @@ class PhpToTypeScript extends Command
       $types = TypeScriptTransformer::create($config)->transform();
 
       if (!empty($tsNameSpacePrefix)) {
-        $stripNameSpaceSection->writeln('Stripping namespace ' . $tsNameSpacePrefix);
-        $this->stripNameSpacePrefix($tsNameSpacePrefix, $outputFile);
+        $output->writeln('<info>' . 'Stripping namespace ' . $tsNameSpacePrefix . '</>');
+        $this->fixupTypeScriptTransformer($tsNameSpacePrefix, $outputFile, $output);
       }
-      if ($input->getOption(self::OPTION_AS_MODULES)) {
-        $this->generateTypeScriptModules($outputPrefix, $outputFile, $modulesSection);
 
+      if ($input->getOption(self::OPTION_AS_MODULES)) {
         $metadataGenerator = new GenerateEntityMetadata(
           phpNameSpacePrefix: $input->getOption(self::OPTION_NS_PREFIX),
-          outputPrefix: $outputPrefix . '/' . self::TS_MODULES_DIR,
-          output: $metaDataSection,
+          outputPrefix: $outputPrefix . self::TS_MODULES_DIR,
+          output: $output,
         );
         $metadataGenerator->generateSparseMetadata();
+        $entityMapNameSpace = $metadataGenerator->exportEntityMap();
+        $tsData = file_get_contents($outputFile);
+        $tsData = $entityMapNameSpace . "\n" . $tsData;
+        file_put_contents($outputFile, $tsData);
+
+        $this->generateTypeScriptModules($outputPrefix, $outputFile, $output);
+
+        $metadataGenerator->dumpTypeScriptData();
       }
     }
 
 
-    if ($summarySection->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-      $summarySection->writeln('');
-      $summarySection->writeln('<info> *** ' . $outputName . ' *** </info>');
+    if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+      $output->writeln('');
+      $output->writeln('<info> *** ' . $outputName . ' *** </info>');
       /** @var TransformedType $type */
       foreach ($types as $class => $type) {
-        $summarySection->writeln('<info>' . $class . ' -> ' . $type->getTypeScriptName() . '</info>');
+        $output->writeln('<info>' . $class . ' -> ' . $type->getTypeScriptName() . '</info>');
       }
-      $summarySection->writeln('---------------------------------------------');
-      $summarySection->writeln('');
+      $output->writeln('---------------------------------------------');
+      $output->writeln('');
     }
 
     return Command::SUCCESS;
@@ -346,9 +351,10 @@ class PhpToTypeScript extends Command
    *
    * @return void
    */
-  private function stripNameSpacePrefix(
+  private function fixupTypeScriptTransformer(
     string $tsNameSpacePrefix,
     string $outputFile,
+    ConsoleOutputInterface $output,
   ): void {
     // strip the top-level namespace as requested and record "root" data types.
     $tsData = null;
@@ -365,16 +371,27 @@ class PhpToTypeScript extends Command
       ],
       file_get_contents($outputFile),
     );
-    // remove also a namespace prefix pointing into the current namespace
-    if (str_starts_with($tsData, self::NS_DECLARATION)) {
-      $offset = strlen(self::NS_DECLARATION) + 1;
-      $len = strpos($tsData, '{') - 1 - $offset;
-      $thisNS = substr($tsData, $offset, $len);
-      if (!empty($thisNS)) {
-        $thisNS .= '.';
-        $tsData = str_replace(': ' . $thisNS, ': ', $tsData);
-      }
+    // fixup [key: EnumType]
+    //
+    // TS error 1337 "... consider using a mapped type instead"
+    //
+    // This is difficult to handle inside Spatie\TypeScriptTransformer ... we
+    // exploit the fact that our Enum-types have an "Enum" in their name. This
+    // is kludgy, but should work.
+    //
+    // e.g.
+    // insuranceRates: { [key: Types.EnumGeographicalScope]: InsuranceRate };
+    $tsFile = fopen('php://temp', 'r+');
+    fputs($tsFile, $tsData);
+    rewind($tsFile);
+    $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
+    $tsData = '';
+    while ($line !== false) {
+      $line = preg_replace('/\\[([[:alnum:]]+):\s*([^]]*Enum[^]]*)\\]/', '[$1 in $2]', $line);
+      $tsData .= $line . "\n";
+      $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
     }
+    fclose($tsFile);
     file_put_contents($outputFile, $tsData);
   }
 
@@ -390,14 +407,16 @@ class PhpToTypeScript extends Command
   private function generateTypeScriptModules(
     string $outputPrefix,
     string $outputFile,
-    OutputInterface|ConsoleSectionOutput $output,
+    ConsoleOutputInterface $output,
   ): void {
+    $headerSection = $output->section();
+    $textSection = $output->section();
+    $textSection->setMaxHeight(5);
+    $progressSection = $output->section();
     $generator = basename(__FILE__);
     $modulesDir = $outputPrefix . '/' . self::TS_MODULES_DIR . '/';
     mkdir($modulesDir);
-    if ($tsData === null) {
-      $tsData = file_get_contents($outputFile);
-    }
+    $tsData = file_get_contents($outputFile);
     $topLevelTypes = [];
     $currentModule = null;
     $currentFullNS = null;
@@ -408,16 +427,21 @@ class PhpToTypeScript extends Command
     $tsFile = fopen('php://temp', 'r+');
     fputs($tsFile, $tsData);
     // First scan: collect all namespaces
+    $numberOfLines = substr_count($tsData, PHP_EOL);
+    $headerSection->writeln('<info>' . 'Scanning for namespaces ...' . '</>');
+    $progressBar = new ProgressBar($progressSection);
+    $progressBar->start($numberOfLines);
     rewind($tsFile);
     $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
     while ($line !== false) {
+      $progressBar->advance();
       $line = rtrim($line, PHP_EOL);
       $backticksCount = substr_count($line, '`');
       if (!$templateString && $backticksCount == 0) {
         if (str_starts_with($line, self::NS_DECLARATION)) {
           $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
           $currentFullNS = implode('.', $nameSpaces);
-          $output->writeln('Current FQ NameSpace ' . $currentFullNS, options: OutputInterface::VERBOSITY_NORMAL);
+          $textSection->writeln('Current FQ NameSpace ' . $currentFullNS, options: OutputInterface::VERBOSITY_NORMAL);
           $allNameSpaces[] = $currentFullNS;
           $allNameSpaces = array_values(array_unique($allNameSpaces));
         } elseif (str_starts_with($line, self::TYPE_DECLARATION)) {
@@ -438,9 +462,13 @@ class PhpToTypeScript extends Command
     // Second run: emit typedefs, replace namespaces as appropriate
     $templateString = false;
     $currentFullNS = null;
+
+    $headerSection->writeln('<info>' . 'Adjusting namespace references ...' . '</>');
+    $progressBar->start($numberOfLines);
     rewind($tsFile);
     $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
     while ($line !== false) {
+      $progressBar->advance();
       $line = rtrim($line, PHP_EOL);
       $backticksCount = substr_count($line, '`');
       if (!$templateString && $backticksCount == 0) {
@@ -498,19 +526,42 @@ EOF;
             }
           }
           $line = str_replace($currentFullNS . '.', '', $line);
-          [,$typeSpec] = explode(':', $line);
+          [,$typeSpec] = explode(':', $line, 2);
           foreach ($allNameSpaces as $existingNameSpace) {
-            if (preg_match('/[[:^alnum:]]' . preg_quote($existingNameSpace . '.') . '/', $typeSpec)) {
+            // if (preg_match('/[[:^alnum:]]' . preg_quote($existingNameSpace . '.') . '/', $typeSpec)) {
+            if (preg_match('/(([^:]+):|export type)(.*)([[:^alnum:]])(' . preg_quote($existingNameSpace . '.') . ')/', $line)) {
               $selfNS = explode('.', $currentFullNS);
               $refNS = explode('.', $existingNameSpace);
-              $output->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace, options: OutputInterface::VERBOSITY_NORMAL);
+              $textSection->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace, options: OutputInterface::VERBOSITY_NORMAL);
               $prefix = [];
-              do {
+              // Database.Doctrine.ORM.EntityMetadata
+              // Database.Doctrine.ORM.Util
+              // Database.Doctrine.ORM.EntityMetadata.EntityMap
+              //
+              //  Wrapped.Carbon.CarbonImmutable
+              //  Database.Doctrine.ORM.Entities
+              while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS)) {
                 array_shift($selfNS);
                 $importNameSpace = array_shift($refNS);
                 $prefix[] = $importNameSpace;
-              } while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS));
-              array_pop($prefix);
+              }
+              // do {
+              //   array_shift($selfNS);
+              //   $importNameSpace = array_shift($refNS);
+              //   $prefix[] = $importNameSpace;
+              // } while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS));
+              // EntityMetadata
+              // Util
+              // prefix = [ Database, Doctrine, ORM ]
+              //
+              //
+              if (!empty($selfNS) && !empty($refNS)) {
+                // can move one level further down.
+                array_shift($selfNS);
+                $importNameSpace = array_shift($refNS);
+              } else {
+                array_pop($prefix);
+              }
               if (empty($prefix)) {
                 $erasePrefix = '';
               } else {
@@ -523,9 +574,8 @@ EOF;
                 $importNameSpace = array_shift($refNS);
                 $importPath .= '/' . $importNameSpace;
               }
-              // $output->writeln('PREFIX ' . $prefix . ' ' . print_r($selfNS, true) . print_r($refNS, true));
               $line = str_replace($erasePrefix . $importNameSpace . '.', $importNameSpace . '.', $line);
-              $headerData[] = "import * as {$importNameSpace} from '{$importPath}.ts';";
+              $headerData[] = "import type * as {$importNameSpace} from '{$importPath}.ts';";
             }
           }
           $currentData .= $line . PHP_EOL;
