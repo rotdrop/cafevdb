@@ -109,7 +109,7 @@ class ClassConstantsTransformer implements Transformer
         foreach ($value as $key => $member) {
           $member = self::convertValueToTypeScript($member, $level + 1);
           if (str_contains($key, ' ')) {
-            $key = "['{$key}']";
+            $key = "'{$key}'";
           }
           $result .= str_pad('', ($level + 1) * 2) . "{$key}: {$member} as const," . PHP_EOL;
         }
