@@ -68,7 +68,7 @@ class ProgressStatusController extends Controller
     try {
       $progress = $this->progressStatusService->get($id);
     } catch (Throwable $t) {
-      $this->logger->logException($t);
+      $this->logException($t);
       return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
     if (empty($progress)) {
@@ -95,7 +95,7 @@ class ProgressStatusController extends Controller
           );
           return self::progressResponse($progress);
         } catch (Throwable $t) {
-          $this->logger->logException($t);
+          $this->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         break;
@@ -103,7 +103,7 @@ class ProgressStatusController extends Controller
         try {
           $progress = $this->progressStatusService->get($this->request['id']);
         } catch (Throwable $t) {
-          $this->logger->logException($t);
+          $this->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         try {
@@ -113,7 +113,7 @@ class ProgressStatusController extends Controller
           $progress->update($current, $target, $data);
           return self::progressResponse($progress);
         } catch (Throwable $t) {
-          $this->logger->logException($t);
+          $this->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         break;
@@ -121,14 +121,14 @@ class ProgressStatusController extends Controller
         try {
           $progress = $this->progressStatusService->get($this->request['id']);
         } catch (Throwable $t) {
-          $this->logger->logException($t);
+          $this->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         try {
           $progress->delete();
           return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
         } catch (Throwable $t) {
-          $this->logger->logException($t);
+          $this->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
       case 'test':

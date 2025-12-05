@@ -100,7 +100,7 @@ class BlogController extends Controller
       try {
         $entry = $this->blogMapper->find($blogId);
       } catch (Throwable $t) {
-        $this->logger->logException($t);
+        $this->logException($t);
         return self::grumble($this->l->t('Error, caught an exception `%s\'.', [$t->getMessage()]));
       }
       if (!$entry) {
