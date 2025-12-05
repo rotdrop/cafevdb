@@ -24,15 +24,24 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
+#[TSAttributes\TemplateParameters('K extends keyof Database.Doctrine.ORM.EntityMetadata.EntityMap')]
 class EntityReferenceCollection extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
+    #[TSAttributes\LiteralTypeScriptType('K')]
     public readonly string $entityClassName,
-    /** @var Collection<string, EntityReference> */
+    /**
+     * @var Collection<string, EntityReference>
+     *
+     * The array key is whatever has been specified by "indexBy".
+     */
+    #[TSAttributes\LiteralTypeScriptType('{ [index: string|number]: Database.Doctrine.ORM.Util.EntityReference<keyof Database.Doctrine.ORM.EntityMetadata.EntityMap> }')]
     public readonly array $entities,
   ) {
   }

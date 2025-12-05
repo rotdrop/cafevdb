@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * A collection of entities without duplicates.
  */
@@ -31,9 +33,11 @@ class EntityResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    /** @var array<string, array> */
+    /** @var array<string, array<string> > */
+    #[TSAttributes\LiteralTypeScriptType('{ [e in keyof Database.Doctrine.ORM.EntityMetadata.EntityMap]: string[] }')]
     public readonly array $entities,
-    /** @var array<string, array> */
+    /** @var array<string, array<string, object> > */
+    #[TSAttributes\LiteralTypeScriptType('{ [e in keyof Database.Doctrine.ORM.EntityMetadata.EntityMap]: { [id: string]: Database.Doctrine.ORM.EntityMetadata.EntityMap[e] } }')]
     public readonly array $repositories,
   ) {
   }

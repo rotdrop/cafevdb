@@ -24,14 +24,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
+#[TSAttributes\TemplateParameters('K extends keyof Database.Doctrine.ORM.EntityMetadata.EntityMap')]
 class EntityReference extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
     public readonly string $flatIdentifier,
+    #[TSAttributes\LiteralTypeScriptType('K')]
     public readonly ?string $entityClassName = null,
   ) {
   }
