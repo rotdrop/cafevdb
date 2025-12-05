@@ -539,9 +539,12 @@ phpunit: $(PHPUNIT)
 	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: phpunit
 
-#@@ Runs integration test for TypeScript code
-jest: dev-setup
+run-jest:
 	npm run jest
+.PHONY: run-jest
+
+#@@ Runs integration test for TypeScript code
+jest: dev-setup run-jest post-build
 .PHONY: jest
 
 #@@ Runs integration test for PHP and TypeScript code
