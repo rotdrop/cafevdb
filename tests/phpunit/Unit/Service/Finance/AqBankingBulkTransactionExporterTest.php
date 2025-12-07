@@ -85,7 +85,7 @@ class AqBankingBulkTransactionExporterTest extends TestCase
   }
 
   private const CONFIG_MOCK = [
-    ConfigConstants::BANK_ACCOUNT_OWNER => 'Orchester e.V.',
+    ConfigConstants::BANK_ACCOUNT_OWNER => 'Örchester e.V.',
     ConfigConstants::BANK_ACCOUNT_IBAN => 'DE07123412341234123412',
     ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER => 'DEPPZZZ0NNNNNNNNNN',
     ConfigConstants::BANK_ACCOUNT_BIC => 'MARKDEFFXXX',
@@ -148,8 +148,8 @@ class AqBankingBulkTransactionExporterTest extends TestCase
     $data = $this->exporter->fileData($transfer);
     $expectedData =<<< EOF
 localBic;localIban;localName;remoteBic;remoteIban;remoteName;executionDate;value/value;value/currency;purpose[0];purpose[1];purpose[2];purpose[3]
-MARKDEFFXXX;DE07123412341234123412;Orchester e.V.;BYLADEM1001;DE02120300000000202051;Inhaber*in, Konto;2099/01/01;0.00;EUR;"TestProject / Forderungen: ReNr RE2";"5/01354 Aktenzeichen 25-01258";"";""
+MARKDEFFXXX;DE07123412341234123412;"Örchester e.V.";BYLADEM1001;DE02120300000000202051;"Inhaber*in, Konto";2099/01/01;0.00;EUR;"TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß";;;
 EOF;
-    $this->assertEquals($data, $expectedData);
+    $this->assertEquals($expectedData, $data);
   }
 }

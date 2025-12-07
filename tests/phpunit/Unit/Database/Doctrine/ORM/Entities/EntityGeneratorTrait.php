@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
 
+use Closure;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -51,6 +53,8 @@ trait EntityGeneratorTrait
   protected const MUSICIAN_BLZ = '12030000';
   protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber*in, Konto';
 
+  private EntityManager $entityManager;
+
   /**
    * {@inheritdoc}
    *
@@ -64,10 +68,9 @@ trait EntityGeneratorTrait
     $mockProvider = \OCP\Server::get(MockProvider::class);
 
     if ($persist) {
-      $entityManager = $mockProvider->getEntityManager($this)
-        ->getWrappedObject();
+      $this->entityManager = $mockProvider->getEntityManager($this);
     } else {
-      $entityManager = $this->createStub(EntityManager::class);
+      $this->entityManager = $this->createStub(EntityManager::class);
     }
 
     $appContainer = $mockProvider->getAppContainer($this);
@@ -76,7 +79,7 @@ trait EntityGeneratorTrait
     $instrumentationService = new InstrumentationService(
       configService: $appContainer->get(ConfigService::class),
       toolTipsService: $appContainer->get(ToolTipsService::class),
-      entityManager: $entityManager,
+      entityManager: $this->entityManager,
     );
 
     $this->project = new Entities\Project()
@@ -96,7 +99,7 @@ trait EntityGeneratorTrait
   /**
    * @return Entitiers\CompositePayment
    */
-  protected function generateCompositePayment(): Entities\CompositePayment
+  protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
   {
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
@@ -120,7 +123,7 @@ trait EntityGeneratorTrait
     $option = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
       ->setKey(Uuid::create())
-      ->setLabel('ReNr RE25/01354 Aktenzeichen 25-01258');
+      ->setLabel('ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß');
     $field->getDataOptions()->set($option->getKey(), $option);
     $datum = new Entities\ProjectParticipantFieldDatum()
       ->setDataOption($option)
@@ -137,7 +140,7 @@ trait EntityGeneratorTrait
       $this->participant,
     );
     $compositePayment->getProjectPayments()->add($projectPayment);
-    $compositePayment->updateSubject();
+    $compositePayment->updateSubject($transliterate);
 
     return $compositePayment;
   }

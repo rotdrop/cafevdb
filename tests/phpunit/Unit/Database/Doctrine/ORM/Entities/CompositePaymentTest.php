@@ -30,19 +30,21 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service;
-use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Listener;
-
-// require_once(__DIR__ . '/EntityGenerator.php');
+use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the Entities\CompositePayment entity. */
 #[Attributes\CoversClass(Entities\CompositePayment::class)]
@@ -53,11 +55,14 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\CoversClass(Entities\ProjectParticipantFieldDataOption::class)]
 #[Attributes\CoversClass(Entities\ProjectParticipantFieldDatum::class)]
 #[Attributes\CoversClass(Entities\ProjectPayment::class)]
+#[Attributes\CoversClass(FinanceService::class)]
 #[Attributes\CoversClass(InstrumentationService::class)]
 #[Attributes\CoversMethod(Entities\CompositePayment::class, '__construct')]
 #[Attributes\CoversMethod(Entities\CompositePayment::class, 'generateSubject')]
 #[Attributes\CoversMethod(Entities\CompositePayment::class, 'updateSubject')]
 #[Attributes\CoversMethod(InstrumentationService::class, 'getDummyMusician')]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(ConfigService::class)]
 #[Attributes\UsesClass(Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(Crypto\HaliteSymmetricStreamCryptor::class)]
@@ -76,32 +81,30 @@ use OCA\CAFEVDB\Listener;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 class CompositePaymentTest extends TestCase
 {
-  use EntityGeneratorTrait;
-
-  /** @return void */
-  public function testSubjectGenerationWithoutDocuments(): void
-  {
-    $compositePayment = $this->generateCompositePayment();
-    $this->assertEquals(
-      'TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258',
-      $compositePayment->getSubject(),
-    );
+  use EntityGeneratorTrait {
+    EntityGeneratorTrait::setup as entitySetup;
   }
 
-  /** @return void */
-  public function testSubjectGenerationWithDocuments(): void
+  private FinanceService $financeService;
+
+  /** {@inheritdoc} */
+  public function setup(): void
   {
-    $folder = (new Entities\DatabaseStorageFolder)
-      ->setName($this->project->getName() . '-005')
-      ;
-    $compositePayment = $this->generateCompositePayment();
-    $compositePayment
-      ->setBalanceDocumentsFolder($folder)
-      ->updateSubject()
-      ;
-    $this->assertEquals(
-      'TestProject99-5 / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258',
-      $compositePayment->getSubject(),
+    $this->entitySetup();
+
+    /** @var MockProvider $mockProvider */
+    $mockProvider = \OCP\Server::get(MockProvider::class);
+
+    $configService = $mockProvider->getConfigService();
+
+    $eventsService = $this->createStub(EventsService::class);
+    $organizationalRolesService = $this->createStub(OrganizationalRolesService::class);
+
+    $this->financeService = new FinanceService(
+      configService: $configService,
+      entityManager: $this->entityManager,
+      eventsService: $eventsService,
+      rolesService: $organizationalRolesService,
     );
   }
 
@@ -125,5 +128,59 @@ class CompositePaymentTest extends TestCase
     $this->assertEquals($this->project, $liability->getProject());
     $this->assertEquals($this->musician, $liability->getMusician());
     $this->assertEquals($this->participant, $liability->getProjectParticipant());
+  }
+
+  /** @return void */
+  public function testSubjectGenerationWithoutDocuments(): void
+  {
+    $compositePayment = $this->generateCompositePayment();
+    $this->assertEquals(
+      'TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
+      $compositePayment->getSubject(),
+    );
+  }
+
+  /** @return void */
+  public function testSubjectGenerationWithDocuments(): void
+  {
+    $folder = (new Entities\DatabaseStorageFolder)
+      ->setName($this->project->getName() . '-005')
+      ;
+    $compositePayment = $this->generateCompositePayment();
+    $compositePayment
+      ->setBalanceDocumentsFolder($folder)
+      ->updateSubject()
+      ;
+    $this->assertEquals(
+      'TestProject99-5 / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
+      $compositePayment->getSubject(),
+    );
+  }
+
+  /** @return void */
+  public function testSubjectGenerationWithoutDocumentsWithTransliterate(): void
+  {
+    $compositePayment = $this->generateCompositePayment(fn(string $x) => $this->financeService->sepaTranslit($x));
+    $this->assertEquals(
+      'TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Uemlaeuetess',
+      $compositePayment->getSubject(),
+    );
+  }
+
+  /** @return void */
+  public function testSubjectGenerationWithDocumentsWithTransliterate(): void
+  {
+    $folder = (new Entities\DatabaseStorageFolder)
+      ->setName($this->project->getName() . '-005')
+      ;
+    $compositePayment = $this->generateCompositePayment(fn(string $x) => $this->financeService->sepaTranslit($x));
+    $compositePayment
+      ->setBalanceDocumentsFolder($folder)
+      ->updateSubject(fn(string $x) => $this->financeService->sepaTranslit($x))
+      ;
+    $this->assertEquals(
+      'TestProject99-5 / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Uemlaeuetess',
+      $compositePayment->getSubject(),
+    );
   }
 }
