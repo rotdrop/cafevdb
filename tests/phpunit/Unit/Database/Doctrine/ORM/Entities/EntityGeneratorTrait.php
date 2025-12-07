@@ -96,10 +96,8 @@ trait EntityGeneratorTrait
     );
   }
 
-  /**
-   * @return Entitiers\CompositePayment
-   */
-  protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
+  /** @return Entities\ProjectParticipantFieldDatum */
+  protected function generateReceivable(): Entities\ProjectParticipantFieldDatum
   {
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
@@ -129,6 +127,17 @@ trait EntityGeneratorTrait
       ->setDataOption($option)
       ->setProjectParticipant($this->participant)
       ->setOptionValue(RationalNumber::fromDecimal('12.23'));
+    $option->getFieldData()->set($this->musician->getId(), $datum);
+    $field->getFieldData()->add($datum);
+
+    return $datum;
+  }
+
+  /** @return Entities\CompositePayment */
+  protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
+  {
+    $datum = $this->generateReceivable();
+
     /** @var Entities\ProjectPayment $projectPayment */
     $projectPayment = new Entities\ProjectPayment()
       ->setProjectParticipant($this->participant)

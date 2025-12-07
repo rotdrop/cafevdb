@@ -61,8 +61,6 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\CoversMethod(Entities\CompositePayment::class, 'generateSubject')]
 #[Attributes\CoversMethod(Entities\CompositePayment::class, 'updateSubject')]
 #[Attributes\CoversMethod(InstrumentationService::class, 'getDummyMusician')]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(ConfigService::class)]
 #[Attributes\UsesClass(Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(Crypto\HaliteSymmetricStreamCryptor::class)]
@@ -78,7 +76,10 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(Util::class)]
 #[Attributes\UsesClass(Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait {

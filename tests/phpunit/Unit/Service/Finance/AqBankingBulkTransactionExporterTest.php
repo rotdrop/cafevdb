@@ -116,9 +116,9 @@ class AqBankingBulkTransactionExporterTest extends TestCase
     );
     $configService->expects($this->atLeastOnce())->method('getConfigValue');
 
-     $this->exporter = new Service\Finance\AqBankingBulkTransactionExporter(
-       $configService,
-     );
+    $this->exporter = new Service\Finance\AqBankingBulkTransactionExporter(
+      $configService,
+    );
   }
 
   /**
