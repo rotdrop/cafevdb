@@ -934,8 +934,9 @@ class ConfigService
 
     empty($locale) && $locale = $this->getAppLocale();
 
-    return $transliterator->transliterate($string, ' ', $locale);
+    return $transliterator->transliterate($string, $locale);
   }
+
 
   /**
    * @param null|string $locale Locale to use, use app-locale if null.
