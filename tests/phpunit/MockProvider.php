@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\Registration;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
@@ -647,6 +648,9 @@ class MockProvider
               $this->getLoggerInterface(),
               $this->getL10N(),
             );
+          // case ucfirst(Registration::APP_LOCALE):
+          // case Registration::APP_LOCALE:
+          //   return self::CONFIG_MOCK_VALUES[ConfigConstants::ORCHESTRA_LOCALE_KEY];
         }
         $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
         // try to generate "the real thing"
