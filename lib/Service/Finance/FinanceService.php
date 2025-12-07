@@ -94,6 +94,12 @@ class FinanceService
     'christmas-next-day'      => '12-26',
   ];
 
+  public const SEPA_TRANSLIT_EXTRA = [
+    '[{' => '(',
+    '}]' => ')',
+    ';' => '/',
+  ];
+
   /** @var Repositories\SepaDebitMandatesRepository */
   private $mandatesRepository;
 
@@ -986,8 +992,8 @@ class FinanceService
   public function sepaTranslit(string $string, ?string $locale = null):string
   {
     return str_replace(
-      ['[{', '}]', ';'],
-      ['(', ')', '/'],
+      array_keys(self::SEPA_TRANSLIT_EXTRA),
+      array_values(self::SEPA_TRANSLIT_EXTRA),
       $this->transliterate($string, $locale)
     );
   }
