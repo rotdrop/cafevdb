@@ -262,7 +262,7 @@ class SepaDebitMandatesController extends Controller
               $this->l->t('Participant %d not found in project %d.', [ $musicianId, $mandateProjectId ]),
             );
           }
-          $newOwner = $participant['musician']['surName'] . ', ' . $participant['musician']['firstName'];
+          $newOwner = $participant['musician']['firstName'] . ' ' . $participant['musician']['LastName'];
           if (!empty($mandateProjectId)) {
             $newValidations[] = [
               'changed' => 'mandateProjectId',
