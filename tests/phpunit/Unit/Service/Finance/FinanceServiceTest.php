@@ -43,7 +43,11 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /** Test the SepaBulkTransactionsService */
 #[Attributes\CoversClass(FinanceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::Class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
@@ -55,7 +59,7 @@ class FinanceServiceTest extends TestCase
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     $configService = $mockProvider->getConfigService();
     $entityManager = $this->createStub(EntityManager::class);
@@ -73,7 +77,7 @@ class FinanceServiceTest extends TestCase
   /** @return void */
   public function testConstruction(): void
   {
-    $this->expectNotToPerformAssertions();
+    // $this->expectNotToPerformAssertions();
   }
 
   public function testSepaTranslit(): void

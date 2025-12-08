@@ -84,7 +84,6 @@ skip-networking
     $this->stopServer();
 
     $this->dbFolder = $dbFolder = rtrim($this->tempManager->getTemporaryFolder(), '/');
-    mkdir($this->dbFolder);
     $setupBinary = $this->executableFinder->find(self::DATABASE_SETUP_SCRIPT);
 
     $dbDataDir = $dbDataDir = $this->dbFolder . '/db-data';

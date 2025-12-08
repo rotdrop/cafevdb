@@ -63,6 +63,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\TranslationNotFoundListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\AuthorizationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]

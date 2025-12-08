@@ -106,7 +106,7 @@ class EntitySerializerTest extends TestCase
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
@@ -117,14 +117,14 @@ class EntitySerializerTest extends TestCase
 
     $this->entitySetup(persist: false);
 
-    $this->entityManager = $mockProvider->getEntityManager($this);
+    $this->entityManager = $mockProvider->getEntityManager();
 
     $this->entityManager->persist($this->musician);
 
     $this->entitySerializer = new EntitySerializer(
       entityManager: $this->entityManager,
-      l: $mockProvider->getL10N($this),
-      logger: $mockProvider->getLoggerInterface($this),
+      l: $mockProvider->getL10N(),
+      logger: $mockProvider->getLoggerInterface(),
     );
   }
 
@@ -140,7 +140,7 @@ class EntitySerializerTest extends TestCase
   /** @return void */
   public function testAddEntity(): void
   {
-    $this->expectNotToPerformAssertions();
+    // $this->expectNotToPerformAssertions();
     $this->entitySerializer->addEntity($this->musician);
   }
 

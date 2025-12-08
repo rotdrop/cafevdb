@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Traits\UserPreferencesTrait;
  */
 #[Attributes\CoversTrait(AppConfigTrait::class)]
 #[Attributes\CoversTrait(UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 class AppConfigTraitTest extends TestCase
 {
   private mixed $classWithMember;
@@ -60,7 +61,7 @@ class AppConfigTraitTest extends TestCase
     parent::setup();
 
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
     $this->cloudConfig = $mockProvider->getCloudConfig();
 
     $this->classWithMember = new class($this->cloudConfig) {
@@ -142,8 +143,6 @@ class AppConfigTraitTest extends TestCase
         $default,
       ),
     );
-
-
 
     $class->setAppValue('BLAHBLAH', 'blubber');
     $this->assertEquals(

@@ -94,7 +94,7 @@ class CompositePaymentTest extends TestCase
     $this->entitySetup();
 
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     $configService = $mockProvider->getConfigService();
 

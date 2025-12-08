@@ -103,13 +103,13 @@ trait SetupEventsServiceTrait
     $this->entitySetup(persist: false);
 
     /** @var MockProvider $mockProvider */
-    $this->mockProvider = $mockProvider = \OCP\Server::get(MockProvider::class);
+    $this->mockProvider = $mockProvider = MockProvider::create($this);
 
     $this->appContainer = $mockProvider->getAppContainer();
 
     $l = $mockProvider->getL10N();
 
-    $cloudConfig = $mockProvider->getCloudConfig();
+    $mockProvider->getCloudConfig();
 
     $this->configService = $mockProvider->getConfigService();
     $calendarId = 1;
@@ -120,7 +120,6 @@ trait SetupEventsServiceTrait
       ++$calendarId;
     }
 
-    $projectEventId = 1;
     $this->calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
     foreach ($this->calendarData as $index => $row) {
       $this->calendarObjects[$row['calendarid']][$row['uri']] = $index;
@@ -150,7 +149,7 @@ trait SetupEventsServiceTrait
     $this->calDavBackend->method('getCalendarById')
       ->willReturnCallback(
         function(int $calendarId): ?array {
-          if ($calendarId < 1 || $calendareId > count($this->defaultCalendars)) {
+          if ($calendarId < 1 || $calendarId > count($this->defaultCalendars)) {
             return null;
           }
           $calendars = array_flip($this->defaultCalendars);

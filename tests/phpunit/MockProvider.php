@@ -80,10 +80,12 @@ class MockProvider
 
   private array $userConfigValues = [];
 
+  private ReflectionMethod $getMockBuilderMethod;
+
   /** {@inheritdoc} */
-  public function __construct(
+  private function __construct(
+    protected TestCase $testCase,
     protected DatabaseProvider $databaseProvider,
-    protected IHasher $hasher,
     protected Logger $logger,
   ) {
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
@@ -91,20 +93,21 @@ class MockProvider
 
     $this->instances[LoggerInterface::class] = $logger;
 
-    $this->mockOwner = new class('Placeholder') extends TestCase
-    {
-      /**
-       * Make the mock-builder public.
-       *
-       * @param string $className
-       *
-       * @return MockBuilder
-       */
-      public function exportMockBuilder(string $className): MockBuilder
-      {
-        return $this->getMockBuilder($className);
-      }
-    };
+    $this->getMockBuilderMethod = new ReflectionMethod($this->testCase, 'getMockBuilder');
+  }
+
+  /**
+   * Create a new instance.
+   *
+   * @return self
+   */
+  public static function create(TestCase $testCase): self
+  {
+    return new self(
+      testCase: $testCase,
+      databaseProvider: \OCP\Server::get(DatabaseProvider::class),
+      logger: \OCP\Server::get(Logger::class),
+    );
   }
 
   /**
@@ -114,7 +117,21 @@ class MockProvider
    */
   protected function getMockBuilder(string $className):MockBuilder
   {
-    return $this->mockOwner->exportMockBuilder($className);
+    return $this->getMockBuilderMethod->invoke($this->testCase, $className);
+  }
+
+  /** {@inheritdoc} */
+  protected function never(): mixed
+  {
+    $method = new ReflectionMethod($this->testCase, 'never');
+    return $method->invoke($this->testCase);
+  }
+
+  /** {@inheritdoc} */
+  protected function atMost(int $count = 2): mixed
+  {
+    $method = new ReflectionMethod($this->testCase, 'atMost');
+    return $method->invoke($this->testCase, $count);
   }
 
   /**
@@ -126,7 +143,7 @@ class MockProvider
   {
     $className = IConfig::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -193,6 +210,8 @@ class MockProvider
     );
     $this->instances[$className] = $instance;
 
+    $instance->expects($this->never())->method('setSystemValues');
+
     return $instance;
   }
 
@@ -203,7 +222,7 @@ class MockProvider
   {
     $className = ConfigService::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -226,7 +245,7 @@ class MockProvider
   {
     $className = EntityManager::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -262,7 +281,7 @@ class MockProvider
   {
     $className = RepositoryFactory::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -283,7 +302,7 @@ class MockProvider
   {
     $className = IRequest::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -293,6 +312,8 @@ class MockProvider
     $instance->method('getPathInfo')->willReturn('/apps/' . $this->appName . '/blahblah');
 
     $this->instances[$className] = $instance;
+
+    $instance->expects($this->never())->method('getEnv');
 
     return $instance;
   }
@@ -310,7 +331,7 @@ class MockProvider
   {
     $className = EncryptionService::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -340,7 +361,7 @@ class MockProvider
   {
     $className = Crypto\AsymmetricCryptorInterface::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -418,6 +439,8 @@ class MockProvider
 
     $this->instances[$className] = $instance;
 
+    $instance->expects($this->never())->method('removeRecryptionRequestHandledNotification');
+
     return $instance;
   }
 
@@ -428,7 +451,7 @@ class MockProvider
   {
     $className = AuthorizationService::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -448,6 +471,8 @@ class MockProvider
 
     $this->instances[$className] = $instance;
 
+    $instance->expects($this->never())->method('isAdmin');
+
     return $instance;
   }
 
@@ -458,7 +483,7 @@ class MockProvider
   {
     $className = Crypto\CryptoFactoryInterface::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -476,7 +501,7 @@ class MockProvider
   {
     $className = ICredentialsStore::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -505,6 +530,8 @@ class MockProvider
 
     $this->instances[$className] = $instance;
 
+    $instance->expects($this->atMost(2))->method('getLoginCredentials');
+
     return $instance;
   }
 
@@ -515,7 +542,7 @@ class MockProvider
   {
     $className = IUser::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -527,6 +554,8 @@ class MockProvider
 
     $this->instances[$className] = $instance;
 
+    $instance->expects($this->never())->method('getFirstLogin');
+
     return $instance;
   }
 
@@ -537,7 +566,7 @@ class MockProvider
   {
     $className = IUserSession::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -547,6 +576,8 @@ class MockProvider
     $instance->method('getUser')->willReturn($this->getUser());
 
     $this->instances[$className] = $instance;
+
+    $instance->expects($this->never())->method('setVolatileActiveUser');
 
     return $instance;
   }
@@ -558,7 +589,7 @@ class MockProvider
   {
     $className = IEventDispatcher::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -567,6 +598,8 @@ class MockProvider
       ->getMock();
 
     $this->instances[$className] = $instance;
+
+    $instance->expects($this->never())->method('removeListener');
 
     return $instance;
   }
@@ -578,7 +611,7 @@ class MockProvider
   {
     $className = IL10N::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -616,7 +649,7 @@ class MockProvider
   {
     $className = IAppContainer::class;
 
-    if ($this->instances[$className]) {
+    if ($this->instances[$className] ?? null) {
       return $this->instances[$className];
     }
 
@@ -663,6 +696,8 @@ class MockProvider
         return $newInstance;
       },
     );
+
+    $instance->expects($this->never())->method('registerMiddleWare');
 
     $this->instances[$className] = $instance;
 

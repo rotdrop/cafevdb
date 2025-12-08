@@ -22,107 +22,88 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Service\Finance;
-
-use UnexpectedValueException;
+namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Controller\EntityRepositoryController;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
-/** Test the SepaBulkTransactionsService */
-#[Attributes\CoversClass(SepaBulkTransactionService::class)]
+/** Test the EntityRepositoryController. */
+#[Attributes\CoversClass(EntityRepositoryController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\CloudLoggerWrapper::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractEnumType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDataOption::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
-class SepaBulkTransactionServiceTest extends TestCase
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+class EntityRepositoryControllerTest extends TestCase
 {
   use EntityGeneratorTrait {
     EntityGeneratorTrait::setup as entitySetup;
   }
 
-  private FinanceService $financeService;
-
-  private SepaBulkTransactionService $sepaBulkTransactionsService;
+  private EntityRepositoryController $entityRepositoryController;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup();
+    $this->entitySetup(persist: false);
 
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
 
-    $configService = $mockProvider->getConfigService();
+    $this->entityManager = $mockProvider->getEntityManager();
 
-    $eventsService = $this->createStub(EventsService::class);
-    $organizationalRolesService = $this->createStub(OrganizationalRolesService::class);
-
-    $this->financeService = new FinanceService(
-      configService: $configService,
+    $entitySerializer = new EntitySerializer(
       entityManager: $this->entityManager,
-      eventsService: $eventsService,
-      rolesService: $organizationalRolesService,
+      l: $mockProvider->getL10N(),
+      logger: $mockProvider->getLoggerInterface(),
     );
 
-    $appContainer = $mockProvider->getAppContainer();
-
-    $logger = $mockProvider->getLoggerInterface();
-
-    $l10n = $mockProvider->getL10N();
-
-    $this->sepaBulkTransactionsService = new SepaBulkTransactionService(
+    $this->entityRepositoryController = new EntityRepositoryController(
+      appName: $mockProvider->appName,
+      request: $this->createStub(IRequest::class),
       entityManager: $this->entityManager,
-      financeService: $this->financeService,
-      eventsService: $eventsService,
-      appContainer: $appContainer,
-      logger: $logger,
-      l: $l10n,
+      entitySerializer: $entitySerializer,
+      logger: $mockProvider->getLoggerInterface(),
     );
   }
 
@@ -130,19 +111,5 @@ class SepaBulkTransactionServiceTest extends TestCase
   public function testConstruction(): void
   {
     // $this->expectNotToPerformAssertions();
-  }
-
-  /** @return void */
-  public function testGenerateProjectPayments(): void
-  {
-    $receivable = $this->generateReceivable();
-    $receivableOption = $receivable->getDataOption();
-
-    $compositePayment = $this->sepaBulkTransactionsService->generateProjectPayments(
-      $this->participant,
-      [$receivableOption],
-    );
-    $expected = 'TestProject / Forderungen: ReNr RE25/01354 Aktenzeichen 25-01258 Uemlaeuetess';
-    $this->assertEquals($expected, $compositePayment->getSubject());
   }
 }

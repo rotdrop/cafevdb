@@ -70,7 +70,7 @@ class EntityManagerTest extends TestCase
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);

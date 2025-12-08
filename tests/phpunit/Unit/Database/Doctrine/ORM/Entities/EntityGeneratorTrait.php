@@ -65,7 +65,7 @@ trait EntityGeneratorTrait
     parent::setup();
 
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     if ($persist) {
       $this->entityManager = $mockProvider->getEntityManager($this);

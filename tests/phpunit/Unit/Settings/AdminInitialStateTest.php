@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Traits;
+namespace OCA\CAFEVDB\Tests\Unit\Settings;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
  */
 #[Attributes\CoversClass(AdminInitialState::class)]
 #[Attributes\CoversClass(FontFileNames::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 class AdminInitialStateTest extends TestCase
 {
   private AdminInitialState $configData;
@@ -49,7 +50,7 @@ class AdminInitialStateTest extends TestCase
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = \OCP\Server::get(MockProvider::class);
+    $mockProvider = MockProvider::create($this);
 
     // generate some fonts ...
     $fonts = [];
