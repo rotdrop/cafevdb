@@ -2,11 +2,25 @@
   "platform": {
     "php": "8.1"
   },
+  "config": {
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
+  },
   "sort-packages": true,
   "require-dev": {
+    "cweagans/composer-patches": "^1.7",
     "phpunit/phpunit": "*"
   },
   "autoload-dev": {
     "psr-4": { "OCA\\CAFEVDB\\Tests\\": "../../tests/phpunit/" }
+  },
+  "extra": {
+    "patches": {
+      "phpunit/phpunit": {
+        "Fix code-coverage warnings to interrupt CodeCoverage::stop() too early": "../../composer-patches/phpunit/phpunit-phpunit-fix-too-early-bailout.patch"
+
+      }
+    }
   }
 }

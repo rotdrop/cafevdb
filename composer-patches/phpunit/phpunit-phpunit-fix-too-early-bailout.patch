@@ -1,0 +1,17 @@
+--- phpunit/phpunit/src/Runner/CodeCoverage.php~	2025-12-08 08:22:32.000000000 +0100
++++ phpunit/phpunit/src/Runner/CodeCoverage.php	2025-12-08 20:18:15.932551875 +0100
+@@ -255,10 +255,12 @@
+             }
+         }
+ 
+-        $this->codeCoverage->stop($append, $status, $covers, $uses, $time);
+-
+         $this->test       = null;
+         $this->collecting = false;
++
++        // This one throws in order to generate warnings, so it should come
++        // _AFTER_ clearing "test" and "collecting"
++        $this->codeCoverage->stop($append, $status, $covers, $uses, $time);
+     }
+ 
+     public function deactivate(): void
