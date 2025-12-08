@@ -33,6 +33,7 @@ PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 PRETTIER_FORMATTER = $(ABSSRCDIR)/node_modules/.bin/prettier
+ESLINT = $(ABSSRCDIR)/node_modules/.bin/eslint
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -245,6 +246,7 @@ TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPES
 $(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/php-to-typescript/*.php) Makefile
 	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
 	$(PRETTIER_FORMATTER) --write --ignore-path /dev/null $(TS_TYPES_DIR)
+	[ -x "$(ESLINT)" ] && $(ESLINT) $(TS_TYPES_DIR)
 
 #@private
 ts-type-files: $(TS_TYPE_FILES)
