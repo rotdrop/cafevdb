@@ -119,11 +119,6 @@ $routes = [
         'apiVersion' => 'v1',
       ],
     ],
-    [
-      'name' => 'encryption#decryptDatabaseValue',
-      'url' => '/encryption/decypt',
-      'verb' => 'POST',
-    ],
   ],
   'routes' => [
     // new Vue frontend wrapper
