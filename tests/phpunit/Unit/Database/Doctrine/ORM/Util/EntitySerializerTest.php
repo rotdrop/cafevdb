@@ -149,7 +149,7 @@ class EntitySerializerTest extends TestCase
   {
     $this->entitySerializer->addEntity($this->musician);
     $exportData = $this->entitySerializer->export();
-    $json = json_encode($exportData, JSON_PRETTY_PRINT);
+    json_encode($exportData, JSON_PRETTY_PRINT);
     $this->assertInstanceOf(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse::class, $exportData);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
