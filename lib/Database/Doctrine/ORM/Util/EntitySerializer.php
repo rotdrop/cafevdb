@@ -122,7 +122,7 @@ class EntitySerializer
       $entityClassName = $metaData->getName();
       $id = $metaData->getIdentifierValues($entity);
       if (empty($id)) {
-        throw Exceptions\DatabaseMissingIdentifierException(
+        throw new Exceptions\DatabaseMissingIdentifierException(
           $this->l->t('Unable to determine the identifier values for an instance of "%s".', get_class($entity)),
           get_class($entity),
         );
