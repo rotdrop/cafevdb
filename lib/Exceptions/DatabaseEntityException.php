@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,10 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-/**
- * Thrown if more than one entity is found when there should be only one, as a
- * result of \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::findBy().
- */
-class DatabaseEntityNotUniqueException extends DatabaseEntityException
+use Throwable;
+
+/** Base class for database exceptions providing an entity-class. */
+class DatabaseEntityException extends DatabaseException
 {
   /**
    * @param string $message
@@ -39,17 +38,14 @@ class DatabaseEntityNotUniqueException extends DatabaseEntityException
    *
    * @param ?string $entityClassName
    *
-   * @param ?array $identifier
-   *
    * {@inheritdoc}
    */
   public function __construct(
     string $message,
     int $code = 0,
     ?Throwable $previous = null,
-    ?string $entityClassName = null,
-    public readonly ?array $criteria = null,
+    public readonly ?string $entityClassName = null,
   ) {
-    parent::__construct($message, $code, $previous, $entityClassName);
+    parent::__construct($message, $code, $previous);
   }
 }
