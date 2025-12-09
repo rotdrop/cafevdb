@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2021-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,9 @@ class UndoableRunQueue
   /** @var array|null */
   protected $undoStack = null;
 
+  /** @var array */
+  protected $resetQueue = [];
+
   /** @var array<int, Throwable> */
   protected $runQueueExceptions = [];
 
@@ -80,10 +83,6 @@ class UndoableRunQueue
   {
     if ($action instanceof Closure) {
       $action = new GenericUndoable($action, $undo);
-    } elseif ($action instanceof IUndoable) {
-      // fallthrouh
-    } else {
-      throw new InvalidArgumentException($this->l->t('$action must be a Closure or an instance of "%s".', IUndoable::class));
     }
     $action->initialize($this->appContainer);
     $this->actionQueue[] = $action;
@@ -102,6 +101,7 @@ class UndoableRunQueue
     $this->undoStack = null;
     $this->runQueueExceptions = [];
     $this->undoExceptions = [];
+    $this->resetQueue = [];
   }
 
   /**
@@ -118,7 +118,7 @@ class UndoableRunQueue
    */
   public function executeActions(bool $gracefully = false):bool
   {
-    if ($this->executing) {
+    if ($this->executing || $this->undoStack !== null) {
       return true;
     }
     $this->executing = true;
@@ -129,6 +129,7 @@ class UndoableRunQueue
     while (!empty($this->actionQueue)) {
       try {
         $action = array_shift($this->actionQueue); // from front
+        $this->resetQueue[] = $action;
         $action->do();
         array_unshift($this->undoStack, $action); // at front
       } catch (Throwable $t) {
@@ -163,8 +164,7 @@ class UndoableRunQueue
       return;
     }
     $this->executing = true;
-    while (!empty($this->undoStack)) {
-      $action = array_shift($this->undoStack);
+    foreach ($this->undoStack as $action) {
       try {
         if (is_callable([ $action, 'undo' ])) {
           $action->undo();
@@ -174,6 +174,7 @@ class UndoableRunQueue
         $this->logException($t);
       }
     }
+    $this->undoStack = [];
     $this->executing = false;
   }
 
@@ -200,9 +201,9 @@ class UndoableRunQueue
    */
   public function getRunQueueException():?Throwable
   {
-    if (!empty($this->runQueueExceptions)) {
-      return reset($this->runQueueExceptions);
-    }
+    return empty($this->runQueueExceptions)
+      ? null
+      : reset($this->runQueueExceptions);
   }
 
   /**
@@ -249,15 +250,11 @@ class UndoableRunQueue
     if ($this->undoStack === null) {
       return;
     }
-    while (!empty($this->undoStack)) {
-      $action = array_shift($this->undoStack); // from front
+    while (!empty($this->resetQueue)) {
+      $action = array_pop($this->resetQueue); // from end
       $action->reset();
       array_unshift($this->actionQueue, $action); // at front
     };
     $this->undoStack = null;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
