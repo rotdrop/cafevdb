@@ -24,14 +24,18 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use InvalidArgumentException;
+
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCS;
 use OCP\AppFramework\OCSController;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Attributes;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
 
@@ -46,6 +50,7 @@ class EntityRepositoryController extends OCSController
     IRequest $request,
     private EntityManager $entityManager,
     private EntitySerializer $entitySerializer,
+    protected IL10N $l,
     protected LoggerInterface $logger,
   ) {
     parent::__construct($appName, $request);
@@ -57,9 +62,17 @@ class EntityRepositoryController extends OCSController
    *
    * @param string $entityName
    *
-   * @param string $findBy Base64 encode array of search criteria as
+   * @param string $find Base64 encoded JSON entity identifier which decodes
+   * to the an array KEY => VALUE, passed to
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::find(). The
+   * parameters $find and $findBy are mutually exclusive, but one of $find or
+   * $findBy has to be given.
+   *
+   * @param string $findBy Base64 encoded array of search criteria as
    * understood by
-   * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::findBy).
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::findBy().
+   * The parameters $find and $findBy are mutually exclusive, but one of $find
+   * or $findBy has to be given.
    *
    * @param null|int $limit
    *
@@ -77,17 +90,42 @@ class EntityRepositoryController extends OCSController
   )]
   public function getEntities(
     string $entityName,
-    string $findBy,
+    ?string $find = null,
+    ?string $findBy = null,
     ?int $limit = null,
     int $offset = 0,
     int $depth = 2,
   ): JSONResponse {
-    $criteria = json_decode($findBy, associative: true);
+    if (($find === null) === ($findBy === null)) {
+      throw new InvalidArgumentException(
+        $this->l->t(
+          'Exactly one of query-parameters "%1$s" and "%2$s" have to be specified.',
+          ['find', 'findBy'],
+        ),
+      );
+    }
     $repository = $this->entityManager->getRepository($entityName);
-    $entities = $repository->findBy($criteria, limit: $limit, offset: $offset);
+    if ($findBy) {
+      $criteria = json_decode(base64_decode($findBy), associative: true);
+      $entities = $repository->findBy($criteria, limit: $limit, offset: $offset);
+    } else {
+      $identifier = json_decode(base64_decode($find), associative: true);
+      $entity = $repository->find($identifier);
+      if ($entity === null) {
+        throw new Exceptions\DatabaseEntityNotFoundException(
+          $this->l->t(
+            'Unable to find the entity "%1$s" identified b y "%2$s".',
+            [$entityName, print_r($identifier, true)],
+          ),
+          entityClassName: $entityName,
+          identifier: $identifier,
+        );
+      }
+      $entities = [ $entity ];
+    }
     foreach ($entities as $entity) {
       $this->entitySerializer->addEntity($entity, $depth);
     }
-    return $this->entitySerializer->export();
+    return $this->entitySerializer->export()->response();
   }
 }
