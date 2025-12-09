@@ -1243,11 +1243,12 @@ received so far'),
       // re-used. Unfortunately findBy() does not work with encrypted fields,
       // so fetch all and filter in PHP.
       $iban = $newValues['iban'];
-      $bankAccountCandidates = $bankAccountsRepository->findBy([
+      $criteria = [
         'musician' => $musician,
         //'iban' => $iban,
         'deleted' => null,
-      ]);
+      ];
+      $bankAccountCandidates = $bankAccountsRepository->findBy($criteria);
       $bankAccountCandidates = array_values(
         array_filter(
           $bankAccountCandidates, fn(Entities\SepaBankAccount $account) => $account->getIban() == $iban
@@ -1262,7 +1263,9 @@ received so far'),
           $this->l->t(
             'More than one (%1$d) active bank account found for musician "%2$s" and IBAN "%3$s".',
             [ count($bankAccountCandidates), $musician->getPublicName(true), $newValues['iban'] ]
-          )
+          ),
+          entityClassName: Entities\SepaBankAccount::class,
+          criteria: $criteria,
         );
       }
       $bankAccount = $bankAccountCandidates[0];

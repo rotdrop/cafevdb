@@ -776,9 +776,13 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $payment = $bulkTransaction->getPayments()->first();
         if ($payment->getId() != $paymentId) {
           throw new Exceptions\DatabaseInconsistentValueException(
-            $this->l->t('Data inconsistency in bulk-transaction payments: %d / %d', [
+            $this->l->t('Data inconsistency in bulk-transaction payments: %1$d / %2$d', [
               $payment->getId(), $paymentId
-            ])
+            ]),
+            entityClassName: Entities\CompositePayment::class,
+            field: 'id',
+            expected: $paymentId,
+            actual: $payment->getId(),
           );
         }
         $paymentId = null;
