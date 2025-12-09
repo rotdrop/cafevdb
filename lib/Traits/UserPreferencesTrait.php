@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use OCP\IConfig;
+
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
@@ -33,6 +35,16 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
 trait UserPreferencesTrait
 {
   protected string $appName;
+
+  /**
+   * @param ?string $userId
+   *
+   * @return string
+   */
+  private function __userPreferencesTraitGetUserId(?string $userId): string
+  {
+    return $userId ?? method_exists($this, 'getUserId') ? $this->getUserId() : $this->userId;
+  }
 
   /**
    * @param string|EnumPersonalSettingsKey $key Config key.
@@ -45,12 +57,10 @@ trait UserPreferencesTrait
    */
   public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
   {
-    if ($userId === null) {
-      $userId = method_exists($this, 'getUserId') ? $this->getUserId() : $this->userId;
-    }
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
+    $userId = $this->__userPreferencesTraitGetUserId($userId);
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
     if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
       $default = $cloudConfig->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
@@ -69,12 +79,10 @@ trait UserPreferencesTrait
    */
   public function setUserValue(string|EnumPersonalSettingsKey $key, mixed $value, ?string $userId = null): void
   {
-    if ($userId === null) {
-      $userId = method_exists($this, 'getUserId') ? $this->getUserId() : $this->userId;
-    }
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
+    $userId = $this->__userPreferencesTraitGetUserId($userId);
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
     $cloudConfig->setUserValue($userId, $this->appName, $key, $value);
     if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
@@ -83,17 +91,18 @@ trait UserPreferencesTrait
   }
 
   /**
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param null|string $userId Use the current user if null.
    *
    * @return void
    */
-  public function deleteUserValue(string $key, ?string $userId = null): void
+  public function deleteUserValue(string|EnumPersonalSettingsKey $key, ?string $userId = null): void
   {
-    if ($userId === null) {
-      $userId = method_exists($this, 'getUserId') ? $this->getUserId() : $this->userId;
+    if ($key instanceof EnumPersonalSettingsKey) {
+      $key = $key->value;
     }
+    $userId = $this->__userPreferencesTraitGetUserId($userId);
     $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
     $cloudConfig->deleteUserValue($userId, $this->appName, $key);
   }

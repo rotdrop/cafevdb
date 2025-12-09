@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use OCP\IConfig;
+
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /**
@@ -51,6 +53,14 @@ trait AppConfigTrait
     return $oldConfigKey;
   }
 
+  /** @return IConfig */
+  private function __appConfigTraitGetCloudConfig(): IConfig
+  {
+    return method_exists($this, 'getCloudConfig')
+      ? $this->getCloudConfig()
+      : $this->cloudConfig;
+  }
+
   /**
    * A short-cut, redirecting to the stock functions for the app.
    *
@@ -62,7 +72,7 @@ trait AppConfigTrait
    */
   public function getAppValue(string $key, mixed $default = null): mixed
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
       $default = $cloudConfig->getAppValue($this->appName, $oldConfigKey, $default);
@@ -81,7 +91,7 @@ trait AppConfigTrait
    */
   public function setAppValue(string $key, mixed $value)
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $cloudConfig->setAppValue($this->appName, $key, $value);
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
@@ -98,7 +108,7 @@ trait AppConfigTrait
    */
   public function deleteAppValue(string $key):void
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $cloudConfig->deleteAppValue($this->appName, $key);
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
