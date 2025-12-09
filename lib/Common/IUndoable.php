@@ -39,21 +39,21 @@ interface IUndoable
    *
    * @return void
    */
-  public function do():void;
+  public function do(): void;
 
   /**
    * Undo that what was done by do().
    *
    * @return void
    */
-  public function undo():void;
+  public function undo(): void;
 
   /**
    * Reset initial state.
    *
    * @return void
    */
-  public function reset():void;
+  public function reset(): void;
 
   /**
    * Lazy initialization in order to have a more lightweight constructor for
@@ -63,12 +63,12 @@ interface IUndoable
    *
    * @return void
    */
-  public function initialize(IAppContainer $appContainer):void;
+  public function initialize(IAppContainer $appContainer): void;
 
   /**
    * Lower sort-orders are executed first.
    *
    * @return int
    */
-  public function getSortOrder():int;
+  public function getSortOrder(): int;
 }
