@@ -176,6 +176,8 @@ class RationalNumberTest extends TestCase
         $rational->getDenominator(),
       )));
     }
+    $this->assertEquals(true, RationalNumber::create('')->equals(RationalNumber::zero()));
+    $this->assertEquals(true, RationalNumber::create(null)->equals(RationalNumber::zero()));
     $this->expectException(InvalidArgumentException::class);
     RationalNumber::create(0.5, 1, 2);
   }

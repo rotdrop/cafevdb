@@ -149,6 +149,12 @@ class AppConfigTraitTest extends TestCase
       'blubber',
       $class->getAppValue('BLAHBLAH'),
     );
+
+    $class->deleteAppValue('BLAHBLAH');
+    $this->assertEquals(
+      'default',
+      $class->getAppValue('BLAHBLAH', 'default'),
+    );
   }
 
 
@@ -173,6 +179,8 @@ class AppConfigTraitTest extends TestCase
   {
     $key = 'BLAHBLAH';
     $value = 'blubber';
+    $default = 'default';
+
     $class->setUserValue($key, $value);
     $this->assertEquals(
       $value,
@@ -196,8 +204,13 @@ class AppConfigTraitTest extends TestCase
       $class->getUserValue($key),
     );
 
+    $class->deleteUserValue($key);
+    $this->assertEquals(
+      $default,
+      $class->getUserValue($key, $default),
+    );
+
     // compat should have been deleted.
-    $default = 'default';
     $this->assertEquals(
       $default,
       $this->cloudConfig->getUserValue(
@@ -207,6 +220,7 @@ class AppConfigTraitTest extends TestCase
         $default,
       ),
     );
+
   }
 
   /** @return void */
