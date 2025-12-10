@@ -83,7 +83,7 @@ class EmailFormController extends Controller
   /** @return int Email draft auto-save interval in seconds. */
   private function getEmailDraftAutoSave():int
   {
-    return $this->getUserValue(EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE, 300);
+    return $this->getUserValue(EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE, ConfigConstants::DEFAULT_AUTOSAVE_INTERVAL);
   }
 
   /**
