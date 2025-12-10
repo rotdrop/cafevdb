@@ -94,7 +94,7 @@ class EntityManager extends EntityManagerDecorator
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
-    __DIR__ . "/Doctrine/ORM/Entities",
+    __DIR__ . '/Doctrine/ORM/Entities',
   ];
 
   /**
