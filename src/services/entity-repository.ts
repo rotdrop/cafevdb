@@ -42,20 +42,25 @@ export const find = (entityName: keyof EntityMap, identifier: string) => {
   console.info('REPOS', repositories);
   return repositories?.[entityName]?.[identifier] ?? undefined;
 };
-export const fetch = async (entityName: keyof EntityMap, identifier: Record<string, unknown>) => {
+export const fetch = async (
+  entityName: keyof EntityMap,
+  identifier: Record<string, unknown>,
+  depth: number = 1,
+) => {
   const url = generateOcsUrl(`/v1/entitites/${entityName}`, {
     find: btoa(JSON.stringify(identifier)),
+    depth,
   });
   try {
     const result = await axios.get<OCSResponse<EntityResponse> >(url);
-    const repositories = result.data.ocs.data.repositories;
-    for (const entityName of Object.keys(repositories) as (keyof EntityMap)[]) {
-      for (const [identifier, entityDto] of Object.entries(repositories[entityName])) {
+    const responseRepositories = result.data.ocs.data.repositories;
+    for (const entityName of Object.keys(responseRepositories) as (keyof EntityMap)[]) {
+      for (const [identifier, entityDto] of Object.entries(responseRepositories[entityName])) {
         const entity = entityFactory(entityName, entityDto);
         if (repositories[entityName] === undefined) {
           vueSet(repositories, entityName, {});
         }
-        vueSet(repositories[entityName], identifier, entity);
+        vueSet(repositories[entityName] as object, identifier, entity);
       }
     }
   } catch (e) {

@@ -35,13 +35,14 @@ require_once($appDir . 'tests/phpunit/bootstrap.php');
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Tests\Unit\Controller\EntityRepositoryControllerTest;
 
-if (count($argv) != 4) {
-  throw new InvalidArgumentException("Usage: {$argv[0]} DTO_BASENAME OUTPUT_DIR OUTPUT_FILE");
+if (count($argv) != 5) {
+  throw new InvalidArgumentException("Usage: {$argv[0]} DTO_BASENAME OUTPUT_DIR OUTPUT_FILE DEPTH");
 }
 
 $entityName = $argv[1];
 $outputDir = rtrim($argv[2], '/');
 $outputFile = rtrim($argv[3], '/');
+$depth = $argv[4];
 
 switch ($entityName) {
   case 'Project':
@@ -69,7 +70,7 @@ $args = [
   'findBy' => null,
   'limit' => null,
   'offset' => 0,
-  'depth' => 2,
+  'depth' => $depth,
 ];
 $dto = $callGetEntities->invokeArgs($phpUnitTest, $args);
 

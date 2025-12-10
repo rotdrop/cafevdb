@@ -39,10 +39,10 @@ export const entities = {
   ProjectParticipant: {},
 } as { [K in typeof entityNames[number]]: Record<string, EntityMap[K]> };
 
-export const generateEntities = async () => {
-  for (const entityName of entityNames) {
+export const generateEntities = async (names: (typeof entityNames[number])[] = [...entityNames], depth: number = 2) => {
+  for (const entityName of names) {
     const inputFile = `${inputFilePrefix}${entityName}.json`;
-    spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, JEST_ARTIFACTS, inputFile]);
+    spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, JEST_ARTIFACTS, inputFile, '' + depth]);
     const dtoJSON = fs.readFileSync(path.join(JEST_ARTIFACTS, inputFile));
     dtos[entityName] = JSON.parse(dtoJSON.toString()) as OCSResponse<EntityResponse>;
     for (const [identifier, entityDto] of Object.entries(dtos[entityName].ocs.data.repositories[entityName])) {
