@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use InvalidArgumentException;
+use ReflectionClass;
+use Throwable;
 
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS;
 use OCP\AppFramework\OCSController;
 use OCP\IL10N;
@@ -35,9 +36,10 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Attributes;
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 
 /** Export entities to the frontend. */
 class EntityRepositoryController extends OCSController
@@ -62,19 +64,19 @@ class EntityRepositoryController extends OCSController
    *
    * @param string $entityName
    *
-   * @param string $find Base64 encoded JSON entity identifier which decodes
+   * @param ?string $find Base64 encoded JSON entity identifier which decodes
    * to the an array KEY => VALUE, passed to
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::find(). The
    * parameters $find and $findBy are mutually exclusive, but one of $find or
    * $findBy has to be given.
    *
-   * @param string $findBy Base64 encoded array of search criteria as
+   * @param ?string $findBy Base64 encoded array of search criteria as
    * understood by
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::findBy().
    * The parameters $find and $findBy are mutually exclusive, but one of $find
    * or $findBy has to be given.
    *
-   * @param null|int $limit
+   * @param ?int $limit
    *
    * @param int $offset
    *
@@ -85,7 +87,7 @@ class EntityRepositoryController extends OCSController
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'GET',
-    url: '/v1/entities/{entityName}/{findBy}',
+    url: '/v1/entities/{entityName}',
     defaults: ['depths' => 2],
   )]
   public function getEntities(
@@ -95,37 +97,50 @@ class EntityRepositoryController extends OCSController
     ?int $limit = null,
     int $offset = 0,
     int $depth = 2,
-  ): JSONResponse {
+  ): DataResponse {
     if (($find === null) === ($findBy === null)) {
-      throw new InvalidArgumentException(
+      throw new OCS\OCSBadRequestException(
         $this->l->t(
           'Exactly one of query-parameters "%1$s" and "%2$s" have to be specified.',
           ['find', 'findBy'],
         ),
       );
     }
-    $repository = $this->entityManager->getRepository($entityName);
-    if ($findBy) {
-      $criteria = json_decode(base64_decode($findBy), associative: true);
-      $entities = $repository->findBy($criteria, limit: $limit, offset: $offset);
-    } else {
-      $identifier = json_decode(base64_decode($find), associative: true);
-      $entity = $repository->find($identifier);
-      if ($entity === null) {
-        throw new Exceptions\DatabaseEntityNotFoundException(
-          $this->l->t(
-            'Unable to find the entity "%1$s" identified b y "%2$s".',
-            [$entityName, print_r($identifier, true)],
-          ),
-          entityClassName: $entityName,
-          identifier: $identifier,
-        );
+    $this->entitySerializer->reset();
+    $shortNames = !str_contains($entityName, '\\');
+    if ($shortNames) {
+      $entityNameSpace = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
+      $entityName = $entityNameSpace . '\\' . $entityName;
+      $this->entitySerializer->setCommonPrefix($entityNameSpace);
+    }
+    try {
+      $repository = $this->entityManager->getRepository($entityName);
+      if ($findBy) {
+        $criteria = json_decode(base64_decode($findBy), associative: true);
+        $entities = $repository->findBy($criteria, limit: $limit, offset: $offset);
+      } else {
+        $identifier = json_decode(base64_decode($find), associative: true);
+        $entity = $repository->find($identifier);
+        if ($entity === null) {
+          throw new Exceptions\DatabaseEntityNotFoundException(
+            $this->l->t(
+              'Unable to find the entity "%1$s" identified b y "%2$s".',
+              [$entityName, print_r($identifier, true)],
+            ),
+            entityClassName: $entityName,
+            identifier: $identifier,
+          );
+        }
+        $entities = [ $entity ];
       }
-      $entities = [ $entity ];
+      foreach ($entities as $entity) {
+        $this->entitySerializer->addEntity($entity, $depth);
+      }
+    } catch (Exceptions\DatabaseEntityNotFoundException $e) {
+      throw new OCS\OCSNotFoundException(previous: $e);
+    } catch (Throwable $t) {
+      throw new OCS\OCSBadRequestException(previous: $t);
     }
-    foreach ($entities as $entity) {
-      $this->entitySerializer->addEntity($entity, $depth);
-    }
-    return $this->entitySerializer->export()->response();
+    return new DataResponse($this->entitySerializer->export());
   }
 }

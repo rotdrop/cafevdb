@@ -37,7 +37,7 @@ class EntityResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     #[TSAttributes\LiteralTypeScriptType('{ [e in keyof Database.Doctrine.ORM.EntityMetadata.EntityMap]: string[] }')]
     public readonly array $entities,
     /** @var array<string, array<string, object> > */
-    #[TSAttributes\LiteralTypeScriptType('{ [e in keyof Database.Doctrine.ORM.EntityMetadata.EntityMap]: { [id: string]: Database.Doctrine.ORM.EntityMetadata.EntityMap[e] } }')]
+    #[TSAttributes\LiteralTypeScriptType('{ [e in keyof Database.Doctrine.ORM.EntityMetadata.EntityMap]: { [id: string]: Database.Doctrine.ORM.EntityMetadata.EntityDto<e> } }')]
     public readonly array $repositories,
   ) {
   }

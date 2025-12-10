@@ -57,6 +57,8 @@ class EntitySerializer
 
   private array $repositories = [];
 
+  private ?string $commonPrefix = null;
+
   /** {@inheritdoc} */
   public function __construct(
     protected EntityManager $entityManager,
@@ -67,6 +69,40 @@ class EntitySerializer
       $this->entityManager->getUnitOfWork(),
       $this->entityManager->getMetadataFactory(),
     );
+  }
+
+  /**
+   * @param ?string $commonPrefix
+   *
+   * @return self
+   */
+  public function setCommonPrefix(?string $commonPrefix): self
+  {
+    $this->commonPrefix = $commonPrefix;
+    if (!str_ends_with($this->commonPrefix, '\\')) {
+      $this->commonPrefix .= '\\';
+    }
+
+    return $this;
+  }
+
+  /** @return ?string */
+  public function getCommonPrefix(): ?string
+  {
+    return $this->commonPrefix;
+  }
+
+  /**
+   * Clear the data built up by previous calls to self::addEntity().
+   *
+   * @return void
+   */
+  public function reset(): void
+  {
+    $this->entityDepths = [];
+    $this->entities = [];
+    $this->repositories = [];
+    $this->commonPrefix = null;
   }
 
   /**
@@ -100,6 +136,21 @@ class EntitySerializer
   }
 
   /**
+   * @param string $entityName
+   *
+   * @return string
+   */
+  private function stripCommonPrefix(string $entityName): string
+  {
+    if ($this->commonPrefix === null) {
+      return $entityName;
+    }
+    if (str_starts_with($entityName, $this->commonPrefix)) {
+      return substr($entityName, strlen($this->commonPrefix));
+    }
+  }
+
+  /**
    * Add one Doctrine ORM entity to the serialization structure.
    *
    * @param mixed $entity An entity instance known to the entity manager.
@@ -119,7 +170,7 @@ class EntitySerializer
   {
     try {
       $metaData = $this->entityManager->getClassMetadata(get_class($entity));
-      $entityClassName = $metaData->getName();
+      $entityClassName = $this->stripCommonPrefix($metaData->getName());
       $id = $metaData->getIdentifierValues($entity);
       if (empty($id)) {
         throw new Exceptions\DatabaseMissingIdentifierException(
@@ -158,7 +209,7 @@ class EntitySerializer
               $flatEntity[$field] = null;
               break;
             }
-            $targetClassName = $associationMapping->targetEntity;
+            $targetClassName = $this->stripCommonPrefix($associationMapping->targetEntity);
             $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
             $targetId = $targetMetaData->getIdentifierValues($targetEntity);
             if (empty($targetId)) {
@@ -183,7 +234,7 @@ class EntitySerializer
                 $field, $entityClassName,
               ]));
             }
-            $targetClassName = $associationMapping->targetEntity;
+            $targetClassName = $this->stripCommonPrefix($associationMapping->targetEntity);
             $flatCollection = [];
             foreach ($targetCollection as $key => $targetEntity) {
               /** @var Mapping\ClassMetadata $targetMetaData */
@@ -195,7 +246,7 @@ class EntitySerializer
                   $targetClassName,
                 );
               }
-              $entityName = $targetMetaData->getName();
+              $entityName = $this->stripCommonPrefix($targetMetaData->getName());
               if ($entityName == $targetClassName) {
                 $entityName = null;
               }

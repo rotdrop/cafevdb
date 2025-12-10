@@ -55,6 +55,8 @@ trait EntityGeneratorTrait
 
   private EntityManager $entityManager;
 
+  private InstrumentationService $instrumentationService;
+
   /**
    * {@inheritdoc}
    *
@@ -75,8 +77,8 @@ trait EntityGeneratorTrait
 
     $appContainer = $mockProvider->getAppContainer($this);
 
-    /** @var InstrumentationService $instrumentationService */
-    $instrumentationService = new InstrumentationService(
+    /** @var InstrumentationService $this->instrumentationService */
+    $this->instrumentationService = new InstrumentationService(
       configService: $appContainer->get(ConfigService::class),
       toolTipsService: $appContainer->get(ToolTipsService::class),
       entityManager: $this->entityManager,
@@ -86,7 +88,7 @@ trait EntityGeneratorTrait
       ->setId(1)
       ->setName('TestProject2099')
       ->setYear(2099);
-    $this->musician = $instrumentationService->getDummyMusician(
+    $this->musician = $this->instrumentationService->getDummyMusician(
       $this->project,
       persist: $persist,
     );

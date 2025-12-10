@@ -43,7 +43,7 @@ class EntityReference extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
   /**
    * Create an instance from a data array.
    *
-   * @param array $data
+   * @param array $datay
    *
    * @return self
    */
@@ -52,7 +52,7 @@ class EntityReference extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self(
-      flattenIdentifier: $flatIdentifier,
+      flatIdentifier: $flatIdentifier,
       entityClassName: $entityClassName ?? null,
     );
   }

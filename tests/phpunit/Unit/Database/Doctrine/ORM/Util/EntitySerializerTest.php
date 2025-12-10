@@ -24,11 +24,14 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
 
+use ReflectionClass;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
@@ -150,11 +153,39 @@ class EntitySerializerTest extends TestCase
     $this->entitySerializer->addEntity($this->musician);
     $exportData = $this->entitySerializer->export();
     json_encode($exportData, JSON_PRETTY_PRINT);
-    $this->assertInstanceOf(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse::class, $exportData);
+    $this->assertInstanceOf(Util\EntityResponse::class, $exportData);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
+  }
+
+  /** @return void */
+  public function testExportWithShortNames(): void
+  {
+    $this->entitySerializer->reset();
+    $nameSpaceName = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
+    $this->entitySerializer->setCommonPrefix($nameSpaceName);
+    $this->entitySerializer->addEntity($this->musician);
+    $exportData = $this->entitySerializer->export();
+    json_encode($exportData, JSON_PRETTY_PRINT);
+    $this->assertInstanceOf(Util\EntityResponse::class, $exportData);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->entities);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->repositories);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\SepaBankAccount::class)->getShortName(), $exportData->repositories);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\ProjectParticipant::class)->getShortName(), $exportData->repositories);
+    $data = json_decode(json_encode($exportData), true);
+    array_walk_recursive(
+      $data,
+      function(mixed $value, mixed $key) use ($nameSpaceName) {
+        if (is_string($value)) {
+          $this->assertFalse(str_starts_with($value, $nameSpaceName), "Array value {$value} for key {$key} should not start with {$nameSpaceName}");
+        }
+        if (is_string($key)) {
+          $this->assertFalse(str_starts_with($key, $nameSpaceName), "Array key {$key} with value {$value} should not start with {$nameSpaceName}");
+        }
+      },
+    );
   }
 
   /** @return void */

@@ -24,13 +24,16 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
-use InvalidArgumentException;
+use ReflectionClass;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\AppFramework\Http;
+use OCP\AppFramework\OCS;
 use OCP\IRequest;
+use OC\AppFramework\Middleware\OCSMiddleware;
 
 use OCA\CAFEVDB\Controller\EntityRepositoryController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -67,8 +70,10 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReference::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReferenceCollection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer::class)]
@@ -101,9 +106,23 @@ class EntityRepositoryControllerTest extends TestCase
     EntityGeneratorTrait::setup as entitySetup;
   }
 
+  private const OCS_OK = [
+    'status' => 'ok',
+    'statuscode' => Http::STATUS_OK,
+    'message' => 'OK',
+  ];
+
   private EntityRepositoryController $entityRepositoryController;
 
   private EntityRepository $projectsRepository;
+
+  private EntityRepository $musiciansRepository;
+
+  private EntityRepository $projectParticipantsRepository;
+
+  private IRequest $request;
+
+  private OCSMiddleware $ocsMiddleware;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -112,6 +131,12 @@ class EntityRepositoryControllerTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
+
+    $this->request = $mockProvider->getRequest();
+    $this->request->method('getScriptName')->willReturn('/ocs/v2.php');
+    $this->request->method('getFormat')->willReturn('json');
+
+    $this->ocsMiddleware = new OCSMiddleware($this->request);
 
     $this->projectsRepository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
@@ -123,6 +148,38 @@ class EntityRepositoryControllerTest extends TestCase
       fn(array $identifier) => $this->project->getId() == ($identifier['id'] ?? null) ? $this->project : null,
     );
 
+    $this->musiciansRepository = $this->getMockBuilder(EntityRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->musiciansRepository->method('findBy')->willReturnCallback(
+      fn(array $criteria) => $this->musician->getId() == ($criteria['id'] ?? null) ? [ $this->musician ] : [],
+    );
+    $this->musiciansRepository->method('find')->willReturnCallback(
+      fn(array $identifier) => $this->musician->getId() == ($identifier['id'] ?? null) ? $this->musician : null,
+    );
+    $this->musiciansRepository->expects($this->never())->method('findBy');
+
+    $this->projectParticipantsRepository = $this->getMockBuilder(EntityRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->projectParticipantsRepository->method('findBy')->willReturnCallback(
+      function(array $criteria) {
+        if (($criteria['project'] ?? 1) === 1 && ($criteria['musician'] ?? 1) === 1) {
+          return [$this->participant];
+        }
+        return [];
+      },
+    );
+    $this->projectParticipantsRepository->method('find')->willReturnCallback(
+      function(array $identifier) {
+        if ($identifier['project'] === 1 && $identifier['musician'] === 1) {
+          return $this->participant;
+        }
+        return null;
+      },
+    );
+    $this->projectParticipantsRepository->expects($this->never())->method('findBy');
+
     $this->entityManager = $this->getMockBuilder(EntityManager::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -131,6 +188,10 @@ class EntityRepositoryControllerTest extends TestCase
         switch ($className) {
           case Entities\Project::class:
             return $this->projectsRepository;
+          case Entities\Musician::class:
+            return $this->musiciansRepository;
+          case Entities\ProjectParticipant::class:
+            return $this->projectParticipantsRepository;
         }
         return null;
       },
@@ -155,7 +216,7 @@ class EntityRepositoryControllerTest extends TestCase
 
     $this->entityRepositoryController = new EntityRepositoryController(
       appName: $mockProvider->appName,
-      request: $this->createStub(IRequest::class),
+      request: $this->request,
       entityManager: $this->entityManager, // this is the mock
       entitySerializer: $entitySerializer,
       logger: $mockProvider->getLoggerInterface(),
@@ -167,8 +228,57 @@ class EntityRepositoryControllerTest extends TestCase
   public function testConstruction(): void
   {
     $this->projectsRepository->expects($this->never())->method('findBy');
+    $this->projectsRepository->expects($this->never())->method('find');
     $this->entityManager->expects($this->never())->method('getRepository');
+    $this->assertEquals(1, $this->project->getParticipants()->count());
     // $this->expectNotToPerformAssertions();
+  }
+
+  /**
+   * @param string $entityName
+   *
+   * @param ?string $find
+   *
+   * @param ?string $findBy
+   *
+   * @param ?int $limit
+   *
+   * @param int $offset
+   *
+   * @param int $depth
+   *
+   * @param bool $throw
+   *
+   * @return $array
+   */
+  private function callGetEntities(
+    string $entityName,
+    ?string $find,
+    ?string $findBy,
+    ?int $limit,
+    int $offset,
+    int $depth,
+    bool $throw = true,
+  ): array {
+    $this->ocsMiddleware->beforeController($this->entityRepositoryController, 'getEntities');
+    try {
+      $response = $this->entityRepositoryController->getEntities(
+        entityName: $entityName,
+        find: $find,
+        findBy: $findBy,
+        limit: $limit,
+        offset: $offset,
+        depth: $depth,
+      );
+      $response = $this->entityRepositoryController->buildResponse($response, $this->request->getFormat());
+      $response = $this->ocsMiddleware->afterController($this->entityRepositoryController, 'getEntities', $response);
+    } catch (OCS\OCSException $e) {
+      if ($throw) {
+        throw $e;
+      }
+      $response = $this->ocsMiddleware->afterException($this->entityRepositoryController, 'getEntities', $e);
+    }
+    return json_decode($response->render(), associative: true);
   }
 
   /** @return void */
@@ -177,7 +287,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->never())->method('find');
     $this->projectsRepository->expects($this->once())->method('findBy');
     $this->entityManager->expects($this->once())->method('getRepository');
-    $response = $this->entityRepositoryController->getEntities(
+    $responseData = $this->callGetEntities(
       entityName: Entities\Project::class,
       find: null,
       findBy: base64_encode(json_encode([ 'id' => $this->project->getId() ])),
@@ -185,6 +295,9 @@ class EntityRepositoryControllerTest extends TestCase
       offset: 0,
       depth: 2,
     );
+    $this->assertEquals(self::OCS_OK, $responseData['ocs']['meta']);
+    $this->assertArrayHasKey('entities', $responseData['ocs']['data']);
+    $this->assertArrayHasKey('repositories', $responseData['ocs']['data']);
   }
 
   /** @return void */
@@ -193,7 +306,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->once())->method('find');
     $this->projectsRepository->expects($this->never())->method('findBy');
     $this->entityManager->expects($this->once())->method('getRepository');
-    $response = $this->entityRepositoryController->getEntities(
+    $responseData = $this->callGetEntities(
       entityName: Entities\Project::class,
       find: base64_encode(json_encode([ 'id' => $this->project->getId() ])),
       findBy: null,
@@ -201,7 +314,31 @@ class EntityRepositoryControllerTest extends TestCase
       offset: 0,
       depth: 2,
     );
+    $this->assertEquals(self::OCS_OK, $responseData['ocs']['meta']);
+    $this->assertArrayHasKey('entities', $responseData['ocs']['data']);
+    $this->assertArrayHasKey('repositories', $responseData['ocs']['data']);
   }
+
+  /** @return void */
+  public function testGetEntitiesFindShortNames(): void
+  {
+    $this->projectsRepository->expects($this->once())->method('find');
+    $this->projectsRepository->expects($this->never())->method('findBy');
+    $this->entityManager->expects($this->once())->method('getRepository');
+    $responseData = $this->callGetEntities(
+      entityName: new ReflectionClass(Entities\Project::class)->getShortName(),
+      find: base64_encode(json_encode([ 'id' => $this->project->getId() ])),
+      findBy: null,
+      limit: null,
+      offset: 0,
+      depth: 2,
+    );
+    $this->assertEquals(self::OCS_OK, $responseData['ocs']['meta']);
+    $this->assertArrayHasKey('entities', $responseData['ocs']['data']);
+    $this->assertEquals(1, count($responseData['ocs']['data']['entities']));
+    $this->assertArrayHasKey('repositories', $responseData['ocs']['data']);
+  }
+
 
   /** @return void */
   public function testFailNoSearchTerms(): void
@@ -209,8 +346,8 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->never())->method('find');
     $this->projectsRepository->expects($this->never())->method('findBy');
     $this->entityManager->expects($this->never())->method('getRepository');
-    $this->expectException(InvalidArgumentException::class);
-    $response = $this->entityRepositoryController->getEntities(
+    $this->expectException(OCS\OCSBadRequestException::class);
+    $response = $this->callGetEntities(
       entityName: Entities\Project::class,
       find: null,
       findBy: null,
@@ -226,8 +363,8 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->never())->method('find');
     $this->projectsRepository->expects($this->never())->method('findBy');
     $this->entityManager->expects($this->never())->method('getRepository');
-    $this->expectException(InvalidArgumentException::class);
-    $response = $this->entityRepositoryController->getEntities(
+    $this->expectException(OCS\OCSBadRequestException::class);
+    $response = $this->callGetEntities(
       entityName: Entities\Project::class,
       find: '',
       findBy: '',
@@ -245,7 +382,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->entityManager->expects($this->once())->method('getRepository');
     $identifier = [ 'id' => -1 ];
     try {
-      $response = $this->entityRepositoryController->getEntities(
+      $response = $this->callGetEntities(
         entityName: Entities\Project::class,
         find: base64_encode(json_encode($identifier)),
         findBy: null,
@@ -253,7 +390,9 @@ class EntityRepositoryControllerTest extends TestCase
         offset: 0,
         depth: 2,
       );
-    } catch (Exceptions\DatabaseEntityNotFoundException $e) {
+    } catch (OCS\OCSNotFoundException $ocsException) {
+      $e = $ocsException->getPrevious();
+      $this->assertInstanceOf(Exceptions\DatabaseEntityNotFoundException::class, $e);
       $this->assertEquals(Entities\Project::class, $e->entityClassName);
       $this->assertEquals($identifier, $e->identifier);
     }
