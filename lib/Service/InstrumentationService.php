@@ -143,6 +143,10 @@ class InstrumentationService
         ->setCreated(new DateTimeImmutable)
         ->setUpdated(new DateTimeImmutable);
       $dummy->getProjectParticipation()->set($project->getId(), $participant);
+      if (!$persist) {
+        $dummy->setId(1);
+      }
+      $project->getParticipants()->set($dummy->getId(), $participant);
     }
 
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
