@@ -52,7 +52,7 @@ jest.mock('../../../../src/logger.ts', () => {
     __esModule: true,
     ...originalModule,
     default: {
-      setSilent: (value: boolean) => { silent = value },
+      setSilent: (value: boolean) => { silent = value; },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       debug: (..._args: any[]) => {
         // console.debug(...args);
@@ -187,8 +187,10 @@ describe('app-l10n', () => {
         expect(getAppLanguage()).toBe(language);
       });
       it('should fail to setup the language given an invalid locale', async () => {
+        // @ts-expect-error 2339
         logger.setSilent(true);
         await setupLocale('!"§$%&/()=');
+        // @ts-expect-error 2339
         logger.setSilent(false);
         expect(getAppLanguage()).toBe('en');
       });
