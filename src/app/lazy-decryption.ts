@@ -227,7 +227,8 @@ const lazyBatchDecryptValues = function($container: JQuery) {
     }
     getOptions($filter).each(function() {
       const $option = $(this);
-      if ($option.val() === '' || $option.val() === '*') {
+      const optionValue = $option.val();
+      if (optionValue === '' || optionValue === '*' || optionValue === '!=%') {
         // skip special placeholder filters.
         return;
       }
