@@ -32,6 +32,7 @@ use Psr\Container\ContainerInterface;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -45,6 +46,24 @@ class Registration
   public const APP_LOCALE = 'AppLocale';
   public const APP_LANGUAGE = 'AppLanguage';
   public const APP_L10N = 'AppL10N';
+
+  /**
+   * Backwards compatibility support after converting stuff to camel case.
+   *
+   * @param string $key
+   *
+   * @return ?string
+   */
+  protected static function oldConfigKey(string $key): ?string
+  {
+    $oldConfigKey = null;
+    if (!empty(OldSettingsKeys::APP_KEYS[$key]) && OldSettingsKeys::APP_KEYS[$key] != $key) {
+      $oldConfigKey = OldSettingsKeys::APP_KEYS[$key];
+    } elseif (strtolower($key) != $key) {
+      $oldConfigKey = strtolower($key);
+    }
+    return $oldConfigKey;
+  }
 
   /**
    * Static service registration routine.
@@ -71,11 +90,15 @@ class Registration
     });
 
     $context->registerService(self::MANAGEMENT_GROUP_ID, function(ContainerInterface $container) {
-      return $container->get(IConfig::class)->getAppValue(
-        $container->get('AppName'),
-        ConfigConstants::USER_GROUP_KEY,
-        null
-      );
+      $cloudConfig = $container->get(IConfig::class);
+      $appName = $container->get('AppName');
+      $default = null;
+      $oldConfigKey = self::oldConfigKey(ConfigConstants::USER_GROUP_KEY);
+      if ($oldConfigKey) {
+        $default = $cloudConfig->getAppValue($appName, $oldConfigKey, $default);
+      }
+      $result = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY, $default);
+      return $result;
     });
     $context->registerServiceAlias(lcfirst(self::MANAGEMENT_GROUP_ID), self::MANAGEMENT_GROUP_ID);
 
