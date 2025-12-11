@@ -25,6 +25,7 @@ xml2js.parseString(fs.readFileSync(infoFile), function(err, result) {
   appInfo = result;
 });
 const appName = appInfo.info.id[0];
+const appVersion = appInfo.info.version[0];
 const productionMode = process.env.NODE_ENV === 'production';
 
 const svgoOptions = {
@@ -150,6 +151,7 @@ module.exports = {
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
       appName: JSON.stringify(appName),
+      appVersion: JSON.stringify(appVersion),
     }),
     new HtmlWebpackPlugin({
       inject: false,
