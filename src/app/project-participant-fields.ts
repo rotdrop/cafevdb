@@ -785,7 +785,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     const $row = $self.closest('tr.data-options');
     const fieldId = $row.data('fieldId');
     // defer submit until after validation.
-    const submitDefer = PHPMyEdit.deferReload($container);
+    const submitDefer = PHPMyEdit.deferReload($container, 'generator-run');
     const cleanup = function() {
       $self.removeClass('busy');
       setFieldTypeCssClass(fieldTypeData());
@@ -886,7 +886,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       }
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload($container);
+      const submitDefer = PHPMyEdit.deferReload($container, 'monetary-value-validation');
       self.prop('readonly', true);
 
       const cleanup = function() {
@@ -970,7 +970,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
             + '&' + allowed.serialize();
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload($container);
+      const submitDefer = PHPMyEdit.deferReload($container, 'generator-define');
       allowed.each(function() {
         const $this = $(this);
         $this.data('readonly-saved', $this.prop('readonly'));
@@ -1091,7 +1091,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
             + '&' + allowed.serialize();
 
       // defer submit until after validation.
-      const submitDefer = PHPMyEdit.deferReload($container);
+      const submitDefer = PHPMyEdit.deferReload($container, 'option-define');
       allowed.prop('readonly', true);
       const cleanup = function() {
         if (!allowed.hasClass('readonly')) {

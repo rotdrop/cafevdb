@@ -291,8 +291,19 @@ const pmeSubmitOuterFormNoThrow = function(outerSelector: string|JQuery, options
 const deferKey = pmePrefix + '-submitdefer';
 const cancellableKey = pmePrefix + '-cancellable';
 
+type DeferReload = {
+  tag: string,
+  promise: Promise<string>,
+  resolve: (result?: string) => void,
+};
+
 const cancelDeferredReload = <E extends HTMLElement>($container: JQuery<E>) => {
-  $container.data(deferKey, []);
+  console.info('CANCEL DEFER RELOAD');
+  const promises: Record<string, PromiseWithResolvers<string> > = $container.data(deferKey) ?? {};
+  for (const promise of Object.values(promises)) {
+    promise.resolve('cancelled');
+  }
+  $container.data(deferKey, {});
 };
 
 /**
@@ -300,17 +311,35 @@ const cancelDeferredReload = <E extends HTMLElement>($container: JQuery<E>) => {
  * until after validation of data, for example.
  *
  * @param $container TBD.
+ *
+ * @param tag TBD.
  */
-const pmeDeferReload = <E extends HTMLElement>($container: JQuery<E>) => {
-  const defer = $.Deferred();
-  const promises = $container.data(deferKey) || [];
-  promises.push(defer.promise());
-  $container.data(deferKey, promises);
-  return defer;
+const pmeDeferReload = <E extends HTMLElement, T extends string>(
+  $container: JQuery<E>,
+  tag: T,
+) => {
+  const { promise, resolve } = Promise.withResolvers<string>();
+  const promises: Record<string, DeferReload> = $container.data(deferKey) ?? {};
+  if (promises[tag]) {
+    console.error('PROMISE ALREADY SET', { tag, promises });
+    promises[tag].resolve('replaced');
+  }
+  promises[tag] = {
+    tag,
+    promise,
+    resolve: (result) => {
+      console.info('RESOLVING WITH', { tag, result });
+      resolve(tag + (result ? ': ' + result : ''));
+    },
+  };
+  console.info('DEFER RELOAD', { promises });
+  return promises[tag];
 };
 
 const reloadDeferred = <E extends HTMLElement>($container: JQuery<E>) => {
-  return $.when(...$container.data(deferKey));
+  const promises: Record<string, PromiseWithResolvers<string> > = $container.data(deferKey) ?? {};
+  console.info('RELOAD DEFERRED', { promises });
+  return Promise.allSettled(Object.values(promises).map(withResolvers => withResolvers.promise));
 };
 
 const pmeCancelBeforeSubmit = <E extends HTMLElement>($container: JQuery<E>) => {
@@ -399,7 +428,7 @@ const pmeIsHalted = function() {
   return !!PHPMyEdit.stopped;
 };
 
-const pmePost = function(post: JQuery.PlainObject|string) {
+const pmePost = (post: JQuery.PlainObject|string) => {
   // console.debug('PME POST', post);
   if (pmeIsHalted()) {
     // just return a promise which is never resolved.
@@ -463,7 +492,7 @@ const tableDialogLoadIndicator = <E extends HTMLElement>($container: JQuery<E>, 
  * @param triggerData Additional data passed to the calling
  * event handler after being triggered artifically.
  */
-const tableDialogReload = (
+const tableDialogReload = async (
   tableDialogOptions: TableDialogOptions,
   callback: (data: TableDialogCallbackData) => void,
   triggerData: TriggerData,
@@ -484,38 +513,40 @@ const tableDialogReload = (
   blockTableDialog(container);
   tableDialogLoadIndicator(container, true);
 
+  pmeCancelBeforeSubmit(container);
+
   // Possibly delay reload until validation handlers have done their
   // work.
-  reloadDeferred(container).then(function() {
+  console.info('BEFORE RELOAD DEFERRED');
+  await reloadDeferred(container);
 
-    pmeCancelBeforeSubmit(container);
+  let post = container.find(pmeFormSelector).serialize();
 
-    let post = container.find(pmeFormSelector).serialize();
+  // add the option values
+  post += '&' + $.param(tableDialogOptions);
 
-    // add the option values
-    post += '&' + $.param(tableDialogOptions);
+  // add name and value of the "submit" button.
+  post += '&' + $.param({ [reloadName]: reloadValue });
 
-    // add name and value of the "submit" button.
-    post += '&' + $.param({ [reloadName]: reloadValue });
-
-    pmePost(post)
-      .fail(function(xhr, status, errorThrown) {
-        pageBusyIcon(false);
-        unblockTableDialog(container);
-        tableDialogLoadIndicator(container, false);
-        container.data(pmeToken('reloading'), false);
-        if (typeof triggerData?.reject === 'function') {
-          triggerData.reject({ xhr, status, errorThrown });
-        }
-      })
-      .done(function(htmlContent, _historyAction, _post) {
-        tableDialogReplace(container, htmlContent, tableDialogOptions, callback, triggerData);
-        container.data(pmeToken('reloading'), false);
-        if (typeof triggerData?.resolve === 'function') {
-          triggerData.resolve('reloaded');
-        }
-      });
-  });
+  try {
+    const htmlContent = await pmePost(post);
+    tableDialogReplace(container, htmlContent, tableDialogOptions, callback, triggerData);
+    container.data(pmeToken('reloading'), false);
+    if (typeof triggerData?.resolve === 'function') {
+      triggerData.resolve('reloaded');
+    }
+  } catch (error) {
+    pageBusyIcon(false);
+    unblockTableDialog(container);
+    tableDialogLoadIndicator(container, false);
+    container.data(pmeToken('reloading'), false);
+    if (typeof triggerData?.reject === 'function') {
+      const xhr = error as JQuery.jqXHR;
+      const status = 'error';
+      const errorThrown = xhr.statusText;
+      triggerData.reject({ xhr, status, errorThrown });
+    }
+  }
 };
 
 /**
@@ -757,9 +788,9 @@ const tableDialogHandlers = (
         ['morechange', 'applyadd', 'applycopy']);
       const deleteSelector = pmeSysNameSelector('input', 'savedelete');
 
-      reloadDeferred($container).then(function() {
+      pmeCancelBeforeSubmit($container);
 
-        pmeCancelBeforeSubmit($container);
+      reloadDeferred($container).then(function() {
 
         let post = $container.find(pmeFormSelector).serialize();
         post += '&' + $.param(tableDialogOptions);

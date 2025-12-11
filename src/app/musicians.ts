@@ -188,7 +188,7 @@ const contactValidation = function(container?: string|JQuery) {
 
       event.stopImmediatePropagation();
 
-      const submitDefer = PHPMyEdit.deferReload($container);
+      const submitDefer = PHPMyEdit.deferReload($container, 'phone-number-validation');
 
       const phones = $form.find('input.phone-number');
       const post = $form.serialize();
@@ -274,7 +274,7 @@ const contactValidation = function(container?: string|JQuery) {
 
       event.stopImmediatePropagation();
 
-      const submitDefer = PHPMyEdit.deferReload($container);
+      const submitDefer = PHPMyEdit.deferReload($container, 'email-validation');
 
       const post = $form.serialize();
       $emailInput.prop('disabled', true);
@@ -622,10 +622,11 @@ const contactValidation = function(container?: string|JQuery) {
       return false;
     }
 
-    const submitDefer = PHPMyEdit.deferReload($container);
+    const submitDefer = PHPMyEdit.deferReload($container, 'autocomplete-address');
     pageBusyIcon(true);
 
     Promise.allSettled([
+
       new Promise((resolve, reject) => fetchPlaceAutocompletion().done(resolve).fail(() => reject(new Error()))),
       new Promise((resolve, reject) => fetchStreetAutocompletion().done(resolve).fail(() => reject(new Error()))),
     ])
