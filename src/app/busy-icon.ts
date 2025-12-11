@@ -25,7 +25,6 @@ import { emit } from '../services/async-event-bus.ts';
 import { SET_BUSY_FLAG } from '../event-bus-events.ts';
 
 const busyIcon = function(on?: boolean) {
-  console.debug('SET BUSY FLAG TO', !!on);
   emit(SET_BUSY_FLAG, { value: !!on });
 };
 
