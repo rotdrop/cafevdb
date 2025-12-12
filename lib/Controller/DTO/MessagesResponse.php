@@ -53,7 +53,7 @@ class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
       $messages = [$data['message']];
     }
     return new self(
-      messges: $messsages,
+      messages: $messsages,
       hints: $hints ?? null,
     );
   }
