@@ -293,7 +293,7 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function getSubmitDate():?DateTimeInterface
   {
-    return $this->submitDate;
+    return $this->submitDate ?? null;
   }
 
   /**
