@@ -70,6 +70,7 @@ use Sabre\VObject\Component\VCalendar;
 
 use OCP\IL10N;
 use OCP\IUserSession;
+use OCP\IDateTimeZone;
 
 /*
  *
@@ -93,6 +94,7 @@ class OC_Calendar_Object
   public function __construct(
     protected IL10N $l,
     protected IUserSession $userSession,
+    protected IDateTimeZone $dateTimeZone,
   ) {
   }
   // phpcs:enable
@@ -748,7 +750,7 @@ class OC_Calendar_Object
     } else {
       //$timezone = OC_Calendar_App::getTimezone();
       //$timezone = new DateTimeZone($timezone);
-      $timezone = $this->getDateTimeZone();
+      $timezone = $this->dateTimeZone->getTimeZone();
 
       $start = new DateTime($from.' '.$fromtime, $timezone);
       $end = new DateTime($to.' '.$totime, $timezone);
