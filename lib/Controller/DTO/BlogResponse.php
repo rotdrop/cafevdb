@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use InvalidArgumentException;
-
 /**
  * DTO document storage file uploads meta data.
  */
