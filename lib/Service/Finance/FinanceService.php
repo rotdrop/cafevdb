@@ -883,7 +883,7 @@ class FinanceService
       $categories .= $project->getName().',';
     }
     $categories .= $this->l->t(ConfigConstants::FINANCE_CALENDAR_URI);
-    $calendarId = $this->getConfigValue($eventKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
 
     $taskData = [
       'summary' => $title,

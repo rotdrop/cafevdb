@@ -69,7 +69,7 @@ import {
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
-import type { ReceivablesStatistics, SepaDebitMandate, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitMandate, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EnumSepaDebitMandateRevocationAction, EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
@@ -1307,11 +1307,11 @@ const mandateExportHandler = function<Element extends HTMLFormElement, Event ext
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })
-    .done(function(data) {
-      if (!Ajax.validateResponse(data, ['messages', 'bankTransferId', 'debitMandateId'], clearBusyState)) {
+    .done(function(data: SepaBulkTransactionResponse) {
+      if (!Ajax.validateResponse(data, ['messages', 'bankTransferId', 'debitNoteId'], clearBusyState)) {
         return;
       }
-      Notification.messages(data.message);
+      Notification.messages(data.messages);
       clearBusyState();
     });
 

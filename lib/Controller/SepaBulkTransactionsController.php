@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Throwable;
+use UnexpectedValueException;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -419,7 +420,7 @@ class SepaBulkTransactionsController extends Controller
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables, $dueDateEstimate);
       if ($compositePayment->getAmount()->eq(0)) {
-        // $this->logInfo('AMOUNT IS 0 ' . $participant->getPublicName());
+        $this->logInfo('AMOUNT IS 0 ' . $participant->getPublicName());
         // @todo Check whether this should be communicated to the musician anyway
         continue;
       }
@@ -442,7 +443,7 @@ class SepaBulkTransactionsController extends Controller
         // In general we do not use non-recurring, but play
         // safe. Mixing recurring and non-recurring debit-notes may
         // lead to errors when submitting the data to the bank.
-        if ($nonRecurring !== null && $debitMandate->getNonRecurring() != $nonRecurring) {
+        if ($nonRecurring !== ngull && $debitMandate->getNonRecurring() != $nonRecurring) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t(
               'The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only.'
@@ -617,6 +618,9 @@ class SepaBulkTransactionsController extends Controller
               start: $hardSubmissionDeadline[$bulkTag],
               alarm: $alarmTimes,
             );
+            if ($object === null) {
+              throw new UnexpectedValueException('NULL CALENDAR OBJECT');
+            }
             $bulkTransaction->setSubmissionEventUri($eventUri);
             $bulkTransaction->setSubmissionEventUid($eventUid);
             $calendarData[$bulkTag][] = $object;
@@ -662,6 +666,9 @@ class SepaBulkTransactionsController extends Controller
               due: $hardSubmissionDeadline[$bulkTag],
               alarm: $alarmTimes,
             );
+            if ($object === null) {
+              throw new UnexpectedValueException('NULL CALENDAR OBJECT');
+            }
             $bulkTransaction->setSubmissionTaskUri($taskUri);
             $bulkTransaction->setSubmissionTaskUid($taskUid);
             $calendarData[$bulkTag][] = $object;
@@ -717,6 +724,9 @@ class SepaBulkTransactionsController extends Controller
               start: $bulkTransaction->getDueDate(),
               payments: $bulkTransaction->getPayments(),
             );
+            if ($object === null) {
+              throw new UnexpectedValueException('NULL CALENDAR OBJECT');
+            }
             $bulkTransaction->setDueEventUri($eventUri);
             $bulkTransaction->setDueEventUid($eventUid);
             $calendarData[$bulkTag][] = $object;
@@ -759,6 +769,9 @@ class SepaBulkTransactionsController extends Controller
                 alarm: SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS,
                 payments: $debitNote->getPayments(),
               );
+              if ($object === null) {
+                throw new UnexpectedValueException('NULL CALENDAR OBJECT');
+              }
               $debitNote->setPreNotificationEventUri($eventUri);
               $debitNote->setPreNotificationEventUid($eventUid);
               $calendarData[$bulkTag][] = $object;
@@ -789,6 +802,9 @@ class SepaBulkTransactionsController extends Controller
                 due: $debitNote->getPreNotificationDeadline(),
                 alarm: SepaBulkTransactionService::BULK_TRANSACTION_REMINDER_SECONDS,
               );
+              if ($object === null) {
+                throw new UnexpectedValueException('NULL CALENDAR OBJECT');
+              }
               $debitNote->setPreNotificationTaskUri($taskUri);
               $debitNote->setPreNotificationTaskUid($taskUid);
               $calendarData[$bulkTag][] = $object;
@@ -879,11 +895,11 @@ class SepaBulkTransactionsController extends Controller
     }
 
     $responseData = [
-      'message' => $messages,
+      'messages' => $messages,
       'bankTransferId' => empty($bankTransfer) ? 0 : $bankTransfer->getId(),
-      'debitMandateId' => empty($debitNote) ? 0 : $debitNote->getId(),
+      'debitNoteId' => empty($debitNote) ? 0 : $debitNote->getId(),
     ];
-    return self::dataResponse($responseData);
+    return new DataResponse($responseData);
   }
 
   /**

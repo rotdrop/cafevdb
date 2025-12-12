@@ -26,12 +26,12 @@ namespace OCA\CAFEVDB\Service;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
 use Exception;
 use InvalidArgumentException;
 use Throwable;
-use DateTimeInterface;
-use DateTimeImmutable;
-use DateTimeZone;
 
 use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
@@ -81,9 +81,9 @@ class EventsService
   public const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   public const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
 
-  private const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
-  private const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
-  private const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
+  public const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
+  public const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
+  public const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
 
   public const PROJECT_REGISTRATION_CATEGORY = 'project registration';
   public const RECORD_ABSENCE_CATEGORY = 'record absence';
