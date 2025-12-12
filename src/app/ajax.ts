@@ -289,7 +289,7 @@ done automatically when cloud click "ok" or close this dialog window.
  */
 const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
   data: T,
-  required: string[],
+  required: (keyof T)[],
   errorCB: (arg: T) => void = () => {},
 ) => {
   const dialogCallback = () => {
@@ -304,11 +304,12 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
     return false;
   }
   let missing = '';
-  for (let idx = 0; idx < required.length; ++idx) {
-    if (typeof data[required[idx]] === 'undefined') {
+  for (const key of required) {
+    if (typeof data[key] === 'undefined') {
+      const keyString = typeof key === 'symbol' ? key.toString() : '' + (key as string|number);
       missing += t(
         appName, 'Field {RequiredField} not present in AJAX response.',
-        { RequiredField: required[idx] }) + '<br>';
+        { RequiredField: keyString }) + '<br>';
     }
   }
   if (missing.length > 0) {
