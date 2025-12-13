@@ -137,8 +137,7 @@ class FinanceService
    */
   public function getDueDate(
     Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable,
-  ): DateTimeInterface
-  {
+  ): DateTimeInterface {
     $field = $receivable->getField();
     if ($field->getMultiplicity() == Types\EnumParticipantFieldMultiplicity::RECURRING) {
       /** @var ReceivablesGeneratorFactory $factory */
@@ -322,7 +321,7 @@ class FinanceService
    *
    * @return string The generated invoice number.
    */
-  public function generateInvoiceNumber(Entities\Musician $originator, null|int|Entities\Project $project, ?DateTimeImmutable $date = null):string
+  public function generateInvoiceNumber(Entities\Musician $originator, null|int|Entities\Project $project, ?DateTimeInterface $date = null):string
   {
     $date = $date ?? (new DateTime);
     $parts = [
@@ -918,8 +917,8 @@ class FinanceService
    */
   public function deleteFinanceCalendarEntry(mixed $objectIdentifier):void
   {
-    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
-    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
+    $calendarKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($calendarKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     if (!is_array($objectIdentifier)) {
       $objectIdentifier = [ $objectIdentifier ];
     }
@@ -971,9 +970,7 @@ class FinanceService
    */
   public function updateFinanceCalendarEntry(array $event):void
   {
-    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
-    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
-    $this->eventsService->udpateCalendarEntry($calendarId, $event);
+    $this->eventsService->updateCalendarEntry($event);
   }
 
   /**
