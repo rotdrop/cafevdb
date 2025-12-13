@@ -791,7 +791,7 @@ class SepaBankAccounts extends PMETableViewBase
           }
           // In order not to trigger erroneous update of unchanged value we
           // emit the sequence value as hidden input. It is further protected
-          // by an udpate "trigger" which just forces it to remain unchanged.
+          // by an update "trigger" which just forces it to remain unchanged.
           $html = $pme->htmlHiddenData($pme->fds[$k], $value);
           $html .= '<span class="cell-wrapper">' . (string)$value . '</span>';
           return $html;
