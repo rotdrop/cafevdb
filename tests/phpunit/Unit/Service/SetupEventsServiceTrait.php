@@ -35,6 +35,7 @@ use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
+use OCP\IDateTimeZone;
 
 use OCA\DAV\CalDAV\CalDavBackend;
 
@@ -237,6 +238,7 @@ trait SetupEventsServiceTrait
       legacyCalendarObject: new OC_Calendar_Object(
         userSession: $mockProvider->getUserSession(),
         l: $mockProvider->getL10N(),
+        dateTimeZone: $this->createStub(IDateTimeZone::class),
       ),
     );
 

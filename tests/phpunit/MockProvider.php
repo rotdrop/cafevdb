@@ -681,6 +681,9 @@ class MockProvider
               $this->getLoggerInterface(),
               $this->getL10N(),
             );
+          case lcfirst(Registration::USER_LOCALE):
+          case Registration::USER_LOCALE:
+            return 'de_DE.UTF-8';
           // case ucfirst(Registration::APP_LOCALE):
           // case Registration::APP_LOCALE:
           //   return self::CONFIG_MOCK_VALUES[ConfigConstants::ORCHESTRA_LOCALE_KEY];

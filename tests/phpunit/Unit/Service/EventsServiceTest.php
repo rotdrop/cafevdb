@@ -103,6 +103,135 @@ class EventsServiceTest extends TestCase
     $this->assertEquals($this->project->getCalendarEvents()->count(), count($events));
   }
 
+  private const BRIEF_EVENT_DATES = [
+    '22.02.2024, 09:10',
+    '20.04.2024, 16:15',
+    '16.02.2025',
+    '16.02.2025, 17:56',
+    '04.03.2025, 09:00',
+    '05.03.2025',
+    '06.03.2025',
+    '06.03.2025',
+    '06.03.2025 - 07.03.2025',
+    '18.03.2025',
+    '19.03.2025',
+    '20.03.2025',
+    '20.03.2025 - 21.03.2025',
+    '21.04.2025, 08:00',
+    '22.04.2025',
+    '23.04.2025',
+    '24.04.2025',
+    '25.04.2025',
+    '26.04.2025',
+    '26.04.2025 - 27.04.2025',
+    '01.08.2025 - 31.12.2025',
+  ];
+
+  private const LONG_EVENT_DATES = [
+    '22.02.2024, 09:10 - 10:10',
+    '20.04.2024, 16:15 - 19:15',
+    '16.02.2025',
+    '16.02.2025, 17:56 - 17:56',
+    '04.03.2025, 09:00 - 23:00',
+    '05.03.2025',
+    '06.03.2025',
+    '06.03.2025',
+    '06.03.2025, 23:00  -  07.03.2025, 16:00',
+    '18.03.2025',
+    '19.03.2025',
+    '20.03.2025',
+    '20.03.2025, 23:00  -  21.03.2025, 16:00',
+    '21.04.2025, 08:00 - 22:00',
+    '22.04.2025',
+    '23.04.2025',
+    '24.04.2025',
+    '25.04.2025',
+    '26.04.2025',
+    '26.04.2025, 22:00  -  27.04.2025, 09:00',
+    '01.08.2025  -  31.12.2025',
+  ];
+
+  private const MATRIX_BRIEF_EVENT_DATES = [
+    '20.04.2024, 16:15',
+    '22.02.2024, 09:10',
+    '18.03.2025',
+    '19.03.2025',
+    '20.03.2025',
+    '20.03.2025 - 21.03.2025',
+    '16.02.2025',
+    '21.04.2025, 08:00',
+    '22.04.2025',
+    '23.04.2025',
+    '24.04.2025',
+    '25.04.2025',
+    '26.04.2025',
+    '26.04.2025 - 27.04.2025',
+    '01.08.2025 - 31.12.2025',
+    '16.02.2025, 17:56',
+    '04.03.2025, 09:00',
+    '05.03.2025',
+    '06.03.2025',
+    '06.03.2025',
+    '06.03.2025 - 07.03.2025',
+  ];
+
+  private const MATRIX_LONG_EVENT_DATES = [
+    '20.04.2024, 16:15 - 19:15',
+    '22.02.2024, 09:10 - 10:10',
+    '18.03.2025',
+    '19.03.2025',
+    '20.03.2025',
+    '20.03.2025, 23:00  -  21.03.2025, 16:00',
+    '16.02.2025',
+    '21.04.2025, 08:00 - 22:00',
+    '22.04.2025',
+    '23.04.2025',
+    '24.04.2025',
+    '25.04.2025',
+    '26.04.2025',
+    '26.04.2025, 22:00  -  27.04.2025, 09:00',
+    '01.08.2025  -  31.12.2025',
+    '16.02.2025, 17:56 - 17:56',
+    '04.03.2025, 09:00 - 23:00',
+    '05.03.2025',
+    '06.03.2025',
+    '06.03.2025',
+    '06.03.2025, 23:00  -  07.03.2025, 16:00',
+    ];
+
+  /** @return void */
+  public function testEventDateFromEventData(): void
+  {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
+    $events = $this->eventsService->events($this->project->getId());
+    foreach ($events as $index => $event) {
+      $this->assertEquals(self::BRIEF_EVENT_DATES[$index], $this->eventsService->briefEventDate($event));
+      $this->assertEquals(self::LONG_EVENT_DATES[$index], $this->eventsService->longEventDate($event));
+    }
+  }
+
+  /** @return void */
+  public function testBriefEventDateFromEventMatrix(): void
+  {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->atLeastOnce())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
+
+    $events = $this->eventsService->events($this->project->getId());
+    $calendars = $this->eventsService->defaultCalendars();
+    $matrix = $this->eventsService->eventMatrix($events, $calendars);
+    $matrixEvents = [];
+    foreach ($matrix as $rowIndex => $matrixRow) {
+      $matrixEvents = array_merge($matrixEvents, $matrixRow->events);
+    }
+    foreach ($matrixEvents as $index => $matrixEvent) {
+      $this->assertEquals(self::MATRIX_BRIEF_EVENT_DATES[$index], $this->eventsService->briefEventDate($matrixEvent));
+      $this->assertEquals(self::MATRIX_LONG_EVENT_DATES[$index], $this->eventsService->longEventDate($matrixEvent));
+    }
+  }
+
   /** @return void */
   public function testDefaultCalendars(): void
   {
