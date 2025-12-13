@@ -542,6 +542,7 @@ class OrganizationalRolesService
     return $this->inGroup($userId, $clubMembersGid);
   }
 
+  /** @return void */
   protected static function l10nDummy(): void
   {
     self::t(self::TREASURER_ROLE);
