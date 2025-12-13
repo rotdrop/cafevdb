@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
@@ -548,6 +549,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
           $template = $template . '-' . $this->l->t('announcement');
           list($template,) = $this->normalizeTemplateName($template);
+        } else {
+          $this->logInfo('TEMPLATE IS ALREADY SET: "' . $template . '".');
         }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
           ? 1
@@ -5989,10 +5992,10 @@ to your user name and will be invalidated in the unfortunate case that you leave
     // build the select option control array
     $selectOptions = [];
     foreach ($eventMatrix as $eventGroup) {
-      $group = $this->l->t($eventGroup['name']);
-      foreach ($eventGroup['events'] as $event) {
+      $group = $this->l->t($eventGroup->name);
+      foreach ($eventGroup->events as $event) {
         $datestring = $this->eventsService->briefEventDate($event);
-        $name = stripslashes($event['summary']).', '.$datestring;
+        $name = stripslashes($event->summary).', '.$datestring;
         $eventData = ProjectEventsController::makeInputValue($event);
         $flatIdentifier = EventsService::makeFlatIdentifier($event);
         $selectOptions[] = [

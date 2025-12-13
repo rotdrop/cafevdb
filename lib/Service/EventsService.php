@@ -213,7 +213,10 @@ class EventsService
       $forcedCalendarId = $this->getCalendarId(ConfigConstants::FINANCE_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::FINANCE_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t(
+        'Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.',
+        [ $objectUri, ConfigConstants::FINANCE_CALENDAR_URI ],
+      );
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
@@ -224,7 +227,10 @@ class EventsService
       $forcedCalendarId = $this->getCalendarId(ConfigConstants::OTHER_CALENDAR_URI);
       $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
-      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigConstants::OTHER_CALENDAR_URI ]);
+      $errorMessage = $this->appL10n()->t(
+        'Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.',
+        [ $objectUri, ConfigConstants::OTHER_CALENDAR_URI ],
+      );
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
     }
@@ -720,8 +726,6 @@ class EventsService
    * [ 'start' => array('date' => ..., 'time' => ..., 'allDay' => ...), 'end' => ... ]
    * ```
    *
-   * @todo Perhaps convert to DateTime class instead of using strftime().
-   *
    * @note The $locale and $timezone parameters are still used by
    * self::eventData() which is used by the ProjectEventsApiController via
    * self::projectEventData(). The controller serves requests from the Redaxo
@@ -731,7 +735,6 @@ class EventsService
   {
     if ($timezone === null) {
       $timezone = $this->getTimezone();
-      $this->getDateTimeZone();
     }
     if ($locale === null) {
       $locale = $this->getLocale();
@@ -798,22 +801,27 @@ class EventsService
   /**
    * Form a brief event date in the given locale.
    *
-   * @param array $eventObject The corresponding event object from fetchEvent() or events().
+   * @param array|DTO\EventMatrixEvent $eventObject The corresponding event object from fetchEvent() or events().
    *
    * @return string
    */
-  public function briefEventDate(array $eventObject):string
+  public function briefEventDate(array|DTO\EventMatrixEvent $eventObject):string
   {
-    $times = $this->eventTimes($eventObject);
+    if (!is_array($eventObject)) {
+      $times = $eventObject->times;
+    } else {
+      $times = DTO\EventTimes::fromArray($this->eventTimes($eventObject));
+    }
 
-    if ($times['start']['date'] == $times['end']['date']) {
-      $datestring = $times['start']['date'];
-      if (!$times['allDay']) {
-        $startTime = $times['start']['time'];
-        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('until %s', $times['end']['time']) : $startTime);
+    if ($times->start->date == $times->end->date) {
+      $datestring = $times->start->date;
+      if (!$times->allDay) {
+        $startTime = $times->start->time;
+        $datestring .= ', '
+          . ($startTime == '00:00' ? $this->l->t('until %s', $times->end->time) : $startTime);
       }
     } else {
-      $datestring = $times['start']['date'].' - '.$times['end']['date'];
+      $datestring = $times->start->date.' - '.$times->end->date;
     }
     return $datestring;
   }
@@ -821,27 +829,31 @@ class EventsService
   /**
    * Form a "brief long" event date in the given locale.
    *
-   * @param array $eventObject The corresponding event object from fetchEvent() or events().
+   * @param array|DTO\EventMatrixEvent $eventObject The corresponding event object from fetchEvent() or events().
    *
    * @return string
    */
-  public function longEventDate(array $eventObject):string
+  public function longEventDate(array|DTO\EventMatrixEvent $eventObject):string
   {
-    $times = $this->eventTimes($eventObject);
+    if (!is_array($eventObject)) {
+      $times = $eventObject->times;
+    } else {
+      $times = DTO\EventTimes::fromArray($this->eventTimes($eventObject));
+    }
 
-    if ($times['start']['date'] == $times['end']['date']) {
-      $datestring = $times['start']['date'];
-      if (!$times['allDay']) {
-        $datestring .= ', '.$times['start']['time'].' - '.$times['end']['time'];
+    if ($times->start->date == $times->end->date) {
+      $datestring = $times->start->date;
+      if (!$times->allDay) {
+        $datestring .= ', ' . $times->start->time . ' - ' . $times->end->time;
       }
     } else {
-      $datestring = $times['start']['date'];
-      if (!$times['allDay']) {
-        $datestring .= ', '.$times['start']['time'];
+      $datestring = $times->start->date;
+      if (!$times->allDay) {
+        $datestring .= ', ' . $times->start->time;
       }
-      $datestring .= '  -  '.$times['end']['date'];
-      if (!$times['allDay']) {
-        $datestring .= ', '.$times['end']['time'];
+      $datestring .= '  -  ' . $times->end->date;
+      if (!$times->allDay) {
+        $datestring .= ', ' . $times->end->time;
       }
     }
     return $datestring;
@@ -1023,7 +1035,7 @@ class EventsService
   /**
    * Export the given events in ICAL format. The events need not
    * belong to the same calendar.
-   *  //
+   *
    * @param array $events An array of event identifiers in the form
    * ```
    * [
@@ -1896,7 +1908,7 @@ class EventsService
    * @param string $eventURI The event key (external key).
    *
    * @param null|string|array $recurrenceId If not null only unregister this
-   * particular instance or instances
+   * particular instance or instances.
    *
    * @param bool $flush
    *
@@ -2042,8 +2054,6 @@ class EventsService
    * Change the categories attached to the given event. The event must be a
    * registered project event. The event is only updated if the categories
    * have actually changed.
-   *
-   * @param int|Entities\Project $projectOrId
    *
    * @param int $calendarId
    *
