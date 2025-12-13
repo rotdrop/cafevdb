@@ -771,14 +771,10 @@ class ConfigService
       }
     }
 
-    if (strpos($locale, '.') === false) {
-      if ($addEncoding) {
-        $locale .= '.UTF-8';
-      }
-    } else {
-      if (!$addEncoding) {
-        $locale = locale_get_primary_language($locale) . '_' . locale_get_region($locale);
-      }
+    if (strpos($locale, '.') === false && $addEncoding) {
+      $locale .= '.UTF-8';
+    } elseif (!$addEncoding) {
+      $locale = locale_get_primary_language($locale) . '_' . locale_get_region($locale);
     }
 
     $this->localeLanguageCache[$lang . $addEncoding] = $locale;
@@ -936,7 +932,6 @@ class ConfigService
 
     return $transliterator->transliterate($string, $locale);
   }
-
 
   /**
    * @param null|string $locale Locale to use, use app-locale if null.
