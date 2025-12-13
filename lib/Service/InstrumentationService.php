@@ -111,7 +111,7 @@ class InstrumentationService
         $bankAccount = (new Entities\SepaBankAccount)
           ->setMusician($dummy)
           ->setIban('DE02700100800030876808')
-          ->setBic('PBNKDEFF')
+          ->setBic('PBNKDEFFXXX')
           ->setBlz('70010080')
           ->setBankAccountOwner($dummy->getPublicName())
           ->setSequence(1)
