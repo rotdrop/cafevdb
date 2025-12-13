@@ -696,13 +696,21 @@ class EventsService
   }
 
   /**
-   * @param array $eventIdentifier Array with at least the keys "calendarId", "uri" and
-   * "recurrenceId", e.g. an item in the array returned by self::events().
+   * @param array|DTO\EventMatrixEvent $eventIdentifier Array with at least the
+   * keys "calendarId", "uri" and "recurrenceId", e.g. an item in the array
+   * returned by self::events().
    *
    * @return string
    */
-  public static function makeFlatIdentifier(array $eventIdentifier):string
+  public static function makeFlatIdentifier(array|DTO\EventMatrixEvent $eventIdentifier):string
   {
+    if ($eventIdentifier instanceof DTO\EventMatrixEvent) {
+      $eventIdentifier = [
+        'calendarId' => $eventIdentifier->calendarId,
+        'uri' => $eventIdentifier->uri,
+        'recurrenceId' => $eventIdentifier->recurrenceId,
+      ];
+    }
     return implode(':', [
       $eventIdentifier['calendarId'],
       $eventIdentifier['uri'],

@@ -213,7 +213,7 @@ class EventsServiceTest extends TestCase
   }
 
   /** @return void */
-  public function testBriefEventDateFromEventMatrix(): void
+  public function testEventDateFromEventMatrix(): void
   {
     $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
     $this->calendarManager->expects($this->atLeastOnce())->method('getCalendars');
@@ -229,6 +229,92 @@ class EventsServiceTest extends TestCase
     foreach ($matrixEvents as $index => $matrixEvent) {
       $this->assertEquals(self::MATRIX_BRIEF_EVENT_DATES[$index], $this->eventsService->briefEventDate($matrixEvent));
       $this->assertEquals(self::MATRIX_LONG_EVENT_DATES[$index], $this->eventsService->longEventDate($matrixEvent));
+    }
+  }
+
+  private const FLAT_IDENTIFIERS_FROM_EVENT_DATA = [
+    '2:74DF0E58-32E1-11EE-B087-4BC75144380D.ics:0',
+    '1:6DDC62D6-32E1-11EE-87EF-3D2D258F32B7.ics:0',
+    '3:863FA79C-E984-11EF-803F-D77076E61BF8.ics:0',
+    '4:521BA9B5-18A2-42D5-8E70-7BAD13376E9E.ics:0',
+    '5:C9D7987C-F8D7-11EF-B5E3-8FE1B384B391.ics:0',
+    '5:952C1F14-E786-48A2-A3EB-13F8AE2C4EE9.ics:1741132800',
+    '5:30734E6C-487E-4059-9C4E-BFACC83F82AB.ics:0',
+    '5:952C1F14-E786-48A2-A3EB-13F8AE2C4EE9.ics:1741219200',
+    '5:C9D92912-F8D7-11EF-892C-3F353C6D504D.ics:0',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742256000',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742342400',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742428800',
+    '2:89D17B5A-FB28-11EF-9900-4D17E2143159.ics:0',
+    '3:5CE69A6C-1EE6-11F0-ADAE-9F26E247CE42.ics:0',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745280000',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745366400',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745452800',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745539200',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745625600',
+    '3:5CE8528A-1EE6-11F0-8CB2-C77D3281A19A.ics:0',
+    '3:5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics:0',
+  ];
+
+  /** @return void */
+  public function testMakeFlatIdentifierFromEventData(): void
+  {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
+    $events = $this->eventsService->events($this->project->getId());
+    foreach ($events as $index => $event) {
+      $this->assertEquals(
+        self::FLAT_IDENTIFIERS_FROM_EVENT_DATA[$index],
+        $this->eventsService->makeFlatIdentifier($event),
+      );
+    }
+  }
+
+  private const FLAT_IDENTIFIERS_FROM_EVENT_MATRIX = [
+
+    '1:6DDC62D6-32E1-11EE-87EF-3D2D258F32B7.ics:0',
+    '2:74DF0E58-32E1-11EE-B087-4BC75144380D.ics:0',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742256000',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742342400',
+    '2:3C02F464-70B4-4772-99E3-B6A41BFEDA31.ics:1742428800',
+    '2:89D17B5A-FB28-11EF-9900-4D17E2143159.ics:0',
+    '3:863FA79C-E984-11EF-803F-D77076E61BF8.ics:0',
+    '3:5CE69A6C-1EE6-11F0-ADAE-9F26E247CE42.ics:0',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745280000',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745366400',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745452800',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745539200',
+    '3:D927B3C3-90F5-4A1D-8B52-589A63A3B138.ics:1745625600',
+    '3:5CE8528A-1EE6-11F0-8CB2-C77D3281A19A.ics:0',
+    '3:5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics:0',
+    '4:521BA9B5-18A2-42D5-8E70-7BAD13376E9E.ics:0',
+    '5:C9D7987C-F8D7-11EF-B5E3-8FE1B384B391.ics:0',
+    '5:952C1F14-E786-48A2-A3EB-13F8AE2C4EE9.ics:1741132800',
+    '5:30734E6C-487E-4059-9C4E-BFACC83F82AB.ics:0',
+    '5:952C1F14-E786-48A2-A3EB-13F8AE2C4EE9.ics:1741219200',
+    '5:C9D92912-F8D7-11EF-892C-3F353C6D504D.ics:0',
+  ];
+
+  /** @return void */
+  public function testMakeFlatIdentifierFromEventMatrix(): void
+  {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository')->with(Entities\ProjectEvent::class);
+    $this->calendarManager->expects($this->atLeastOnce())->method('getCalendars');
+    $this->calDavBackend->expects($this->atLeastOnce())->method('getCalendarObject');
+
+    $events = $this->eventsService->events($this->project->getId());
+    $calendars = $this->eventsService->defaultCalendars();
+    $matrix = $this->eventsService->eventMatrix($events, $calendars);
+    $matrixEvents = [];
+    foreach ($matrix as $rowIndex => $matrixRow) {
+      $matrixEvents = array_merge($matrixEvents, $matrixRow->events);
+    }
+    foreach ($matrixEvents as $index => $matrixEvent) {
+      $this->assertEquals(
+        self::FLAT_IDENTIFIERS_FROM_EVENT_MATRIX[$index],
+        $this->eventsService->makeFlatIdentifier($matrixEvent),
+      );
     }
   }
 
