@@ -13,9 +13,11 @@ APP_INFO = $(SRCDIR)/appinfo/info.xml
 XPATH = $(shell which xpath 2> /dev/null)
 ifneq ($(XPATH),)
 APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
+APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
 APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
 else
 APP_NAME = $(notdir $(CURDIR))
+APP_VERSION = unknown
 APP_NAMESPACE = $(shell grep -F '<namespace>' $(APP_INFO)|sed -E 's|.*<namespace>([^<]*)</namespace>.*|\\1|g')
 endif
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib

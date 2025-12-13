@@ -21,20 +21,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName as configAppName } from '../../build/ts-types/app-config.ts';
+import {
+  appName as configAppName,
+  appVersion as configAppVersion,
+} from '../../build/ts-types/app-config.ts';
 import OCInstance from './OC.ts';
 
 declare global {
   // eslint-disable-next-line
   var appName: string;
   // eslint-disable-next-line
+  var appVersion: string;
+  // eslint-disable-next-line
   var APP_NAME: string;
   // eslint-disable-next-line
+  var APP_VERSION: string;
   // var OC: Record<string, any>
 }
 
 global.appName = configAppName;
 global.APP_NAME = configAppName;
+global.appVersion = configAppVersion;
+global.APP_VERSION = configAppVersion;
 // @ts-expect-error 2339
 global.OC = OCInstance;
 
