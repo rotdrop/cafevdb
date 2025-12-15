@@ -34,7 +34,7 @@ import {
 } from './pme-selectors.ts';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
-  rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
+  type TooltipsStatistics,
 } from './jquery-cafevdb-tooltips.ts';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
@@ -263,19 +263,13 @@ const toolTipSelectors: ToolTipSpec[] = [
 ];
 
 /**
- * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
+ * Initialize all tooltips on the given element and its children.
  *
  * @param containerSel TBD.
- *
- * @todo This function performs too much work and is too unstructured.
  */
-const toolTipsInit = (containerSel?: string|JQuery) => {
+const toolTipsInit = async (containerSel?: string|JQuery) => {
 
-  console.time('TOOLTIPS');
-
-  rejectToolTipsBackgroundPromise();
-
-  console.time('TOOLTIP PROMISE');
+  // rejectToolTipsBackgroundPromise();
 
   if (typeof containerSel === 'undefined') {
     containerSel = appContainerSelector;
@@ -292,40 +286,24 @@ const toolTipsInit = (containerSel?: string|JQuery) => {
     $container.find(toolTipSpec.selector).cafevTooltip(options);
   }
 
-  // for (const toolTipSpec of toolTipSelectors) {
-  //   toolTipSpec.options.timestamp = timestamp;
-  // }
-
-  // container.find('*').each(function() {
-  //   const $this = $(this);
-  //   for (const toolTipSpec of toolTipSelectors) {
-  //     if ($this.is(toolTipSpec.selector)) {
-  //       $this.cafevTooltip(toolTipSpec.options);
-  //     }
-  //   }
-  // });
-
-  toolTipsBackgroundPromise
-    .done((maxJobs) => {
-      console.timeEnd('TOOLTIP PROMISE');
-      console.info('TOOLTIP JOBS HANDLED', maxJobs);
+  toolTipsBackgroundPromise.then(
+    (statistics) => {
+      console.info('TOOLTIP STATISTICS', statistics);
       if (globalState.toolTipsEnabled) {
         $.fn.cafevTooltip.enable();
       } else {
         $.fn.cafevTooltip.disable();
       }
-    })
-    .fail((maxJobs) => {
-      console.timeEnd('TOOLTIP PROMISE');
-      console.info('FAIL RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
+    },
+    (statistics: TooltipsStatistics) => {
+      console.info('TOOLTIP BACKGROUND PROMISE REJECTED, TOOLTIP STATISTICS', statistics);
       if (globalState.toolTipsEnabled) {
         $.fn.cafevTooltip.enable();
       } else {
         $.fn.cafevTooltip.disable();
       }
-    });
-
-  console.timeEnd('TOOLTIPS');
+    },
+  );
 };
 
 export {

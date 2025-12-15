@@ -23,7 +23,7 @@
 
 type TooltipOptions = Tooltip.Options & {
   cssclass: string[],
-  timestamp: boolean,
+  timestamp?: number,
 };
 
 type TooltipMethods =

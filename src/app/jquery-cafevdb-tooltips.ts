@@ -37,16 +37,20 @@ require('tooltips.scss');
 
 type TooltipOptions = Tooltip.Options & {
   cssclass: string[],
-  timestamp: boolean,
+  timestamp?: number,
 };
 
 const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
 const vendorOriginalTitleAttribute = 'data-bs-original-title' as const;
 const appTitleKey = `${appName}Title` as const;
 const appTitleAttribute = `data-${appName}-title` as const;
+const elementLockAttribute = `data-${appName}-tooltip-lock` as const;
+const elementTimestampAttribute = `data-${appName}-tooltip-timestamp` as const;
 
 const toolTipJobInitialTimeOut = 100; // ms
 const toolTipJobRunnerTimeOut = 0; // ms
+let toolTipsTimer: undefined|NodeJS.Timeout;
+const consoleTimerTag = 'TOOLTIP CONSOLE TIMER' as const;
 
 const allowList = {
   ...toolTipProvider.Default.allowList,
@@ -72,56 +76,114 @@ const defaultOptions: Partial<TooltipOptions> = {
   cssclass: [] as string[],
   fallbackPlacements: ['top', 'right', 'bottom', 'left'],
   boundary: 'clippingParents',
-  timestamp: false,
-  // delay: { show: 500, hide: 100000 },
+  timestamp: undefined,
+  //  delay: { show: 500, hide: 100000 },
 };
 
-let backGroundCount = 0;
-let maxBackGroundCount = 0;
+export type TooltipsStatistics = {
+  processed: number;
+  pending: number;
+  pendingMax: number;
+  dropped: {
+    duplicates: number,
+    locked: number,
+  },
+};
+const statistics: TooltipsStatistics = {
+  processed: 0,
+  pending: 0,
+  pendingMax: 0,
+  dropped: {
+    duplicates: 0,
+    locked: 0,
+  },
+};
+const resetStatistics = () => {
+  statistics.processed = 0;
+  statistics.pending = 0;
+  statistics.pendingMax = 0;
+  statistics.dropped.duplicates = 0;
+  statistics.dropped.locked = 0;
+};
 
-let backGroundDeferred = $.Deferred();
-let backGroundPromise = backGroundDeferred.promise();
+let backGroundPromise = Promise.resolve<TooltipsStatistics>(statistics);
+let backGroundResolve: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics> >['resolve'];
+let backGroundReject: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics> >['reject'];
 
 const rejectBackgroundPromise = function() {
-  backGroundDeferred.reject(maxBackGroundCount);
-  maxBackGroundCount = 0;
-  backGroundDeferred = $.Deferred();
-  backGroundPromise = backGroundDeferred.promise();
+  if (toolTipsTimer) {
+    clearTimeout(toolTipsTimer);
+    toolTipsTimer = undefined;
+  }
+  if (backGroundReject) {
+    console.timeEnd(consoleTimerTag);
+    backGroundReject({ ...statistics });
+    backGroundResolve = undefined;
+    backGroundReject = undefined;
+  }
+  resetStatistics();
+  backGroundPromise = Promise.resolve<TooltipsStatistics>({ ...statistics });
 };
 
 const unregisterBackgroundJob = function() {
-  if (--backGroundCount === 0) {
-    backGroundDeferred.resolve(maxBackGroundCount);
-    maxBackGroundCount = 0;
-    backGroundDeferred = $.Deferred();
-    backGroundPromise = backGroundDeferred.promise();
+  if (--statistics.pending === 0) {
+    console.debug('TOOLTIPS WORKQUEUE FINISHED', { statistics: { ...statistics } });
+    if (backGroundResolve) {
+      console.timeEnd(consoleTimerTag);
+      backGroundResolve({ ...statistics });
+      backGroundResolve = undefined;
+      backGroundReject = undefined;
+    }
+    resetStatistics();
+    backGroundPromise = Promise.resolve<TooltipsStatistics>({ ...statistics });
   }
 };
 
-const markElement = function($element: JQuery, timestamp: boolean) {
-  if (timestamp !== false) {
-    if ($element.data(appName + '-tooltip-timestamp') === timestamp) {
+/**
+ * A debug helper in order not to apply tooltips twice. The side
+ * effect is that tooltips cannot be changed.
+ *
+ * @param $element TBD.
+ *
+ * @param timestamp TBD.
+ *
+ * @todo This should no longer be necessary, if anything then we
+ * should just record statistics about doubly applied tooltips.
+ */
+const markElement = function($element: JQuery, timestamp?: number) {
+  if (timestamp) {
+    if ($element.attr(elementTimestampAttribute) !== undefined) {
+      ++statistics.dropped.duplicates;
       return false;
     }
-    $element.data(appName + '-tooltip-timestamp', timestamp);
+    $element.attr(elementTimestampAttribute, timestamp);
   }
   return true;
 };
 
+/**
+ * Disable applying new tooltips while the element has not yet been
+ * processed, but has already been pushed to the work-queue.
+ *
+ * @param $element TBD.
+ *
+ * @todo Is this lock really necessary?
+ */
 const lockElement = function($element: JQuery) {
-  if ($element.data(appName + '-tooltip-lock') === true) {
+  if ($element.attr(elementLockAttribute) !== undefined) {
+    ++statistics.dropped.locked;
     return false;
   }
-  $element.data(appName + '-tooltip-lock', true);
-  if (++backGroundCount > maxBackGroundCount) {
-    maxBackGroundCount = backGroundCount;
+  $element.attr(elementLockAttribute, '');
+  if (++statistics.pending > statistics.pendingMax) {
+    statistics.pendingMax = statistics.pending;
   }
   return true;
 };
 
 const unlockElement = function($element: JQuery) {
   unregisterBackgroundJob();
-  $element.data(appName + '-tooltip-lock', false);
+  $element.removeAttr(elementLockAttribute);
 };
 
 const toolTipsWorkQueue: {
@@ -132,6 +194,7 @@ const toolTipsWorkQueue: {
 // const spaceRe = /\s+/;
 
 function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobChunkSize?: number) {
+  ++statistics.processed;
   // const $this = this;
   const selfOptions: TooltipOptions = $.extend(true, {}, optionsForAll);
   const attrClass = $this.attr('class') || '';
@@ -181,7 +244,7 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
     $this.removeAttr('title');
     selfOptions.title = function() {
       const $this = $(this);
-      const originalTitle = $this.data(appTitleKey);
+      const originalTitle: string = $this.data(appTitleKey) ?? '';
       if ($this.is(':invalid')) {
         const invalidHint = t(appName, 'Please fill out this field!');
         if (!selfOptions.html) {
@@ -214,7 +277,7 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
   }
   const job = toolTipsWorkQueue.pop();
   if (job !== undefined) {
-    setTimeout(() => singleToolTipWorker(job.element, job.options, jobChunkSize), toolTipJobRunnerTimeOut);
+    toolTipsTimer = setTimeout(() => singleToolTipWorker(job.element, job.options, jobChunkSize), toolTipJobRunnerTimeOut);
   }
 }
 
@@ -222,9 +285,9 @@ type TooltipArgument = Parameters<Tooltip.jQueryInterface>[0];
 
 function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<TooltipOptions>|TooltipArgument) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const $this = this; // $(this);
-  if (arguments.length === 1 && typeof config !== 'string') {
-    const optionsForAll = $.extend(true, {}, defaultOptions, config);
+  const $this = this;
+  if (arguments.length <= 1 && typeof config !== 'string') {
+    const optionsForAll = $.extend(true, {}, defaultOptions, { timestamp: Date.now() }, config ?? {});
     if (typeof optionsForAll.placement === 'string') {
       const words = optionsForAll.placement.split(' ');
       for (const word of words) {
@@ -246,13 +309,20 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
     // @todo This has to be reworked, tooltips just take too much time.
     $this.each(function() {
       const $element = $(this);
-      if (!markElement($element, !!optionsForAll.timestamp)) {
+      if (!markElement($element, optionsForAll.timestamp)) {
         return;
       }
       if (!lockElement($element)) {
         return;
       }
-      if (backGroundCount === 1) {
+      if (statistics.pending === 1) {
+        console.debug('TOOLTIP KICK OFF', { ...statistics });
+        console.time(consoleTimerTag);
+        ({
+          promise: backGroundPromise,
+          resolve: backGroundResolve,
+          reject: backGroundReject,
+        } = Promise.withResolvers<TooltipsStatistics>());
         setTimeout(() => singleToolTipWorker($element, optionsForAll as TooltipOptions, toolTipJobInitialTimeOut));
       } else {
         toolTipsWorkQueue.push({
@@ -308,7 +378,7 @@ cafevTooltip.hide = () => {
 $.fn.cafevTooltip = cafevTooltip;
 
 export {
-  backGroundCount,
+  statistics,
   backGroundPromise,
   rejectBackgroundPromise,
 };
