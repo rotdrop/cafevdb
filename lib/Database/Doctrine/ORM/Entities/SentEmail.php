@@ -123,13 +123,13 @@ class SentEmail
   private ?SepaBulkTransaction $sepaBulkTransaction = null;
 
   #[ORM\OneToOne(targetEntity: CompositePayment::class, mappedBy: 'preNotificationEmail')]
-  private ?ProjectPayment $compositePayment;
+  private ?CompositePayment $compositePayment = null;
 
   #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'notificationMessage')]
-  private ?DonationReceipt $donationReceipt;
+  private ?DonationReceipt $donationReceipt = null;
 
   #[ORM\OneToOne(targetEntity: Invoice::class, mappedBy: 'notificationEmail')]
-  private ?Invoice $invoice;
+  private ?Invoice $invoice = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
