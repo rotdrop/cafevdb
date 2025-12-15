@@ -104,7 +104,7 @@ class ProjectParticipant implements \ArrayAccess
    * but we keep it here for convenient access.
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
-  private DatabaseStorage $databaseDocuments;
+  private ?DatabaseStorage $databaseDocuments = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?Musician $musician = null, ?Project $project = null)
