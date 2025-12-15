@@ -806,7 +806,6 @@ class EmailFormController extends Controller
         } else {
           $emailOptions = $topic . 'EmailOptions';
           $requestData[$emailOptions] = $this->$emailOptions($composer, $selected);
-          $this->logInfo($emailOptions . ' OPTIONS ' . print_r($requestData[$emailOptions], true));
         }
         break;
       case 'delete':
