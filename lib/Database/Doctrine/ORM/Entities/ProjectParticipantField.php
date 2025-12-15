@@ -119,9 +119,15 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    */
-  #[Gedmo\Translatable]
+  #[Gedmo\Translatable(untranslated: 'untranslatedTooltip')]
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private ?string $tooltip = null;
+
+  /**
+   * Untranslated variant of self::$tooltip, filled automatically by
+   * Gedmo\Translatable
+   */
+  private ?string $untranslatedTooltip = null;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedTab')]
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Tab to display the field in. If empty, then the project tab is used.'])]
@@ -489,25 +495,15 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set untranslatedName.
-   *
-   * @param null|string $untranslatedName
-   *
-   * @return ProjectParticipantField
-   */
-  public function setUntranslatedName(?string $untranslatedName):ProjectParticipantField
-  {
-    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedName" cannot be set, it is read-only.');
-    return $this;
-  }
-
-  /**
    * Get untranslatedName.
    *
    * @return string
    */
   public function getUntranslatedName()
   {
+    if ($this->isFileSystemContext()) {
+      return $this->name;
+    }
     return $this->untranslatedName;
   }
 
@@ -677,6 +673,16 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
+   * Get untranslatedTooltip.
+   *
+   * @return string
+   */
+  public function getUntranslatedTooltip()
+  {
+    return $this->untranslatedTooltip;
+  }
+
+  /**
    * Set tab.
    *
    * @param null|string $tab
@@ -698,19 +704,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getTab()
   {
     return $this->tab;
-  }
-
-  /**
-   * Set untranslatedTab.
-   *
-   * @param null|string $untranslatedTab
-   *
-   * @return ProjectParticipantField
-   */
-  public function setUntranslatedTab(?string $untranslatedTab):ProjectParticipantField
-  {
-    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedTab" cannot be set, it is read-only.');
-    return $this;
   }
 
   /**
