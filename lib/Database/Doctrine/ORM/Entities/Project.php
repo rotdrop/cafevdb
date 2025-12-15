@@ -111,7 +111,7 @@ class Project implements \ArrayAccess
    *
    * @todo This does not work well with _AT_Gedmo\Translatable
    */
-  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private Collection $participantFields;
 
@@ -459,9 +459,10 @@ class Project implements \ArrayAccess
   public function getParticipantFields(
     string|Types\EnumParticipationContext $participationContext = Types\EnumParticipationContext::UNRESTRICTED,
   ):Collection {
-    // trigger load
-    $this->participantFields->count();
-    // sorting during load does not work when using Translatable
+    // Sorting during load does not work when using Translatable, so trigger load.
+    if ($this->participantFields instanceof \OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection) {
+      $this->participantFields->initialize();
+    }
     $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
     if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
       $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
