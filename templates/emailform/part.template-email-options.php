@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EmailFormController;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 /**
@@ -39,7 +40,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 $locale = $l->getLocaleCode();
 
-foreach ($templateEmails as $template) {
+foreach ($_[EmailFormController::TEMPLATE_EMAILS] as $template) {
   $createdAt = ($template['created']??(new DateTime)->setTimestamp(0))->locale($locale);
   $updatedAt = ($template['updated']??(new DateTime)->setTimestamp(0))->locale($locale);
   $title = $l->t(
@@ -56,7 +57,7 @@ foreach ($templateEmails as $template) {
   <option value="<?= $name ?>"
           class="tooltip-auto"
           title="<?php p($title); ?>"
-          <?php ($currentTemplate ?? null) == $template['name'] && print('selected="selected"') ?>
+          <?php ($_[EmailFormController::EMAIL_TEMPLATE_NAME] ?? null) == $template['name'] && print('selected="selected"') ?>
   >
     <?= $name ?>
   </option>

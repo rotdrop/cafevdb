@@ -61,7 +61,12 @@ class EmailFormController extends Controller
 
   public const UPLOAD_KEY = 'files';
 
-  const TOPIC_UNSPECIFIC = 'general';
+  public const TOPIC_UNSPECIFIC = 'general';
+
+  public const EMAIL_TEMPLATE_NAME = 'emailTemplateName';
+  public const TEMPLATE_EMAILS = 'templateEmails';
+  public const DRAFT_EMAILS = 'draftEmails';
+  public const SENT_EMAILS = 'sentEmails';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -176,10 +181,10 @@ class EmailFormController extends Controller
       ],
       'emailDraftAutoSave' => $emailDraftAutoSave,
       // Needed for the editor
-      'emailTemplateName' => $composer->currentEmailTemplate(),
-      'templateEmails' => $composer->templateEmails(),
-      'draftEmails' => $composer->draftEmails(),
-      'sentEmails' => $composer->sentEmails(),
+      self::EMAIL_TEMPLATE_NAME => $composer->currentEmailTemplate(),
+      self::TEMPLATE_EMAILS => $composer->templateEmails(),
+      self::DRAFT_EMAILS => $composer->draftEmails(),
+      self::SENT_EMAILS => $composer->sentEmails(),
       'disclosedRecipients' => $composer->discloseRecipients(),
       'TO' => $composer->toStringArray(),
       'BCC' => $composer->blindCarbonCopy(),
@@ -238,21 +243,22 @@ class EmailFormController extends Controller
    *
    * @param Composer $composer The email composer class.
    *
+   * @param ?string $currentTemplate The selected template.
+   *
    * @return string Rendered HTML template.
    */
   private function templateEmailOptions(Composer $composer, ?string $currentTemplate = null):string
   {
-    $templateParamters = [
-      'templateEmails' => $composer->templateEmails(),
+    $templateParameters = [
+      self::TEMPLATE_EMAILS => $composer->templateEmails(),
+      self::EMAIL_TEMPLATE_NAME => $currentTemplate,
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
-      'currentTemplate' => $currentTemplate,
     ];
-    $this->logInfo('TEMPLATE TEMPLATE PARAMS ' . print_r($templateParameters['templateEmails'], true));
 
     $tmpl = $this->templateResponse(
       'emailform/part.template-email-options',
-      $templateParamters,
+      $templateParameters,
     );
     return $tmpl->render();
   }
@@ -267,7 +273,7 @@ class EmailFormController extends Controller
   private function draftEmailOptions(Composer $composer):string
   {
     $templateParamters = [
-      'draftEmails' => $composer->draftEmails(),
+      self::DRAFT_EMAILS => $composer->draftEmails(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
@@ -290,7 +296,7 @@ class EmailFormController extends Controller
   private function sentEmailOptions(Composer $composer):string
   {
     $templateParameters = [
-      'sentEmails' => $composer->sentEmails(),
+      self::SENT_EMAILS => $composer->sentEmails(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
@@ -434,10 +440,10 @@ class EmailFormController extends Controller
             $templateParameters = [
               'projectName' => $projectName,
               'projectId' => $projectId,
-              'emailTemplateName' => $composer->currentEmailTemplate(),
-              'templateEmails' => $composer->templateEmails(),
-              'draftEmails' => $composer->draftEmails(),
-              'sentEmails' => $composer->sentEmails(),
+              self::EMAIL_TEMPLATE_NAME => $composer->currentEmailTemplate(),
+              self::TEMPLATE_EMAILS => $composer->templateEmails(),
+              self::DRAFT_EMAILS => $composer->draftEmails(),
+              self::SENT_EMAILS => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
@@ -545,10 +551,10 @@ class EmailFormController extends Controller
               'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
               'dateTimeZone' => $this->getDateTimeZone(),
 
-              'emailTemplateName' => $composer->currentEmailTemplate(),
-              'templateEmails' => $composer->templateEmails(),
-              'draftEmails' => $composer->draftEmails(),
-              'sentEmails' => $composer->sentEmails(),
+              self::EMAIL_TEMPLATE_NAME => $composer->currentEmailTemplate(),
+              self::TEMPLATE_EMAILS => $composer->templateEmails(),
+              self::DRAFT_EMAILS => $composer->draftEmails(),
+              self::SENT_EMAILS => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
@@ -620,7 +626,7 @@ class EmailFormController extends Controller
                 httpStatusCode: Http::STATUS_NOT_FOUND,
               );
             }
-            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
+            $requestData[self::EMAIL_TEMPLATE_NAME] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
@@ -686,10 +692,10 @@ class EmailFormController extends Controller
               'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
               'dateTimeZone' => $this->getDateTimeZone(),
 
-              'emailTemplateName' => $composer->currentEmailTemplate(),
-              'templateEmails' => $composer->templateEmails(),
-              'draftEmails' => $composer->draftEmails(),
-              'sentEmails' => $composer->sentEmails(),
+              self::EMAIL_TEMPLATE_NAME => $composer->currentEmailTemplate(),
+              self::TEMPLATE_EMAILS => $composer->templateEmails(),
+              self::DRAFT_EMAILS => $composer->draftEmails(),
+              self::SENT_EMAILS => $composer->sentEmails(),
               'disclosedRecipients' => $composer->discloseRecipients(),
               'TO' => $composer->toStringArray(),
               'BCC' => $composer->blindCarbonCopy(),
@@ -808,7 +814,7 @@ class EmailFormController extends Controller
           case 'template':
             $composer->deleteTemplate($requestData['templateMessagesSelector']);
             $composer->setDefaultTemplate();
-            $requestData['emailTemplateName'] = $composer->currentEmailTemplate();
+            $requestData[self::EMAIL_TEMPLATE_NAME] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
@@ -1004,8 +1010,7 @@ class EmailFormController extends Controller
 
         try {
           $freeForm = $this->emailAddressService->parseAddressString($freeForm);
-        }
-        catch (Exceptions\EnduserNotificationException $e) {
+        } catch (Exceptions\EnduserNotificationException $e) {
           return self::grumble(
             $this->l->t('Unable to parse email-recipients "%s".', $e->getMessage())
           );

@@ -671,13 +671,21 @@ const emailFormCompositionHandlers = (
   WysiwygEditor.addEditor($dialogHolder.find('textarea.wysiwyg-editor'));
 
   const messageSelectorSelectizeOptions: Selectize.IOptions = {
-    onBeforeDropdownOpen(_$dropdown: JQuery) { this.$wrapper.toggleClass('dropdown-open', true); },
-    onDropdownClose(_$dropdown: JQuery) { this.$wrapper.toggleClass('dropdown-open', false); },
+    onBeforeDropdownOpen(_$dropdown: JQuery) {
+      this.$wrapper.toggleClass('dropdown-open', true);
+    },
+    onDropdownClose(_$dropdown: JQuery) {
+      this.$wrapper.toggleClass('dropdown-open', false);
+    },
     onChange(value) {
       this.$wrapper.toggleClass('loading', !!value);
     },
-    onClear() { this.$wrapper.toggleClass('loading', false); },
-    onOptionsRefresh($dropdown) { $dropdown.find('[class*="tooltip-"]').cafevTooltip(); },
+    onClear() {
+      this.$wrapper.toggleClass('loading', false);
+    },
+    onOptionsRefresh($dropdown) {
+      $dropdown.find('[class*="tooltip-"]').cafevTooltip();
+    },
     closeAfterSelect: true,
     openOnFocus: selectizeOpenOnFocus,
   };

@@ -25,8 +25,9 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
+use OCA\CAFEVDB\Controller\EmailFormController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTime;
 
 $locale = $l->getLocaleCode();
 
@@ -51,8 +52,8 @@ if ($groupByYear) {
 }
 
 /** @var Entities\SentEmail $sentEmail */
-foreach ($sentEmails as $sentEmail) {
-  $createdAt = ($sentEmail->getCreated()??(new DateTime)->setTimestamp(0))
+foreach ($_[EmailFormController::SENT_EMAILS] as $sentEmail) {
+  $createdAt = ($sentEmail->getCreated() ?? (new DateTime)->setTimestamp(0))
     ->locale($locale)
     ->setTimezone($dateTimeZone);
   $currentYear = $createdAt->format('Y');
@@ -68,13 +69,13 @@ foreach ($sentEmails as $sentEmail) {
   if ($currentYear != $lastYear) {
     $lastYear = $currentYear;
     ?>
-</optgroup><optgroup label="<?php p($currentYear); ?>">
+</optgroup><optgroup label="<?= $currentYear ?>">
     <?php
   }
   ?>
   <option value="<?php p($sentEmail->getMessageId()); ?>"
           class="tooltip-auto"
-          title="<?php echo Util::htmlEscape($title); ?>"
+          title="<?= Util::htmlEscape($title); ?>"
   >
     <?php p($name); ?>
   </option>
