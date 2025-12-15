@@ -51,7 +51,7 @@ class EmailDraft implements \ArrayAccess
   private ?string $subject = null;
 
   #[ORM\Column(type: 'json', nullable: false, options: ['comment' => 'Message Data Without Attachments'])]
-  private string $data;
+  private array $data;
 
   /**
    * Set to true if this draft was never actively saved or loaded. The
