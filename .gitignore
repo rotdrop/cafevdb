@@ -40,3 +40,5 @@ build-flavour
 /vendor-bin/**/composer.lock
 .php-cs-fixer.cache
 .phpunit.cache
+dev-scripts/playground/php/*.php
+**/.ac-php-conf.json
