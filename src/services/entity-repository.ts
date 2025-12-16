@@ -21,17 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appName } from '../config.ts';
 import {
   reactive,
   set as vueSet,
 } from 'vue';
 import axios from '@nextcloud/axios';
+import { translate as t } from '@nextcloud/l10n';
 // eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs';
 import { generateOcsUrl } from '../toolkit/util/generate-url.ts';
-import { type EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
+import { type EntityId, type EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { type EntityResponse } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
 import entityFactory from '../services/entity-factory.ts';
+import { AppError } from '../types/errors.ts';
 
 type EntityRepository<E extends keyof EntityMap> = {
   [Identifier: string]: EntityMap[E];
@@ -39,12 +42,11 @@ type EntityRepository<E extends keyof EntityMap> = {
 
 export const repositories = reactive<{ [E in keyof EntityMap]?: EntityRepository<E> }>({});
 export const find = (entityName: keyof EntityMap, identifier: string) => {
-  console.info('REPOS', repositories);
   return repositories?.[entityName]?.[identifier] ?? undefined;
 };
-export const fetch = async (
-  entityName: keyof EntityMap,
-  identifier: Record<string, unknown>,
+export const fetch = async <N extends keyof EntityMap>(
+  entityName: N,
+  identifier: EntityId<N>,
   depth: number = 1,
 ) => {
   const url = generateOcsUrl(`/v1/entitites/${entityName}`, {
@@ -64,6 +66,10 @@ export const fetch = async (
       }
     }
   } catch (e) {
-    console.error(e);
+    throw new AppError(
+      { entityName, identifier, depth },
+      t(appName, 'Unable to fetch entity "{entityName}" with identifier "{identifier}".', { entityName, identifier: JSON.stringify(identifier) }),
+      { cause: e },
+    );
   }
 };

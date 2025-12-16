@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { generateEntities, entities, dtos } from './entity-repository-setup.ts';
+import { generateEntities, dtos } from './entity-repository-setup.ts';
 import { beforeAll, jest } from '@jest/globals';
 import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { fetch as fetchEntity, find as findEntity } from '@/src/services/entity-repository.ts';
@@ -85,5 +85,10 @@ describe('Fetch entities', () => {
       const entity = findEntity(entityName as keyof EntityMap, flattenedIdentifier);
       expect(entity).toBeDefined();
     }
+  });
+  it('Should throw ;)', async () => {
+    await expect(fetchEntity('Instrument', { id: 'blahblahblah' }))
+      .rejects
+      .toThrow('Unable to fetch entity');
   });
 });
