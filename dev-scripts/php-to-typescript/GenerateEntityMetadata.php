@@ -231,7 +231,11 @@ export type EntityFieldMetadata<N extends EntityNames, F extends EntityFieldName
   id: EntityFieldId<N, F>;
   mapping: EntityFieldMapping<N, F>;
   type: EntityFieldType<N, F>;
-};
+  };
+
+export type EntityId<N extends EntityNames> = {
+  [F in keyof EntityMetadataMap[N] as ('id' extends keyof EntityMetadataMap[N][F] ? EntityMetadataMap[N][F]['id'] extends true ? F : never : never)]: unknown;
+}
 
 EOF;
     $metadataForwarder .= "
