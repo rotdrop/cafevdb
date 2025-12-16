@@ -187,7 +187,7 @@ class EntitySerializer
             $this->entities[$entityClassName][] = $flatIdentifier;
           }
         }
-        if ($this->entityDepths[$entityClassName][$flatIdentifier] == $depth) {
+        if (($this->entityDepths[$entityClassName][$flatIdentifier] ?? -1) == $depth) {
           return;
         }
         $existing = true;
@@ -223,7 +223,9 @@ class EntitySerializer
               flatIdentifier: $flatTargetIdentifier,
               entityClassName: $targetClassName,
             );
-            if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+            if ($depth > 0
+                && (empty($this->repositories[$targetClassName][$flatTargetIdentifier])
+                    || ($this->entityDepths[$targetClassName][$flatTargetIdentifier] ?? -1) < ($depth - 1))) {
               $this->addEntity($targetEntity, $depth - 1, false);
             }
             break;
@@ -255,7 +257,9 @@ class EntitySerializer
                 flatIdentifier: $flatTargetIdentifier,
                 entityClassName: $entityName,
               );
-              if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+              if ($depth > 0
+                  && (empty($this->repositories[$targetClassName][$flatTargetIdentifier])
+                      || ($this->entityDepths[$targetClassName][$flatTargetIdentifier] ?? -1) < $depth - 1)) {
                 $this->addEntity($targetEntity, $depth - 1, false);
               }
             }

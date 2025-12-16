@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Throwable;
 
 use OCA\CAFEVDB\Common\Uuid;
@@ -68,10 +69,15 @@ class InstrumentationService
    * data-base. If true the dummy person will be persisted as deleted
    * in order not to interfere with the real data.
    *
+   * @param ?DateTimeInterface $now A date-time object to use instead of (new DateTimeImmutable).
+   *
    * @return Entities\Musician
    */
-  public function getDummyMusician(?Entities\Project $project = null, bool $persist = true):Entities\Musician
-  {
+  public function getDummyMusician(
+    ?Entities\Project $project = null,
+    bool $persist = true,
+    ?DateTimeInterface $now = null,
+  ):Entities\Musician {
     // disable "deleted" filter
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
@@ -80,6 +86,8 @@ class InstrumentationService
       /** @var Entities\Musician $dummy */
       $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
     }
+
+    $now = $now ?? new DateTimeImmutable;
 
     $this->entityManager->beginTransaction();
     try {
@@ -96,13 +104,17 @@ class InstrumentationService
         ->setCity($this->l->t('Nowhere'))
         ->setCountry('AQ')
         ->setEmail($this->getConfigValue(ConfigConstants::EMAIL_TEST_ADDRESS_KEY, 'john.doe@nowhere.tld'))
-        ->setBirthday(new DateTimeImmutable)
+        ->setBirthday($now)
         ->setMobilePhone('0815')
         ->setFixedLinePhone('4711')
-        ->setDeleted(new DateTimeImmutable)
-        ->setCreated(new DateTimeImmutable)
-        ->setUpdated(new DateTimeImmutable)
+        ->setDeleted($now)
+        ->setCreated($now)
+        ->setUpdated($now)
         ->setUuid(Uuid::NIL);
+      /** @var Entities\MusicianEmailAddress $emailAddress */
+      foreach ($dummy->getEmailAddresses() as $emailAddress) {
+        $emailAddress->setCreated($now)->setUpdated($now);
+      }
       if ($persist) {
         $this->persist($dummy);
       }
@@ -115,7 +127,7 @@ class InstrumentationService
           ->setBlz('70010080')
           ->setBankAccountOwner($dummy->getPublicName())
           ->setSequence(1)
-          ->setDeleted(new DateTimeImmutable);
+          ->setDeleted($now);
         $dummy->getSepaBankAccounts()->add($bankAccount);
         if ($persist) {
           $this->persist($bankAccount);
@@ -140,8 +152,8 @@ class InstrumentationService
       $participant = (new Entities\ProjectParticipant)
         ->setMusician($dummy)
         ->setProject($project)
-        ->setCreated(new DateTimeImmutable)
-        ->setUpdated(new DateTimeImmutable);
+        ->setCreated($now)
+        ->setUpdated($now);
       $dummy->getProjectParticipation()->set($project->getId(), $participant);
       if (!$persist) {
         $dummy->setId(1);

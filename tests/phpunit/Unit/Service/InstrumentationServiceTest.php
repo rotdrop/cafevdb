@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use DateTimeImmutable;
 use UnexpectedValueException;
 
 use PHPUnit\Framework\Attributes;
@@ -69,7 +70,8 @@ class InstrumentationServiceTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup();
+    $now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2024-01-01 00:00:00');
+    $this->entitySetup(now: $now);
   }
 
   /** @return void */

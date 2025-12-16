@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
 
 use Closure;
+use DateTimeInterface;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
@@ -62,7 +63,7 @@ trait EntityGeneratorTrait
    *
    * @return void
    */
-  public function setup(bool $persist = false): void
+  public function setup(bool $persist = false, ?DateTimeInterface $now = null): void
   {
     parent::setup();
 
@@ -91,6 +92,7 @@ trait EntityGeneratorTrait
     $this->musician = $this->instrumentationService->getDummyMusician(
       $this->project,
       persist: $persist,
+      now: $now,
     );
     $this->musician->setId(1);
     $this->participant = $this->musician->getProjectParticipantOf(
