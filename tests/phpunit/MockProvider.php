@@ -195,7 +195,22 @@ class MockProvider
     );
     $instance->method('getUserValue')->willReturnCallback(
       function(string $userId, string $appName, string $key, mixed $default = null) {
-        return $this->userConfigValues[$userId . $appName . $key] ?? $default;
+        if (isset($this->userConfigValues[$userId . $appName . $key])) {
+          return $this->userConfigValues[$userId . $appName . $key];
+        }
+        if ($userId == self::EXECUTIVE_BOARD_UID && $appName == 'core') {
+          // Default to German stuff as this is the only region where the app
+          // is used ATM.
+          switch ($key) {
+            case 'timezone':
+              return 'Europe/Berlin';
+            case 'lang':
+              return 'de';
+            case 'locale':
+              return 'de';
+          }
+        }
+        return $default;
       },
     );
     $instance->method('setUserValue')->willReturnCallback(
