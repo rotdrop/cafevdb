@@ -61,7 +61,8 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   /** @var Collection<TaxationStatutorySource> */
   #[ORM\ManyToMany(targetEntity: TaxationStatutorySource::class, inversedBy: 'taxExemptionNotices', cascade: ['persist'])]
   #[ORM\JoinTable(name: 'TaxExemptionItems')]
-  #[ORM\JoinColumn(nullable: false)]
+  // #[ORM\JoinColumn(nullable: false)]
+  // #[ORM\JoinColumn()]
   private Collection $taxationStatutorySources;
 
   /**
