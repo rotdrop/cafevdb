@@ -146,11 +146,15 @@ const config: Config = deepmerge(
     //   "json",
     //   "node"
     // ],
+    moduleFileExtensions: [
+      'mjs',
+    ],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
       '\\.(s?css|less)$': 'identity-obj-proxy',
       '^@/(.*)$': '<rootDir>/$1',
+      '@nextcloud/paths': '<rootDir>/node_modules/@nextcloud/paths/dist/index.mjs',
     },
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],
@@ -249,6 +253,7 @@ const config: Config = deepmerge(
     // A map from regular expressions to paths to transformers
     transform: {
       '^.+\\.tsx?$': ['ts-jest', { babelConfig: true, useESM: true, tsconfig: './tests/jest/tsconfig.json' }],
+      '^.+\\.mjs$': require.resolve('babel-jest'),
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
