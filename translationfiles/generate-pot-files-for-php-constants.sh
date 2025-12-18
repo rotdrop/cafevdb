@@ -35,7 +35,7 @@ declare -a CONSTANTS
 while read -r MATCH; do
     FILE=$(echo "$MATCH"|cut -d: -f 1)
     case "$FILE" in
-        *~)
+        *~|*#*)
             continue
             ;;
     esac
