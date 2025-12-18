@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\EnumType;
 
 /**
  * InsuranceRate
@@ -63,6 +64,9 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
   #[ORM\Id]
   private Types\EnumGeographicalScope $geographicalScope;
+
+  #[ORM\Column(type: 'enum')]
+  private Types\EnumTest $enumTest;
 
   #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
   private RationalNumber $rate;
