@@ -26,6 +26,7 @@ for f in "${APPDIR}"/translationfiles/additions/*.pot ; do
 done
 
 bash "$APPDIR"/translationfiles/generate-pot-files-for-php-constants.sh >> "${TMPFILE}"
+php "$APPDIR"/dev-scripts/extract-translatable-enum-values.php >> "${TMPFILE}"
 if msguniq "${TMPFILE}" > /dev/null 2>&1 ; then
     msguniq "${TMPFILE}"|grep -vF '#-#-#-#-#' > "${TEMPLATE}"
 else
