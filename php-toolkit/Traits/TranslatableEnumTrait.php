@@ -41,8 +41,7 @@ trait TranslatableEnumTrait
 {
   use BackedEnumTrait;
 
-
-  private const L10N_TAG = 'ENUM: ';
+  public const L10N_TAG = 'ENUMVALUE: ';
 
   /**
    * @param IL10N $l
