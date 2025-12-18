@@ -92,6 +92,9 @@ class GenerateEntityMetadata
    */
   public function exportEntityMap(): string
   {
+    if (!($this->entityNameSpace ?? null)) {
+      throw new UnexpectedValueException('Entity-namespace is null, did you call ' . __CLASS__ . '::generateSparseMetadata()?');
+    }
     $entityParentNameSpace = substr($this->entityNameSpace, 0, strrpos($this->entityNameSpace, '\\'));
     $entityParentNameSpace = str_replace('\\', '.', $entityParentNameSpace);
 
@@ -268,6 +271,7 @@ export {
     $this->entityMetaInfo = [];
 
     $headerSection = $this->output->section();
+    $headerSection->setMaxHeight(2);
     $textSection = $this->output->section();
     $textSection->setMaxHeight(5);
     $progressSection = $this->output->section();
@@ -311,6 +315,7 @@ export {
     // association, and if this is the case, whether it is to-on -- this yields a
     // simple getter -- or if it is to-may -- this yields an iterator.
     foreach ($entityNames as $entityName) {
+      // $textSection->writeln('ENTITY ' . $entityName);
       $ormCliProcess = new Process([
         $this->ormCliCmd,
         '--format=json',
@@ -335,8 +340,9 @@ export {
       if (!($this->entityNameSpace ?? null)) {
         // just assume all entities live in the same namespace ...
         $this->entityNameSpace = trim(substr(substr($entityName, 0, -strlen($shortName) - 1), strlen($this->phpNameSpacePrefix)), '\\');
-        $textSection->writeln('Entity-Namespace: ' . $this->entityNameSpace);
+        $headerSection->writeln('Entity-Namespace: ' . $this->entityNameSpace);
       }
+      // $textSection->writeln('NAMESPACE ' . $this->entityNameSpace);
       $entityName = $shortName;
       // echo $entityName . PHP_EOL;
       // print_r($metadata);
