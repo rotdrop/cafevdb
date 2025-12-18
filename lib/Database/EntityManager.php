@@ -463,7 +463,7 @@ class EntityManager extends EntityManagerDecorator
     Types\EnumParticipationContext::class => 'enum',
     Types\EnumFileType::class => 'enum',
     Types\EnumGender::class => 'enum',
-    Types\EnumGeographicalScope::class => 'enum',
+    // Types\EnumGeographicalScope::class => 'enum',
     Types\EnumGnuCashSlotType::class => 'enum',
     Types\EnumMemberStatus::class => 'enum',
     Types\EnumParticipantFieldDataType::class => 'enum',

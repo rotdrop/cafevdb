@@ -58,7 +58,7 @@ class EnumSharedCalendarUriTest extends TestCase
   /** @return void */
   public function testNoExtranous(): void
   {
-    foreach (EnumSharedCalendarUri::array() as $name => $value) {
+    foreach (EnumSharedCalendarUri::toArray() as $name => $value) {
       $this->assertArrayHasKey($value, ConfigConstants::CALENDARS);
       $this->assertEquals($value, ConfigConstants::{$name . '_CALENDAR_URI'});
     }

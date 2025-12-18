@@ -37,12 +37,10 @@ class EnumType extends PhpEnumType
   public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
   {
     $class = $this->enumClass;
-    if (!empty($fieldDeclaration['values']) && is_array($fieldDeclaration['values'])) {
-      $values = $fieldDeclaration['values'];
-    } else {
-      $values = $class::toArray();
+    if (empty($fieldDeclaration['values']) || !is_array($fieldDeclaration['values'])) {
+      $fieldDeclaration['values'] = $class::toArray();
     }
-    return "enum('" . implode("','", $values) . "')";
+    return $platform->getEnumDeclarationSQL($fieldDeclaration);
   }
 
   /**

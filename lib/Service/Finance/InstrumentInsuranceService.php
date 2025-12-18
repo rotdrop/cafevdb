@@ -622,19 +622,19 @@ class InstrumentInsuranceService
                           ->setAddress($this->l->t('unknown'));
     $germanyRate = (new Entities\InsuranceRate)
                  ->setBroker($oneInsuranceBroker)
-                 ->setGeographicalScope(Types\EnumGeographicalScope::GERMANY())
+                 ->setGeographicalScope(Types\EnumGeographicalScope::GERMANY)
                  ->setRate(0.0043)
                  ->setDueDate('2014-07-01')
                  ->setPolicyNumber('1234567890');
     $europeRate = (new Entities\InsuranceRate)
                 ->setBroker($oneInsuranceBroker)
-                ->setGeographicalScope(Types\EnumGeographicalScope::EUROPE())
+                ->setGeographicalScope(Types\EnumGeographicalScope::EUROPE)
                 ->setRate(0.0051)
                 ->setDueDate('2014-07-01')
                 ->setPolicyNumber('1234567890');
     $worldRate = (new Entities\InsuranceRate)
                ->setBroker($otherInsuranceBroker)
-               ->setGeographicalScope(Types\EnumGeographicalScope::WORLD())
+               ->setGeographicalScope(Types\EnumGeographicalScope::WORLD)
                ->setRate(0.0068)
                ->setDueDate('2014-04-01')
                ->setPolicyNumber('1234567890');
