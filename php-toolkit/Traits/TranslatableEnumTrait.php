@@ -41,7 +41,7 @@ trait TranslatableEnumTrait
 {
   use BackedEnumTrait;
 
-  public const L10N_TAG = Constants::ENUM_VALUE_L10N_TAG . ': ';
+  public const L10N_TAG = 'ENUMVALUE';
 
   /**
    * @param IL10N $l
@@ -55,12 +55,18 @@ trait TranslatableEnumTrait
       $values,
       array_map(
         function(string $value) use ($l) {
-          $prefix = static::L10N_TAG;
+          $prefix = self::l10nTag();
           $l10nValue = $l->t($prefix . $value);
           return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
         },
         $values,
       ),
     );
+  }
+
+  /** @return string */
+  public static function l10nTag(): string
+  {
+    return self::L10N_TAG . ': ';
   }
 }
