@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultExpression\CurrentDate;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -109,7 +110,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * This should be set to the date of the actual sending out of the invoice.
    */
-  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => 'CURRENT_DATE'])]
+  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => new CurrentDate()])]
   private DateTimeImmutable $invoiceDate;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]

@@ -51,7 +51,7 @@ abstract class AbstractDecimalRationalType extends DecimalType
    *
    * This overrides precision and scale with the class constants
    */
-  public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+  public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
   {
     $column['precision'] = static::PRECISION;
     $column['scale'] = static::SCALE;
@@ -61,7 +61,7 @@ abstract class AbstractDecimalRationalType extends DecimalType
   /**
    * {@inheritDoc}
    */
-  public function convertToPHPValue($value, AbstractPlatform $platform)
+  public function convertToPHPValue($value, AbstractPlatform $platform): ?string
   {
     if ($value === null || $value === '') {
       return null;
@@ -75,14 +75,15 @@ abstract class AbstractDecimalRationalType extends DecimalType
   /**
    * {@inheritdoc}
    *
-   * @param RationalNumber|int|float|string|null $value
+   * @param mixed $value
+   *
    * @param AbstractPlatform $platform
    *
-   * @return string|null
+   * @return mixed
    *
    * @throws ConversionException
    */
-  public function convertToDatabaseValue($value, AbstractPlatform $platform)
+  public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
   {
     if ($value === null || $value === '') {
       return null;

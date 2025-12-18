@@ -15,12 +15,13 @@
     }
   },
   "require": {
-    "acelaya/doctrine-enum-type": "^2.5",
+    "acelaya/doctrine-enum-type": "dev-cafevdb/production",
     "beberlei/doctrineextensions": "^1.2.0",
     "bytestream/horde-imap-client": "*",
     "cjh/doctrine-on-update-extension": "dev-master",
+    "firehed/dbal-logger": "^2.0.0",
     "doctrine/annotations": "*",
-    "doctrine/dbal": "^3.2",
+    "doctrine/dbal": "^4.0",
     "doctrine/orm": "dev-production/3.6.x/cafevdb",
     "gedmo/doctrine-extensions": "3.x-dev",
     "maennchen/zipstream-php": "^3.0.0",
@@ -28,7 +29,7 @@
     "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
-    "ramsey/uuid-doctrine": "^1.6",
+    "ramsey/uuid-doctrine": "^2.0",
     "symfony/cache": "^6",
     "symfony/string": "*"
   },
@@ -60,6 +61,10 @@
       "options": {
         "symlink": false
       }
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/acelaya-doctrine-enum-type.git"
     }
   ],
   "minimum-stability": "dev",
@@ -76,7 +81,8 @@
         "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
       },
       "doctrine/dbal": {
-        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch"
+        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch",
+        "Fix MariaDB default values for date(time) stuff": "../composer-patches/doctrine/dbal/fix-mariadb-datetime-defaults.patch"
       },
       "symfony/string": {
         "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"

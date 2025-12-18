@@ -1,0 +1,68 @@
+--- doctrine/dbal/src/Platforms/MySQL/MySQLMetadataProvider.php.orig	2025-12-18 00:32:57.925392504 +0100
++++ doctrine/dbal/src/Platforms/MySQL/MySQLMetadataProvider.php	2025-12-18 00:34:59.771752683 +0100
+@@ -11,6 +11,7 @@
+ use Doctrine\DBAL\Platforms\Exception\NotSupported;
+ use Doctrine\DBAL\Platforms\MariaDBPlatform;
+ use Doctrine\DBAL\Schema\Column;
++use Doctrine\DBAL\Schema\DefaultExpression;
+ use Doctrine\DBAL\Schema\Exception\UnsupportedName;
+ use Doctrine\DBAL\Schema\ForeignKeyConstraint\MatchType;
+ use Doctrine\DBAL\Schema\ForeignKeyConstraint\ReferentialAction;
+@@ -342,9 +343,9 @@
+         }
+ 
+         return match ($columnDefault) {
+-            'current_timestamp()' => $platform->getCurrentTimestampSQL(),
+-            'curdate()' => $platform->getCurrentDateSQL(),
+-            'curtime()' => $platform->getCurrentTimeSQL(),
++            'current_timestamp()' => new DefaultExpression\CurrentTimestamp, // $platform->getCurrentTimestampSQL(),
++            'curdate()' => new DefaultExpression\CurrentDate, // $platform->getCurrentDateSQL(),
++            'curtime()' => new DefaultExpression\CurrentTime, // $platform->getCurrentTimeSQL(),
+             default => $columnDefault,
+         };
+     }
+--- doctrine/dbal/src/Schema/MySQLSchemaManager.php.orig	2025-12-18 00:32:47.929284628 +0100
++++ doctrine/dbal/src/Schema/MySQLSchemaManager.php	2025-12-18 00:35:53.269373318 +0100
+@@ -14,6 +14,7 @@
+ use Doctrine\DBAL\Platforms\MySQL\CollationMetadataProvider\ConnectionCollationMetadataProvider;
+ use Doctrine\DBAL\Platforms\MySQL\DefaultTableOptions;
+ use Doctrine\DBAL\Result;
++use Doctrine\DBAL\Schema\DefaultExpression;
+ use Doctrine\DBAL\Types\Type;
+ 
+ use function array_change_key_case;
+@@ -255,9 +256,9 @@
+         }
+ 
+         return match ($columnDefault) {
+-            'current_timestamp()' => $platform->getCurrentTimestampSQL(),
+-            'curdate()' => $platform->getCurrentDateSQL(),
+-            'curtime()' => $platform->getCurrentTimeSQL(),
++            'current_timestamp()' => new DefaultExpression\CurrentTimestamp, // $platform->getCurrentTimestampSQL(),
++            'curdate()' => new DefaultExpression\CurrentDate, // $platform->getCurrentDateSQL(),
++            'curtime()' => new DefaultExpression\CurrentTime, // $platform->getCurrentTimeSQL(),
+             default => $columnDefault,
+         };
+     }
+--- doctrine/dbal/src/Platforms/MySQL/MySQLMetadataProvider.php.orig	2025-12-18 00:48:03.353679488 +0100
++++ doctrine/dbal/src/Platforms/MySQL/MySQLMetadataProvider.php	2025-12-18 00:48:30.227039664 +0100
+@@ -332,7 +332,7 @@
+      *
+      * @param string|null $columnDefault default value as stored in information_schema for MariaDB >= 10.2.7
+      */
+-    private function parseMariaDBColumnDefault(MariaDBPlatform $platform, ?string $columnDefault): ?string
++    private function parseMariaDBColumnDefault(MariaDBPlatform $platform, ?string $columnDefault): mixed
+     {
+         if ($columnDefault === 'NULL' || $columnDefault === null) {
+             return null;
+--- doctrine/dbal/src/Schema/MySQLSchemaManager.php.orig	2025-12-18 00:46:56.345784728 +0100
++++ doctrine/dbal/src/Schema/MySQLSchemaManager.php	2025-12-18 00:47:36.707323089 +0100
+@@ -245,7 +245,7 @@
+      *
+      * @param string|null $columnDefault default value as stored in information_schema for MariaDB >= 10.2.7
+      */
+-    private function getMariaDBColumnDefault(MariaDBPlatform $platform, ?string $columnDefault): ?string
++    private function getMariaDBColumnDefault(MariaDBPlatform $platform, ?string $columnDefault): mixed
+     {
+         if ($columnDefault === 'NULL' || $columnDefault === null) {
+             return null;

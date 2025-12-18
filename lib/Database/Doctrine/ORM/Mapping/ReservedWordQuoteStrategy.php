@@ -51,7 +51,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
     $parts = explode('.', $name);
     foreach ($parts as $k => $v) {
       if ($force || $keywords->isKeyword($v)) {
-        $parts[$k] = $platform->quoteIdentifier($v);
+        $parts[$k] = $platform->quoteSingleIdentifier($v);
       }
     }
 
@@ -65,8 +65,8 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
   {
     return $this->getQuotedName(
       $platform,
-      $class->fieldMappings[$fieldName]['columnName'],
-      isset($class->fieldMappings[$fieldName]['quoted'])
+      $class->fieldMappings[$fieldName]->columnName,
+      isset($class->fieldMappings[$fieldName]->quoted),
     );
   }
 
@@ -113,8 +113,8 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
   {
     return $this->getQuotedName(
       $platform,
-      $joinColumn['name'],
-      isset($joinColumn['quoted'])
+      $joinColumn->name,
+      isset($joinColumn->quoted),
     );
   }
 
@@ -125,8 +125,8 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
   {
     return $this->getQuotedName(
       $platform,
-      $joinColumn['referencedColumnName'],
-      isset($joinColumn['quoted'])
+      $joinColumn->referencedColumnName,
+      isset($joinColumn->quoted),
     );
   }
 
@@ -137,16 +137,16 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
   {
     $schema = '';
 
-    if (isset($association['joinTable']['schema'])) {
-      $schema = $association['joinTable']['schema'] . '.';
+    if (isset($association['joinTable']->schema)) {
+      $schema = $association['joinTable']->schema . '.';
     }
 
-    $tableName = $association['joinTable']['name'];
+    $tableName = $association['joinTable']->name;
 
     $tableName = $this->getQuotedName(
       $platform,
       $tableName,
-      isset($association['joinTable']['quoted'])
+      isset($association['joinTable']->quoted),
     );
 
     return $schema . $tableName;

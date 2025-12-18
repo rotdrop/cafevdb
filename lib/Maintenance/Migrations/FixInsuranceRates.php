@@ -1,11 +1,11 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,17 +22,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use PDO;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\Hydration\AbstractHydrator;
-
-/** Extract one column as a flat array. */
-class ColumnHydrator extends AbstractHydrator
+/**
+ * Fix constraints.
+ */
+class FixInsuranceRates extends AbstractMigration
 {
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE InsuranceRates
+   ADD CONSTRAINT FK_CB75C3526CC064FC_ONUPDATE_CASCADE
+   FOREIGN KEY IF NOT EXISTS
+     (broker_id) REFERENCES InsuranceBrokers (short_name)
+   ON UPDATE CASCADE",
+    ],
+  ];
+
   /** {@inheritdoc} */
-  protected function hydrateAllData():mixed
+  public function description():string
   {
-    return $this->stmt->fetchAllAssociative(PDO::FETCH_COLUMN);
+    return $this->l->t('Fix explicitly set constraints on insurance rates table.');
   }
 }

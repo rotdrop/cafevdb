@@ -1,0 +1,13 @@
+diff --git a/composer.json b/composer.json
+index f8c54af..899a298 100644
+--- a/composer.json
++++ b/composer.json
+@@ -15,7 +15,7 @@
+     ],
+     "require": {
+         "php": "^7.4 || ^8.0",
+-        "doctrine/dbal": "^2.12 || ^3.0",
++        "doctrine/dbal": "^2.12 || ^3.0 || ^4.0",
+         "myclabs/php-enum": "^1.7"
+     },
+     "require-dev": {

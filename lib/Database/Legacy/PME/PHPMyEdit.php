@@ -394,13 +394,12 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $this->logError('RESULT INVALID ' . get_class($stmt));
       return false;
     }
-    $pdo = $this->dbh->getWrappedConnection()->getNativeConnection();
+    $pdo = $this->dbh->getNativeConnection();
     $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
-    $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
-    $result = $stmt->fetch($type);
+    $result = $type === 'n' ? $stmt->fetchNumeric() : $stmt->fetchAssociative();
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
     if ($result !== false
-        && $type == FetchMode::ASSOCIATIVE
+        && $type == 'n'
         && $this->queryHash == $this->generatedQueryHash
         && !empty($this->columnAliases)) {
       $missingColumns = array_diff($this->columnAliases, array_keys($result));

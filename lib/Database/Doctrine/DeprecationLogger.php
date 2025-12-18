@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,48 +24,64 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine;
 
+use OCA\CAFEVDB\Wrapped\Psr\Log\AbstractLogger;
 use OCP\ILogger;
+use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Doctrine\Deprecations\Deprecation always logs with level 'notice'. We wrap
  * therefore another Psr-logger to just map all levels to the wanted one.
  */
-class DeprecationLogger extends CloudLoggerWrapper
+class DeprecationLogger extends AbstractLogger
 {
-  /** @var null|int $logLevel */
-  protected $logLevel = null;
+  /** @var mixed $logLevel */
+  protected mixed $logLevel = null;
+
+  protected LoggerInterface $actualLogger;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    private LoggerInterface $logger,
+    private bool $isCLI,
+  ) {
+    if ($isCLI) {
+      \OCP\Server::get(\Psr\Log\LoggerInterface::class)->info('BLAH', ['exception' => new \Exception('BLAH') ]);
+      // ignore the provided logger and instead log to the console
+      $this->actualLogger = new ConsoleLogger(new ConsoleOutput);
+    } else {
+      $this->actualLogger = $logger;
+    }
+  }
+  // phpcs:enable
 
   /**
-   * @param null|int $level
+   * @param mixed $level
    *
-   * @return void
+   * @return self
    */
-  public function setLogLevel(null|int $level)
+  public function setLogLevel(mixed $level): self
   {
     $this->logLevel = $level;
+
+    return $this;
   }
 
   /**
-   * @return null|int
+   * @return mixed
    */
-  public function getLogLevel():?int
+  public function getLogLevel(): mixed
   {
     return $this->logLevel;
   }
 
-  /**
-   * Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
-   * understands those.
-   *
-   * @param mixed $level
-   *
-   * @return mixed
-   */
-  protected function mapLogLevels(mixed $level):int
+  /** {@inheritdoc} */
+  public function log($level, string|\Stringable $message, array $context = []): void
   {
-    if ($this->logLevel !== null) {
-      return $this->logLevel;
-    }
-    return parent::mapLogLevels($level);
+    $level = $this->isCLI ? LogLevel::CRITICAL : $this->logLevel;
+    $this->actualLogger->log($level, $message, $context);
   }
 }

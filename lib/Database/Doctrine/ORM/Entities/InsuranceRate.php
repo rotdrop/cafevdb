@@ -50,7 +50,11 @@ class InsuranceRate implements \ArrayAccess
   public const RATE_PRECISION = 4;
   public const RATE_SCALE = self::RATE_PRECISION;
 
-  #[CJH\ForeignKey(targetEntity: 'InsuranceBroker', referencedColumnName: 'short_name', onUpdate: 'cascade')]
+  #[CJH\ForeignKey(
+    targetEntity: 'InsuranceBroker',
+    referencedColumnName: 'short_name',
+    onUpdate: 'cascade',
+  )]
   #[ORM\JoinColumn(referencedColumnName: 'short_name')]
   #[ORM\ManyToOne(targetEntity: InsuranceBroker::class, inversedBy: 'insuranceRates', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   #[ORM\Id]

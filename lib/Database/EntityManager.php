@@ -67,7 +67,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -76,6 +78,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use OCA\CAFEVDB\Wrapped\Firehed\DbalLogger;
 use OCA\CAFEVDB\Wrapped\Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
@@ -157,7 +160,7 @@ class EntityManager extends EntityManagerDecorator
   private $reopenAfterRollback;
 
   /** @var bool */
-  private $typesBound;
+  private bool $typesBound = false;
 
   /** @var bool */
   private $decorateClassMetadata = true;
@@ -305,6 +308,8 @@ class EntityManager extends EntityManagerDecorator
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
+    } else {
+      $this->logError('NOT CONNECTED');
     }
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
@@ -410,7 +415,8 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Check for a valid database connection.
+   * Check for a valid database connection, try to establish a connection if
+   * not connected.
    *
    * @return bool
    */
@@ -437,10 +443,9 @@ class EntityManager extends EntityManagerDecorator
     }
     try {
       if (!$connection->isConnected()) {
-        if (!$connection->connect()) {
-          $this->logError('db cannot connect');
-          return false;
-        }
+        // $connection->connect() is deprecated
+        $connection->getNativeConnection();
+        return $connection->isConnected();
       }
     } catch (Throwable $t) {
       if (str_contains($this->request->getPathInfo() ?? '', 'apps/' . $this->appName)) {
@@ -450,6 +455,33 @@ class EntityManager extends EntityManagerDecorator
     }
     return true;
   }
+
+  private const DBAL_TYPES = [
+    Types\EnumAccessPermission::class => 'enum',
+    Types\EnumDataTransformation::class => 'enum',
+    Types\EnumDirEntryType::class => 'enum',
+    Types\EnumParticipationContext::class => 'enum',
+    Types\EnumFileType::class => 'enum',
+    Types\EnumGender::class => 'enum',
+    Types\EnumGeographicalScope::class => 'enum',
+    Types\EnumGnuCashSlotType::class => 'enum',
+    Types\EnumMemberStatus::class => 'enum',
+    Types\EnumParticipantFieldDataType::class => 'enum',
+    Types\EnumParticipantFieldMultiplicity::class => 'enum',
+    Types\EnumParticipationStatus::class => 'enum',
+    Types\EnumProjectTemporalType::class => 'enum',
+    Types\EnumSepaTransaction::class => 'enum',
+    Types\EnumTaxType::class => 'enum',
+    Types\EnumVCalendarType::class => 'enum',
+    // Ramsey\UuidType::class => null,
+    // Ramsey\UuidBinaryType::class => 'binary',
+    // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
+    Types\UuidType::class => 'uuid_binary',
+    Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
+    Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
+    Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
+    Types\ArrayType::class => 'array',
+  ];
 
   /**
    * Register the needed additional DBAL types.
@@ -461,56 +493,27 @@ class EntityManager extends EntityManagerDecorator
     if ($this->typesBound) {
       return;
     }
-    $types = [
-      Types\EnumAccessPermission::class => 'enum',
-      Types\EnumDataTransformation::class => 'enum',
-      Types\EnumDirEntryType::class => 'enum',
-      Types\EnumParticipationContext::class => 'enum',
-      Types\EnumFileType::class => 'enum',
-      Types\EnumGender::class => 'enum',
-      Types\EnumGeographicalScope::class => 'enum',
-      Types\EnumGnuCashSlotType::class => 'enum',
-      Types\EnumMemberStatus::class => 'enum',
-      Types\EnumParticipantFieldDataType::class => 'enum',
-      Types\EnumParticipantFieldMultiplicity::class => 'enum',
-      Types\EnumParticipationStatus::class => 'enum',
-      Types\EnumProjectTemporalType::class => 'enum',
-      Types\EnumSepaTransaction::class => 'enum',
-      Types\EnumTaxType::class => 'enum',
-      Types\EnumVCalendarType::class => 'enum',
-      // Ramsey\UuidType::class => null,
-      // Ramsey\UuidBinaryType::class => 'binary',
-      // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
-      Types\UuidType::class => 'uuid_binary',
-      Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
-      Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
-      Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
-    ];
 
     $connection = $this->entityManager->getConnection();
     try {
       $platform = $connection->getDatabasePlatform();
-      foreach ($types as $phpType => $sqlType) {
+      foreach (self::DBAL_TYPES as $phpType => $sqlType) {
         if ($sqlType == 'enum') {
           $typeName = substr(strrchr($phpType, '\\'), 1);
-          Types\EnumType::registerEnumType($typeName, $phpType);
-
-          // variant in lower case
-          // @todo: WHY?
-          $blah = strtolower($typeName);
-          Types\EnumType::registerEnumType($blah, $phpType);
-          $platform->registerDoctrineTypeMapping($sqlType, $blah);
-
+          if (!Type::hasType($typeName)) {
+            Types\EnumType::registerEnumType($typeName, $phpType);
+          }
         } else {
           $instance = new $phpType;
           $typeName = $instance->getName();
-          Type::addType($typeName, $phpType);
+          if (!Type::hasType($typeName)) {
+            Type::addType($typeName, $phpType);
+          }
         }
         if (!empty($sqlType)) {
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
         }
       }
-
       // Override datetime stuff
       Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
@@ -520,7 +523,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetimetz_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (Throwable $t) {
-      $this->logException($t);
+      throw new Exceptions\DatabaseException($this->l->t('Unable to register types with DBAL.'), previous: $t);
     }
   }
 
@@ -585,7 +588,7 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::postPersist,
       // ORM\Events::preRemove,
       // ORM\Events::postRemove,
-      \Doctrine\DBAL\Events::postConnect,
+      // \Doctrine\DBAL\Events::postConnect,
       ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
 
@@ -599,11 +602,17 @@ class EntityManager extends EntityManagerDecorator
     $quoteStrategy = new ReservedWordQuoteStrategy();
     $config->setQuoteStrategy($quoteStrategy);
 
-    $config->setSQLLogger($this->sqlLogger);
+    // $config->setSQLLogger($this->sqlLogger);
+
+    $middleware = new DBalLogger\Middleware($this->sqlLogger);
+    $config->setMiddlewares([$middleware]);
+
+    $config->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
 
     // obtaining the entity manager
+
     $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
-    $entityManager = new ORMEntityManager($connection, $config);
+    $entityManager = new ORMEntityManager($connection, $config, $eventManager);
 
     if (!$this->showSoftDeleted) {
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
@@ -782,13 +791,6 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($foreignKeyListener);
 
     return [ $config, $evm, $attributeReader ];
-  }
-
-  /** {@inheritdoc} */
-  public function postConnect(ConnectionEventArgs $args)
-  {
-    // not yet
-    // $args->getConnection()->executeStatement("SET @@character_set_collations = '" . Constants::CHARACTER_SET . "=" . Constants::SHORT_COLLATION . "'");
   }
 
   /**
