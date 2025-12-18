@@ -53,7 +53,7 @@ trait BackedEnumTrait
    * [ NAME => VALUE, ... ]
    * ```
    */
-  public static function array(): array
+  public static function toArray(): array
   {
     return array_combine(self::names(), self::values());
   }
@@ -83,7 +83,7 @@ trait BackedEnumTrait
         $previous = new \ReflectionProperty($t, 'previous');
         $previous->setValue($t, $e);
         throw new InvalidArgumentException(
-          "{$key} is neither a value nor a key of {self::class}: " . print_r(self::array(), true),
+          "{$key} is neither a value nor a key of {self::class}: " . print_r(self::toArray(), true),
           previous: $t,
         );
       }
