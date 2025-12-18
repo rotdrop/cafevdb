@@ -35,21 +35,29 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
 /** Example enum for testing. */
-enum EnumExample: string
+enum TranslatableEnumExample: string
 {
-  use BackedEnumTrait;
+  use TranslatableEnumTrait;
 
   case ONE = 'one';
   case TWO = 'two';
 }
 
 /** Test consistency of the enum with constants from ConfigConstants */
-#[Attributes\CoversTrait(BackedEnumTrait::class)]
-class BackedEnumTraitTest extends TestCase
+#[Attributes\CoversTrait(TranslatableEnumTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\TranslationNotFoundListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+class TranslatableEnumTraitTest extends TestCase
 {
+  private IL10N $l10n;
+
   /**
    * {@inheritdoc}
    *
@@ -57,48 +65,23 @@ class BackedEnumTraitTest extends TestCase
    */
   public function setup(): void
   {
+    $mockProvider = MockProvider::create($this);
+
+    $this->l10n = $mockProvider->getL10N();
   }
 
   /** @return void */
-  public function testGetFromValue(): void
+  public function testGetL10NValues(): void
   {
-    foreach (EnumExample::values() as $value) {
-      $this->assertEquals($value, EnumExample::get($value)->value);
-    }
-  }
-
-  /** @return void */
-  public function testGetFromName(): void
-  {
-    foreach (EnumExample::names() as $name) {
-      $this->assertEquals($name, EnumExample::get($name)->name);
-    }
-  }
-
-  /** @return void */
-  public function testGetFromInstance(): void
-  {
-    foreach (EnumExample::cases() as $instance) {
-      $this->assertEquals($instance, EnumExample::get($instance));
-    }
-  }
-
-  /** @return void */
-  public function testGetFromInvalid(): void
-  {
-    $this->expectException(InvalidArgumentException::class);
-    EnumExample::get('blahblahblah');
-  }
-
-  /** @return void */
-  public function testGetFromInvalidExceptionChain(): void
-  {
-    try {
-      EnumExample::get('blahblahblah');
-    } catch (Throwable $t) {
-      $this->assertInstanceOf(InvalidArgumentException::class, $t);
-      $this->assertInstanceOf(Error::class, $t->getPrevious());
-      $this->assertInstanceOf(ValueError::class, $t->getPrevious()->getPrevious());
-    }
+    $enumValues = TranslatableEnumExample::values();
+    $expected = array_combine(
+      $enumValues,
+      array_map(
+        fn(string $s) => $this->l10n->t($s),
+        $enumValues,
+      ),
+    );
+    $values = TranslatableEnumExample::getL10NValues($this->l10n);
+    $this->assertEquals($expected, $values);
   }
 }
