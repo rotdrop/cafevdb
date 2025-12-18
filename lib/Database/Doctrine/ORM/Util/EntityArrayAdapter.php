@@ -74,7 +74,7 @@ class EntityArrayAdapter implements ArrayAccess, Iterator, JsonSerializable
     private ?self $root = null,
     private ?string $flatIdentifier = null,
     ?EntitySerializer $entitySerializer = null,
-    IAppContainer $appContainer = null,
+    ?IAppContainer $appContainer = null,
   ) {
     if ($root === null) {
       $this->entitySerializer = clone ($entitySerializer ?? \OCP\Server::get(EntitySerializer::class));
