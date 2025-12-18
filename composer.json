@@ -9,6 +9,9 @@
     }
   ],
   "config": {
+    "audit": {
+      "block-insecure": false
+    },
     "allow-plugins": {
       "bamarni/composer-bin-plugin": true,
       "cweagans/composer-patches": true,
