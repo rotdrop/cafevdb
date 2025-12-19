@@ -60,7 +60,6 @@
     "vildanbina/composer-upgrader": "^1.0"
   },
   "autoload": {
-    "classmap": ["3rdparty/phpMyEdit/."],
     "files": ["lib/Common/Functions.php"]
   },
   "autoload-dev": {

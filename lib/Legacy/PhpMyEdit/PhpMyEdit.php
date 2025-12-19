@@ -36,45 +36,14 @@
 	original table view (Pass 1).
 */
 
-class phpMyEdit_timer /* {{{ */
-{
-	public $startTime;
-	public $started;
-
-	function __construct($start = true)
-	{
-		$this->started = false;
-		if ($start) {
-			$this->start();
-		}
-	}
-
-	function start()
-	{
-		$this->startTime =  hrtime(true);
-		$this->started	 = true;
-	}
-
-	function end($iterations = 1)
-	{
-		// get the time, check whether the timer was started later
-		$endTime = hrtime(true);
-		if ($this->started) {
-			$dur = $endTime - $this->startTime;
-			$avg = $dur / $iterations / 1e6;
-			return $avg;
-		} else {
-			return 'phpMyEdit_timer ERROR: timer not started';
-		}
-	}
-} /* }}} */
+namespace OCA\CAFEVDB\Legacy\PhpMyEdit;
 
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)
  * @SuppressWarnings(PHPMD.Superglobals)
  * @SuppressWarnings(PHPMD.DevelopmentCodeFragment)
  */
-class phpMyEdit
+class PhpMyEdit
 {
 	const COLUMN_ALIAS = 'PMEcolumn';
 	const TABLE_ALIAS = 'PMEalias';
@@ -241,7 +210,7 @@ class phpMyEdit
 	public $tabs_help;     // Tooltips, if any
 	public $tabs_by_id;    // TAB indices by Id
 	public $tabs_by_name;  // TAB indices by Id
-	public $timer = null;	// phpMyEdit_timer object
+	public $timer = null;	// PhpMyEditTimer object
 	public $sd; public $ed;	// sql start and end delimiters '`' in case of MySQL
 
 	// various "spurious" on-the-fly members ... these trigger PHP errors/warnings as of now
@@ -7241,7 +7210,7 @@ EOT;
 		$this->display['sort']	= @$opts[self::OPT_DISPLAY]['sort'];
 		$this->display['time']	= @$opts[self::OPT_DISPLAY]['time'];
 		if ($this->display['time']) {
-			$this->timer = new phpMyEdit_timer();
+			$this->timer = new PhpMyEditTimer();
 		}
 		$this->display['postfix'] = @$opts[self::OPT_DISPLAY]['postfix'];
 		$this->display['tabs'] = isset($opts[self::OPT_DISPLAY]['tabs'])
