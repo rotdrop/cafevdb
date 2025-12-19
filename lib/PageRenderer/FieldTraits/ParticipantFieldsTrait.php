@@ -1607,8 +1607,8 @@ trait ParticipantFieldsTrait
 
               $cssClass = [
                 'row-count-' .count($values),
-                'multiplicity-' . $fieldMultiplicity,
-                'data-type-' . $fieldDataType,
+                cat('multiplicity-', $fieldMultiplicity),
+                cat('data-type-', $fieldDataType),
                 'recurring-generator-' . $generatorSlug,
                 'recurring-option-recompute-button-' . ($noRecomputeButton ? 'dis' : 'en') . 'able',
               ];

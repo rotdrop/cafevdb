@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
 /** @var Entities\ProjectParticipantField $field */
 $fieldId = $field->getId();
 $fieldName = $field->getName();
-$dataType = $field->getDataType();
+$dataType = $field->getDataType()->value;
 $optionKey = $fieldOption->getKey();
 $optionLabel = $fieldOption->getLabel();
 $optionBalancingAccount = $fieldOption->getBalancingAccount();
@@ -68,7 +68,7 @@ $optionBalancingAccountVisible = ($uiFlags & Generator::UI_VISIBLE_BALANCING_ACC
 
 $valueInputType = ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES)
   ? 'type="number" step="0.01"' : 'type="text"';
-$filesAppTarget = md5($filesAppPath ?? '');
+ $filesAppTarget = md5($filesAppPath ?? '');
 
 $labelled = $optionLabel !== null;
 $lockCssClass = [
