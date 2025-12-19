@@ -65,6 +65,13 @@ class NativeEnums extends AbstractMigration
       "ALTER TABLE TaxationStatutorySources
   CHANGE tax_type tax_type ENUM('corporate income tax', 'sales tax', 'trade tax', 'VAT', 'insurance tax')
     DEFAULT 'corporate income tax' NOT NULL",
+      "ALTER TABLE InstrumentInsurances
+  CHANGE geographical_scope geographical_scope ENUM('Domestic', 'Continent', 'Germany', 'Europe', 'World')
+    NOT NULL",
+      "ALTER TABLE InsuranceRates
+  CHANGE geographical_scope geographical_scope ENUM('Domestic', 'Continent', 'Germany', 'Europe', 'World')
+    DEFAULT 'Germany'
+    NOT NULL",
     ],
   ];
 
