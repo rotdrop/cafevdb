@@ -198,7 +198,7 @@ const participantFieldsPopup = (
     // initialName: false, // 'PME_sys_operation',
     initialName: pmeSys('operation'),
     // initialValue: false, // 'View',
-    initialValue: 'View',
+    initialValue: 'Filter',
     // reloadName: false, // 'PME_sys_operation',
     reloadName: pmeSys('operation'),
     // reloadValue: false, // 'View',
