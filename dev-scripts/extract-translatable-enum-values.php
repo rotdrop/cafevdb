@@ -64,12 +64,26 @@ foreach ($finder as $path => $fileInfo) {
     $startLine = $reflection->getStartLine();
     // echo 'TRANSLATABLE ENUM ' . $enum . ' ' . $enum::L10N_TAG . PHP_EOL;
     $shortFile = substr($path, $topDirLen);
-    $tag = $enum::L10N_TAG ?? '';
-    foreach ($enum::array() as $key => $value) {
+    $tag = $enum::l10nTag();
+    foreach ($enum::toArray() as $key => $value) {
+      $reflectionCase = new ReflectionEnumBackedCase($enum, $key);
+      $docComment = $reflectionCase->getDocComment();
       // echo "{$key} => {$value}" . PHP_EOL;
       $poEntry =<<<EOF
 #. TRANSLATORS: An enum value of "enum $enum".
-#. TRANSLATORS: $key => $value.
+#. TRANSLATORS: $key => $value
+
+EOF;
+      if (!empty($docComment)) {
+        $poEntry .= implode(
+          '',
+          array_map(
+            fn(string $line) => '#. TRANSLATORS: ' . preg_replace('/^[\/* ]+/', '', $line) . "\n",
+            explode("\n", $docComment),
+          ),
+        );
+      }
+      $poEntry .=<<<EOF
 #: $shortFile:$startLine
 #, php-format
 msgid "$tag$value"
