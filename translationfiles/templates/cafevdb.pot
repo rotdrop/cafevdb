@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-12-18 11:01+0100\n"
+"POT-Creation-Date: 2025-12-19 17:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -528,7 +528,7 @@ msgstr ""
 
 #: lib/Command/Migrations.php:362
 #: lib/PageRenderer/DonationReceipts.php:546
-#: lib/PageRenderer/ProjectParticipants.php:1031
+#: lib/PageRenderer/ProjectParticipants.php:1034
 msgid "Status"
 msgstr ""
 
@@ -1112,9 +1112,9 @@ msgstr ""
 
 #: lib/Command/SentNotifications.php:261
 #: lib/PageRenderer/DonationReceipts.php:472
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1624
-#: lib/PageRenderer/Invoices.php:949
-#: lib/PageRenderer/Invoices.php:970
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1627
+#: lib/PageRenderer/Invoices.php:951
+#: lib/PageRenderer/Invoices.php:972
 #: lib/PageRenderer/ProjectPayments.php:719
 #: lib/PageRenderer/ProjectPayments.php:740
 #: lib/PageRenderer/SepaBulkTransactions.php:513
@@ -1843,7 +1843,7 @@ msgstr ""
 #: lib/Documents/OpenDocumentFiller.php:388
 #: lib/Documents/OpenDocumentFiller.php:391
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2514
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2522
 #: lib/PageRenderer/Projects.php:813
 #: lib/PageRenderer/Projects.php:821
 #: lib/Service/Finance/InstrumentInsuranceService.php:618
@@ -1909,8 +1909,8 @@ msgstr ""
 
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:488
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1586
-#: lib/PageRenderer/Invoices.php:501
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1589
+#: lib/PageRenderer/Invoices.php:503
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:68
 msgid "Documents"
 msgstr ""
@@ -4306,7 +4306,7 @@ msgid "Attempt to double wrap a class-meta-data instance."
 msgstr ""
 
 #: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:224
-#: lib/Service/L10N/AppL10N.php:100
+#: lib/Service/L10N/AppL10N.php:102
 #: lib/Service/L10N/L10NFactory.php:149
 #, php-format
 msgid "Undefined method - %1$s::%2$s"
@@ -4367,43 +4367,43 @@ msgstr ""
 msgid "The entity-manager is unable to connect to the database."
 msgstr ""
 
-#: lib/Database/EntityManager.php:526
+#: lib/Database/EntityManager.php:500
 msgid "Unable to register types with DBAL."
 msgstr ""
 
-#: lib/Database/EntityManager.php:977
+#: lib/Database/EntityManager.php:947
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:986
-#: lib/Database/EntityManager.php:1038
-#: lib/Database/EntityManager.php:1252
+#: lib/Database/EntityManager.php:956
+#: lib/Database/EntityManager.php:1008
+#: lib/Database/EntityManager.php:1222
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1003
+#: lib/Database/EntityManager.php:973
 msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1208
+#: lib/Database/EntityManager.php:1178
 msgid "The connection is marked for rollback only."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1441
+#: lib/Database/EntityManager.php:1411
 #, php-format
 msgid "Unexpected locale settings \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1530
+#: lib/Database/EntityManager.php:1500
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1556
+#: lib/Database/EntityManager.php:1526
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -4428,248 +4428,248 @@ msgstr ""
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:550
+#: lib/EmailForm/Composer.php:552
 msgid "announcement"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:635
+#: lib/EmailForm/Composer.php:637
 msgid "ExampleFormletter"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:648
+#: lib/EmailForm/Composer.php:650
 #: src/app/email.ts:1467
 msgid "Unknown Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:746
+#: lib/EmailForm/Composer.php:748
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "STREET_AND_NUMBER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:754
+#: lib/EmailForm/Composer.php:756
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "EMAIL"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:761
+#: lib/EmailForm/Composer.php:763
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "NICK_NAME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:768
+#: lib/EmailForm/Composer.php:770
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "DISPLAY_NAME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:775
+#: lib/EmailForm/Composer.php:777
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "COUNTRY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:789
+#: lib/EmailForm/Composer.php:791
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "LANGUAGE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:800
+#: lib/EmailForm/Composer.php:802
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BIRTHDAY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:813
-#: lib/EmailForm/Composer.php:4379
+#: lib/EmailForm/Composer.php:815
+#: lib/EmailForm/Composer.php:4381
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:822
+#: lib/EmailForm/Composer.php:824
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "TOTAL_FEES"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:830
+#: lib/EmailForm/Composer.php:832
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "AMOUNT_PAID"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:838
+#: lib/EmailForm/Composer.php:840
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "MISSING_AMOUNT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:847
+#: lib/EmailForm/Composer.php:849
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "PROJECT_DATA"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1041
+#: lib/EmailForm/Composer.php:1043
 msgid "Option"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1042
-#: lib/EmailForm/Composer.php:1064
-#: lib/EmailForm/Composer.php:1490
-#: lib/EmailForm/Composer.php:1542
-#: lib/PageRenderer/Invoices.php:777
+#: lib/EmailForm/Composer.php:1044
+#: lib/EmailForm/Composer.php:1066
+#: lib/EmailForm/Composer.php:1492
+#: lib/EmailForm/Composer.php:1544
+#: lib/PageRenderer/Invoices.php:779
 #: lib/PageRenderer/ProjectPayments.php:657
 msgid "Total Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1042
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:580
-#: lib/PageRenderer/ProjectParticipantFields.php:659
-#: lib/PageRenderer/ProjectParticipantFields.php:1738
-#: lib/PageRenderer/ProjectParticipantFields.php:1748
+#: lib/EmailForm/Composer.php:1044
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:583
+#: lib/PageRenderer/ProjectParticipantFields.php:661
+#: lib/PageRenderer/ProjectParticipantFields.php:1751
+#: lib/PageRenderer/ProjectParticipantFields.php:1761
 msgid "Deposit"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1043
-#: lib/EmailForm/Composer.php:1543
+#: lib/EmailForm/Composer.php:1045
+#: lib/EmailForm/Composer.php:1545
 msgid "Received"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1044
-#: lib/EmailForm/Composer.php:1544
+#: lib/EmailForm/Composer.php:1046
+#: lib/EmailForm/Composer.php:1546
 msgid "Remaining"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1045
+#: lib/EmailForm/Composer.php:1047
 #: lib/PageRenderer/InstrumentInsurances.php:634
-#: lib/PageRenderer/Invoices.php:902
-#: lib/PageRenderer/Invoices.php:913
+#: lib/PageRenderer/Invoices.php:904
+#: lib/PageRenderer/Invoices.php:915
 #: lib/PageRenderer/PMETableViewBase.php:699
 msgid "Due Date"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1184
+#: lib/EmailForm/Composer.php:1186
 msgid "members"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1286
+#: lib/EmailForm/Composer.php:1288
 msgid "DONATION_AMOUNT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1299
+#: lib/EmailForm/Composer.php:1301
 msgid "WAIVED_AMOUNT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1312
+#: lib/EmailForm/Composer.php:1314
 msgid "WAIVING_OF_REIMBURSEMENT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1320
+#: lib/EmailForm/Composer.php:1322
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:145
-#: lib/PageRenderer/ProjectParticipantFields.php:895
-#: lib/PageRenderer/ProjectParticipantFields.php:901
+#: lib/PageRenderer/ProjectParticipantFields.php:897
+#: lib/PageRenderer/ProjectParticipantFields.php:903
 msgid "yes"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1321
+#: lib/EmailForm/Composer.php:1323
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:149
-#: lib/PageRenderer/ProjectParticipantFields.php:895
+#: lib/PageRenderer/ProjectParticipantFields.php:897
 msgid "no"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1329
+#: lib/EmailForm/Composer.php:1331
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_AMOUNT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1342
+#: lib/EmailForm/Composer.php:1344
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_PURPOSE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1355
+#: lib/EmailForm/Composer.php:1357
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "SEPA_MANDATE_REFERENCE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1372
+#: lib/EmailForm/Composer.php:1374
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "SEPA_MANDATE_DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1389
+#: lib/EmailForm/Composer.php:1391
 #: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_IBAN"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1406
+#: lib/EmailForm/Composer.php:1408
 #: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_BIC"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1423
+#: lib/EmailForm/Composer.php:1425
 #: lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_BANK"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1451
+#: lib/EmailForm/Composer.php:1453
 #: lib/EmailForm/Composer.php:570 lib/EmailForm/Composer.php:235
 #, php-format
 msgid "BANK_ACCOUNT_OWNER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1468
+#: lib/EmailForm/Composer.php:1470
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_PARTS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1540
+#: lib/EmailForm/Composer.php:1542
 msgid "Purpose"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1541
+#: lib/EmailForm/Composer.php:1543
 msgid "Invoice Amount"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1654
+#: lib/EmailForm/Composer.php:1656
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1733
+#: lib/EmailForm/Composer.php:1735
 msgid ""
 "Unable to lock the email-sending action, Redis ist not available. This is an "
 "internal error, please report this to the system administrator."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1757
+#: lib/EmailForm/Composer.php:1759
 msgid "Message(s) sent out successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1768
+#: lib/EmailForm/Composer.php:1770
 msgid "Someone is already sending email, please try again later."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:1894
-#: lib/EmailForm/Composer.php:3681
+#: lib/EmailForm/Composer.php:1896
+#: lib/EmailForm/Composer.php:3683
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2550
+#: lib/EmailForm/Composer.php:2552
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -4695,137 +4695,137 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2802
-#: lib/EmailForm/Composer.php:3313
+#: lib/EmailForm/Composer.php:2804
+#: lib/EmailForm/Composer.php:3315
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3513
+#: lib/EmailForm/Composer.php:3515
 msgid "*** empty content ***"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3567
+#: lib/EmailForm/Composer.php:3569
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3569
+#: lib/EmailForm/Composer.php:3571
 msgid "Prewiew generation detected errors!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3634
+#: lib/EmailForm/Composer.php:3636
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3637
+#: lib/EmailForm/Composer.php:3639
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3640
+#: lib/EmailForm/Composer.php:3642
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3851
-#: lib/EmailForm/Composer.php:4299
-#: lib/EmailForm/Composer.php:5535
+#: lib/EmailForm/Composer.php:3853
+#: lib/EmailForm/Composer.php:4301
+#: lib/EmailForm/Composer.php:5537
 msgid "PROJECT_MUSIC_SHEETS_SHARE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3899
-#: lib/EmailForm/Composer.php:4344
+#: lib/EmailForm/Composer.php:3901
+#: lib/EmailForm/Composer.php:4346
 msgid "POST_PROJECT_MEDIA_SHARE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3901
-#: lib/EmailForm/Composer.php:4356
+#: lib/EmailForm/Composer.php:3903
+#: lib/EmailForm/Composer.php:4358
 msgid "POST_PROJECT_MEDIA_FOLDER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3981
+#: lib/EmailForm/Composer.php:3983
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:4018
+#: lib/EmailForm/Composer.php:4020
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4103
-#: lib/EmailForm/Composer.php:4119
+#: lib/EmailForm/Composer.php:4105
+#: lib/EmailForm/Composer.php:4121
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4226
-#: lib/EmailForm/Composer.php:4389
-#: lib/EmailForm/Composer.php:4399
+#: lib/EmailForm/Composer.php:4228
+#: lib/EmailForm/Composer.php:4391
+#: lib/EmailForm/Composer.php:4401
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:4249
+#: lib/EmailForm/Composer.php:4251
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4253
+#: lib/EmailForm/Composer.php:4255
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4259
+#: lib/EmailForm/Composer.php:4261
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4269
+#: lib/EmailForm/Composer.php:4271
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ORGANIZER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4272
+#: lib/EmailForm/Composer.php:4274
 msgid "SENDER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4275
+#: lib/EmailForm/Composer.php:4277
 #, php-format
 msgid "your orchestra organizers (%s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4280
+#: lib/EmailForm/Composer.php:4282
 msgid "UNKNOWN"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4282
+#: lib/EmailForm/Composer.php:4284
 msgid "PRESIDENT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4283
+#: lib/EmailForm/Composer.php:4285
 msgid "TREASURER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4284
+#: lib/EmailForm/Composer.php:4286
 msgid "SECRETARY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4285
+#: lib/EmailForm/Composer.php:4287
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "CREDITOR_IDENTIFIER"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4288
+#: lib/EmailForm/Composer.php:4290
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "ADDRESS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4291
+#: lib/EmailForm/Composer.php:4293
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_ACCOUNT"
@@ -4833,7 +4833,7 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\GnuCashConnectorService::PROJECT_KEY = 'PROJECT';
-#: lib/EmailForm/Composer.php:4295
+#: lib/EmailForm/Composer.php:4297
 #: templates/settings/share-settings.php:215
 #: templates/settings/share-settings.php:228
 #: templates/settings/share-settings.php:252
@@ -4844,103 +4844,103 @@ msgstr ""
 msgid "PROJECT"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4296
+#: lib/EmailForm/Composer.php:4298
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4309
+#: lib/EmailForm/Composer.php:4311
 msgid "PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4321
+#: lib/EmailForm/Composer.php:4323
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4338
+#: lib/EmailForm/Composer.php:4340
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4368
-#: lib/EmailForm/Composer.php:4414
+#: lib/EmailForm/Composer.php:4370
+#: lib/EmailForm/Composer.php:4416
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4369
-#: lib/EmailForm/Composer.php:4408
+#: lib/EmailForm/Composer.php:4371
+#: lib/EmailForm/Composer.php:4410
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_DUE_DAYS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4370
-#: lib/EmailForm/Composer.php:4417
+#: lib/EmailForm/Composer.php:4372
+#: lib/EmailForm/Composer.php:4419
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DATE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4371
-#: lib/EmailForm/Composer.php:4411
+#: lib/EmailForm/Composer.php:4373
+#: lib/EmailForm/Composer.php:4413
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "BANK_TRANSACTION_SUBMIT_DAYS"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4382
+#: lib/EmailForm/Composer.php:4384
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "TIME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4392
+#: lib/EmailForm/Composer.php:4394
 #: lib/EmailForm/Composer.php:570
 #, php-format
 msgid "DATETIME"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4504
+#: lib/EmailForm/Composer.php:4506
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4855
+#: lib/EmailForm/Composer.php:4857
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4867
+#: lib/EmailForm/Composer.php:4869
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4891
+#: lib/EmailForm/Composer.php:4893
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4925
+#: lib/EmailForm/Composer.php:4927
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4983
-#: lib/EmailForm/Composer.php:5110
+#: lib/EmailForm/Composer.php:4985
+#: lib/EmailForm/Composer.php:5112
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5019
+#: lib/EmailForm/Composer.php:5021
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5044
+#: lib/EmailForm/Composer.php:5046
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5496
+#: lib/EmailForm/Composer.php:5498
 #, php-format
 msgid ""
 "Web-references in emails are required to use \"https\", i.e. only SSL-"
@@ -4948,21 +4948,21 @@ msgid ""
 "\"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5525
+#: lib/EmailForm/Composer.php:5527
 #, php-format
 msgid ""
 "The link refers to a file or folder \"%1$s\" inside the music sheets "
 "download folder \"%2$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5530
+#: lib/EmailForm/Composer.php:5532
 #, php-format
 msgid ""
 "The link is a manually generated referenc to the music sheets download "
 "folder \"%1$s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5533
+#: lib/EmailForm/Composer.php:5535
 #, php-format
 msgid ""
 "Please use the substitution \"%1$s\" instead. Otherwise proper link "
@@ -4971,35 +4971,35 @@ msgid ""
 "leave the executive board."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5569
+#: lib/EmailForm/Composer.php:5571
 msgid "SSL validation failed. The external site is misconfigured."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5588
+#: lib/EmailForm/Composer.php:5590
 msgid "The link could not be opened."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5903
+#: lib/EmailForm/Composer.php:5905
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5904
+#: lib/EmailForm/Composer.php:5906
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5907
+#: lib/EmailForm/Composer.php:5909
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5910
+#: lib/EmailForm/Composer.php:5912
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5913
+#: lib/EmailForm/Composer.php:5915
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:6039
+#: lib/EmailForm/Composer.php:6041
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -5290,14 +5290,14 @@ msgid "Unable to initialize asymmetric key-pair for user \"%s\"."
 msgstr ""
 
 #: lib/Listener/ProjectParticipantEntityListener.php:104
-#: lib/PageRenderer/ProjectParticipants.php:1578
+#: lib/PageRenderer/ProjectParticipants.php:1581
 #, php-format
 msgid ""
 "Confirmed project participants cannot have a participation status of \"%s\"."
 msgstr ""
 
 #: lib/Listener/ProjectParticipantEntityListener.php:116
-#: lib/PageRenderer/ProjectParticipants.php:1595
+#: lib/PageRenderer/ProjectParticipants.php:1598
 #, php-format
 msgid ""
 "The participation-status cannot be set to \"%1$s\" as long as the "
@@ -5498,6 +5498,10 @@ msgstr ""
 msgid "Make the ProjectPayment subject nullable."
 msgstr ""
 
+#: lib/Maintenance/Migrations/NativeEnums.php:74
+msgid "Renove DBAL DC2Type comments part two."
+msgstr ""
+
 #: lib/Maintenance/Migrations/ParticipantDropBankAccountColumns.php:47
 msgid "Drop some unused obsololete columns in the project_participants table"
 msgstr ""
@@ -5669,16 +5673,16 @@ msgstr ""
 #: lib/PageRenderer/DonationReceipts.php:317
 #: lib/PageRenderer/InstrumentInsurances.php:241
 #: lib/PageRenderer/Musicians.php:277
-#: lib/PageRenderer/ProjectParticipantFields.php:291
+#: lib/PageRenderer/ProjectParticipantFields.php:293
 msgid "Miscellaneous Data"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:321
 #: lib/PageRenderer/InstrumentInsurances.php:246
-#: lib/PageRenderer/Invoices.php:509
+#: lib/PageRenderer/Invoices.php:511
 #: lib/PageRenderer/Musicians.php:280
-#: lib/PageRenderer/ProjectParticipantFields.php:296
-#: lib/PageRenderer/ProjectParticipants.php:1796
+#: lib/PageRenderer/ProjectParticipantFields.php:298
+#: lib/PageRenderer/ProjectParticipants.php:1799
 #: lib/PageRenderer/ProjectPayments.php:491
 #: lib/PageRenderer/SepaBankAccounts.php:1126
 #: lib/PageRenderer/SepaBulkTransactions.php:273
@@ -5697,10 +5701,10 @@ msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:379
 #: lib/PageRenderer/DonationReceipts.php:385
-#: lib/PageRenderer/Invoices.php:735
+#: lib/PageRenderer/Invoices.php:737
 #: lib/PageRenderer/Musicians.php:543
-#: lib/PageRenderer/ProjectAssociates.php:579
-#: lib/PageRenderer/ProjectParticipants.php:643
+#: lib/PageRenderer/ProjectAssociates.php:580
+#: lib/PageRenderer/ProjectParticipants.php:646
 #: lib/PageRenderer/ProjectPayments.php:651
 msgid "User Id"
 msgstr ""
@@ -5711,8 +5715,8 @@ msgid "Payment Id"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:509
-#: lib/PageRenderer/Invoices.php:801
-#: lib/PageRenderer/ProjectParticipantFields.php:2083
+#: lib/PageRenderer/Invoices.php:803
+#: lib/PageRenderer/ProjectParticipantFields.php:2096
 #: lib/PageRenderer/ProjectPayments.php:672
 #: lib/PageRenderer/SepaBankAccounts.php:1080
 #: lib/PageRenderer/SepaBulkTransactions.php:387
@@ -5733,9 +5737,9 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:143
 #: lib/PageRenderer/DonationReceipts.php:573
-#: lib/PageRenderer/Invoices.php:600
+#: lib/PageRenderer/Invoices.php:602
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:195
-#: lib/PageRenderer/ProjectParticipantFields.php:343
+#: lib/PageRenderer/ProjectParticipantFields.php:345
 #: lib/PageRenderer/ProjectPayments.php:579
 #: lib/PageRenderer/SepaBulkTransactions.php:366
 #: specialVueFakeDummyForL10nScript.js:6736
@@ -5743,21 +5747,21 @@ msgid "Project"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:603
-#: lib/PageRenderer/Invoices.php:632
+#: lib/PageRenderer/Invoices.php:634
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:235
 #: lib/PageRenderer/ProjectPayments.php:609
 msgid "Project Name"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:610
-#: lib/PageRenderer/Invoices.php:639
+#: lib/PageRenderer/Invoices.php:641
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:242
 #: lib/PageRenderer/ProjectPayments.php:616
 msgid "Project Year"
 msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:615
-#: lib/PageRenderer/Invoices.php:1192
+#: lib/PageRenderer/Invoices.php:1194
 msgid "Local Copy"
 msgstr ""
 
@@ -5775,8 +5779,8 @@ msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:750
 #: lib/PageRenderer/Musicians.php:991
-#: lib/PageRenderer/ProjectAssociates.php:1132
-#: lib/PageRenderer/ProjectParticipants.php:1403
+#: lib/PageRenderer/ProjectAssociates.php:1133
+#: lib/PageRenderer/ProjectParticipants.php:1406
 #: lib/PageRenderer/Projects.php:1020
 #: lib/PageRenderer/TaxExemptionNotices.php:446
 msgid "Last Updated"
@@ -5784,8 +5788,8 @@ msgstr ""
 
 #: lib/PageRenderer/DonationReceipts.php:763
 #: lib/PageRenderer/Musicians.php:1004
-#: lib/PageRenderer/ProjectAssociates.php:1144
-#: lib/PageRenderer/ProjectParticipants.php:1415
+#: lib/PageRenderer/ProjectAssociates.php:1145
+#: lib/PageRenderer/ProjectParticipants.php:1418
 #: lib/PageRenderer/TaxExemptionNotices.php:459
 msgid "Created"
 msgstr ""
@@ -5857,7 +5861,7 @@ msgid "Orchestra Contact"
 msgstr ""
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:533
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1594
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1597
 #: lib/PageRenderer/SepaBulkTransactions.php:609
 msgid "Date"
 msgstr ""
@@ -5904,7 +5908,7 @@ msgid "project associates for %s"
 msgstr ""
 
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:108
-#: lib/PageRenderer/ProjectAssociates.php:612
+#: lib/PageRenderer/ProjectAssociates.php:613
 msgid "Role"
 msgstr ""
 
@@ -5935,10 +5939,10 @@ msgid "Not Confirmed"
 msgstr ""
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:146
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:837
-#: lib/PageRenderer/ProjectParticipantFields.php:803
-#: lib/PageRenderer/ProjectParticipantFields.php:1038
-#: lib/PageRenderer/ProjectParticipantFields.php:1618
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:840
+#: lib/PageRenderer/ProjectParticipantFields.php:805
+#: lib/PageRenderer/ProjectParticipantFields.php:1040
+#: lib/PageRenderer/ProjectParticipantFields.php:1631
 #: lib/Service/ProjectParticipantFieldsService.php:663
 #: specialVueFakeDummyForL10nScript.js:1123
 #: specialVueFakeDummyForL10nScript.js:1149
@@ -5948,10 +5952,10 @@ msgid "true"
 msgstr ""
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:150
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:836
-#: lib/PageRenderer/ProjectParticipantFields.php:803
-#: lib/PageRenderer/ProjectParticipantFields.php:1039
-#: lib/PageRenderer/ProjectParticipantFields.php:1618
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:839
+#: lib/PageRenderer/ProjectParticipantFields.php:805
+#: lib/PageRenderer/ProjectParticipantFields.php:1041
+#: lib/PageRenderer/ProjectParticipantFields.php:1631
 #: lib/Service/ProjectParticipantFieldsService.php:663
 #: templates/pme-table.php:56
 msgid "false"
@@ -5971,7 +5975,7 @@ msgid "Mailing List"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:132
-#: lib/PageRenderer/ProjectParticipants.php:1161
+#: lib/PageRenderer/ProjectParticipants.php:1164
 #: templates/emailform/part.emailform.recipients.php:201
 msgid "Project Mailing List"
 msgstr ""
@@ -6004,126 +6008,126 @@ msgstr ""
 msgid "guessed: %s"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:195
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:198
 #, php-format
 msgid "Unsupported multiplicity / data-type combination: %s / %s"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:259
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:262
 #: lib/PageRenderer/InstrumentFamilies.php:258
 #: lib/PageRenderer/Instruments.php:302
 #: lib/PageRenderer/Musicians.php:579
-#: lib/PageRenderer/ProjectAssociates.php:524
-#: lib/PageRenderer/ProjectParticipantFields.php:399
-#: lib/PageRenderer/ProjectParticipants.php:588
+#: lib/PageRenderer/ProjectAssociates.php:525
+#: lib/PageRenderer/ProjectParticipantFields.php:401
+#: lib/PageRenderer/ProjectParticipants.php:591
 #: lib/PageRenderer/Projects.php:324
 #: lib/PageRenderer/TaxExemptionNotices.php:255
 #: lib/PageRenderer/TaxationStatutorySources.php:303
 msgid "Deleted"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:326
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:810
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:329
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:813
 #, php-format
 msgid "Not default style for \"%s\" available."
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:344
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:347
 msgid "Revert to default"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:390
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:877
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1161
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1290
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1826
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2088
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:393
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:880
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1164
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1293
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1829
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2091
 msgid "sub-totals"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:543
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1591
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:546
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1594
 msgid "Invoice"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:701
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:704
 #: lib/PageRenderer/FieldTraits/ParticipantFileFieldsTrait.php:117
 #, php-format
 msgid "The file \"%s\" could not be found on the server."
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:789
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1038
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:792
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1041
 #, php-format
 msgid "The folder \"%s\" could not be found on the server."
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:792
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:795
 msgid "The folder is empty."
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1345
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1348
 #, php-format
 msgid "Label for %s"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1380
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1383
 #, php-format
 msgid "Balancing account for %s"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1585
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1588
 msgid "Value"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1590
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1593
 #, php-format
 msgid "Value [%s]"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1597
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1600
 msgid "Date/Time"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1601
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1604
 msgid "File"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1623
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1626
 msgid "Actions"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1628
-#: lib/PageRenderer/ProjectParticipantFields.php:912
-#: lib/PageRenderer/ProjectParticipantFields.php:1740
-#: lib/PageRenderer/ProjectParticipantFields.php:1750
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1631
+#: lib/PageRenderer/ProjectParticipantFields.php:914
+#: lib/PageRenderer/ProjectParticipantFields.php:1753
+#: lib/PageRenderer/ProjectParticipantFields.php:1763
 msgid "Balancing Account"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1678
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1778
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1882
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1681
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1781
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1885
 msgid "without group"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1745
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1965
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2054
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1748
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1968
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2057
 msgid "deleted"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1893
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1896
 msgid "add to this group"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2380
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2388
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
 "\"%s\", new: \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2533
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2541
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -6193,7 +6197,7 @@ msgid "SEPA Bank Accounts"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:186
-#: lib/PageRenderer/Invoices.php:1640
+#: lib/PageRenderer/Invoices.php:1642
 #: lib/PageRenderer/ProjectPayments.php:1357
 #: lib/PageRenderer/SepaBankAccounts.php:620
 #: lib/PageRenderer/SepaBankAccounts.php:698
@@ -6203,7 +6207,7 @@ msgid "Fetching decrypted values in the background."
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:188
-#: lib/PageRenderer/Invoices.php:1642
+#: lib/PageRenderer/Invoices.php:1644
 #: lib/PageRenderer/ProjectPayments.php:1359
 #: lib/PageRenderer/SepaBankAccounts.php:622
 #: lib/PageRenderer/SepaBankAccounts.php:700
@@ -6395,7 +6399,7 @@ msgid "Families"
 msgstr ""
 
 #: lib/PageRenderer/Instruments.php:314
-#: lib/PageRenderer/ProjectParticipantFields.php:412
+#: lib/PageRenderer/ProjectParticipantFields.php:414
 msgid "#Usage"
 msgstr ""
 
@@ -6409,8 +6413,8 @@ msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:33
 #: lib/PageRenderer/InsuranceBrokers.php:167
-#: lib/PageRenderer/ProjectAssociates.php:421
-#: lib/PageRenderer/ProjectParticipants.php:485
+#: lib/PageRenderer/ProjectAssociates.php:422
+#: lib/PageRenderer/ProjectParticipants.php:488
 #: specialVueFakeDummyForL10nScript.js:6378
 msgid "Name"
 msgstr ""
@@ -6437,197 +6441,197 @@ msgstr ""
 msgid "Rate"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:349
+#: lib/PageRenderer/Invoices.php:351
 #: src/files-hooks.ts:553
 #: src/files-hooks.ts:567
 msgid "New Invoice"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:357
+#: lib/PageRenderer/Invoices.php:359
 #, php-format
 msgid "Invoicing for project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:358
+#: lib/PageRenderer/Invoices.php:360
 msgid "Invoicing for all projects"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:492
+#: lib/PageRenderer/Invoices.php:494
 msgid "General invoice data"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:493
+#: lib/PageRenderer/Invoices.php:495
 msgid "Invoice Data"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:496
+#: lib/PageRenderer/Invoices.php:498
 msgid "Tax rate and constitutory sources"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:497
+#: lib/PageRenderer/Invoices.php:499
 msgid "Taxes"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:504
+#: lib/PageRenderer/Invoices.php:506
 #: lib/PageRenderer/ProjectPayments.php:486
 msgid "Bulk-transaction data"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:505
-#: lib/PageRenderer/Invoices.php:1592
+#: lib/PageRenderer/Invoices.php:507
+#: lib/PageRenderer/Invoices.php:1594
 #: lib/PageRenderer/ProjectPayments.php:487
 msgid "Bank Transaction"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:519
+#: lib/PageRenderer/Invoices.php:521
 msgid "Invoice Id"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:544
+#: lib/PageRenderer/Invoices.php:546
 msgid "Debitor-Musician-Id"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:555
-#: lib/PageRenderer/ProjectAssociates.php:333
-#: lib/PageRenderer/ProjectParticipants.php:401
+#: lib/PageRenderer/Invoices.php:557
+#: lib/PageRenderer/ProjectAssociates.php:334
+#: lib/PageRenderer/ProjectParticipants.php:404
 #: lib/PageRenderer/ProjectPayments.php:534
 msgid "Project-Id"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:580
+#: lib/PageRenderer/Invoices.php:582
 #: lib/PageRenderer/ProjectPayments.php:559
 msgid "Bulk-Transaction Id"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:644
+#: lib/PageRenderer/Invoices.php:646
 msgid "Author"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:688
+#: lib/PageRenderer/Invoices.php:690
 msgid "Debitor"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:719
+#: lib/PageRenderer/Invoices.php:721
 #: lib/PageRenderer/Musicians.php:504
-#: lib/PageRenderer/ProjectAssociates.php:538
-#: lib/PageRenderer/ProjectParticipants.php:602
+#: lib/PageRenderer/ProjectAssociates.php:539
+#: lib/PageRenderer/ProjectParticipants.php:605
 msgid "Display-Name (pers.)"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:729
+#: lib/PageRenderer/Invoices.php:731
 #: lib/PageRenderer/Musicians.php:360
-#: lib/PageRenderer/ProjectAssociates.php:405
-#: lib/PageRenderer/ProjectParticipants.php:467
+#: lib/PageRenderer/ProjectAssociates.php:406
+#: lib/PageRenderer/ProjectParticipants.php:470
 msgid "Organization"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:740
+#: lib/PageRenderer/Invoices.php:742
 msgid "Invoice Number"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:751
-#: lib/PageRenderer/Invoices.php:758
+#: lib/PageRenderer/Invoices.php:753
+#: lib/PageRenderer/Invoices.php:760
 msgid "automatically determined"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:818
+#: lib/PageRenderer/Invoices.php:820
 msgid "Sales Tax"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:841
+#: lib/PageRenderer/Invoices.php:843
 #: lib/PageRenderer/TaxationStatutorySources.php:262
 msgid "Legal Basis"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:858
+#: lib/PageRenderer/Invoices.php:860
 msgid "Inconsistency"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:890
+#: lib/PageRenderer/Invoices.php:892
 msgid "Invoice Date"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:914
+#: lib/PageRenderer/Invoices.php:916
 msgid "Item Due Date"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:925
+#: lib/PageRenderer/Invoices.php:927
 msgid "Balanced Date"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:932
+#: lib/PageRenderer/Invoices.php:934
 msgid "Cover Text"
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/Invoices.php:998
-#: lib/PageRenderer/Invoices.php:1088
+#: lib/PageRenderer/Invoices.php:1000
+#: lib/PageRenderer/Invoices.php:1090
 #: lib/PageRenderer/ProjectPayments.php:785
 #: lib/PageRenderer/ProjectPayments.php:871
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:102
 msgid "Receivables"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1072
-#: lib/PageRenderer/Invoices.php:1150
+#: lib/PageRenderer/Invoices.php:1074
+#: lib/PageRenderer/Invoices.php:1152
 #: lib/PageRenderer/ProjectPayments.php:855
 #: lib/PageRenderer/ProjectPayments.php:931
 msgid "Single Options"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1075
+#: lib/PageRenderer/Invoices.php:1077
 #: lib/PageRenderer/ProjectPayments.php:858
 msgid "Operations"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1076
+#: lib/PageRenderer/Invoices.php:1078
 #: lib/PageRenderer/ProjectPayments.php:859
 msgid "Add a new Receivable"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1288
+#: lib/PageRenderer/Invoices.php:1290
 #: lib/PageRenderer/ProjectPayments.php:1408
 msgid "Message-ID"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1331
+#: lib/PageRenderer/Invoices.php:1333
 #: lib/PageRenderer/ProjectPayments.php:1048
 msgid "Financial Project Balance"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1444
+#: lib/PageRenderer/Invoices.php:1446
 #: lib/PageRenderer/ProjectPayments.php:1161
 msgid "Parts Project Balances"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1610
+#: lib/PageRenderer/Invoices.php:1612
 msgid "Date of Bank Transaction"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1621
+#: lib/PageRenderer/Invoices.php:1623
 #: lib/PageRenderer/ProjectPayments.php:1338
 #: lib/PageRenderer/SepaBulkTransactions.php:425
 msgid "IBAN"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1683
+#: lib/PageRenderer/Invoices.php:1685
 #: lib/PageRenderer/ProjectPayments.php:1400
 #: lib/PageRenderer/SepaBankAccounts.php:805
 #: lib/PageRenderer/SepaBulkTransactions.php:487
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1697
+#: lib/PageRenderer/Invoices.php:1699
 #: lib/PageRenderer/ProjectPayments.php:1426
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:1814
+#: lib/PageRenderer/Invoices.php:1816
 #: lib/PageRenderer/ProjectPayments.php:1519
 msgid "Project Balance"
 msgstr ""
 
-#: lib/PageRenderer/Invoices.php:2139
+#: lib/PageRenderer/Invoices.php:2141
 #, php-format
 msgid ""
 "Unable to find an email message on the imap-server for the given message id "
@@ -6651,7 +6655,7 @@ msgid "Display of all stored personal data for the shown person."
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:168
-#: lib/PageRenderer/ProjectAssociates.php:193
+#: lib/PageRenderer/ProjectAssociates.php:194
 msgid "Edit the data of the displayed person."
 msgstr ""
 
@@ -6664,7 +6668,7 @@ msgid "Instruments and Status"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:271
-#: lib/PageRenderer/ProjectParticipants.php:1779
+#: lib/PageRenderer/ProjectParticipants.php:1782
 msgid "Contact Information"
 msgstr ""
 
@@ -6673,8 +6677,8 @@ msgid "Financial Topics"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:368
-#: lib/PageRenderer/ProjectAssociates.php:413
-#: lib/PageRenderer/ProjectParticipants.php:476
+#: lib/PageRenderer/ProjectAssociates.php:414
+#: lib/PageRenderer/ProjectParticipants.php:479
 msgid "Job-Title"
 msgstr ""
 
@@ -6687,53 +6691,53 @@ msgid "Forename"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:400
-#: lib/PageRenderer/ProjectAssociates.php:439
-#: lib/PageRenderer/ProjectParticipants.php:503
+#: lib/PageRenderer/ProjectAssociates.php:440
+#: lib/PageRenderer/ProjectParticipants.php:506
 msgid "Nickname"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:414
-#: lib/PageRenderer/ProjectAssociates.php:446
-#: lib/PageRenderer/ProjectAssociates.php:449
-#: lib/PageRenderer/ProjectParticipants.php:510
+#: lib/PageRenderer/ProjectAssociates.php:447
+#: lib/PageRenderer/ProjectAssociates.php:450
 #: lib/PageRenderer/ProjectParticipants.php:513
+#: lib/PageRenderer/ProjectParticipants.php:516
 msgid "e.g. Cathy"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:448
-#: lib/PageRenderer/ProjectAssociates.php:479
-#: lib/PageRenderer/ProjectParticipants.php:543
+#: lib/PageRenderer/ProjectAssociates.php:480
+#: lib/PageRenderer/ProjectParticipants.php:546
 msgid "Display-Name"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:467
-#: lib/PageRenderer/ProjectAssociates.php:486
-#: lib/PageRenderer/ProjectAssociates.php:491
-#: lib/PageRenderer/ProjectParticipants.php:550
-#: lib/PageRenderer/ProjectParticipants.php:555
+#: lib/PageRenderer/ProjectAssociates.php:487
+#: lib/PageRenderer/ProjectAssociates.php:492
+#: lib/PageRenderer/ProjectParticipants.php:553
+#: lib/PageRenderer/ProjectParticipants.php:558
 msgid "e.g. Doe, Cathy"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:514
-#: lib/PageRenderer/ProjectAssociates.php:549
-#: lib/PageRenderer/ProjectParticipants.php:613
+#: lib/PageRenderer/ProjectAssociates.php:550
+#: lib/PageRenderer/ProjectParticipants.php:616
 msgid "Gender"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:531
-#: lib/PageRenderer/ProjectAssociates.php:566
-#: lib/PageRenderer/ProjectParticipants.php:630
+#: lib/PageRenderer/ProjectAssociates.php:567
+#: lib/PageRenderer/ProjectParticipants.php:633
 #, php-format
 msgid "auto-detected gender: %s"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:640
-#: lib/PageRenderer/ProjectParticipants.php:719
+#: lib/PageRenderer/ProjectParticipants.php:722
 msgid "Instrument Sort Order"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:654
-#: lib/PageRenderer/ProjectParticipants.php:1005
+#: lib/PageRenderer/ProjectParticipants.php:1008
 msgid "Disabled Instruments"
 msgstr ""
 
@@ -6742,68 +6746,68 @@ msgid "Default Status"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:693
-#: lib/PageRenderer/ProjectAssociates.php:815
-#: lib/PageRenderer/ProjectParticipants.php:1069
+#: lib/PageRenderer/ProjectAssociates.php:816
+#: lib/PageRenderer/ProjectParticipants.php:1072
 msgid "Cloud Account Deactivated"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:712
-#: lib/PageRenderer/ProjectAssociates.php:835
-#: lib/PageRenderer/ProjectParticipants.php:1089
+#: lib/PageRenderer/ProjectAssociates.php:836
+#: lib/PageRenderer/ProjectParticipants.php:1092
 msgid "Hidden from Cloud"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:734
-#: lib/PageRenderer/ProjectAssociates.php:906
-#: lib/PageRenderer/ProjectParticipants.php:1174
+#: lib/PageRenderer/ProjectAssociates.php:907
+#: lib/PageRenderer/ProjectParticipants.php:1177
 msgid "Mobile Phone"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:748
-#: lib/PageRenderer/ProjectAssociates.php:921
-#: lib/PageRenderer/ProjectParticipants.php:1189
+#: lib/PageRenderer/ProjectAssociates.php:922
+#: lib/PageRenderer/ProjectParticipants.php:1192
 msgid "Fixed Line Phone"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:766
-#: lib/PageRenderer/ProjectAssociates.php:936
-#: lib/PageRenderer/ProjectParticipants.php:1204
+#: lib/PageRenderer/ProjectAssociates.php:937
+#: lib/PageRenderer/ProjectParticipants.php:1207
 msgid "Address Supplement"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:777
-#: lib/PageRenderer/ProjectAssociates.php:947
-#: lib/PageRenderer/ProjectParticipants.php:1215
+#: lib/PageRenderer/ProjectAssociates.php:948
+#: lib/PageRenderer/ProjectParticipants.php:1218
 msgid "Street"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:792
-#: lib/PageRenderer/ProjectAssociates.php:961
-#: lib/PageRenderer/ProjectParticipants.php:1229
+#: lib/PageRenderer/ProjectAssociates.php:962
+#: lib/PageRenderer/ProjectParticipants.php:1232
 msgid "Street Number"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:803
-#: lib/PageRenderer/ProjectParticipants.php:1240
+#: lib/PageRenderer/ProjectParticipants.php:1243
 #: lib/Traits/FlattenEntityTrait.php:75
 msgid "P.O. Box"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:814
-#: lib/PageRenderer/ProjectAssociates.php:983
-#: lib/PageRenderer/ProjectParticipants.php:1251
+#: lib/PageRenderer/ProjectAssociates.php:984
+#: lib/PageRenderer/ProjectParticipants.php:1254
 msgid "Postal Code"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:823
-#: lib/PageRenderer/ProjectAssociates.php:992
-#: lib/PageRenderer/ProjectParticipants.php:1260
+#: lib/PageRenderer/ProjectAssociates.php:993
+#: lib/PageRenderer/ProjectParticipants.php:1263
 msgid "City"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:835
-#: lib/PageRenderer/ProjectAssociates.php:1004
-#: lib/PageRenderer/ProjectParticipants.php:1272
+#: lib/PageRenderer/ProjectAssociates.php:1005
+#: lib/PageRenderer/ProjectParticipants.php:1275
 #: lib/PageRenderer/TaxationStatutorySources.php:211
 msgid "Country"
 msgstr ""
@@ -6813,8 +6817,8 @@ msgid "Remarks"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:868
-#: lib/PageRenderer/ProjectAssociates.php:1063
-#: lib/PageRenderer/ProjectParticipants.php:1331
+#: lib/PageRenderer/ProjectAssociates.php:1064
+#: lib/PageRenderer/ProjectParticipants.php:1334
 msgid "Language"
 msgstr ""
 
@@ -6823,8 +6827,8 @@ msgid "Instrument Insurance"
 msgstr ""
 
 #: lib/PageRenderer/Musicians.php:935
-#: lib/PageRenderer/ProjectAssociates.php:1077
-#: lib/PageRenderer/ProjectParticipants.php:1345
+#: lib/PageRenderer/ProjectAssociates.php:1078
+#: lib/PageRenderer/ProjectParticipants.php:1348
 #: src/app/email.ts:2043
 #: templates/emailform/part.emailform.composer.php:225
 #: templates/emailform/part.emailform.composer.php:244
@@ -6980,70 +6984,70 @@ msgid ""
 "missing \"%3$s\"."
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:189
+#: lib/PageRenderer/ProjectAssociates.php:190
 #, php-format
 msgid "Remove the person from %s?"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:191
+#: lib/PageRenderer/ProjectAssociates.php:192
 msgid "Display of all stored data for the shown person."
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:195
+#: lib/PageRenderer/ProjectAssociates.php:196
 #, php-format
 msgid "Business Contacts and Associates for Project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:345
-#: lib/PageRenderer/ProjectParticipants.php:413
+#: lib/PageRenderer/ProjectAssociates.php:346
+#: lib/PageRenderer/ProjectParticipants.php:416
 #: lib/PageRenderer/ProjectPayments.php:523
 #: lib/PageRenderer/SepaBankAccounts.php:465
 msgid "Musician-Id"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:430
-#: lib/PageRenderer/ProjectParticipants.php:494
+#: lib/PageRenderer/ProjectAssociates.php:431
+#: lib/PageRenderer/ProjectParticipants.php:497
 msgid "First Name"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:668
+#: lib/PageRenderer/ProjectAssociates.php:669
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:297
-#: lib/PageRenderer/ProjectParticipants.php:735
+#: lib/PageRenderer/ProjectParticipants.php:738
 msgid "Voice"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:703
+#: lib/PageRenderer/ProjectAssociates.php:704
 msgid "Possible Roles"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:749
+#: lib/PageRenderer/ProjectAssociates.php:750
 msgid "Disabled Roles"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:775
+#: lib/PageRenderer/ProjectAssociates.php:776
 msgid "Participation Status"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:789
+#: lib/PageRenderer/ProjectAssociates.php:790
 msgid "Email Status"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:803
-#: lib/PageRenderer/ProjectParticipants.php:1057
+#: lib/PageRenderer/ProjectAssociates.php:804
+#: lib/PageRenderer/ProjectParticipants.php:1060
 msgid "Musician Deleted"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:972
+#: lib/PageRenderer/ProjectAssociates.php:973
 msgid "P.O. Box "
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:1022
-#: lib/PageRenderer/ProjectParticipants.php:1290
+#: lib/PageRenderer/ProjectAssociates.php:1023
+#: lib/PageRenderer/ProjectParticipants.php:1293
 msgid "General Remarks"
 msgstr ""
 
-#: lib/PageRenderer/ProjectAssociates.php:1056
-#: lib/PageRenderer/ProjectParticipants.php:1324
+#: lib/PageRenderer/ProjectAssociates.php:1057
+#: lib/PageRenderer/ProjectParticipants.php:1327
 msgid ""
 "General, not project-specific remarks. The field cannot be changed from here."
 msgstr ""
@@ -7076,9 +7080,9 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:309
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:315
-#: lib/PageRenderer/ProjectParticipantFields.php:791
-#: lib/PageRenderer/ProjectParticipantFields.php:800
-#: lib/PageRenderer/ProjectParticipants.php:842
+#: lib/PageRenderer/ProjectParticipantFields.php:793
+#: lib/PageRenderer/ProjectParticipantFields.php:802
+#: lib/PageRenderer/ProjectParticipants.php:845
 msgid "n/a"
 msgstr ""
 
@@ -7098,253 +7102,253 @@ msgstr ""
 msgid "Balance"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:188
+#: lib/PageRenderer/ProjectParticipantFields.php:190
 msgid "New Table Field"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:197
+#: lib/PageRenderer/ProjectParticipantFields.php:199
 #, php-format
 msgid "Participant-Fields for Project %s"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:199
+#: lib/PageRenderer/ProjectParticipantFields.php:201
 msgid "Extra Fields for Projects"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:274
+#: lib/PageRenderer/ProjectParticipantFields.php:276
 msgid "Definition of name, type, allowed values, default values."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:275
+#: lib/PageRenderer/ProjectParticipantFields.php:277
 msgid "Defintion"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:279
+#: lib/PageRenderer/ProjectParticipantFields.php:281
 msgid ""
 "Ordering, linking to and defining newe tabs, definition of tooltips (help "
 "text)."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:281
+#: lib/PageRenderer/ProjectParticipantFields.php:283
 msgid "Display"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:204
-#: lib/PageRenderer/ProjectParticipantFields.php:286
+#: lib/PageRenderer/ProjectParticipantFields.php:288
 #: specialVueFakeDummyForL10nScript.js:1620
 msgid "Access Control"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:334
+#: lib/PageRenderer/ProjectParticipantFields.php:336
 msgid "Year"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:382
+#: lib/PageRenderer/ProjectParticipantFields.php:384
 msgid "Field-Name"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:424
+#: lib/PageRenderer/ProjectParticipantFields.php:426
 msgid "Multiplicity"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:461
+#: lib/PageRenderer/ProjectParticipantFields.php:463
 msgid "Data-Type"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:513
+#: lib/PageRenderer/ProjectParticipantFields.php:515
 msgid "Deposit Due Date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:557
+#: lib/PageRenderer/ProjectParticipantFields.php:559
 msgid "Data Options"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:627
+#: lib/PageRenderer/ProjectParticipantFields.php:629
 #: lib/EmailForm/Composer.php:1942 lib/EmailForm/Composer.php:1948
 #: lib/Service/L10N/BiDirectionalL10N.php:80
 #, php-format
 msgid "Default"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:629
-#: lib/PageRenderer/ProjectParticipantFields.php:1737
-#: lib/PageRenderer/ProjectParticipantFields.php:1747
+#: lib/PageRenderer/ProjectParticipantFields.php:631
+#: lib/PageRenderer/ProjectParticipantFields.php:1750
+#: lib/PageRenderer/ProjectParticipantFields.php:1760
 msgid "Data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:723
+#: lib/PageRenderer/ProjectParticipantFields.php:725
 msgid "Maximum Size"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:750
-#: lib/PageRenderer/ProjectParticipantFields.php:845
-#: lib/PageRenderer/ProjectParticipantFields.php:880
+#: lib/PageRenderer/ProjectParticipantFields.php:752
+#: lib/PageRenderer/ProjectParticipantFields.php:847
+#: lib/PageRenderer/ProjectParticipantFields.php:882
 msgid "Default Value"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:929
-#: lib/PageRenderer/ProjectParticipantFields.php:1741
-#: lib/PageRenderer/ProjectParticipantFields.php:1751
+#: lib/PageRenderer/ProjectParticipantFields.php:931
+#: lib/PageRenderer/ProjectParticipantFields.php:1754
+#: lib/PageRenderer/ProjectParticipantFields.php:1764
 msgid "Tooltip"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:949
+#: lib/PageRenderer/ProjectParticipantFields.php:951
 msgid "Display-Order"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:961
+#: lib/PageRenderer/ProjectParticipantFields.php:963
 msgid "Table Tab"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:986
+#: lib/PageRenderer/ProjectParticipantFields.php:988
 msgid "New Tab Name"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:999
+#: lib/PageRenderer/ProjectParticipantFields.php:1001
 msgid "name of new tab"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1005
+#: lib/PageRenderer/ProjectParticipantFields.php:1007
 #: lib/PageRenderer/TaxExemptionNotices.php:212
 msgid "Context"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1016
+#: lib/PageRenderer/ProjectParticipantFields.php:1018
 msgid "Participant Access"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1021
+#: lib/PageRenderer/ProjectParticipantFields.php:1023
 msgid "no access"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1022
+#: lib/PageRenderer/ProjectParticipantFields.php:1024
 msgid "read"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1023
+#: lib/PageRenderer/ProjectParticipantFields.php:1025
 msgid "read / write"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1033
+#: lib/PageRenderer/ProjectParticipantFields.php:1035
 msgid "Encrypted"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1166
+#: lib/PageRenderer/ProjectParticipantFields.php:1174
 #, php-format
 msgid ""
 "The name \"%1$s\" is reserved by the app in order to provide general help "
 "texts in the file-system and may not be used as a field-name."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1346
+#: lib/PageRenderer/ProjectParticipantFields.php:1359
 #, php-format
 msgid "Simple field-option key is not an UUID: \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1637
+#: lib/PageRenderer/ProjectParticipantFields.php:1650
 msgid "empty"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1645
+#: lib/PageRenderer/ProjectParticipantFields.php:1658
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1647
+#: lib/PageRenderer/ProjectParticipantFields.php:1660
 msgid "Show data-fields."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1735
-#: lib/PageRenderer/ProjectParticipantFields.php:1745
+#: lib/PageRenderer/ProjectParticipantFields.php:1748
+#: lib/PageRenderer/ProjectParticipantFields.php:1758
 msgid "Key"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1736
-#: lib/PageRenderer/ProjectParticipantFields.php:1746
+#: lib/PageRenderer/ProjectParticipantFields.php:1749
+#: lib/PageRenderer/ProjectParticipantFields.php:1759
 msgid "Label"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1739
-#: lib/PageRenderer/ProjectParticipantFields.php:1749
+#: lib/PageRenderer/ProjectParticipantFields.php:1752
+#: lib/PageRenderer/ProjectParticipantFields.php:1762
 msgid "Limit"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:226
+#: lib/PageRenderer/ProjectParticipants.php:229
 msgid "Add Musician"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:234
+#: lib/PageRenderer/ProjectParticipants.php:237
 #, php-format
 msgid "Remove the musician from %s?"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:236
+#: lib/PageRenderer/ProjectParticipants.php:239
 msgid "Display of all stored data for the shown musician."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:238
+#: lib/PageRenderer/ProjectParticipants.php:241
 msgid "Edit the data of the displayed musician."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:240
+#: lib/PageRenderer/ProjectParticipants.php:243
 #, php-format
 msgid "Instrumentation for Project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:676
+#: lib/PageRenderer/ProjectParticipants.php:679
 msgid "Project Instrument"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:851
+#: lib/PageRenderer/ProjectParticipants.php:854
 msgid "Section Leader"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:926
+#: lib/PageRenderer/ProjectParticipants.php:929
 msgid "Participation"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:935
+#: lib/PageRenderer/ProjectParticipants.php:938
 #: lib/Service/ToolTipsDataService.php:588
 #: lib/Service/ToolTipsDataService.php:596
 #: lib/Service/ToolTipsDataService.php:604
 msgid "tentatively"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:935
+#: lib/PageRenderer/ProjectParticipants.php:938
 #: lib/Service/ToolTipsDataService.php:589
 #: lib/Service/ToolTipsDataService.php:597
 #: lib/Service/ToolTipsDataService.php:605
 msgid "confirmed"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:959
+#: lib/PageRenderer/ProjectParticipants.php:962
 msgid "All Instruments"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1168
+#: lib/PageRenderer/ProjectParticipants.php:1171
 msgid "Announcements List"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1755
+#: lib/PageRenderer/ProjectParticipants.php:1758
 #: lib/Service/InstrumentationService.php:204
 msgid "Instrumentation related data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1760
+#: lib/PageRenderer/ProjectParticipants.php:1763
 #: lib/Service/InstrumentationService.php:209
 msgid "Project related data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1767
+#: lib/PageRenderer/ProjectParticipants.php:1770
 #: lib/Service/InstrumentationService.php:216
 msgid "Finance related data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1784
+#: lib/PageRenderer/ProjectParticipants.php:1787
 #: lib/Service/InstrumentationService.php:228
 msgid "Personal data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipants.php:1791
+#: lib/PageRenderer/ProjectParticipants.php:1794
 #: lib/PageRenderer/SepaBankAccounts.php:1119
 msgid "Miscinfo"
 msgstr ""
@@ -8480,7 +8484,7 @@ msgstr ""
 msgid "A migration with the version \"%s\" does not exist."
 msgstr ""
 
-#: lib/Service/MigrationsService.php:212
+#: lib/Service/MigrationsService.php:213
 #, php-format
 msgid "Migration %s has failed to execute."
 msgstr ""
@@ -12172,7 +12176,7 @@ msgstr ""
 msgid "ToolTip-Key \"%s\""
 msgstr ""
 
-#: lib/Service/VCalendarService.php:873
+#: lib/Service/VCalendarService.php:877
 msgid "Default Event Notification"
 msgstr ""
 
@@ -16382,11 +16386,7 @@ msgstr ""
 msgid "once"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT = 'permanent';
 #: templates/sepa-debit-mandate.php:283
-#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:48
-#, php-format
 msgid "permanent"
 msgstr ""
 
@@ -17389,11 +17389,11 @@ msgstr ""
 msgid "?"
 msgstr ""
 
-#: tests/phpunit/Unit/Service/SetupEventsServiceTrait.php:118
+#: tests/phpunit/Unit/Service/SetupEventsServiceTrait.php:119
 msgid "uri"
 msgstr ""
 
-#: tests/phpunit/Unit/Service/SetupEventsServiceTrait.php:178
+#: tests/phpunit/Unit/Service/SetupEventsServiceTrait.php:179
 msgid " (calendar.owner)"
 msgstr ""
 
@@ -17518,22 +17518,12 @@ msgstr ""
 msgid "sub-page"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPLATE = 'template';
 #: lib/PageRenderer/PMETableViewBase.php:230
-#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:49
-#: lib/PageRenderer/Projects.php:1035
 #, php-format
 msgid "template"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::TEMPORARY = 'temporary';
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY = 'temporary';
 #: lib/PageRenderer/PMETableViewBase.php:230
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:57
-#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:47
 #, php-format
 msgid "temporary"
 msgstr ""
@@ -17627,20 +17617,14 @@ msgstr ""
 msgid "blz"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::EUROPE = 'Europe';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:56
 #, php-format
 msgid "Europe"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::GERMANY = 'Germany';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:55
 #, php-format
 msgid "Germany"
 msgstr ""
@@ -17665,11 +17649,8 @@ msgstr ""
 msgid "Select project debit-note mandate"
 msgstr ""
 
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::WORLD = 'World';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:57
 #, php-format
 msgid "World"
 msgstr ""
@@ -17966,167 +17947,6 @@ msgid "auto"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::MALE = 'male';
-#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:47
-#, php-format
-msgid "male"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::FEMALE = 'female';
-#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:48
-#, php-format
-msgid "female"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::DIVERSE = 'diverse';
-#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:49
-#, php-format
-msgid "diverse"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::DOMESTIC = 'Domestic';
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:53
-#, php-format
-msgid "Domestic"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::CONTINENT = 'Continent';
-#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:54
-#, php-format
-msgid "Continent"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::REGULAR = 'regular';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:53
-#, php-format
-msgid "regular"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::PASSIVE = 'passive';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:54
-#, php-format
-msgid "passive"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::SOLOIST = 'soloist';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:55
-#, php-format
-msgid "soloist"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::CONDUCTOR = 'conductor';
-#: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:56
-#, php-format
-msgid "conductor"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::ASSOCIATES = 'ENUM_DISPLAY_CONTEXT: associates';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:53
-#, php-format
-msgid "ENUM_DISPLAY_CONTEXT: associates"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::PARTICIPANTS = 'ENUM_DISPLAY_CONTEXT: participants';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:54
-#, php-format
-msgid "ENUM_DISPLAY_CONTEXT: participants"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED = 'ENUM_DISPLAY_CONTEXT: unrestricted';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:55
-#, php-format
-msgid "ENUM_DISPLAY_CONTEXT: unrestricted"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::ASSOCIATED = 'ENUM_PARTICIPATION_STATUS: associated';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:57
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: associated"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::CONDUCTOR = 'ENUM_PARTICIPATION_STATUS: conductor';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:58
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: conductor"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::PASSIVE = 'ENUM_PARTICIPATION_STATUS: passive';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:59
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: passive"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::REGULAR = 'ENUM_PARTICIPATION_STATUS: regular';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:60
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: regular"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::SOLOIST = 'ENUM_PARTICIPATION_STATUS: soloist';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:61
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: soloist"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_TAG . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::L10N_SEP . \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus::TEMPORARY = 'ENUM_PARTICIPATION_STATUS: temporary';
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:62
-#, php-format
-msgid "ENUM_PARTICIPATION_STATUS: temporary"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::CORPORATE_INCOME = 'corporate income tax';
-#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:53
-#, php-format
-msgid "corporate income tax"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::INSURANCE = 'insurance tax';
-#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:54
-#, php-format
-msgid "insurance tax"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::SALES = 'sales tax';
-#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:55
-#, php-format
-msgid "sales tax"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::TRADE = 'trade tax';
-#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:56
-#, php-format
-msgid "trade tax"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::VAT = 'VAT';
-#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:57
-#, php-format
-msgid "VAT"
-msgstr ""
-
-#. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::NON_INSTRUMENT_ASSOCIATE = 'associate';
 #: lib/Database/Doctrine/ORM/Entities/ProjectInstrument.php:366
 #, php-format
@@ -18146,21 +17966,21 @@ msgstr ""
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:70
 #: lib/Maintenance/Migrations/EnsureNotAnInstrumentBusinessRelation.php:74
 #: lib/PageRenderer/FieldTraits/InstrumentsTrait.php:66
-#: lib/PageRenderer/ProjectParticipants.php:254
+#: lib/PageRenderer/ProjectParticipants.php:257
 #, php-format
 msgid "not an instrument"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\EmailForm\Composer::FROM_ORCHESTRA = 'orchestra';
-#: lib/EmailForm/Composer.php:6050
+#: lib/EmailForm/Composer.php:6052
 #, php-format
 msgid "orchestra"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\EmailForm\Composer::FROM_PERSONAL = 'personal';
-#: lib/EmailForm/Composer.php:6051
+#: lib/EmailForm/Composer.php:6053
 #, php-format
 msgid "personal"
 msgstr ""
@@ -18300,4 +18120,477 @@ msgstr ""
 #: lib/Settings/ConfigConstants.php:283
 #, php-format
 msgid "donation receipt"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission".
+#. TRANSLATORS: NONE => none
+#: lib/Database/Doctrine/DBAL/Types/EnumAccessPermission.php:30
+#, php-format
+msgid "ENUMVALUE: none"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission".
+#. TRANSLATORS: READ => read
+#: lib/Database/Doctrine/DBAL/Types/EnumAccessPermission.php:30
+#, php-format
+msgid "ENUMVALUE: read"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission".
+#. TRANSLATORS: READ_WRITE => read-write
+#: lib/Database/Doctrine/DBAL/Types/EnumAccessPermission.php:30
+#, php-format
+msgid "ENUMVALUE: read-write"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin".
+#. TRANSLATORS: UPLOAD => upload
+#: lib/Database/Doctrine/DBAL/Types/EnumAttachmentOrigin.php:30
+#, php-format
+msgid "ENUMVALUE: upload"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin".
+#. TRANSLATORS: CLOUD => cloud
+#: lib/Database/Doctrine/DBAL/Types/EnumAttachmentOrigin.php:30
+#, php-format
+msgid "ENUMVALUE: cloud"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin".
+#. TRANSLATORS: PARTICIPANT_FIELD => participant-field
+#: lib/Database/Doctrine/DBAL/Types/EnumAttachmentOrigin.php:30
+#, php-format
+msgid "ENUMVALUE: participant-field"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin".
+#. TRANSLATORS: TEMPLATE => template
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType".
+#. TRANSLATORS: TEMPLATE => template
+#. TRANSLATORS:
+#. TRANSLATORS: Template projects can be used to pre-configure some well-known scenarious
+#. TRANSLATORS: and instrumentations.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumAttachmentOrigin.php:30
+#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:31
+#, php-format
+msgid "ENUMVALUE: template"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType".
+#. TRANSLATORS: GENERIC => generic
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType".
+#. TRANSLATORS: GENERIC => generic
+#: lib/Database/Doctrine/DBAL/Types/EnumDirEntryType.php:30
+#: lib/Database/Doctrine/DBAL/Types/EnumFileType.php:30
+#, php-format
+msgid "ENUMVALUE: generic"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType".
+#. TRANSLATORS: FOLDER => folder
+#: lib/Database/Doctrine/DBAL/Types/EnumDirEntryType.php:30
+#, php-format
+msgid "ENUMVALUE: folder"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType".
+#. TRANSLATORS: FILE => file
+#: lib/Database/Doctrine/DBAL/Types/EnumDirEntryType.php:30
+#, php-format
+msgid "ENUMVALUE: file"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType".
+#. TRANSLATORS: IMAGE => image
+#: lib/Database/Doctrine/DBAL/Types/EnumFileType.php:30
+#, php-format
+msgid "ENUMVALUE: image"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType".
+#. TRANSLATORS: ENCRYPTED => encrypted
+#: lib/Database/Doctrine/DBAL/Types/EnumFileType.php:30
+#, php-format
+msgid "ENUMVALUE: encrypted"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender".
+#. TRANSLATORS: MALE => male
+#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:30
+#, php-format
+msgid "ENUMVALUE: male"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender".
+#. TRANSLATORS: FEMALE => female
+#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:30
+#, php-format
+msgid "ENUMVALUE: female"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender".
+#. TRANSLATORS: DIVERSE => diverse
+#: lib/Database/Doctrine/DBAL/Types/EnumGender.php:30
+#, php-format
+msgid "ENUMVALUE: diverse"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope".
+#. TRANSLATORS: DOMESTIC => Domestic
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:32
+#, php-format
+msgid "ENUMVALUE: Domestic"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope".
+#. TRANSLATORS: CONTINENT => Continent
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:32
+#, php-format
+msgid "ENUMVALUE: Continent"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope".
+#. TRANSLATORS: GERMANY => Germany
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:32
+#, php-format
+msgid "ENUMVALUE: Germany"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope".
+#. TRANSLATORS: EUROPE => Europe
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:32
+#, php-format
+msgid "ENUMVALUE: Europe"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope".
+#. TRANSLATORS: WORLD => World
+#: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:32
+#, php-format
+msgid "ENUMVALUE: World"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: BOOLEAN => boolean
+#. TRANSLATORS: A yes/no value. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: boolean"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: CLOUD_FILE => cloud-file
+#. TRANSLATORS:
+#. TRANSLATORS: Single-file upload data which is stored in the storage of the ambient
+#. TRANSLATORS: cloud software.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: cloud-file"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: CLOUD_FOLDER => cloud-folder
+#. TRANSLATORS:
+#. TRANSLATORS: Multi-file upload data which is stored in the storage of the ambient
+#. TRANSLATORS: cloud software under a folder with the configured name.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: cloud-folder"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: DATE => date
+#. TRANSLATORS: A date without time. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: date"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: DATETIME => datetime
+#. TRANSLATORS: A date including time information. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: datetime"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: DB_FILE => db-file
+#. TRANSLATORS:
+#. TRANSLATORS: Single-file upload data which is stored as blob in the database. The
+#. TRANSLATORS: total encoded size is limited by the used database backend and its
+#. TRANSLATORS: associated data-type.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: db-file"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: FLOAT => float
+#. TRANSLATORS: Floating point number. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: float"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: HTML => html
+#. TRANSLATORS: HTML text field. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: html"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: INTEGER => integer
+#. TRANSLATORS: Integral number. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: integer"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: LIABILITIES => liabilities
+#. TRANSLATORS:
+#. TRANSLATORS: A monetary value with the convention that positive values denote
+#. TRANSLATORS: liabilities and negative values denote receivables (from the view of the
+#. TRANSLATORS: orchestra.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: liabilities"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: RECEIVABLES => receivables
+#. TRANSLATORS:
+#. TRANSLATORS: A monetary value with the convention that positive values denote
+#. TRANSLATORS: receivables and negative values denote liabilities (from the view of the
+#. TRANSLATORS: orchestra.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: receivables"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType".
+#. TRANSLATORS: TEXT => text
+#. TRANSLATORS: Plain UTF-8 text field. */
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldDataType.php:30
+#, php-format
+msgid "ENUMVALUE: text"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: SIMPLE => simple
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: simple"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: SINGLE => single
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: single"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: MULTIPLE => multiple
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: multiple"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: PARALLEL => parallel
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: parallel"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: RECURRING => recurring
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: recurring"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: GROUPOFPEOPLE => groupofpeople
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: groupofpeople"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity".
+#. TRANSLATORS: GROUPSOFPEOPLE => groupsofpeople
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipantFieldMultiplicity.php:30
+#, php-format
+msgid "ENUMVALUE: groupsofpeople"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext".
+#. TRANSLATORS: ASSOCIATES => associates
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:36
+#, php-format
+msgid "ENUMVALUE_DISPLAY_CONTEXT: associates"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext".
+#. TRANSLATORS: PARTICIPANTS => participants
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:36
+#, php-format
+msgid "ENUMVALUE_DISPLAY_CONTEXT: participants"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext".
+#. TRANSLATORS: UNRESTRICTED => unrestricted
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationContext.php:36
+#, php-format
+msgid "ENUMVALUE_DISPLAY_CONTEXT: unrestricted"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: ASSOCIATED => associated
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: associated"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: CONDUCTOR => conductor
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: conductor"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: PASSIVE => passive
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: passive"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: REGULAR => regular
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: regular"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: SOLOIST => soloist
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: soloist"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
+#. TRANSLATORS: TEMPORARY => temporary
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#, php-format
+msgid "ENUMVALUE_PARTICIPATION_STATUS: temporary"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType".
+#. TRANSLATORS: TEMPORARY => temporary
+#. TRANSLATORS:
+#. TRANSLATORS: The standard type for ordinary transient projects.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:31
+#, php-format
+msgid "ENUMVALUE: temporary"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType".
+#. TRANSLATORS: PERMANENT => permanent
+#. TRANSLATORS:
+#. TRANSLATORS: Permanent projects model club-member and the executive board.
+#. TRANSLATORS:
+#: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:31
+#, php-format
+msgid "ENUMVALUE: permanent"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction".
+#. TRANSLATORS: DEBIT_NOTE => debit_note
+#: lib/Database/Doctrine/DBAL/Types/EnumSepaTransaction.php:30
+#, php-format
+msgid "ENUMVALUE: debit_note"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction".
+#. TRANSLATORS: BANK_TRANSFER => bank_transfer
+#: lib/Database/Doctrine/DBAL/Types/EnumSepaTransaction.php:30
+#, php-format
+msgid "ENUMVALUE: bank_transfer"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType".
+#. TRANSLATORS: CORPORATE_INCOME => corporate income tax
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:32
+#, php-format
+msgid "ENUMVALUE: corporate income tax"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType".
+#. TRANSLATORS: SALES => sales tax
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:32
+#, php-format
+msgid "ENUMVALUE: sales tax"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType".
+#. TRANSLATORS: TRADE => trade tax
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:32
+#, php-format
+msgid "ENUMVALUE: trade tax"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType".
+#. TRANSLATORS: VAT => VAT
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:32
+#, php-format
+msgid "ENUMVALUE: VAT"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType".
+#. TRANSLATORS: INSURANCE => insurance tax
+#: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:32
+#, php-format
+msgid "ENUMVALUE: insurance tax"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType".
+#. TRANSLATORS: VEVENT => VEVENT
+#: lib/Database/Doctrine/DBAL/Types/EnumVCalendarType.php:30
+#, php-format
+msgid "ENUMVALUE: VEVENT"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType".
+#. TRANSLATORS: VTODO => VTODO
+#: lib/Database/Doctrine/DBAL/Types/EnumVCalendarType.php:30
+#, php-format
+msgid "ENUMVALUE: VTODO"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType".
+#. TRANSLATORS: VJOURNAL => VJOURNAL
+#: lib/Database/Doctrine/DBAL/Types/EnumVCalendarType.php:30
+#, php-format
+msgid "ENUMVALUE: VJOURNAL"
+msgstr ""
+
+#. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType".
+#. TRANSLATORS: VCARD => VCARD
+#: lib/Database/Doctrine/DBAL/Types/EnumVCalendarType.php:30
+#, php-format
+msgid "ENUMVALUE: VCARD"
 msgstr ""
