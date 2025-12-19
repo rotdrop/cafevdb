@@ -128,6 +128,9 @@ while read -r MATCH; do
         EXPRESSION="${EXPRESSION}${EXPR_JOIN}$CLASS::$CONSTANT"
         EXPR_JOIN=' . '
     done
+    if [ -z "$VALUE" ]; then
+        continue
+    fi
     # ARRAY_KEY=$(echo "$EXPRESSION"|sed 's/\\/-/g')
     ARRAY_KEY=${EXPRESSION//\\/-}
     LINE=$(echo "$MATCH"|cut -d: -f 2)
