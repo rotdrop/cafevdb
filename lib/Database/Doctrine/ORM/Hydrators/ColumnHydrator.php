@@ -33,6 +33,6 @@ class ColumnHydrator extends AbstractHydrator
   /** {@inheritdoc} */
   protected function hydrateAllData():mixed
   {
-    return $this->stmt->fetchAllAssociative(PDO::FETCH_COLUMN);
+    return $this->stmt->fetchFirstColumn();
   }
 }
