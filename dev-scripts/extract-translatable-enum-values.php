@@ -78,7 +78,7 @@ EOF;
         $poEntry .= implode(
           '',
           array_map(
-            fn(string $line) => '#. TRANSLATORS: ' . preg_replace('/^[\/* ]+/', '', $line) . "\n",
+            fn(string $line) => trim('#. TRANSLATORS: ' . preg_replace('/^[\/* ]+/', '', $line)) . "\n",
             explode("\n", $docComment),
           ),
         );
