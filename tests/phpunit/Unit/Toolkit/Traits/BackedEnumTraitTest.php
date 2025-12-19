@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 /** Example enum for testing. */
 enum EnumExample: string
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  use BackedEnumTrait;
 
   case ONE = 'one';
   case TWO = 'two';

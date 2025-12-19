@@ -15,7 +15,6 @@
     }
   },
   "require": {
-    "acelaya/doctrine-enum-type": "dev-cafevdb/production",
     "beberlei/doctrineextensions": "^1.2.0",
     "bytestream/horde-imap-client": "*",
     "cjh/doctrine-on-update-extension": "dev-master",
@@ -26,7 +25,6 @@
     "gedmo/doctrine-extensions": "3.x-dev",
     "maennchen/zipstream-php": "^3.0.0",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
-    "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^2.0",
@@ -61,10 +59,6 @@
       "options": {
         "symlink": false
       }
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/rotdrop/acelaya-doctrine-enum-type.git"
     }
   ],
   "minimum-stability": "dev",

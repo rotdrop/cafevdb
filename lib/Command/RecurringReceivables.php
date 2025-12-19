@@ -40,7 +40,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -236,7 +236,7 @@ class RecurringReceivables extends Command
         $output->writeln('<error>' . $this->l->t('Unable to find the receivable field with name "%s".', $fieldName) . '</error>');
         $fieldNames = $project->getParticipantFields()
           ->filter(
-            fn(Entities\ProjectParticipantField $entity) => $entity->getDataType() == FieldType::RECEIVABLES && $entity->getMultiplicity() == FieldMultiplicity::RECURRING
+            fn(Entities\ProjectParticipantField $entity) => $entity->getDataType() == FieldDataType::RECEIVABLES && $entity->getMultiplicity() == FieldMultiplicity::RECURRING
           )
           ->map(fn(Entities\ProjectParticipantField $entity) => $entity->getName())
           ->toArray();

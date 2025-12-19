@@ -1137,7 +1137,7 @@ class EmailFormController extends Controller
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
 
-    switch ($source) {
+    switch (AttachmentOrigin::get($source)) {
       case AttachmentOrigin::CLOUD:
         $paths = $this->request['paths'];
         if (empty($paths)) {

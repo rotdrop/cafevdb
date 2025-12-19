@@ -27,25 +27,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 /**
  * Type of projects.
  *
- * @method static EnumProjectTemporalType TEMPORARY()
- * @method static EnumProjectTemporalType PERMANENT()
- * @method static EnumProjectTemporalType TEMPLATE()
  */
-class EnumProjectTemporalType extends AbstractEnumType
+enum EnumProjectTemporalType: string
 {
-  public const TEMPORARY = 'temporary';
-  public const PERMANENT = 'permanent';
-  public const TEMPLATE = 'template';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
-  {
-    self::t(self::TEMPORARY);
-    self::t(self::PERMANENT);
-    self::t(self::TEMPLATE);
-  }
+  case TEMPORARY = 'temporary';
+  case PERMANENT = 'permanent';
+  case TEMPLATE = 'template';
 }

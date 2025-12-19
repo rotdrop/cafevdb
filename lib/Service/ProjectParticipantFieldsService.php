@@ -36,8 +36,8 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -60,69 +60,69 @@ class ProjectParticipantFieldsService
 
   /** Matrix of unsupported data-types. */
   private const UNSUPPORTED = [
-    Multiplicity::SIMPLE => [
-      DataType::BOOLEAN,
+    FieldMultiplicity::SIMPLE->value => [
+      FieldDataType::BOOLEAN,
     ],
-    Multiplicity::SINGLE => [
-      DataType::CLOUD_FILE,
-      DataType::DB_FILE,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::SINGLE->value => [
+      FieldDataType::CLOUD_FILE,
+      FieldDataType::DB_FILE,
+      FieldDataType::CLOUD_FOLDER,
     ],
-    Multiplicity::MULTIPLE => [
-      DataType::BOOLEAN,
-      DataType::CLOUD_FILE,
-      DataType::DB_FILE,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::MULTIPLE->value => [
+      FieldDataType::BOOLEAN,
+      FieldDataType::CLOUD_FILE,
+      FieldDataType::DB_FILE,
+      FieldDataType::CLOUD_FOLDER,
     ],
-    Multiplicity::PARALLEL => [
-      DataType::BOOLEAN,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::PARALLEL->value => [
+      FieldDataType::BOOLEAN,
+      FieldDataType::CLOUD_FOLDER,
     ],
-    Multiplicity::RECURRING => [
-      DataType::BOOLEAN,
-      // DataType::TEXT,
-      DataType::HTML,
-      DataType::INTEGER,
-      DataType::FLOAT,
-      // DataType::DATE,
-      // DataType::DATETIME,
-      DataType::CLOUD_FILE,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::RECURRING->value => [
+      FieldDataType::BOOLEAN,
+      // FieldDataType::TEXT,
+      FieldDataType::HTML,
+      FieldDataType::INTEGER,
+      FieldDataType::FLOAT,
+      // FieldDataType::DATE,
+      // FieldDataType::DATETIME,
+      FieldDataType::CLOUD_FILE,
+      FieldDataType::CLOUD_FOLDER,
     ],
-    Multiplicity::GROUPOFPEOPLE => [
-      DataType::BOOLEAN,
-      DataType::CLOUD_FILE,
-      DataType::DB_FILE,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::GROUPOFPEOPLE->value => [
+      FieldDataType::BOOLEAN,
+      FieldDataType::CLOUD_FILE,
+      FieldDataType::DB_FILE,
+      FieldDataType::CLOUD_FOLDER,
     ],
-    Multiplicity::GROUPSOFPEOPLE => [
-      DataType::BOOLEAN,
-      DataType::CLOUD_FILE,
-      DataType::DB_FILE,
-      DataType::CLOUD_FOLDER,
+    FieldMultiplicity::GROUPSOFPEOPLE->value => [
+      FieldDataType::BOOLEAN,
+      FieldDataType::CLOUD_FILE,
+      FieldDataType::DB_FILE,
+      FieldDataType::CLOUD_FOLDER,
     ],
   ];
 
   private const ALLOWED_TRANSITIONS = [
-    Multiplicity::SIMPLE => [],
-    Multiplicity::SINGLE => [
-      Multiplicity::SIMPLE,
-      Multiplicity::MULTIPLE,
-      Multiplicity::PARALLEL,
+    FieldMultiplicity::SIMPLE->value => [],
+    FieldMultiplicity::SINGLE->value => [
+      FieldMultiplicity::SIMPLE,
+      FieldMultiplicity::MULTIPLE,
+      FieldMultiplicity::PARALLEL,
     ],
-    Multiplicity::MULTIPLE => [
-      Multiplicity::SIMPLE,
-      Multiplicity::PARALLEL,
+    FieldMultiplicity::MULTIPLE->value => [
+      FieldMultiplicity::SIMPLE,
+      FieldMultiplicity::PARALLEL,
     ],
-    Multiplicity::PARALLEL => [
-      Multiplicity::SIMPLE,
+    FieldMultiplicity::PARALLEL->value => [
+      FieldMultiplicity::SIMPLE,
     ],
-    Multiplicity::RECURRING => [
+    FieldMultiplicity::RECURRING->value => [
       // we could allow to change to PARALLEL, too.
-      Multiplicity::SIMPLE,
+      FieldMultiplicity::SIMPLE,
     ],
-    Multiplicity::GROUPOFPEOPLE => [],
-    Multiplicity::GROUPSOFPEOPLE => [],
+    FieldMultiplicity::GROUPOFPEOPLE->value => [],
+    FieldMultiplicity::GROUPSOFPEOPLE->value => [],
   ];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -190,9 +190,9 @@ class ProjectParticipantFieldsService
     // singletons. "matching" uses === which only yields true for objects if
     // their refer to the same instance.
     return $project->getParticipantFields($participationContext)->filter(function($field) {
-      switch ($field->getDataType()) {
-        case DataType::RECEIVABLES:
-        case DataType::LIABILITIES:
+      switch ($field->getFieldDataType()) {
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           return true;
         default:
           return false;
@@ -210,10 +210,10 @@ class ProjectParticipantFieldsService
   public function generatedFields(Entities\Project $project):iterable
   {
     // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-    //   'multiplicity' => Multiplicity::RECURRING
+    //   'multiplicity' => FieldMultiplicity::RECURRING
     // ]));
     return $project->getParticipantFields()->filter(function($field) {
-      return $field->getMultiplicity() == Multiplicity::RECURRING;
+      return $field->getFieldMultiplicity() == FieldMultiplicity::RECURRING;
     });
   }
 
@@ -226,7 +226,7 @@ class ProjectParticipantFieldsService
    * @param Entities\Project $project
    *
    * @param bool $distinct Split multi-select options into grouped
-   * parts. Note that options with Multiplicity::RECURRING are always
+   * parts. Note that options with FieldMultiplicity::RECURRING are always
    * split.
    *
    * @return array
@@ -237,9 +237,9 @@ class ProjectParticipantFieldsService
     $selectOptions = [];
     /** @var Entities\ProjectParticipantField $field */
     foreach ($this->monetaryFields($project) as $field) {
-      switch ($field->getMultiplicity()) {
-        case Multiplicity::SIMPLE:
-        case Multiplicity::SINGLE:
+      switch ($field->getFieldMultiplicity()) {
+        case FieldMultiplicity::SIMPLE:
+        case FieldMultiplicity::SINGLE:
           // always only a single option
           $selectOptions[] = [
             'group' => $nonRecurringGroup,
@@ -248,10 +248,10 @@ class ProjectParticipantFieldsService
             'data' => [], // relevant data from field definition
           ];
           break;
-        case Multiplicity::MULTIPLE:
-        case Multiplicity::GROUPOFPEOPLE:
-        case Multiplicity::GROUPSOFPEOPLE:
-        case Multiplicity::PARALLEL:
+        case FieldMultiplicity::MULTIPLE:
+        case FieldMultiplicity::GROUPOFPEOPLE:
+        case FieldMultiplicity::GROUPSOFPEOPLE:
+        case FieldMultiplicity::PARALLEL:
           if (!$distinct) {
             // only a single option
             $selectOptions[] = [
@@ -262,7 +262,7 @@ class ProjectParticipantFieldsService
             ];
           } else {
             // option groups with multiple options
-            $group = sprintf('%s "%s"', $this->l->t($field->getMultiplicity()->getValue()), $field->getName());
+            $group = sprintf('%s "%s"', $this->l->t($field->getFieldMultiplicity()->getValue()), $field->getName());
             /** @var Entities\ProjectParticipantFieldDataOption $option */
             foreach ($field->getSelectableOptions() as $option) {
               $selectOptions[] = [
@@ -275,7 +275,7 @@ class ProjectParticipantFieldsService
             }
           }
           break;
-        case Multiplicity::RECURRING:
+        case FieldMultiplicity::RECURRING:
           // option groups with multiple options
           $group = $this->l->t('Recurring "%s"', $field->getName());
           /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -334,10 +334,10 @@ class ProjectParticipantFieldsService
     $projectParticipant = $musician->getProjectParticipantOf($project);
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
-      $fieldDataType = $fieldDatum->getField()->getDataType();
-      switch ($fieldDataType) {
-        case DataType::RECEIVABLES:
-        case DataType::LIABILITIES:
+      $fieldFieldDataType = $fieldDatum->getField()->getFieldDataType();
+      switch ($fieldFieldDataType) {
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           $obligations['sum']->addEq($fieldDatum->amountPayable());
           $obligations['received']->addEq($fieldDatum->amountPaid());
           break;
@@ -364,15 +364,15 @@ class ProjectParticipantFieldsService
    */
   public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):RationalNumber
   {
-    switch ($participantField->getMultiplicity()) {
-      case Multiplicity::SIMPLE():
+    switch ($participantField->getFieldMultiplicity()) {
+      case FieldMultiplicity::SIMPLE:
         return RationalNumber::create($value);
-      case Multiplicity::GROUPOFPEOPLE():
+      case FieldMultiplicity::GROUPOFPEOPLE:
         if (empty($key)) {
           break;
         }
         return RationalNumber::create($participantField->getManagementOption()->getData());
-      case Multiplicity::SINGLE():
+      case FieldMultiplicity::SINGLE:
         if (empty($key)) {
           break;
         }
@@ -383,8 +383,8 @@ class ProjectParticipantFieldsService
           $this->logWarn('Stored value "' . $key . '" unequal to stored key "' . $dataOption['key'] . '"');
         }
         return RationalNumber::create($dataOption['data']);
-      case Multiplicity::GROUPSOFPEOPLE():
-      case Multiplicity::MULTIPLE():
+      case FieldMultiplicity::GROUPSOFPEOPLE:
+      case FieldMultiplicity::MULTIPLE:
         if (empty($key)) {
           break;
         }
@@ -395,7 +395,7 @@ class ProjectParticipantFieldsService
         }
         $this->logError('No data item for multiple choice key "'.$key.'"');
         return RationalNumber::zero();
-      case Multiplicity::PARALLEL():
+      case FieldMultiplicity::PARALLEL:
         if (empty($key)) {
           break;
         }
@@ -413,7 +413,7 @@ class ProjectParticipantFieldsService
           $this->logError('No data item for parallel choice key "'.$key.'"');
         }
         return $amount;
-      case Multiplicity::RECURRING():
+      case FieldMultiplicity::RECURRING:
         if (empty($key) || empty($value)) {
           break;
         }
@@ -434,15 +434,15 @@ class ProjectParticipantFieldsService
   /**
    * Determine whether a multiplicity-type combination is supported.
    *
-   * @param string $multiplicity
+   * @param FieldMultiplicity $multiplicity
    *
-   * @param string $type
+   * @param FieldDataType $type
    *
    * @return bool
    */
-  public static function isSupportedType(string $multiplicity, string $type):bool
+  public static function isSupportedType(FieldMultiplicity $multiplicity, FieldDataType $type): bool
   {
-    $unsupported = self::UNSUPPORTED[$multiplicity] ?? [];
+    $unsupported = self::UNSUPPORTED[$multiplicity->value] ?? [];
     return !in_array($type, $unsupported);
   }
 
@@ -458,21 +458,21 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * @param string $multiplicity
+   * @param FieldMultiplicity $multiplicity
    *
-   * @param string $dataType
+   * @param FieldDataType $dataType
    *
    * @return string
    */
-  public static function defaultTabId(string $multiplicity, string $dataType):string
+  public static function defaultTabId(FieldMultiplicity $multiplicity, FieldDataType $dataType):string
   {
     switch ($dataType) {
-      case DataType::RECEIVABLES:
-      case DataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
+      case FieldDataType::LIABILITIES:
         return  'finance';
-      case DataType::CLOUD_FILE:
-      case DataType::CLOUD_FOLDER:
-      case DataType::DB_FILE:
+      case FieldDataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FOLDER:
+      case FieldDataType::DB_FILE:
         return 'file-attachments';
       default:
         return 'project';
@@ -526,7 +526,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Return the cloud-folder name for the given $field which must be of
-   * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   * type FieldDataType::CLOUD_FOLDER or FieldDataType::CLOUD_FILE.
    *
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
@@ -541,7 +541,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Return the cloud-folder name for the given $field which must be of
-   * type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.
+   * type FieldDataType::CLOUD_FOLDER or FieldDataType::CLOUD_FILE.
    *
    * @param Entities\ProjectParticipantField $field
    *
@@ -555,8 +555,8 @@ class ProjectParticipantFieldsService
    */
   public function doGetFieldFolderPath(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $dry = true):?string
   {
-    $fieldType = $field->getDataType();
-    if ($fieldType != DataType::CLOUD_FILE && $fieldType != DataType::CLOUD_FOLDER) {
+    $fieldType = $field->getFieldDataType();
+    if ($fieldType != FieldDataType::CLOUD_FILE && $fieldType != FieldDataType::CLOUD_FOLDER) {
       return null;
     }
 
@@ -567,11 +567,11 @@ class ProjectParticipantFieldsService
 
     $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician, dry: $dry);
 
-    switch ($field->getDataType()) {
-      case DataType::CLOUD_FOLDER:
+    switch ($field->getFieldDataType()) {
+      case FieldDataType::CLOUD_FOLDER:
         return $participantFolder . UserStorage::PATH_SEP . $fieldName;
-      case DataType::CLOUD_FILE:
-        $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
+      case FieldDataType::CLOUD_FILE:
+        $subDirPrefix = ($field->getFieldMultiplicity() == FieldMultiplicity::SIMPLE)
           ? ''
           : UserStorage::PATH_SEP . $fieldName;
 
@@ -597,34 +597,34 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantField $field */
     $field = $datum->getField();
 
-    switch ($field->getDataType()) {
-      case DataType::BOOLEAN:
+    switch ($field->getFieldDataType()) {
+      case FieldDataType::BOOLEAN:
         return boolval($value);
-      case DataType::DATE:
-      case DataType::DATETIME:
+      case FieldDataType::DATE:
+      case FieldDataType::DATETIME:
         return Util::convertToDateTime($value);
-      case DataType::FLOAT:
-      case DataType::RECEIVABLES:
+      case FieldDataType::FLOAT:
+      case FieldDataType::RECEIVABLES:
         return RationalNumber::create($value);
-      case DataType::LIABILITIES:
+      case FieldDataType::LIABILITIES:
         return RationalNumber::create($value)->neg();
-      case DataType::INTEGER:
+      case FieldDataType::INTEGER:
         return intval($value);
-      case DataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FILE:
         $folderPath = $this->getFieldFolderPath($datum, dry: false);
         $filePath = $folderPath . UserStorage::PATH_SEP . $value;
         $file = $this->di(UserStorage::class)->getFile($filePath);
         return $file;
-      case DataType::CLOUD_FOLDER:
+      case FieldDataType::CLOUD_FOLDER:
         $folderPath = $this->getFieldFolderPath($datum, dry: false);
         return $this->di(UserStorage::class)->getFolder($folderPath);
-      case DataType::DB_FILE:
+      case FieldDataType::DB_FILE:
         if (empty($value)) {
           return null;
         }
         return $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
-      case DataType::TEXT:
-      case DataType::HTML:
+      case FieldDataType::TEXT:
+      case FieldDataType::HTML:
       default:
         return $value;
     }
@@ -658,28 +658,28 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantField $field */
     $field = $datum->getField();
 
-    switch ($field->getDataType()) {
-      case DataType::BOOLEAN:
+    switch ($field->getFieldDataType()) {
+      case FieldDataType::BOOLEAN:
         return $fieldValue ? $this->l->t('true') : $this->l->t('false');
-      case DataType::DATE:
+      case FieldDataType::DATE:
         return $this->formatDate($fieldValue, $dateFormat);
-      case DataType::DATETIME:
+      case FieldDataType::DATETIME:
         return $this->formatDateTime($fieldValue, $dateFormat);
-      case DataType::FLOAT:
+      case FieldDataType::FLOAT:
         return $this->floatValue($fieldValue, $floatPrecision);
-      case DataType::RECEIVABLES:
-      case DataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
+      case FieldDataType::LIABILITIES:
         return $this->moneyValue($fieldValue);
-      case DataType::INTEGER:
+      case FieldDataType::INTEGER:
         return (string)(int)$fieldValue;
-      case DataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FILE:
         return $fieldValue->getName();
-      case DataType::CLOUD_FOLDER:
+      case FieldDataType::CLOUD_FOLDER:
         return $fieldValue->getName() . UserStorage::PATH_SEP;
-      case DataType::DB_FILE:
+      case FieldDataType::DB_FILE:
         return $fieldValue->getFileName();
-      case DataType::TEXT:
-      case DataType::HTML: // should use tidy
+      case FieldDataType::TEXT:
+      case FieldDataType::HTML: // should use tidy
       default:
         return $fieldValue;
     }
@@ -829,8 +829,8 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * For the given Multiplicity::GROUPOFPEOPLE or
-   * Multiplicity::GROUPSOFPEOPLE option find the group members.
+   * For the given FieldMultiplicity::GROUPOFPEOPLE or
+   * FieldMultiplicity::GROUPSOFPEOPLE option find the group members.
    *
    * @param Entities\ProjectParticipantFieldDataOption|Entities\ProjectParticipantFieldDatum $groupOptionProvider
    *
@@ -847,9 +847,9 @@ class ProjectParticipantFieldsService
     }
 
     $groupField = $groupOptionProvider->getField();
-    $multipliciy = $groupField->getMultiplicity();
-    if ($multipliciy != Multiplicity::GROUPOFPEOPLE
-        && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
+    $multipliciy = $groupField->getFieldMultiplicity();
+    if ($multipliciy != FieldMultiplicity::GROUPOFPEOPLE
+        && $multipliciy != FieldMultiplicity::GROUPSOFPEOPLE) {
       throw new RuntimeException(
         $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
     }
@@ -869,9 +869,9 @@ class ProjectParticipantFieldsService
    */
   public function findGroupMembers(Entities\ProjectParticipantField $groupField):array
   {
-    $multipliciy = $groupField->getMultiplicity();
-    if ($multipliciy != Multiplicity::GROUPOFPEOPLE
-        && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
+    $multipliciy = $groupField->getFieldMultiplicity();
+    if ($multipliciy != FieldMultiplicity::GROUPOFPEOPLE
+        && $multipliciy != FieldMultiplicity::GROUPSOFPEOPLE) {
       throw new RuntimeException(
         $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
     }
@@ -1002,15 +1002,15 @@ class ProjectParticipantFieldsService
           ;
         if (false) {
           $absenceField
-            ->setMultiplicity(Multiplicity::MULTIPLE)
-            ->setDataType(DataType::TEXT);
+            ->setFieldMultiplicity(FieldMultiplicity::MULTIPLE)
+            ->setFieldDataType(FieldDataType::TEXT);
         } else {
           $absenceField
-            ->setMultiplicity(Multiplicity::SIMPLE)
-            ->setDataType(DataType::HTML);
+            ->setFieldMultiplicity(FieldMultiplicity::SIMPLE)
+            ->setFieldDataType(FieldDataType::HTML);
         }
-        switch ($absenceField->getMultiplicity()) {
-          case Multiplicity::MULTIPLE:
+        switch ($absenceField->getFieldMultiplicity()) {
+          case FieldMultiplicity::MULTIPLE:
             $options = [
               (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
               (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
@@ -1027,7 +1027,7 @@ class ProjectParticipantFieldsService
               $this->persist($option);
             }
             break;
-          case Multiplicity::SIMPLE:
+          case FieldMultiplicity::SIMPLE:
             // simple text field still needs one dummy option
             $option = (new Entities\ProjectParticipantFieldDataOption)
               ->setLabel($absenceField->getName())
@@ -1062,7 +1062,7 @@ class ProjectParticipantFieldsService
       ->setDisplayOrder(-$eventData['start']->getTimestamp())
       ->setParticipantAccess(AccessPermission::READ);
 
-    if ($absenceField->getMultiplicity() == Multiplicity::SIMPLE) {
+    if ($absenceField->getFieldMultiplicity() == FieldMultiplicity::SIMPLE) {
       $defaultOption = $absenceField->getDataOption();
       if (empty($defaultOption->getTooltip())) {
         $defaultOption->setTooltip($description);
@@ -1096,9 +1096,9 @@ class ProjectParticipantFieldsService
    *
    * @param string $name
    *
-   * @param Multiplicity $multiplicity
+   * @param FieldMultiplicity $multiplicity
    *
-   * @param DataType $dataType
+   * @param FieldDataType $dataType
    *
    * @param null|string $tooltip
    *
@@ -1106,19 +1106,19 @@ class ProjectParticipantFieldsService
    */
   public function createField(
     string $name,
-    Multiplicity $multiplicity,
-    DataType $dataType,
+    FieldMultiplicity $multiplicity,
+    FieldDataType $dataType,
     ?string $tooltip = null,
   ):?Entities\ProjectParticipantField {
-    if ($multiplicity != Multiplicity::SIMPLE) {
+    if ($multiplicity != FieldMultiplicity::SIMPLE) {
       return null;
     }
 
     /** @var Entities\ProjectParticipantField $field */
     $field = (new Entities\ProjectParticipantField)
            ->setName($name)
-           ->setMultiplicity($multiplicity)
-           ->setDataType($dataType)
+           ->setFieldMultiplicity($multiplicity)
+           ->setFieldDataType($dataType)
            ->setTooltip($tooltip);
     /** @var Entities\ProjectParticipantFieldDataOption $option */
     $option = (new Entities\ProjectParticipantFieldDataOption)
@@ -1224,7 +1224,7 @@ class ProjectParticipantFieldsService
     );
 
     // check if we have to do something
-    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+    if ($field->getFieldDataType() != FieldDataType::CLOUD_FOLDER) {
       return;
     }
 
@@ -1277,14 +1277,14 @@ class ProjectParticipantFieldsService
     ?string $newTooltip,
   ):void {
     // check if we have to do something
-    $isHandledField = $field->getDataType() == DataType::CLOUD_FOLDER
-      || ($field->getDataType() == DataType::CLOUD_FILE && $field->getMultiplicity() != Multiplicity::SIMPLE);
+    $isHandledField = $field->getFieldDataType() == FieldDataType::CLOUD_FOLDER
+      || ($field->getFieldDataType() == FieldDataType::CLOUD_FILE && $field->getFieldMultiplicity() != FieldMultiplicity::SIMPLE);
 
     if (!$isHandledField) {
       return;
     }
 
-    $mkdir = $field->getDataType() != DataType::CLOUD_FILE;
+    $mkdir = $field->getFieldDataType() != FieldDataType::CLOUD_FILE;
 
     $oldReadMe = Util::htmlToMarkDown($oldTooltip);
     $newReadMe = Util::htmlToMarkDown($newTooltip);
@@ -1311,16 +1311,16 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $field
    *
-   * @param null|DataType $oldType
+   * @param null|FieldDataType $oldType
    *
-   * @param null|DataType $newType
+   * @param null|FieldDataType $newType
    *
    * @return void
    */
   public function handleChangeFieldType(
     Entities\ProjectParticipantField $field,
-    ?DataType $oldType,
-    ?DataType $newType,
+    ?FieldDataType $oldType,
+    ?FieldDataType $newType,
   ):void {
 
     if ($newType == $oldType) {
@@ -1330,13 +1330,13 @@ class ProjectParticipantFieldsService
     $needsFlush = false;
 
     switch ($newType) {
-      case DataType::CLOUD_FOLDER:
-      case DataType::CLOUD_FOLDER:
-      case DataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FOLDER:
+      case FieldDataType::CLOUD_FOLDER:
+      case FieldDataType::CLOUD_FILE:
         $readMe = Util::htmlToMarkDown($field->getTooltip());
 
         switch ($newType) {
-          case DataType::CLOUD_FOLDER:
+          case FieldDataType::CLOUD_FOLDER:
             // try to create any missing folder
             /** @var Entities\ProjectParticipant $participant */
             foreach ($field->getProject()->getParticipants() as $participant) {
@@ -1359,7 +1359,7 @@ class ProjectParticipantFieldsService
                 }));
             }
             break;
-          case DataType::CLOUD_FILE:
+          case FieldDataType::CLOUD_FILE:
             foreach ($field->getProject()->getParticipants() as $participant) {
               $musician = $participant->getMusician();
               $this->entityManager->registerPreCommitAction(
@@ -1371,7 +1371,7 @@ class ProjectParticipantFieldsService
             break;
         }
         switch ($oldType) {
-          case DataType::CLOUD_FOLDER:
+          case FieldDataType::CLOUD_FOLDER:
             // try to remove essentially empty folders
             /** @var Entities\ProjectParticipant $participant */
             foreach ($field->getProject()->getParticipants() as $participant) {
@@ -1382,9 +1382,9 @@ class ProjectParticipantFieldsService
               // be added again and the files are still there.
 
               // this has to be precomputed, as this belongs to the old field type.
-              $field->setDataType($oldType);
+              $field->setFieldDataType($oldType);
               $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
-              $field->setDataType($newType);
+              $field->setFieldDataType($newType);
 
               $this->entityManager->registerPreCommitAction(
                 new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
@@ -1393,8 +1393,8 @@ class ProjectParticipantFieldsService
             break;
         }
         break; // FS stuff
-      case DataType::RECEIVABLES:
-      case DataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
+      case FieldDataType::LIABILITIES:
         // change the sign of all values in the entire hierarchy.
 
         /** @var Entities\ProjectParticipantFieldDataOption $option */
@@ -1403,11 +1403,11 @@ class ProjectParticipantFieldsService
         $needsFlush = $field->getDataOptions()->count() > 0
           || $field->getFieldData()->count() > 0;
 
-        switch ($field->getMultiplicity()) {
-          case Multiplicity::SINGLE:
-          case Multiplicity::MULTIPLE:
-          case Multiplicity::PARALLEL:
-          case Multiplicity::GROUPSOFPEOPLE:
+        switch ($field->getFieldMultiplicity()) {
+          case FieldMultiplicity::SINGLE:
+          case FieldMultiplicity::MULTIPLE:
+          case FieldMultiplicity::PARALLEL:
+          case FieldMultiplicity::GROUPSOFPEOPLE:
             // value is stored in the option, negate it
             foreach ($field->getDataOptions() as $option) {
               $option->setData(-$option->getData());
@@ -1417,13 +1417,13 @@ class ProjectParticipantFieldsService
               }
             }
             break;
-          case Multiplicity::GROUPOFPEOPLE:
+          case FieldMultiplicity::GROUPOFPEOPLE:
             // value in management option of $field
             $option = $field->getManagementOption();
             $option->setData(-$option->getData());
             $option->setDeposit($option->getDeposit()->neg());
             break;
-          case Multiplicity::SIMPLE:
+          case FieldMultiplicity::SIMPLE:
             /** @var Entities\ProjectParticipantFieldDatum $datum */
             foreach ($field->getFieldData() as $datum) {
               $datum->setOptionValue(-$datum->getOptionValue());
@@ -1442,7 +1442,7 @@ class ProjectParticipantFieldsService
               }
             }
             break;
-          case Multiplicity::RECURRING:
+          case FieldMultiplicity::RECURRING:
             // value in data-entities, no deposit in this case
             foreach ($field->getFieldData() as $datum) {
               $datum->setOptionValue(-$datum->getOptionValue());
@@ -1461,16 +1461,16 @@ class ProjectParticipantFieldsService
   /**
    * Check if the transistion from $old to $new is implemented.
    *
-   * @param Multiplicity $oldMultiplicity
+   * @param FieldMultiplicity $oldFieldMultiplicity
    *
-   * @param Multiplicity $newMultiplicity
+   * @param FieldMultiplicity $newFieldMultiplicity
    *
    * @return bool
    */
-  private function isSupportedMultiplicityTransition(Multiplicity $oldMultiplicity, Multiplicity $newMultiplicity):bool
+  private function isSupportedFieldMultiplicityTransition(FieldMultiplicity $oldFieldMultiplicity, FieldMultiplicity $newFieldMultiplicity):bool
   {
-    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity];
-    return in_array((string)$newMultiplicity, $allowed);
+    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity];
+    return in_array((string)$newFieldMultiplicity, $allowed);
   }
 
   /**
@@ -1478,32 +1478,32 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $field
    *
-   * @param null|Multiplicity $oldMultiplicity
+   * @param null|FieldMultiplicity $oldFieldMultiplicity
    *
-   * @param null|Multiplicity $newMultiplicity
+   * @param null|FieldMultiplicity $newFieldMultiplicity
    *
    * @return void
    */
-  public function handleChangeFieldMultiplicity(
+  public function handleChangeFieldFieldMultiplicity(
     Entities\ProjectParticipantField $field,
-    ?Multiplicity $oldMultiplicity,
-    ?Multiplicity $newMultiplicity,
+    ?FieldMultiplicity $oldFieldMultiplicity,
+    ?FieldMultiplicity $newFieldMultiplicity,
   ):void {
 
-    if ($oldMultiplicity === null || $newMultiplicity == $oldMultiplicity) {
+    if ($oldFieldMultiplicity === null || $newFieldMultiplicity == $oldFieldMultiplicity) {
       return;
     }
 
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    $dataType = $field->getDataType();
+    $dataType = $field->getFieldDataType();
 
-    if (!$this->isSupportedType($newMultiplicity, $dataType)) {
+    if (!$this->isSupportedType($newFieldMultiplicity, $dataType)) {
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       throw new Exceptions\EnduserNotificationException(
         $this->l->t(
           'Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
-            $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+            $this->l->t($oldFieldMultiplicity), $this->l->t($newFieldMultiplicity), $this->l->t($dataType),
           ],
         )
       );
@@ -1513,37 +1513,37 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    if (!$this->isSupportedMultiplicityTransition($oldMultiplicity, $newMultiplicity)) {
-      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity] ?? [];
+    if (!$this->isSupportedFieldMultiplicityTransition($oldFieldMultiplicity, $newFieldMultiplicity)) {
+      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity] ?? [];
       if (empty($allowedTransitions)) {
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'The field is already in use, therefore the multiplicity may no longer be changed from "%1$s" to "%2$s".', [
-              $this->l->t($oldMultiplicity),
-              $this->l->t($newMultiplicity),
+              $this->l->t($oldFieldMultiplicity),
+              $this->l->t($newFieldMultiplicity),
             ]));
       } else {
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'The field is already in use, therefore the multiplicity may only be changed from "%1$s" to "%2$s", but not to "%3$s".', [
-              $this->l->t($oldMultiplicity),
+              $this->l->t($oldFieldMultiplicity),
               implode(', ', array_map(fn($value) => $this->l->t($value), $allowedTransitions)),
-              $this->l->t($newMultiplicity),
+              $this->l->t($newFieldMultiplicity),
             ]));
       }
     }
 
     $needsFlush = false;
 
-    switch ($newMultiplicity) {
-      case Multiplicity::SIMPLE:
-        if ($dataType != DataType::TEXT && $dataType != DataType::HTML) {
+    switch ($newFieldMultiplicity) {
+      case FieldMultiplicity::SIMPLE:
+        if ($dataType != FieldDataType::TEXT && $dataType != FieldDataType::HTML) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t(
               'The field is already in use, therefore changing the multiplicity from "%1$s" to "%2$s" is only supported for text or HTML fields, but the actual data-type is "%3$s".', [
-                $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+                $this->l->t($oldFieldMultiplicity), $this->l->t($newFieldMultiplicity), $this->l->t($dataType),
               ]));
         }
         /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
@@ -1554,7 +1554,7 @@ class ProjectParticipantFieldsService
         }
         $tooltips = [];
         $participantData = [];
-        $field->setMultiplicity($oldMultiplicity);
+        $field->setFieldMultiplicity($oldFieldMultiplicity);
         /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
         foreach ($field->getFieldData() as $fieldDatum) {
           /** @var Entities\ProjectParticipant $participant */
@@ -1604,13 +1604,13 @@ class ProjectParticipantFieldsService
           $activeDatum->setOptionValue($value);
           $needsFlush = true;
         }
-        $field->setMultiplicity($newMultiplicity);
+        $field->setFieldMultiplicity($newFieldMultiplicity);
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         break;
-      case Multiplicity::PARALLEL:
+      case FieldMultiplicity::PARALLEL:
         // nothing to do
         break;
-      case Multiplicity::MULTIPLE:
+      case FieldMultiplicity::MULTIPLE:
         // nothing to do;
         break;
       default:
@@ -1648,7 +1648,7 @@ class ProjectParticipantFieldsService
   ):bool {
     $needsFlush = false;
 
-    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+    if ($field->getFieldDataType() != FieldDataType::CLOUD_FOLDER) {
       return $needsFlush;
     }
 
@@ -1749,11 +1749,11 @@ class ProjectParticipantFieldsService
   {
     $needsFlush = false;
     $fieldData = [];
-    if ($field->getDataType() != DataType::CLOUD_FILE) {
+    if ($field->getFieldDataType() != FieldDataType::CLOUD_FILE) {
       return $needsFlush;
     }
 
-    $multiplicity = $field->getMultiplicity();
+    $multiplicity = $field->getFieldMultiplicity();
 
     if (!$this->containsEntity($musician)) {
       $musician = $this->getReference(Entities\Musician::class, $musician->getId());
@@ -1778,14 +1778,14 @@ class ProjectParticipantFieldsService
 
     /** @var Collections\Collection $fieldOptions */
     $fieldOptions = $field->getSelectableOptions();
-    if ($fieldOptions->count() == 0 && $multiplicity == Multiplicity::SIMPLE) {
+    if ($fieldOptions->count() == 0 && $multiplicity == FieldMultiplicity::SIMPLE) {
       $this->logError('There should be one field-option for field ' . $field->getName() . '@' . $field->getId() . ', but there is none.');
       return $needsFlush;
     }
 
     /** @var Entities\ProjectParticipantFieldDataOption $fieldOption */
     foreach ($fieldOptions as $fieldOption) {
-      if ($multiplicity == Multiplicity::SIMPLE) {
+      if ($multiplicity == FieldMultiplicity::SIMPLE) {
         $fileSystemName = $this->getFileSystemFieldName($field);
       } else {
         $fileSystemName = $this->getFileSystemOptionLabel($fieldOption);
@@ -1853,7 +1853,7 @@ class ProjectParticipantFieldsService
   public function handleRemoveField(Entities\ProjectParticipantField $field):void
   {
     // check if we have to do something
-    if ($field->getDataType() != DataType::CLOUD_FOLDER) {
+    if ($field->getFieldDataType() != FieldDataType::CLOUD_FOLDER) {
       return;
     }
 
@@ -1895,28 +1895,28 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    $type = $field->getDataType();
+    $type = $field->getFieldDataType();
     switch ($type) {
-      case DataType::CLOUD_FOLDER:
+      case FieldDataType::CLOUD_FOLDER:
         // We have to rename the folder which is just named after the
         // field-name.
         $mkdir = true;
         break;
-      case DataType::CLOUD_FILE:
-        switch ($field->getMultiplicity()) {
-          case Multiplicity::SIMPLE:
+      case FieldDataType::CLOUD_FILE:
+        switch ($field->getFieldMultiplicity()) {
+          case FieldMultiplicity::SIMPLE:
             // The file is name after the field, so we have to rename the file.
             break;
           default:
-            // should be Multiplicity::PARALLEL ...  the individual files are
+            // should be FieldMultiplicity::PARALLEL ...  the individual files are
             // named after the option and stored in a sub-folder which is just
             // the field-name, so we have to rename the folder
-            $type = DataType::CLOUD_FOLDER;
+            $type = FieldDataType::CLOUD_FOLDER;
             $mkdir = false;
             break;
         }
         break;
-      case DataType::DB_FILE:
+      case FieldDataType::DB_FILE:
         break;
       default:
         return;
@@ -1933,14 +1933,14 @@ class ProjectParticipantFieldsService
       $musician = $participant->getMusician();
       $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
       switch ($type) {
-        case DataType::CLOUD_FOLDER:
+        case FieldDataType::CLOUD_FOLDER:
           $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
           $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
           $this->entityManager->registerPreCommitAction(
             new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
           );
           break;
-        case DataType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FILE:
           /** @var Entities\ProjectParticipantFieldDataOption $option */
           foreach ($field->getSelectableOptions(true) as $option) {
             /** @var Entities\ProjectParticipantFieldDatum $datum */
@@ -1957,11 +1957,11 @@ class ProjectParticipantFieldsService
             }
           }
           break;
-        case DataType::DB_FILE:
+        case FieldDataType::DB_FILE:
           break;
       }
     }
-    if ($type == DataType::DB_FILE) {
+    if ($type == FieldDataType::DB_FILE) {
       $this->entityManager->registerPreCommitAction(
         new Common\GenericUndoable(function() use ($field) {
           $needsFlush = false;
@@ -2001,10 +2001,10 @@ class ProjectParticipantFieldsService
     }
 
     $field = $option->getField();
-    if ($field->getDataType() != DataType::CLOUD_FILE) {
+    if ($field->getFieldDataType() != FieldDataType::CLOUD_FILE) {
       return;
     }
-    if ($field->getMultiplicity() == Multiplicity::SIMPLE) {
+    if ($field->getFieldMultiplicity() == FieldMultiplicity::SIMPLE) {
       // name based on field name
       return;
     }

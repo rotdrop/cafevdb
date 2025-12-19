@@ -1031,8 +1031,8 @@ class Projects extends PMETableViewBase
       // unset($this-> parameter Service [$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $yearIdx)]);
     } else {
       $opts['filters']['OR'][] = [
-        'sql' => '$table.type IN ("' . ProjectType::PERMANENT . '","' . ProjectType::TEMPLATE . '")',
-        'text' => $opts['fdd']['type']['name'] . ' IN ("' . $this->l->t(ProjectType::PERMANENT) . '","' . $this->l->t(ProjectType::TEMPLATE) . '")',
+        'sql' => '$table.type IN ("' . ProjectType::PERMANENT->value . '","' . ProjectType::TEMPLATE->value . '")',
+        'text' => $opts['fdd']['type']['name'] . ' IN ("' . $this->l->t(ProjectType::PERMANENT->value) . '","' . $this->l->t(ProjectType::TEMPLATE->value) . '")',
       ];
     }
     if (!$this->showDisabled) {

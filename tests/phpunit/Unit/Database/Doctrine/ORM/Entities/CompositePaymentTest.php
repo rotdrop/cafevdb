@@ -72,7 +72,6 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(RationalNumber::class)]
 #[Attributes\UsesClass(Service\AuthorizationService::class)]
 #[Attributes\UsesClass(Service\EncryptionService::class)]
-#[Attributes\UsesClass(Types\AbstractEnumType::class)]
 #[Attributes\UsesClass(Util::class)]
 #[Attributes\UsesClass(Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
@@ -80,6 +79,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class CompositePaymentTest extends TestCase
 {
   use EntityGeneratorTrait {

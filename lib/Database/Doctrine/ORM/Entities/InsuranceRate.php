@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * InsuranceRate
@@ -60,7 +61,7 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\Id]
   private InsuranceBroker $broker;
 
-  #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => 'Germany'])]
   #[ORM\Id]
   private Types\EnumGeographicalScope $geographicalScope;
 
@@ -116,9 +117,10 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return InsuranceRate
    */
-  public function setGeographicalScope($geographicalScope):InsuranceRate
+  public function setGeographicalScope(string|EnumGeographicalScope $geographicalScope): InsuranceRate
   {
-    $this->geographicalScope = new Types\EnumGeographicalScope($geographicalScope);
+    $geographicalScope = EnumGeographicalScope::get($geographicalScope);
+    $this->geographicalScope = $geographicalScope;
 
     return $this;
   }

@@ -396,12 +396,16 @@ class VCalendarService
    *
    * @param VCalendar $vCalendar VCalendar object.
    *
-   * @param string $type Defaults to 'VEVENT'
+   * @param string|VCalendarType $type Defaults to 'VEVENT'
    *
    * @return array
    */
-  public static function getAllVObjects(VCalendar $vCalendar, string $type = self::VEVENT):array
+  public static function getAllVObjects(VCalendar $vCalendar, string|VCalendarType $type = self::VEVENT):array
   {
+    if ($type instanceof VCalendarType) {
+      $type = $type->value;
+    }
+
     $vObjects = [];
     foreach ($vCalendar->children() as $child) {
       if (!($child instanceof VComponent)) {

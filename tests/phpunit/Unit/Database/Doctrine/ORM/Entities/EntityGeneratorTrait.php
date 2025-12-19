@@ -107,9 +107,9 @@ trait EntityGeneratorTrait
     $field = new Entities\ProjectParticipantField()
       ->setId(0)
       ->setProject($this->project)
-      ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES())
+      ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES)
       ->setMultiplicity(
-        Types\EnumParticipantFieldMultiplicity::RECURRING(),
+        Types\EnumParticipantFieldMultiplicity::RECURRING,
       )
       ->setName('Forderungen');
     $generator = new Entities\ProjectParticipantFieldDataOption()

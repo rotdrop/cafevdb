@@ -28,11 +28,13 @@ use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * SepaBulkTransaction
@@ -41,8 +43,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'SepaBulkTransactions')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'sepa_transaction', type: 'EnumSepaTransaction')]
-#[ORM\DiscriminatorMap([null => 'SepaBulkTransaction', 'debit_note' => 'SepaDebitNote', 'bank_transfer' => 'SepaBankTransfer'])]
+#[ORM\DiscriminatorColumn(name: 'sepa_transaction', type: DBALTypes::ENUM, enumType: EnumSepaTransaction::class)]
+#[ORM\DiscriminatorMap(['debit_note' => 'SepaDebitNote', 'bank_transfer' => 'SepaBankTransfer'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener::class])]

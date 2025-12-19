@@ -28,32 +28,14 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
  * Tax types. FIXME: the difference between VAT and "Sales Tax" is not clean
  * and IMHO in Germany there is no difference; there is "Sales Tax" ==
  * "Umsatzsteuer" and this is it.
- *
- * @method static EnumTaxType CORPORATE_INCOME()
- * @method static EnumTaxType INSURANCE()
- * @method static EnumTaxType SALES()
- * @method static EnumTaxType TRADE()
- * @method static EnumTaxType VAT()
  */
-class EnumTaxType extends AbstractEnumType
+enum EnumTaxType: string
 {
-  public const CORPORATE_INCOME = 'corporate income tax';
-  public const SALES = 'sales tax';
-  public const TRADE = 'trade tax';
-  public const VAT = 'VAT';
-  public const INSURANCE = 'insurance tax';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
-  {
-    self::t(self::CORPORATE_INCOME);
-    self::t(self::INSURANCE);
-    self::t(self::SALES);
-    self::t(self::TRADE);
-    self::t(self::VAT);
-  }
+  case CORPORATE_INCOME = 'corporate income tax';
+  case SALES = 'sales tax';
+  case TRADE = 'trade tax';
+  case VAT = 'VAT';
+  case INSURANCE = 'insurance tax';
 }

@@ -42,27 +42,27 @@ abstract class AbstractSpreadsheetExporter
 
   /** Array of supported file-types */
   const FILE_TYPES = [
-    ExportFormat::EXCEL => [
+    ExportFormat::EXCEL->value => [
       'writer' => 'Xlsx',
       'mimeType' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'extension' => 'xlsx',
     ],
-    ExportFormat::ODS => [
+    ExportFormat::ODS->value => [
       'writer' => 'Ods',
       'mimeType' => 'application/vnd.oasis.opendocument.spreadsheet',
       'extension' => 'ods',
     ],
-    ExportFormat::CSV => [
+    ExportFormat::CSV->value => [
       'writer' => 'Csv',
       'mimeType' => 'text/csv',
       'extension' => 'csv',
     ],
-    ExportFormat::HTML => [
+    ExportFormat::HTML->value => [
       'writer' => 'Html',
       'mimeType' => 'text/html',
       'extension' => 'html',
     ],
-    ExportFormat::PDF => [
+    ExportFormat::PDF->value => [
       'writer' => 'Pdf\\Mpdf',
       'mimeType' => 'application/pdf',
       'extension' => 'pdf',
@@ -117,7 +117,7 @@ abstract class AbstractSpreadsheetExporter
    */
   public function export(string $fileName, $format)
   {
-    $format = new ExportFormat(strtolower($format));
+    $format = ExportFormat::get(strtolower($format));
 
     $creator   = $this->getConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, 'Bilbo Baggins');
     $email     = $this->getConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY, 'bilbo@nowhere.com');
@@ -273,7 +273,7 @@ abstract class AbstractSpreadsheetExporter
      *
      */
 
-    $fileType = self::FILE_TYPES[$format->getValue()];
+    $fileType = self::FILE_TYPES[$format->value];
 
     $writerClass = '\\PhpOffice\\PhpSpreadsheet\\Writer\\' . $fileType['writer'];
     $writer = new $writerClass($spreadSheet);

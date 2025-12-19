@@ -49,7 +49,7 @@ class DeprecationLogger extends AbstractLogger
     private bool $isCLI,
   ) {
     if ($isCLI) {
-      \OCP\Server::get(\Psr\Log\LoggerInterface::class)->info('BLAH', ['exception' => new \Exception('BLAH') ]);
+      // \OCP\Server::get(\Psr\Log\LoggerInterface::class)->info('BLAH', ['exception' => new \Exception('BLAH') ]);
       // ignore the provided logger and instead log to the console
       $this->actualLogger = new ConsoleLogger(new ConsoleOutput);
     } else {

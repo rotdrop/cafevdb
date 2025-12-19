@@ -60,6 +60,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
  * matrix. It should be extended to also cover the various events emitted by
  * the dav app.
  */
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 trait SetupEventsServiceTrait
 {
   use EntityGeneratorTrait {

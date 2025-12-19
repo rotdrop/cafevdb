@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -310,23 +310,23 @@ trait ParticipantFileFieldsTrait
       $project = $project ?? $field->getProject();
       $dataType = $field->getDataType();
       switch ($dataType) {
-        case FieldType::RECEIVABLES:
-        case FieldType::LIABILITIES:
-        case FieldType::DB_FILE:
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
+        case FieldDataType::DB_FILE:
           $pathChain[] = $this->getDocumentsFolderName();
-          if ($dataType != FieldType::DB_FILE) {
+          if ($dataType != FieldDataType::DB_FILE) {
             $pathChain[] = $this->getSupportingDocumentsFolderName();
           }
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
             $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           }
           break;
-        case FieldType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FILE:
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {
             $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           }
           break;
-        case FieldType::CLOUD_FOLDER:
+        case FieldDataType::CLOUD_FOLDER:
           $pathChain[] = $this->participantFieldsService->getFileSystemFieldName($field);
           break;
         default:

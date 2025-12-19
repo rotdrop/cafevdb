@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * Projects
@@ -70,8 +71,8 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private string $name;
 
-  #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false, options: ['default' => 'temporary'])]
-  private Types\EnumProjectTemporalType $type;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumProjectTemporalType::TEMPORARY])]
+  private Types\EnumProjectTemporalType $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
    * The list-id of the mailing list for the members
@@ -175,7 +176,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
-    $this->type = Types\EnumProjectTemporalType::TEMPORARY();
+    $this->type = Types\EnumProjectTemporalType::TEMPORARY;
   }
 
   /** {@inheritdoc} */
@@ -287,9 +288,9 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setType($type):Project
+  public function setType(string|Types\EnumProjectTemporalType $type): Project
   {
-    $this->type = new Types\EnumProjectTemporalType($type);
+    $this->type = Types\EnumProjectTemporalType::get($type);
 
     return $this;
   }
@@ -523,7 +524,7 @@ class Project implements \ArrayAccess
   public function getParticipants(
     string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):Collection {
-    switch (ParticipationContext::from($participationContext)) {
+    switch (ParticipationContext::get($participationContext)) {
       case ParticipationContext::UNRESTRICTED:
         return $this->participants;
       case ParticipationContext::ASSOCIATES:

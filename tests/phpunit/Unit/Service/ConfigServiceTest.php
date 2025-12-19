@@ -34,6 +34,10 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** Test aspects of the config-service .*/
 #[Attributes\CoversClass(ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 class ConfigServiceTest extends TestCase
 {
   private ConfigService $configService;

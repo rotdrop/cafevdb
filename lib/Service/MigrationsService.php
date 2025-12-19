@@ -199,8 +199,9 @@ class MigrationsService
     $instance = $this->appContainer->get($className);
 
     $this->entityManager->close();
-    $this->clearDatabaseRepository();
     $this->entityManager->reopen();
+    $this->clearDatabaseRepository();
+    $this->entityManager->getConfiguration()->getMetadataCache()->clear();
 
     $exception = null;
     try {
@@ -215,6 +216,7 @@ class MigrationsService
     $this->entityManager->close();
     $this->entityManager->reopen();
     $this->clearDatabaseRepository();
+    $this->entityManager->getConfiguration()->getMetadataCache()->clear();
 
     $migrationClassName = self::getBaseClassName($className);
 

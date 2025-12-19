@@ -399,7 +399,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     $result = $type === 'n' ? $stmt->fetchNumeric() : $stmt->fetchAssociative();
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
     if ($result !== false
-        && $type == 'n'
+        && $type == 'a'
         && $this->queryHash == $this->generatedQueryHash
         && !empty($this->columnAliases)) {
       $missingColumns = array_diff($this->columnAliases, array_keys($result));

@@ -457,25 +457,6 @@ class EntityManager extends EntityManagerDecorator
   }
 
   private const DBAL_TYPES = [
-    Types\EnumAccessPermission::class => 'enum',
-    Types\EnumDataTransformation::class => 'enum',
-    Types\EnumDirEntryType::class => 'enum',
-    Types\EnumParticipationContext::class => 'enum',
-    Types\EnumFileType::class => 'enum',
-    Types\EnumGender::class => 'enum',
-    Types\EnumGeographicalScope::class => 'enum',
-    Types\EnumGnuCashSlotType::class => 'enum',
-    Types\EnumMemberStatus::class => 'enum',
-    Types\EnumParticipantFieldDataType::class => 'enum',
-    Types\EnumParticipantFieldMultiplicity::class => 'enum',
-    Types\EnumParticipationStatus::class => 'enum',
-    Types\EnumProjectTemporalType::class => 'enum',
-    Types\EnumSepaTransaction::class => 'enum',
-    Types\EnumTaxType::class => 'enum',
-    Types\EnumVCalendarType::class => 'enum',
-    // Ramsey\UuidType::class => null,
-    // Ramsey\UuidBinaryType::class => 'binary',
-    // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
     Types\UuidType::class => 'uuid_binary',
     Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
     Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
@@ -498,17 +479,10 @@ class EntityManager extends EntityManagerDecorator
     try {
       $platform = $connection->getDatabasePlatform();
       foreach (self::DBAL_TYPES as $phpType => $sqlType) {
-        if ($sqlType == 'enum') {
-          $typeName = substr(strrchr($phpType, '\\'), 1);
-          if (!Type::hasType($typeName)) {
-            Types\EnumType::registerEnumType($typeName, $phpType);
-          }
-        } else {
-          $instance = new $phpType;
-          $typeName = $instance->getName();
-          if (!Type::hasType($typeName)) {
-            Type::addType($typeName, $phpType);
-          }
+        $instance = new $phpType;
+        $typeName = $instance->getName();
+        if (!Type::hasType($typeName)) {
+          Type::addType($typeName, $phpType);
         }
         if (!empty($sqlType)) {
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
@@ -618,6 +592,14 @@ class EntityManager extends EntityManagerDecorator
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
     }
 
+    if ($this->devMode) {
+      // Shoot-down the cache. Note that this is the regular cache, as we
+      // always keep dev-mode disabled inside the ORM. This way we can force a
+      // shoot-down of the real cache by toggling dev-mode once to true and
+      // back to false again.
+      $config->getMetadataCache()?->clear();
+    }
+
     return $entityManager;
   }
 
@@ -645,8 +627,9 @@ class EntityManager extends EntityManagerDecorator
    */
   private function createSimpleConfiguration():array
   {
-    $cache = null;
-    $config = ORMSetup::createAttributeMetadataConfig(self::ENTITY_PATHS, $this->devMode);
+    // Keep dev-mode in ORM disabled, instead we shoot down the ordinary cache
+    // if we think we are in dev-mode.
+    $config = ORMSetup::createAttributeMetadataConfig(self::ENTITY_PATHS, isDevMode: false);
     $config->enableNativeLazyObjects(true);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
@@ -828,19 +811,6 @@ class EntityManager extends EntityManagerDecorator
         if (false && $foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
           $table->removeForeignKey($foreignKey->getName());
         }
-      }
-
-      $enumColumns = [];
-      // inject enum values into comments
-      foreach ($table->getColumns() as $column) {
-        if ($column->getType() instanceof Types\EnumType) {
-          $enumColumns[] = $column;
-        }
-      }
-
-      /** @var \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Column $column */
-      foreach ($enumColumns as $column) {
-        $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->toArray()))));
       }
     }
   }

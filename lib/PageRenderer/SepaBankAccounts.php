@@ -314,7 +314,7 @@ class SepaBankAccounts extends PMETableViewBase
       $monetaryFields = $this->participantFieldsService->monetaryFields($this->project);
       /** @var Entities\ProjectParticipantField $field */
       $haveGenerators = $monetaryFields->exists(function($key, $field) {
-        return $field->getMultiplicity() == FieldMultiplicity::RECURRING();
+        return $field->getMultiplicity() == FieldMultiplicity::RECURRING;
       });
 
       // Control to select what we want to debit

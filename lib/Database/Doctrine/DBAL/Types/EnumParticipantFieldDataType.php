@@ -26,59 +26,51 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Enum for "participant-fields" data-types.
- *
- * @see \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField
- *
- * @method static EnumParticipantFieldDataType TEXT()
- *   Plain UTF-8 text field.
- * @method static EnumParticipantFieldDataType HTML()
- *   HTML text field.
- * @method static EnumParticipantFieldDataType BOOLEAN()
- *   Yes/no value.
- * @method static EnumParticipantFieldDataType INTEGER()
- *   Integral number.
- * @method static EnumParticipantFieldDataType FLOAT()
- *   Floating point number.
- * @method static EnumParticipantFieldDataType DATE()
- *   A date without time.
- * @method static EnumParticipantFieldDataType DATETIME()
- *   A date with time information.
- *
- * @method static EnumParticipantFieldDataType RECEIVABLES()
- * A monetary value with the convention that positive values denote
- * receivables and negative values denote liabilities (from the view
- * of the orchestra.
- *
- * @method static EnumParticipantFieldDataType LIABILITIES()
- * A monetary value with the convention that positive values denote
- * liabilities and negative values denote receivables (from the view
- * of the orchestra.
- *
- * @method static EnumParticipantFieldDataType CLOUD_FILE()
- * Single-file upload data which is stored in the storage of the
- * ambient cloud software.
- *
- * @method static EnumParticipantFieldDataType CLOUD_FOLDER()
- * Multi-file upload data which is stored in the storage of the
- * ambient cloud software under a folder with the configured name.
- *
- * @method static EnumParticipantFieldDataType DB_FILE()
- * Single-file upload data which is stored as blob in the
- * database. The total encoded size is limited by the used database
- * backend and its associated data-type.
  */
-class EnumParticipantFieldDataType extends AbstractEnumType
+enum EnumParticipantFieldDataType: string
 {
-  public const BOOLEAN = 'boolean';
-  public const CLOUD_FILE = 'cloud-file';
-  public const CLOUD_FOLDER = 'cloud-folder';
-  public const DATE = 'date';
-  public const DATETIME = 'datetime';
-  public const DB_FILE = 'db-file';
-  public const FLOAT = 'float';
-  public const HTML = 'html';
-  public const INTEGER = 'integer';
-  public const LIABILITIES = 'liabilities';
-  public const RECEIVABLES = 'receivables';
-  public const TEXT  = 'text';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  /** A yes/no value. */
+  case BOOLEAN = 'boolean';
+  /**
+   * Single-file upload data which is stored in the storage of the ambient
+   * cloud software.
+   */
+  case CLOUD_FILE = 'cloud-file';
+  /**
+   * Multi-file upload data which is stored in the storage of the ambient
+   * cloud software under a folder with the configured name.
+   */
+  case CLOUD_FOLDER = 'cloud-folder';
+  /** A date without time. */
+  case DATE = 'date';
+  /** A date including time information. */
+  case DATETIME = 'datetime';
+  /**
+   * Single-file upload data which is stored as blob in the database. The
+   * total encoded size is limited by the used database backend and its
+   * associated data-type.
+   */
+  case DB_FILE = 'db-file';
+  /** Floating point number. */
+  case FLOAT = 'float';
+  /** HTML text field. */
+  case HTML = 'html';
+  /** Integral number. */
+  case INTEGER = 'integer';
+  /**
+   * A monetary value with the convention that positive values denote
+   * liabilities and negative values denote receivables (from the view of the
+   * orchestra.
+   */
+  case LIABILITIES = 'liabilities';
+  /**
+   * A monetary value with the convention that positive values denote
+   * receivables and negative values denote liabilities (from the view of the
+   * orchestra.
+   */
+  case RECEIVABLES = 'receivables';
+  /** Plain UTF-8 text field. */
+  case TEXT  = 'text';
 }

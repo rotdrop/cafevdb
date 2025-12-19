@@ -33,12 +33,13 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 /**
  * Musician
@@ -84,7 +85,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private ?string $displayName = null;
 
-  #[ORM\Column(type: 'EnumGender', nullable: true)]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: true)]
   private ?Types\EnumGender $gender = null;
 
   /**
@@ -177,7 +178,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', cascade: ['remove', 'persist'], orphanRemoval: true, indexBy: 'address')]
   private Collection $emailAddresses;
 
-  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumParticipationStatus::REGULAR])]
   private Types\EnumParticipationStatus $defaultParticipationStatus;
 
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
@@ -306,7 +307,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->invoices = new ArrayCollection();
     $this->originatedInvoices = new ArrayCollection();
 
-    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR;
 
     $this->setUpdated(new DateTimeImmutable());
     $this->setCreated(new DateTimeImmutable());
@@ -825,11 +826,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setDefaultParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):Musician
   {
-    if ($this->defaultParticipationStatus != $participationStatus) {
-      $this->defaultParticipationStatus = is_string($participationStatus)
-        ? new Types\EnumParticipationStatus($participationStatus)
-        : $participationStatus;
-    }
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::get($participationStatus);
 
     return $this;
   }
@@ -854,9 +851,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function setGender(null|string|Types\EnumGender $gender):Musician
   {
     if ($gender === null) {
-      $this->gender = $gender;
+      $this->gender = null;
     } else {
-      $this->gender = new Types\EnumGender($gender);
+      $this->gender = Types\EnumGender::get($gender);
     }
 
     return $this;

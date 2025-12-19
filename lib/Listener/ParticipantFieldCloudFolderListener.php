@@ -54,7 +54,7 @@ use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\UndoableFileRemove;
 use OCA\CAFEVDB\Common\UndoableFileRename;
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -376,7 +376,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 throw new HintException($message, $hint);
               }
             } elseif ($baseName !== Constants::README_NAME) { // baseName given
-              if ($fieldType == FieldType::CLOUD_FILE && $fieldMultiplicity != FieldMultiplicity::SIMPLE) {
+              if ($fieldType == FieldDataType::CLOUD_FILE && $fieldMultiplicity != FieldMultiplicity::SIMPLE) {
                 // check if the name matches one of the registered options
                 if (null == $this->getOptionFromFileName($baseName, $userIdSlug, $field)) {
                   $message = $this->l->t('The current folder "%1$s" belongs to the participant-field "%2$s", but "%3$s" is not one of the registered allowed file-names.', [
@@ -401,7 +401,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
           }
 
           if (!$checkOnly && !empty($baseName) && $baseName !== Constants::README_NAME) { // work only on the folder-contents, not the folder itself
-            if ($fieldType == FieldType::CLOUD_FOLDER) {
+            if ($fieldType == FieldDataType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
               if (empty($fieldDatum)) {
@@ -502,7 +502,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               // However, if the folder belongs to a multi-value CLOUD_FILE
               // field then it may be deleted if there is no related field-data.
               $preventDeletion = true;
-              if ($fieldType == FieldType::CLOUD_FILE) {
+              if ($fieldType == FieldDataType::CLOUD_FILE) {
                 $musician = $this->getMusician($criterion);
                 $fieldData = $field->getMusicianFieldData($musician);
                 if ($fieldData->count() == 0) {
@@ -524,7 +524,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
           if (!$checkOnly && !empty($baseName) && $baseName !== Constants::README_NAME) {
             // work only on the relevant folder-contents, not the folder itself
-            if ($fieldType == FieldType::CLOUD_FOLDER) {
+            if ($fieldType == FieldDataType::CLOUD_FOLDER) {
               /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
               $fieldDatum = $this->getFieldDatum($criterion);
               if (!empty($fieldDatum)) {
@@ -648,7 +648,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private static function isCloudFileField(Entities\ProjectParticipantField $field):bool
   {
-    return $field->getDataType() == FieldType::CLOUD_FOLDER || $field->getDataType() == FieldType::CLOUD_FILE;
+    return $field->getDataType() == FieldDataType::CLOUD_FOLDER || $field->getDataType() == FieldDataType::CLOUD_FILE;
   }
 
   /**

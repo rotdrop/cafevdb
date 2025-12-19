@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,14 @@
 
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
-use MyCLabs\Enum\Enum as EnumType;
-
-/** Quasi enum with the supported export formats. */
-class ExportFormat extends EnumType
+/** Enum for the supported export formats. */
+enum ExportFormat: string
 {
-  const EXCEL = 'excel';
-  const ODS = 'ods';
-  const CSV = 'csv';
-  const HTML = 'html';
-  const PDF = 'pdf';
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case EXCEL = 'excel';
+  case ODS = 'ods';
+  case CSV = 'csv';
+  case HTML = 'html';
+  case PDF = 'pdf';
 }

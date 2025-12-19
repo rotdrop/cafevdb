@@ -28,7 +28,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
@@ -127,7 +127,7 @@ trait ParticipantTotalFeesTrait
             $fieldAmount = $this->participantFieldsService->participantFieldSurcharge(
               $fieldValues['key'], $fieldValues['value'], $participantField,
             );
-            if ($participantField->getDataType() == FieldType::LIABILITIES) {
+            if ($participantField->getDataType() == FieldDataType::LIABILITIES) {
               $amountInvoiced->subEq($fieldAmount);
             } else {
               $amountInvoiced->addEq($fieldAmount);

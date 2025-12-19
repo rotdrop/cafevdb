@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -348,8 +348,8 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * Add an directory entry for a ProjectParticipantFieldDatum of type
-   * FieldType::DB_FILE or for the optional supporting document of fields of
-   * type FieldType:RECEIVABLES, FieldType::LIABILITIES.
+   * FieldDataType::DB_FILE or for the optional supporting document of fields of
+   * type FieldDataType:RECEIVABLES, FieldDataType::LIABILITIES.
    *
    * Missing sub-folders will be created.
    *
@@ -417,8 +417,8 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * Remove all directory entries for a ProjectParticipantFieldDatum of type
-   * FieldType::DB_FILE or for the optional supporting document of fields of
-   * type FieldType:RECEIVABLES, FieldType::LIABILITIES.
+   * FieldDataType::DB_FILE or for the optional supporting document of fields of
+   * type FieldDataType:RECEIVABLES, FieldDataType::LIABILITIES.
    *
    * Empty sub-folders will be deleted.
    *
@@ -498,8 +498,8 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * Update an existing directory entry for a ProjectParticipantFieldDatum of
-   * type FieldType::DB_FILE or for the optional supporting document of fields
-   * of type FieldType:RECEIVABLES, FieldType::LIABILITIES.
+   * type FieldDataType::DB_FILE or for the optional supporting document of fields
+   * of type FieldDataType:RECEIVABLES, FieldDataType::LIABILITIES.
    *
    * As the complete path is determined by the name of the fields and its
    * options the function also renames all parent directory entries.

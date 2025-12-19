@@ -265,8 +265,6 @@ class PhpToTypeScript extends Command
           DTOCollector::class,
           // transform all native enums
           EnumCollector::class,
-          // transform all MyClabs enums used in the DB entities
-          DatabaseEnumCollector::class,
           // transfrom all database entities
           DatabaseEntityCollector::class,
         ])

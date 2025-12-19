@@ -26,7 +26,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -37,8 +39,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'FileData')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
-#[ORM\DiscriminatorMap(['identity' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
+#[ORM\DiscriminatorMap(['generic' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
 #[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 #[ORM\HasLifecycleCallbacks]

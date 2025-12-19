@@ -28,11 +28,14 @@ use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
 
+use function OCA\CAFEVDB\Common\Functions\strcat;
+use function OCA\CAFEVDB\Common\Functions\sprintf;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -329,8 +332,8 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += (int)($field['dataType'] == FieldType::RECEIVABLES);
-      $extraFinancial += (int)($field['dataType'] == FieldType::LIABILITIES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::RECEIVABLES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::LIABILITIES);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;
@@ -459,7 +462,7 @@ GROUP BY t.id';
 
     $this->defineJoinStructure($opts);
 
-    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = 'NOT $table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"';
+    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = strcat('NOT $table.participation_status = "', ParticipationStatus::ASSOCIATED, '"');
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'organization',

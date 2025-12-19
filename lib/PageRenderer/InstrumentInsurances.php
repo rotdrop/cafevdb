@@ -100,7 +100,7 @@ class InstrumentInsurances extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'tax_type' => [
-          'value' => Types\EnumTaxType::INSURANCE,
+          'value' => Types\EnumTaxType::INSURANCE->value,
         ],
       ],
       'column' => 'tax_type',
@@ -820,7 +820,7 @@ GROUP BY b.short_name',
     $insuranceField = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->findOneBy([
       'project' => $this->projectId,
       'multiplicity' => Types\EnumParticipantFieldMultiplicity::RECURRING,
-      'dataType' => Types\EnumParticipantFieldDataType::RECEIVABLES, /** @todo CHANGE TO RECEIVABLES */
+      'dataType' => Types\EnumParticipantFieldDataType::RECEIVABLES,
       'dataOptions.key:uuid_binary' => Uuid::NIL,
       'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
     ]);

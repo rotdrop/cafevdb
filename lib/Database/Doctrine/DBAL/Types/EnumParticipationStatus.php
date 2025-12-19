@@ -27,38 +27,22 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 /**
  * Participation status enum for musicians.
  *
- * @method static EnumParticipationStatus ASSOCIATED()
- * @method static EnumParticipationStatus CONDUCTOR()
- * @method static EnumParticipationStatus PASSIVE()
- * @method static EnumParticipationStatus REGULAR()
- * @method static EnumParticipationStatus SOLOIST()
- * @method static EnumParticipationStatus TEMPORARY()
- *
  * @todo This should rather be specified per project.
  */
-class EnumParticipationStatus extends AbstractEnumType
+enum EnumParticipationStatus: string
 {
-  public const ASSOCIATED = 'associated';
-  public const CONDUCTOR = 'conductor';
-  public const PASSIVE = 'passive';
-  public const REGULAR = 'regular';
-  public const SOLOIST = 'soloist';
-  public const TEMPORARY = 'temporary';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  public const L10N_TAG = parent::L10N_TAG . '_PARTICIPATION_STATUS';
+  case ASSOCIATED = 'associated';
+  case CONDUCTOR = 'conductor';
+  case PASSIVE = 'passive';
+  case REGULAR = 'regular';
+  case SOLOIST = 'soloist';
+  case TEMPORARY = 'temporary';
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
+  /** {@inheritdoc} */
+  public static function l10nTag(): string
   {
-    self::t(static::L10N_TAG . self::L10N_SEP . self::ASSOCIATED);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::CONDUCTOR);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::PASSIVE);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::REGULAR);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::SOLOIST);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::TEMPORARY);
+    return self::L10N_TAG . '_PARTICIPATION_STATUS: ';
   }
 }

@@ -29,7 +29,7 @@ use \BadFunctionCallException;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -90,7 +90,7 @@ class ProjectPayments extends PMETableViewBase
       .'
   JSON_OBJECTAGG(
     IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
-    IF(__t4.data_type = "' . FieldType::LIABILITIES . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
+    IF(__t4.data_type = "' . FieldDataType::LIABILITIES->value . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
   ) AS receivable_values,'
       . '
   JSON_OBJECTAGG(
@@ -120,8 +120,8 @@ LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . ' __t3
 ON __t2.field_id = __t3.field_id AND __t2.option_key = __t3.key
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_TABLE . ' __t4
 ON __t2.field_id = __t4.id AND __t4.data_type  IN ('
-        . "   '" . FieldType::RECEIVABLES . "',"
-        . "   '" . FieldType::LIABILITIES . "'"
+        . "   '" . FieldDataType::RECEIVABLES->value . "',"
+        . "   '" . FieldDataType::LIABILITIES->value . "'"
         . ' )
 GROUP BY __t1.id',
       'identifier' => [
@@ -801,9 +801,9 @@ WHERE dsf.id IS NOT NULL',
   ppf.id AS field_id,
   ppfo.key AS receivable_key,
   IF(ppf.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
      COALESCE(ppftr.content, ppf.name),
      CONCAT_WS(" - ", COALESCE(ppftr.content, ppf.name), COALESCE(ppfotr.content, ppfo.label))
   ) AS receivable_display_label,
@@ -849,9 +849,9 @@ WHERE dsf.id IS NOT NULL',
   , "amount", $table.amount
 )',
           'groups' => 'IF($table.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
         ],
@@ -881,9 +881,9 @@ WHERE dsf.id IS NOT NULL',
   CONCAT_WS("'.self::COMP_KEY_SEP.'", ppf.project_id, ppf.id, BIN2UUID(ppfo.key)) AS composite_key,
   ppfo.*,
   IF(ppf.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
      COALESCE(ppftr.content, ppf.name),
      CONCAT_WS(" - ", COALESCE(ppftr.content, ppf.name), COALESCE(ppfotr.content, ppfo.label))
   ) AS display_label,
@@ -899,7 +899,7 @@ WHERE dsf.id IS NOT NULL',
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   INNER JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
-      AND ppf.data_type IN ("' . FieldType::RECEIVABLES . '","' . FieldType::LIABILITIES . '")'
+      AND ppf.data_type IN ("' . FieldDataType::RECEIVABLES->value . '","' . FieldDataType::LIABILITIES->value . '")'
           . ($projectMode
              ? '
       AND ppf.project_id = ' . $this->projectId
@@ -925,9 +925,9 @@ WHERE dsf.id IS NOT NULL',
                      . ' AND $join_table.project_id = '
                      . $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id'),
           'groups' => 'IF($table.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',

@@ -26,16 +26,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Some CalDAV related types.
- *
- * @method static EnumVCalendarType VEVENT()
- * @method static EnumVCalendarType VTODO()
- * @method static EnumVCalendarType VJOURNAL()
- * @method static EnumVCalendarType VCARD()
  */
-class EnumVCalendarType extends AbstractEnumType
+enum EnumVCalendarType: string
 {
-  public const VEVENT = 'VEVENT';
-  public const VTODO = 'VTODO';
-  public const VJOURNAL = 'VJOURNAL';
-  public const VCARD = 'VCARD';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case VEVENT = 'VEVENT';
+  case VTODO = 'VTODO';
+  case VJOURNAL = 'VJOURNAL';
+  case VCARD = 'VCARD';
 }

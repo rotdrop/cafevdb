@@ -23,3 +23,5 @@ print_r(BLAH::cases());
 print_r((array)Foo::FOO);
 
 print json_encode(Foo::cases()) . PHP_EOL;
+
+echo "{Foo::FOO->value}" . PHP_EOL;
