@@ -26,16 +26,13 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Member status enum for musicians.
- *
- * @method static EnumAttachmentOrigin UPLOAD()
- * @method static EnumAttachmentOrigin CLOUD()
- * @method static EnumAttachmentOrigin PARTICIPANT_FIELD()
- * @method static EnumAttachmentOrigin TEMPLATE()
  */
-class EnumAttachmentOrigin extends AbstractEnumType
+enum EnumAttachmentOrigin: string
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case UPLOAD = 'upload';
+  case CLOUD = 'cloud';
+  case PARTICIPANT_FIELD = 'participant-field';
+  case TEMPLATE = 'template';
 }

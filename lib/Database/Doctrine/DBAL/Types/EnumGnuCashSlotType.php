@@ -26,28 +26,19 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * GnuCash slot types.
- *
- * @method static EnumGnuCashSlotType INT64()
- * @method static EnumGnuCashSlotType DOUBLE()
- * @method static EnumGnuCashSlotType NUMERIC()
- * @method static EnumGnuCashSlotType STRING()
- * @method static EnumGnuCashSlotType GUID()
- * @method static EnumGnuCashSlotType TIME64()
- * @method static EnumGnuCashSlotType PLACEHOLDER_DONT_USE()
- * @method static EnumGnuCashSlotType GLIST()
- * @method static EnumGnuCashSlotType FRAME()
- * @method static EnumGnuCashSlotType GDATE()
  */
-class EnumGnuCashSlotType extends AbstractEnumType
+enum EnumGnuCashSlotType: int
 {
-  public const INT64 = 1;
-  public const DOUBLE = 2;
-  public const NUMERIC = 3;
-  public const STRING = 4;
-  public const GUID = 5;
-  public const TIME64 = 6;
-  public const PLACEHOLDER_DONT_USE = 7;
-  public const GLIST = 8;
-  public const FRAME = 9;
-  public const GDATE = 10;
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case INT64 = 1;
+  case DOUBLE = 2;
+  case NUMERIC = 3;
+  case STRING = 4;
+  case GUID = 5;
+  case TIME64 = 6;
+  case PLACEHOLDER_DONT_USE = 7;
+  case GLIST = 8;
+  case FRAME = 9;
+  case GDATE = 10;
 }

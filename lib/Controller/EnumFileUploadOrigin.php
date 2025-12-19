@@ -36,6 +36,6 @@ enum EnumFileUploadOrigin: string
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
   // @todo The DB enum has more options. Are they needed with AJAX?
-  case UPLOAD = AttachmentOrigin::UPLOAD;
-  case CLOUD = AttachmentOrigin::CLOUD;
+  case UPLOAD = AttachmentOrigin::UPLOAD->value;
+  case CLOUD = AttachmentOrigin::CLOUD->value;
 }

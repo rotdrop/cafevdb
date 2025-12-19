@@ -170,7 +170,7 @@ class GnuCashSlot implements \ArrayAccess
    */
   public function getSlotType():GnuCashSlotType
   {
-    return GnuCashSlottype($this->slotType);
+    return GnuCashSlottype::get($this->slotType);
   }
 
   /**
@@ -180,7 +180,7 @@ class GnuCashSlot implements \ArrayAccess
    */
   public function setSlotType(int|GnuCashSlotType $slotType):GnuCashSlot
   {
-    $this->slotType = (int)$slotType;
+    $this->slotType = GnuCashSlotType::get($slotType);
 
     return $this;
   }

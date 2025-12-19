@@ -26,11 +26,12 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
+use function OCA\CAFEVDB\Common\Functions\strcat as cat;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -261,8 +262,8 @@ class ProjectAssociates extends ProjectParticipants
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += (int)($field['dataType'] == FieldType::RECEIVABLES);
-      $extraFinancial += (int)($field['dataType'] == FieldType::LIABILITIES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::RECEIVABLES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::LIABILITIES);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;
@@ -1207,7 +1208,7 @@ GROUP BY t.id';
 
     $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
     $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '('
-      . '$table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"'
+      . '$table.participation_status = "' . cat(ParticipationStatus::ASSOCIATED) . '"'
       . ' OR '
       . $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")'
       . ')';

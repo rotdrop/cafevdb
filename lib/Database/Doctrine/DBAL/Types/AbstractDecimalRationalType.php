@@ -27,12 +27,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\DecimalType;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 
 /**
  * Abstract base class for decimal types
  */
-abstract class AbstractDecimalRationalType extends DecimalType
+abstract class AbstractDecimalRationalType extends Type
 {
   protected const PRECISION = 10;
   protected const SCALE = 0;
@@ -61,7 +61,7 @@ abstract class AbstractDecimalRationalType extends DecimalType
   /**
    * {@inheritDoc}
    */
-  public function convertToPHPValue($value, AbstractPlatform $platform): ?string
+  public function convertToPHPValue(mixed $value, AbstractPlatform $platform): ?RationalNumber
   {
     if ($value === null || $value === '') {
       return null;

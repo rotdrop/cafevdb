@@ -26,8 +26,8 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use InvalidArgumentException;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 
 /**
  * DTO for ProejctParticipantField retrieval.
@@ -39,8 +39,8 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseD
     public readonly int $id,
     public readonly string $name,
     public readonly string $untranslatedName,
-    public readonly DataType $type,
-    public readonly Multiplicity $multiplicity,
+    public readonly FieldDataType $type,
+    public readonly FieldMultiplicity $multiplicity,
   ) {
   }
 
@@ -57,8 +57,8 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseD
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    $type = new DataType($type);
-    $multiplicity = new Multiplicity($multiplicity);
+    $type = FieldDataType::get($type);
+    $multiplicity = FieldMultiplicity::get($multiplicity);
     return new self($id, $name, $untranslatedName, $type, $multiplicity);
   }
 }

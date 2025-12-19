@@ -884,7 +884,7 @@ class PersonalSettingsController extends Controller
             '"%s" set to "%s".', [$parameter.'Id', $newProject['id'] ]);
           $this->setConfigValue($parameter.'Id', $newProject['id']);
           if ($newProject['type'] != Types\EnumProjectTemporalType::PERMANENT) {
-            $newProject['type'] = Types\EnumProjectTemporalType::PERMANENT();
+            $newProject['type'] = Types\EnumProjectTemporalType::PERMANENT;
             $this->projectService->persistProject($newProject);
             $this->data['message'][] = $this->l->t(
               'Type of project "%s" set to "%s".', Types\EnumProjectTemporalType::PERMANENT);

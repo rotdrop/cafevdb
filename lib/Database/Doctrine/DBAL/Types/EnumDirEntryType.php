@@ -25,15 +25,13 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
- * Enum for data transformations.
- *
- * @method static EnumDirEntryType GENERIC()
- * @method static EnumDirEntryType FOLDER()
- * @method static EnumDirEntryType FILE()
+ * Directory entry type.
  */
-class EnumDirEntryType extends AbstractEnumType
+enum EnumDirEntryType: string
 {
-  public const GENERIC = 'generic';
-  public const FOLDER = 'folder';
-  public const FILE = 'file';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case GENERIC = 'generic';
+  case FOLDER = 'folder';
+  case FILE = 'file';
 }

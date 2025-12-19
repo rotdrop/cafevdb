@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-
 /**
  * Upload origin, arguably the origin "cloud" is not an upload origin,
  * however, the idea is to provide "upload from local machine" as well as

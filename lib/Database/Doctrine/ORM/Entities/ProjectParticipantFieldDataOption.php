@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -106,7 +106,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private ?string $balancingAccount = null;
 
   /**
-   * @var string
+   * @var ?RationalNumber
    * Optional value of a deposit for monetary options.
    */
   #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
@@ -497,7 +497,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /** @return bool Whether this field links to the cloud-file-systen. */
   public function isFileSystemContext():bool
   {
-    return $this->field->getDataType() == FieldType::CLOUD_FILE
+    return $this->field->getDataType() == FieldDataType::CLOUD_FILE
       && $this->field->getMultiplicity() != FieldMultiplicity::SIMPLE;
   }
 

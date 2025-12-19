@@ -28,14 +28,16 @@ use RuntimeException;
 
 use OCP\IRequest;
 
+use function OCA\CAFEVDB\Common\Functions\strcat as cat;
+
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -103,10 +105,10 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_DATA_INPUT_SIZE = [
     'default' => 9,
-    DataType::RECEIVABLES => 9,
-    DataType::LIABILITIES => 9,
-    DataType::DATE => 7,
-    DataType::DATETIME => 12,
+    FieldDataType::RECEIVABLES->value => 9,
+    FieldDataType::LIABILITIES->value => 9,
+    FieldDataType::DATE->value => 7,
+    FieldDataType::DATETIME->value => 12,
   ];
 
   /** @var string */
@@ -427,11 +429,11 @@ class ProjectParticipantFields extends PMETableViewBase
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'multiplicity', ], ],
-      'default' => Multiplicity::SIMPLE,
+      'default' => FieldMultiplicity::SIMPLE->value,
       'values2' => $this->participantFieldMultiplicityNames(),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
         return [ $tag, $this->toolTipsService['participant-field-multiplicity' . ':' . $tag] ];
-      }, Multiplicity::toArray()),
+      }, FieldMultiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
       'display|ACP' => [
@@ -468,7 +470,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'values2' => $this->participantFieldDataTypeNames(),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
         return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
-      }, DataType::toArray()),
+      }, FieldDataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
@@ -769,7 +771,7 @@ __EOT__;
       'sql' => 'BIN2UUID($main_table.default_value)',
       'default' => false,
       'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
-        $multiplicity = $row[$this->queryField('multiplicity')];
+        $multiplicity = FieldMultiplicity::get($row[$this->queryField('multiplicity')]);
         $dataType = $row[$this->queryField('data_type')];
         if (!empty($value)) {
           // fetch the value from the data-options data
@@ -778,35 +780,35 @@ __EOT__;
           $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
-          } elseif ($multiplicity != Multiplicity::SIMPLE && !empty($defaultRow['label'])) {
+          } elseif ($multiplicity != FieldMultiplicity::SIMPLE && !empty($defaultRow['label'])) {
             $value = $defaultRow['label'];
           } else {
             $value = null;
           }
         }
         switch ($multiplicity) {
-          case Multiplicity::GROUPOFPEOPLE:
-          case Multiplicity::GROUPSOFPEOPLE:
-          case Multiplicity::RECURRING:
+          case FieldMultiplicity::GROUPOFPEOPLE:
+          case FieldMultiplicity::GROUPSOFPEOPLE:
+          case FieldMultiplicity::RECURRING:
             $value = $this->l->t('n/a');
             break;
           default:
             switch ($dataType) {
-              case DataType::CLOUD_FILE:
+              case FieldDataType::CLOUD_FILE:
                 $value = !empty($value) ? $this->l->t($value) : '';
                 break;
-              case DataType::DB_FILE:
-              case DataType::CLOUD_FOLDER:
+              case FieldDataType::DB_FILE:
+              case FieldDataType::CLOUD_FOLDER:
                 $value = $this->l->t('n/a');
                 break;
-              case DataType::BOOLEAN:
+              case FieldDataType::BOOLEAN:
                 $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
                 break;
-              case DataType::RECEIVABLES:
-              case DataType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 $value = $this->moneyValue($value);
                 break;
-              case DataType::DATE:
+              case FieldDataType::DATE:
                 if (!empty($value)) {
                   try {
                     $date = DateTime::parse($value, $this->getDateTimeZone());
@@ -816,7 +818,7 @@ __EOT__;
                   }
                 }
                 break;
-              case DataType::DATETIME:
+              case FieldDataType::DATETIME:
                 if (!empty($value)) {
                   try {
                     $date = DateTime::parse($value, $this->getDateTimeZone());
@@ -830,9 +832,9 @@ __EOT__;
                 break;
             }
         }
-        $cssClass = ($dataType != DataType::HTML && $dataType != DataType::TEXT) ? ' align-right' : '';
+        $cssClass = ($dataType != FieldDataType::HTML && $dataType != FieldDataType::TEXT) ? ' align-right' : '';
         $html = '<span class="pme-cell-wrapper'.$cssClass.'">';
-        $html .= ($dataType == DataType::HTML)
+        $html .= ($dataType == FieldDataType::HTML)
           ? '<span class="pme-cell-squeezer">'.$value.'</span>'
           : $value;
         $html .= '</span>';
@@ -1018,11 +1020,11 @@ __EOT__;
       'css' => [ 'postfix' => [ 'participant-access', 'access' ], ],
       'select' => 'O',
       'values2' => [
-        Types\EnumAccessPermission::NONE => $this->l->t('no access'),
-        Types\EnumAccessPermission::READ => $this->l->t('read'),
-        Types\EnumAccessPermission::READ_WRITE => $this->l->t('read / write'),
+        Types\EnumAccessPermission::NONE->value => $this->l->t('no access'),
+        Types\EnumAccessPermission::READ->value => $this->l->t('read'),
+        Types\EnumAccessPermission::READ_WRITE->value => $this->l->t('read / write'),
       ],
-      'default' => Types\EnumAccessPermission::NONE,
+      'default' => Types\EnumAccessPermission::NONE->value,
       'sort' => true,
       'align' => 'center',
       'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participant-access'],
@@ -1069,17 +1071,17 @@ __EOT__;
         $multiplicity = $row[PHPMyEdit::QUERY_FIELD . $km];
         $dataType = $row[PHPMyEdit::QUERY_FIELD . $kd];
         $depositDueDate = $row[PHPMyEdit::QUERY_FIELD . $kddd];
-        $pme->fdd[$km]['css']['postfix'][] = 'multiplicity-'.$multiplicity;
-        $pme->fdd[$km]['css']['postfix'][] = 'data-type-'.$dataType;
+        $pme->fdd[$km]['css']['postfix'][] = cat('multiplicity-', $multiplicity);
+        $pme->fdd[$km]['css']['postfix'][] = cat('data-type-', $dataType);
         if (!empty($depositDueDate)) {
           $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-set';
         } else {
           $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-unset';
         }
         switch ($dataType) {
-          case DataType::RECEIVABLES:
+          case FieldDataType::RECEIVABLES:
             // fall-through
-          case DataType::LIABILITIES:
+          case FieldDataType::LIABILITIES:
             $selectValue = 'N';
             break;
           default:
@@ -1104,13 +1106,13 @@ __EOT__;
         if (empty($row[$this->queryField('tab')])) {
           $tab = null;
           switch ($dataType) {
-            case DataType::RECEIVABLES:
-            case DataType::LIABILITIES:
+            case FieldDataType::RECEIVABLES:
+            case FieldDataType::LIABILITIES:
               $tab = 'finance';
               break;
-            case DataType::CLOUD_FILE:
-            case DataType::CLOUD_FOLDER:
-            case DataType::DB_FILE:
+            case FieldDataType::CLOUD_FILE:
+            case FieldDataType::CLOUD_FOLDER:
+            case FieldDataType::DB_FILE:
               $tab = 'file-attachments';
               break;
             default:
@@ -1150,8 +1152,14 @@ __EOT__;
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateOrInsertTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
-  {
+  public function beforeUpdateOrInsertTrigger(
+    PHPMyEdit &$pme,
+    string $op,
+    string $step,
+    array &$oldValues,
+    array &$changed,
+    array &$newValues,
+  ): bool {
     if ($op === PHPMyEdit::SQL_QUERY_INSERT) {
       // populate the empty $oldValues array with null in order to have
       // less undefined array key accesses.
@@ -1167,6 +1175,8 @@ __EOT__;
           . ' and may not be used as a field-name.',
           Constants::README_NAME));
     }
+
+    $newMultiplicity = FieldMultiplicity::get($newValues['multiplicity']);
 
     /*-**********************************************************************
      *
@@ -1204,7 +1214,10 @@ __EOT__;
     $tag = 'tab';
     foreach (['oldvals', 'newvals'] as $dataSet) {
       if (!empty(${$dataSet}[$tag])) {
-        $defaultTabId = ProjectParticipantFieldsService::defaultTabId(${$dataSet}['multiplicity'], ${$dataSet}['data_type']);
+        $defaultTabId = ProjectParticipantFieldsService::defaultTabId(
+          FieldMultiplicity::get(${$dataSet}['multiplicity']),
+          FieldDataType::get(${$dataSet}['data_type']),
+        );
         if (${$dataSet}[$tag] == $defaultTabId) {
           ${$dataSet}[$tag] = null;
         }
@@ -1247,9 +1260,9 @@ __EOT__;
      */
 
     $tag = 'default_multi_value';
-    if ($newValues['multiplicity'] === Multiplicity::MULTIPLE ||
-        $newValues['multiplicity'] === Multiplicity::PARALLEL) {
-      $value = $newValues[$tag]??null;
+    if ($newMultiplicity === FieldMultiplicity::MULTIPLE ||
+        $newMultiplicity === FieldMultiplicity::PARALLEL) {
+      $value = $newValues[$tag] ?? null;
       $newValues['default_value'] = strlen($value) < 36 ? null : $value;
     }
     self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
@@ -1261,7 +1274,7 @@ __EOT__;
      */
 
     $tag = 'default_single_value';
-    if ($newValues['multiplicity'] == Multiplicity::SINGLE) {
+    if ($newMultiplicity == FieldMultiplicity::SINGLE) {
       $value = $newValues[$tag];
       $newValues['default_value'] = strlen($value) < 36 ? null : $value;
     }
@@ -1272,7 +1285,7 @@ __EOT__;
      * Recurring fields do not have a default value, the value is computed.
      *
      */
-    if ($newValues['multiplicity'] == Multiplicity::RECURRING) {
+    if ($newMultiplicity == FieldMultiplicity::RECURRING) {
       unset($newValues['default_value']);
     }
 
@@ -1287,7 +1300,7 @@ __EOT__;
      */
 
     $tag = 'maximum_group_size';
-    if ($newValues['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+    if ($newMultiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
       $first = array_key_first($newValues['data_options_groupofpeople']);
       $newValues['data_options_groupofpeople'][$first]['key'] = Uuid::NIL;
       $newValues['data_options_groupofpeople'][$first]['limit'] = $newValues[$tag];
@@ -1302,7 +1315,7 @@ __EOT__;
      */
 
     $tag = 'data_options_single';
-    if ($newValues['multiplicity'] == Multiplicity::SINGLE) {
+    if ($newMultiplicity == FieldMultiplicity::SINGLE) {
       $first = array_key_first($newValues[$tag]);
       $newValues[$tag][$first]['label'] = $newValues['name'];
       $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'] ?? null;
@@ -1318,7 +1331,7 @@ __EOT__;
      */
 
     $tag = 'data_options_groupofpeople';
-    if ($newValues['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+    if ($newMultiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
       $first = array_key_first($newValues[$tag]);
       $newValues[$tag][$first]['label'] = $newValues['name'];
       $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'];
@@ -1334,7 +1347,7 @@ __EOT__;
      */
 
     $tag = 'data_options_simple';
-    if ($newValues['multiplicity'] == Multiplicity::SIMPLE) {
+    if ($newMultiplicity == FieldMultiplicity::SIMPLE) {
       $first = array_key_first($newValues[$tag]);
       $newValues[$tag][$first]['label'] = $newValues['name'];
       $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'] ?? '';
@@ -1370,7 +1383,7 @@ __EOT__;
       $allowed = $this->participantFieldsService->explodeDataOptions($newValues['data_options'], false);
     } else {
       $allowed = $newValues['data_options'];
-      if ($newValues['multiplicity'] == Multiplicity::RECURRING) {
+      if ($newMultiplicity == FieldMultiplicity::RECURRING) {
         // index -1 holds the generator information
 
         // sanitize
@@ -1413,11 +1426,11 @@ __EOT__;
           $value = is_numeric($value) ? $value : null;
         } elseif ($key != Uuid::NIL && $field == 'data') {
           switch ($newValues['data_type']) {
-            case DataType::DATE:
+            case FieldDataType::DATE:
               $date = DateTime::parseFromLocale($value, $this->getLocale(), 'UTC');
               $value = $date->format('Y-m-d');
               break;
-            case DataType::DATETIME:
+            case FieldDataType::DATETIME:
               $date = DateTime::parseFromLocale($value, $this->getLocale(), $this->getDateTimeZone());
               $value = $date->setTimezone('UTC')->toIso8601String();
               break;
@@ -1428,8 +1441,8 @@ __EOT__;
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = $value === null ? null : $key . self::JOIN_KEY_SEP . $value;
       }
-      if (($newValues['multiplicity'] == Multiplicity::SIMPLE
-           || $newValues['multiplicity'] == Multiplicity::SINGLE)
+      if (($newMultiplicity == FieldMultiplicity::SIMPLE
+           || $newMultiplicity == FieldMultiplicity::SINGLE)
           && $key != Uuid::NIL
           && empty($allowedValue['deleted'])) {
         break;
@@ -1609,24 +1622,24 @@ __EOT__;
         return '';
       }
       switch ($multiplicity) {
-        case Multiplicity::SIMPLE:
+        case FieldMultiplicity::SIMPLE:
           return '';
-        case Multiplicity::SINGLE:
+        case FieldMultiplicity::SINGLE:
           $singleOption = reset($allowed);
           switch ($dataType) {
-            case DataType::BOOLEAN:
+            case FieldDataType::BOOLEAN:
               return $this->l->t('true') . ' / ' . $this->l->t('false');
-            case DataType::RECEIVABLES:
-            case DataType::LIABILITIES:
+            case FieldDataType::RECEIVABLES:
+            case FieldDataType::LIABILITIES:
               return $this->moneyValue(0) . ' / ' . $this->moneyValue($singleOption['data']);
-            case DataType::DATE:
+            case FieldDataType::DATE:
               $fieldValue = $singleOption['data'];
               if (!empty($fieldValue)) {
                 $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
                 $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
               }
               return $fieldValue;
-            case DataType::DATETIME:
+            case FieldDataType::DATETIME:
               $fieldValue = $singleOption['data'];
               if (!empty($fieldValue)) {
                 $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
@@ -1702,7 +1715,7 @@ __EOT__;
       $cssClass[] = 'data-type-'.$dataType;
     }
 
-    if ($multiplicity == Multiplicity::RECURRING) {
+    if ($multiplicity == FieldMultiplicity::RECURRING) {
       foreach ($allowed as $value) {
         if ($value['key'] === Uuid::NIL) {
           $generatorItem = $value;
@@ -1730,7 +1743,7 @@ __EOT__;
   <thead>
      <tr>';
     $html .= '<th class="operations"></th>';
-    if ($multiplicity == Multiplicity::RECURRING) {
+    if ($multiplicity == FieldMultiplicity::RECURRING) {
       $headers = [
         'key' => $this->l->t('Key'),
         'label' => $this->l->t('Label'),
@@ -1773,7 +1786,7 @@ __EOT__;
           if (empty($value['key']) || !empty($value['deleted'])) {
             continue;
           }
-          if ($multiplicity == Multiplicity::GROUPOFPEOPLE && $value['key'] != Uuid::NIL) {
+          if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE && $value['key'] != Uuid::NIL) {
             continue;
           }
           $html .= '
@@ -1781,7 +1794,7 @@ __EOT__;
       <td class="operations"></td>';
           foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip'] as $field) {
             $fieldValue = $value[$field];
-            if ($multiplicity == Multiplicity::RECURRING) {
+            if ($multiplicity == FieldMultiplicity::RECURRING) {
               if ($field == 'limit' && !empty($fieldValue)) {
                 $fieldValue = $this->dateTimeFormatter()->formatDate(
                   Util::convertToDateTime($fieldValue),
@@ -1789,11 +1802,11 @@ __EOT__;
               }
             } elseif ($field == 'data' && !empty($fieldValue)) {
               switch ($dataType) {
-                case DataType::RECEIVABLES:
-                case DataType::LIABILITIES:
+                case FieldDataType::RECEIVABLES:
+                case FieldDataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
                   break;
-                case DataType::DATE:
+                case FieldDataType::DATE:
                   try {
                     $reporting = error_reporting(0);
                     $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
@@ -1805,7 +1818,7 @@ __EOT__;
                     // ignore
                   }
                   break;
-                case DataType::DATETIME:
+                case FieldDataType::DATETIME:
                   try {
                     $reporting = error_reporting(0);
                     $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
@@ -1843,7 +1856,7 @@ __EOT__;
           if (empty($key)) {
             continue;
           }
-          if ($key == Uuid::NIL && $multiplicity != Multiplicity::GROUPOFPEOPLE) {
+          if ($key == Uuid::NIL && $multiplicity != FieldMultiplicity::GROUPOFPEOPLE) {
             $generatorItem = $value;
             continue;
           }
@@ -1865,7 +1878,7 @@ __EOT__;
    * well may contain deleted and generator options.
    *
    * The strategy is to pick the first non-deleted option or the first
-   * non-deleted generator option for Multiplicity::GROUPOFPEOPLE.
+   * non-deleted generator option for FieldMultiplicity::GROUPOFPEOPLE.
    *
    * @param mixed $dataOptions
    *
@@ -1889,14 +1902,14 @@ __EOT__;
       if (!$allowDeleted && !empty($option['deleted'])) {
         continue;
       }
-      if ($option['key'] == Uuid::NIL && $multiplicity == Multiplicity::GROUPOFPEOPLE) {
+      if ($option['key'] == Uuid::NIL && $multiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
         $entry = $option;
       } elseif (empty($entry)) {
         $entry = $option;
       }
     }
     empty($entry) && $entry = $this->participantFieldsService->dataOptionPrototype();
-    if ($multiplicity == Multiplicity::GROUPOFPEOPLE) {
+    if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
       $entry['key'] = Uuid::NIL;
     }
     return [ $entry, $allowed ];
@@ -1944,11 +1957,11 @@ __EOT__;
     if (!empty($value)) {
       try {
         switch ($dataType) {
-          case DataType::DATE:
+          case FieldDataType::DATE:
             $date = DateTime::parse($value, $this->getDateTimeZone());
             $value = $this->dateTimeFormatter()->formatDate($date, 'medium');
             break;
-          case DataType::DATETIME:
+          case FieldDataType::DATETIME:
             $date = DateTime::parse($value, $this->getDateTimeZone());
             $value = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
             break;
@@ -1960,7 +1973,7 @@ __EOT__;
     $value = htmlspecialchars($value);
     $tip   = $toolTip;
     $html  = '<div class="active-value">';
-    if ($dataType == DataType::HTML) {
+    if ($dataType == FieldDataType::HTML) {
       $htmlDisabled = [ 'input' => 'disabled', 'textarea' => '' ];
     } else {
       $htmlDisabled = [ 'textarea' => 'disabled', 'input' => '' ];
@@ -2030,7 +2043,7 @@ __EOT__;
       if ($key == $entry['key']) {
         continue;
       }
-      if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
+      if ($multiplicity != FieldMultiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
       foreach (['key', 'label', 'data', 'deposit', 'limit', 'balancingAccount', 'tooltip', 'deleted'] as $field) {
@@ -2093,8 +2106,16 @@ __EOT__;
    */
   private static function ifFileSystemEntry(string $ifTrue, string $ifFalse):string
   {
-    return 'IF($main_table.data_type IN ("'
-      . DataType::CLOUD_FILE . '", "'
-      . DataType::CLOUD_FOLDER . '"), ' . $ifTrue . ', ' . $ifFalse . ')';
+    return cat(
+      'IF($main_table.data_type IN ("',
+      FieldDataType::CLOUD_FILE,
+      '", "',
+      FieldDataType::CLOUD_FOLDER,
+      '"), ',
+      $ifTrue,
+      ', ',
+      $ifFalse,
+      ')',
+    );
   }
 }

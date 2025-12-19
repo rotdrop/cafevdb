@@ -28,7 +28,8 @@ use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -38,6 +39,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
@@ -80,11 +82,11 @@ class ProjectParticipantField implements \ArrayAccess
    */
   private ?string $untranslatedName;
 
-  #[ORM\Column(type: 'EnumParticipantFieldMultiplicity', nullable: false)]
-  private Types\EnumParticipantFieldMultiplicity $multiplicity;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private FieldMultiplicity $multiplicity;
 
-  #[ORM\Column(type: 'EnumParticipantFieldDataType', nullable: false, options: ['default' => 'text'])]
-  private Types\EnumParticipantFieldDataType $dataType;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => FieldDataType::TEXT])]
+  private FieldDataType $dataType;
 
   /**
    * @var Collection<UuidInterface, ProjectParticipantFieldDataOption>
@@ -146,7 +148,7 @@ class ProjectParticipantField implements \ArrayAccess
    * If non-null show the field only in the respective view, either
    * "participants" or "associates". If null show the field in either view.
    */
-  #[ORM\Column(type: 'EnumParticipationContext', nullable: false, options: ['default' => 'unrestricted'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => ParticipationContext::UNRESTRICTED])]
   private ParticipationContext $participationContext;
 
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 0])]
@@ -156,8 +158,8 @@ class ProjectParticipantField implements \ArrayAccess
    * A bit-field which determines whether this field is exported to the
    * corresponding participant for use in the cafevdbmembers-app.
    */
-  #[ORM\Column(type: 'EnumAccessPermission', nullable: false, options: ['default' => 'none'])]
-  private Types\EnumAccessPermission $participantAccess;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumAccessPermission::NONE->value])]
+  private Types\EnumAccessPermission $participantAccess = Types\EnumAccessPermission::NONE;
 
   /**
    * @var Collection<ProjectParticipantFieldDatum>
@@ -175,14 +177,13 @@ class ProjectParticipantField implements \ArrayAccess
     if ($project !== null) {
       $this->project = project;
     }
-    $this->defaultValue = null;
-    $this->dataType = Types\EnumParticipantFieldDataType::TEXT();
-    $this->participationContext = ParticipationContext::UNRESTRICTED();
-    $this->participantAccess = Types\EnumAccessPermission::NONE();
-    $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
-    $this->participantAccess = Types\EnumAccessPermission::NONE();
-    $this->participationContext = ParticipationContext::UNRESTRICTED();
+    $this->dataType = FieldDataType::TEXT;
+    $this->defaultValue = null;
+    $this->fieldData = new ArrayCollection();
+    $this->participantAccess = Types\EnumAccessPermission::NONE;
+    $this->participationContext = ParticipationContext::UNRESTRICTED;
+    $this->participationContext = ParticipationContext::UNRESTRICTED;
   }
   // phpcs:enable
 
@@ -510,13 +511,13 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set multiplicity.
    *
-   * @param EnumParticipantFieldMultiplicity|string $multiplicity
+   * @param FieldMultiplicity|string $multiplicity
    *
    * @return ProjectParticipantField
    */
-  public function setMultiplicity($multiplicity):ProjectParticipantField
+  public function setMultiplicity(string|FieldMultiplicity $multiplicity): ProjectParticipantField
   {
-    $this->multiplicity = new Types\EnumParticipantFieldMultiplicity($multiplicity);
+    $this->multiplicity = FieldMultiplicity::get($multiplicity);
 
     return $this;
   }
@@ -524,9 +525,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get multiplicity.
    *
-   * @return EnumParticipantFieldMultiplicity
+   * @return FieldMultiplicity
    */
-  public function getMultiplicity():Types\EnumParticipantFieldMultiplicity
+  public function getMultiplicity(): FieldMultiplicity
   {
     return $this->multiplicity;
   }
@@ -534,13 +535,13 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set dataType.
    *
-   * @param EnumParticipantFieldDataType|string $dataType
+   * @param string|FieldDataType $dataType
    *
    * @return ProjectParticipantField
    */
-  public function setDataType($dataType):ProjectParticipantField
+  public function setDataType(string|FieldDataType $dataType): ProjectParticipantField
   {
-    $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
+    $this->dataType = FieldDataType::get($dataType);
     return $this;
   }
 
@@ -549,7 +550,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return EnumParticipantFieldDataType
    */
-  public function getDataType():Types\EnumParticipantFieldDataType
+  public function getDataType(): FieldDataType
   {
     return $this->dataType;
   }
@@ -743,15 +744,13 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set participantAccess.
    *
-   * @param string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param string|Types\EnumAccessPermission $participantAccess
    *
    * @return ProjectParticipantField
    */
   public function setParticipantAccess(string|Types\EnumAccessPermission $participantAccess):ProjectParticipantField
   {
-    if ((string)$participantAccess !== (string)$this->participantAccess ?? '') {
-      $this->participantAccess = new Types\EnumAccessPermission($participantAccess);
-    }
+    $this->participantAccess = Types\EnumAccessPermission::get($participantAccess);
 
     return $this;
   }
@@ -761,7 +760,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return Types\EnumAccessPermission
    */
-  public function getParticipantAccess():Types\EnumAccessPermission
+  public function getParticipantAccess(): Types\EnumAccessPermission
   {
     return $this->participantAccess;
   }
@@ -796,7 +795,7 @@ class ProjectParticipantField implements \ArrayAccess
   /** @return bool Whether this field links to the cloud-file-systen. */
   public function isFileSystemContext():bool
   {
-    return $this->dataType == FieldType::CLOUD_FOLDER || $this->dataType == FieldType::CLOUD_FILE;
+    return $this->dataType == FieldDataType::CLOUD_FOLDER || $this->dataType == FieldDataType::CLOUD_FILE;
   }
 
   /**

@@ -49,6 +49,21 @@ enum TranslatableEnumExample: string
   case TWO = 'two';
 }
 
+/** Example enum for testing. */
+enum TranslatableEnumExampleL10NOverride: string
+{
+  use TranslatableEnumTrait;
+
+  case ONE = 'one';
+  case TWO = 'two';
+
+  /** {@inheritdoc} */
+  public static function l10nTag(): string
+  {
+    return self::L10N_TAG . '_MY_OWN_ADDITION: ';
+  }
+}
+
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversTrait(TranslatableEnumTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
@@ -57,6 +72,11 @@ enum TranslatableEnumExample: string
 class TranslatableEnumTraitTest extends TestCase
 {
   private IL10N $l10n;
+
+  private const TRANSLATIONS = [
+    'one' => 'eins',
+    'two' => 'zwei',
+  ];
 
   /**
    * {@inheritdoc}
@@ -67,7 +87,11 @@ class TranslatableEnumTraitTest extends TestCase
   {
     $mockProvider = MockProvider::create($this);
 
-    $this->l10n = $mockProvider->getL10N();
+    $this->l10n = $this->getMockBuilder(IL10N::class)
+      ->getMock();
+    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
   }
 
   /** @return void */
@@ -77,11 +101,24 @@ class TranslatableEnumTraitTest extends TestCase
     $expected = array_combine(
       $enumValues,
       array_map(
-        fn(string $s) => $this->l10n->t($s),
+        fn(string $s) => self::TRANSLATIONS[$s] ?? $s,
         $enumValues,
       ),
     );
     $values = TranslatableEnumExample::getL10NValues($this->l10n);
     $this->assertEquals($expected, $values);
+  }
+
+  /** @return void */
+  public function testGetL10NTags(): void
+  {
+    $this->assertEquals(
+      TranslatableEnumExample::L10N_TAG . '_MY_OWN_ADDITION: ',
+      TranslatableEnumExampleL10NOverride::l10nTag(),
+    );
+    $this->l10n
+      ->expects($this->atLeastOnce(TranslatableEnumExample::L10N_TAG . '_MY_OWN_ADDITION: ' . 'one'))
+      ->method('t');
+    $values = TranslatableEnumExampleL10NOverride::getL10NValues($this->l10n);
   }
 }

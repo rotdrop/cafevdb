@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use BackedEnum;
+
 use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
@@ -80,6 +82,9 @@ trait FindLikeTrait
     $qb = $this->createQueryBuilder('table');
     $andX = $qb->expr()->andX();
     foreach ($criteria as $key => &$value) {
+      if ($value instanceof BackedEnum) {
+        $value = $value->value;
+      }
       $value = str_replace('*', '%', $value);
       if (strpos($value, '%') !== false) {
         $andX->add($qb->expr()->like('table'.'.'.$key, ':'.$key));
@@ -363,6 +368,11 @@ trait FindLikeTrait
       if (is_numeric($key)) {
         $key = array_key_first($value);
         $value = $value[$key];
+      }
+      if ($value instanceof BackedEnum) {
+        $value = $value->value;
+      } elseif (is_array($value)) {
+        $value = array_map(fn(mixed $data) => $data instanceof BackedEnumd ? $data->value : $data, $value);
       }
       $groupFunction = null;
       $fctPos = strpos($key, '@');

@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -59,8 +60,8 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private int $id;
 
-  #[ORM\Column(type: 'EnumTaxType', nullable: false, options: ['default' => 'corporate income tax'])]
-  private Types\EnumTaxType $taxType;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumTaxType::CORPORATE_INCOME])]
+  private Types\EnumTaxType $taxType = Types\EnumTaxType::CORPORATE_INCOME;
 
   /**
    * Tax rate. If 0 then this item refers to a tax exemption, a taxation
@@ -125,9 +126,7 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    */
   public function setTaxType(string|EnumTaxType $taxType):TaxationStatutorySource
   {
-    if (($this->taxType ?? null) != $taxType) {
-      $this->taxType = is_string($taxType) ? new Types\EnumTaxType($taxType) : $taxType;
-    }
+    $this->taxType = EnumTaxType::get($taxType);
 
     return $this;
   }

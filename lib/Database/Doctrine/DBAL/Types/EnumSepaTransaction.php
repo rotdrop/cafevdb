@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-, 20222022, ,  Claus-Justus Heine
+ * @copyright 2011-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,11 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * (Two) types of SEPA-money transfers.
- *
- * @method static EnumSepaTransaction DEBIT_NOTE()
- * @method static EnumSepaTransaction BANK_TRANSFER()
  */
-class EnumSepaTransaction extends AbstractEnumType
+enum EnumSepaTransaction: string
 {
-  public const DEBIT_NOTE = 'debit_note';
-  public const BANK_TRANSFER = 'bank_transfer';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case DEBIT_NOTE = 'debit_note';
+  case BANK_TRANSFER = 'bank_transfer';
 }

@@ -179,9 +179,6 @@ class Application extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context): void
   {
-    if ((include_once __DIR__ . '/../Common/Functions.php') === false) {
-      throw new Exception('Cannot include common functions.');
-    }
     if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
       throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }

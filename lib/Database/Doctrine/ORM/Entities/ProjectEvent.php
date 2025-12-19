@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
@@ -104,7 +105,7 @@ class ProjectEvent implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
   private int $sequence = 0;
 
-  #[ORM\Column(type: 'EnumVCalendarType', nullable: false)]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
   private Types\EnumVCalendarType $type;
 
   /**
@@ -357,7 +358,7 @@ class ProjectEvent implements \ArrayAccess
     if ($type === null) {
       $this->type = $type;
     } else {
-      $this->type = new Types\EnumVCalendarType($type);
+      $this->type = Types\EnumVCalendarType::get($type);
     }
 
     return $this;

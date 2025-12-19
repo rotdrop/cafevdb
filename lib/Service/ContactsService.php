@@ -638,13 +638,13 @@ class ContactsService
       if (!empty($value)) {
         switch ($value) {
           case 'M':
-            $entity['gender'] = EnumGender::MALE();
+            $entity->setGender(EnumGender::MALE);
             break;
           case 'F':
-            $entity['gender'] = EnumGender::FEMALE();
+            $entity->setGener(EnumGender::FEMALE);
             break;
           case 'O':
-            $entity['gender'] = EnumGender::DIVERSE();
+            $entity->setGender(EnumGender::DIVERSE);
             break;
           case 'N':
           case 'U':
@@ -654,7 +654,7 @@ class ContactsService
     }
 
     if (!empty($entity->getOrganization())) {
-      $entity->setDefaultParticipationStatus(EnumParticipationStatus::ASSOCIATED());
+      $entity->setDefaultParticipationStatus(EnumParticipationStatus::ASSOCIATED);
     }
 
     // Ignore image data.
@@ -717,7 +717,7 @@ class ContactsService
       $vCard->add('LANG', $musician->getLanguage(), $baseParameters);
     }
     $gender = null;
-    switch ((string)$musician->getGender()) {
+    switch ($musician->getGender()) {
       case EnumGender::MALE:
         $gender = 'M';
         break;

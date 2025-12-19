@@ -639,7 +639,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       /** @var Entities\ProjectParticipant $participant */
       foreach ($musician->getProjectParticipation() as $participant) {
         $participantProject = $participant->getProject();
-        $tempory = Types\EnumProjectTemporalType::TEMPORARY();
+        $tempory = Types\EnumProjectTemporalType::TEMPORARY;
         if ($participantProject->getType() == $tempory) {
           $name = $participantProject['name'];
           $year = $participantProject['year'];

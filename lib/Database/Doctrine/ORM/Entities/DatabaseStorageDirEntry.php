@@ -29,6 +29,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * Generic directory entry for a database-backed file.
@@ -36,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'DatabaseStorageDirEntries')]
 #[ORM\UniqueConstraint(columns: ['parent_id', 'name'])]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumDirEntryType')]
+#[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: DirEntryType::class)]
 #[ORM\DiscriminatorMap(['generic' => 'DatabaseStorageDirEntry', 'file' => 'DatabaseStorageFile', 'folder' => 'DatabaseStorageFolder'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository::class)]
 #[ORM\HasLifecycleCallbacks]

@@ -24,26 +24,18 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
  * Enum for "participant-field" multiplicity.
- *
- * @method static EnumParticipantFieldMultiplicity SIMPLE()
- * @method static EnumParticipantFieldMultiplicity SINGLE()
- * @method static EnumParticipantFieldMultiplicity MULTIPLE()
- * @method static EnumParticipantFieldMultiplicity PARALLEL()
- * @method static EnumParticipantFieldMultiplicity RECURRING()
- * @method static EnumParticipantFieldMultiplicity GROUPOFPEOPLE()
- * @method static EnumParticipantFieldMultiplicity GROUPSOFPEOPLE()
  */
-class EnumParticipantFieldMultiplicity extends AbstractEnumType
+enum EnumParticipantFieldMultiplicity: string
 {
-  public const SIMPLE = 'simple';
-  public const SINGLE = 'single';
-  public const MULTIPLE = 'multiple';
-  public const PARALLEL = 'parallel';
-  public const RECURRING = 'recurring';
-  public const GROUPOFPEOPLE = 'groupofpeople';
-  public const GROUPSOFPEOPLE = 'groupsofpeople';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case SIMPLE = 'simple';
+  case SINGLE = 'single';
+  case MULTIPLE = 'multiple';
+  case PARALLEL = 'parallel';
+  case RECURRING = 'recurring';
+  case GROUPOFPEOPLE = 'groupofpeople';
+  case GROUPSOFPEOPLE = 'groupsofpeople';
 }

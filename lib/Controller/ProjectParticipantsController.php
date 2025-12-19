@@ -491,8 +491,8 @@ class ProjectParticipantsController extends Controller
         $subDirPrefix = empty($subDir) ? '' : UserStorage::PATH_SEP . $subDir;
         $fieldFolderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
 
-        $dataType = $field->getDataType();
-        switch ($dataType) {
+        $fieldDataType = $field->getDataType();
+        switch ($fieldDataType) {
           case FieldDataType::DB_FILE:
             /** @var Entities\DatabaseStorageFile $dbDocument */
             $dbDocument = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)
@@ -529,13 +529,13 @@ class ProjectParticipantsController extends Controller
             break;
 
           default:
-            return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
+            return self::grumble($this->l->t('Unsupported field type "%s".', $fieldDataType));
         }
 
         $doDeleteFieldDatum = true;
         $this->entityManager->beginTransaction();
         try {
-          switch ($dataType) {
+          switch ($fieldDataType) {
             case FieldDataType::CLOUD_FOLDER:
               $this->entityManager->registerPreCommitAction(
                 Common\UndoableFileRemove($filePath, gracefully: true)
@@ -596,12 +596,12 @@ class ProjectParticipantsController extends Controller
         $filesAppPath = $uploadData['filesAppPath']??null;
 
         $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-        $dataType = $field->getDataType();
+        $fieldDataType = $field->getDataType();
         $multiplicity = $field->getMultiplicity();
 
         $folderPath = $filePath = '';
 
-        switch ($dataType) {
+        switch ($fieldDataType) {
           case FieldDataType::CLOUD_FOLDER:
           case FieldDataType::CLOUD_FILE:
             $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, dry: true), ];
@@ -611,7 +611,7 @@ class ProjectParticipantsController extends Controller
             }
             $userStorage->ensureFolderChain($pathChain);
             $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
-            if ($dataType === FieldDataType::CLOUD_FILE) {
+            if ($fieldDataType === FieldDataType::CLOUD_FILE) {
               $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
             } elseif (!empty($fileName)) {
               $pathChain[] = pathinfo($fileName, PATHINFO_FILENAME);
@@ -632,7 +632,7 @@ class ProjectParticipantsController extends Controller
 
             break;
           default:
-            return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
+            return self::grumble($this->l->t('Unsupported field type "%s".', $fieldDataType));
         }
 
         /*
@@ -644,7 +644,7 @@ class ProjectParticipantsController extends Controller
          *
          */
 
-        $files = $this->prepareUploadInfo($files, $optionKey, multiple: $dataType == FieldDataType::CLOUD_FOLDER);
+        $files = $this->prepareUploadInfo($files, $optionKey, multiple: $fieldDataType == FieldDataType::CLOUD_FOLDER);
 
         if ($files instanceof Http\Response) {
           // error generated
@@ -667,7 +667,7 @@ class ProjectParticipantsController extends Controller
             continue;
           }
 
-          switch ($dataType) {
+          switch ($fieldDataType) {
             case FieldDataType::CLOUD_FOLDER:
               if (empty($fileName)) {
                 // use original name as storage name in the cloud
@@ -700,9 +700,9 @@ class ProjectParticipantsController extends Controller
               }
               break;
             case UploadsController::UPLOAD_MODE_LINK:
-              if ($dataType != FieldDataType::DB_FILE
-                  && $dataType != FieldDataType::RECEIVABLES
-                  && $dataType != FieldDataType::LIABILITIES
+              if ($fieldDataType != FieldDataType::DB_FILE
+                  && $fieldDataType != FieldDataType::RECEIVABLES
+                  && $fieldDataType != FieldDataType::LIABILITIES
               ) {
                 return self::grumble($this->l->t('Link operation requested, but the link target does not reside in the database storage.'));
               }
@@ -762,7 +762,7 @@ class ProjectParticipantsController extends Controller
             $optionValue = $fieldData->getOptionValue();
             $dbDocument = null;
             $dbFile = null;
-            switch ($dataType) {
+            switch ($fieldDataType) {
               case FieldDataType::CLOUD_FILE:
                 if (empty($optionValue)) {
                   break;
@@ -831,13 +831,13 @@ class ProjectParticipantsController extends Controller
                 break;
             }
 
-            switch ($dataType) {
+            switch ($fieldDataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
                 $storageBackend = EnumFileStorageBackend::CLOUD;
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
-                if ($dataType == FieldDataType::CLOUD_FOLDER) {
+                if ($fieldDataType == FieldDataType::CLOUD_FOLDER) {
                   $oldValue = json_decode($fieldData->getOptionValue(), true);
                   if (!is_array($oldValue)) {
                     $oldValue = [];
@@ -851,7 +851,7 @@ class ProjectParticipantsController extends Controller
                 $this->entityManager->registerPreCommitAction(
                   new Common\UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
                 );
-                if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
+                if ($fieldDataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
                   $readMe = Util::htmlToMarkDown($field->getTooltip());
                   // also place the tooltip as README.md
                   // @todo There is also a listener which also installes the
@@ -925,7 +925,7 @@ class ProjectParticipantsController extends Controller
                 }
                 $this->flush();
 
-                if ($dataType == FieldDataType::DB_FILE) {
+                if ($fieldDataType == FieldDataType::DB_FILE) {
                   $fieldData->setOptionValue($dbDocument->getId());
                 } else {
                   $fieldData->setSupportingDocument($dbDocument);
@@ -992,7 +992,7 @@ class ProjectParticipantsController extends Controller
           } catch (Throwable $t) {
             $this->entityManager->rollback();
             if ($fileCopied) {
-              switch ($dataType) {
+              switch ($fieldDataType) {
                 case FieldDataType::CLOUD_FILE:
                   // should have been handled by the undoable pre-commit actions
                   // $userStorage->delete($filePath);

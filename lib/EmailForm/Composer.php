@@ -37,6 +37,8 @@ use OCP\IDateTimeFormatter;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 
+use function OCA\CAFEVDB\Common\Functions\sprintf;
+
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\RationalNumber;
@@ -46,7 +48,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -858,8 +860,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           'monetary' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 return true;
               default:
                 return false;
@@ -871,8 +873,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               return false;
             }
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 return true;
               default:
                 return false;
@@ -880,17 +882,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           }),
           'files' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return ($field->getDataType() == FieldType::CLOUD_FILE
-                    || $field->getDataType() == FieldType::DB_FILE
-                    || $field->getDataType() == FieldType::CLOUD_FOLDER);
+            return ($field->getDataType() == FieldDataType::CLOUD_FILE
+                    || $field->getDataType() == FieldDataType::DB_FILE
+                    || $field->getDataType() == FieldDataType::CLOUD_FOLDER);
           }),
           'other' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return ($field->getDataType() != FieldType::RECEIVABLES
-                    && $field->getDataType() != FieldType::LIABILITIES
-                    && $field->getDataType() != FieldType::CLOUD_FILE
-                    && $field->getDataType() != FieldType::DB_FILE
-                    && $field->getDataType() != FieldType::CLOUD_FOLDER);
+            return ($field->getDataType() != FieldDataType::RECEIVABLES
+                    && $field->getDataType() != FieldDataType::LIABILITIES
+                    && $field->getDataType() != FieldDataType::CLOUD_FILE
+                    && $field->getDataType() != FieldDataType::DB_FILE
+                    && $field->getDataType() != FieldDataType::CLOUD_FOLDER);
           }),
         ];
 
@@ -909,15 +911,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $doSpecificField = true;
             $found = true;
             switch ($specificField->first()->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 $fieldsByType = ['monetary' => $specificField ];
                 if (!empty($specificField->first()->getDepositDueDate())) {
                   $fieldsByType['deposit'] = $specificField;
                 }
                 break;
-              case FieldType::CLOUD_FILE:
-              case FieldType::DB_FILE:
+              case FieldDataType::CLOUD_FILE:
+              case FieldDataType::DB_FILE:
                 $fieldsByType = [ 'file' => $specificField ];
                 break;
               default:
@@ -946,11 +948,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           // add implicit file attachments
           foreach ($fields as $field) {
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
-              case FieldType::CLOUD_FILE:
-              case FieldType::DB_FILE:
-              case FieldType::CLOUD_FOLDER:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
+              case FieldDataType::CLOUD_FILE:
+              case FieldDataType::DB_FILE:
+              case FieldDataType::CLOUD_FOLDER:
                 $this->implicitFileAttachments[] = 'participant-field' . ':' . $field->getId();
                 break;
             }
@@ -2232,18 +2234,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       $fieldName = $field->getName();
-      $fieldType = $field->getDataType();
+      $fieldDataType = $field->getDataType();
       $fieldMultiplicity = $field->getMultiplicity();
 
-      switch ($fieldType) {
-        case FieldType::CLOUD_FILE:
-        case FieldType::CLOUD_FOLDER:
-        case FieldType::DB_FILE:
-        case FieldType::RECEIVABLES:
-        case FieldType::LIABILITIES:
+      switch ($fieldDataType) {
+        case FieldDataType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FOLDER:
+        case FieldDataType::DB_FILE:
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           break;
         default:
-          $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
+          $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldDataType));
           $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
           continue 2;
       }
@@ -2258,14 +2260,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       if ($fieldData->count() > 1 && $fieldMultiplicity == FieldMultiplicity::SIMPLE) {
-        $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldType, $fieldMultiplicity));
+        $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldDataType, $fieldMultiplicity));
         $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
         continue;
       }
 
-      switch ($fieldType) {
-        case FieldType::RECEIVABLES:
-        case FieldType::LIABILITIES:
+      switch ($fieldDataType) {
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           // ATM we support sub-selection item only for FieldMultiplicity::RECURRING
           if ($attachment['status'] != 'selected') {
             $selectedKeys = [];
@@ -2316,7 +2318,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FILE:
           // can be a single file or multiple files with FieldMultiplicity::PARALLEL
           if ($fieldData->count() == 1) {
             $fieldDatum = $fieldData->first();
@@ -2364,7 +2366,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::CLOUD_FOLDER:
+        case FieldDataType::CLOUD_FOLDER:
           // simply add the folder as a zip-archive
           $fieldDatum = $fieldData->first();
           /** @var OCP\Files\Folder $folder */
@@ -2390,7 +2392,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::DB_FILE:
+        case FieldDataType::DB_FILE:
           // can be a single file or multiple files with FieldMultiplicity::PARALLEL or FieldMultiplicity::RECURRING
           $items = [];
           foreach ($fieldData as $fieldDatum) {
@@ -5059,9 +5061,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @return bool The execution status.
    */
-  private function rememberTemporaryFile(string $tmpFile, mixed $origin):bool
+  private function rememberTemporaryFile(string $tmpFile, string|AttachmentOrigin $origin):bool
   {
-    if ($origin == AttachmentOrigin::PARTICIPANT_FIELD) {
+    if (AttachmentOrigin::get($origin) == AttachmentOrigin::PARTICIPANT_FIELD) {
       // no need to save, we just need the field-id which is stored anyway
       return true;
     }
@@ -5700,12 +5702,12 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project->getParticipantFields() as $participantField) {
-      $fieldType = $participantField->getDataType();
-      if ($fieldType != FieldType::CLOUD_FILE
-          && $fieldType != FieldType::CLOUD_FOLDER
-          && $fieldType != FieldType::DB_FILE
-          && $fieldType != FieldType::RECEIVABLES
-          && $fieldType != FieldType::LIABILITIES
+      $fieldDataType = $participantField->getDataType();
+      if ($fieldDataType != FieldDataType::CLOUD_FILE
+          && $fieldDataType != FieldDataType::CLOUD_FOLDER
+          && $fieldDataType != FieldDataType::DB_FILE
+          && $fieldDataType != FieldDataType::RECEIVABLES
+          && $fieldDataType != FieldDataType::LIABILITIES
       ) {
         continue;
       }
@@ -5724,7 +5726,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       } else {
         $attachment['status'] = 'inactive';
       }
-      if ($fieldType == FieldType::RECEIVABLES || $fieldType == FieldType::LIABILITIES) {
+      if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
         $attachment['sub_topic'] = 'bills and receipts';
         // split only the recurring receivables as there may be so many of them ...
         if ($participantField->getMultiplicity() == FieldMultiplicity::RECURRING) {

@@ -24,34 +24,26 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
 /**
  * Display context of ProjectParticipantFields. Some may only be relevant to
  * real participants, other fields may only be relevant for business contacts
  * / associated (legal) persons.
  *
- * @method static EnumParticipationStatus ASSOCIATES()
- * @method static EnumParticipationStatus PARTICIPANTS()
- * @method static EnumParticipationStatus UNRESTRICTED()
- *
  * @todo This should rather be specified per project.
  */
-class EnumParticipationContext extends AbstractEnumType
+enum EnumParticipationContext: string
 {
-  public const ASSOCIATES = 'associates';
-  public const PARTICIPANTS = 'participants';
-  public const UNRESTRICTED = 'unrestricted';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  public const L10N_TAG = parent::L10N_TAG . '_DISPLAY_CONTEXT';
+  case ASSOCIATES = 'associates';
+  case PARTICIPANTS = 'participants';
+  case UNRESTRICTED = 'unrestricted';
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
+  /** {@inheritdoc} */
+  public static function l10nTag(): string
   {
-    self::t(static::L10N_TAG . self::L10N_SEP . self::ASSOCIATES);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::PARTICIPANTS);
-    self::t(static::L10N_TAG . self::L10N_SEP . self::UNRESTRICTED);
+    return self::L10N_TAG . '_DISPLAY_CONTEXT: ';
   }
 }

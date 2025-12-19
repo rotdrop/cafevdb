@@ -36,7 +36,7 @@ use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
 use OCP\IUserSession;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
@@ -276,7 +276,7 @@ class MountProvider implements IMountProvider
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([
-        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::RECEIVABLES, FieldType::LIALBILITIES ],
+        // '(|participantFields.dataType' => [ FieldDataType::DB_FILE, FieldDataType::RECEIVABLES, FieldDataType::LIALBILITIES ],
         // '>financialBalanceSupportingDocuments.sequence' => 0,
         // [ ')' => true ],
         'type' => [ ProjectType::PERMANENT, ProjectType::TEMPORARY ],
@@ -339,9 +339,9 @@ class MountProvider implements IMountProvider
 
     $fileCriteria = DBUtil::criteriaWhere([
       'dataType' => [
-        FieldType::DB_FILE,
-        FieldType::RECEIVABLES,
-        FieldType::LIABILITIES,
+        FieldDataType::DB_FILE,
+        FieldDataType::RECEIVABLES,
+        FieldDataType::LIABILITIES,
       ],
       'deleted' => null,
     ]);
