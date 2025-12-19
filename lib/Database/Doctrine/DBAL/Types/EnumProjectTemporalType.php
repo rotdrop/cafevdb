@@ -32,7 +32,17 @@ enum EnumProjectTemporalType: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
+  /**
+   * The standard type for ordinary transient projects.
+   */
   case TEMPORARY = 'temporary';
+  /**
+   * Permanent projects model club-member and the executive board.
+   */
   case PERMANENT = 'permanent';
+  /**
+   * Template projects can be used to pre-configure some well-known scenarious
+   * and instrumentations.
+   */
   case TEMPLATE = 'template';
 }
