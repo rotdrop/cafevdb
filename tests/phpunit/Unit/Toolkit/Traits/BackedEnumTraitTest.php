@@ -29,6 +29,7 @@ namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Traits;
 use Error;
 use InvalidArgumentException;
 use Throwable;
+use TypeError;
 use ValueError;
 
 use PHPUnit\Framework\Attributes;
@@ -38,12 +39,21 @@ use PHPUnit\Framework\TestCase;
 use OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
 /** Example enum for testing. */
-enum EnumExample: string
+enum StringEnumExample: string
 {
   use BackedEnumTrait;
 
   case ONE = 'one';
   case TWO = 'two';
+}
+
+/** Other example enum for testing. */
+enum IntEnumExample: int
+{
+  use BackedEnumTrait;
+
+  case ONE = 1;
+  case TWO = 2;
 }
 
 /** Test consistency of the enum with constants from ConfigConstants */
@@ -60,45 +70,72 @@ class BackedEnumTraitTest extends TestCase
   }
 
   /** @return void */
+  public function testValuesType(): void
+  {
+    foreach (StringEnumExample::values() as $value) {
+      $this->assertIsString($value);
+    }
+    foreach (IntEnumExample::values() as $value) {
+      $this->assertIsInt($value);
+    }
+  }
+
+
+
+  /** @return void */
   public function testGetFromValue(): void
   {
-    foreach (EnumExample::values() as $value) {
-      $this->assertEquals($value, EnumExample::get($value)->value);
+    foreach (StringEnumExample::values() as $value) {
+      $this->assertEquals($value, StringEnumExample::get($value)->value);
+    }
+    foreach (IntEnumExample::values() as $value) {
+      $this->assertEquals($value, IntEnumExample::get($value)->value);
     }
   }
 
   /** @return void */
   public function testGetFromName(): void
   {
-    foreach (EnumExample::names() as $name) {
-      $this->assertEquals($name, EnumExample::get($name)->name);
+    foreach (StringEnumExample::names() as $name) {
+      $this->assertEquals($name, StringEnumExample::get($name)->name);
+    }
+    foreach (IntEnumExample::names() as $name) {
+      $this->assertEquals($name, IntEnumExample::get($name)->name);
     }
   }
 
   /** @return void */
   public function testGetFromInstance(): void
   {
-    foreach (EnumExample::cases() as $instance) {
-      $this->assertEquals($instance, EnumExample::get($instance));
+    foreach (StringEnumExample::cases() as $instance) {
+      $this->assertEquals($instance, StringEnumExample::get($instance));
     }
-  }
-
-  /** @return void */
-  public function testGetFromInvalid(): void
-  {
-    $this->expectException(InvalidArgumentException::class);
-    EnumExample::get('blahblahblah');
+    foreach (IntEnumExample::cases() as $instance) {
+      $this->assertEquals($instance, IntEnumExample::get($instance));
+    }
   }
 
   /** @return void */
   public function testGetFromInvalidExceptionChain(): void
   {
     try {
-      EnumExample::get('blahblahblah');
+      StringEnumExample::get('blahblahblah');
     } catch (Throwable $t) {
       $this->assertInstanceOf(InvalidArgumentException::class, $t);
       $this->assertInstanceOf(Error::class, $t->getPrevious());
       $this->assertInstanceOf(ValueError::class, $t->getPrevious()->getPrevious());
+    }
+    // Strict types, so passing null or other enums should throw.
+    try {
+      StringEnumExample::get(null);
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(TypeError::class, $t);
+    }
+    // Strict types, so passing null or other enums should throw.
+    try {
+      StringEnumExample::get(IntEnumExample::ONE);
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(TypeError::class, $t);
     }
   }
 }

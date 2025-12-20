@@ -19,12 +19,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 namespace OCA\RotDrop\Toolkit\Traits;
 
 use InvalidArgumentException;
 use Throwable;
 use ValueError;
+use TypeError;
 
 /**
  * Some convenience stuff for PHP enums.
@@ -62,28 +64,30 @@ trait BackedEnumTrait
    * Try to convert a string which is either the value or the case name into
    * the enum instance. If an enum instance is passed, it is just returned.
    *
-   * @param mixed $key
+   * @param self|int|string $instanceOrCaseOrValue
    *
    * @return self
    *
-   * @throws ValueError
-   * @throws Error
+   * @throws InvalidArgumentException
+   * @throws TypeError
    */
-  public static function get(mixed $key):self
+  public static function get(self|int|string $instanceOrCaseOrValue):self
   {
-    if ($key instanceof self) {
-      return $key;
+    if ($instanceOrCaseOrValue instanceof self) {
+      return $instanceOrCaseOrValue;
     }
     try {
-      $instance = self::from($key);
-    } catch (ValueError $e) {
+      $instance = self::from($instanceOrCaseOrValue);
+    } catch (TypeError|ValueError $e) {
       try {
-        $instance = self::{$key};
+        $instance = self::{$instanceOrCaseOrValue};
       } catch (Throwable $t) {
-        $previous = new \ReflectionProperty($t, 'previous');
-        $previous->setValue($t, $e);
+        $class = new \ReflectionClass($t);
+        $ctor = $class->getConstructor();
+        $ctor->invoke($t, $t->getMessage(), $t->getCode(), $e);
+        $invalid = $instanceOrCaseOrValue ?? 'NULL';
         throw new InvalidArgumentException(
-          "{$key} is neither a value nor a key of {self::class}: " . print_r(self::toArray(), true),
+          "{$invalid} is neither a value nor a key of {self::class}: " . print_r(self::toArray(), true),
           previous: $t,
         );
       }
