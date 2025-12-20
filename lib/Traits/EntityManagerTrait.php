@@ -161,7 +161,7 @@ trait EntityManagerTrait
     bool $soft = false,
     bool $useTransaction = false,
   ):void {
-    if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+    if (filter_var($entity, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
       $entity = [ 'id' => $entity ];
     }
     if (is_array($entity)) {
@@ -326,7 +326,7 @@ trait EntityManagerTrait
    */
   protected function findEntity(string $entityClassName, mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
   {
-    if (filter_var($id, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+    if (filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
       $id = [ 'id' => $id ];
     }
     return $this->entityManager->find($entityClassName, $id, $lockMode, $lockVersion);

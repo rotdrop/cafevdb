@@ -298,7 +298,7 @@ class EntityManager extends EntityManagerDecorator
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
       $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
-      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) ?: 0;
+      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
       $this->devMode = 0 != ($debugMode & ConfigConstants::DEBUG_ORM);
       $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';

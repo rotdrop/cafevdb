@@ -171,7 +171,7 @@ class PersonalSettingsController extends Controller
         ]))->response();
 
       case EnumPersonalSettingsKey::PAGE_ROWS_DEFAULT:
-        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => -1]);
+        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => -1]]);
         if ($realValue === false) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]),
@@ -272,7 +272,7 @@ class PersonalSettingsController extends Controller
         }
         return self::response($this->l->t('Encryption key stored.'));
       case EnumPersonalSettingsKey::EMAIL_DRAFT_AUTO_SAVE:
-        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
+        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
         if ($realValue === false) {
           $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
           if ($realValue === true) {
@@ -1461,7 +1461,7 @@ class PersonalSettingsController extends Controller
         ))->response();
 
       case ConfigConstants::EVENT_DURATION_KEY:
-        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 0]);
+        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
         if ($realValue === false) {
           throw new Exceptions\EnduserNotificationException($this->l->t('Value "%1$s" for set "%2$s" is not in the allowed range.', [$value, $parameter]));
         }
@@ -1684,7 +1684,7 @@ class PersonalSettingsController extends Controller
                 // just some port is needed
                 $realValue = self::EMAIL_PORTS[$proto][$security];
               }
-            } elseif (filter_var($realValue, FILTER_VALIDATE_INT, [ 'min_range' => 1, 'max_range' => 65535 ]) === false) {
+            } elseif (filter_var($realValue, FILTER_VALIDATE_INT, ['options' => [ 'min_range' => 1, 'max_range' => 65535]]) === false) {
               return self::grumble(
                 $this->l->t(
                   '"%s" is not an integral number in the range [%d, %d]', [ $realValue, 1, 65535 ]));
@@ -1993,7 +1993,7 @@ class PersonalSettingsController extends Controller
         if (array_search($key, $redaxoKeys) === false) {
           return self::grumble($this->l->t('Unknown configuation key %s', [ $parameter ]));
         }
-        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['min_range' => 1]);
+        $realValue = filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         if ($realValue === false) {
           return self::grumble($this->l->t('Value "%s" for setting "%s" is not in the allowed range.', [$value, $parameter]));
         }

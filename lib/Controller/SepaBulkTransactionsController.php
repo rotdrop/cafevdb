@@ -305,7 +305,7 @@ class SepaBulkTransactionsController extends Controller
     $receivablesRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDataOption::class);
     $receivables = [];
     foreach ($bulkTransactions as $bulkTransaction) {
-      $fieldId = filter_var($bulkTransaction, FILTER_VALIDATE_INT, ['min_range' => 1]);
+      $fieldId = filter_var($bulkTransaction, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
       if ($fieldId !== false) {
         // all options from this field
         /** @var Entities\ProjectParticipantField $field */
@@ -922,7 +922,7 @@ class SepaBulkTransactionsController extends Controller
     ?string $format = null,
   ):Response {
     $purpose = $purpose ?? self::EXPORT_PURPOSE_BANK_IMPORT;
-    $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['min_range' => 1]);
+    $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     if ($id === false) {
       throw new Exceptions\EnduserNotificationException($this->l->t('Submitted value "%s" is not a positive integer.', $bulkTransactionId));
     }

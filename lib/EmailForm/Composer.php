@@ -4716,7 +4716,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function fetchTemplate($templateIdentifier, bool $exact = true):?Entities\EmailTemplate
   {
     if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
-      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]) !== false) {
+      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) !== false) {
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->find($templateIdentifier);

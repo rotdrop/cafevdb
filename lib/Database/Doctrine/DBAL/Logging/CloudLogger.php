@@ -76,7 +76,7 @@ class CloudLogger implements QueryLogger
   private function setup(): void
   {
     $debugMode = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
-    $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
+    $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
     $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
     $this->sqlFilter = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, null);
   }
