@@ -26,8 +26,6 @@ namespace OCA\CAFEVDB\Controller;
 
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-use OCA\CAFEVDB\Settings\ConfigConstants;
-
 /**
  * (Some) personal settings keys.
  */

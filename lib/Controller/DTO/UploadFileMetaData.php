@@ -66,23 +66,26 @@ class UploadFileMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     try {
       $storageBackend = EnumFileStorageBackend::get($storageBackend);
-      $conflict = EnumAddDocumentConflictAction::get($conflict);
+      if ($conflict !== null) {
+        $conflict = EnumAddDocumentConflictAction::get($conflict);
+      }
     } catch (InvalidArgumentException $e) {
       throw $e;
     }
 
     return new self(
-      $musicianId,
-      $projectId,
-      $dirName,
-      $baseName,
-      $extension,
-      $fileName,
-      $fileId,
-      $storageBackend,
-      $download,
-      $filesApp,
-      $conflict,
+      musicianId: $musicianId,
+      projectId: $projectId,
+      dirName: $dirName,
+      baseName: $baseName,
+      extension: $extension,
+      fileName: $fileName,
+      fileId: $fileId,
+      storageBackend: $storageBackend,
+      download: $download,
+      filesApp: $filesApp,
+      conflict: $conflict,
+      messages: $messages,
     );
   }
 }

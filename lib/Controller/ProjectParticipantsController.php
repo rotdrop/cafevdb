@@ -687,10 +687,10 @@ class ProjectParticipantsController extends Controller
 
           $originalFilePath = $file['original_name'] ?? null;
 
-          $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
+          $uploadMode = EnumFileUploadMode::get($file['upload_mode'] ?? EnumFileUploadMode::COPY);
 
           switch ($uploadMode) {
-            case UploadsController::UPLOAD_MODE_MOVE:
+            case EnumFileUploadMode::MOVE:
               if (empty($originalFilePath)) {
                 return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
               }
@@ -699,7 +699,7 @@ class ProjectParticipantsController extends Controller
                 return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
               }
               break;
-            case UploadsController::UPLOAD_MODE_LINK:
+            case EnumFileUploadMode::LINK:
               if ($fieldDataType != FieldDataType::DB_FILE
                   && $fieldDataType != FieldDataType::RECEIVABLES
                   && $fieldDataType != FieldDataType::LIABILITIES
@@ -716,7 +716,7 @@ class ProjectParticipantsController extends Controller
               }
               $originalFilePath = $originalFile->getFileName();
               break;
-            case UploadsController::UPLOAD_MODE_COPY:
+            case EnumFileUploadMode::COPY:
               // this is the default, nothing special
               break;
           }
@@ -774,7 +774,7 @@ class ProjectParticipantsController extends Controller
                   $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
                 }
                 $oldPath .= $fieldData->getOptionValue();
-                $conflict = 'replaced';
+                $conflict = EnumAddDocumentConflictAction::REPLACE;
                 break;
               case FieldDataType::DB_FILE:
                 if (empty($optionValue)) {
@@ -789,13 +789,13 @@ class ProjectParticipantsController extends Controller
                   ));
                 }
                 $dbFile = $dbDocument->getFile();
-                $conflict = 'replaced';
+                $conflict = EnumAddDocumentConflictAction::REPLACE;
                 break;
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
                 $dbDocument = $fieldData->getSupportingDocument();
                 if (!empty($dbDocument)) {
-                  $conflict = 'replaced';
+                  $conflict = EnumAddDocumentConflictAction::REPLACE;
                   $dbFile = $dbDocument->getFile();
                 }
                 break;
@@ -808,19 +808,19 @@ class ProjectParticipantsController extends Controller
                   $optionValue = [];
                 }
                 if (array_search($pathInfo['basename'], $optionValue) !== false) {
-                  $conflict = 'replaced';
+                  $conflict = EnumAddDocumentConflictAction::REPLACE;
                 }
                 break;
             }
 
             switch ($uploadMode) {
-              case UploadsController::UPLOAD_MODE_MOVE:
+              case EnumFileUploadMode::MOVE:
                 $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
                 // no break
-              case UploadsController::UPLOAD_MODE_COPY:
+              case EnumFileUploadMode::COPY:
                 $fileData = $this->getUploadContent($file);
                 break;
-              case UploadsController::UPLOAD_MODE_LINK:
+              case EnumFileUploadMode::LINK:
                 $fileData = null;
                 /** @var Entities\EncryptedFile $originalFile */
                 if (!empty($dbFile) && $dbFile->getId() == $originalFileId) {
@@ -879,8 +879,8 @@ class ProjectParticipantsController extends Controller
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
                 switch ($uploadMode) {
-                  case UploadsController::UPLOAD_MODE_COPY:
-                  case UploadsController::UPLOAD_MODE_MOVE:
+                  case EnumFileUploadMode::COPY:
+                  case EnumFileUploadMode::MOVE:
                     // replace the data or generate a new document
 
                     /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -913,7 +913,7 @@ class ProjectParticipantsController extends Controller
                     }
                     $dbFile->setFileName($originalFileName ?? null);
                     break;
-                  case UploadsController::UPLOAD_MODE_LINK:
+                  case EnumFileUploadMode::LINK:
                     $dbFile = $originalFile;
                     break;
                 }
@@ -952,20 +952,20 @@ class ProjectParticipantsController extends Controller
               $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
             }
 
-            if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+            if ($uploadMode != EnumFileUploadMode::LINK) {
               $fileCopied = true;
               $this->removeStashedFile($file);
             }
 
             unset($file['tmp_name']);
             switch ($uploadMode) {
-              case UploadsController::UPLOAD_MODE_COPY:
+              case EnumFileUploadMode::COPY:
                 $messages[] = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $filePath ]);
                 break;
-              case UploadsController::UPLOAD_MODE_MOVE:
+              case EnumFileUploadMode::MOVE:
                 $messages[] = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $filePath ]);
                 break;
-              case UploadsController::UPLOAD_MODE_LINK:
+              case EnumFileUploadMode::LINK:
                 $messages[] = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $filePath ]);
                 break;
             }
@@ -990,7 +990,10 @@ class ProjectParticipantsController extends Controller
 
             $this->entityManager->commit();
           } catch (Throwable $t) {
-            $this->entityManager->rollback();
+            if ($this->entityManager->isTransactionActive()) {
+              $this->entityManager->pushTransactionException($t);
+              $this->entityManager->rollback();
+            }
             if ($fileCopied) {
               switch ($fieldDataType) {
                 case FieldDataType::CLOUD_FILE:

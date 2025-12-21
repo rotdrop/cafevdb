@@ -65,7 +65,7 @@ class File implements \ArrayAccess
   protected int $id;
 
   #[ORM\Column(type: 'string', length: 512, nullable: true)]
-  protected ?string $fileName;
+  protected ?string $fileName = null;
 
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
   protected string $mimeType;
@@ -91,7 +91,7 @@ class File implements \ArrayAccess
   protected ?DateTimeImmutable $updated = null;
 
   /** {@inheritdoc} */
-  public function __construct($fileName = null, $data = null, $mimeType = null)
+  public function __construct(?string $fileName = null, ?string $data = null, ?string $mimeType = null)
   {
     $this->arrayCTOR();
     $this->setFileName($fileName);

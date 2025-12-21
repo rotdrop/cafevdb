@@ -5628,7 +5628,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $this->templateFileAttachments = [];
 
-    $origin = AttachmentOrigin::TEMPLATE;
+    $origin = AttachmentOrigin::TEMPLATE->value;
 
     $templateAttachments = [];
     foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
@@ -5653,8 +5653,8 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $comparator = function($a, $b) {
       return strcmp(
-        $a['origin'].$a['name'],
-        $b['origin'].$b['name']
+        $a['origin'] . $a['name'],
+        $b['origin'] . $b['name']
       );
     };
     usort($templateAttachments, $comparator);
@@ -5694,7 +5694,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
     // add participant fields data if present
     $this->personalFileAttachments = [];
 
-    $origin = AttachmentOrigin::PARTICIPANT_FIELD;
+    $origin = AttachmentOrigin::PARTICIPANT_FIELD->value;
 
     $generalAttachments = [];
     $serviceFeeAttachments = [];
@@ -5899,7 +5899,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
         $size = \OCP\Util::humanFileSize($attachment['size']);
         $name .= ' (' . $size . ')';
       }
-      $origin = $attachment['origin'];
+      $origin = AttachmentOrigin::get($attachment['origin']);
       switch ($origin) {
         case AttachmentOrigin::TEMPLATE:
           $group = $this->l->t('Blank Template');
@@ -5922,7 +5922,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       }
       $selected = $attachment['status'] == 'selected';
       $selectOption = [
-        'value' => $origin . ':' . $value,
+        'value' => $origin->value . ':' . $value,
         'name' => $name,
         'group' => $group,
         'groupData' => $groupData,

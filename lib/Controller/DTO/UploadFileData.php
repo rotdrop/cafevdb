@@ -40,7 +40,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     public readonly ?int $error,
     public readonly ?string $str_error,
     public readonly ?string $message,
-    public readonly string $tmp_name,
+    public readonly ?string $tmp_name,
     public readonly string $type,
     public readonly int $size,
     public readonly string $original_name,
@@ -58,27 +58,27 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $data
    *
    * @return IBANMetatData
+   *
+   * @throws InvalidArgumentException
    */
   public static function fromArray(array $data): self
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    if (!empty($meta) && !($meta instanceof UploadFileMetaData)) {
-      $meta = UploadFileMetaData::fromArray($meta);
-    } else {
-      $meta = null;
+    if (is_array($meta)) {
+      $meta = empty($meta) ? null : UploadFileMetaData::fromArray($meta);
     }
     if (!empty($origin)) {
       try {
         $origin = EnumFileUploadOrigin::get($origin);
-      } catch (InvalidArgumentException $e)  {
+      } catch (InvalidArgumentException $e) {
         throw $e;
       }
     }
     if (!empty($upload_mode)) {
       try {
-        $upload_mode = EnumFileUploadOrigin::get($upload_mode);
-      } catch (InvalidArgumentException $e)  {
+        $upload_mode = EnumFileUploadMode::get($upload_mode);
+      } catch (InvalidArgumentException $e) {
         throw $e;
       }
     }
@@ -87,7 +87,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
       $error ?? null,
       $str_error ?? null,
       $message ?? null,
-      $tmp_name,
+      $tmp_name ?? null,
       $type,
       $size,
       $original_name,

@@ -53,7 +53,6 @@ import {
 } from './project-participant-fields.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
-import { UploadMode } from '../types/ajax/upload.ts';
 import './lock-input.ts';
 import {
   data as pmeData,
@@ -70,7 +69,7 @@ import {
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitMandate, SepaBankAccount, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import type { EnumSepaDebitMandateRevocationAction, EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
+import { EnumFileUploadMode, type EnumSepaDebitMandateRevocationAction, type EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 
@@ -302,7 +301,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     console.info('FILE', { file });
     const mandateFieldset = $popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
     mandateFieldset.find('input.written-mandate-file-upload').val(JSON.stringify([file]));
-    const fileName = (file.upload_mode !== UploadMode.LINK)
+    const fileName = (file.upload_mode !== EnumFileUploadMode.LINK)
       ? file.original_name
       : file.name;
     mandateFieldset.find('input.upload-placeholder')

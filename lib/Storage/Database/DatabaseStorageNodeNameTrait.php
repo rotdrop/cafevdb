@@ -92,7 +92,19 @@ trait DatabaseStorageNodeNameTrait
 
   /**
    * Get the name of the sub-folder containing supporting documents for
-   * bank-transactions.
+   * receivables.
+   *
+   * @return string
+   */
+  protected function getLiabilitiesFolderName():string
+  {
+    // TRANSLATORS: folder-name
+    return $this->getAppL10n()->t('Liabilities');
+  }
+
+  /**
+   * Get the name of the sub-folder containing supporting documents for
+   * receivables.
    *
    * @return string
    */

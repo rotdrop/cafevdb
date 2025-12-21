@@ -194,6 +194,6 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /** {@inheritdoc} */
   public function __toString():string
   {
-    return static::$type . ':' . $this->name;
+    return static::$type->value . ':' . $this->name;
   }
 }

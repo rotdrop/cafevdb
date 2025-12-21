@@ -50,14 +50,13 @@ import logoSvg from '../img/cafevdb.svg?raw';
 import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
 import Console from './util/console.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
-import { UPLOAD_MODE_MOVE as UploadModeMove, ConflictResolutionRename } from './types/ajax/upload.ts';
 import type {
   MailMergePayload,
   MailMergeResponse,
 } from './types/ajax/mail-merge.ts';
 import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import { vueDevTools } from './toolkit/util/vue-devtools.ts';
-import { EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
+import { EnumAddDocumentConflictAction, EnumFileUploadMode, EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
 
 type Toast = ReturnType<typeof showError>;
 
@@ -603,8 +602,8 @@ class InvoicesEntry implements NewMenuEntry {
             filesAppPath: folder.path,
           },
           cloudFile,
-          uploadMode: UploadModeMove,
-          conflict: ConflictResolutionRename,
+          uploadMode: EnumFileUploadMode.MOVE,
+          conflict: EnumAddDocumentConflictAction.RENAME,
         };
 
         const moveResponse = await axios.post(moveUrl, moveData);

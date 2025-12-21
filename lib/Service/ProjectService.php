@@ -1118,12 +1118,14 @@ class ProjectService
     }
 
     switch ($field->getDataType()) {
-      case FieldDataType::RECEIVABLES:
       case FieldDataType::LIABILITIES:
+        $dataTypeSubdir = $this->getLiabilitiesFolderName();
+      case FieldDataType::RECEIVABLES:
+        $dataTypeSubdir = $dataTypeSubdir ?? $this->getReceivablesFolderName();
         $subDirPrefix =
           $this->getSupportingDocumentsFolderName()
           . Constants::PATH_SEP
-          . $this->getReceivablesFolderName();
+          . $dataTypeSubdir;
         $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . Constants::PATH_SEP . $dirName;
         break;
     }

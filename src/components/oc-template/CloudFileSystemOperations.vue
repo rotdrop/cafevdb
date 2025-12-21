@@ -30,21 +30,21 @@
 </template>
 <script lang="ts" setup>
 import { appName } from '../../config.ts'
-import { translate } from '@nextcloud/l10n'
+import { translate as t } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import useTooltipsStore from '../../stores/tooltips.ts'
+import { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts'
+import type { TemplateFileUploadMode } from './oc-template-parameters.ts'
 
-const t = (a, b) => b
-const modes = [t(appName, 'copy'), t(appName, 'move'), t(appName, 'link')]
 const tooltipsProvider = useTooltipsStore()
-tooltipsProvider.provideTooltips(modes.map(mode => 'cloud-file-system-operations:' + mode))
+tooltipsProvider.provideTooltips(Object.values(EnumFileUploadMode).map(mode => 'cloud-file-system-operations:' + mode))
 const hints = tooltipsProvider.tooltipsData
 
-const modeData = computed<Record<string, { name: string, hint: string }> >(() => {
+const modeData = computed<Record<TemplateFileUploadMode, { name: string, hint: string }> >(() => {
   console.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
   const result = {}
-  for (const mode of modes) {
-    result[mode] = { name: translate(appName, mode), hint: hints['cloud-file-system-operations:' + mode] }
+  for (const mode of Object.values(EnumFileUploadMode).filter(value => value !== EnumFileUploadMode.TEST)) {
+    result[mode] = { name: t(appName, mode), hint: hints[`cloud-file-system-operations:${mode}`] }
   }
   return result
 })

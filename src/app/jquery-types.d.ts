@@ -70,7 +70,7 @@ interface JQuery<TElement = HTMLElement> {
   datetimepicker(argument: 'destroy'|Record<string, unknown>, ...rest: unknown): JQuery<TElement>,
   readonly(state?: boolean|string): JQuery<TElement>,
   lockUnlock(argument?: LockUnlockCommands|Partial<LockUnlockOptions>, value?: null|undefined|boolean|string): JQuery<TElement>,
-  octemplate(options: Record<string, string>, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>,
+  octemplate<T extends Record<string, string|number> >(options: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>,
   avatar(user: string, size: number): void,
   bootstrapDualListbox(arg: Record<string, unknown>|'refresh', value?: boolean): void;
 }

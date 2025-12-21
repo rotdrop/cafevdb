@@ -504,7 +504,7 @@ trait ParticipantFieldsTrait
                     'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                     'documentsFolders' => $this->getDocumentsFolderName(),
                     'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
-                    'receivablesFolder' => $this->getReceivablesFolderName(),
+                    'liabilitiesReceivablesFolder' => $fieldDataType == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
                   ];
                   $participantFolder = $pathChain['participantFolder'];
 
@@ -2271,7 +2271,7 @@ GROUP BY " . $fdAlias . ".option_key",
       'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
       'documentsFolders' => $this->getDocumentsFolderName(),
       'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
-      'receivablesFolder' => $this->getReceivablesFolderName(),
+      'liabilitiesReceivablesFolder' => $fieldDataType == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
       'fieldFolder' => $this->participantFieldsService->getFileSystemFieldName($field),
     ];
     $participantFolder = $pathChain['participantFolder'];
@@ -2370,8 +2370,8 @@ GROUP BY " . $fdAlias . ".option_key",
       unset($oldValues[$key]);
       Util::unsetValue($changed, $key);
 
-      $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
-      $this->debug("MULTIPLICITY / DATATYPE ".$fieldMultiplicity.' / '.$fieldDataType);
+      $this->debug('FIELDNAMES ' . $keyName . ' / ' . $groupFieldName);
+      $this->debug('MULTIPLICITY / DATATYPE ' . $fieldMultiplicity->value . ' / ' . $fieldDataType->value);
       switch ($fieldMultiplicity) {
         case FieldMultiplicity::SIMPLE:
           // We fake a multi-selection field and set the user input as

@@ -24,16 +24,17 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 /**
- * Simple setting as enum.
+ * Conflict resolution actions for DatabaseStorageFolder::add().
  */
+#[TypeScript(options: ['nativeEnums' => true])]
 enum EnumAddDocumentConflictAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
-  case FAIL = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL;
-  case REPLACE = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE;
-  case RENAME = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_RENAME;
+  case FAIL = 'fail';
+  case REPLACE = 'replace';
+  case RENAME = 'rename';
 }

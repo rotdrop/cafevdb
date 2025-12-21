@@ -306,17 +306,17 @@ $routes = [
     // Currently /upload/stash to move uploaded files to a app-storage
     // directory and /upload/move to move a stashed file to a cloud
     // directory.
-    [
-      'name' => 'uploads#stash',
-      'url' => '/upload/stash',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'uploads#move',
-      'url' => '/upload/move/{storage}',
-      'verb' => 'POST',
-      'defaults' => [ 'storage' => 'cloud' ],
-    ],
+    // [
+    //   'name' => 'uploads#stash',
+    //   'url' => '/upload/stash',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'uploads#move',
+    //   'url' => '/upload/move/{storage}',
+    //   'verb' => 'POST',
+    //   'defaults' => [ 'storage' => 'cloud' ],
+    // ],
     // various download stuff
     [
       'name' => 'downloads#fetch',

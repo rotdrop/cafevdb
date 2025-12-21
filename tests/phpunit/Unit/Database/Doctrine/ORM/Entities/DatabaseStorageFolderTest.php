@@ -27,16 +27,19 @@ namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
 use ReflectionProperty;
 use Throwable;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the DatabaseStorageFolder entity. */
+#[Attributes\CoversClass(Entities\DatabaseStorageDirEntry::class)]
 #[Attributes\CoversClass(Entities\DatabaseStorageFile::class)]
 #[Attributes\CoversClass(Entities\DatabaseStorageFolder::class)]
 #[Attributes\UsesClass(Entities\EncryptedFile::class)]
@@ -47,6 +50,9 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(Exceptions\DatabaseEntityExistsException::class)]
 class DatabaseStorageFolderTest extends TestCase
 {
+  private const FOLDER_NAME = 'FolderName';
+  private const FOLDER_ID = 1;
+
   private const FILE_BASENAME = 'file';
   private const FILE_EXTENSION = '.ext';
   private const FILE_NAME = self::FILE_BASENAME . self::FILE_EXTENSION;
@@ -66,7 +72,8 @@ class DatabaseStorageFolderTest extends TestCase
       mimeType: self::FILE_MIMETYPE,
     );
     $this->folder = new Entities\DatabaseStorageFolder()
-      ->setId(1);
+      ->setName(self::FOLDER_NAME)
+      ->setId(self::FOLDER_ID);
     $this->dirEntryFile = $this->folder->addDocument($this->file);
   }
 
@@ -97,12 +104,12 @@ class DatabaseStorageFolderTest extends TestCase
   }
 
   /**
-   * @param ?Entities\EnumAddDocumentConflictAction $conflictAction
+   * @param ?EnumAddDocumentConflictAction $conflictAction
    *
    * @return void
    */
   public function testAddDocumentConflictDefault(
-    ?Entities\EnumAddDocumentConflictAction $conflictAction = null,
+    ?EnumAddDocumentConflictAction $conflictAction = null,
   ): void {
     $newFile = new Entities\EncryptedFile(self::FILE_NAME, mimeType: self::FILE_MIMETYPE);
     try {
@@ -144,13 +151,13 @@ class DatabaseStorageFolderTest extends TestCase
   /** @return void */
   public function testAddDocumentConflictFail(): void
   {
-    $this->testAddDocumentConflictDefault(Entities\EnumAddDocumentConflictAction::FAIL);
+    $this->testAddDocumentConflictDefault(EnumAddDocumentConflictAction::FAIL);
   }
 
   /** @return void */
   public function testAddDocumentConflictReplace(): void
   {
-    $conflictAction = Entities\EnumAddDocumentConflictAction::REPLACE;
+    $conflictAction = EnumAddDocumentConflictAction::REPLACE;
     $newFile = new Entities\EncryptedFile(self::FILE_NAME, mimeType: self::FILE_MIMETYPE);
     $dirEntryFile = $this->folder->addDocument($newFile, conflictAction: $conflictAction);
     $this->assertEquals($this->dirEntryFile, $dirEntryFile);
@@ -185,7 +192,7 @@ class DatabaseStorageFolderTest extends TestCase
     $instance->setValue($entityManager, $entityManager);
     $entityManager->expects($this->atLeastOnce())->method('flush')->willReturnCallback(function() {});
 
-    $conflictAction = Entities\EnumAddDocumentConflictAction::RENAME;
+    $conflictAction = EnumAddDocumentConflictAction::RENAME;
     $rounds = 2;
     while ($rounds-- > 0) {
       $newFile = new Entities\EncryptedFile(self::FILE_NAME, mimeType: self::FILE_MIMETYPE);
@@ -207,5 +214,11 @@ class DatabaseStorageFolderTest extends TestCase
         }
       }
     }
+  }
+
+  /** @return void */
+  public function testToString(): void
+  {
+    $this->assertEquals(DirEntryType::FOLDER->value . ':' . $this->folder->getName(), (string)$this->folder);
   }
 }

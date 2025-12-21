@@ -134,7 +134,7 @@ class DocumentStorageUploadController extends Controller
     ?int $projectId,
     array|string $data = '{}',
     ?string $cloudFile = null,
-    string $uploadMode = UploadsController::UPLOAD_MODE_COPY,
+    string $uploadMode = EnumFileUploadMode::COPY->value,
     string $conflict = EnumAddDocumentConflictAction::REPLACE->value,
   ):Response {
     switch ($operation) {
@@ -162,6 +162,9 @@ class DocumentStorageUploadController extends Controller
         $entityId = $this->request['optionKey'];
         break;
     }
+
+    $uploadMode = EnumFileUploadMode::get($uploadMode);
+    $conflict = EnumAddDocumentConflictAction::get($conflict);
 
     foreach (self::REQUIRED[$section][$topic] as $required) {
       if (empty(${$required})) {
@@ -213,7 +216,7 @@ class DocumentStorageUploadController extends Controller
         $userStorage = $this->di(UserStorage::class);
 
         switch ($uploadMode) {
-          case UploadsController::UPLOAD_MODE_MOVE:
+          case EnumFileUploadMode::MOVE:
             if (empty($originalFilePath)) {
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t('Move operation requested, but the original file path has not been specified.'),
@@ -227,7 +230,7 @@ class DocumentStorageUploadController extends Controller
               );
             }
             break;
-          case UploadsController::UPLOAD_MODE_LINK:
+          case EnumFileUploadMode::LINK:
             $originalFileId = $originalFilePath;
             if (empty($originalFileId)) {
               throw new Exceptions\EnduserNotificationException(
@@ -242,7 +245,7 @@ class DocumentStorageUploadController extends Controller
             }
             $originalFilePath = $originalFile->getFileName();
             break;
-          case UploadsController::UPLOAD_MODE_COPY:
+          case EnumFileUploadMode::COPY:
             if ($cloudFile) {
               /** @var File $originalFile */
               $originalFile = $userStorage->get($originalFilePath);
@@ -268,10 +271,10 @@ class DocumentStorageUploadController extends Controller
           $storage = $this->getStorage($section, $topic, $entity);
 
           switch ($uploadMode) {
-            case UploadsController::UPLOAD_MODE_MOVE:
+            case EnumFileUploadMode::MOVE:
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
               // no break
-            case UploadsController::UPLOAD_MODE_COPY:
+            case EnumFileUploadMode::COPY:
               if ($cloudFile) {
                 $fileContent = $originalFile->getContent();
               } else {
@@ -282,7 +285,7 @@ class DocumentStorageUploadController extends Controller
               $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-              if (!empty($fileEntity) && $fileEntity->getNumberOfLinks() > 1 && $conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE) {
+              if (!empty($fileEntity) && $fileEntity->getNumberOfLinks() > 1 && $conflict == EnumAddDocumentConflictAction::REPLACE) {
                 // if the file has multiple links then it is probably
                 // better to remove the existing file rather than
                 // overwriting a file which has multiple links.
@@ -290,14 +293,14 @@ class DocumentStorageUploadController extends Controller
                 $fileEntity = null;
               }
 
-              if (empty($fileEntity) || $conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_RENAME) {
+              if (empty($fileEntity) || $conflict == EnumAddDocumentConflictAction::RENAME) {
                 $fileEntity = new Entities\EncryptedFile(
                   data: $fileContent,
                   mimeType: $mimeType,
                   owner: $this->getOwner($entity),
                 );
                 $this->persist($fileEntity);
-              } elseif ($conflict == DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE) {
+              } elseif ($conflict == EnumAddDocumentConflictAction::REPLACE) {
                 $fileEntity
                   ->setMimeType($mimeType)
                   ->setSize(strlen($fileContent))
@@ -312,7 +315,7 @@ class DocumentStorageUploadController extends Controller
               $fileEntity->setFileName($originalFileName);
 
               break;
-            case UploadsController::UPLOAD_MODE_LINK:
+            case EnumFileUploadMode::LINK:
               $fileContent = null;
               /** @var Entities\EncryptedFile $originalFile */
               if (!empty($fileEntity) && $fileEntity->getId() == $originalFileId) {
@@ -347,7 +350,7 @@ class DocumentStorageUploadController extends Controller
           );
         }
 
-        if ($uploadMode != UploadsController::UPLOAD_MODE_LINK && empty($cloudFile)) {
+        if ($uploadMode != EnumFileUploadMode::LINK && empty($cloudFile)) {
           $this->removeStashedFile($file);
         }
 
@@ -370,13 +373,13 @@ class DocumentStorageUploadController extends Controller
         unset($file['tmp_name']);
 
         switch ($uploadMode) {
-          case UploadsController::UPLOAD_MODE_COPY:
+          case EnumFileUploadMode::COPY:
             $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $fileName ]);
             break;
-          case UploadsController::UPLOAD_MODE_MOVE:
+          case EnumFileUploadMode::MOVE:
             $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $fileName ]);
             break;
-          case UploadsController::UPLOAD_MODE_LINK:
+          case EnumFileUploadMode::LINK:
             $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $fileName ]);
             break;
         }

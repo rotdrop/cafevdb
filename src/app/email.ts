@@ -477,7 +477,7 @@ const emailFormRecipientsHandlers = (
    * read-only attempt.
    */
   const readonlyFilterControls = (state: boolean, exceptions?: string[]) => {
-
+    console.trace('READONLY FILTERS');
     $fieldset.toggleClass('filter-controls-disabled', state);
 
     exceptions = exceptions ?? [];
@@ -561,6 +561,10 @@ const emailFormRecipientsHandlers = (
 
   // initialization
   if ($basicRecipientsSet.filter('.mailing-list').prop('checked')) {
+    console.info('MAILING LIST CONTROLS', {
+      mlc: $basicRecipientsSet.filter('.mailing-list'),
+      checked: $basicRecipientsSet.filter('.mailing-list').prop('checked'),
+    });
     readonlyFilterControls(true, ['.mailing-list', '.database']);
   }
 

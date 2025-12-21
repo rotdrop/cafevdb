@@ -76,7 +76,7 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
     projectId,
     musicianId,
     uploadData,
-    requestToken: getRequestToken(),
+    requestToken: getRequestToken() ?? '',
   });
   const $oldUploadForm = $('#' + widgetId);
   if ($oldUploadForm.length === 0) {

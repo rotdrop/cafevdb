@@ -24,12 +24,13 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use UnexpectedValueException;
 use DateTimeInterface;
+use UnexpectedValueException;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
@@ -172,7 +173,7 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
-   * @param string $conflict
+   * @param EnumAddDocumentConflictAction $conflict
    *
    * @return null|Entities\DatabaseStorageFile
    */
@@ -180,7 +181,7 @@ class ProjectParticipantsStorage extends Storage
     Entities\SepaDebitMandate $debitMandate,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
+    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -240,7 +241,7 @@ class ProjectParticipantsStorage extends Storage
     bool $flush = true,
     bool $replace = false,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDebitMandate($debitMandate, $file, $flush, conflict: DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE);
+    return $this->addDebitMandate($debitMandate, $file, $flush, conflict: EnumAddDocumentConflictAction::REPLACE);
   }
 
   /**
@@ -300,7 +301,7 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
-   * @param string $conflict
+   * @param EnumAddDocumentConflictAction $conflict
    *
    * @return null|Entities\DatabaseStorageFile
    */
@@ -308,7 +309,7 @@ class ProjectParticipantsStorage extends Storage
     Entities\CompositePayment $compositePayment,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
+    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);

@@ -840,10 +840,10 @@ class RecipientsFilter
       }
       $byStatusDefault = array_keys($this->participationStatusNames);
     } else {
-      $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR ];
+      $byStatusDefault = [ DBTypes\EnumParticipationStatus::REGULAR->value ];
       if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
-        $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE;
-        $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY;
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::PASSIVE->value;
+        $byStatusDefault[] = DBTypes\EnumParticipationStatus::TEMPORARY->value;
       }
     }
     sort($byStatusDefault);

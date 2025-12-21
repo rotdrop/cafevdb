@@ -24,11 +24,14 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
 /**
  * Upload origin, arguably the origin "cloud" is not an upload origin,
  * however, the idea is to provide "upload from local machine" as well as
  * "choose from cloud".
  */
+#[TypeScript(options: ['nativeEnums' => true])]
 enum EnumFileUploadMode: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

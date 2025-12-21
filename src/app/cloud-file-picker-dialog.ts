@@ -35,11 +35,9 @@ import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { parse as pathParse } from './path.ts';
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
-import { UPLOAD_MODES } from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
-import type { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
-import type { UploadFileData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-
-type UploadMode = EnumFileUploadMode;
+import { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
+import type { UploadFileData, UploadModeTest } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
 
 export interface CloudFilePickerParameters {
   setup?: () => void,
@@ -88,14 +86,14 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
       }
       $.post(generateAppUrl(parameters.stashUrl), {
         cloudPaths: paths,
-        uploadMode: 'test',
+        uploadMode: EnumFileUploadMode.TEST,
       })
-        .fail(function(xhr, status, errorThrown) {
+        .fail((xhr, status, errorThrown) => {
           Ajax.handleError(xhr, status, errorThrown, parameters.cleanup);
         })
-        .done(function(data) {
+        .done((data: UploadModeTest[]) => {
 
-          const performUpload = function(uploadMode: UploadMode) {
+          const performUpload = function(uploadMode: EnumFileUploadMode) {
             $.post(generateAppUrl(parameters.stashUrl), {
               cloudPaths: paths,
               uploadMode,
@@ -103,7 +101,7 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
               .fail(function(xhr, status, errorThrown) {
                 Ajax.handleError(xhr, status, errorThrown, parameters.cleanup);
               })
-              .done(function(files) {
+              .done(function(files: UploadFileData[]) {
                 if (!Array.isArray(files) || (!parameters.multiple && files.length !== 1)) {
                   alertDialog(
                     t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
@@ -117,12 +115,13 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
           };
 
           const uploadFiles: ReturnType<typeof pathParse>[] = [];
-          let uploadModes: EnumFileUploadMode[] = [...UPLOAD_MODES];
+          const allUploadModes = Object.values(EnumFileUploadMode).filter(value => value !== EnumFileUploadMode.TEST);
+          let uploadModes = allUploadModes;
           for (const uploadInfo of data) {
-            uploadModes = uploadModes.filter(value => uploadInfo.upload_mode.includes(value));
-            uploadFiles.push(pathParse(uploadInfo.original_name));
+            uploadModes = uploadModes.filter(value => uploadInfo.availableUploadModes.includes(value));
+            uploadFiles.push(pathParse(uploadInfo.originalName));
           }
-          const templateParameters: Record<string, string> = {
+          const templateParameters: TemplateParameters['cloudFileSystemOperations'] = {
             operations: uploadModes.join(' '),
             files: uploadFiles.map(
               (info) => {
@@ -140,29 +139,34 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
             widgetCssClass: 'cloud-file-system-operations',
             widgetRadioName: 'cloudFileSystemOperations',
           };
-          for (const mode of UPLOAD_MODES) {
-            templateParameters[mode + 'Selected'] = '';
-            templateParameters[mode + 'CssClass'] = mode + '-control';
+          for (const mode of allUploadModes) {
+            templateParameters[`${mode}Selected`] = '';
+            templateParameters[`${mode}CssClass`] = `${mode}-control`;
             if (uploadModes.includes(mode)) {
-              templateParameters[mode + 'Disabled'] = '';
-              templateParameters[mode + 'CssClass'] += ' enabled';
+              templateParameters[`${mode}Disabled`] = '';
+              templateParameters[`${mode}CssClass`] += ' enabled';
             } else {
-              templateParameters[mode + 'Disabled'] = 'disabled';
-              templateParameters[mode + 'CssClass'] += ' disabled';
+              templateParameters[`${mode}Disabled`] = 'disabled';
+              templateParameters[`${mode}CssClass`] += ' disabled';
             }
           }
-          templateParameters.copySelected = 'checked';
+          // prefer linking over copy
+          if (uploadModes.includes(EnumFileUploadMode.LINK)) {
+            templateParameters.linkSelected = 'checked';
+          } else {
+            templateParameters.copySelected = 'checked';
+          }
 
           const $fileSystemOps = $('#cloudFileSystemOperations').octemplate(
             templateParameters,
             { escapeFunction: (x) => x },
           );
 
-          let uploadMode: UploadMode = 'copy';
+          let uploadMode: EnumFileUploadMode = EnumFileUploadMode.COPY;
           $('body')
             .off('change', 'input.cloud-file-system-operations-input')
             .on('change', 'input.cloud-file-system-operations-input', function(_event) {
-              uploadMode = $(this).val() as UploadMode;
+              uploadMode = $(this).val() as EnumFileUploadMode;
               console.info('UPLOAD MODE', uploadMode);
             });
           $('body')
