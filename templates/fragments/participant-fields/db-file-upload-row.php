@@ -48,5 +48,4 @@ echo $this->inc('fragments/participant-fields/attachment-file-upload-row', [
   'subDir' => '',
   'dataStorage' => EnumFileStorageBackend::DB->value,
   'entityField' => 'option-value',
-  'uploadPolicy' => Entities\DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE,
 ]);
