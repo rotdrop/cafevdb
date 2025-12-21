@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-12-19 17:46+0100\n"
+"POT-Creation-Date: 2025-12-21 21:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -586,7 +586,7 @@ msgid "Unable to find the project with name \"%s\"."
 msgstr ""
 
 #: lib/Command/ParticipantFolders.php:190
-#: lib/Storage/Database/ProjectParticipantsStorage.php:464
+#: lib/Storage/Database/ProjectParticipantsStorage.php:465
 #, php-format
 msgid "Folder \"%s\" does not exist."
 msgstr ""
@@ -1181,7 +1181,7 @@ msgstr ""
 msgid "The folder or file \"%s\" exists already."
 msgstr ""
 
-#: lib/Common/UndoableRunQueue.php:137
+#: lib/Common/UndoableRunQueue.php:138
 #, php-format
 msgid ""
 "Exception during execution of run-queue: %1$s. Number of successful actions: "
@@ -1374,7 +1374,7 @@ msgstr ""
 #: lib/Controller/AdminSettingsController.php:468
 #: lib/Controller/PersonalSettingsController.php:2007
 #: lib/Controller/PersonalSettingsController.php:2044
-#: lib/Controller/ProjectParticipantsController.php:1015
+#: lib/Controller/ProjectParticipantsController.php:1018
 #, php-format
 msgid "Unknown Request: \"%s\""
 msgstr ""
@@ -1444,7 +1444,7 @@ msgstr ""
 #: lib/Controller/BlogController.php:225
 #: lib/Controller/CspViolationController.php:70
 #: lib/Controller/DownloadsController.php:149
-#: lib/Controller/MusicianValidationController.php:448
+#: lib/Controller/MusicianValidationController.php:451
 #: lib/Controller/PersonalSettingsController.php:295
 #: lib/Controller/ProgressStatusController.php:144
 #: lib/Controller/ProjectParticipantsController.php:214
@@ -1456,9 +1456,9 @@ msgid "Unknown Request"
 msgstr ""
 
 #: lib/Controller/ContactsController.php:75
-#: lib/Controller/DocumentStorageUploadController.php:431
+#: lib/Controller/DocumentStorageUploadController.php:434
 #: lib/Controller/EmailFormController.php:1118
-#: lib/Controller/SepaDebitMandatesController.php:1258
+#: lib/Controller/SepaDebitMandatesController.php:1256
 msgid "UNIMPLEMENTED"
 msgstr ""
 
@@ -1466,130 +1466,130 @@ msgstr ""
 msgid "The encryption service is not available."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:169
-#: lib/Controller/SepaDebitMandatesController.php:1175
-#: lib/Controller/SepaDebitMandatesController.php:1484
+#: lib/Controller/DocumentStorageUploadController.php:172
+#: lib/Controller/SepaDebitMandatesController.php:1173
+#: lib/Controller/SepaDebitMandatesController.php:1482
 #, php-format
 msgid "Required information \"%s\" not provided."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:179
+#: lib/Controller/DocumentStorageUploadController.php:182
 #, php-format
 msgid ""
 "Unable to find the database entity with id \"%1$d\" in section \"%2$s\" for "
 "topic \"%3$s\"."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:198
-#: lib/Controller/SepaDebitMandatesController.php:1274
+#: lib/Controller/DocumentStorageUploadController.php:201
+#: lib/Controller/SepaDebitMandatesController.php:1272
 #, php-format
 msgid "Upload error \"%s\"."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:219
+#: lib/Controller/DocumentStorageUploadController.php:222
 #: lib/Controller/ProjectParticipantsController.php:695
-#: lib/Controller/SepaDebitMandatesController.php:1291
+#: lib/Controller/SepaDebitMandatesController.php:1289
 msgid ""
 "Move operation requested, but the original file path has not been specified."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:226
+#: lib/Controller/DocumentStorageUploadController.php:229
 #: lib/Controller/ProjectParticipantsController.php:699
-#: lib/Controller/SepaDebitMandatesController.php:1295
+#: lib/Controller/SepaDebitMandatesController.php:1293
 #, php-format
 msgid "Move operation requested, but the original file \"%s\" cannot be found."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:234
+#: lib/Controller/DocumentStorageUploadController.php:237
 #: lib/Controller/ProjectParticipantsController.php:711
-#: lib/Controller/SepaDebitMandatesController.php:1301
+#: lib/Controller/SepaDebitMandatesController.php:1299
 msgid ""
 "Link operation requested, but the id of the original file has not been "
 "specified."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:240
+#: lib/Controller/DocumentStorageUploadController.php:243
 #: lib/Controller/ProjectParticipantsController.php:715
-#: lib/Controller/SepaDebitMandatesController.php:1305
+#: lib/Controller/SepaDebitMandatesController.php:1303
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file with id \"%s\" "
 "cannot be found."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:251
+#: lib/Controller/DocumentStorageUploadController.php:254
 #, php-format
 msgid "Copy operation requested, but the original file \"%s\" cannot be found."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:308
+#: lib/Controller/DocumentStorageUploadController.php:311
 #, php-format
 msgid "The destination document already exists as \"%s\"."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:321
+#: lib/Controller/DocumentStorageUploadController.php:324
 #: lib/Controller/ProjectParticipantsController.php:827
-#: lib/Controller/SepaDebitMandatesController.php:1366
+#: lib/Controller/SepaDebitMandatesController.php:1364
 #, php-format
 msgid ""
 "Link operation requested, but the existing original file is the same as the "
 "target destination (%s@%s)"
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:345
-#: lib/Controller/DocumentStorageUploadController.php:424
-#: lib/Controller/SepaDebitMandatesController.php:1249
-#: lib/Controller/SepaDebitMandatesController.php:1396
-#: lib/Controller/SepaDebitMandatesController.php:1725
+#: lib/Controller/DocumentStorageUploadController.php:348
+#: lib/Controller/DocumentStorageUploadController.php:427
+#: lib/Controller/SepaDebitMandatesController.php:1247
+#: lib/Controller/SepaDebitMandatesController.php:1394
+#: lib/Controller/SepaDebitMandatesController.php:1723
 msgid "Error, caught an exception. No changes were performed."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:374
+#: lib/Controller/DocumentStorageUploadController.php:377
 #: lib/Controller/ProjectParticipantsController.php:963
-#: lib/Controller/SepaDebitMandatesController.php:1431
+#: lib/Controller/SepaDebitMandatesController.php:1429
 #, php-format
 msgid "Upload of \"%s\" as \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:377
+#: lib/Controller/DocumentStorageUploadController.php:380
 #: lib/Controller/ProjectParticipantsController.php:966
-#: lib/Controller/SepaDebitMandatesController.php:1434
+#: lib/Controller/SepaDebitMandatesController.php:1432
 #, php-format
 msgid "Move of \"%s\" to \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:380
+#: lib/Controller/DocumentStorageUploadController.php:383
 #: lib/Controller/ProjectParticipantsController.php:969
-#: lib/Controller/SepaDebitMandatesController.php:1437
+#: lib/Controller/SepaDebitMandatesController.php:1435
 #, php-format
 msgid "Linking of file id \"%s\" to \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:409
+#: lib/Controller/DocumentStorageUploadController.php:412
 #, php-format
 msgid ""
 "We have no supporting document for the entity \"%1$s\", so we cannot delete "
 "it."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:429
+#: lib/Controller/DocumentStorageUploadController.php:432
 #, php-format
 msgid ""
 "Successfully deleted the written document for the entity \"%1$s\", please "
 "upload a new one!"
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:464
+#: lib/Controller/DocumentStorageUploadController.php:467
 #, php-format
 msgid ""
 "Support for file upload in section \"%2$s\" for the topic \"%3$s\" is "
 "unimplemented."
 msgstr ""
 
-#: lib/Controller/DocumentStorageUploadController.php:495
-#: lib/Controller/DocumentStorageUploadController.php:530
-#: lib/Controller/DocumentStorageUploadController.php:561
-#: lib/Controller/DocumentStorageUploadController.php:625
+#: lib/Controller/DocumentStorageUploadController.php:498
+#: lib/Controller/DocumentStorageUploadController.php:533
+#: lib/Controller/DocumentStorageUploadController.php:564
+#: lib/Controller/DocumentStorageUploadController.php:628
 #, php-format
 msgid "Support for file upload for entities of type \"%1$s\" is unimplemented."
 msgstr ""
@@ -1670,7 +1670,7 @@ msgid "Unable to parse email-recipients \"%s\"."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1038
-#: src/app/email.ts:2040
+#: src/app/email.ts:2044
 msgid "Form Input"
 msgstr ""
 
@@ -1684,47 +1684,47 @@ msgid "Attachment file-names were not submitted"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1153
-#: lib/Controller/UploadsController.php:288
+#: lib/Controller/UploadsController.php:275
 #, php-format
 msgid "File \"%s\" could not be found in cloud storage."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1156
-#: lib/Controller/UploadsController.php:291
+#: lib/Controller/UploadsController.php:278
 #, php-format
 msgid "File \"%s\" is not a plain file, this is not yet implemented."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1171
 #: lib/Controller/EmailFormController.php:1230
-#: lib/Controller/UploadsController.php:419
+#: lib/Controller/UploadsController.php:406
 #, php-format
 msgid "Couldn't save temporary file for: %s"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1189
 #: lib/Controller/FileUploadRowTrait.php:78
-#: lib/Controller/UploadsController.php:373
+#: lib/Controller/UploadsController.php:360
 #, php-format
 msgid "Upload size %s exceeds limit %s, contact your server administrator."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1197
 #: lib/Controller/FileUploadRowTrait.php:86
-#: lib/Controller/UploadsController.php:381
+#: lib/Controller/UploadsController.php:368
 #, php-format
 msgid "No file was uploaded, error message was \"%s\"."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1199
 #: lib/Controller/FileUploadRowTrait.php:88
-#: lib/Controller/UploadsController.php:383
+#: lib/Controller/UploadsController.php:370
 msgid "No file was uploaded. Unknown error"
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1211
 #: lib/Controller/FileUploadRowTrait.php:116
-#: lib/Controller/UploadsController.php:395
+#: lib/Controller/UploadsController.php:382
 msgid "Not enough storage available"
 msgstr ""
 
@@ -1968,58 +1968,58 @@ msgstr ""
 msgid "Migration step \"%1$s\" failed."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:144
+#: lib/Controller/MusicianValidationController.php:146
 #: lib/Controller/PersonalSettingsController.php:610
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:157
+#: lib/Controller/MusicianValidationController.php:159
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:166
+#: lib/Controller/MusicianValidationController.php:168
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:176
+#: lib/Controller/MusicianValidationController.php:178
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:194
+#: lib/Controller/MusicianValidationController.php:196
 msgid "Submitted email is empty"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:280
+#: lib/Controller/MusicianValidationController.php:282
 #, php-format
 msgid "Unsupported auto-complete request for \"%s\"."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:421
+#: lib/Controller/MusicianValidationController.php:423
 msgid "full name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:423
+#: lib/Controller/MusicianValidationController.php:425
 msgid "first name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:424
+#: lib/Controller/MusicianValidationController.php:426
 msgid "surname"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:426
+#: lib/Controller/MusicianValidationController.php:428
 msgid "communication"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:427
+#: lib/Controller/MusicianValidationController.php:429
 msgid "address"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:437
+#: lib/Controller/MusicianValidationController.php:441
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr ""
@@ -2354,7 +2354,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:990
-#: lib/Service/ProjectService.php:2970
+#: lib/Service/ProjectService.php:2972
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -2369,7 +2369,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1024
-#: lib/Service/ProjectService.php:3251
+#: lib/Service/ProjectService.php:3253
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -3241,31 +3241,31 @@ msgid ""
 "database storage."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1007
+#: lib/Controller/ProjectParticipantsController.php:1010
 msgid "Unable to store uploaded data"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1039
+#: lib/Controller/ProjectParticipantsController.php:1042
 msgid "Mailing-lists REST API is not configured."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1044
+#: lib/Controller/ProjectParticipantsController.php:1047
 #, php-format
 msgid ""
 "Unable to find the participant by project- and musician-id \"%1$d / %2$d\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1051
+#: lib/Controller/ProjectParticipantsController.php:1054
 #, php-format
 msgid "The project \"%s\" does not yet have a mailing-list."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1058
+#: lib/Controller/ProjectParticipantsController.php:1061
 #, php-format
 msgid "The musician \"%s\" does not have an email-address."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1079
+#: lib/Controller/ProjectParticipantsController.php:1082
 #, php-format
 msgid ""
 "%1$s participation has not been confirmed yet. Please consider to set the "
@@ -3275,71 +3275,71 @@ msgid ""
 "list?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1088
+#: lib/Controller/ProjectParticipantsController.php:1091
 #, php-format
 msgid "%1$s <%2$s> has been subscribed to %3$s."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1091
-#: lib/Controller/ProjectParticipantsController.php:1111
+#: lib/Controller/ProjectParticipantsController.php:1094
+#: lib/Controller/ProjectParticipantsController.php:1114
 #, php-format
 msgid "A notification has been sent to %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1102
+#: lib/Controller/ProjectParticipantsController.php:1105
 #, php-format
 msgid ""
 "The participation of %1$s has already been been confirmed. Are you really "
 "really sure that want to unsubscribe %1$s from the project mailing list?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1108
+#: lib/Controller/ProjectParticipantsController.php:1111
 #, php-format
 msgid "%1$s <%2$s> has been unsubscribed from %3$s."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1122
+#: lib/Controller/ProjectParticipantsController.php:1125
 #, php-format
 msgid ""
 "%1$s can enable message delivery by itself. Are you really sure that you "
 "want to enable message delivery for %1$s?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1130
+#: lib/Controller/ProjectParticipantsController.php:1133
 #, php-format
 msgid "Re-enabled message delivery for %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1141
+#: lib/Controller/ProjectParticipantsController.php:1144
 #, php-format
 msgid ""
 "%1$s can disable message delivery by itself. Are you really sure that you "
 "want to disable message delivery for %1$s?"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1150
+#: lib/Controller/ProjectParticipantsController.php:1153
 #, php-format
 msgid "Disabled message delivery for %1$s <%2$s>."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1158
+#: lib/Controller/ProjectParticipantsController.php:1161
 #, php-format
 msgid "Unknown list action: \"%s\"."
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1211
+#: lib/Controller/ProjectParticipantsController.php:1214
 msgid "digest"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1219
+#: lib/Controller/ProjectParticipantsController.php:1222
 msgid "disabled by user"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1224
+#: lib/Controller/ProjectParticipantsController.php:1227
 msgid "disabled because of bounces"
 msgstr ""
 
-#: lib/Controller/ProjectParticipantsController.php:1229
+#: lib/Controller/ProjectParticipantsController.php:1232
 msgid "disabled by moderator"
 msgstr ""
 
@@ -3933,7 +3933,7 @@ msgid "Unable to load SEPA debit mandate for musician %s/%d, sequence count %d"
 msgstr ""
 
 #: lib/Controller/SepaDebitMandatesController.php:810
-#: lib/Controller/SepaDebitMandatesController.php:1620
+#: lib/Controller/SepaDebitMandatesController.php:1618
 #, php-format
 msgid "Required information `%s' not provided."
 msgstr ""
@@ -3966,248 +3966,248 @@ msgstr ""
 msgid "Successfully stored the bank account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:937
+#: lib/Controller/SepaDebitMandatesController.php:935
 #, php-format
 msgid ""
 "The bank-account with IBAN %1$s bound to the existing mandate does not match "
 "the submitted bank-account with IBAN %2$s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:958
+#: lib/Controller/SepaDebitMandatesController.php:956
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "date of the debit-mandate must not be changed. Please create a new debit-"
 "mandate; you may disable the current mandate, at you option."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:967
+#: lib/Controller/SepaDebitMandatesController.php:965
 msgid ""
 "The current debit-mandate already has been used for more than a single "
 "payment. Therefore it can non longer be changed from \"recurring\" to \"non-"
 "recurring\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:974
+#: lib/Controller/SepaDebitMandatesController.php:972
 msgid ""
 "The current debit-mandate already has been used for payments. Therefore the "
 "project-binding can no longer be changed."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:979
+#: lib/Controller/SepaDebitMandatesController.php:977
 msgid ""
 "The current debit-mandate alrady has been used for payments. Therefore the "
 "stored copy of the written mandate cannot be deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1004
+#: lib/Controller/SepaDebitMandatesController.php:1002
 msgid "Unable to modify already used debit-mandate."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1018
+#: lib/Controller/SepaDebitMandatesController.php:1016
 #, php-format
 msgid "Successfully stored the bank-account with IBAN \"%s\" and owner \"%s\""
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1022
+#: lib/Controller/SepaDebitMandatesController.php:1020
 #, php-format
 msgid ""
 "Successfully stored the debit-mandate with reference \"%s\" for the IBAN "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1033
+#: lib/Controller/SepaDebitMandatesController.php:1031
 msgid "Unknown upload failure."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1085
+#: lib/Controller/SepaDebitMandatesController.php:1083
 #, php-format
 msgid ""
 "General debit-mandate requested but musician \"%s\" is not a club member."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1096
+#: lib/Controller/SepaDebitMandatesController.php:1094
 msgid "Unable to find a fillable debit mandate form."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1189
+#: lib/Controller/SepaDebitMandatesController.php:1187
 #, php-format
 msgid ""
 "Unable to find a debit mandate for musician id \"%1$d\" with sequence "
 "\"%2$d\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1210
+#: lib/Controller/SepaDebitMandatesController.php:1208
 #, php-format
 msgid ""
 "We have no hard-copy of the written-mandate for \"%1$s\", so we cannot "
 "delete it."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1214
+#: lib/Controller/SepaDebitMandatesController.php:1212
 #, php-format
 msgid ""
 "The debit mandate \"%1$s\" is already in use, the hard-copy of the written-"
 "mandate should only be replaced, but not deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1216
+#: lib/Controller/SepaDebitMandatesController.php:1214
 msgid "Are you sure you want to proceed?"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1256
+#: lib/Controller/SepaDebitMandatesController.php:1254
 #, php-format
 msgid ""
 "Successfully deleted the hard-copy of the written-mandate for \"%1$s\", "
 "please upload a new one!"
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1509
+#: lib/Controller/SepaDebitMandatesController.php:1507
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1518
+#: lib/Controller/SepaDebitMandatesController.php:1516
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1526
-#: lib/Controller/SepaDebitMandatesController.php:1713
+#: lib/Controller/SepaDebitMandatesController.php:1524
+#: lib/Controller/SepaDebitMandatesController.php:1711
 #, php-format
 msgid "Unknown revocation action: \"%s\"."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1537
+#: lib/Controller/SepaDebitMandatesController.php:1535
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1540
+#: lib/Controller/SepaDebitMandatesController.php:1538
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1552
+#: lib/Controller/SepaDebitMandatesController.php:1550
 #, php-format
 msgid "SEPA debit mandate with reference \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1653
+#: lib/Controller/SepaDebitMandatesController.php:1651
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be deleted as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1676
+#: lib/Controller/SepaDebitMandatesController.php:1674
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1688
+#: lib/Controller/SepaDebitMandatesController.php:1686
 #, php-format
 msgid ""
 "The account with IBAN \"%s\" cannot be disabled as the following associated "
 "mandates are still active: %s."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1705
+#: lib/Controller/SepaDebitMandatesController.php:1703
 #, php-format
 msgid "Bank account with IBAN \"%s\" is already active."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1735
+#: lib/Controller/SepaDebitMandatesController.php:1733
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been invalidated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1737
+#: lib/Controller/SepaDebitMandatesController.php:1735
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been reactivated."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1738
+#: lib/Controller/SepaDebitMandatesController.php:1736
 msgid ""
 "Please note that associated debit-mandates need to be reactivated "
 "separately, they are still disabled."
 msgstr ""
 
-#: lib/Controller/SepaDebitMandatesController.php:1741
+#: lib/Controller/SepaDebitMandatesController.php:1739
 #, php-format
 msgid "Bank account with IBAN \"%s\" has been deleted."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:123
+#: lib/Controller/UploadsController.php:107
 msgid "Original file path is not given, cannot move files."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:130
+#: lib/Controller/UploadsController.php:114
 #, php-format
 msgid "The original file \"%s\" cannot be found, cannot move files."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:136
+#: lib/Controller/UploadsController.php:120
 #, php-format
 msgid ""
 "Original file \"%s\" cannot be deleted, moving it is therefore not possible."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:148
+#: lib/Controller/UploadsController.php:132
 msgid ""
 "Linking files is only support when the destination storage is backed by the "
 "data-base."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:157
+#: lib/Controller/UploadsController.php:141
 #, php-format
 msgid "Moved \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:174
+#: lib/Controller/UploadsController.php:158
 msgid "Link source cannot be found."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:178
+#: lib/Controller/UploadsController.php:162
 #, php-format
 msgid "Encryption requested, but link-source \"%s\" is unencrypted"
 msgstr ""
 
-#: lib/Controller/UploadsController.php:205
+#: lib/Controller/UploadsController.php:189
 #, php-format
 msgid "Unable to move \"%1$s\" to db-storage with name \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:223
+#: lib/Controller/UploadsController.php:207
 msgid "Moved \"%1$s\" to db-storage with name \"%2$s\", id %d."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:229
+#: lib/Controller/UploadsController.php:213
 msgid "Unknown request"
 msgstr ""
 
-#: lib/Controller/UploadsController.php:284
+#: lib/Controller/UploadsController.php:271
 #, php-format
 msgid ""
 "File \"%s\" referes to a database storage folder, we expected a plain file."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:314
+#: lib/Controller/UploadsController.php:301
 #, php-format
 msgid ""
 "File \"%s\" is not backed by database-storage and thus cannot be linked."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:324
+#: lib/Controller/UploadsController.php:311
 #, php-format
 msgid "File \"%s\" cannot be deleted, moving it is therefor not possible."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:336
+#: lib/Controller/UploadsController.php:323
 #, php-format
 msgid "Could not copy cloud file \"%s\" to upload storage."
 msgstr ""
 
-#: lib/Controller/UploadsController.php:360
+#: lib/Controller/UploadsController.php:347
 #, php-format
 msgid ""
 "For client-uploads the only supported upload-mode is \"copy\", \"%s\" is not "
@@ -4354,7 +4354,7 @@ msgstr ""
 msgid "Collection \"%1$s\" in entity of type \"%2$s\" is null."
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:282
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:292
 #, php-format
 msgid "Unable to compute a serialization for an instance of \"%s\"."
 msgstr ""
@@ -4378,7 +4378,7 @@ msgstr ""
 
 #: lib/Database/EntityManager.php:956
 #: lib/Database/EntityManager.php:1008
-#: lib/Database/EntityManager.php:1222
+#: lib/Database/EntityManager.php:1225
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
@@ -4388,22 +4388,22 @@ msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1178
+#: lib/Database/EntityManager.php:1181
 msgid "The connection is marked for rollback only."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1411
+#: lib/Database/EntityManager.php:1414
 #, php-format
 msgid "Unexpected locale settings \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1500
+#: lib/Database/EntityManager.php:1503
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1526
+#: lib/Database/EntityManager.php:1529
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -4437,7 +4437,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:650
-#: src/app/email.ts:1467
+#: src/app/email.ts:1471
 msgid "Unknown Template"
 msgstr ""
 
@@ -5498,7 +5498,7 @@ msgstr ""
 msgid "Make the ProjectPayment subject nullable."
 msgstr ""
 
-#: lib/Maintenance/Migrations/NativeEnums.php:74
+#: lib/Maintenance/Migrations/NativeEnums.php:81
 msgid "Renove DBAL DC2Type comments part two."
 msgstr ""
 
@@ -5595,7 +5595,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:110
-#: src/app/email.ts:2044
+#: src/app/email.ts:2048
 msgid "Accept"
 msgstr ""
 
@@ -6442,8 +6442,8 @@ msgid "Rate"
 msgstr ""
 
 #: lib/PageRenderer/Invoices.php:351
-#: src/files-hooks.ts:553
-#: src/files-hooks.ts:567
+#: src/files-hooks.ts:552
+#: src/files-hooks.ts:566
 msgid "New Invoice"
 msgstr ""
 
@@ -6568,7 +6568,7 @@ msgstr ""
 #: lib/PageRenderer/Invoices.php:1090
 #: lib/PageRenderer/ProjectPayments.php:785
 #: lib/PageRenderer/ProjectPayments.php:871
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:102
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:114
 msgid "Receivables"
 msgstr ""
 
@@ -6829,7 +6829,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:935
 #: lib/PageRenderer/ProjectAssociates.php:1078
 #: lib/PageRenderer/ProjectParticipants.php:1348
-#: src/app/email.ts:2043
+#: src/app/email.ts:2047
 #: templates/emailform/part.emailform.composer.php:225
 #: templates/emailform/part.emailform.composer.php:244
 msgid "Address Book"
@@ -7392,8 +7392,8 @@ msgid "Filing Date"
 msgstr ""
 
 #: lib/PageRenderer/Projects.php:143
-#: src/files-hooks.ts:458
-#: src/files-hooks.ts:481
+#: src/files-hooks.ts:457
+#: src/files-hooks.ts:480
 msgid "New Project"
 msgstr ""
 
@@ -8811,7 +8811,7 @@ msgid ""
 msgstr ""
 
 #: lib/Service/ProjectService.php:518
-#: src/files-hooks.ts:138
+#: src/files-hooks.ts:137
 msgid "templates"
 msgstr ""
 
@@ -8832,12 +8832,12 @@ msgstr ""
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1418
+#: lib/Service/ProjectService.php:1420
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1482
+#: lib/Service/ProjectService.php:1484
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -8868,159 +8868,159 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:193
-#: lib/Service/ProjectService.php:1671
+#: lib/Service/ProjectService.php:1673
 #: specialVueFakeDummyForL10nScript.js:2236
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1673
-#: lib/Service/ProjectService.php:1729
-#: lib/Service/ProjectService.php:1902
-#: lib/Service/ProjectService.php:1947
-#: lib/Service/ProjectService.php:2007
+#: lib/Service/ProjectService.php:1675
+#: lib/Service/ProjectService.php:1731
+#: lib/Service/ProjectService.php:1904
+#: lib/Service/ProjectService.php:1949
+#: lib/Service/ProjectService.php:2009
 #: lib/Settings/PersonalForm.php:307
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1675
+#: lib/Service/ProjectService.php:1677
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1677
+#: lib/Service/ProjectService.php:1679
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1723
+#: lib/Service/ProjectService.php:1725
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1750
+#: lib/Service/ProjectService.php:1752
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1775
+#: lib/Service/ProjectService.php:1777
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1796
+#: lib/Service/ProjectService.php:1798
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1840
+#: lib/Service/ProjectService.php:1842
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1884
+#: lib/Service/ProjectService.php:1886
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2055
+#: lib/Service/ProjectService.php:2057
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2119
+#: lib/Service/ProjectService.php:2121
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2139
+#: lib/Service/ProjectService.php:2141
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2289
+#: lib/Service/ProjectService.php:2291
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2295
+#: lib/Service/ProjectService.php:2297
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2303
+#: lib/Service/ProjectService.php:2305
 #, php-format
 msgid ""
 "Selecting \"%1$s\" as instrument of the musician %2$s for the project "
 "\"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2348
+#: lib/Service/ProjectService.php:2350
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2359
+#: lib/Service/ProjectService.php:2361
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2415
+#: lib/Service/ProjectService.php:2417
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2482
+#: lib/Service/ProjectService.php:2484
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2626
+#: lib/Service/ProjectService.php:2628
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2651
+#: lib/Service/ProjectService.php:2653
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2728
+#: lib/Service/ProjectService.php:2730
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2769
+#: lib/Service/ProjectService.php:2771
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2799
+#: lib/Service/ProjectService.php:2801
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3084
+#: lib/Service/ProjectService.php:3086
 #, php-format
 msgid "Unable to find the project specified by given data (%s)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:3331
+#: lib/Service/ProjectService.php:3333
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3364
+#: lib/Service/ProjectService.php:3366
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3370
+#: lib/Service/ProjectService.php:3372
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3458
+#: lib/Service/ProjectService.php:3460
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -12225,14 +12225,14 @@ msgid "Readme"
 msgstr ""
 
 #: lib/Storage/Database/BankTransactionsStorage.php:140
-#: lib/Storage/Database/DonationReceiptsStorage.php:165
-#: lib/Storage/Database/InvoicesStorage.php:151
+#: lib/Storage/Database/DonationReceiptsStorage.php:166
+#: lib/Storage/Database/InvoicesStorage.php:152
 #, php-format
 msgid "Unable to add new document \"%s\"."
 msgstr ""
 
 #: lib/Storage/Database/BankTransactionsStorage.php:198
-#: lib/Storage/Database/DonationReceiptsStorage.php:242
+#: lib/Storage/Database/DonationReceiptsStorage.php:243
 #, php-format
 msgid "Unable to remove document \"%s\"."
 msgstr ""
@@ -12247,122 +12247,127 @@ msgstr ""
 msgid "BankTransactions"
 msgstr ""
 
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:112
+#. TRANSLATORS: folder-name
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:102
+msgid "Liabilities"
+msgstr ""
+
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:124
 msgid "TaxAuthorities"
 msgstr ""
 
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:122
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:134
 msgid "TaxExemptionNotices"
 msgstr ""
 
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:132
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:144
 msgid "DonationReceipts"
 msgstr ""
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:152
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:164
 #, php-format
 msgid "PaymentRecord-%1$s-%2$d"
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:187
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:199
 msgid "DebitMandates"
 msgstr ""
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:248
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:260
 #, php-format
 msgid "TaxExemptionNotice-%1$s-%2$04d-%3$04d"
 msgstr ""
 
 #. TRANSLATORS: file-name
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:300
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:312
 #, php-format
 msgid "DonationReceipt-%1$d-%2$s-%3$s"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Settings\ConfigConstants::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
-#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:364
-#: lib/Storage/Database/InvoicesStorage.php:104
+#: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:376
+#: lib/Storage/Database/InvoicesStorage.php:105
 #: lib/Settings/ConfigConstants.php:281
 #, php-format
 msgid "invoice"
 msgstr ""
 
-#: lib/Storage/Database/DonationReceiptsStorage.php:137
-#: lib/Storage/Database/InvoicesStorage.php:113
-#: lib/Storage/Database/ProjectParticipantsStorage.php:270
-#: lib/Storage/Database/ProjectParticipantsStorage.php:457
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:122
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:187
+#: lib/Storage/Database/DonationReceiptsStorage.php:138
+#: lib/Storage/Database/InvoicesStorage.php:114
+#: lib/Storage/Database/ProjectParticipantsStorage.php:271
+#: lib/Storage/Database/ProjectParticipantsStorage.php:458
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:123
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:188
 msgid "Root-folder does not exist."
 msgstr ""
 
-#: lib/Storage/Database/InvoicesStorage.php:438
+#: lib/Storage/Database/InvoicesStorage.php:439
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:449
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:235
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:236
 #, php-format
 msgid "Unable to find database entity for path \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/InvoicesStorage.php:443
+#: lib/Storage/Database/InvoicesStorage.php:444
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:454
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:240
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:241
 #, php-format
 msgid "Path \"%s\" is a directory."
 msgstr ""
 
-#: lib/Storage/Database/InvoicesStorage.php:450
+#: lib/Storage/Database/InvoicesStorage.php:451
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:461
 #, php-format
 msgid "Unable to find document container for path \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/InvoicesStorage.php:456
+#: lib/Storage/Database/InvoicesStorage.php:457
 #: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:467
 #, php-format
 msgid "The directory entry \"%s\" is not linked to a file."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:218
+#: lib/Storage/Database/ProjectParticipantsStorage.php:219
 #, php-format
 msgid "Unable to add debit-mandate \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:259
+#: lib/Storage/Database/ProjectParticipantsStorage.php:260
 #, php-format
 msgid "Debit-mandate \"%s\" has no hard-copy attached."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:290
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:205
+#: lib/Storage/Database/ProjectParticipantsStorage.php:291
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:206
 #, php-format
 msgid "Unable to remove debit-mandate \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:343
+#: lib/Storage/Database/ProjectParticipantsStorage.php:344
 #, php-format
 msgid "Unable to add composite payment \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:410
+#: lib/Storage/Database/ProjectParticipantsStorage.php:411
 #, php-format
 msgid "Unable to add file for field-datum \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:437
+#: lib/Storage/Database/ProjectParticipantsStorage.php:438
 #, php-format
 msgid "The field datum for field \"%s\" has no file attached to it."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:493
+#: lib/Storage/Database/ProjectParticipantsStorage.php:494
 #, php-format
 msgid "Unable to remove file for field-datum \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:560
+#: lib/Storage/Database/ProjectParticipantsStorage.php:561
 #, php-format
 msgid "Unable to update file-name for field-datum \"%s\"."
 msgstr ""
@@ -12385,12 +12390,12 @@ msgstr ""
 msgid "Unable to convert the in-memory file \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:136
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:137
 #, php-format
 msgid "Unable to add written tax exemption notice for \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/TaxExemptionNoticesStorage.php:176
+#: lib/Storage/Database/TaxExemptionNoticesStorage.php:177
 #, php-format
 msgid "Tax exemption notice \"%s\" has no hard-copy attached."
 msgstr ""
@@ -12910,7 +12915,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:1104
 #: src/app/project-participants.ts:907
 #: src/app/projects.ts:520
-#: src/app/sepa-debit-mandate.ts:898
+#: src/app/sepa-debit-mandate.ts:897
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
 msgstr ""
@@ -13957,18 +13962,6 @@ msgstr ""
 msgid "GnuCash Balance Data"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6267
-msgid "copy"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:6267
-msgid "move"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:6267
-msgid "link"
-msgstr ""
-
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:43
 #: specialVueFakeDummyForL10nScript.js:6380
 #: templates/settings.php:70
@@ -14084,11 +14077,11 @@ msgstr ""
 #: src/app/blog.ts:337
 #: src/app/blog.ts:363
 #: src/app/blog.ts:386
-#: src/app/cloud-file-picker-dialog.ts:82
-#: src/app/cloud-file-picker-dialog.ts:110
+#: src/app/cloud-file-picker-dialog.ts:80
+#: src/app/cloud-file-picker-dialog.ts:108
 #: src/app/email.ts:121
-#: src/app/email.ts:901
-#: src/app/email.ts:1031
+#: src/app/email.ts:905
+#: src/app/email.ts:1035
 #: src/app/project-participant-fields.ts:326
 #: src/app/settings.ts:1366
 #: src/app/settings.ts:1379
@@ -14226,34 +14219,34 @@ msgstr ""
 msgid "Missing Input Data"
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:62
-#: src/app/pme-file-upload-row.ts:202
+#: src/app/cloud-file-picker-dialog.ts:60
+#: src/app/pme-file-upload-row.ts:203
 msgid "Select a file from the cloud"
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:82
+#: src/app/cloud-file-picker-dialog.ts:80
 #: src/app/settings.ts:1366
 msgid "Empty response from file selection!"
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:109
+#: src/app/cloud-file-picker-dialog.ts:107
 msgid "Unable to copy selected file(s) {file}."
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:175
+#: src/app/cloud-file-picker-dialog.ts:179
 msgid "Select File System Operation"
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:182
+#: src/app/cloud-file-picker-dialog.ts:186
 msgid "Operation has been cancelled."
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:187
+#: src/app/cloud-file-picker-dialog.ts:191
 #: src/app/sepa-debit-mandate.ts:634
 msgid "Apply"
 msgstr ""
 
-#: src/app/cloud-file-picker-dialog.ts:188
+#: src/app/cloud-file-picker-dialog.ts:192
 #: src/app/select-popup.ts:72
 #: templates/blog/blogedit.php:42
 #: templates/emailform/part.emailform.composer.php:409
@@ -14383,47 +14376,47 @@ msgstr ""
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.ts:702
+#: src/app/email.ts:706
 msgid "Add"
 msgstr ""
 
-#: src/app/email.ts:900
+#: src/app/email.ts:904
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.ts:946
-#: src/app/email.ts:2262
+#: src/app/email.ts:950
+#: src/app/email.ts:2266
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.ts:948
-#: src/app/email.ts:2264
+#: src/app/email.ts:952
+#: src/app/email.ts:2268
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.ts:1030
+#: src/app/email.ts:1034
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.ts:1097
+#: src/app/email.ts:1101
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.ts:1098
+#: src/app/email.ts:1102
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.ts:1126
+#: src/app/email.ts:1130
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.ts:1162
+#: src/app/email.ts:1166
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.ts:1304
+#: src/app/email.ts:1308
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -14431,112 +14424,112 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.ts:1309
+#: src/app/email.ts:1313
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.ts:1372
+#: src/app/email.ts:1376
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.ts:1373
+#: src/app/email.ts:1377
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.ts:1405
+#: src/app/email.ts:1409
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.ts:1407
+#: src/app/email.ts:1411
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.ts:1448
+#: src/app/email.ts:1452
 msgid ""
 "Do you really want to delete the template with the name "
 "\"`{emailTemplateName}\"?"
 msgstr ""
 
-#: src/app/email.ts:1451
+#: src/app/email.ts:1455
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.ts:1465
+#: src/app/email.ts:1469
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.ts:1482
+#: src/app/email.ts:1486
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.ts:1485
+#: src/app/email.ts:1489
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.ts:1511
+#: src/app/email.ts:1515
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.ts:1512
+#: src/app/email.ts:1516
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.ts:1607
+#: src/app/email.ts:1611
 msgid ""
 "Click \"Yes\" to use the selected personal sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1608
+#: src/app/email.ts:1612
 msgid ""
 "Click \"Yes\" to use the selected \"global\" sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1611
+#: src/app/email.ts:1615
 msgid "Remember the sender choice?"
 msgstr ""
 
-#: src/app/email.ts:1627
+#: src/app/email.ts:1631
 msgid "Preference \"{configKey}\" set to \"{senderTag}\"."
 msgstr ""
 
-#: src/app/email.ts:1651
+#: src/app/email.ts:1655
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.ts:1653
+#: src/app/email.ts:1657
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.ts:1830
+#: src/app/email.ts:1834
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.ts:1831
-#: src/app/email.ts:1984
+#: src/app/email.ts:1835
+#: src/app/email.ts:1988
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.ts:1939
+#: src/app/email.ts:1943
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.ts:1983
+#: src/app/email.ts:1987
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.ts:2090
+#: src/app/email.ts:2094
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.ts:2093
+#: src/app/email.ts:2097
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
@@ -14606,33 +14599,33 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr ""
 
-#: src/app/musicians.ts:242
+#: src/app/musicians.ts:243
 msgid "Phone Number Validation"
 msgstr ""
 
-#: src/app/musicians.ts:305
+#: src/app/musicians.ts:306
 msgid "Email Validation"
 msgstr ""
 
-#: src/app/musicians.ts:334
+#: src/app/musicians.ts:335
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr ""
 
-#: src/app/musicians.ts:445
+#: src/app/musicians.ts:446
 msgid "Suggestions"
 msgstr ""
 
-#: src/app/musicians.ts:723
+#: src/app/musicians.ts:719
 msgid "I am refusing to add duplicates to the database."
 msgstr ""
 
-#: src/app/musicians.ts:726
+#: src/app/musicians.ts:722
 msgid "The following musician matches exactly your input:"
 msgid_plural "The following musicians match exactly your input:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/app/musicians.ts:729
+#: src/app/musicians.ts:725
 msgid ""
 "When you click the 'OK'-button or close this alert-window\n"
 "you will be redirected to the existing musician's data in order to inspect "
@@ -14642,21 +14635,21 @@ msgid ""
 "entry."
 msgstr ""
 
-#: src/app/musicians.ts:733
+#: src/app/musicians.ts:729
 msgid "Duplicates Detected"
 msgstr ""
 
-#: src/app/musicians.ts:760
+#: src/app/musicians.ts:756
 msgid "You definitely do not want to add duplicates to the database."
 msgstr ""
 
-#: src/app/musicians.ts:764
+#: src/app/musicians.ts:760
 msgid "The following musician matches your input:"
 msgid_plural "The following musicians match also your input:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/app/musicians.ts:767
+#: src/app/musicians.ts:763
 msgid ""
 "Please answer \"YES\" in order not to add a new musician,\n"
 "otherwise answer \"no\" (but please do not do this). If you react in a "
@@ -14665,7 +14658,7 @@ msgid ""
 "the personal data of the respective musician up-to-date."
 msgstr ""
 
-#: src/app/musicians.ts:771
+#: src/app/musicians.ts:767
 msgid "Avoid Possible Duplicate?"
 msgstr ""
 
@@ -14673,17 +14666,17 @@ msgstr ""
 msgid "Unable to download table in format \"{format}\" from \"{url}\": "
 msgstr ""
 
-#: src/app/pme-file-upload-row.ts:124
+#: src/app/pme-file-upload-row.ts:125
 msgid ""
 "File-upload feedback does not contain the required meta-information, the "
 "upload has probably failed."
 msgstr ""
 
-#: src/app/pme-file-upload-row.ts:201
+#: src/app/pme-file-upload-row.ts:202
 msgid "Select cloud-files for {object}"
 msgstr ""
 
-#: src/app/pme-file-upload-row.ts:258
+#: src/app/pme-file-upload-row.ts:259
 msgid "Confirmation Required!"
 msgstr ""
 
@@ -14926,66 +14919,66 @@ msgstr ""
 msgid "Missing Data"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:868
+#: src/app/sepa-debit-mandate.ts:867
 msgid "Do you really want to disable the current bank-account?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:870
+#: src/app/sepa-debit-mandate.ts:869
 msgid "Do you really want to disable the current debit-mandate?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:877
+#: src/app/sepa-debit-mandate.ts:876
 msgid "Do you really want to reactivate the current bank-account?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:879
+#: src/app/sepa-debit-mandate.ts:878
 msgid "Do you really want to reactiveate the current debit-mandate?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:888
+#: src/app/sepa-debit-mandate.ts:887
 msgid "Do you really want to delete the current bank-account?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:890
+#: src/app/sepa-debit-mandate.ts:889
 msgid "Do you really want to delete the current debit-mandate?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:901
+#: src/app/sepa-debit-mandate.ts:900
 msgid "Unconfirmed, doing nothing"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:923
-#: src/app/sepa-debit-mandate.ts:1035
+#: src/app/sepa-debit-mandate.ts:922
+#: src/app/sepa-debit-mandate.ts:1034
 msgid "Suggested alternatives based on common human mis-transcriptions:"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:927
-#: src/app/sepa-debit-mandate.ts:1039
+#: src/app/sepa-debit-mandate.ts:926
+#: src/app/sepa-debit-mandate.ts:1038
 msgid "Please do not accept these alternatives lightly!"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:1506
+#: src/app/sepa-debit-mandate.ts:1501
 msgid "Update canceled by user"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:1691
+#: src/app/sepa-debit-mandate.ts:1686
 msgid ""
 "The bank-account-owner is already set but differs from the project-"
 "participant. Shall we replace the current bank-account-owner by the project-"
 "participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:1693
+#: src/app/sepa-debit-mandate.ts:1688
 msgid "Set Bank-Account-Owner to Project-Participant?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:1748
+#: src/app/sepa-debit-mandate.ts:1743
 msgid ""
 "Project-participant is already set but differs from the bank-account-owner. "
 "Shall we set the project-participant to the bank-account-owner?"
 msgstr ""
 
-#: src/app/sepa-debit-mandate.ts:1750
+#: src/app/sepa-debit-mandate.ts:1745
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr ""
 
@@ -15084,76 +15077,76 @@ msgstr ""
 msgid "Vue JS Frontend"
 msgstr ""
 
-#: src/files-hooks.ts:231
+#: src/files-hooks.ts:230
 msgid "Perform mail-merge operation with this template file."
 msgstr ""
 
-#: src/files-hooks.ts:317
-#: src/files-hooks.ts:349
+#: src/files-hooks.ts:316
+#: src/files-hooks.ts:348
 msgid "New Supporting Document"
 msgstr ""
 
-#: src/files-hooks.ts:347
+#: src/files-hooks.ts:346
 msgid "New Year Folder"
 msgstr ""
 
-#: src/files-hooks.ts:372
+#: src/files-hooks.ts:371
 msgid "Year determined as {year}."
 msgstr ""
 
-#: src/files-hooks.ts:388
-#: src/files-hooks.ts:432
+#: src/files-hooks.ts:387
+#: src/files-hooks.ts:431
 msgid "Created new folder \"{name}\""
 msgstr ""
 
-#: src/files-hooks.ts:415
+#: src/files-hooks.ts:414
 msgid "Document sequence determined as {sequence}."
 msgstr ""
 
-#: src/files-hooks.ts:476
-#: src/files-hooks.ts:523
+#: src/files-hooks.ts:475
+#: src/files-hooks.ts:522
 msgid "Please use the \"{appName}\" app!"
 msgstr ""
 
-#: src/files-hooks.ts:480
+#: src/files-hooks.ts:479
 msgid "project overview"
 msgstr ""
 
-#: src/files-hooks.ts:479
+#: src/files-hooks.ts:478
 msgid ""
 "New projects have to be created using the \"{buttonName}\" button on the "
 "{pageName} page."
 msgstr ""
 
-#: src/files-hooks.ts:508
+#: src/files-hooks.ts:507
 msgid "New Project-Participant"
 msgstr ""
 
-#: src/files-hooks.ts:527
+#: src/files-hooks.ts:526
 msgid "project participants"
 msgstr ""
 
-#: src/files-hooks.ts:526
+#: src/files-hooks.ts:525
 msgid "Participants have to be managed on the {pageName} page."
 msgstr ""
 
-#: src/files-hooks.ts:569
+#: src/files-hooks.ts:568
 msgid "Generate Invoice Document"
 msgstr ""
 
-#: src/files-hooks.ts:589
+#: src/files-hooks.ts:588
 msgid "Starting mail-merge, this may take some time ..."
 msgstr ""
 
-#: src/files-hooks.ts:596
+#: src/files-hooks.ts:595
 msgid "Mail-merge completed, moving document into the proper place ..."
 msgstr ""
 
-#: src/files-hooks.ts:618
+#: src/files-hooks.ts:617
 msgid "Reloading file list."
 msgstr ""
 
-#: src/files-hooks.ts:629
+#: src/files-hooks.ts:628
 msgid "Mail-merge operation has failed"
 msgstr ""
 
