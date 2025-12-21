@@ -32,7 +32,8 @@ const placeholderCssClass = '__jquery-readonly-placeholder__';
 const elementReadonlyClass = '__jquery-readonly-active__';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type VanillaPropertyFunction = (propertyName: string, propertyValue?: boolean) => any;
+// type VanillaPropertyFunction = (propertyName: string, propertyValue?: boolean) => any;
+type VanillaPropertyFunction = typeof $.fn.prop;
 const vanillaProp: VanillaPropertyFunction = $.fn.prop;
 
 type ValueType =
@@ -63,7 +64,7 @@ const data = <T extends HTMLElement>($arg: JQuery<T>) => {
   return data;
 };
 
-const overrideProp = function<T extends HTMLElement>(
+const overrideProp: VanillaPropertyFunction = function<T extends HTMLElement>(
   this: JQuery<T>,
   property: string|JQuery.PlainObject,
   propertyValue?: ValueType,
@@ -71,8 +72,14 @@ const overrideProp = function<T extends HTMLElement>(
   const value: undefined|boolean = propertyValue as undefined|boolean;
   // eslint-disable-next-line
   if (this.length === 0) {
-    // @ts-expect-error 2345 DO NOT CARE
-    return vanillaProp.call(this, property, propertyValue);
+    switch (arguments.length) {
+      case 1:
+        return vanillaProp.call(this, property as string);
+      case 2:
+      default:
+        // @ts-expect-error 2554 Why???
+        return vanillaProp.call(this, property, propertyValue);
+    }
   }
   if (propertyValue === undefined) {
     if (typeof property === 'string') {
@@ -87,6 +94,7 @@ const overrideProp = function<T extends HTMLElement>(
       return vanillaProp.call(this, property);
     } else {
       for (const [key, value] of Object.entries(property)) {
+        // @ts-expect-error 2554 Why???
         overrideProp.call(this, key, value);
       }
       return this;
@@ -103,6 +111,7 @@ const overrideProp = function<T extends HTMLElement>(
       const $placeholder = thisData.readonlyPlaceholder;
       if ($placeholder) {
         // enable and disable the placeholder instead of the element
+        // @ts-expect-error 2554 Why???
         vanillaProp.call($placeholder, property, value);
       }
       if ($this.is('option')) {
@@ -111,6 +120,7 @@ const overrideProp = function<T extends HTMLElement>(
         const $optionPlaceholder = thisData.readonlyPlaceholder;
         if ($optionPlaceholder) {
           const optionDisabled = value || thisData.readonlyRestoreDisabled || !vanillaProp.call($this, 'selected');
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($optionPlaceholder, property, optionDisabled);
         }
       } else if (isJQuerySelect($this)) {
@@ -120,6 +130,7 @@ const overrideProp = function<T extends HTMLElement>(
           const $optionPlaceholder = data($option).readonlyPlaceholder;
           if ($optionPlaceholder) {
             const optionDisabled = value as boolean || $option.data().readonlyRestoreDisabled as boolean || !vanillaProp.call($option, 'selected');
+            // @ts-expect-error 2554 Why???
             vanillaProp.call($optionPlaceholder, property, optionDisabled);
           }
         });
@@ -128,6 +139,7 @@ const overrideProp = function<T extends HTMLElement>(
           thisData.readonlyRestoreDisabled = value;
         } else {
           // apply the disabled attribute to the surrounding single select
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($this, property, value);
         }
       } else if ($this.is(':radio')) {
@@ -139,9 +151,11 @@ const overrideProp = function<T extends HTMLElement>(
       } else if ($this.is(':button, :submit')) {
         thisData.readonlyRestoreDisabled = value;
       } else {
+        // @ts-expect-error 2554 Why???
         vanillaProp.call($this, property, value);
       }
     } else {
+      // @ts-expect-error 2554 Why???
       vanillaProp.call($this, property as string, value);
     }
   });
@@ -217,6 +231,7 @@ $.fn.readonly = function(state?: boolean|string) {
     }
     thisData.readonlyState = state;
     $this.toggleClass(elementReadonlyClass, state);
+    // @ts-expect-error 2554 Why???
     vanillaProp.call($this, 'readonly', state);
     if (!state) {
       $this.removeAttr('readonly');
@@ -231,10 +246,12 @@ $.fn.readonly = function(state?: boolean|string) {
           if (!state) {
             const restoreDisabled = data($option).readonlyRestoreDisabled;
             if (restoreDisabled !== undefined) {
+              // @ts-expect-error 2554 Why???
               vanillaProp.call($option, 'disabled', restoreDisabled);
             }
           } else {
             data($option).readonlyRestoreDisabled = vanillaProp.call($option, 'disabled');
+            // @ts-expect-error 2554 Why???
             vanillaProp.call($option, 'disabled', !vanillaProp.call($option, 'selected'));
           }
           data($option).readonlyState = state;
@@ -254,14 +271,17 @@ $.fn.readonly = function(state?: boolean|string) {
             placeholder = generatePlaceHolder($option, name, optionValue, $this, placeholderInitialized);
           }
           placeholder.attr('value', optionValue);
+          // @ts-expect-error 2554 Why???
           vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
           if (!state) {
             const restoreDisabled = data($option).readonlyRestoreDisabled;
             if (restoreDisabled !== undefined) {
+              // @ts-expect-error 2554 Why???
               vanillaProp.call($option, 'disabled', restoreDisabled);
             }
           } else {
             data($option).readonlyRestoreDisabled = vanillaProp.call($option, 'disabled');
+            // @ts-expect-error 2554 Why???
             vanillaProp.call($option, 'disabled', true);
           }
           data($option).readonlyState = state;
@@ -271,11 +291,13 @@ $.fn.readonly = function(state?: boolean|string) {
         if (!state) {
           const restoreDisabled = thisData.readonlyRestoreDisabled;
           if (restoreDisabled !== undefined) {
+            // @ts-expect-error 2554 Why???
             vanillaProp.call($this, 'disabled', restoreDisabled);
           }
         } else {
           // disable the multi-select as all data is submitted via placeholders
           thisData.readonlyRestoreDisabled = vanillaProp.call($this, 'disabled');
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($this, 'disabled', true);
         }
       }
@@ -301,15 +323,18 @@ $.fn.readonly = function(state?: boolean|string) {
         // remember the current state in each group member's data-set
         data($radio).readonlyState = state;
         $radio.toggleClass(elementReadonlyClass, state);
+        // @ts-expect-error 2554 Why???
         vanillaProp.call($radio, 'readonly', state);
 
         if (!state) {
           const restoreDisabled = data($radio).readonlyRestoreDisabled;
           if (restoreDisabled !== undefined) {
+            // @ts-expect-error 2554 Why???
             vanillaProp.call($radio, 'disabled', restoreDisabled);
           }
         } else {
           data($radio).readonlyRestoreDisabled = vanillaProp.call($radio, 'disabled');
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($radio, 'disabled', !vanillaProp.call($radio, 'checked'));
         }
       });
@@ -322,25 +347,30 @@ $.fn.readonly = function(state?: boolean|string) {
         placeholder = generatePlaceHolder($this, name, checkboxValue);
       }
       placeholder.attr('value', checkboxValue);
+      // @ts-expect-error 2554 Why???
       vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
       if (!state) {
         const restoreDisabled = thisData.readonlyRestoreDisabled;
         if (restoreDisabled !== undefined) {
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($this, 'disabled', restoreDisabled);
         }
       } else {
         thisData.readonlyRestoreDisabled = vanillaProp.call($this, 'disabled');
-        vanillaProp.call($this, 'disabled', true);
+        // @ts-expect-error 2554 Why???
+        anillaProp.call($this, 'disabled', true);
       }
     } else if ($this.is(':button, :submit')) {
       // readonly-buttons do not make sense, but it simplifies the code in other places.
       if (!state) {
         const restoreDisabled = thisData.readonlyRestoreDisabled;
         if (restoreDisabled !== undefined) {
+          // @ts-expect-error 2554 Why???
           vanillaProp.call($this, 'disabled', restoreDisabled);
         }
       } else {
         thisData.readonlyRestoreDisabled = vanillaProp.call($this, 'disabled');
+        // @ts-expect-error 2554 Why???
         vanillaProp.call($this, 'disabled', true);
       }
     }
