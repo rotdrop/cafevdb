@@ -270,6 +270,16 @@ class EntitySerializer
             break;
         }
       }
+      if ($entity instanceof JsonSerializable) {
+        // add further properties if advertised by the entity. This is now
+        // somewhat inefficient, but perhaps we will find a better way some
+        // day ....
+        $jsonData = $entity->jsonSerialize();
+        $missingProperties = array_diff(array_keys($jsonData), array_keys($flatEntity));
+        foreach ($missingProperties as $property) {
+          $flatEntity[$property] = $jsonData[$property];
+        }
+      }
       $this->repositories[$entityClassName][$flatIdentifier] = $flatEntity;
       if ($principal) {
         if (!$existing) {

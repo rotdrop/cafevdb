@@ -48,7 +48,8 @@ import {
   promise as decryptionPromise,
 } from './lazy-decryption.ts';
 import debounce from './debounce.ts';
-import type { Musician } from '../types/address-book.d.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
+import type { DuplicateMusiciansResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -642,16 +643,6 @@ const contactValidation = function(container?: string|JQuery) {
   updateAutocompleteData();
 };
 
-type DuplicateMusician = Musician & {
-  duplicatesPropability: number;
-  reasons: string;
-};
-
-type DuplicatesResponse = {
-  messages: string[];
-  duplicates: Record<number, DuplicateMusician>;
-};
-
 let nameValidationActive = false;
 
 const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => void = () => {}) => {
@@ -680,8 +671,8 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, cleanup);
     })
-    .done(function(data: DuplicatesResponse) {
-      if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+    .done(function(data: DuplicateMusiciansResponse) {
+      if (!Ajax.validateResponse(data, ['messages'], cleanup)) {
         return;
       }
 
@@ -697,25 +688,30 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
       }
       const $musicianViewTemplate = $('#musicianAddressViewTemplate');
       const $musicianViews = $('<div class="duplicate-musicians-view"></div>');
-      let maxPropability = 0.0;
+      let maxProbability = 0.0;
       const maxIds: number[] = [];
-      for (const [musicianId, musician] of Object.entries(duplicates)) {
-        const $musicianView = $musicianViewTemplate.octemplate(musician);
+      for (const [musicianId, duplicate] of Object.entries(duplicates)) {
+        const $musicianView = $musicianViewTemplate.octemplate<TemplateParameters['musicianAddressViewTemplate']>(
+          { ...duplicate, ...duplicate.musician, reasons: duplicate.reasons.join('. ') },
+        );
         $musicianViews.append($musicianView);
-        if (musician.duplicatesPropability === maxPropability) {
+        if (duplicate.duplicatesProbability === maxProbability) {
           maxIds.push(+musicianId);
-        } else if (musician.duplicatesPropability > maxPropability) {
-          maxPropability = musician.duplicatesPropability;
+        } else if (duplicate.duplicatesProbability > maxProbability) {
+          maxProbability = duplicate.duplicatesProbability;
           maxIds.length = 0;
           maxIds.push(+musicianId);
         }
       }
 
-      if (maxPropability === 1.0) {
+      if (maxProbability === 1.0) {
         // remove all none 100% people
         $musicianViews.empty();
         for (const musicianId of maxIds) {
-          const $musicianView = $musicianViewTemplate.octemplate(duplicates[musicianId]);
+          const duplicate = duplicates[musicianId];
+          const $musicianView = $musicianViewTemplate.octemplate<TemplateParameters['musicianAddressViewTemplate']>(
+            { ...duplicate, ...duplicate.musician, reasons: duplicate.reasons.join('. ') },
+          );
           $musicianViews.append($musicianView);
         }
 

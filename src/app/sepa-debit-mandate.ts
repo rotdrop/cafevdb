@@ -72,6 +72,7 @@ import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitManda
 import { EnumFileUploadMode, type EnumSepaDebitMandateRevocationAction, type EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -274,7 +275,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   const fileUploadTemplate = $('#fileUploadTemplate');
   const uploadWrapperId = appName + 'written-mandate-upload-wrapper';
-  const $uploadUi = fileUploadTemplate.octemplate({
+  const $uploadUi = fileUploadTemplate.octemplate<TemplateParameters['fileUploadTemplate']>({
     wrapperId: uploadWrapperId,
     formClass: 'file-upload-form',
     accept: '*',

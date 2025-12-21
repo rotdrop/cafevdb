@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,32 +22,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
+namespace OCA\CAFEVDB\Controller\DTO;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Simple entity reference with optional class name and flattened identifier.
+ * Duplicate musician DTO.
  */
-#[TSAttributes\TemplateParameters('K extends keyof Database.Doctrine.ORM.EntityMetadata.EntityMap')]
-class EntityReferenceCollection extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    #[TSAttributes\LiteralTypeScriptType('K')]
-    public readonly string $entityClassName,
-    /**
-     * @var Collection<string, EntityReference>
-     *
-     * The array key is whatever has been specified by "indexBy".
-     */
-    #[TSAttributes\LiteralTypeScriptType('{ [index: string|number]: Database.Doctrine.ORM.Util.EntityReference<keyof Database.Doctrine.ORM.EntityMetadata.EntityMap> }')]
-    public readonly array $entities,
+    public readonly float $duplicatesProbability,
+    /** @var array<string> $reasons */
+    public readonly array $reasons,
+    #[TSAttributes\LiteralTypeScriptType("Database.Doctrine.ORM.EntityMetadata.EntityDto<'Musician'>")]
+    public readonly array $musician,
   ) {
   }
 
   /**
-   * Create an instance from a data array.
+   * Initialize from the given array.
    *
    * @param array $data
    *
@@ -61,8 +56,9 @@ class EntityReferenceCollection extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self(
-      entityClassName: $entityClassName,
-      entities: $entities,
+      duplicatesProbability: $duplicatesProbability,
+      reasons: $reasons,
+      musician: $musician,
     );
   }
 }

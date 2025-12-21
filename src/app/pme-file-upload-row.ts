@@ -36,6 +36,7 @@ import md5 from 'blueimp-md5';
 import setAppBusyIndicators from './busy-indicators.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
 import { translate as t } from '@nextcloud/l10n';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -68,7 +69,7 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
     console.error('JSON STRINGIFY ERROR', { error, data: $thisRow.data() });
     return;
   }
-  const $uploadUi = $('#fileUploadTemplate').octemplate({
+  const $uploadUi = $('#fileUploadTemplate').octemplate<TemplateParameters['fileUploadTemplate']>({
     wrapperId: widgetId,
     formClass: 'file-upload-form',
     accept: '*',

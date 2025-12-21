@@ -43,10 +43,10 @@ export type TemplateParameters = {
     formClass: string;
     accept: string;
     uploadName: string;
-    uploadData: string;
     requestToken: string;
-    projectId: number;
-    musicianId: number;
+    uploadData?: string;
+    projectId?: number;
+    musicianId?: number;
   };
   imageFileUploadTemplate: {
     formId: string;
@@ -58,19 +58,19 @@ export type TemplateParameters = {
   };
   musicianAddressViewTemplate: {
     id: number;
-    personalPulicName: string;
-    email: string;
-    fixedLinePhone: string;
-    mobilePhone: string;
-    addressSupplement: string;
+    personalPublicName: string;
+    email?: string;
+    fixedLinePhone?: string;
+    mobilePhone?: string;
+    addressSupplement?: string;
     streetAndNumber: string;
-    postalCode: string;
-    country: string;
-    duplicatesProbability: string;
+    postalCode?: string;
+    country?: string;
+    duplicatesProbability: number;
     reasons: string;
   };
   progressWrapperTemplate: {
-    wrapperId: string;
+    wrapperId: strin;g
     caption: string;
     label: string;
   };

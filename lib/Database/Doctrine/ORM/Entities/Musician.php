@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -44,6 +45,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Musician
  *
+ * @property string $test
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
@@ -53,6 +55,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
+#[LiteralTypeScriptProperty(propertyName: 'personalPublicName', typeScript: 'string', optional: false)]
+#[LiteralTypeScriptProperty(propertyName: 'streetAndNumber', typeScript: 'string', optional: false)]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -146,7 +150,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private ?string $addressSupplement = null;
 
   /**
-   * po-box component for the sake of supporting business contacts.
+   * PO-Box component for the sake of supporting business contacts.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $poBox = null;
@@ -1663,13 +1667,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function jsonSerialize():array
   {
     return array_merge($this->toArray(), [
-      'publicName' => $this->getPublicName(true),
+      'publicName' => $this->getPublicName(firstNameFirst: true),
+      'personalPublicName' => $this->getPublicName(firstNameFirst: true),
+      'displayName' => $this->displayName ?? $this->getPublicName(firstNameFirst: false),
+      'streetAndNumber' => $this->street . ' ' . $this->streetNumber,
+      'numberAndStreet' => $this->number . ' ' . $this->street,
     ]);
   }
 
   /**
    * {@inheritdoc}
-   *
    *
    * @todo This should no longer be necessary.
    */

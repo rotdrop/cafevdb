@@ -31,6 +31,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
@@ -96,6 +97,7 @@ class MusicianValidationController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/musicians/{topic}/{subTopic}', defaults: ['subTopic' => ''])]
   public function validate(string $topic, ?string $subTopic = null, string $failure = 'notice'):DataResponse
   {
     $message = [];
@@ -426,9 +428,11 @@ class MusicianValidationController extends Controller
             $commsMatch && $reasons[] = $this->l->t('communication');
             $addressMatch && $reasons[] = $this->l->t('address');
 
-            $duplicates[$musicianId] = $this->flattenMusician($musician, only: []);
-            $duplicates[$musicianId]['duplicatesProbability'] = $duplicatesProbability;
-            $duplicates[$musicianId]['reasons'] = implode(', ', $reasons);
+            $duplicates[$musicianId] = new DTO\DuplicateMusician(
+              duplicatesProbability: $duplicatesProbability,
+              reasons: $reasons,
+              musician: EntityArrayAdapter::create($musician, depth: 0),
+            );
           }
         }
 
@@ -437,11 +441,10 @@ class MusicianValidationController extends Controller
           $messages[] = $this->l->t('Musician(s) with the same first and sur-name already exist: %s', $duplicateNames);
         }
 
-        return self::dataResponse([
-          'messages' => $messages,
-          'duplicates' => $duplicates,
-        ]);
-        break;
+        return new DTO\DuplicateMusiciansResponse(
+          messages: $messages,
+          duplicates: $duplicates,
+        )->response();
       default:
         break;
     }

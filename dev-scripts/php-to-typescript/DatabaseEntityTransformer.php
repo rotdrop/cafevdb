@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,16 +27,18 @@ namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 use ReflectionClass;
 use ReflectionProperty;
 
+use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 
-/** Transform database entities, including and in particular their private and
- *  protected properties.
+/**
+ * Transform database entities, including and in particular their private and
+ * protected properties.
  */
 class DatabaseEntityTransformer extends DtoTransformer
 {
+  /** {@inheritdoc} */
   protected function resolveProperties(ReflectionClass $class): array
   {
-    $foo = false;
     $visibility = ReflectionProperty::IS_PUBLIC
       |ReflectionProperty::IS_PROTECTED
       |ReflectionProperty::IS_PRIVATE;
@@ -46,5 +48,32 @@ class DatabaseEntityTransformer extends DtoTransformer
     );
 
     return array_values($properties);
+  }
+
+  /** {@inheritdoc} */
+  protected function transformExtra(
+    ReflectionClass $class,
+    MissingSymbolsCollection $missingSymbols
+  ): string {
+    $result = '';
+    $attributes = $class->getAttributes(LiteralTypeScriptProperty::class);
+    foreach ($attributes as $reflectionAttribute) {
+      /** @var LiteralTypeScriptProperty $attribute */
+      $attribute = $reflectionAttribute->newInstance();
+      $propertyName = $attribute->getPropertyName();
+      $propertyType = $attribute->getType();
+      $isOptional = $attribute->getOptional();
+      $transformedType = $this->typeToTypeScript(
+        $propertyType,
+        $missingSymbols,
+        false,
+        $class->getName(),
+      );
+      $result .= $isOptional
+        ? "    {$propertyName}?: {$transformedType};" . PHP_EOL
+        : "    {$propertyName}: {$transformedType};" . PHP_EOL;
+    }
+
+    return $result;
   }
 }

@@ -60,13 +60,15 @@ class EntityArrayAdapter implements ArrayAccess, Iterator, JsonSerializable
    *
    * @param int $depth Fetch associations up to the given recursion depth.
    *
-   * @param ?self $root Non null only on inferior instances
+   * @param ?self $root Non null only on inferior instances.
    *
    * @param ?string $flatIdentifier
    *
    * @param ?EntitySerializer $entitySerializer Extra param in order to aid
    * unit-testing with (partly) mocked objects. The object will be cloned
    * s.t. that each top-level array-adapter has its own caching instance.
+   *
+   * @param ?IAppContainer $appContainer
    */
   protected function __construct(
     private mixed $entity,
@@ -266,7 +268,7 @@ class EntityArrayAdapter implements ArrayAccess, Iterator, JsonSerializable
   /** {@inheritdoc} */
   public function current(): mixed
   {
-    $data = $this->data ?? $this->ensureData();
+    $this->data ?? $this->ensureData();
     $key = current($this->keys);
     if ($key !== false) {
       return $this[$key];

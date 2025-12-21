@@ -22,41 +22,52 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
+namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Attribute;
+
+use Spatie\TypeScriptTransformer\Types\StructType;
+use Spatie\TypeScriptTransformer\Types\TypeScriptType;
+use phpDocumentor\Reflection\Type;
 
 /**
- * Simple entity reference with optional class name and flattened identifier.
+ * Define additional properties which should be present in the TS output.
  */
-#[TSAttributes\TemplateParameters('K extends keyof Database.Doctrine.ORM.EntityMetadata.EntityMap')]
-class EntityReference extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+#[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS)]
+class LiteralTypeScriptProperty
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly string $flatIdentifier,
-    #[TSAttributes\LiteralTypeScriptType('K')]
-    public readonly ?string $entityClassName = null,
+    private string $propertyName,
+    private string | array $typeScript,
+    private bool $optional = false,
   ) {
   }
 
-  /**
-   * Create an instance from a data array.
-   *
-   * @param array $data
-   *
-   * @return self
-   *
-   * @SuppressWarnings(PHPMD.UndefinedVariable)
-   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-   */
-  public static function fromArray(array $data): self
+  /** @return string */
+  public function getPropertyName(): string
   {
-    static::initKeys();
-    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self(
-      flatIdentifier: $flatIdentifier,
-      entityClassName: $entityClassName ?? null,
+    return $this->propertyName;
+  }
+
+  /** @return bool */
+  public function getOptional(): bool
+  {
+    return $this->optional;
+  }
+
+  /** @return Type */
+  public function getType(): Type
+  {
+    if (is_string($this->typeScript)) {
+      return new TypeScriptType($this->typeScript);
+    }
+
+    $types = array_map(
+      fn (string $type) => new TypeScriptType($type),
+      $this->typeScript
     );
+
+    return new StructType($types);
   }
 }

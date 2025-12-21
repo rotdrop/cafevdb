@@ -430,12 +430,12 @@ $routes = [
     /**
      * Musicians
      */
-    [
-      'name' => 'musician_validation#validate',
-      'url' => '/validate/musicians/{topic}/{subTopic}',
-      'verb' => 'POST',
-      'defaults' => [ 'subTopic' => '' ],
-    ],
+    // [
+    //   'name' => 'musician_validation#validate',
+    //   'url' => '/validate/musicians/{topic}/{subTopic}',
+    //   'verb' => 'POST',
+    //   'defaults' => [ 'subTopic' => '' ],
+    // ],
     /**
      * Finance and stuff
      */

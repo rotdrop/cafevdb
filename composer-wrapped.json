@@ -66,6 +66,12 @@
   "require-dev": {
     "cweagans/composer-patches": "^1.7"
   },
+  "autoload-dev": {
+    "psr-4": {
+      "OCA\\CAFEVDB\\DevScripts\\PhpToTypeScript\\": "dev-scripts/php-to-typescript",
+      "Spatie\\TypeScriptTransformer\\": "vendor-bin/typescript-transformer/vendor/spatie/typescript-transformer/src/"
+    }
+  },
   "extra": {
     "patches": {
       "bytestream/horde-socket-client": {

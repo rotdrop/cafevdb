@@ -63,15 +63,15 @@
     "cweagans/composer-patches": "^1.7",
     "vildanbina/composer-upgrader": "^1.0"
   },
-  "autoload": {
-    "files": [
-      "lib/Common/Functions.php"
-    ]
-  },
   "autoload-dev": {
     "psr-4": {
       "OCA\\CAFEVDB\\DevScripts\\PhpToTypeScript\\": "dev-scripts/php-to-typescript"
     }
+  },
+  "autoload": {
+    "files": [
+      "lib/Common/Functions.php"
+    ]
   },
   "repositories": [
     {
