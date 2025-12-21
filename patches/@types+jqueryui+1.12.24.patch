@@ -7,7 +7,7 @@ index df0eb3a..0602ff0 100644
  
      interface AccordionEvent {
 -        (event: JQueryEventObject, ui: AccordionUIParams): void;
-+        (event: JQuery.Event, ui: AccordionUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: AccordionUIParams): void;
      }
  
      interface AccordionEvents {
@@ -33,7 +33,7 @@ index df0eb3a..0602ff0 100644
  
      interface AutocompleteEvent {
 -        (event: JQueryEventObject, ui: AutocompleteUIParams): void;
-+        (event: JQuery.Event, ui: AutocompleteUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: AutocompleteUIParams): void;
      }
  
      interface AutocompleteEvents {
@@ -115,7 +115,7 @@ index df0eb3a..0602ff0 100644
          showText?: string | boolean | undefined;
          text?: string | undefined;
 -        click?: ((eventObject: JQueryEventObject) => any) | undefined;
-+        click?: ((eventObject: JQuery.Event) => any) | undefined;
++        click?: ((eventObject: JQuery.TriggeredEvent) => any) | undefined;
          [attr: string]: any; // attributes for the <button> element
      }
  
@@ -126,7 +126,7 @@ index df0eb3a..0602ff0 100644
 -    interface DialogEvent {
 -        (event: JQueryEventObject, ui: DialogUIParams): void;
 +    interface DialogEvent<E = HTMLElement> {
-+      (this: E, event: JQuery.Event, ui: DialogUIParams): void;
++      (this: E, event: JQuery.TriggeredEvent, ui: DialogUIParams): void;
      }
  
 -    interface DialogEvents {
@@ -165,7 +165,7 @@ index df0eb3a..0602ff0 100644
  
      interface DraggableEvent {
 -        (event: JQueryEventObject, ui: DraggableEventUIParams): void;
-+        (event: JQuery.Event, ui: DraggableEventUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: DraggableEventUIParams): void;
      }
  
      interface DraggableOptions extends DraggableEvents {
@@ -174,7 +174,7 @@ index df0eb3a..0602ff0 100644
  
      interface DroppableEvent {
 -        (event: JQueryEventObject, ui: DroppableEventUIParam): void;
-+        (event: JQuery.Event, ui: DroppableEventUIParam): void;
++        (event: JQuery.TriggeredEvent, ui: DroppableEventUIParam): void;
      }
  
      interface DroppableOptions extends DroppableEvents {
@@ -183,7 +183,7 @@ index df0eb3a..0602ff0 100644
  
      interface MenuEvent {
 -        (event: JQueryEventObject, ui: MenuUIParams): void;
-+        (event: JQuery.Event, ui: MenuUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: MenuUIParams): void;
      }
  
      interface MenuEvents {
@@ -192,7 +192,7 @@ index df0eb3a..0602ff0 100644
  
      interface ProgressbarEvent {
 -        (event: JQueryEventObject, ui: ProgressbarUIParams): void;
-+        (event: JQuery.Event, ui: ProgressbarUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: ProgressbarUIParams): void;
      }
  
      interface ProgressbarEvents {
@@ -201,7 +201,7 @@ index df0eb3a..0602ff0 100644
  
      interface ResizableEvent {
 -        (event: JQueryEventObject, ui: ResizableUIParams): void;
-+        (event: JQuery.Event, ui: ResizableUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: ResizableUIParams): void;
      }
  
      interface ResizableEvents {
@@ -215,12 +215,12 @@ index df0eb3a..0602ff0 100644
 -        stop?(event: JQueryEventObject, ui: any): void;
 -        unselected?(event: JQueryEventObject, ui: { unselected: Element }): void;
 -        unselecting?(event: JQueryEventObject, ui: { unselecting: Element }): void;
-+        selected?(event: JQuery.Event, ui: { selected?: Element | undefined }): void;
-+        selecting?(event: JQuery.Event, ui: { selecting?: Element | undefined }): void;
-+        start?(event: JQuery.Event, ui: any): void;
-+        stop?(event: JQuery.Event, ui: any): void;
-+        unselected?(event: JQuery.Event, ui: { unselected: Element }): void;
-+        unselecting?(event: JQuery.Event, ui: { unselecting: Element }): void;
++        selected?(event: JQuery.TriggeredEvent, ui: { selected?: Element | undefined }): void;
++        selecting?(event: JQuery.TriggeredEvent, ui: { selecting?: Element | undefined }): void;
++        start?(event: JQuery.TriggeredEvent, ui: any): void;
++        stop?(event: JQuery.TriggeredEvent, ui: any): void;
++        unselected?(event: JQuery.TriggeredEvent, ui: { unselected: Element }): void;
++        unselecting?(event: JQuery.TriggeredEvent, ui: { unselecting: Element }): void;
      }
  
      interface Selectable extends Widget, SelectableOptions {
@@ -229,7 +229,7 @@ index df0eb3a..0602ff0 100644
  
      interface SelectMenuEvent {
 -        (event: JQueryEventObject, ui: SelectMenuUIParams): void;
-+        (event: JQuery.Event, ui: SelectMenuUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: SelectMenuUIParams): void;
      }
  
      interface SelectMenuEvents {
@@ -238,7 +238,7 @@ index df0eb3a..0602ff0 100644
  
      interface SliderEvent {
 -        (event: JQueryEventObject, ui: SliderUIParams): void;
-+        (event: JQuery.Event, ui: SliderUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: SliderUIParams): void;
      }
  
      interface SliderEvents {
@@ -247,7 +247,7 @@ index df0eb3a..0602ff0 100644
          forcePlaceholderSize?: boolean | undefined;
          grid?: number[] | undefined;
 -        helper?: string | ((event: JQueryEventObject, element: Sortable) => Element) | undefined;
-+        helper?: string | ((event: JQuery.Event, element: Sortable) => Element) | undefined;
++        helper?: string | ((event: JQuery.TriggeredEvent, element: Sortable) => Element) | undefined;
          handle?: any; // Selector or Element
          items?: any; // Selector
          opacity?: number | undefined;
@@ -256,7 +256,7 @@ index df0eb3a..0602ff0 100644
  
      interface SortableEvent {
 -        (event: JQueryEventObject, ui: SortableUIParams): void;
-+        (event: JQuery.Event, ui: SortableUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: SortableUIParams): void;
      }
  
      interface SortableEvents {
@@ -265,7 +265,7 @@ index df0eb3a..0602ff0 100644
  
      interface SpinnerEvent<T> {
 -        (event: JQueryEventObject, ui: T): void;
-+        (event: JQuery.Event, ui: T): void;
++        (event: JQuery.TriggeredEvent, ui: T): void;
      }
  
      interface SpinnerEvents {
@@ -274,7 +274,7 @@ index df0eb3a..0602ff0 100644
  
      interface TabsEvent<UI> {
 -        (event: JQueryEventObject, ui: UI): void;
-+        (event: JQuery.Event, ui: UI): void;
++        (event: JQuery.TriggeredEvent, ui: UI): void;
      }
  
      interface TabsEvents {
@@ -283,7 +283,7 @@ index df0eb3a..0602ff0 100644
  
      interface TooltipEvent {
 -        (event: JQueryEventObject, ui: TooltipUIParams): void;
-+        (event: JQuery.Event, ui: TooltipUIParams): void;
++        (event: JQuery.TriggeredEvent, ui: TooltipUIParams): void;
      }
  
      interface TooltipEvents {
@@ -818,31 +818,31 @@ index df0eb3a..0602ff0 100644
          (methodName: "blur"): void;
 -        (methodName: "collapse", event?: JQueryEventObject): void;
 -        (methodName: "collapseAll", event?: JQueryEventObject, all?: boolean): void;
-+        (methodName: "collapse", event?: JQuery.Event): void;
-+        (methodName: "collapseAll", event?: JQuery.Event, all?: boolean): void;
++        (methodName: "collapse", event?: JQuery.TriggeredEvent): void;
++        (methodName: "collapseAll", event?: JQuery.TriggeredEvent, all?: boolean): void;
          (methodName: "destroy"): void;
          (methodName: "disable"): void;
          (methodName: "enable"): void;
 -        (methodName: string, event: JQueryEventObject, item: JQuery): void;
 -        (methodName: "focus", event: JQueryEventObject, item: JQuery): void;
-+        (methodName: string, event: JQuery.Event, item: JQuery): void;
-+        (methodName: "focus", event: JQuery.Event, item: JQuery): void;
++        (methodName: string, event: JQuery.TriggeredEvent, item: JQuery): void;
++        (methodName: "focus", event: JQuery.TriggeredEvent, item: JQuery): void;
          (methodName: "isFirstItem"): boolean;
          (methodName: "isLastItem"): boolean;
 -        (methodName: "next", event?: JQueryEventObject): void;
 -        (methodName: "nextPage", event?: JQueryEventObject): void;
 -        (methodName: "previous", event?: JQueryEventObject): void;
 -        (methodName: "previousPage", event?: JQueryEventObject): void;
-+        (methodName: "next", event?: JQuery.Event): void;
-+        (methodName: "nextPage", event?: JQuery.Event): void;
-+        (methodName: "previous", event?: JQuery.Event): void;
-+        (methodName: "previousPage", event?: JQuery.Event): void;
++        (methodName: "next", event?: JQuery.TriggeredEvent): void;
++        (methodName: "nextPage", event?: JQuery.TriggeredEvent): void;
++        (methodName: "previous", event?: JQuery.TriggeredEvent): void;
++        (methodName: "previousPage", event?: JQuery.TriggeredEvent): void;
          (methodName: "refresh"): void;
 -        (methodName: "select", event?: JQueryEventObject): void;
 -        (methodName: "widget"): JQuery;
 -        (methodName: string): JQuery;
 -        (options: JQueryUI.MenuOptions): JQuery;
-+        (methodName: "select", event?: JQuery.Event): void;
++        (methodName: "select", event?: JQuery.TriggeredEvent): void;
 +        (methodName: "widget"): JQuery<TElement>;
 +        (methodName: string): JQuery<TElement>;
 +        (options: JQueryUI.MenuOptions): JQuery<TElement>;
