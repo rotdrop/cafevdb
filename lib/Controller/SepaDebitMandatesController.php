@@ -904,18 +904,16 @@ Therefore you have to enable the validation checkbox again before you are allowe
 
     if (empty($mandateRegistration) && empty($mandateSequence)) {
 
-      $responseData = [
-        'message' => $this->l->t(
+      return DTO\SepaBankAccount::fromArray([
+        'messages' => [$this->l->t(
           'Successfully stored the bank account with IBAN "%s" and owner "%s"',
           [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]
-        ),
+        )],
         'projectId' => $projectId,
         'musicianId' => $musicianId,
         'bankAccountSequence' => $bankAccount->getSequence(),
-        'mandateSequence' => $mandateSequence,
-      ];
-
-      return self::dataResponse($responseData);
+        'bankAccountDeleted' => false,
+      ])->response();
     }
 
     // From here on we should have a real musician entity:
@@ -1042,12 +1040,12 @@ Therefore you have to enable the validation checkbox again before you are allowe
     }
 
     return DTO\SepaDebitMandate::fromArray([
-      'message' => $messages,
+      'messages' => $messages,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'bankAccountSequence' => $bankAccount->getSequence(),
-      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
       'mandateSequence' => $debitMandate->getSequence(),
+      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
       'mandateDeleted' => !empty($mandate->getDeleted()),
       'mandateReference' => $debitMandate->getMandateReference(),
     ])->response();
@@ -1283,10 +1281,10 @@ Therefore you have to enable the validation checkbox again before you are allowe
     $userStorage = $this->di(UserStorage::class);
 
     $originalFilePath = $file['original_name'] ?? null;
-    $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
+    $uploadMode = $file['upload_mode'] ?? EnumFileUploadMode::COPY;
 
     switch ($uploadMode) {
-      case UploadsController::UPLOAD_MODE_MOVE:
+      case EnumFileUploadMode::MOVE:
         if (empty($originalFilePath)) {
           return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
         }
@@ -1295,7 +1293,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
           return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
         }
         break;
-      case UploadsController::UPLOAD_MODE_LINK:
+      case EnumFileUploadMode::LINK:
         $originalFileId = $file['original_name'];
         if (empty($originalFileId)) {
           return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
@@ -1306,7 +1304,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
         }
         $originalFilePath = $originalFile->getFileName();
         break;
-      case UploadsController::UPLOAD_MODE_COPY:
+      case EnumFileUploadMode::COPY:
         // this is the default, nothing special
         break;
     }
@@ -1328,10 +1326,10 @@ Therefore you have to enable the validation checkbox again before you are allowe
       }
 
       switch ($uploadMode) {
-        case UploadsController::UPLOAD_MODE_MOVE:
+        case EnumFileUploadMode::MOVE:
           $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
           // no break
-        case UploadsController::UPLOAD_MODE_COPY:
+        case EnumFileUploadMode::COPY:
           $fileContent = $this->getUploadContent($file);
 
           /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -1350,7 +1348,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
             );
             $this->persist($writtenMandateFile);
           } else {
-            $conflict = 'replaced';
+            $conflict = EnumAddDocumentConflictAction::REPLACE;
             $writtenMandateFile
               ->setMimeType($mimeType)
               ->setSize(strlen($fileContent))
@@ -1359,7 +1357,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
           $writtenMandateFile->setFileName($originalFileName);
 
           break;
-        case UploadsController::UPLOAD_MODE_LINK:
+        case EnumFileUploadMode::LINK:
           $fileContent = null;
           /** @var Entities\EncryptedFile $originalFile */
           if (!empty($writtenMandateFile) && $writtenMandateFile->getId() == $originalFileId) {
@@ -1400,7 +1398,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       }
     }
 
-    if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+    if ($uploadMode != EnumFileUploadMode::LINK) {
       $this->removeStashedFile($file);
     }
 
@@ -1427,13 +1425,13 @@ Therefore you have to enable the validation checkbox again before you are allowe
     unset($file['tmp_name']);
 
     switch ($uploadMode) {
-      case UploadsController::UPLOAD_MODE_COPY:
+      case EnumFileUploadMode::COPY:
         $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $writtenMandateFileName ]);
         break;
-      case UploadsController::UPLOAD_MODE_MOVE:
+      case EnumFileUploadMode::MOVE:
         $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $writtenMandateFileName ]);
         break;
-      case UploadsController::UPLOAD_MODE_LINK:
+      case EnumFileUploadMode::LINK:
         $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $writtenMandateFileName ]);
         break;
     }

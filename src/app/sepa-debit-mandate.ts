@@ -53,7 +53,7 @@ import {
 } from './project-participant-fields.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
-import { UPLOAD_MODE_LINK as UploadModeLink } from '../types/ajax/upload.ts';
+import { UploadMode } from '../types/ajax/upload.ts';
 import './lock-input.ts';
 import {
   data as pmeData,
@@ -69,7 +69,7 @@ import {
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
-import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitMandate, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitMandate, SepaBankAccount, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { EnumSepaDebitMandateRevocationAction, EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
@@ -87,12 +87,12 @@ require('./jquery-datetimepicker.ts');
 
 require('./jquery-readonly.ts');
 
-const makeSepaId = (data: SepaDebitMandate) => {
+const makeSepaId = (data: SepaBankAccount & Partial<SepaDebitMandate>) => {
   return {
     projectId: data.projectId,
     musicianId: data.musicianId,
     bankAccountSequence: data.bankAccountSequence,
-    mandateSequence: data.mandateSequence,
+    mandateSequence: data.mandateSequence ?? 0,
     bankAccountDeleted: !!data.bankAccountDeleted,
     mandateDeleted: !!data.mandateDeleted,
   };
@@ -302,7 +302,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     console.info('FILE', { file });
     const mandateFieldset = $popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
     mandateFieldset.find('input.written-mandate-file-upload').val(JSON.stringify([file]));
-    const fileName = (file.upload_mode !== UploadModeLink)
+    const fileName = (file.upload_mode !== UploadMode.LINK)
       ? file.original_name
       : file.name;
     mandateFieldset.find('input.upload-placeholder')
@@ -647,7 +647,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
               enableButtons();
               $form.removeClass('busy');
             },
-            done(data: SepaDebitMandate) {
+            done(data: SepaDebitMandate|SepaBankAccount) {
               // the simplest thing is just to reload the form instead
               // of updating all form elements from JS.
 
@@ -771,7 +771,7 @@ const mandateLoad = function(options_: Pick<MandateLoadOptions, 'sepaId'> & Part
         options.always();
       });
     })
-    .done(function(data) {
+    .done(function(data: SepaDebitMandate) {
       if (!Ajax.validateResponse(data, [
         'contents',
         'projectId',
@@ -791,7 +791,7 @@ const mandateLoad = function(options_: Pick<MandateLoadOptions, 'sepaId'> & Part
 
 type MandateStoreOptions = {
   $form: JQuery<HTMLFormElement>;
-  done: (data: SepaDebitMandate) => void;
+  done: (data: SepaDebitMandate|SepaBankAccount) => void;
   fail: () => void;
   always: () => void;
 };
@@ -834,18 +834,17 @@ const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omi
         options.always();
       });
     })
-    .done(function(data) {
+    .done(function(data: SepaDebitMandate|SepaBankAccount) {
       if (!Ajax.validateResponse(data, [
-        'message',
+        'messages',
         'projectId',
         'musicianId',
         'bankAccountSequence',
-        'mandateSequence',
       ])) {
         options.fail();
         options.always();
       } else {
-        Notification.messages(data.message, { timeout: 15 });
+        Notification.messages(data.messages, { timeout: 15 });
         options.done(data);
         options.always();
       }
@@ -1167,10 +1166,10 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
         },
       });
     })
-    .done(function(data) {
+    .done(function(data: SepaDebitMandateValidation) {
       if (!Ajax.validateResponse(
         data,
-        ['suggestions', 'message'],
+        ['suggestions', 'messages'],
         validateErrorUnlock)) {
         if (data.blz) {
           $('input.bankAccountBLZ').val(data.blz);
@@ -1178,13 +1177,9 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
         return false;
       }
 
-      if (!Array.isArray(data.message)) {
-        data.message = [data.message];
-      }
-
       const hints = makeSuggestions(data);
       if (hints) {
-        data.message.push(hints);
+        data.messages.push(hints);
       }
 
       if (data.iban !== undefined) {
@@ -1211,7 +1206,7 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
       }
 
       Notification.hide();
-      Notification.messages(data.message, { timeout: 15 });
+      Notification.messages(data.messages, { timeout: 15 });
 
       validateUnlock();
 

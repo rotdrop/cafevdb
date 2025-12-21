@@ -30,29 +30,17 @@ use OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus;
 /**
  * DTO for a debit mandate, only the bare minimum of data.
  */
-class SepaDebitMandate extends SepaBankAccount
+class SepaBankAccount extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    int $projectId,
-    int $musicianId,
-    int $bankAccountSequence,
-    bool $bankAccountDeleted,
+    public readonly int $projectId,
+    public readonly int $musicianId,
+    public readonly int $bankAccountSequence,
+    public readonly bool $bankAccountDeleted,
     /** @var string[] */
-    ?array $messages,
-    public readonly int $mandateSequence,
-    public readonly bool $mandateDeleted,
-    public readonly string $mandateReference,
-    public readonly ?EnumSepaDebitMandateRevocationStatus $state,
-    public readonly ?string $contents,
+    public readonly ?array $messages,
   ) {
-    parent::__construct(
-      projectId: $projectId,
-      musicianId: $musicianId,
-      bankAccountSequence: $bankAccountSequence,
-      bankAccountDeleted: $bankAccountDeleted,
-      messages: $messages,
-    );
   }
 
   /**
@@ -77,11 +65,6 @@ class SepaDebitMandate extends SepaBankAccount
       bankAccountSequence: $bankAccountSequence,
       bankAccountDeleted: $bankAccountDeleted,
       messages: $messages ?? null,
-      mandateSequence: $mandateSequence,
-      mandateDeleted: $mandateDeleted,
-      mandateReference: $mandateReference,
-      state: $state ?? null,
-      contents: $contents ?? null,
     );
   }
 }

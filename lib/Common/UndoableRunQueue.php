@@ -24,13 +24,14 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Closure;
 use InvalidArgumentException;
 use Throwable;
-use Closure;
+use UnexpectedValueException;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Exceptions\UndoableRunQueueException;
 
@@ -162,6 +163,9 @@ class UndoableRunQueue
   {
     if ($this->executing) {
       return;
+    }
+    if ($this->undoStack === null) {
+      throw new UnexpectedValueException('Undo is executed without prior execution of the queue.');
     }
     $this->executing = true;
     foreach ($this->undoStack as $action) {

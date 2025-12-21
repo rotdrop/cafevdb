@@ -1151,15 +1151,18 @@ class EntityManager extends EntityManagerDecorator
     $level = --$this->transactionNestingLevel;
 
     // the post-commit actions cannot be undone
-    // undo does not throw, it just logs exceptions
-    $this->preCommitActions[$level]->executeUndo();
-    $this->preFlushActions->executeUndo();
+    if ($this->preCommitActions[$level]->active()) {
+      $this->preCommitActions[$level]->executeUndo();
+    }
+    if ($this->preFlushActions->active()) {
+      $this->preFlushActions->executeUndo();
+    }
 
     if (!$this->isTransactionActive() && $this->reopenAfterRollback) {
       try {
         $this->entityManager->close();
         $this->reopen();
-      } catch (\Throable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Unable to reopen after rollback');
       }
     }

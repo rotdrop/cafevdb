@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Tests\Unit\Common;
 
 use Throwable;
 use Exception;
+use UnexpectedValueException;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
@@ -217,7 +218,7 @@ class UndoableRunQueueTest extends TestCase
     $this->assertEquals(0, $data);
   }
 
-    /** @return void */
+  /** @return void */
   public function testRunWithUndoExceptions(): void
   {
     $data = 0;
@@ -257,6 +258,13 @@ class UndoableRunQueueTest extends TestCase
     foreach ($undoExceptions as $index => $exception) {
       $this->assertEquals(self::EXCEPTION_TEXT . (self::ACTION_COUNT - $index - 1), $exception->getMessage());
     }
+  }
+
+  /** @return void */
+  public function testUndoWithoutDo(): void
+  {
+    $this->expectException(UnexpectedValueException::class);
+    $this->queue->executeUndo();
   }
 
   /** @return void */
