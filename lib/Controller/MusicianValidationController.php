@@ -24,9 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -98,8 +101,11 @@ class MusicianValidationController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/musicians/{topic}/{subTopic}', defaults: ['subTopic' => ''])]
-  public function validate(string $topic, ?string $subTopic = null, string $failure = 'notice'):DataResponse
-  {
+  public function validate(
+    string $topic,
+    ?string $subTopic = null,
+    string $failure = 'notice',
+  ): DataResponse|JSONResponse {
     $message = [];
     switch ($failure) {
       case 'error':
@@ -431,7 +437,7 @@ class MusicianValidationController extends Controller
             $duplicates[$musicianId] = new DTO\DuplicateMusician(
               duplicatesProbability: $duplicatesProbability,
               reasons: $reasons,
-              musician: EntityArrayAdapter::create($musician, depth: 0),
+              musician: $musician,
             );
           }
         }
@@ -445,6 +451,7 @@ class MusicianValidationController extends Controller
           messages: $messages,
           duplicates: $duplicates,
         )->response();
+
       default:
         break;
     }

@@ -26,19 +26,25 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
 /**
  * Duplicate musician DTO.
  */
 class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
+  #[TSAttributes\LiteralTypeScriptType("Database.Doctrine.ORM.EntityMetadata.EntityDto<'Musician'>")]
+  public readonly EntityArrayAdapter $musician;
+
   /** {@inheritdoc} */
   public function __construct(
     public readonly float $duplicatesProbability,
     /** @var array<string> $reasons */
     public readonly array $reasons,
-    #[TSAttributes\LiteralTypeScriptType("Database.Doctrine.ORM.EntityMetadata.EntityDto<'Musician'>")]
-    public readonly array $musician,
+    Entities\Musician $musician,
   ) {
+    $this->musician = EntityArrayAdapter::create($musician, depth: 0);
   }
 
   /**
