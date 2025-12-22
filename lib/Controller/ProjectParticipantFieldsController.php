@@ -204,7 +204,7 @@ class ProjectParticipantFieldsController extends Controller
             if (empty($data)) {
               return self::grumble($this->l->t('Missing parameters in request "%s".', $topic));
             }
-            $used = $data['used'] === 'used';
+            $used = ($data['used'] ?? null) === 'used';
             $dataOptions = $projectValues['data_options'];
             $dataOptions = array_values($dataOptions); // get rid of -1 index
             if (count($dataOptions) !== 1) {

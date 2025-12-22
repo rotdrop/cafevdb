@@ -1425,7 +1425,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $this->debug('REM ID '.print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $this->debug('ENTITIY ID ' . print_r(array_keys($entityId), true));
               $entity = $this->find($entityId);
               if (empty($entity)) {
                 throw new Exception($this->l->t(
@@ -1828,7 +1828,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
             // set further properties ...
             $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
-            $this->debug('ENTITY ID ' . print_r($entityId, true));
+            $this->debug('ENTITY ID ' . print_r(array_keys($entityId), true));
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
             $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {

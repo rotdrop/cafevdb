@@ -1355,7 +1355,7 @@ __EOT__;
      */
 
     Util::unsetValue($changed, 'default_value');
-    if ($newValues['default_value'] !== ($oldValues['default_value']??null)) {
+    if (($newValues['default_value'] ?? null) !== ($oldValues['default_value'] ?? null)) {
       $changed[] = 'default_value';
     }
 
