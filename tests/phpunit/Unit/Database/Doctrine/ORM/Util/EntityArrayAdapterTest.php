@@ -356,7 +356,11 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [],
         "encryptedFiles": [],
         "invoices": [],
-        "originatedInvoices": []
+        "originatedInvoices": [],
+        "publicName": "Max Musterperson",
+        "personalPublicName": "Max Musterperson",
+        "streetAndNumber": "Unauffindbarweg 42",
+        "numberAndStreet": "42 Unauffindbarweg"
     },
     "participantFieldsData": [],
     "projectInstruments": [],
@@ -518,7 +522,11 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [],
         "encryptedFiles": [],
         "invoices": [],
-        "originatedInvoices": []
+        "originatedInvoices": [],
+        "publicName": "Max Musterperson",
+        "personalPublicName": "Max Musterperson",
+        "streetAndNumber": "Unauffindbarweg 42",
+        "numberAndStreet": "42 Unauffindbarweg"
     },
     "participantFieldsData": [],
     "projectInstruments": [],
@@ -663,7 +671,11 @@ class EntityArrayAdapterTest extends TestCase
                     "payments": [],
                     "encryptedFiles": [],
                     "invoices": [],
-                    "originatedInvoices": []
+                    "originatedInvoices": [],
+                    "publicName": "Max Musterperson",
+                    "personalPublicName": "Max Musterperson",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "numberAndStreet": "42 Unauffindbarweg"
                 },
                 "participantFieldsData": [],
                 "projectInstruments": [],
@@ -793,7 +805,11 @@ class EntityArrayAdapterTest extends TestCase
                     "payments": [],
                     "encryptedFiles": [],
                     "invoices": [],
-                    "originatedInvoices": []
+                    "originatedInvoices": [],
+                    "publicName": "Max Musterperson",
+                    "personalPublicName": "Max Musterperson",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "numberAndStreet": "42 Unauffindbarweg"
                 }
             }
         },
@@ -913,7 +929,11 @@ class EntityArrayAdapterTest extends TestCase
                     "payments": [],
                     "encryptedFiles": [],
                     "invoices": [],
-                    "originatedInvoices": []
+                    "originatedInvoices": [],
+                    "publicName": "Max Musterperson",
+                    "personalPublicName": "Max Musterperson",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "numberAndStreet": "42 Unauffindbarweg"
                 },
                 "participantFieldsData": [],
                 "projectInstruments": [],
@@ -1008,7 +1028,11 @@ class EntityArrayAdapterTest extends TestCase
                     "payments": [],
                     "encryptedFiles": [],
                     "invoices": [],
-                    "originatedInvoices": []
+                    "originatedInvoices": [],
+                    "publicName": "Max Musterperson",
+                    "personalPublicName": "Max Musterperson",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "numberAndStreet": "42 Unauffindbarweg"
                 },
                 "sepaDebitMandates": [],
                 "payments": []
@@ -1018,7 +1042,11 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [],
         "encryptedFiles": [],
         "invoices": [],
-        "originatedInvoices": []
+        "originatedInvoices": [],
+        "publicName": "Max Musterperson",
+        "personalPublicName": "Max Musterperson",
+        "streetAndNumber": "Unauffindbarweg 42",
+        "numberAndStreet": "42 Unauffindbarweg"
     },
     "participantFieldsData": [],
     "projectInstruments": [],
