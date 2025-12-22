@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 
 /** Repository for project participants. */
 class ProjectParticipantsRepository extends EntityRepository
@@ -89,13 +90,13 @@ AS displayName",
       if (!is_array($onlyStatus)) {
         $onlyStatus = [$onlyStatus];
       }
-      $qb->andWhere($qb->expr()->in('pp.participationStatus', array_map(fn(mixed $any) => (string)$any, $onlyStatus)));
+      $qb->andWhere($qb->expr()->in('pp.participationStatus', array_map(fn(ParticipationStatus $status) => $status, $onlyStatus)));
     }
     if ($excludeStatus !== null) {
       if (!is_array($excludeStatus)) {
         $excludeStatus = [$excludeStatus];
       }
-      $qb->andWhere($qb->expr()->notIn('pp.participationStatus', array_map(fn(mixed $any) => (string)$any, $excludeStatus)));
+      $qb->andWhere($qb->expr()->notIn('pp.participationStatus', array_map(fn(ParticipationStatus $status) => $status, $excludeStatus)));
     }
     return $qb
       ->setParameter('projectId', $projectId)
