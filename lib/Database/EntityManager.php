@@ -1284,6 +1284,31 @@ class EntityManager extends EntityManagerDecorator
     $this->decorateClassMetadata = $onOff;
   }
 
+  /**
+   * Unfortunately the ORM builtin FilterCollection likes to throw too many
+   * exceptions. So work around that mis-feature.
+   *
+   * @param string $filterName The name of the filter.
+   *
+   * @param bool $state The state to set. Defaults to \true.
+   *
+   * @return bool The old state of the filter.
+   */
+  public function setFilterEnabled(string $filterName, bool $state = true): bool
+  {
+    $oldState = $this->getFilters()->isEnabled($filterName);
+    try {
+      if ($state) {
+        $this->getFilters()->enable($filterName);
+      } else {
+        $this->getFilters()->disable($filterName);
+      }
+    } catch (Throwable) {
+      // just ignore, we just want to have the work done.
+    }
+    return $oldState;
+  }
+
   /** @return void */
   private function createTableLookup():void
   {

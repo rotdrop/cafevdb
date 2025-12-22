@@ -393,13 +393,11 @@ trait EntityManagerTrait
    *
    * @param bool $state
    *
-   * @return \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
+   * @return bool The old state of the filter.
    */
-  protected function enableFilter(string $filterName, bool $state = true)
+  protected function enableFilter(string $filterName, bool $state = true): bool
   {
-    if ($state) {
-      return $this->entityManager->getFilters()->enable($filterName);
-    }
+    return $this->entityManager->setFilterEnabled($filterName, $state);
   }
 
   /**
@@ -410,13 +408,9 @@ trait EntityManagerTrait
    *
    * @return bool The previous isEnabled() state of the filter.
    */
-  protected function disableFilter(string $filterName):bool
+  protected function disableFilter(string $filterName): bool
   {
-    if ($this->entityManager->getFilters()->isEnabled($filterName)) {
-      $this->entityManager->getFilters()->disable($filterName);
-      return true;
-    }
-    return false;
+    return $this->enableFilter($filterName, false);
   }
 
   /**
