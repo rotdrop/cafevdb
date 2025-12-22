@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
@@ -43,6 +44,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\CoversMethod(EntitySerializer::class, 'addEntity')]
 #[Attributes\CoversMethod(EntitySerializer::class, 'export')]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
@@ -53,11 +55,15 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDataOption::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
@@ -89,6 +95,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
@@ -121,6 +128,8 @@ class EntitySerializerTest extends TestCase
     $this->entitySetup(persist: false);
 
     $this->entityManager = $mockProvider->getEntityManager();
+
+    $this->generateReceivable();
 
     $this->entityManager->persist($this->musician);
 
@@ -168,12 +177,24 @@ class EntitySerializerTest extends TestCase
     $this->entitySerializer->setCommonPrefix($nameSpaceName);
     $this->entitySerializer->addEntity($this->musician);
     $exportData = $this->entitySerializer->export();
-    json_encode($exportData, JSON_PRETTY_PRINT);
+    $jsonData = json_encode($exportData, JSON_PRETTY_PRINT);
+    $this->assertGreaterThan(0, strlen($jsonData));
     $this->assertInstanceOf(Util\EntityResponse::class, $exportData);
     $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->entities);
     $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->repositories);
     $this->assertArrayHasKey(new ReflectionClass(Entities\SepaBankAccount::class)->getShortName(), $exportData->repositories);
     $this->assertArrayHasKey(new ReflectionClass(Entities\ProjectParticipant::class)->getShortName(), $exportData->repositories);
+
+    // Test for index-by stringification of UUIDs
+    foreach ($this->musician->getProjectParticipantFieldsData()->getKeys() as $key) {
+      $uuidInstance = Uuid::fromBytes($key);
+      $uuidString = (string)$uuidInstance;
+      $this->assertArrayHasKey(
+        $uuidString,
+        $exportData->repositories['Musician'][$this->musician->getId()]['projectParticipantFieldsData']->entities,
+      );
+    }
+
     $data = json_decode(json_encode($exportData), true);
     array_walk_recursive(
       $data,
