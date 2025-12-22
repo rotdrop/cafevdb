@@ -172,6 +172,8 @@ class EntitySerializer
    */
   public function addEntity(mixed $entity, int $depth = 1, bool $principal = true): void
   {
+    // disable the filter here in order to have all entities available
+    $softDeleteableState = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, false);
     try {
       $metaData = $this->entityManager->getClassMetadata(get_class($entity));
       $entityClassName = $this->stripCommonPrefix($metaData->getName());
@@ -311,11 +313,13 @@ class EntitySerializer
         $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
       }
     } catch (Throwable $t) {
+      $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       throw new Exceptions\EntitySerializationException(
         $this->l->t('Unable to compute a serialization for an instance of "%s".', get_class($entity)),
         $entity,
         previous: $t,
       );
     }
+    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
   }
 }
