@@ -76,10 +76,10 @@
           </tr>
           <tr>
             <td class="tag">
-              <span class="tag-label">{{ t(appName, 'Propability') }}:</span>
+              <span class="tag-label">{{ t(appName, 'Probability') }}:</span>
             </td>
             <td class="data">
-              <span class="value">{duplicatesPropability} ({reasons})</span>
+              <span class="value">{duplicatesProbability} ({reasons})</span>
             </td>
           </tr>
         </tbody>
