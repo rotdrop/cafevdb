@@ -49,10 +49,6 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 class ProjectEvent implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
-  use CAFEVDB\Traits\DateTimeTrait;
-
   /**
    * While it would be tempting to just use the calendar URI and event UID and
    * perhaps the recurrence id as composite key it turns out that this is
@@ -62,10 +58,10 @@ class ProjectEvent implements \ArrayAccess
    * the correct new old event. The event will then be part of a new event
    * series with a new UID.
    */
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use CAFEVDB\Traits\AutoIncrementTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
@@ -124,30 +120,6 @@ class ProjectEvent implements \ArrayAccess
     $this->arrayCTOR();
   }
   // phpcs:enable
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return IdEvent
-   */
-  public function setId(int $id):ProjectEvent
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId():int
-  {
-    return $this->id;
-  }
 
   /**
    * Set projectId.

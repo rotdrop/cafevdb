@@ -52,18 +52,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
-  use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   private const DATE_FORMAT = 'Ymd';
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
   private int $year;
@@ -207,30 +203,6 @@ class Project implements \ArrayAccess
     }
 
     // anything else stays empty
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id Entity id.
-   *
-   * @return Project
-   */
-  public function setId(int $id):Project
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**

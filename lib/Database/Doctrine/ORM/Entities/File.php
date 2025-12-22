@@ -53,16 +53,12 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class File implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\CreatedAtEntity;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\UpdatedAt;
 
   const PATH_SEPARATOR = '/';
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected int $id;
 
   #[ORM\Column(type: 'string', length: 512, nullable: true)]
   protected ?string $fileName = null;
@@ -104,16 +100,6 @@ class File implements \ArrayAccess
     $this
       ->setFileData($fileData)
       ->setSize(strlen($data));
-  }
-
-  /**
-   * Get id.
-   *
-   * @return integer
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

@@ -42,15 +42,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class InstrumentFamily implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\UnusedTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedFamily')]
   #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
@@ -69,16 +65,6 @@ class InstrumentFamily implements \ArrayAccess
     $this->instruments = new ArrayCollection();
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set family.

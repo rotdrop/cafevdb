@@ -39,15 +39,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class EmailTemplate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
   use CAFEVDB\Traits\TranslatableTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedTag')]
   #[ORM\Column(type: 'string', length: 128, unique: true, nullable: false)]
@@ -60,16 +56,6 @@ class EmailTemplate implements \ArrayAccess
 
   #[ORM\Column(type: 'text', length: 0, nullable: true)]
   private ?string $contents = null;
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set tag.

@@ -48,17 +48,13 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class TaxationStatutorySource implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
   public const RATE_PRECISION = 2;
   public const RATE_SCALE = self::RATE_PRECISION;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumTaxType::CORPORATE_INCOME])]
   private Types\EnumTaxType $taxType = Types\EnumTaxType::CORPORATE_INCOME;
@@ -106,16 +102,6 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
     $this->setRate(0);
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id ?? null;
-  }
 
   /**
    * Set taxType as a fraction between 0 and 1 (not the percentage)

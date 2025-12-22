@@ -59,8 +59,9 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class CompositePayment implements \ArrayAccess, \JsonSerializable
 {
   use AppORM\Traits\ArrayTrait;
-  use AppORM\Traits\FactoryTrait;
+  use AppORM\Traits\AutoIncrementTrait;
   use AppORM\Traits\DateTimeTrait;
+  use AppORM\Traits\FactoryTrait;
   use AppORM\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
@@ -71,11 +72,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
   const SUBJECT_FIELD_LENGTH = 1024;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   /**
    * The total amount for the bank transaction. This must equal the
@@ -180,16 +176,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
     $this->setAmount(0);
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**

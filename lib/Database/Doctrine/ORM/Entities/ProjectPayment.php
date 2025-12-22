@@ -38,12 +38,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id = 0;
 
   /**
    * Project payments are actually also expenses in which case the sign of the
@@ -108,31 +104,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->setAmount(0);
-  }
-
-  /**
-   * Set id.
-   *
-   * @param null|int $id
-   *
-   * @return ProjectPayment
-   */
-  public function setId(?int $id):ProjectPayment
-  {
-    if (empty($id)) {
-      $this->id = 0; // flag auto-increment on insert
-    }
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

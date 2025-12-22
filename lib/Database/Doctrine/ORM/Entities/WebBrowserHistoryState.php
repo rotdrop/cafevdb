@@ -44,19 +44,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class WebBrowserHistoryState implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\UpdatedAtEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\CreatedAt;
-
-  /**
-   * @var int
-   *
-   * We could use $userId and $created as ids, but that would make the
-   * chaining between the entries and the state much more complicated.
-   */
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected $id;
+  use CAFEVDB\Traits\UpdatedAtEntity;
 
   #[ORM\Column(type: 'string', length: 256, nullable: false)]
   protected string $userId;
@@ -81,24 +71,6 @@ class WebBrowserHistoryState implements \ArrayAccess
     $this->setUserId($userId);
 
     $this->stack = new ArrayCollection;
-  }
-
-  /** @return null|int */
-  public function getId():int
-  {
-    return $this->id;
-  }
-
-  /**
-   * @param null|int $id
-   *
-   * @return WebBrowserHistoryState
-   */
-  public function setId(int $id):WebBrowserHistoryState
-  {
-    $this->id = $id;
-
-    return $this;
   }
 
   /** @return string */

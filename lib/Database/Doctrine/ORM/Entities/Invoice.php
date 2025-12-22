@@ -52,10 +52,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   public const INVOICE_NUMBER_SEPARATOR = '/';
@@ -65,11 +66,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * The fields which are using in order to autogenerate the slug field.
    */
   public const INVOICE_NUMBER_FIELDS = [ 'project', 'balanceDocumentsFolder' ];
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 255, nullable: false)]
   #[Gedmo\Slug(
@@ -198,16 +194,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
     $this->arrayCTOR();
     $this->invoiceItems = new ArrayCollection;
     $this->setAmount(0);
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**

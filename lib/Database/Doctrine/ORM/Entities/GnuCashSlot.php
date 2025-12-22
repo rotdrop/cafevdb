@@ -40,12 +40,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class GnuCashSlot implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $objGuid;
@@ -99,30 +95,6 @@ class GnuCashSlot implements \ArrayAccess
   public function __construct()
   {
     $this->__wakeup();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId():int
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return Musician
-   */
-  public function setId(int $id):GnuCashSlot
-  {
-    $this->id = $id;
-
-    return $this;
   }
 
   /**

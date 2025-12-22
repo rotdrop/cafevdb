@@ -44,16 +44,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 class DatabaseStorageDirEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\UpdatedAtEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\CreatedAtEntity;
+  use CAFEVDB\Traits\UpdatedAtEntity;
 
   /** @var string */
   protected static $type = DirEntryType::GENERIC;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected int $id;
 
   #[ORM\Column(type: 'string', length: 256)]
   protected string $name;
@@ -65,24 +61,6 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /** {@inheritdoc} */
   public function __construct()
   {
-  }
-
-  /** @return null|int */
-  public function getId():?int
-  {
-    return $this->id;
-  }
-
-  /**
-   * @param null|int $id
-   *
-   * @return DatabaseStorageDirEntry
-   */
-  public function setId(?int $id):DatabaseStorageDirEntry
-  {
-    $this->id = $id;
-
-    return $this;
   }
 
   /** @return null|string */

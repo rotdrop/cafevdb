@@ -44,12 +44,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class TranslationKey implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'text', nullable: false, options: ['comment' => 'Keyword to be translated. Normally the untranslated text in locale en_US, but could be any unique tag'])]
   private string $phrase;
@@ -79,16 +75,6 @@ class TranslationKey implements \ArrayAccess
     $this->locations = new ArrayCollection();
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set phrase.

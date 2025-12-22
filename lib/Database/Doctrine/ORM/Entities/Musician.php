@@ -60,19 +60,15 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\UuidTrait;
-  use CAFEVDB\Traits\UpdatedAt;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\CreatedAtEntity;
+  use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\GetByUuidTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use CAFEVDB\Traits\GetByUuidTrait;
-  use CAFEVDB\Traits\DateTimeTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use CAFEVDB\Traits\UpdatedAt;
+  use CAFEVDB\Traits\UuidTrait;
 
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $surName;
@@ -322,30 +318,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->keys[] = 'publicName';
-  }
-
-  /**
-   * Set id.
-   *
-   * @param null|int $id
-   *
-   * @return Musician
-   */
-  public function setId($id):Musician
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

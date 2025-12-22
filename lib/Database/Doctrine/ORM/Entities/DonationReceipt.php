@@ -44,10 +44,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\HasLifecycleCallbacks]
 class DonationReceipt implements JsonSerializable, ArrayAccess
 {
-  use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   /**
    * @var string
@@ -58,11 +59,6 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * forthcoming snail-mail letter.
    */
   public const NOTIFICATION_EMAIL_TEMPLATE = 'donation-receipt-notification';
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   /**
    * The associated payment.
@@ -106,30 +102,6 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   public function __construct()
   {
     $this->__wakeup();
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return DonationReceipt
-   */
-  public function setId(int $id):DonationReceipt
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

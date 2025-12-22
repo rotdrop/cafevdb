@@ -46,11 +46,7 @@ class Instrument implements \ArrayAccess
   use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use CAFEVDB\Traits\AutoIncrementTrait;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedName')]
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
@@ -88,30 +84,6 @@ class Instrument implements \ArrayAccess
     $this->musicianInstruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectInstrumentationNumbers = new ArrayCollection();
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return Instrument
-   */
-  public function setId(int $id):Instrument
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

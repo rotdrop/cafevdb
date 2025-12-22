@@ -38,14 +38,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class EmailDraft implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private ?string $subject = null;
@@ -73,16 +69,6 @@ class EmailDraft implements \ArrayAccess
     $this->fileAttachments = new ArrayCollection();
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
-  }
 
   /**
    * Set subject.

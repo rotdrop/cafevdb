@@ -47,16 +47,12 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class TaxExemptionNotice implements JsonSerializable, ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   // Notice -> Items -> JoinTable -> TaxationSources
   // Notice.item1, Notice.item2
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   /** @var Collection<TaxationStatutorySource> */
   #[ORM\ManyToMany(targetEntity: TaxationStatutorySource::class, inversedBy: 'taxExemptionNotices', cascade: ['persist'])]
@@ -125,30 +121,6 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
     $this->__wakeup();
     $this->donationReceipts = new ArrayCollection;
     $this->taxationStatutorySources = new ArrayCollection;
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return TaxExemptionNotice
-   */
-  public function setId(int $id):TaxExemptionNotice
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id ?? null;
   }
 
   /**
