@@ -458,9 +458,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                   ->setMusician($musician)
                   ->setProject($project);
                 $field->getFieldData()->add($fieldDatum);
-                $fieldOption->getFieldData()->add($fieldDatum);
+                $fieldOption->getFieldData()->set($musician->getId(), $fieldDatum);
                 $project->getParticipantFieldsData()->add($fieldDatum);
-                $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+                $musician->getProjectParticipantFieldsData()->set($fieldDatum->getOptionKey()->getBytes(), $fieldDatum);
               } else {
                 $fieldDatum = $fieldData->first();
               }

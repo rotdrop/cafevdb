@@ -1703,8 +1703,9 @@ class ProjectParticipantFieldsService
           ->setMusician($musician)
           ->setProject($project);
         $field->getFieldData()->add($fieldDatum);
+        $fieldOption->getFieldData()->set($musician->getId(), $fieldDatm);
         $project->getParticipantFieldsData()->add($fieldDatum);
-        $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+        $musician->getProjectParticipantFieldsData()->set($fieldDatum->getOptionKey()->getBytes(), $fieldDatum);
         $this->persist($fieldDatum);
         $needsFlush = true;
       } else {
@@ -1817,9 +1818,9 @@ class ProjectParticipantFieldsService
                      ->setMusician($musician)
                      ->setProject($project);
           $field->getFieldData()->add($fieldDatum);
-          $fieldOption->getFieldData()->add($fieldDatum);
+          $fieldOption->getFieldData()->set($musician->getId(), $fieldDatum);
           $project->getParticipantFieldsData()->add($fieldDatum);
-          $musician->getProjectParticipantFieldsData()->add($fieldDatum);
+          $musician->getProjectParticipantFieldsData()->set($fieldDatum->getOptionKey()->getBytes(), $fieldDatum);
           $this->persist($fieldDatum);
           $needsFlush = true;
         } else {

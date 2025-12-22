@@ -133,6 +133,7 @@ trait EntityGeneratorTrait
       ->setOptionValue(RationalNumber::fromDecimal('12.23'));
     $option->getFieldData()->set($this->musician->getId(), $datum);
     $field->getFieldData()->add($datum);
+    $this->musician->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
 
     return $datum;
   }

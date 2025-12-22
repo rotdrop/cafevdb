@@ -166,8 +166,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
              ->setOptionKey($receivable->getKey())
              ->setOptionValue($receivable->getData());
       $participantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
-      $receivable->getFieldData()->add($datum);
-      $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
+      $receivable->getFieldData()->set($participant->getMusician()->getId(), $datum);
+      $participant->getMusician()->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
       $participant->getProject()->getParticipantFieldsData()->add($datum);
       $added = true;
     } else {
