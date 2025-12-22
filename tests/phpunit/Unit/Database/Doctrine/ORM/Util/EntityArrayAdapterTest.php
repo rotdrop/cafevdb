@@ -243,82 +243,47 @@ class EntityArrayAdapterTest extends TestCase
   }
 
   private const SERIALIZED_ENTITY = [
+    0 => '{
+    "__DEPTH__": 0,
+    "created": "2024-01-01T00:00:00.000000Z",
+    "databaseDocuments": null,
+    "deleted": null,
+    "invoices": [],
+    "musician": {
+        "flatIdentifier": "1",
+        "entityClassName": "Musician"
+    },
+    "participantFieldsData": [],
+    "participationStatus": "regular",
+    "payments": [],
+    "project": {
+        "flatIdentifier": "1",
+        "entityClassName": "Project"
+    },
+    "projectInstruments": [],
+    "registration": false,
+    "updated": "2024-01-01T00:00:00.000000Z"
+}',
     1 => '{
     "__DEPTH__": 1,
-    "registration": false,
-    "participationStatus": "regular",
     "created": "2024-01-01T00:00:00.000000Z",
-    "updated": "2024-01-01T00:00:00.000000Z",
+    "databaseDocuments": null,
     "deleted": null,
-    "project": {
-        "__DEPTH__": 0,
-        "id": 1,
-        "year": 2099,
-        "name": "TestProject2099",
-        "type": "temporary",
-        "mailingListId": null,
-        "registrationStartDate": null,
-        "registrationDeadline": null,
-        "created": null,
-        "updated": null,
-        "deleted": null,
-        "instrumentationNumbers": [],
-        "webPages": [],
-        "participantFields": [],
-        "participantFieldsData": [],
-        "participants": {
-            "entityClassName": "ProjectParticipant",
-            "entities": {
-                "1": {
-                    "flatIdentifier": "1:1",
-                    "entityClassName": null
-                }
-            }
-        },
-        "applications": [],
-        "sepaDebitMandates": [],
-        "compositePayments": [],
-        "payments": [],
-        "invoices": [],
-        "participantInstruments": [],
-        "calendarEvents": [],
-        "sentEmail": [],
-        "financialBalanceDocumentsStorage": null
-    },
+    "invoices": [],
     "musician": {
         "__DEPTH__": 0,
-        "id": 1,
-        "surName": "Musterperson",
-        "firstName": "Max",
-        "nickName": null,
-        "displayName": null,
-        "gender": null,
-        "userIdSlug": null,
-        "userPassphrase": null,
-        "city": "Nirgends",
-        "street": "Unauffindbarweg",
-        "streetNumber": "42",
+        "addressBookUri": null,
         "addressSupplement": "Igloo 13",
-        "poBox": null,
-        "country": "AQ",
-        "postalCode": "Z-7",
-        "language": null,
-        "mobilePhone": "0815",
-        "fixedLinePhone": "4711",
         "birthday": "2024-01-01T00:00:00.000000Z",
-        "email": "john.doe@nowhere.tld",
-        "defaultParticipationStatus": "regular",
-        "remarks": null,
+        "city": "Nirgends",
         "cloudAccountDeactivated": null,
         "cloudAccountDisabled": true,
-        "updated": "2024-01-01T00:00:00.000000Z",
-        "addressBookUri": null,
-        "organization": null,
-        "jobTitle": null,
-        "uuid": "00000000-0000-0000-0000-000000000000",
+        "country": "AQ",
         "created": "2024-01-01T00:00:00.000000Z",
+        "defaultParticipationStatus": "regular",
         "deleted": "2024-01-01T00:00:00.000000Z",
-        "rowAccessToken": null,
+        "displayName": null,
+        "email": "john.doe@nowhere.tld",
         "emailAddresses": {
             "entityClassName": "MusicianEmailAddress",
             "entities": {
@@ -328,8 +293,29 @@ class EntityArrayAdapterTest extends TestCase
                 }
             }
         },
+        "encryptedFiles": [],
+        "firstName": "Max",
+        "fixedLinePhone": "4711",
+        "gender": null,
+        "id": 1,
+        "instrumentInsurances": [],
         "instruments": [],
+        "invoices": [],
+        "jobTitle": null,
+        "language": null,
+        "mobilePhone": "0815",
+        "nickName": null,
+        "numberAndStreet": "42 Unauffindbarweg",
+        "organization": null,
+        "originatedInvoices": [],
+        "payableInsurances": [],
+        "payments": [],
+        "personalPublicName": "Max Musterperson",
+        "poBox": null,
+        "postalCode": "Z-7",
         "projectApplications": [],
+        "projectInstruments": [],
+        "projectParticipantFieldsData": [],
         "projectParticipation": {
             "entityClassName": "ProjectParticipant",
             "entities": {
@@ -339,10 +325,9 @@ class EntityArrayAdapterTest extends TestCase
                 }
             }
         },
-        "projectInstruments": [],
-        "projectParticipantFieldsData": [],
-        "instrumentInsurances": [],
-        "payableInsurances": [],
+        "publicName": "Max Musterperson",
+        "remarks": null,
+        "rowAccessToken": null,
         "sepaBankAccounts": {
             "entityClassName": "SepaBankAccount",
             "entities": [
@@ -353,421 +338,262 @@ class EntityArrayAdapterTest extends TestCase
             ]
         },
         "sepaDebitMandates": [],
-        "payments": [],
-        "encryptedFiles": [],
-        "invoices": [],
-        "originatedInvoices": [],
-        "publicName": "Max Musterperson",
-        "personalPublicName": "Max Musterperson",
+        "street": "Unauffindbarweg",
         "streetAndNumber": "Unauffindbarweg 42",
-        "numberAndStreet": "42 Unauffindbarweg"
+        "streetNumber": "42",
+        "surName": "Musterperson",
+        "updated": "2024-01-01T00:00:00.000000Z",
+        "userIdSlug": null,
+        "userPassphrase": null,
+        "uuid": "00000000-0000-0000-0000-000000000000"
     },
     "participantFieldsData": [],
-    "projectInstruments": [],
+    "participationStatus": "regular",
     "payments": [],
-    "invoices": [],
-    "databaseDocuments": null
+    "project": {
+        "__DEPTH__": 0,
+        "applications": [],
+        "calendarEvents": [],
+        "compositePayments": [],
+        "created": null,
+        "deleted": null,
+        "financialBalanceDocumentsStorage": null,
+        "id": 1,
+        "instrumentationNumbers": [],
+        "invoices": [],
+        "mailingListId": null,
+        "name": "TestProject2099",
+        "participantFields": [],
+        "participantFieldsData": [],
+        "participantInstruments": [],
+        "participants": {
+            "entityClassName": "ProjectParticipant",
+            "entities": {
+                "1": {
+                    "flatIdentifier": "1:1",
+                    "entityClassName": null
+                }
+            }
+        },
+        "payments": [],
+        "registrationDeadline": null,
+        "registrationStartDate": null,
+        "sentEmail": [],
+        "sepaDebitMandates": [],
+        "type": "temporary",
+        "updated": null,
+        "webPages": [],
+        "year": 2099
+    },
+    "projectInstruments": [],
+    "registration": false,
+    "updated": "2024-01-01T00:00:00.000000Z"
 }',
     2 => '{
     "__DEPTH__": 2,
-    "registration": false,
-    "participationStatus": "regular",
     "created": "2024-01-01T00:00:00.000000Z",
-    "updated": "2024-01-01T00:00:00.000000Z",
+    "databaseDocuments": null,
     "deleted": null,
-    "project": {
-        "__DEPTH__": 1,
-        "id": 1,
-        "year": 2099,
-        "name": "TestProject2099",
-        "type": "temporary",
-        "mailingListId": null,
-        "registrationStartDate": null,
-        "registrationDeadline": null,
-        "created": null,
-        "updated": null,
-        "deleted": null,
-        "instrumentationNumbers": [],
-        "webPages": [],
-        "participantFields": [],
-        "participantFieldsData": [],
-        "participants": {
-            "1": {
-                "__DEPTH__": 0,
-                "registration": false,
-                "participationStatus": "regular",
-                "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
-                "deleted": null,
-                "project": {
-                    "flatIdentifier": "1",
-                    "entityClassName": "Project"
-                },
-                "musician": {
-                    "flatIdentifier": "1",
-                    "entityClassName": "Musician"
-                },
-                "participantFieldsData": [],
-                "projectInstruments": [],
-                "payments": [],
-                "invoices": [],
-                "databaseDocuments": null
-            }
-        },
-        "applications": [],
-        "sepaDebitMandates": [],
-        "compositePayments": [],
-        "payments": [],
-        "invoices": [],
-        "participantInstruments": [],
-        "calendarEvents": [],
-        "sentEmail": [],
-        "financialBalanceDocumentsStorage": null
-    },
+    "invoices": [],
     "musician": {
         "__DEPTH__": 1,
-        "id": 1,
-        "surName": "Musterperson",
-        "firstName": "Max",
-        "nickName": null,
-        "displayName": null,
-        "gender": null,
-        "userIdSlug": null,
-        "userPassphrase": null,
-        "city": "Nirgends",
-        "street": "Unauffindbarweg",
-        "streetNumber": "42",
+        "addressBookUri": null,
         "addressSupplement": "Igloo 13",
-        "poBox": null,
-        "country": "AQ",
-        "postalCode": "Z-7",
-        "language": null,
-        "mobilePhone": "0815",
-        "fixedLinePhone": "4711",
         "birthday": "2024-01-01T00:00:00.000000Z",
-        "email": "john.doe@nowhere.tld",
-        "defaultParticipationStatus": "regular",
-        "remarks": null,
+        "city": "Nirgends",
         "cloudAccountDeactivated": null,
         "cloudAccountDisabled": true,
-        "updated": "2024-01-01T00:00:00.000000Z",
-        "addressBookUri": null,
-        "organization": null,
-        "jobTitle": null,
-        "uuid": "00000000-0000-0000-0000-000000000000",
+        "country": "AQ",
         "created": "2024-01-01T00:00:00.000000Z",
+        "defaultParticipationStatus": "regular",
         "deleted": "2024-01-01T00:00:00.000000Z",
-        "rowAccessToken": null,
+        "displayName": null,
+        "email": "john.doe@nowhere.tld",
         "emailAddresses": {
             "john.doe@nowhere.tld": {
                 "__DEPTH__": 0,
                 "address": "john.doe@nowhere.tld",
                 "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
                 "musician": {
                     "flatIdentifier": "1",
                     "entityClassName": "Musician"
-                }
+                },
+                "updated": "2024-01-01T00:00:00.000000Z"
             }
         },
+        "encryptedFiles": [],
+        "firstName": "Max",
+        "fixedLinePhone": "4711",
+        "gender": null,
+        "id": 1,
+        "instrumentInsurances": [],
         "instruments": [],
+        "invoices": [],
+        "jobTitle": null,
+        "language": null,
+        "mobilePhone": "0815",
+        "nickName": null,
+        "numberAndStreet": "42 Unauffindbarweg",
+        "organization": null,
+        "originatedInvoices": [],
+        "payableInsurances": [],
+        "payments": [],
+        "personalPublicName": "Max Musterperson",
+        "poBox": null,
+        "postalCode": "Z-7",
         "projectApplications": [],
+        "projectInstruments": [],
+        "projectParticipantFieldsData": [],
         "projectParticipation": {
             "1": {
                 "__DEPTH__": 0,
-                "registration": false,
-                "participationStatus": "regular",
                 "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
+                "databaseDocuments": null,
                 "deleted": null,
-                "project": {
-                    "flatIdentifier": "1",
-                    "entityClassName": "Project"
-                },
+                "invoices": [],
                 "musician": {
                     "flatIdentifier": "1",
                     "entityClassName": "Musician"
                 },
                 "participantFieldsData": [],
-                "projectInstruments": [],
+                "participationStatus": "regular",
                 "payments": [],
-                "invoices": [],
-                "databaseDocuments": null
+                "project": {
+                    "flatIdentifier": "1",
+                    "entityClassName": "Project"
+                },
+                "projectInstruments": [],
+                "registration": false,
+                "updated": "2024-01-01T00:00:00.000000Z"
             }
         },
-        "projectInstruments": [],
-        "projectParticipantFieldsData": [],
-        "instrumentInsurances": [],
-        "payableInsurances": [],
+        "publicName": "Max Musterperson",
+        "remarks": null,
+        "rowAccessToken": null,
         "sepaBankAccounts": [
             {
                 "__DEPTH__": 0,
-                "sequence": 1,
-                "iban": "DE02700100800030876808",
+                "bankAccountOwner": "Musterperson, Max",
                 "bic": "PBNKDEFFXXX",
                 "blz": "70010080",
-                "bankAccountOwner": "Musterperson, Max",
-                "deleted": "2024-01-01T00:00:00.000000Z",
                 "created": null,
-                "updated": null,
+                "deleted": "2024-01-01T00:00:00.000000Z",
+                "iban": "DE02700100800030876808",
                 "musician": {
                     "flatIdentifier": "1",
                     "entityClassName": "Musician"
                 },
+                "payments": [],
                 "sepaDebitMandates": [],
-                "payments": []
+                "sequence": 1,
+                "updated": null
             }
         ],
         "sepaDebitMandates": [],
-        "payments": [],
-        "encryptedFiles": [],
-        "invoices": [],
-        "originatedInvoices": [],
-        "publicName": "Max Musterperson",
-        "personalPublicName": "Max Musterperson",
+        "street": "Unauffindbarweg",
         "streetAndNumber": "Unauffindbarweg 42",
-        "numberAndStreet": "42 Unauffindbarweg"
+        "streetNumber": "42",
+        "surName": "Musterperson",
+        "updated": "2024-01-01T00:00:00.000000Z",
+        "userIdSlug": null,
+        "userPassphrase": null,
+        "uuid": "00000000-0000-0000-0000-000000000000"
     },
     "participantFieldsData": [],
-    "projectInstruments": [],
+    "participationStatus": "regular",
     "payments": [],
-    "invoices": [],
-    "databaseDocuments": null
+    "project": {
+        "__DEPTH__": 1,
+        "applications": [],
+        "calendarEvents": [],
+        "compositePayments": [],
+        "created": null,
+        "deleted": null,
+        "financialBalanceDocumentsStorage": null,
+        "id": 1,
+        "instrumentationNumbers": [],
+        "invoices": [],
+        "mailingListId": null,
+        "name": "TestProject2099",
+        "participantFields": [],
+        "participantFieldsData": [],
+        "participantInstruments": [],
+        "participants": {
+            "1": {
+                "__DEPTH__": 0,
+                "created": "2024-01-01T00:00:00.000000Z",
+                "databaseDocuments": null,
+                "deleted": null,
+                "invoices": [],
+                "musician": {
+                    "flatIdentifier": "1",
+                    "entityClassName": "Musician"
+                },
+                "participantFieldsData": [],
+                "participationStatus": "regular",
+                "payments": [],
+                "project": {
+                    "flatIdentifier": "1",
+                    "entityClassName": "Project"
+                },
+                "projectInstruments": [],
+                "registration": false,
+                "updated": "2024-01-01T00:00:00.000000Z"
+            }
+        },
+        "payments": [],
+        "registrationDeadline": null,
+        "registrationStartDate": null,
+        "sentEmail": [],
+        "sepaDebitMandates": [],
+        "type": "temporary",
+        "updated": null,
+        "webPages": [],
+        "year": 2099
+    },
+    "projectInstruments": [],
+    "registration": false,
+    "updated": "2024-01-01T00:00:00.000000Z"
 }',
     3 => '{
     "__DEPTH__": 3,
-    "registration": false,
-    "participationStatus": "regular",
     "created": "2024-01-01T00:00:00.000000Z",
-    "updated": "2024-01-01T00:00:00.000000Z",
+    "databaseDocuments": null,
     "deleted": null,
-    "project": {
-        "__DEPTH__": 2,
-        "id": 1,
-        "year": 2099,
-        "name": "TestProject2099",
-        "type": "temporary",
-        "mailingListId": null,
-        "registrationStartDate": null,
-        "registrationDeadline": null,
-        "created": null,
-        "updated": null,
-        "deleted": null,
-        "instrumentationNumbers": [],
-        "webPages": [],
-        "participantFields": [],
-        "participantFieldsData": [],
-        "participants": {
-            "1": {
-                "__DEPTH__": 1,
-                "registration": false,
-                "participationStatus": "regular",
-                "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
-                "deleted": null,
-                "project": {
-                    "__DEPTH__": 0,
-                    "id": 1,
-                    "year": 2099,
-                    "name": "TestProject2099",
-                    "type": "temporary",
-                    "mailingListId": null,
-                    "registrationStartDate": null,
-                    "registrationDeadline": null,
-                    "created": null,
-                    "updated": null,
-                    "deleted": null,
-                    "instrumentationNumbers": [],
-                    "webPages": [],
-                    "participantFields": [],
-                    "participantFieldsData": [],
-                    "participants": {
-                        "entityClassName": "ProjectParticipant",
-                        "entities": {
-                            "1": {
-                                "flatIdentifier": "1:1",
-                                "entityClassName": null
-                            }
-                        }
-                    },
-                    "applications": [],
-                    "sepaDebitMandates": [],
-                    "compositePayments": [],
-                    "payments": [],
-                    "invoices": [],
-                    "participantInstruments": [],
-                    "calendarEvents": [],
-                    "sentEmail": [],
-                    "financialBalanceDocumentsStorage": null
-                },
-                "musician": {
-                    "__DEPTH__": 0,
-                    "id": 1,
-                    "surName": "Musterperson",
-                    "firstName": "Max",
-                    "nickName": null,
-                    "displayName": null,
-                    "gender": null,
-                    "userIdSlug": null,
-                    "userPassphrase": null,
-                    "city": "Nirgends",
-                    "street": "Unauffindbarweg",
-                    "streetNumber": "42",
-                    "addressSupplement": "Igloo 13",
-                    "poBox": null,
-                    "country": "AQ",
-                    "postalCode": "Z-7",
-                    "language": null,
-                    "mobilePhone": "0815",
-                    "fixedLinePhone": "4711",
-                    "birthday": "2024-01-01T00:00:00.000000Z",
-                    "email": "john.doe@nowhere.tld",
-                    "defaultParticipationStatus": "regular",
-                    "remarks": null,
-                    "cloudAccountDeactivated": null,
-                    "cloudAccountDisabled": true,
-                    "updated": "2024-01-01T00:00:00.000000Z",
-                    "addressBookUri": null,
-                    "organization": null,
-                    "jobTitle": null,
-                    "uuid": "00000000-0000-0000-0000-000000000000",
-                    "created": "2024-01-01T00:00:00.000000Z",
-                    "deleted": "2024-01-01T00:00:00.000000Z",
-                    "rowAccessToken": null,
-                    "emailAddresses": {
-                        "entityClassName": "MusicianEmailAddress",
-                        "entities": {
-                            "john.doe@nowhere.tld": {
-                                "flatIdentifier": "john.doe@nowhere.tld:1",
-                                "entityClassName": null
-                            }
-                        }
-                    },
-                    "instruments": [],
-                    "projectApplications": [],
-                    "projectParticipation": {
-                        "entityClassName": "ProjectParticipant",
-                        "entities": {
-                            "1": {
-                                "flatIdentifier": "1:1",
-                                "entityClassName": null
-                            }
-                        }
-                    },
-                    "projectInstruments": [],
-                    "projectParticipantFieldsData": [],
-                    "instrumentInsurances": [],
-                    "payableInsurances": [],
-                    "sepaBankAccounts": {
-                        "entityClassName": "SepaBankAccount",
-                        "entities": [
-                            {
-                                "flatIdentifier": "1:1",
-                                "entityClassName": null
-                            }
-                        ]
-                    },
-                    "sepaDebitMandates": [],
-                    "payments": [],
-                    "encryptedFiles": [],
-                    "invoices": [],
-                    "originatedInvoices": [],
-                    "publicName": "Max Musterperson",
-                    "personalPublicName": "Max Musterperson",
-                    "streetAndNumber": "Unauffindbarweg 42",
-                    "numberAndStreet": "42 Unauffindbarweg"
-                },
-                "participantFieldsData": [],
-                "projectInstruments": [],
-                "payments": [],
-                "invoices": [],
-                "databaseDocuments": null
-            }
-        },
-        "applications": [],
-        "sepaDebitMandates": [],
-        "compositePayments": [],
-        "payments": [],
-        "invoices": [],
-        "participantInstruments": [],
-        "calendarEvents": [],
-        "sentEmail": [],
-        "financialBalanceDocumentsStorage": null
-    },
+    "invoices": [],
     "musician": {
         "__DEPTH__": 2,
-        "id": 1,
-        "surName": "Musterperson",
-        "firstName": "Max",
-        "nickName": null,
-        "displayName": null,
-        "gender": null,
-        "userIdSlug": null,
-        "userPassphrase": null,
-        "city": "Nirgends",
-        "street": "Unauffindbarweg",
-        "streetNumber": "42",
+        "addressBookUri": null,
         "addressSupplement": "Igloo 13",
-        "poBox": null,
-        "country": "AQ",
-        "postalCode": "Z-7",
-        "language": null,
-        "mobilePhone": "0815",
-        "fixedLinePhone": "4711",
         "birthday": "2024-01-01T00:00:00.000000Z",
-        "email": "john.doe@nowhere.tld",
-        "defaultParticipationStatus": "regular",
-        "remarks": null,
+        "city": "Nirgends",
         "cloudAccountDeactivated": null,
         "cloudAccountDisabled": true,
-        "updated": "2024-01-01T00:00:00.000000Z",
-        "addressBookUri": null,
-        "organization": null,
-        "jobTitle": null,
-        "uuid": "00000000-0000-0000-0000-000000000000",
+        "country": "AQ",
         "created": "2024-01-01T00:00:00.000000Z",
+        "defaultParticipationStatus": "regular",
         "deleted": "2024-01-01T00:00:00.000000Z",
-        "rowAccessToken": null,
+        "displayName": null,
+        "email": "john.doe@nowhere.tld",
         "emailAddresses": {
             "john.doe@nowhere.tld": {
                 "__DEPTH__": 1,
                 "address": "john.doe@nowhere.tld",
                 "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
                 "musician": {
                     "__DEPTH__": 0,
-                    "id": 1,
-                    "surName": "Musterperson",
-                    "firstName": "Max",
-                    "nickName": null,
-                    "displayName": null,
-                    "gender": null,
-                    "userIdSlug": null,
-                    "userPassphrase": null,
-                    "city": "Nirgends",
-                    "street": "Unauffindbarweg",
-                    "streetNumber": "42",
+                    "addressBookUri": null,
                     "addressSupplement": "Igloo 13",
-                    "poBox": null,
-                    "country": "AQ",
-                    "postalCode": "Z-7",
-                    "language": null,
-                    "mobilePhone": "0815",
-                    "fixedLinePhone": "4711",
                     "birthday": "2024-01-01T00:00:00.000000Z",
-                    "email": "john.doe@nowhere.tld",
-                    "defaultParticipationStatus": "regular",
-                    "remarks": null,
+                    "city": "Nirgends",
                     "cloudAccountDeactivated": null,
                     "cloudAccountDisabled": true,
-                    "updated": "2024-01-01T00:00:00.000000Z",
-                    "addressBookUri": null,
-                    "organization": null,
-                    "jobTitle": null,
-                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "country": "AQ",
                     "created": "2024-01-01T00:00:00.000000Z",
+                    "defaultParticipationStatus": "regular",
                     "deleted": "2024-01-01T00:00:00.000000Z",
-                    "rowAccessToken": null,
+                    "displayName": null,
+                    "email": "john.doe@nowhere.tld",
                     "emailAddresses": {
                         "entityClassName": "MusicianEmailAddress",
                         "entities": {
@@ -777,8 +603,29 @@ class EntityArrayAdapterTest extends TestCase
                             }
                         }
                     },
+                    "encryptedFiles": [],
+                    "firstName": "Max",
+                    "fixedLinePhone": "4711",
+                    "gender": null,
+                    "id": 1,
+                    "instrumentInsurances": [],
                     "instruments": [],
+                    "invoices": [],
+                    "jobTitle": null,
+                    "language": null,
+                    "mobilePhone": "0815",
+                    "nickName": null,
+                    "numberAndStreet": "42 Unauffindbarweg",
+                    "organization": null,
+                    "originatedInvoices": [],
+                    "payableInsurances": [],
+                    "payments": [],
+                    "personalPublicName": "Max Musterperson",
+                    "poBox": null,
+                    "postalCode": "Z-7",
                     "projectApplications": [],
+                    "projectInstruments": [],
+                    "projectParticipantFieldsData": [],
                     "projectParticipation": {
                         "entityClassName": "ProjectParticipant",
                         "entities": {
@@ -788,10 +635,9 @@ class EntityArrayAdapterTest extends TestCase
                             }
                         }
                     },
-                    "projectInstruments": [],
-                    "projectParticipantFieldsData": [],
-                    "instrumentInsurances": [],
-                    "payableInsurances": [],
+                    "publicName": "Max Musterperson",
+                    "remarks": null,
+                    "rowAccessToken": null,
                     "sepaBankAccounts": {
                         "entityClassName": "SepaBankAccount",
                         "entities": [
@@ -802,43 +648,144 @@ class EntityArrayAdapterTest extends TestCase
                         ]
                     },
                     "sepaDebitMandates": [],
-                    "payments": [],
-                    "encryptedFiles": [],
-                    "invoices": [],
-                    "originatedInvoices": [],
-                    "publicName": "Max Musterperson",
-                    "personalPublicName": "Max Musterperson",
+                    "street": "Unauffindbarweg",
                     "streetAndNumber": "Unauffindbarweg 42",
-                    "numberAndStreet": "42 Unauffindbarweg"
-                }
+                    "streetNumber": "42",
+                    "surName": "Musterperson",
+                    "updated": "2024-01-01T00:00:00.000000Z",
+                    "userIdSlug": null,
+                    "userPassphrase": null,
+                    "uuid": "00000000-0000-0000-0000-000000000000"
+                },
+                "updated": "2024-01-01T00:00:00.000000Z"
             }
         },
+        "encryptedFiles": [],
+        "firstName": "Max",
+        "fixedLinePhone": "4711",
+        "gender": null,
+        "id": 1,
+        "instrumentInsurances": [],
         "instruments": [],
+        "invoices": [],
+        "jobTitle": null,
+        "language": null,
+        "mobilePhone": "0815",
+        "nickName": null,
+        "numberAndStreet": "42 Unauffindbarweg",
+        "organization": null,
+        "originatedInvoices": [],
+        "payableInsurances": [],
+        "payments": [],
+        "personalPublicName": "Max Musterperson",
+        "poBox": null,
+        "postalCode": "Z-7",
         "projectApplications": [],
+        "projectInstruments": [],
+        "projectParticipantFieldsData": [],
         "projectParticipation": {
             "1": {
                 "__DEPTH__": 1,
-                "registration": false,
-                "participationStatus": "regular",
                 "created": "2024-01-01T00:00:00.000000Z",
-                "updated": "2024-01-01T00:00:00.000000Z",
+                "databaseDocuments": null,
                 "deleted": null,
+                "invoices": [],
+                "musician": {
+                    "__DEPTH__": 0,
+                    "addressBookUri": null,
+                    "addressSupplement": "Igloo 13",
+                    "birthday": "2024-01-01T00:00:00.000000Z",
+                    "city": "Nirgends",
+                    "cloudAccountDeactivated": null,
+                    "cloudAccountDisabled": true,
+                    "country": "AQ",
+                    "created": "2024-01-01T00:00:00.000000Z",
+                    "defaultParticipationStatus": "regular",
+                    "deleted": "2024-01-01T00:00:00.000000Z",
+                    "displayName": null,
+                    "email": "john.doe@nowhere.tld",
+                    "emailAddresses": {
+                        "entityClassName": "MusicianEmailAddress",
+                        "entities": {
+                            "john.doe@nowhere.tld": {
+                                "flatIdentifier": "john.doe@nowhere.tld:1",
+                                "entityClassName": null
+                            }
+                        }
+                    },
+                    "encryptedFiles": [],
+                    "firstName": "Max",
+                    "fixedLinePhone": "4711",
+                    "gender": null,
+                    "id": 1,
+                    "instrumentInsurances": [],
+                    "instruments": [],
+                    "invoices": [],
+                    "jobTitle": null,
+                    "language": null,
+                    "mobilePhone": "0815",
+                    "nickName": null,
+                    "numberAndStreet": "42 Unauffindbarweg",
+                    "organization": null,
+                    "originatedInvoices": [],
+                    "payableInsurances": [],
+                    "payments": [],
+                    "personalPublicName": "Max Musterperson",
+                    "poBox": null,
+                    "postalCode": "Z-7",
+                    "projectApplications": [],
+                    "projectInstruments": [],
+                    "projectParticipantFieldsData": [],
+                    "projectParticipation": {
+                        "entityClassName": "ProjectParticipant",
+                        "entities": {
+                            "1": {
+                                "flatIdentifier": "1:1",
+                                "entityClassName": null
+                            }
+                        }
+                    },
+                    "publicName": "Max Musterperson",
+                    "remarks": null,
+                    "rowAccessToken": null,
+                    "sepaBankAccounts": {
+                        "entityClassName": "SepaBankAccount",
+                        "entities": [
+                            {
+                                "flatIdentifier": "1:1",
+                                "entityClassName": null
+                            }
+                        ]
+                    },
+                    "sepaDebitMandates": [],
+                    "street": "Unauffindbarweg",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "streetNumber": "42",
+                    "surName": "Musterperson",
+                    "updated": "2024-01-01T00:00:00.000000Z",
+                    "userIdSlug": null,
+                    "userPassphrase": null,
+                    "uuid": "00000000-0000-0000-0000-000000000000"
+                },
+                "participantFieldsData": [],
+                "participationStatus": "regular",
+                "payments": [],
                 "project": {
                     "__DEPTH__": 0,
-                    "id": 1,
-                    "year": 2099,
-                    "name": "TestProject2099",
-                    "type": "temporary",
-                    "mailingListId": null,
-                    "registrationStartDate": null,
-                    "registrationDeadline": null,
+                    "applications": [],
+                    "calendarEvents": [],
+                    "compositePayments": [],
                     "created": null,
-                    "updated": null,
                     "deleted": null,
+                    "financialBalanceDocumentsStorage": null,
+                    "id": 1,
                     "instrumentationNumbers": [],
-                    "webPages": [],
+                    "invoices": [],
+                    "mailingListId": null,
+                    "name": "TestProject2099",
                     "participantFields": [],
                     "participantFieldsData": [],
+                    "participantInstruments": [],
                     "participants": {
                         "entityClassName": "ProjectParticipant",
                         "entities": {
@@ -848,149 +795,47 @@ class EntityArrayAdapterTest extends TestCase
                             }
                         }
                     },
-                    "applications": [],
-                    "sepaDebitMandates": [],
-                    "compositePayments": [],
                     "payments": [],
-                    "invoices": [],
-                    "participantInstruments": [],
-                    "calendarEvents": [],
+                    "registrationDeadline": null,
+                    "registrationStartDate": null,
                     "sentEmail": [],
-                    "financialBalanceDocumentsStorage": null
-                },
-                "musician": {
-                    "__DEPTH__": 0,
-                    "id": 1,
-                    "surName": "Musterperson",
-                    "firstName": "Max",
-                    "nickName": null,
-                    "displayName": null,
-                    "gender": null,
-                    "userIdSlug": null,
-                    "userPassphrase": null,
-                    "city": "Nirgends",
-                    "street": "Unauffindbarweg",
-                    "streetNumber": "42",
-                    "addressSupplement": "Igloo 13",
-                    "poBox": null,
-                    "country": "AQ",
-                    "postalCode": "Z-7",
-                    "language": null,
-                    "mobilePhone": "0815",
-                    "fixedLinePhone": "4711",
-                    "birthday": "2024-01-01T00:00:00.000000Z",
-                    "email": "john.doe@nowhere.tld",
-                    "defaultParticipationStatus": "regular",
-                    "remarks": null,
-                    "cloudAccountDeactivated": null,
-                    "cloudAccountDisabled": true,
-                    "updated": "2024-01-01T00:00:00.000000Z",
-                    "addressBookUri": null,
-                    "organization": null,
-                    "jobTitle": null,
-                    "uuid": "00000000-0000-0000-0000-000000000000",
-                    "created": "2024-01-01T00:00:00.000000Z",
-                    "deleted": "2024-01-01T00:00:00.000000Z",
-                    "rowAccessToken": null,
-                    "emailAddresses": {
-                        "entityClassName": "MusicianEmailAddress",
-                        "entities": {
-                            "john.doe@nowhere.tld": {
-                                "flatIdentifier": "john.doe@nowhere.tld:1",
-                                "entityClassName": null
-                            }
-                        }
-                    },
-                    "instruments": [],
-                    "projectApplications": [],
-                    "projectParticipation": {
-                        "entityClassName": "ProjectParticipant",
-                        "entities": {
-                            "1": {
-                                "flatIdentifier": "1:1",
-                                "entityClassName": null
-                            }
-                        }
-                    },
-                    "projectInstruments": [],
-                    "projectParticipantFieldsData": [],
-                    "instrumentInsurances": [],
-                    "payableInsurances": [],
-                    "sepaBankAccounts": {
-                        "entityClassName": "SepaBankAccount",
-                        "entities": [
-                            {
-                                "flatIdentifier": "1:1",
-                                "entityClassName": null
-                            }
-                        ]
-                    },
                     "sepaDebitMandates": [],
-                    "payments": [],
-                    "encryptedFiles": [],
-                    "invoices": [],
-                    "originatedInvoices": [],
-                    "publicName": "Max Musterperson",
-                    "personalPublicName": "Max Musterperson",
-                    "streetAndNumber": "Unauffindbarweg 42",
-                    "numberAndStreet": "42 Unauffindbarweg"
+                    "type": "temporary",
+                    "updated": null,
+                    "webPages": [],
+                    "year": 2099
                 },
-                "participantFieldsData": [],
                 "projectInstruments": [],
-                "payments": [],
-                "invoices": [],
-                "databaseDocuments": null
+                "registration": false,
+                "updated": "2024-01-01T00:00:00.000000Z"
             }
         },
-        "projectInstruments": [],
-        "projectParticipantFieldsData": [],
-        "instrumentInsurances": [],
-        "payableInsurances": [],
+        "publicName": "Max Musterperson",
+        "remarks": null,
+        "rowAccessToken": null,
         "sepaBankAccounts": [
             {
                 "__DEPTH__": 1,
-                "sequence": 1,
-                "iban": "DE02700100800030876808",
+                "bankAccountOwner": "Musterperson, Max",
                 "bic": "PBNKDEFFXXX",
                 "blz": "70010080",
-                "bankAccountOwner": "Musterperson, Max",
-                "deleted": "2024-01-01T00:00:00.000000Z",
                 "created": null,
-                "updated": null,
+                "deleted": "2024-01-01T00:00:00.000000Z",
+                "iban": "DE02700100800030876808",
                 "musician": {
                     "__DEPTH__": 0,
-                    "id": 1,
-                    "surName": "Musterperson",
-                    "firstName": "Max",
-                    "nickName": null,
-                    "displayName": null,
-                    "gender": null,
-                    "userIdSlug": null,
-                    "userPassphrase": null,
-                    "city": "Nirgends",
-                    "street": "Unauffindbarweg",
-                    "streetNumber": "42",
+                    "addressBookUri": null,
                     "addressSupplement": "Igloo 13",
-                    "poBox": null,
-                    "country": "AQ",
-                    "postalCode": "Z-7",
-                    "language": null,
-                    "mobilePhone": "0815",
-                    "fixedLinePhone": "4711",
                     "birthday": "2024-01-01T00:00:00.000000Z",
-                    "email": "john.doe@nowhere.tld",
-                    "defaultParticipationStatus": "regular",
-                    "remarks": null,
+                    "city": "Nirgends",
                     "cloudAccountDeactivated": null,
                     "cloudAccountDisabled": true,
-                    "updated": "2024-01-01T00:00:00.000000Z",
-                    "addressBookUri": null,
-                    "organization": null,
-                    "jobTitle": null,
-                    "uuid": "00000000-0000-0000-0000-000000000000",
+                    "country": "AQ",
                     "created": "2024-01-01T00:00:00.000000Z",
+                    "defaultParticipationStatus": "regular",
                     "deleted": "2024-01-01T00:00:00.000000Z",
-                    "rowAccessToken": null,
+                    "displayName": null,
+                    "email": "john.doe@nowhere.tld",
                     "emailAddresses": {
                         "entityClassName": "MusicianEmailAddress",
                         "entities": {
@@ -1000,8 +845,29 @@ class EntityArrayAdapterTest extends TestCase
                             }
                         }
                     },
+                    "encryptedFiles": [],
+                    "firstName": "Max",
+                    "fixedLinePhone": "4711",
+                    "gender": null,
+                    "id": 1,
+                    "instrumentInsurances": [],
                     "instruments": [],
+                    "invoices": [],
+                    "jobTitle": null,
+                    "language": null,
+                    "mobilePhone": "0815",
+                    "nickName": null,
+                    "numberAndStreet": "42 Unauffindbarweg",
+                    "organization": null,
+                    "originatedInvoices": [],
+                    "payableInsurances": [],
+                    "payments": [],
+                    "personalPublicName": "Max Musterperson",
+                    "poBox": null,
+                    "postalCode": "Z-7",
                     "projectApplications": [],
+                    "projectInstruments": [],
+                    "projectParticipantFieldsData": [],
                     "projectParticipation": {
                         "entityClassName": "ProjectParticipant",
                         "entities": {
@@ -1011,10 +877,9 @@ class EntityArrayAdapterTest extends TestCase
                             }
                         }
                     },
-                    "projectInstruments": [],
-                    "projectParticipantFieldsData": [],
-                    "instrumentInsurances": [],
-                    "payableInsurances": [],
+                    "publicName": "Max Musterperson",
+                    "remarks": null,
+                    "rowAccessToken": null,
                     "sepaBankAccounts": {
                         "entityClassName": "SepaBankAccount",
                         "entities": [
@@ -1025,40 +890,197 @@ class EntityArrayAdapterTest extends TestCase
                         ]
                     },
                     "sepaDebitMandates": [],
-                    "payments": [],
-                    "encryptedFiles": [],
-                    "invoices": [],
-                    "originatedInvoices": [],
-                    "publicName": "Max Musterperson",
-                    "personalPublicName": "Max Musterperson",
+                    "street": "Unauffindbarweg",
                     "streetAndNumber": "Unauffindbarweg 42",
-                    "numberAndStreet": "42 Unauffindbarweg"
+                    "streetNumber": "42",
+                    "surName": "Musterperson",
+                    "updated": "2024-01-01T00:00:00.000000Z",
+                    "userIdSlug": null,
+                    "userPassphrase": null,
+                    "uuid": "00000000-0000-0000-0000-000000000000"
                 },
+                "payments": [],
                 "sepaDebitMandates": [],
-                "payments": []
+                "sequence": 1,
+                "updated": null
             }
         ],
         "sepaDebitMandates": [],
-        "payments": [],
-        "encryptedFiles": [],
-        "invoices": [],
-        "originatedInvoices": [],
-        "publicName": "Max Musterperson",
-        "personalPublicName": "Max Musterperson",
+        "street": "Unauffindbarweg",
         "streetAndNumber": "Unauffindbarweg 42",
-        "numberAndStreet": "42 Unauffindbarweg"
+        "streetNumber": "42",
+        "surName": "Musterperson",
+        "updated": "2024-01-01T00:00:00.000000Z",
+        "userIdSlug": null,
+        "userPassphrase": null,
+        "uuid": "00000000-0000-0000-0000-000000000000"
     },
     "participantFieldsData": [],
-    "projectInstruments": [],
+    "participationStatus": "regular",
     "payments": [],
-    "invoices": [],
-    "databaseDocuments": null
+    "project": {
+        "__DEPTH__": 2,
+        "applications": [],
+        "calendarEvents": [],
+        "compositePayments": [],
+        "created": null,
+        "deleted": null,
+        "financialBalanceDocumentsStorage": null,
+        "id": 1,
+        "instrumentationNumbers": [],
+        "invoices": [],
+        "mailingListId": null,
+        "name": "TestProject2099",
+        "participantFields": [],
+        "participantFieldsData": [],
+        "participantInstruments": [],
+        "participants": {
+            "1": {
+                "__DEPTH__": 1,
+                "created": "2024-01-01T00:00:00.000000Z",
+                "databaseDocuments": null,
+                "deleted": null,
+                "invoices": [],
+                "musician": {
+                    "__DEPTH__": 0,
+                    "addressBookUri": null,
+                    "addressSupplement": "Igloo 13",
+                    "birthday": "2024-01-01T00:00:00.000000Z",
+                    "city": "Nirgends",
+                    "cloudAccountDeactivated": null,
+                    "cloudAccountDisabled": true,
+                    "country": "AQ",
+                    "created": "2024-01-01T00:00:00.000000Z",
+                    "defaultParticipationStatus": "regular",
+                    "deleted": "2024-01-01T00:00:00.000000Z",
+                    "displayName": null,
+                    "email": "john.doe@nowhere.tld",
+                    "emailAddresses": {
+                        "entityClassName": "MusicianEmailAddress",
+                        "entities": {
+                            "john.doe@nowhere.tld": {
+                                "flatIdentifier": "john.doe@nowhere.tld:1",
+                                "entityClassName": null
+                            }
+                        }
+                    },
+                    "encryptedFiles": [],
+                    "firstName": "Max",
+                    "fixedLinePhone": "4711",
+                    "gender": null,
+                    "id": 1,
+                    "instrumentInsurances": [],
+                    "instruments": [],
+                    "invoices": [],
+                    "jobTitle": null,
+                    "language": null,
+                    "mobilePhone": "0815",
+                    "nickName": null,
+                    "numberAndStreet": "42 Unauffindbarweg",
+                    "organization": null,
+                    "originatedInvoices": [],
+                    "payableInsurances": [],
+                    "payments": [],
+                    "personalPublicName": "Max Musterperson",
+                    "poBox": null,
+                    "postalCode": "Z-7",
+                    "projectApplications": [],
+                    "projectInstruments": [],
+                    "projectParticipantFieldsData": [],
+                    "projectParticipation": {
+                        "entityClassName": "ProjectParticipant",
+                        "entities": {
+                            "1": {
+                                "flatIdentifier": "1:1",
+                                "entityClassName": null
+                            }
+                        }
+                    },
+                    "publicName": "Max Musterperson",
+                    "remarks": null,
+                    "rowAccessToken": null,
+                    "sepaBankAccounts": {
+                        "entityClassName": "SepaBankAccount",
+                        "entities": [
+                            {
+                                "flatIdentifier": "1:1",
+                                "entityClassName": null
+                            }
+                        ]
+                    },
+                    "sepaDebitMandates": [],
+                    "street": "Unauffindbarweg",
+                    "streetAndNumber": "Unauffindbarweg 42",
+                    "streetNumber": "42",
+                    "surName": "Musterperson",
+                    "updated": "2024-01-01T00:00:00.000000Z",
+                    "userIdSlug": null,
+                    "userPassphrase": null,
+                    "uuid": "00000000-0000-0000-0000-000000000000"
+                },
+                "participantFieldsData": [],
+                "participationStatus": "regular",
+                "payments": [],
+                "project": {
+                    "__DEPTH__": 0,
+                    "applications": [],
+                    "calendarEvents": [],
+                    "compositePayments": [],
+                    "created": null,
+                    "deleted": null,
+                    "financialBalanceDocumentsStorage": null,
+                    "id": 1,
+                    "instrumentationNumbers": [],
+                    "invoices": [],
+                    "mailingListId": null,
+                    "name": "TestProject2099",
+                    "participantFields": [],
+                    "participantFieldsData": [],
+                    "participantInstruments": [],
+                    "participants": {
+                        "entityClassName": "ProjectParticipant",
+                        "entities": {
+                            "1": {
+                                "flatIdentifier": "1:1",
+                                "entityClassName": null
+                            }
+                        }
+                    },
+                    "payments": [],
+                    "registrationDeadline": null,
+                    "registrationStartDate": null,
+                    "sentEmail": [],
+                    "sepaDebitMandates": [],
+                    "type": "temporary",
+                    "updated": null,
+                    "webPages": [],
+                    "year": 2099
+                },
+                "projectInstruments": [],
+                "registration": false,
+                "updated": "2024-01-01T00:00:00.000000Z"
+            }
+        },
+        "payments": [],
+        "registrationDeadline": null,
+        "registrationStartDate": null,
+        "sentEmail": [],
+        "sepaDebitMandates": [],
+        "type": "temporary",
+        "updated": null,
+        "webPages": [],
+        "year": 2099
+    },
+    "projectInstruments": [],
+    "registration": false,
+    "updated": "2024-01-01T00:00:00.000000Z"
 }',
   ];
 
   /** @return void */
   public function testSerialization(): void
   {
+    // tests also "deepen"
     foreach (self::SERIALIZED_ENTITY as $depth => $data) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
@@ -1067,6 +1089,7 @@ class EntityArrayAdapterTest extends TestCase
         json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR),
       );
     }
+    // tests also "un-deepen"
     foreach (array_reverse(self::SERIALIZED_ENTITY, preserve_keys: true) as $depth => $data) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());

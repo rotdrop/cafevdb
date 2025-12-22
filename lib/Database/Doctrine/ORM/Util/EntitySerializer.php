@@ -302,6 +302,7 @@ class EntitySerializer
           $flatEntity[$property] = $jsonData[$property];
         }
       }
+      ksort($flatEntity);
       $this->repositories[$entityClassName][$flatIdentifier] = $flatEntity;
       if ($principal) {
         if (!$existing) {
