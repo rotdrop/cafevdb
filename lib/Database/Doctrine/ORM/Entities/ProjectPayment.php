@@ -43,7 +43,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  private int $id = 0;
 
   /**
    * Project payments are actually also expenses in which case the sign of the
@@ -120,7 +120,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function setId(?int $id):ProjectPayment
   {
     if (empty($id)) {
-      $this->id = null; // flag auto-increment on insert
+      $this->id = 0; // flag auto-increment on insert
     }
     return $this;
   }
@@ -266,7 +266,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSubject(?string $subject):ProjectPayment
   {
-    $autoSubject = $this->receivable->paymentReference();
+
+    $autoSubject = ($this->receivable ?? null)?->paymentReference();
 
     $this->subject = ($subject == $autoSubject) ? null : $subject;
 
@@ -342,7 +343,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function getReceivable():?ProjectParticipantFieldDatum
   {
-    return $this->receivable;
+    return $this->receivable ?? null;
   }
 
   /**
