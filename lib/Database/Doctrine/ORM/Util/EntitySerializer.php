@@ -24,8 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
-use UnexpectedValueException;
+use JsonSerializable;
+use Stringable;
 use Throwable;
+use UnexpectedValueException;
 
 use Psr\Log\LoggerInterface;
 
@@ -34,7 +36,9 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\PersisterHelper;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
@@ -238,9 +242,27 @@ class EntitySerializer
             }
             $targetClassName = $this->stripCommonPrefix($associationMapping->targetEntity);
             $flatCollection = [];
+            $keyConvert = fn(mixed $value, mixed $metaData) => $value;
+            if ($associationMapping->isIndexed()) {
+              $targetMetaData = $this->entityManager->getClassMetadata($associationMapping->targetEntity);
+              $indexField = $associationMapping->indexBy();
+              $keyConvert = function(mixed $value, mixed $metaData) use ($indexField, $targetMetaData, $field, $entityClassName) {
+                $fieldType = PersisterHelper::getTypeOfColumn(
+                  $indexField,
+                  $targetMetaData->getWrappedObject(),
+                  $this->entityManager->getWrappedObject(),
+                );
+                $phpValue = $this->entityManager->getConnection()->convertToPHPValue($value, $fieldType);
+                if (!is_string($phpValue) && !is_integer($phpValue)) {
+                  $phpValue = (string)$phpValue;
+                }
+                return $phpValue;
+              };
+            }
             foreach ($targetCollection as $key => $targetEntity) {
               /** @var Mapping\ClassMetadata $targetMetaData */
               $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+              $key = $keyConvert($key, $targetMetaData);
               $targetId = $targetMetaData->getIdentifierValues($targetEntity);
               if (empty($targetId)) {
                 throw Exceptions\DatabaseMissingIdentifierException(
