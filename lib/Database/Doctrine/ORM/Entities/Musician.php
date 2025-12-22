@@ -125,7 +125,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private ?string $userPassphrase = null;
 
   #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
-  private ?MusicianRowAccessToken $rowAccessToken;
+  private ?MusicianRowAccessToken $rowAccessToken = null;
 
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $city = null;
@@ -1671,7 +1671,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
       'personalPublicName' => $this->getPublicName(firstNameFirst: true),
       'displayName' => $this->displayName ?? $this->getPublicName(firstNameFirst: false),
       'streetAndNumber' => $this->street . ' ' . $this->streetNumber,
-      'numberAndStreet' => $this->number . ' ' . $this->street,
+      'numberAndStreet' => $this->streetNumber . ' ' . $this->street,
     ]);
   }
 
