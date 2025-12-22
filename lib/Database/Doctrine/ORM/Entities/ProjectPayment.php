@@ -145,7 +145,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function setId(?int $id):ProjectPayment
   {
     if (empty($id)) {
-      $this->id = null; // flag auto-increment on insert
+      $this->id = 0; // flag auto-increment on insert
     }
     return $this;
   }
@@ -289,7 +289,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSubject(?string $subject):ProjectPayment
   {
-    $autoSubject = $this->receivable->paymentReference();
+
+    $autoSubject = ($this->receivable ?? null)?->paymentReference();
 
     $this->subject = ($subject == $autoSubject) ? null : $subject;
 
@@ -365,7 +366,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function getReceivable():?ProjectParticipantFieldDatum
   {
-    return $this->receivable;
+    return $this->receivable ?? null;
   }
 
   /**
