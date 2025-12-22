@@ -31,11 +31,15 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  */
 trait AutoIncrementTrait
 {
-
+  /**
+   * This must be protected as otherwise inheritance is not possible:
+   * althought the consuming class can change the visibility of a method, it
+   * may not change the visibility of a property.
+   */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id = 0;
+  protected int $id = 0;
 
   /**
    * Set id.
