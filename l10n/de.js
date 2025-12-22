@@ -2538,7 +2538,7 @@ OC.L10N.register(
     "GnuCash Balance Data" : "GnuCash Ausgleichsbuchungen",
     "Email" : "Email",
     "Phone" : "Telefon",
-    "Propability" : "Wahrscheinlichkeit",
+    "Probability" : "Wahrscheinlichkeit",
     "Required." : "Benötigt.",
     "File download failed for {fileName}." : "Laden der Datei {fileName} ist fehlgeschlagen.",
     "no response received from {ajaxUrl}" : "keine Antwort von {ajaxUrl} erhalten",

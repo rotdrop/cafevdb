@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2025-12-21 21:09+0100\n"
+"POT-Creation-Date: 2025-12-22 17:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1444,7 +1444,7 @@ msgstr ""
 #: lib/Controller/BlogController.php:225
 #: lib/Controller/CspViolationController.php:70
 #: lib/Controller/DownloadsController.php:149
-#: lib/Controller/MusicianValidationController.php:451
+#: lib/Controller/MusicianValidationController.php:458
 #: lib/Controller/PersonalSettingsController.php:295
 #: lib/Controller/ProgressStatusController.php:144
 #: lib/Controller/ProjectParticipantsController.php:214
@@ -1968,58 +1968,58 @@ msgstr ""
 msgid "Migration step \"%1$s\" failed."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:146
+#: lib/Controller/MusicianValidationController.php:152
 #: lib/Controller/PersonalSettingsController.php:610
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:159
+#: lib/Controller/MusicianValidationController.php:165
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:168
+#: lib/Controller/MusicianValidationController.php:174
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:178
+#: lib/Controller/MusicianValidationController.php:184
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:196
+#: lib/Controller/MusicianValidationController.php:202
 msgid "Submitted email is empty"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:282
+#: lib/Controller/MusicianValidationController.php:288
 #, php-format
 msgid "Unsupported auto-complete request for \"%s\"."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:423
+#: lib/Controller/MusicianValidationController.php:429
 msgid "full name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:425
+#: lib/Controller/MusicianValidationController.php:431
 msgid "first name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:426
+#: lib/Controller/MusicianValidationController.php:432
 msgid "surname"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:428
+#: lib/Controller/MusicianValidationController.php:434
 msgid "communication"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:429
+#: lib/Controller/MusicianValidationController.php:435
 msgid "address"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:441
+#: lib/Controller/MusicianValidationController.php:447
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr ""
@@ -4313,22 +4313,22 @@ msgid "Undefined method - %1$s::%2$s"
 msgstr ""
 
 #: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:345
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:409
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:634
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:410
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:639
 msgid "Foreign keys as principle keys cannot be composite"
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:420
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:425
 #, php-format
 msgid "Missing value and no generator for identifier field: %s::%s"
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:484
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:489
 #, php-format
 msgid "Type conversion for field \"%s\" failed."
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:599
+#: lib/Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php:604
 #, php-format
 msgid ""
 "Association field must eiter be an entity or the value of the single join "
@@ -4342,19 +4342,19 @@ msgstr ""
 msgid "The identifier is missing for a query to find an instance of \"%1$s\"."
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:177
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:217
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:247
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:181
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:221
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:269
 #, php-format
 msgid "Unable to determine the identifier values for an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:235
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:239
 #, php-format
 msgid "Collection \"%1$s\" in entity of type \"%2$s\" is null."
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:292
+#: lib/Database/Doctrine/ORM/Util/EntitySerializer.php:314
 #, php-format
 msgid "Unable to compute a serialization for an instance of \"%s\"."
 msgstr ""
@@ -13975,7 +13975,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:79
 #: specialVueFakeDummyForL10nScript.js:6386
-msgid "Propability"
+msgid "Probability"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:6515
