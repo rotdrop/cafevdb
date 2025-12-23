@@ -349,30 +349,6 @@ export default defineStore(storeId, () => {
       return undefined;
     }
   };
-  const stateFindProjectIds = async (errorHandler?: ErrorHandler) => {
-    const url = generateAppUrl('projects');
-    try {
-      const response: AxiosResponse<number[]> = await axios.get(url, {
-        signal: abortController.signal,
-      });
-      logger.info('FIND PROJECT IDS RESPONSE', response);
-      return response.data;
-    } catch (e) {
-      stateHandleError(
-        e,
-        {
-          message: t(
-            appName,
-            'Unable to fetch the poject-ids from the database.',
-          ),
-          action: 'findProjectIds',
-          url,
-        },
-        errorHandler,
-      );
-      return undefined;
-    }
-  };
   const stateSearchProjects = async (
     query: string,
     errorHandler?: ErrorHandler,
@@ -421,53 +397,24 @@ export default defineStore(storeId, () => {
    *
    ****************************************************************************/
 
-  const projectIds = ref<number[]>([]);
-  stateFindProjectIds(errorHandlerProvider.getHandler())
-    .then((value) => {
-      if (value) {
-        projectIds.value = value;
-      }
-    })
-    .catch((error) => {
-      projectIds.value = [];
-      logger.error(
-        'Fetching the project ids failed',
-        error,
-        errorHandlerProvider.getHandler(),
-        errorHandlerProvider.errorHandler,
-      );
-    });
   const projects = computed(() => state.projects);
   watch(projects, (value, oldValue) =>
     logger.info('PROJECTS WATCHER', value, oldValue),
   );
 
-  async function getProject(
+  const getProject = async (
     projectKey: string | number,
     handler?: ErrorHandler,
-  ) {
+  ) => {
     const result = await stateGetProject(
       projectKey,
       handler || errorHandlerProvider.getHandler(),
     );
-    if (result && !(result.id in projectIds.value)) {
-      projectIds.value!.push(result.id);
-    }
     return result;
-  }
+  };
 
-  async function searchProjects(query: string, handler?: ErrorHandler) {
-    const result =
-      (await stateSearchProjects(
-        query,
-        handler || errorHandlerProvider.getHandler(),
-      )) || [];
-    for (const project of result) {
-      if (!(project.id in projectIds.value)) {
-        projectIds.value!.push(project.id);
-      }
-    }
-  }
+  const searchProjects = (query: string, handler?: ErrorHandler) =>
+    stateSearchProjects(query, handler || errorHandlerProvider.getHandler());
 
   const currentProject = ref<undefined | Project>(undefined);
   const projectMode = computed(() => !!currentProject.value);
