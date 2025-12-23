@@ -26,12 +26,11 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use BackedEnum;
 
+use OCA\CAFEVDB\Database\Constants;
 use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
-
-use OCA\CAFEVDB\Database\Constants;
 
 /** Trait for entity repositories which adds kind of a symbolic query "language". */
 trait FindLikeTrait
