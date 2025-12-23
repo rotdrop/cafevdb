@@ -659,67 +659,67 @@ $routes = [
         'pattern' => '',
       ],
     ],
-    [
-      'name' => 'projects#search_projects',
-      'verb' => 'GET',
-      'url' => '/projects/search/{pattern}',
-      'defaults' => [
-        'pattern' => '',
-      ],
-    ],
-    [
-      'name' => 'projects#get',
-      'verb' => 'GET',
-      'url' => '/projects/{projectId}/{topic}/{subTopic}',
-      'defaults' => [
-        'topic' => '',
-        'subTopic' => ''
-      ],
-      'requirements' => [
-        'projectId' => '^\d+$',
-      ],
-    ],
-    [
-      'name' => 'projects#getIndices',
-      'verb' => 'GET',
-      'url' => '/projects',
-    ],
-    [
-      'name' => 'projects#post',
-      'verb' => 'POST',
-      'url' => '/projects/{projectId}/{topic}/{subTopic}',
-      'defaults' => [
-        'topic' => '',
-        'subTopic' => ''
-      ],
-      'requirements' => [
-        'projectId' => '^\d+$',
-      ],
-    ],
-    [
-      'name' => 'projects#delete',
-      'verb' => 'DELETE',
-      'url' => '/projects/{projectId}/{topic}/{subTopic}',
-      'defaults' => [
-        'topic' => '',
-        'subTopic' => ''
-      ],
-      'requirements' => [
-        'projectId' => '^\d+$',
-      ],
-    ],
-    [
-      'name' => 'projects#patch',
-      'verb' => 'PATCH',
-      'url' => '/projects/{projectId}/{topic}/{subTopic}',
-      'defaults' => [
-        'topic' => '',
-        'subTopic' => ''
-      ],
-      'requirements' => [
-        'projectId' => '^\d+$',
-      ],
-    ],
+    // [
+    //   'name' => 'projects#search_projects',
+    //   'verb' => 'GET',
+    //   'url' => '/projects/search/{pattern}',
+    //   'defaults' => [
+    //     'pattern' => '',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'projects#get',
+    //   'verb' => 'GET',
+    //   'url' => '/projects/{projectId}/{topic}/{subTopic}',
+    //   'defaults' => [
+    //     'topic' => '',
+    //     'subTopic' => ''
+    //   ],
+    //   'requirements' => [
+    //     'projectId' => '^\d+$',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'projects#getIndices',
+    //   'verb' => 'GET',
+    //   'url' => '/projects',
+    // ],
+    // [
+    //   'name' => 'projects#post',
+    //   'verb' => 'POST',
+    //   'url' => '/projects/{projectId}/{topic}/{subTopic}',
+    //   'defaults' => [
+    //     'topic' => '',
+    //     'subTopic' => ''
+    //   ],
+    //   'requirements' => [
+    //     'projectId' => '^\d+$',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'projects#delete',
+    //   'verb' => 'DELETE',
+    //   'url' => '/projects/{projectId}/{topic}/{subTopic}',
+    //   'defaults' => [
+    //     'topic' => '',
+    //     'subTopic' => ''
+    //   ],
+    //   'requirements' => [
+    //     'projectId' => '^\d+$',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'projects#patch',
+    //   'verb' => 'PATCH',
+    //   'url' => '/projects/{projectId}/{topic}/{subTopic}',
+    //   'defaults' => [
+    //     'topic' => '',
+    //     'subTopic' => ''
+    //   ],
+    //   'requirements' => [
+    //     'projectId' => '^\d+$',
+    //   ],
+    // ],
     /**
      * Forward to the contacts manager. Arguably, we should just use the
      * CardDAV end-points in the Vue front-end. However, looking at the

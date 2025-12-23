@@ -34,6 +34,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -418,6 +419,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/projects')]
   public function getIndices()
   {
     /** @var ProjectService $projectService */
@@ -437,6 +439,15 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/projects/{projectId}/{topic}/{subTopic}',
+    requirements: ['projectId' => '^\d+$'],
+    defaults: [
+      'topic' => '',
+      'subTopic' => ''
+    ],
+  )]
   public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse|JSONResponse
   {
     if (!($projectId > 0)) {
@@ -570,6 +581,15 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/projects/{projectId}/{topic}/{subTopic}',
+    defaults: [
+      'topic' => '',
+      'subTopic' => ''
+    ],
+    requirements: ['projectId' => '^\d+$'],
+  )]
   public function post(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -611,6 +631,15 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'DELETE',
+    url: '/projects/{projectId}/{topic}/{subTopic}',
+    defaults: [
+      'topic' => '',
+      'subTopic' => ''
+    ],
+    requirements: ['projectId' => '^\d+$'],
+  )]
   public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -661,6 +690,15 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'PATCH',
+    url: '/projects/{projectId}/{topic}/{subTopic}',
+    defaults: [
+      'topic' => '',
+      'subTopic' => ''
+    ],
+    requirements: ['projectId' => '^\d+$'],
+  )]
   public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
   {
     /** @var ProjectService $projectService */
@@ -717,6 +755,13 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/projects/search/{pattern}',
+    defaults: [
+      'pattern' => '',
+    ],
+  )]
   public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
   {
     $repository = $this->getDatabaseRepository(Entities\Project::class);
@@ -739,6 +784,7 @@ class ProjectsController extends Controller
         }
       }
       $criteria = [
+        Database\Constants::QUERY_OPTIONS_KEY => [ Database\Constants::QUERY_OPTION_WILDCARDS => true ],
         '(|name' => $pattern,
         'id' => $pattern,
         ')' => true,
