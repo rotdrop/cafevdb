@@ -100,20 +100,23 @@ const metaDataText = function(metaData: Record<string, undefined|null|string>|st
   return metaData.join('<br/>');
 };
 
-const getData = ($element: JQuery, key: string, silent: boolean = false) => {
-  const data = $element.attr('data-' + key);
+const getData = <K extends string>($element: JQuery, key: K, silent: boolean = false) => {
+  const data = $element.attr(`data-${key}`);
   if (!silent && !data) {
     console.error('DATA ATTRIBUTE IS EMPTY DURING LAZY DECRYPTION', { $element, key });
   }
   return data;
 };
-const getDataCryptoHash = ($element: JQuery) => getData($element, DataConstants.DATA_CRYPTO_HASH);
+const getDataOriginalValue = ($element: JQuery, silent: boolean = false) =>
+  getData($element, DataConstants.DATA_PME_ORIGINAL_VALUE, silent);
+const getDataCryptoHash = ($element: JQuery, silent: boolean = false) =>
+  getData($element, DataConstants.DATA_CRYPTO_HASH, silent);
 // sealed data is only there for special filter selects, otherwise use the option value
 const getDataSealedValue = ($element: JQuery) =>
   getData($element, DataConstants.DATA_SEALED_VALUE, true);
 const getDataMetaData = ($element: JQuery) => getData($element, DataConstants.DATA_META_DATA);
 const getDataPMEValues = ($element: JQuery) => {
-  const data = getData($element, DataConstants.DATA_PME_VALUES);
+  const data = getData($element, DataConstants.DATA_PME_PME_VALUES);
   if (!data) {
     return undefined;
   }
@@ -125,11 +128,19 @@ const getDataPMEValues = ($element: JQuery) => {
   }
 };
 
+const getElementCryptoHash = ($element: JQuery) => {
+  const hash = getDataCryptoHash($element, true) ?? getDataOriginalValue($element, true);
+  if (hash === undefined) {
+    console.error('UNABLE TO OBTAIN CRYPT-HASH FROM ELEMENT', { $element });
+  }
+  return hash;
+};
+
 const getCachedCryptoData = (hash: undefined|string) => hash ? cryptoCache[hash] : undefined;
 
 const replaceElementEncryptionPlaceholder = function($element: JQuery, cryptoData?: UnsealedData) {
   if (!cryptoData) {
-    cryptoData = getCachedCryptoData(getDataCryptoHash($element));
+    cryptoData = getCachedCryptoData(getElementCryptoHash($element));
     if (!cryptoData) {
       return;
     }
@@ -156,7 +167,7 @@ const replaceElementEncryptionPlaceholder = function($element: JQuery, cryptoDat
       popupText.push($tableCell.html());
     } else if ($tableCell.hasClass('meta-data-popup')) {
       $tableCell.find(`[data-${DataConstants.DATA_CRYPTO_HASH}]`).each(function() {
-        const cryptoData = getCachedCryptoData(getDataCryptoHash($(this)));
+        const cryptoData = getCachedCryptoData(getElementCryptoHash($(this)));
         if (!cryptoData || !cryptoData.metaData) {
           return;
         }
@@ -193,7 +204,7 @@ const replaceEncryptionPlaceholder = function(
   }
   refreshWidget($filter);
   $container
-    .find('[data-crypto-hash="' + cryptoData.hash + '"].encryption-placeholder')
+    .find(`[data-${DataConstants.DATA_CRYPTO_HASH}="${cryptoData.hash}"].encryption-placeholder`)
     .each(function() { replaceElementEncryptionPlaceholder($(this), cryptoData); });
 };
 
@@ -211,7 +222,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
   // replace any remaining, also run if the cache is just used as is.
   decryptionPromise.always(() => {
     $container
-      .find('[data-crypto-hash].encryption-placeholder')
+      .find(`[data-${DataConstants.DATA_CRYPTO_HASH}].encryption-placeholder`)
       .each(function() { replaceElementEncryptionPlaceholder($(this)); });
   });
   const batchJobs: Record<string, Record<string, BatchJob> > = {};
@@ -232,7 +243,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
         // skip special placeholder filters.
         return;
       }
-      const cryptoHash = getDataCryptoHash($option);
+      const cryptoHash = getElementCryptoHash($option);
       const cachedData = getCachedCryptoData(cryptoHash);
       if (cachedData) {
         replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
@@ -255,7 +266,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       return;
     }
     const values: Record<string, string> = getDataPMEValues($input)?.values || {};
-    const valueCryptoHash = getDataCryptoHash($input);
+    const valueCryptoHash = getElementCryptoHash($input);
     for (const [sealedData, cryptoHash] of Object.entries(values)) {
       const cachedData = getCachedCryptoData(cryptoHash);
       if (cachedData) {
@@ -303,12 +314,14 @@ const lazyBatchDecryptValues = function($container: JQuery) {
               const batchInput = batchInputs[cryptoHash];
               if (batchInput) {
                 const $input = batchInput.input;
-                const valueCryptoHash = getDataCryptoHash($input);
+                const valueCryptoHash = getElementCryptoHash($input);
                 if (valueCryptoHash === cryptoHash && $input.val() === cryptoHash) {
                   $input.val(dataItem.data);
                 }
                 batchInput.values[batchInput.sealedData] = dataItem.data;
-                $input.attr('data-pme-values', JSON.stringify(batchInput.values));
+                const pmeValues = getDataPMEValues($input);
+                pmeValues.values = batchInput.values;
+                $input.attr(`data-${DataConstants.DATA_PME_PME_VALUES}`, JSON.stringify(pmeValues));
               }
             }
             decreaseDecryptionJobCount(valuesChunk.length);
