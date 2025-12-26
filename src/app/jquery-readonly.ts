@@ -358,7 +358,7 @@ $.fn.readonly = function(state?: boolean|string) {
       } else {
         thisData.readonlyRestoreDisabled = vanillaProp.call($this, 'disabled');
         // @ts-expect-error 2554 Why???
-        anillaProp.call($this, 'disabled', true);
+        vanillaProp.call($this, 'disabled', true);
       }
     } else if ($this.is(':button, :submit')) {
       // readonly-buttons do not make sense, but it simplifies the code in other places.
