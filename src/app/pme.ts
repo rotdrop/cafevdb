@@ -87,10 +87,12 @@ import {
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import {
+  awaitEmit,
   emit as asyncEmit,
-  getEmitResult,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
+import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+
 require('cafevdb-selectize.scss');
 
 require('pme-table.scss');
@@ -1229,7 +1231,7 @@ const pseudoSubmitPost = ($form: JQuery<HTMLFormElement>, $element: JQuery, rese
   // convert to plain object
   const post = qsParse(postString, { allowSparse: true, duplicates: 'last' });
   const result = $.Deferred();
-  getEmitResult(asyncEmit(LEGACY_SANITIZE_POST_DATA, { post }))
+  awaitEmit(LEGACY_SANITIZE_POST_DATA, { post })
     .then(
       (postData) => {
         console.info('POST DATA', postData);
@@ -1620,7 +1622,7 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
         persist: false,
         hideSelected: false,
         openOnFocus: true, // false,
-        items: $self.data('initialValues'),
+        items: $self.attr(`data-${DATA_PME_INITIAL_VALUES}`),
         // closeAfterSelect: true,
         create: false,
         inputClass: pmeToken('selectize-input'),
