@@ -51,12 +51,13 @@ import {
   ref,
   watch,
 } from 'vue'
-import type { Project, ProjectTemporalType } from '../stores/app-data.ts'
+import type { Project } from '../stores/app-data.ts'
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
+import type { EnumProjectTemporalType } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts'
 
 type OnlyIdType = { id: number }
-type ProjectItemType = Project | (OnlyIdType & { name: string, year: number, type: ProjectTemporalType })
+type ProjectItemType = Project | (OnlyIdType & { name: string, year: number, type: EnumProjectTemporalType|'' })
 type IdType = OnlyIdType | ProjectItemType
 type InputObjectType = IdType | number
 type ValueType = InputObjectType[]|InputObjectType|undefined
