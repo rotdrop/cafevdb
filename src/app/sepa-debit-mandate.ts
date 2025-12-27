@@ -72,7 +72,8 @@ import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitManda
 import { EnumFileUploadMode, type EnumSepaDebitMandateRevocationAction, type EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -423,7 +424,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
     const accountOwnerInput = accountFieldset.find(accountOwnerSelector);
     accountOwnerInput.autocomplete({
-      source: accountOwnerInput.data('autocomplete'),
+      source: accountOwnerInput.data('autocomplete') ?? [],
       position: { my: 'left bottom', at: 'left top' },
       minLength: 0,
       autoFocus: true,
@@ -1509,8 +1510,12 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
             }
           } catch (e) {
             console.info('ERROR', e);
-            const xhr = (e as Error).cause as JQuery.jqXHR;
-            await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+            const xhr = (e as Error).cause;
+            if (isJqXHR(xhr)) {
+              await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+            } else {
+              throw e;
+            }
             break;
           }
         }
@@ -1553,7 +1558,6 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
     .on('click', mandateExportHandler);
 
   rejectDecryptionPromise(); // terminate previous calls
-  console.time('DECRYPTION PROMISE');
   decryptionPromise.always((maxJobs) => {
     console.timeEnd('DECRYPTION PROMISE');
     console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
@@ -1573,7 +1577,6 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
       [DataConstants.DATA_DATA_KEY]: Record<string, { data: string }>;
       [DataConstants.DATA_VALUES_KEY]: Record<string, string>;
     } = $bankAccountIbanInput.data('pmeValues');
-    console.info('IBAN VALUES', ibanValues);
     const ibanAutoComplete: Record<string, string[]> = {};
     const sequenceData = {}; // by musician id and iban
     const ibanIdentifiers = {}; // identifier by IBAN
@@ -1613,7 +1616,7 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
     }
 
     $bankAccountIbanInput.autocomplete({
-      source: ibanAutoComplete[$musicianIdInput.val()!],
+      source: ibanAutoComplete?.[$musicianIdInput.val() ?? ''] ?? [],
       position: { my: 'left bottom', at: 'left top' },
       minLength: 0,
       autoFocus: true,
