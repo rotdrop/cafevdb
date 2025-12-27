@@ -73,6 +73,8 @@ export const generateOcsUrl = <T extends string>(
 ) => {
   url = url.replace(/^\/+/g, '') as T;
   let generated = nextcloudGenerateOcsUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
+  // depending on the version of @nextcloud/router there are further duplicate slashes, oh well.
+  generated = generated.replace(/\/\/ocs/g, '/ocs');
   const queryParams = { ...urlParams };
   for (const urlParam of url.matchAll(/{([^{}]*)}/g)) {
     delete queryParams[urlParam[1]];
