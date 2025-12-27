@@ -41,8 +41,6 @@ require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.ph
 use OCA\CAFEVDB\Wrapped;
 use OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
-class_alias(Wrapped\MyCLabs\Enum\Enum::class, MyCLabs\Enum\Enum::class, true);
-
 use Spatie\TypeScriptTransformer\Transformers;
 
 // store output of different transformers in different files
@@ -55,7 +53,6 @@ $outputFiles = [
   'types' => [
     'transformers' => [
       Transformers\EnumTransformer::class,
-      Transformers\MyclabsEnumTransformer::class,
       PhpToTypeScript\ClassConstantsTransformer::class,
       Transformers\EnumTransformer::class,
       Transformers\DtoTransformer::class,

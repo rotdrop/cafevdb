@@ -35,10 +35,11 @@ use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
 
 /**
- * Collect all myclabs enums.
+ * Collect DTOs.
  */
 class DTOCollector extends DefaultCollector
 {
+  /** {@inheritdoc} */
   protected function shouldCollect(ClassTypeReflector $reflector): bool
   {
     $class = $reflector->getReflectionClass();

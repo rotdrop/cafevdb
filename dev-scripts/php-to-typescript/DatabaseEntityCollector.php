@@ -39,15 +39,13 @@ use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
- * Collect all myclabs enums.
+ * Collect all database entities.
  */
 class DatabaseEntityCollector extends DefaultCollector
 {
   protected function shouldCollect(ClassTypeReflector $reflector): bool
   {
     $class = $reflector->getReflectionClass();
-
-    $className = $reflector->getName();
 
     $transformers = array_map('get_class', $this->config->getTransformers());
 
