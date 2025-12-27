@@ -198,7 +198,7 @@ class Projects extends PMETableViewBase
       'show-hide-disabled',
     ];
     if (!empty($this->project)) {
-      $opts['css']['postfix'][] = 'project-type-' . (string)$this->project->getType();
+      $opts['css']['postfix'][] = 'project-type-' . $this->project->getType()->value;
     }
 
     // Number of records to display on the screen
