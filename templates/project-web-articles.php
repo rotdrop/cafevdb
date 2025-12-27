@@ -138,7 +138,7 @@ if ($cnt == 0) {
         <option></option>
 <?php
 if (count($otherPages) > 0) {
-  $oldGroup = $otherPages[0]['categoryName'];
+  $oldGroup = $otherPages[0]->categoryName;
 }
 ?>
         <optgroup label="<?php p($oldGroup) ?>">
