@@ -407,7 +407,7 @@ ${systemErrorString.value}
 
 const translationsLoaded = ref(false)
 
-loadTranslations('logreader', () => false)
+loadTranslations('logreader')
   .then(() => {
     translationsLoaded.value = true
   })
@@ -432,7 +432,6 @@ const reportError = async () => {
       appName,
       'Your comment has already been submitted with the following notification: {notification}.',
       { notification: submittedUserComments[userCommentHash] },
-      undefined,
       { escape: false },
     ))
     submitted.value = true
