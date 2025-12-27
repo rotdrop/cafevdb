@@ -200,21 +200,21 @@ export interface EntityMetadataMap {
     // some complicate template stuff in order to get the entity-DTOs right.
     $metadataForwarder .= <<<EOF
 
-type EntityNames = keyof EntityMap|keyof EntityMetadataMap;
-type EntityFieldNames<N extends EntityNames> = keyof EntityMap[N]|keyof EntityMetadataMap[N];
+export type EntityNames = keyof EntityMap|keyof EntityMetadataMap;
+export type EntityFieldNames<N extends EntityNames> = keyof EntityMap[N]|keyof EntityMetadataMap[N];
 type EntityFieldId<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
   F extends keyof EntityMetadataMap[N]
     ? ('id' extends keyof EntityMetadataMap[N][F]
         ? (EntityMetadataMap[N][F]['id'] extends boolean ? EntityMetadataMap[N][F]['id'] : never)
         : never)
     : never;
-type EntityFieldType<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
+export type EntityFieldType<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
   F extends keyof EntityMetadataMap[N]
     ? ('type' extends keyof EntityMetadataMap[N][F]
         ? (EntityMetadataMap[N][F]['type'] extends keyof EntityMap ? EntityMetadataMap[N][F]['type'] : never)
         : never)
     : never;
-type EntityFieldMapping<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
+export type EntityFieldMapping<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
   F extends keyof EntityMetadataMap[N]
     ? ('mapping' extends keyof EntityMetadataMap[N][F]
         ? EntityMetadataMap[N][F]['mapping']
