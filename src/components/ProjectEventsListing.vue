@@ -382,7 +382,6 @@ import { generateUrl } from '@nextcloud/router'
 import type {
   CalendarUris,
   EventMatrixEvent,
-  EventMatrixRow,
   Project,
   ProjectEventMatrix,
 } from '../stores/app-data.ts'
@@ -445,6 +444,7 @@ import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts
 import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
 import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
 import appTranslate from '../services/app-l10n.ts'
+import type { EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -492,6 +492,8 @@ const origin = prev
     transition: 'unknown',
   }
 
+logger.info('COMPUTED ORIGIN', { origin, prev })
+
 onBeforeMount(() => {
   logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
 })
@@ -508,9 +510,11 @@ onBeforeRouteUpdate((to, from, next) => {
 })
 
 const handleClose = () => {
-  if (origin?.transition === 'push') {
+  if (origin?.transition === 'push' && origin?.transition !== 'push') {
+    logger.info('TRY GO TO PREVIOUS ON CLOSE', { origin })
     router.go(-1) // maybe we want to avoid this altogether ...
   } else if (origin) {
+    logger.info('TRY PUSH TO ORIGIN', { origin })
     router.push(origin.location)
   }
 }
