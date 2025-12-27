@@ -121,7 +121,7 @@ class Project implements \ArrayAccess
   private Collection $participants;
 
   /** @var Collection<int, ProjectApplication> */
-  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'id')]
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'email')]
   private Collection $applications;
 
   /** @var Collection<SepaDebitMandate> */
