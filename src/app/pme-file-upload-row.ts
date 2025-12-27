@@ -36,7 +36,7 @@ import md5 from 'blueimp-md5';
 import setAppBusyIndicators from './busy-indicators.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
 import { translate as t } from '@nextcloud/l10n';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',

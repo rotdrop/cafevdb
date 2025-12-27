@@ -34,7 +34,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import useTooltipsStore from '../../stores/tooltips.ts'
 import { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts'
-import type { TemplateFileUploadMode } from './oc-template-parameters.ts'
+import type { TemplateFileUploadMode } from './oc-template-parameters.d.ts'
 
 const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(Object.values(EnumFileUploadMode).map(mode => 'cloud-file-system-operations:' + mode))

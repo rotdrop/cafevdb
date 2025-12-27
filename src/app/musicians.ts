@@ -48,7 +48,7 @@ import {
   promise as decryptionPromise,
 } from './lazy-decryption.ts';
 import debounce from './debounce.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import type { DuplicateMusiciansResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');

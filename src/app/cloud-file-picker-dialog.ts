@@ -37,7 +37,7 @@ import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
 import { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
 import type { UploadFileData, UploadModeTest } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 
 export interface CloudFilePickerParameters {
   setup?: () => void,
