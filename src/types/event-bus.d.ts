@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+// import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
 import { messages } from '../app/notification.ts';
 
@@ -75,7 +75,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     projectName?: string,
     musicianId?: number,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string|number]: any,
+    [key: PropertyKey]: any,
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,7 +87,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   type BoolSetterArgs = SetterArgs<boolean, HTMLInputElement>
 
   export interface EventArgs {
-    // mapping of 'event name' => 'event type'
+    // mapping of 'event name' => { arg: 'event type', res: result type }
     [ADD_CONTACTS_TO_PROJECT]: { projectName: string },
     [APP_SETTINGS_POPUP]: AppSettingsCallbacks,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -130,6 +130,17 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [TOGGLE_TOOLTIPS]: { enabled: boolean },
   }
 
+  export interface EventResults {
+    /** The current value of the counter. */
+    [PUSH_BUSY_STATE]: number,
+    /** The current value of the counter. */
+    [POP_BUSY_STATE]: number,
+    /** The prior state of the flag. */
+    [SET_BUSY_FLAG]: boolean,
+    /* Sanitizing post data */
+    [LEGACY_SANITIZE_POST_DATA]: TemplatePostData,
+  }
+
   type KeysOfValue<T, TCondition> = {
     [K in keyof T]: T[K] extends TCondition
     ? K
@@ -140,7 +151,16 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   export type SetterEvents = Pick<EventArgs, SetterEventKeys>;
   export type SetterEventValue<EventName extends SetterEventKeys> = SetterEvents[EventName]['value'];
 
-  export interface AsyncNextcloudEvents extends EventArgs {
+  type IsUndefined<T> = [T] extends [undefined] ? true : false
+
+  export type Events = {
+    [K in keyof EventArgs]: {
+      arg: EventArgs[K],
+      res: K extends keyof EventResults ? EventResults[K] : unknown,
+    }
+  };
+
+  export interface AsyncNextcloudEvents extends Events {
   }
 }
 

@@ -53,7 +53,7 @@ import {
 import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
-import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 
 require('./jquery-readonly.ts');
@@ -80,7 +80,7 @@ asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-const overviewPopup = async (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]) => {
+const overviewPopup = async (containerSel: string, data: EventArgs[typeof BusEvents.LEGACY_RECORD_POPUP]) => {
   const tableOptions = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-overview-dialog',

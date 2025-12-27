@@ -68,30 +68,56 @@ export function emit<K extends keyof AsyncNextcloudEvents>(
   name: K,
   ...event: EventArg<AsyncNextcloudEvents, K>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<PromiseSettledResult<any>[]> {
+) {
   return bus.emit(name, ...event);
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isOne = (x: any): x is 1 => x === 1;
 
 /**
  * Lax parsing of the all-settled result with only minimal error diagnostics.
  *
- * @param result Promise of fulfilled result of Promise.allSettled()
+ * @param result Promise or fulfilled result of Promise.allSettled()
  *
  * @param count Default 1, how many items to expect at least.
  *
  * @returns Data items of just the first data item if count === 1.
  *
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function getEmitResult(result: Promise<PromiseSettledResult<any>[]>|PromiseSettledResult<any>[], count = 1) {
-  result = await result;
-  const values = result.filter(item => item.status === 'fulfilled').map(item => item.value);
+export const getEmitResult = async <
+  K extends keyof AsyncNextcloudEvents,
+  N extends number = 1,
+>(
+  result: ReturnType<typeof emit<K> >|Awaited<ReturnType<typeof emit<K> > >,
+  count?: N,
+) : Promise<N extends 1 ? AsyncNextcloudEvents[K]['res'] : AsyncNextcloudEvents[K]['res'][]> => {
+  const awaitedResult = await result;
+  const values = awaitedResult.filter(item => item.status === 'fulfilled').map(item => item.value);
 
-  if (values.length < count) {
+  if (values.length < (count ?? 1)) {
     throw new Error('Not enough fulfilled data items in Promise.allSettled() result.');
   }
-  return count === 1 ? values[0] : values;
-}
+  // @ts-expect-error 2322
+  return isOne(count ?? 1) ? values[0] : values;
+};
+
+/**
+ * Emit an event and fetch the first result available. Despite its
+   name this function is (and must be) async and hence returns a
+   promise which has to be awaited for in order to get hold of the
+   actual value.
+ *
+ * @param name name of the event
+ * @param event event payload
+ */
+export const awaitEmit = async <K extends keyof AsyncNextcloudEvents>(
+  name: K,
+  ...event: EventArg<AsyncNextcloudEvents, K>
+) => {
+  const result = emit(name, ...event);
+  return getEmitResult<K>(result);
+};
 
 /**
  * Unsubscribe all subscribers for an event.
