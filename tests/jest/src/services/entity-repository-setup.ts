@@ -26,28 +26,29 @@ import type { OCSResponse } from '@nextcloud/typings/ocs';
 import path from 'path';
 import fs from 'fs';
 import { type EntityResponse } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
-import entityFactory from '@/src/services/entity-factory.ts';
-import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
+import entityFactory, { type FrontEndEntity } from '@/src/services/entity-factory.ts';
+import type { ObjectEntries } from '@/src/types/type-traits';
 
 const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
 const inputFilePrefix = 'EntityRepositoryResponse-' as const;
 
-export const dtos = {} as { [K in typeof entityNames[number]]: OCSResponse<EntityResponse> };
+export const dtos = {} as { [K in typeof entityNames[number]]: OCSResponse<EntityResponse<K> > };
 export const entities = {
   Musician: {},
   Project: {},
   ProjectParticipant: {},
-} as { [K in typeof entityNames[number]]: Record<string, EntityMap[K]> };
+} as { [K in typeof entityNames[number]]: Record<string, FrontEndEntity<K> > };
 
 export const generateEntities = async (names: (typeof entityNames[number])[] = [...entityNames], depth: number = 2) => {
   for (const entityName of names) {
     const inputFile = `${inputFilePrefix}${entityName}.json`;
     spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, JEST_ARTIFACTS, inputFile, '' + depth]);
     const dtoJSON = fs.readFileSync(path.join(JEST_ARTIFACTS, inputFile));
-    dtos[entityName] = JSON.parse(dtoJSON.toString()) as OCSResponse<EntityResponse>;
-    for (const [identifier, entityDto] of Object.entries(dtos[entityName].ocs.data.repositories[entityName])) {
+    dtos[entityName] = JSON.parse(dtoJSON.toString()); //  as OCSResponse<EntityResponse<typeof entityName> >;
+    const entityRepository = dtos[entityName].ocs.data.repositories[entityName];
+    for (const [identifier, entityDto] of Object.entries(entityRepository) as ObjectEntries<typeof entityRepository>) {
       const entity = await entityFactory(entityName, entityDto);
-      entities[entityName][identifier] = entity;
+      entities[entityName][identifier as string] = entity as (typeof entities)[typeof entityName][string];
     }
   }
 };
