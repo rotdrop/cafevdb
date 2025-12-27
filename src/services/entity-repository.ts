@@ -33,9 +33,11 @@ import type { OCSResponse } from '@nextcloud/typings/ocs';
 import { generateOcsUrl } from '../toolkit/util/generate-url.ts';
 import { type EntityId, type EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { type EntityResponse } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
+import { EnumOrderByOptions } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Repositories.ts';
+import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS, WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
 import entityFactory, { type FrontEndEntity } from '../services/entity-factory.ts';
 import { AppError } from '../types/errors.ts';
-import type { ObjectEntries } from '../types/type-traits.d.ts';
+import type { DeepWriteable, ObjectEntries } from '../types/type-traits.d.ts';
 
 type EntityRepository<E extends keyof EntityMap> = {
   [Identifier: string]: FrontEndEntity<E>;
@@ -43,7 +45,7 @@ type EntityRepository<E extends keyof EntityMap> = {
 
 export const repositories = reactive<{ [E in keyof EntityMap]?: EntityRepository<E> }>({});
 export const find = <N extends keyof EntityMap>(entityName: N, identifier: string) => {
-  return repositories?.[entityName]?.[identifier] ?? undefined;
+  return repositories[entityName]?.[identifier] as FrontEndEntity<N>|undefined;
 };
 
 const loadEntities = async <const N extends keyof EntityMap>(url: string) => {
@@ -76,6 +78,14 @@ const loadEntities = async <const N extends keyof EntityMap>(url: string) => {
   return result;
 };
 
+export type FindByRecord = {
+  [QUERY_OPTIONS_KEY]: { [QUERY_OPTION_WILDCARDS]: boolean },
+} | {
+  [K: string]: null|string|number|(string|number)[];
+} | {
+  [K: number]: Record<string, null|string|number|(string|number)[]>;
+};
+
 export type SearchArguments<
   N extends keyof EntityMap,
   D extends number = 1,
@@ -83,12 +93,15 @@ export type SearchArguments<
   O extends number = 0,
 > = {
   entityName: N;
-  findBy: Record<string, string|number|undefined>,
-  sortBy?: Record<string, string|number|undefined>,
+  findBy: FindByRecord,
+  orderBy?: Record<string, EnumOrderByOptions>,
   depth?: D,
   limit?: L,
   offset?: O,
 };
+
+export type Blah = DeepWriteable<typeof WILDCARD_QUERY_OPTIONS, 1>;
+export type Blub = Blah['__OPTIONS__'];
 
 /**
  * Search for entities of the given name. In order to separate "new"
@@ -102,7 +115,7 @@ export type SearchArguments<
  * @param root0.findBy Search criteria. Basically everything which is
  * understood by the PHP server code FindByTrait.
  *
- * @param root0.sortBy Sort criteria. Basically everything which is
+ * @param root0.orderBy Sort criteria. Basically everything which is
  * understood by the PHP server code FindByTrait.
  *
  * @param root0.depth The "depth" of the entity mesh which is
@@ -116,14 +129,14 @@ export type SearchArguments<
  */
 export const search = async <
   N extends keyof EntityMap,
-  D extends number = 1,
+  D extends number = 0,
   L extends null|number = null,
   O extends number = 0,
 >({
   entityName,
   findBy,
-  sortBy = undefined,
-  depth = 1 as D,
+  orderBy = undefined,
+  depth = 0 as D,
   limit = null as L,
   offset = 0 as O,
 }: SearchArguments<N, D, L, O>) => {
@@ -132,7 +145,7 @@ export const search = async <
     entityName,
     depth,
     findBy: btoa(JSON.stringify(findBy)),
-    sortBy: sortBy ? btoa(JSON.stringify(sortBy)) : null,
+    orderBy: orderBy ? btoa(JSON.stringify(orderBy)) : null,
     limit,
     offset,
   });
@@ -151,17 +164,17 @@ export const search = async <
 
 export type FetchArguments<
   N extends keyof EntityMap,
-  D extends number = 1,
+  D extends number = 0,
 > = {
   entityName: N;
   identifier: EntityId<N>,
   depth?: D,
 };
 
-export const fetch = async <N extends keyof EntityMap, D extends number = 1>({
+export const fetch = async <N extends keyof EntityMap, D extends number = 0>({
   entityName,
   identifier,
-  depth = 1 as D,
+  depth = 0 as D,
 }: FetchArguments<N, D>) => {
   const url = generateOcsUrl(`v1/entities/${entityName}`, {
     find: btoa(JSON.stringify(identifier)),

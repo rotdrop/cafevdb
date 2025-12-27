@@ -59,14 +59,18 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
         const reference: null|EntityReference<E> = entityDto[fieldName];
         if (reference) {
           const targetEntity = reference.entityClassName as keyof EntityMap;
-          const identifier = entityDto[fieldName].flatIdentifier;
+          const identifier = reference.flatIdentifier;
           Object.defineProperty(
             entity,
             fieldName, {
               get: async () => {
                 let result = EntityRepository.find(targetEntity, identifier);
                 if (result === undefined) {
-                  await EntityRepository.fetch(targetEntity, identifier);
+                  // @todo: this will not work for composite keys and complicated foreign keys
+                  await EntityRepository.fetch({
+                    entityName: targetEntity,
+                    identifier,
+                  });
                   result = EntityRepository.find(targetEntity, identifier);
                 }
                 return result;
@@ -94,7 +98,11 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
               const className = entityReference.entityClassName ?? collection.entityClassName;
               let result = EntityRepository.find(className, entityReference.flatIdentifier);
               if (result === undefined) {
-                await EntityRepository.fetch(className, entityReference.flatIdentifier);
+                await EntityRepository.fetch({
+                  entityName: className,
+                  // @todo: this will not work for composite keys and complicated foreign keys
+                  identifier: entityReference.flatIdentifier,
+                });
                 result = EntityRepository.find(className, entityReference.flatIdentifier);
               }
               return result;
