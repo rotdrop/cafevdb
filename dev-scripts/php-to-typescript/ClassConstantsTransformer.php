@@ -54,8 +54,6 @@ class ClassConstantsTransformer implements Transformer
     $namespaceName = $class->getNamespaceName();
     $namespacedClassName = $namespaceName . '\\' . $name;
 
-    echo "{$namespacedClassName}" . PHP_EOL;
-
     $constants = $this->resolveConstants($class);
 
     if ($this->config->emitConstantsAsConstants()) {
