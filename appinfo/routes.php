@@ -334,19 +334,23 @@ $routes = [
         'section' => '^(?!pdf).*$',
       ],
     ],
+    // /**
+    //  * Project data validation etc.
+    //  */
+    // [
+    //   'name' => 'projects#validate',
+    //   'url' => '/validate/projects/{topic}',
+    //   'verb' => 'POST',
+    // ],
     /**
-     * Project data validation etc.
-     */
-    [
-      'name' => 'projects#validate',
-      'url' => '/validate/projects/{topic}',
-      'verb' => 'POST',
-    ],
-    /**
-     *  options/define
-     *  options/regenerate
-     *  generator/define
-     *  generator/run
+     * Topic / Subtopic:
+     *
+     * Currently:
+
+     * options/define
+     * options/regenerate
+     * generator/define
+     * generator/run
      */
     [
       'name' => 'project_participant_fields#service_switch',
@@ -403,25 +407,25 @@ $routes = [
       'url' => '/projects/participants/files/{operation}',
       'verb' => 'POST',
     ],
-    /**
-     * Project instruments and voices
-     *
-     * The end-point expects the the instrument and voices selection
-     * as input and returns selection-options for the voices.
-     */
-    [
-      'name' => 'projects#change_instrumentation',
-      'url' => '/projects/change-instrumentation',
-      'verb' => 'POST',
-    ],
-    /**
-     * Project mailing lists and subscriptions
-     */
-    [
-      'name' => 'projects#mailing_lists',
-      'url' => '/projects/mailing-lists/{operation}',
-      'verb' => 'POST',
-    ],
+    // /**
+    //  * Project instruments and voices
+    //  *
+    //  * The end-point expects the the instrument and voices selection
+    //  * as input and returns selection-options for the voices.
+    //  */
+    // [
+    //   'name' => 'projects#change_instrumentation',
+    //   'url' => '/projects/change-instrumentation',
+    //   'verb' => 'POST',
+    // ],
+    // /**
+    //  * Project mailing lists and subscriptions
+    //  */
+    // [
+    //   'name' => 'projects#mailing_lists',
+    //   'url' => '/projects/mailing-lists/{operation}',
+    //   'verb' => 'POST',
+    // ],
     [
       'name' => 'project_participants#mailing_list_subscriptions',
       'url' => '/projects/participants/mailing-list/{operation}',
