@@ -38,7 +38,11 @@ import type { UrlOptions } from '@nextcloud/router';
  *
  * @param urlOptions Object with query parameters
  */
-export const generateUrl = <T extends string>(url: T, urlParams?: Record<string, string|number|boolean|null>, urlOptions?: UrlOptions) => {
+export const generateUrl = <T extends string>(
+  url: T,
+  urlParams?: Record<string, string|number|boolean|null>,
+  urlOptions?: UrlOptions,
+) => {
   // const str = '/image/{joinTable}/{ownerId}';
   url = url.replace(/^\/+/g, '') as T;
   let generated = nextcloudGenerateUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
@@ -62,7 +66,12 @@ export const generateUrl = <T extends string>(url: T, urlParams?: Record<string,
   return generated;
 };
 
-export const generateOcsUrl = <T extends string>(url: T, urlParams?: Record<string, string|number|boolean|null>, urlOptions?: UrlOptions) => {
+export const generateOcsUrl = <T extends string>(
+  url: T,
+  urlParams?: Record<string, string|number|boolean|null>,
+  urlOptions?: UrlOptions,
+) => {
+  url = url.replace(/^\/+/g, '') as T;
   let generated = nextcloudGenerateOcsUrl('/apps/' + appName + '/' + url, urlParams, urlOptions);
   const queryParams = { ...urlParams };
   for (const urlParam of url.matchAll(/{([^{}]*)}/g)) {
