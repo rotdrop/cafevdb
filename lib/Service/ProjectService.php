@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -65,6 +67,7 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
  */
+#[TSAttributes\TypeScript]
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -1687,12 +1690,12 @@ Whatever.',
         foreach ($pages as $idx => $article) {
           $article['categoryName'] = $category['name'];
           $article = PageRenderer\DTO\ProjectWebPage::fromArray($article);
-          if (isset($articleIds[$article['articleId']])) {
+          if (isset($articleIds[$article->articleId])) {
             $projectPages[] = $article;
           } else {
             $otherPages[] = $article;
           }
-          $this->logDebug("Projects: ".print_r($article, true));
+          $this->logDebug("Projects: " . print_r($article, true));
         }
       }
     }
