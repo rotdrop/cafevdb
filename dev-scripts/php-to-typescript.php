@@ -54,7 +54,6 @@ $outputFiles = [
     'transformers' => [
       Transformers\EnumTransformer::class,
       PhpToTypeScript\ClassConstantsTransformer::class,
-      Transformers\EnumTransformer::class,
       Transformers\DtoTransformer::class,
     ],
     'paths' => [
