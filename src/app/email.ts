@@ -1362,7 +1362,7 @@ const emailFormCompositionHandlers = (
     .on('change', function(_event: JQuery.EventBase) {
       const $this = $(this);
       startDraftAutoSave($this);
-      $.post(setPersonalUrl('email-draft-auto-save'), {
+      $.post(setPersonalUrl('emailDraftAutoSave'), {
         value: $this.prop('checked') ? autoSaveSeconds : 0,
       })
         .fail(function(xhr, status, errorThrown) {
