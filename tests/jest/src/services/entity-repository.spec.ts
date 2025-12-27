@@ -43,14 +43,15 @@ jest.mock('@nextcloud/axios', () => {
     default: {
       get: async (url: string) => {
         // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
-        const prefix = '/ocs/v2.php/apps/cafevdb/v1/entitites/';
+        const prefix = '/ocs/v2.php/apps/cafevdb/v1/entities/';
         const urlInfo = URL.parse(url);
-        if (!urlInfo?.pathname.startsWith(prefix)) {
-          throw Error(`Unexpected URL "${url}".`);
+        const pathName = urlInfo?.pathname;
+        if (!pathName?.startsWith(prefix)) {
+          throw Error(`Unexpected URL "${url}", path "${pathName}" does not start with "${prefix}".`);
         }
         const depth = +(urlInfo?.searchParams?.get('depth') ?? 0);
         const identifier = JSON.parse(atob(urlInfo?.searchParams?.get('find') ?? ''));
-        const entityName = urlInfo.pathname.substring(prefix.length);
+        const entityName = urlInfo!.pathname.substring(prefix.length);
         switch (entityName) {
           case 'Musician':
           case 'Project':
@@ -88,7 +89,10 @@ describe('Fetch entities', () => {
     }
   });
   it('Should throw ;)', async () => {
-    await expect(fetchEntity('Instrument', { id: 'blahblahblah' }))
+    await expect(fetchEntity({
+      entityName: 'Instrument',
+      identifier: { id: 'blahblahblah' },
+    }))
       .rejects
       .toThrow('Unable to fetch entity');
   });
