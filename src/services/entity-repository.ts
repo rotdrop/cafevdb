@@ -155,7 +155,7 @@ export type FetchArguments<
 > = {
   entityName: N;
   identifier: EntityId<N>,
-  depth: D,
+  depth?: D,
 };
 
 export const fetch = async <N extends keyof EntityMap, D extends number = 1>({
