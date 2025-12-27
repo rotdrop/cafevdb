@@ -95,8 +95,6 @@ trait InitialStateTrait
     $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
     $debugQuerySqlFilter = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, '');
 
-    $adminContact = $this->appContainer->get(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
-
     $authorizationService = $this->appContainer->get(AuthorizationService::class);
 
     $languageComplete = $l->getLanguageCode();
