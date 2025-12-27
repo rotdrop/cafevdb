@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use BackedEnum;
 
 use OCA\CAFEVDB\Database\Constants;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EnumOrderByOptions;
 use OCA\CAFEVDB\Exceptions\DatabaseException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
@@ -36,8 +37,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
 trait FindLikeTrait
 {
   use LogTrait;
-
-  public const OPTIONS_KEY = Constants::QUERY_OPTIONS_KEY;
 
   private const MODIFIERS = [
     '!' => 'not',
@@ -78,27 +77,8 @@ trait FindLikeTrait
     ?int $limit = null,
     ?int $offset = null,
   ): array {
-    $qb = $this->createQueryBuilder('table');
-    $andX = $qb->expr()->andX();
-    foreach ($criteria as $key => &$value) {
-      if ($value instanceof BackedEnum) {
-        $value = $value->value;
-      }
-      $value = str_replace('*', '%', $value);
-      if (strpos($value, '%') !== false) {
-        $andX->add($qb->expr()->like('table'.'.'.$key, ':'.$key));
-      } else {
-        $andX->add($qb->expr()->eq('table'.'.'.$key, ':'.$key));
-      }
-    }
-    foreach ($criteria as $key => $value) {
-      $qb->setParameter($key, $value);
-    }
-    $qb->where($andX);
-
-    self::addOrderBy($qb, $orderBy, $limit, $offset, 'table');
-
-    return $qb->getQuery()->execute();
+    $criteria = array_merge(Constants::WILDCARD_QUERY_OPTIONS, $criteria);
+    return $this->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   /**
@@ -145,10 +125,13 @@ trait FindLikeTrait
     ?string $alias = null
   ): ORM\QueryBuilder {
     foreach ($orderBy??[] as $key => $dir) {
+      if (is_string($dir)) {
+        $dir = EnumOrderByOptions::get(strtoupper($dir));
+      }
       if (strpos($key, '.') === false && !empty($alias)) {
         $key = $alias . '.' . $key;
       }
-      $qb->addOrderBy($key, $dir);
+      $qb->addOrderBy($key, $dir->value);
     }
     if (!empty($limit)) {
       $qb->setMaxResults($limit);
@@ -167,7 +150,7 @@ trait FindLikeTrait
    *   'musician' in this example is the name of the property in the
    *   master entity.
    * - allow sorting by association fields
-   * - allow indexing by adding an 'INDEX' option to $orderBy.
+   * - allow indexing by adding an EnumOrderByOptions::INDEX option to $orderBy.
    * - allow wild-cards, uses "LIKE" or "REGEXP" in comparison if specified by
    *   query-options (see below $criteria). Wildcards unescaped '%' and '_' as
    *   in vanilla LIKE. When REGEXP is used then '%' maps to '.*' and '_' maps
@@ -343,10 +326,10 @@ trait FindLikeTrait
       Constants::QUERY_OPTION_WILDCARDS => false,
     ];
     if (!empty($criteria)
-        && array_keys($criteria)[0] === self::OPTIONS_KEY
-        && is_array($criteria[self::OPTIONS_KEY])) {
-      $options = array_merge($options, $criteria[self::OPTIONS_KEY]);
-      unset($criteria[self::OPTIONS_KEY]);
+        && array_keys($criteria)[0] === Constants::QUERY_OPTIONS_KEY
+        && is_array($criteria[Constants::QUERY_OPTIONS_KEY])) {
+      $options = array_merge($options, $criteria[Constants::QUERY_OPTIONS_KEY]);
+      unset($criteria[Constants::QUERY_OPTIONS_KEY]);
     }
 
     $orderBy = $orderBy?:[];
@@ -496,6 +479,9 @@ trait FindLikeTrait
     }
     $indexBy = [];
     foreach ($orderBy as $key => $ordering) {
+      if (is_string($ordering)) {
+        $ordering = EnumOrderByOptions::get(strtoupper($ordering));
+      }
       $dotPos = strpos($key, '.');
       if ($dotPos !== false) {
         $joinParent = 'mainTable';
@@ -518,7 +504,7 @@ trait FindLikeTrait
         $tableAlias = 'mainTable';
         $field = $tableAlias.'.'.$key;
       }
-      if (strtoupper($ordering) == 'INDEX') {
+      if ($ordering == EnumOrderByOptions::INDEX) {
         $indexBy[$tableAlias] = $field;
         unset($orderBy[$key]);
       }
