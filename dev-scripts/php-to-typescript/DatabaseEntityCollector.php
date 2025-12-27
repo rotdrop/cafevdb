@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  */
 class DatabaseEntityCollector extends DefaultCollector
 {
+  /** {@inheritdoc} */
   protected function shouldCollect(ClassTypeReflector $reflector): bool
   {
     $class = $reflector->getReflectionClass();
@@ -70,6 +71,7 @@ class DatabaseEntityCollector extends DefaultCollector
     return true;
   }
 
+  /** {@inheritdoc} */
   protected function resolveTypeViaTransformer(ClassTypeReflector $reflector): null|TransformedType|TypesCollection
   {
     $transformerClass = DatabaseEntityTransformer::class;

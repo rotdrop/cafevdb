@@ -51,6 +51,11 @@ class ClassConstantsTransformer implements Transformer
       return null;
     }
 
+    $namespaceName = $class->getNamespaceName();
+    $namespacedClassName = $namespaceName . '\\' . $name;
+
+    echo "{$namespacedClassName}" . PHP_EOL;
+
     $constants = $this->resolveConstants($class);
 
     if ($this->config->emitConstantsAsConstants()) {
@@ -67,7 +72,8 @@ class ClassConstantsTransformer implements Transformer
           $value,
           keyword: 'const',
         );
-        $collection[$class->getName() . '.' . $constant->getName()] = $constantType;
+        $constantType->namespaceName = $namespacedClassName;
+        $collection[$namespacedClassName . '.' . $constant->getName()] = $constantType;
       }
 
       return $collection;

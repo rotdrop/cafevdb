@@ -28,7 +28,10 @@ use ReflectionClass;
 use ReflectionProperty;
 
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
+use Spatie\TypeScriptTransformer\Structures\TransformedType;
+use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 
 /**
  * Transform database entities, including and in particular their private and
@@ -36,6 +39,16 @@ use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
  */
 class DatabaseEntityTransformer extends DtoTransformer
 {
+  private ClassConstantsTransformer $classConstantsTransformer;
+
+  /** {@inheritdoc} */
+  public function __construct(
+    ClassConstantsTransformerConfig $config,
+  ) {
+    parent::__construct($config);
+    $this->classConstantsTransformer = new ClassConstantsTransformer($config);
+  }
+
   /** {@inheritdoc} */
   protected function resolveProperties(ReflectionClass $class): array
   {
@@ -75,5 +88,19 @@ class DatabaseEntityTransformer extends DtoTransformer
     }
 
     return $result;
+  }
+
+  /** {@inheritdoc} */
+  public function transform(ReflectionClass $class, string $name): null|TransformedType|TypesCollection
+  {
+    $dtoType = parent::transform($class, $name);
+
+    $collection = $this->classConstantsTransformer->transform($class, 'Constants\\' . $name);
+    if ($collection) {
+      $collection[$class->getName()] = $dtoType;
+      return $collection;
+    }
+
+    return $dtoType;
   }
 }

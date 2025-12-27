@@ -28,17 +28,22 @@ use ReflectionClass;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
 
+/** {@inheritdoc} */
 class TransformedTypeOrConstant extends TransformedType
 {
+  public ?string $namespaceName = null;
+
+  /** {@inheritdoc} */
   public function getNamespaceSegments(): array
   {
     if ($this->isInline === true) {
       return [];
     }
 
-    $namespace = $this->keyword == 'const'
-      ? $this->reflection->getName()
-      : $this->reflection->getNamespaceName();
+    $namespace = $this->namespaceName
+      ?? ($this->keyword == 'const'
+          ? $this->reflection->getName()
+          : $this->reflection->getNamespaceName());
 
     if (empty($namespace)) {
             return [];
@@ -47,6 +52,7 @@ class TransformedTypeOrConstant extends TransformedType
     return explode('\\', $namespace);
   }
 
+/** {@inheritdoc} */
   public function toString(): string
   {
     if ($this->keyword == 'const') {
@@ -56,6 +62,7 @@ class TransformedTypeOrConstant extends TransformedType
     return parent::toString();
   }
 
+  /** {@inheritdoc} */
   public static function create(
     ReflectionClass $class,
     string $name,
@@ -66,6 +73,7 @@ class TransformedTypeOrConstant extends TransformedType
     bool $trailingSemicolon = true,
     ?array $templateTypes = null,
   ): self {
-    return new self($class, $name, $transformed, $missingSymbols ?? new MissingSymbolsCollection(), $inline, $keyword, $trailingSemicolon);
+    $instance = new self($class, $name, $transformed, $missingSymbols ?? new MissingSymbolsCollection(), $inline, $keyword, $trailingSemicolon);
+    return $instance;
   }
 }
