@@ -691,8 +691,8 @@ class ProjectParticipantFieldsController extends Controller
               $this->entityManager->rollback();
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
-                  'Unable to update receivable "%1$s" for the person "%2$s" using the generator "%3$s".', [
-                    $receivable->getLabel(), $participant->getMusician()->getPublicName(), get_class($generator),
+                  'Unable to update receivable "%1$s@%2$s" for the person "%3$s" using the generator "%4$s".', [
+                    $receivable->getLabel(), $field->getName(), $participant->getMusician()->getPublicName(), get_class($generator),
                   ]),
                 previous: $t,
                 httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
@@ -774,7 +774,7 @@ class ProjectParticipantFieldsController extends Controller
         foreach ($field->getSelectableOptions() as $dataOption) {
           $data[] = DTO\ProjectParticipantFieldDataOption::fromArray([
             'fieldId' => $field->getId(),
-            'key' => (string)$dataOption->getKey(),
+            'key' => $dataOption->getKey(),
             'label' => $dataOption->getLabel(),
             'data' => $dataOption->getData(),
             'limit' => $dataOption->getLimit(),

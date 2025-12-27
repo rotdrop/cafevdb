@@ -41,13 +41,13 @@ class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Toolkit\DTO\Abstrac
     public readonly int $fieldId,
     /** @var string */
     public readonly UuidInterface $key,
-    public readonly string $label,
-    public readonly string $untranslatedLabel,
-    public readonly string $data,
+    public readonly ?string $label,
+    public readonly ?string $untranslatedLabel,
+    public readonly ?string $data,
     public readonly ?int $limit,
     ?DateTimeInterface $deleted,
   ) {
-    $this->deleted = CarbonImmutable::instance($deleted);
+    $this->deleted = $deleted === null ? null : CarbonImmutable::instance($deleted);
   }
 
   /**

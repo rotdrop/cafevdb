@@ -39,7 +39,6 @@ class SepaDebitMandateValidation extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespon
     public readonly ?array $suggestions,
     public readonly ?int $mandateProjectId,
     public readonly ?string $reference,
-    public readonly ?string $value,
     public readonly ?string $iban,
     public readonly ?int $blz,
     public readonly ?string $bic,
@@ -54,6 +53,9 @@ class SepaDebitMandateValidation extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespon
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
@@ -64,7 +66,6 @@ class SepaDebitMandateValidation extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespon
       $suggestions ?? null,
       $mandateProjectId ?? null,
       $reference ?? null,
-      $value ?? null,
       $iban ?? null,
       $blz ?? null,
       $bic ?? null,

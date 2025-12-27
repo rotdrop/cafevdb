@@ -93,6 +93,14 @@ class SepaDebitMandatesController extends Controller
     $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
   }
 
+  private const MANDATE_VALIDATE_REQUIRED = [
+    'mandateProjectId' => FILTER_VALIDATE_INT,
+    'musicianId' => FILTER_VALIDATE_INT,
+    'mandateReference' => null,
+    'bankAccountSequence' => FILTER_VALIDATE_INT,
+    'mandateSequence' => FILTER_VALIDATE_INT,
+  ];
+
   /**
    * @param string $changed The name of the changed parameter.
    *
@@ -105,32 +113,44 @@ class SepaDebitMandatesController extends Controller
   #[CoreAttributes\NoAdminRequired]
   public function mandateValidate(string $changed):Response
   {
-    $requiredKeys = [
-      'mandateProjectId',
-      'musicianId',
-      'mandateReference',
-      'bankAccountSequence',
-      'mandateSequence',
-    ];
-    foreach ($requiredKeys as $required) {
-      $missing = [];
-      if ($this->request->getParam($required, false) === false) {
+    $missing = [];
+    $failed = [];
+    foreach (self::MANDATE_VALIDATE_REQUIRED as $required => $validation) {
+      $value = $this->request->getParam($required, false);
+      if ($value === false) {
         $missing[] = $required;
-      }
-      if (!empty($missing)) {
-        throw new Exceptions\EnduserNotificationException(
-          $this->l->t('Required information %s not provided.', implode(', ', $missing)),
-          context: [
-            'missing' => $missing,
-            'required' => $required,
-          ],
-        );
+      } elseif ($value !== '') {
+        switch ($validation) {
+          case FILTER_VALIDATE_INT:
+            if (filter_var($value, $validation, ['options' => ['min_range' => 1]]) === false) {
+              $failed[$required] = $value;
+            }
+            break;
+        }
       }
     }
 
-    $musicianId = $this->request['musicianId'];
+    if (!empty($missing)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Required information "%s" not provided.', implode('", "', $missing)),
+        context: [
+          'missing' => $missing,
+          'required' => array_keys(self::MANDATE_VALIDATE_REQUIRED),
+        ],
+      );
+    }
+    if (!empty($failed)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The following data does not satisfy its constraints: "%s"', print_r($failed, true)),
+        context: [
+          'failed' => $failed,
+        ],
+      );
+    }
+
+    $musicianId = (int)$this->request['musicianId'];
     $reference  = $this->request['mandateReference'];
-    $mandateProjectId  = $this->request['mandateProjectId'];
+    $mandateProjectId  = (int)$this->request['mandateProjectId'];
     $mandateNonRecurring = $this->request['mandateNonRecurring'];
     $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
@@ -165,7 +185,6 @@ class SepaDebitMandatesController extends Controller
 
     $feedback = [];
     $messages = [];
-    $result = [];
 
     while (($validation = array_pop($validations)) !== null) {
 
@@ -291,10 +310,8 @@ class SepaDebitMandatesController extends Controller
         case ConfigConstants::BANK_ACCOUNT_IBAN:
           if (empty($value)) {
             $IBAN = '';
-            $BLZ = '';
+            $BLZ = null;
             $BIC = '';
-            $result[ConfigConstants::BANK_ACCOUNT_BLZ] = $BLZ;
-            $result[ConfigConstants::BANK_ACCOUNT_BIC] = $BIC;
             break;
           }
           $value = Util::removeSpaces($value);
@@ -427,12 +444,10 @@ Therefore you have to enable the validation checkbox again before you are allowe
             $BLZ = $blz;
             $BIC = $this->bav->getMainAgency($blz)->getBIC();
           }
-          $result[ConfigConstants::BANK_ACCOUNT_BLZ] = $BLZ;
-          $result[ConfigConstants::BANK_ACCOUNT_BIC] = $BIC;
           break;
         case ConfigConstants::BANK_ACCOUNT_BLZ:
           if ($value == '') {
-            $BLZ = '';
+            $BLZ = null;
             break;
           }
           $value = Util::removeSpaces($value);
@@ -497,7 +512,6 @@ Therefore you have to enable the validation checkbox again before you are allowe
         $messages[] = $this->l->t(
           'Value for "%s" set to "%s".', [ $changed, $value ]);
       }
-      $result[$changed] = $value;
 
       foreach ($newValidations as $validation) {
         if ($initiator == $validation['changed']) {
@@ -519,11 +533,10 @@ Therefore you have to enable the validation checkbox again before you are allowe
       return DTO\SepaDebitMandateValidation::fromArray([
         'messages' => $messages,
         'suggestions' => [],
-        'mandateProjectId' => $mandateProjectId,
+        'mandateProjectId' => $mandateProjectId ? (int)$mandateProjectId : null,
         'reference' => $reference,
-        'value' => $result,
         'iban' => $IBAN,
-        'blz' => $BLZ,
+        'blz' => $BLZ ? (int)$BLZ : null,
         'bic' => $BIC,
         'owner' => $owner,
         'feedback' => $feedback,
@@ -1046,7 +1059,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       'bankAccountSequence' => $bankAccount->getSequence(),
       'mandateSequence' => $debitMandate->getSequence(),
       'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
-      'mandateDeleted' => !empty($mandate->getDeleted()),
+      'mandateDeleted' => !empty($debitMandate->getDeleted()),
       'mandateReference' => $debitMandate->getMandateReference(),
     ])->response();
   }

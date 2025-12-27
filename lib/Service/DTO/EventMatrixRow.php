@@ -42,7 +42,7 @@ class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     public readonly int $calendarId,
     public readonly string $uri,
     public readonly string $urlPath,
-    /** @var array<int, EventMatrixEvent> */
+    /** @var array<EventMatrixEvent> */
     public readonly array $events,
   ) {
   }
@@ -53,6 +53,9 @@ class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
