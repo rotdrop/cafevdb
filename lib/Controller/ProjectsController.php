@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateTime;
 
 use OCP\AppFramework\Controller;
@@ -50,6 +52,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** AJAX controller for projects. */
+#[TSAttributes\TypeScript]
 class ProjectsController extends Controller
 {
   use GetPrefixParamsTrait;
@@ -83,6 +86,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/projects/{topic}')]
   public function validate(string $topic):DataResponse
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -187,6 +191,9 @@ class ProjectsController extends Controller
   }
 
   /**
+   * The end-point expects the the instrument and voices selection
+   * as input and returns selection-options for the voices.
+   *
    * @param string $instruments The name of the instruments select.
    *
    * @param string $voices The name of the voices select.
@@ -194,6 +201,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/projects/change-instrumentation')]
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
@@ -244,6 +252,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/mailing-lists/{operation}')]
   public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
   {
     switch ($operation) {
@@ -391,43 +400,10 @@ class ProjectsController extends Controller
   ];
 
   /**
-   * Return a list of musician ids and their registration.
-   */
-  const GET_PARTICIPANTS = 'participants';
-
-  /**
-   * Return a list of generated fields, optionally filtered by multiplicity or data-type
-   *
-   * APP_URL/PROJECT_ID/participant-fields?multiplicity=MULT&type=TYPE
-   */
-  const GET_PARTICIPANT_FIELDS = 'participant-fields';
-
-  /**
-   * Return the list of calendar events.
-   */
-  const GET_CALENDAR_EVENTS = 'calendar-events';
-
-  /**
    * Return the "event matrix", project events sorted by category with extra
    * information.
    */
   const GET_EVENT_MATRIX = 'event-matrix';
-
-  /**
-   * Return all project indices as flat array.
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/projects')]
-  public function getIndices()
-  {
-    /** @var ProjectService $projectService */
-    $projectService = $this->di(ProjectService::class);
-    /** @var Entities\Project $project */
-    $projectIds = $projectService->findProjectIds();
-    return self::dataResponse($projectIds);
-  }
 
   /**
    * @param int $projectId Entity id.
@@ -467,53 +443,6 @@ class ProjectsController extends Controller
       );
     }
     switch ($topic) {
-      case '':
-        $data = $this->flattenProject($project);
-        $data['wikiPage'] = $projectService->projectWikiLink($project->getName());
-        return self::dataResponse($data);
-
-      case self::GET_PARTICIPANT_FIELDS:
-        $multiplicity = $this->request->getParam('multiplicity');
-        $type = $this->request->getParam('type');
-        $data = [];
-        /** @var Entities\ProjectParticipantField $field */
-        foreach ($project->getParticipantFields() as $field) {
-          $fieldType = $field->getDataType();
-          $fieldMultiplicity = $field->getMultiplicity();
-          if (!empty($type) && $fieldType != $type) {
-            continue;
-          }
-          if (!empty($multiplicity) && $fieldMultiplicity != $multiplicity) {
-            continue;
-          }
-          $data[] = DTO\ProjectParticipantField::fromArray([
-            'id' => $field->getId(),
-            'name' => $field->getName(),
-            'untranslatedName' => $field->getUntranslatedName(),
-            'type' => $fieldType,
-            'multiplicity' => $fieldMultiplicity,
-          ]);
-        }
-        usort($data, fn($a, $b) => strcmp($a->name, $b->name));
-        return new DataResponse($data);
-
-      case self::GET_PARTICIPANTS:
-        $data = [];
-        /** @var Entities\ProjectParticipant $participant */
-        foreach ($project->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
-          $data[] = [
-            'projectId' => $project->getId(),
-            'musicianId' => $musician->getId(),
-            'publicName' => $musician->getPublicName(),
-            'personalPublicName' => $musician->getPublicName(firstNameFirst: true),
-            'registration' => $participant->getRegistration(),
-            'deleted' => $participant->getDeleted() === null ? null : $participant->getDeleted()->format(DateTime::W3C),
-          ];
-        }
-        usort($data, fn($a, $b) => strcmp($a['publicName'], $b['publicName']));
-        return self::dataResponse($data);
-
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
@@ -527,19 +456,6 @@ class ProjectsController extends Controller
             );
         }
 
-      case self::GET_CALENDAR_EVENTS:
-        $calendarEvents = [];
-        /** @var Entities\ProjectEvent $event */
-        foreach ($project->getCalendarEvents() as $event) {
-          $flatEvent = $event->toArray();
-          unset($flatEvent['project']);
-          $flatEvent['projectId'] = $project->getId();
-          unset($flatEvent['absenceField']);
-          $flatEvent['absenceFieldId'] = $event->getAbsenceField() ? $event->getAbsenceField()->getId() : null;
-          $calendarEvents[] = $flatEvent;
-        }
-        return self::dataResponse($calendarEvents);
-
       case self::GET_EVENT_MATRIX:
         /** @var EventsService $eventsService */
         $eventsService = $this->di(EventsService::class);
@@ -552,16 +468,20 @@ class ProjectsController extends Controller
         switch ($subTopic) {
           case '':
           case 'all':
-            return self::dataResponse($projectService->getProjectFolder($project));
+            return DTO\ProjectFoldersResponse::fromArray(
+              $projectService->getProjectFolder($project)
+            )->response();
+
           case ProjectService::FOLDER_TYPE_PROJECT:
           case ProjectService::FOLDER_TYPE_BALANCE:
           case ProjectService::FOLDER_TYPE_PARTICIPANTS:
           case ProjectService::FOLDER_TYPE_POSTERS:
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
             $configKey = self::FOLDER_TYPES[$subTopic];
-            return self::dataResponse([
+            return DTO\ProjectFolderResponse::fromArray([
               'folder' => $projectService->getProjectFolder($project, only: $configKey),
-            ]);
+            ])->response();
+
           default:
             return self::grumble($this->l->t('Unknown folder type "%s".', $subTopic));
         }
@@ -739,66 +659,5 @@ class ProjectsController extends Controller
         break;
     }
     return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
-  }
-
-  /**
-   * Search by project-id and name. Pattern may contain wildcards (* and %).
-   *
-   * @param string $pattern
-   *
-   * @param null|int $limit
-   *
-   * @param null|int $offset
-   *
-   * @param null|int $year
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(
-    verb: 'GET',
-    url: '/projects/search/{pattern}',
-    defaults: [
-      'pattern' => '',
-    ],
-  )]
-  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
-  {
-    $repository = $this->getDatabaseRepository(Entities\Project::class);
-
-    if (empty($pattern)) {
-      $criteria = [];
-    } else {
-      $pattern = str_replace('*', '%', $pattern);
-
-      if (strpos($pattern, '%') === false) {
-        if ($pattern[0] != '^') {
-          $pattern = '%' . $pattern;
-        } else {
-          $pattern = substr($pattern, 1);
-        }
-        if (substr($pattern, -1) != '$') {
-          $pattern = $pattern . '%';
-        } else {
-          $pattern = substr($pattern, 0, -1);
-        }
-      }
-      $criteria = [
-        Database\Constants::QUERY_OPTIONS_KEY => [ Database\Constants::QUERY_OPTION_WILDCARDS => true ],
-        '(|name' => $pattern,
-        'id' => $pattern,
-        ')' => true,
-      ];
-      if ($year !== null) {
-        $criteria[] = [ 'year' => $year ];
-      }
-    }
-
-    $projects = $repository->findBy($criteria, [
-      'year' => 'DESC',
-      'name' => 'ASC',
-    ], $limit, $offset);
-
-    return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
   }
 }

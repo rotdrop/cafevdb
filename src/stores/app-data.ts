@@ -22,6 +22,7 @@
  */
 
 import { defineStore } from 'pinia';
+import globalState from '../app/globalstate.ts';
 import {
   set as vueSet,
   // del as vueDelete,
@@ -48,8 +49,11 @@ import useErrorHandler from './error-handler.ts';
 import type { AnyPromise } from '../types/promise.d.ts';
 import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
 import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
-import type { EnumProjectTemporalType } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import useDatabaseEntities from './database-entities.ts';
+import type { FrontEndEntity } from '../services/entity-factory.ts';
+import type { EntityReference } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
+import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
+import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 export { type EventMatrixEvent };
 
@@ -67,35 +71,20 @@ export class AppDataStoreError extends AppError {
 
 }
 
-const abortController = new AbortController();
-
-interface ProjectFolders {
-  projectsfolder: string;
-  projectparticipantsfolder: string;
-  projectpostersfolder: string;
-  projectpublicdownloadsfolder: string;
-  balancesfolder: string;
-}
-
 export type CalendarUris = keyof typeof CALENDARS;
 
-export { type EventMatrixRow };
 export type ProjectEventMatrix = Record<number, EventMatrixRow>;
 
-export interface Project {
-  id: number;
-  name: string;
-  year: number;
-  wikiPage: string;
-  type: EnumProjectTemporalType;
-  folders?: ProjectFolders;
-  eventMatrix?: ProjectEventMatrix;
+export interface Project extends FrontEndEntity<'Project'> {
+  wikiPage: string,
+  folders?: ProjectFolders,
+  eventMatrix?: ProjectEventMatrix,
   getFolders: (
     errorHandler?: ErrorHandler,
-  ) => Promise<undefined | ProjectFolders>;
+  ) => Promise<undefined | ProjectFolders>,
   getEventMatrix: (
     errorHandler?: ErrorHandler,
-  ) => Promise<undefined | ProjectEventMatrix>;
+  ) => Promise<undefined | ProjectEventMatrix>,
 }
 
 export default defineStore(storeId, () => {
@@ -143,6 +132,8 @@ export default defineStore(storeId, () => {
   const state = reactive({
     projects: {} as Record<number, Project>,
     projectsByName: {} as Record<string, Project>,
+    projectFolders: {} as Record<number, ProjectFolders>,
+    projectEvents: {} as Record<number, ProjectEventMatrix>,
     loadingPromise: Promise.resolve(true) as AnyPromise,
   });
 
@@ -203,19 +194,16 @@ export default defineStore(storeId, () => {
     }
   };
   const stateGetEventMatrix = async (
-    project: Project,
+    projectId: number,
     errorHandler?: ErrorHandler,
   ) => {
-    const projectId = project.id;
     const url = generateAppUrl('projects/{projectId}/event-matrix', {
       projectId,
     });
     try {
-      const response: AxiosResponse<ProjectEventMatrix> = await axios.get(url, {
-        signal: abortController.signal,
-      });
+      const response: AxiosResponse<ProjectEventMatrix> = await axios.get(url);
       logger.debug('FETCH EVENT MATRIX RESPONSE', response);
-      vueSet(project, 'eventMatrix', response.data);
+      vueSet(state.projectEvents, projectId, response.data);
       return response.data;
     } catch (e) {
       stateHandleError(
@@ -227,19 +215,16 @@ export default defineStore(storeId, () => {
     }
   };
   const stateGetProjectFolders = async (
-    project: Project,
+    projectId: number,
     errorHandler?: ErrorHandler,
   ) => {
-    const projectId = project.id;
     const url = generateAppUrl('projects/{projectId}/folder/all', {
       projectId,
     });
     try {
-      const response: AxiosResponse<ProjectFolders> = await axios.get(url, {
-        signal: abortController.signal,
-      });
+      const response: AxiosResponse<ProjectFolders> = await axios.get(url);
       logger.debug('FETCH PROJECT FOLDERS RESPONSE', response);
-      vueSet(project, 'folders', response.data);
+      vueSet(state.projectFolders, projectId, response.data);
       return response.data;
     } catch (e) {
       stateHandleError(
@@ -250,38 +235,88 @@ export default defineStore(storeId, () => {
       return undefined;
     }
   };
-  const statePutProject = async (
-    project: Project,
+  const statePutProject = (
+    project: FrontEndEntity<'Project'>,
     errorHandler?: ErrorHandler,
-  ) => {
-    const projectId = project.id;
+  ): Project => {
+    const projectId = '' + project.id;
     if (state.projects[projectId]) {
       return state.projects[projectId];
     }
-    project.getFolders = (handler?: ErrorHandler) =>
-      stateGetProjectFolders(project, handler || errorHandler);
-    project.getEventMatrix = (handler?: ErrorHandler) =>
-      stateGetEventMatrix(project, handler || errorHandler);
-    vueSet(state.projects, projectId, project);
-    vueSet(state.projectsByName, project.name, project);
+    const projectReference: EntityReference<'Project'> = {
+      entityClassName: 'Project',
+      flatIdentifier: projectId,
+    };
+    const stateProject = new Proxy(
+      projectReference,
+      {
+        get: (_entityReference, field, _receiver) => {
+          switch (field) {
+            case 'wikiPage': {
+              // see ProjectService::projectWikiLink()
+              const project = databaseEntities.find('Project', projectId)!;
+              return `${globalState.wikiNameSpace ?? ''}:${globalState.projectsFolder ?? ''}:${project.name ?? ''}`;
+            }
+            case 'folders':
+              return state.projectFolders[projectId] ?? undefined;
+            case 'getFolders':
+              return (handler?: ErrorHandler) => stateGetProjectFolders(+projectId, handler || errorHandler);
+            case 'eventMatrix':
+              return state.projectEvents[projectId] ?? undefined;
+            case 'getEventMatrix':
+              return (handler?: ErrorHandler) => stateGetEventMatrix(+projectId, handler || errorHandler);
+            default: {
+              const project = databaseEntities.find('Project', projectId)!;
+              return project[field];
+            }
+          }
+        },
+        has: (_entityReference, field) => {
+          switch (field) {
+            case 'wikiPage':
+            case 'folders':
+            case 'getFolders':
+            case 'eventMatrix':
+            case 'getEventMatrix':
+              return true;
+            default: {
+              const project = databaseEntities.find('Project', projectId)!;
+              return field in project;
+            }
+          }
+        },
+        ownKeys: (_entityReference) => {
+          const project = databaseEntities.find('Project', projectId)!;
+          return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project)];
+        },
+        set: (entityReference, field, value) => {
+          throw new AppDataStoreError(
+            { entityReference, field, value },
+            t(appName, 'App-store projects may not be modified.'),
+          );
+        },
+      },
+    ) as unknown as Project;
+    vueSet(state.projects, projectId, stateProject);
+    vueSet(state.projectsByName, project.name, stateProject);
     return state.projects[projectId];
   };
   const stateFindProject = async (
     projectId: number,
     errorHandler?: ErrorHandler,
   ) => {
-    const url = generateAppUrl('projects/{projectId}', { projectId });
     try {
-      const response: AxiosResponse<Project> = await axios.get(url, {
-        signal: abortController.signal,
+      const data = await databaseEntities.fetch({
+        entityName: 'Project',
+        identifier: { id: projectId },
       });
-      logger.info('FIND PROJECT RESPONSE', response);
-      const project = await statePutProject(response.data, errorHandler);
+      logger.info('FIND PROJECT RESPONSE', data);
+      const project = statePutProject(data.Project[projectId], errorHandler);
       return project;
     } catch (e) {
       stateHandleError(
         e,
-        { action: 'findProject', projectId, url },
+        { action: 'findProject', projectId },
         errorHandler,
       );
       return undefined;
@@ -302,28 +337,31 @@ export default defineStore(storeId, () => {
     query: string,
     errorHandler?: ErrorHandler,
   ) => {
-    query = encodeURI(query);
-    if (query !== '') {
-      query = '/' + query;
-    }
-    try {
-      const response: AxiosResponse<Project[]> = await axios.get(
-        generateAppUrl(`projects/search${query}`),
-        {
-          params: { limit: 10 },
-        },
-      );
-      if (response.data.length > 0) {
-        const promises = [] as Promise<undefined | Project>[];
-        for (const project of response.data) {
-          promises.push(statePutProject(project, errorHandler));
-        }
-        const projects = await Promise.allSettled(promises);
-        return projects
-          .filter((result) => result.status === 'fulfilled')
-          .map((result) => result.value as Project);
+    query = query.replace(/\*/g, '%');
+    if (!query.match('%')) {
+      if (!query.startsWith('^')) {
+        query = '%' + query;
+      } else {
+        query = query.slice(1);
       }
-      return response.data;
+      if (!query.endsWith('$')) {
+        query = query + '%';
+      } else {
+        query = query.slice(0, -1);
+      }
+    }
+    const findBy = { '(|name': query, id: query, ')': true };
+    try {
+      const data = await databaseEntities.search({
+        entityName: 'Project',
+        findBy: query.match('%') ? { ...WILDCARD_QUERY_OPTIONS, ...findBy } : findBy,
+        limit: 10,
+      });
+      const result: Project[] = [];
+      for (const project of Object.values(data.Project)) {
+        result.push(statePutProject(project, errorHandler));
+      }
+      return result;
     } catch (e) {
       stateHandleError(e, { action: 'searchProjects', query }, errorHandler);
       return undefined;

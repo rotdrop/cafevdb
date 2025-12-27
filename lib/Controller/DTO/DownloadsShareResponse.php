@@ -25,10 +25,11 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
+
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
- * DTO upload file data as reported by PHP, a bit enhanced.
+ * Response DTO for querying the music sheets download folder.
  */
 class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {

@@ -24,41 +24,33 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use DateTimeInterface;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
-
 /**
- * DTO for brief project participant info.
+ * DTO for fetching a single project folder.
  */
-class ProjectParticipant extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ProjectFolderResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
-  public readonly ?CarbonImmutable $deleted;
-
-    /** {@inheritdoc} */
+  /** {@inheritdoc} */
   public function __construct(
-    public readonly int $projectId,
-    public readonly int $musicianId,
-    public readonly string $publicName,
-    public readonly string $personalPublicName,
-    public readonly bool $registration,
-    ?DateTimeInterface $deleted,
+    public string $folder,
   ) {
-    $this->deleted = CarbonImmutable::instance($deleted);
   }
 
   /**
-   * Create from array.
+   * Create from $data array.
    *
    * @param array $data
    *
    * @return self
    *
-   * @throws UnexpectedValueException
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    return new self($projectId, $musicianId, $publicName, $personalPublicName, $registration, $deleted);
+    return new self(
+      folder: $folder,
+    );
   }
 }

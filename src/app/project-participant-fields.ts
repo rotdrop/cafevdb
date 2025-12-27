@@ -44,9 +44,11 @@ import {
 import { showSuccess } from '@nextcloud/dialogs';
 import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
 import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import type { ProjectParticipant, ProjectParticipantField, ProjectParticipantFieldDataOption, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ProjectParticipant, ProjectParticipantFieldDataOption, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
 import searchEntities from '../services/search-entities.ts';
+import type { FrontEndEntity } from '../services/entity-factory.ts';
+import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
 
 require('./jquery-readonly.ts');
 require('../legacy/nextcloud/jquery/octemplate.js');
@@ -138,35 +140,35 @@ const getProjectParticipantFields = async (
       type,
     },
   });
-  return Object.values(data.ProjectParticipantField ?? {});
+  return Object.values(data.ProjectParticipantField);
 };
 
 /**
  * @param fieldId The id of the project.
  */
 const getProjectParticipantFieldOptions = async (fieldId: number) => {
-  try {
-    const data: ProjectParticipantFieldDataOption[] = await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options')).promise();
-    return data;
-  } catch (error) {
-    const xhr = error as JQuery.jqXHR;
-    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
-    return null;
-  }
+  const data = await searchEntities({
+    entityName: 'ProjectParticipantFieldDataOption',
+    findBy: {
+      field: fieldId,
+      '!key': GENERATOR_KEY,
+      deleted: null,
+    },
+  });
+  return Object.values(data.ProjectParticipantFieldDataOption);
 };
 
 /**
  * @param projectId The id of the project.
  */
 const getProjectParticipants = async (projectId: number) => {
-  try {
-    const data: ProjectParticipant[] = await $.get(generateAppUrl('projects/' + projectId + '/participants')).promise();
-    return data;
-  } catch (error) {
-    const xhr = error as JQuery.jqXHR;
-    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
-    return null;
-  }
+  const data = await searchEntities({
+    entityName: 'ProjectParticipant',
+    findBy: {
+      project: projectId,
+    },
+  });
+  return Object.values(data.ProjectParticipant);
 };
 
 const receivableAccumulatorProperties = ['added', 'removed', 'changed', 'skipped'] as const;
@@ -187,7 +189,7 @@ export type UpdateStrategy = typeof IRecurringReceivablesGenerator.UPDATE_STRATE
  * @param updateStrategy The conflict resolution strategy.
  */
 const confirmedReceivablesUpdate = async (
-  field: Pick<ProjectParticipantField, 'id'|'name'>,
+  field: Pick<FrontEndEntity<'ProjectParticipantField'>, 'id'|'name'>,
   receivables: Pick<ProjectParticipantFieldDataOption, 'key'|'label'/* |'data'|'limit' */>[],
   participants: Pick<ProjectParticipant, 'musicianId'|'publicName'|'personalPublicName'>[],
   updateStrategy: UpdateStrategy,
@@ -746,9 +748,6 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       return false;
     }
     console.info('PARTICIPANTS', participants);
-
-    // let options = await $.get(generateAppUrl('projects/participant-fields/' + fieldId + '/options'));
-    // console.info('OPTIONS', options);
 
     // or parse the Dom:
     const receivables: Pick<ProjectParticipantFieldDataOption, 'key'|'label'|'data'|'limit'>[] = [];

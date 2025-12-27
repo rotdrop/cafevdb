@@ -746,50 +746,6 @@ class ProjectParticipantFieldsController extends Controller
     return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
   }
 
-  public const GET_OPTIONS = 'options';
-
-  /**
-   * Request information about a field given its id.
-   *
-   * @param int $fieldId
-   *
-   * @param string $topic Major topic.
-   *
-   * @param string $subTopic Minor topic.
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function get(int $fieldId, string $topic = '', string $subTopic = ''):DataResponse
-  {
-    /** @var Entities\ProjectParticipantField $field */
-    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-    if (empty($field)) {
-      return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
-    }
-    switch ($topic) {
-      case self::GET_OPTIONS:
-        $data = [];
-        /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
-        foreach ($field->getSelectableOptions() as $dataOption) {
-          $data[] = DTO\ProjectParticipantFieldDataOption::fromArray([
-            'fieldId' => $field->getId(),
-            'key' => $dataOption->getKey(),
-            'label' => $dataOption->getLabel(),
-            'data' => $dataOption->getData(),
-            'limit' => $dataOption->getLimit(),
-            'untranslatedLabel' => $dataOption->getUntranslatedLabel(),
-            'deleted' => $dataOption->getDeleted(),
-          ]);
-        }
-        return self::dataResponse($data);
-      default:
-        break;
-    }
-    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
-  }
-
-
   /**
    * @param string $topic The kind of object to patch. Currently only
    * self::REQUEST_SUB_TOPIC_OPTION is supported.

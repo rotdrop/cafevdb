@@ -24,41 +24,41 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use InvalidArgumentException;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-
 /**
- * DTO for ProejctParticipantField retrieval.
+ * DTO for fetching the project folders from the ProjectsController.
  */
-class ProjectParticipantField extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ProjectFoldersResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly int $id,
-    public readonly string $name,
-    public readonly string $untranslatedName,
-    public readonly FieldDataType $type,
-    public readonly FieldMultiplicity $multiplicity,
+    public string $balancesFolder,
+    public string $projectParticipantsFolder,
+    public string $projectPostersFolder,
+    public string $projectPublicDownloadsFolder,
+    public string $projectsFolder,
   ) {
   }
 
   /**
-   * Create from array.
+   * Create from $data array.
    *
    * @param array $data
    *
    * @return self
    *
-   * @throws UnexpectedValueException
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    $type = FieldDataType::get($type);
-    $multiplicity = FieldMultiplicity::get($multiplicity);
-    return new self($id, $name, $untranslatedName, $type, $multiplicity);
+    return new self(
+      balancesFolder: $balancesFolder,
+      projectParticipantsFolder: $projectParticipantsFolder,
+      projectPostersFolder: $projectPostersFolder,
+      projectPublicDownloadsFolder: $projectPublicDownloadsFolder,
+      projectsFolder: $projectsFolder,
+    );
   }
 }
