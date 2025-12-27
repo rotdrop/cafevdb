@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ErrorContext = Record<string, string|number|object|undefined|null>;
+export type ErrorContext = Record<PropertyKey, PropertyKey|string|number|object|undefined|null>;
 
 export class AppError<C extends ErrorContext = ErrorContext> extends Error {
 
