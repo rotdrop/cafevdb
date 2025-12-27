@@ -118,6 +118,14 @@ class PhpMyEdit
 
 	const MAX_INPUT_LEN = 60;
 
+	const DATA_GROUP_ID = 'group-id';
+	const DATA_GROUP_INFO = 'group-info';
+	const DATA_INITIAL_VALUES = 'initial-values';
+	const DATA_ORIGINAL_VALUE = 'original-value';
+	const DATA_PME_VALUES = 'pme-values';
+	const DATA_TAB_ID = 'tab-id';
+	const DATA_TAB_INDEX = 'tab-index';
+
 	// Class variables {{{
 
 	// Database handling
@@ -2823,7 +2831,7 @@ EOT;
 			}
 			$class = $this->getCSSclass('navigation', $position).' table-tabs tab-menu'.$selected;
 			echo '<li class="'.$class.'"'.$title.'>'."\n";
-			echo '<a href="#tab-'.$idx.'" data-tab-id="'.$id.'" data-tab-index="'.$idx.'">'.$name.'</a>'."\n";
+			echo '<a href="#tab-'.$idx.'" data-' . self::DATA_TAB_ID . '="'.$id.'" data-' . self::DATA_TAB_INDEX . '="' . $idx . '">' . $name . '</a>' . "\n";
 			echo '</li>'."\n";
 		}
 		echo '<li class="table-tabs scrollbar-compensator"></li>'."\n";
@@ -3022,7 +3030,7 @@ EOT;
 				echo ($this->mandatory($k) ? ' required' : '');
 
 				if (!empty($valgrp)) {
-					echo " data-pme-values='".json_encode($valgrp)."'";
+					echo " data-" . self::DATA_PME_VALUES . "='" . json_encode($valgrp) . "'";
 				}
 
 				echo $this->htmlAttributes(self::OPERATION_ADD, $k, [], $readonly);
@@ -3293,7 +3301,7 @@ EOT;
 			echo ($this->mandatory($k) ? ' required' : '');
 
 			if (!empty($valgrp)) {
-				echo " data-pme-values='".json_encode($valgrp)."'";
+				echo " data-" . self::DATA_PME_VALUES . "='" . json_encode($valgrp) . "'";
 			}
 
 			echo $this->htmlAttributes($operation, $k, $row, $readonly);
@@ -3309,7 +3317,7 @@ EOT;
 				echo $value;
 			}
 			echo '"';
-			echo ' data-original-value="' . $this->enc($value) . '"';
+			echo ' data-' . self::DATA_ORIGINAL_VALUE . '="' . $this->enc($value) . '"';
 			echo ' ' . $len_props .'/>' . "\n";
 		}
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
@@ -3948,7 +3956,7 @@ EOT;
 			if (!is_array($selected)) {
 				$selected = self::explodeValueArray($selected);
 			}
-			$ret .= " data-initial-values='".json_encode($selected, JSON_NUMERIC_CHECK)."'";
+			$ret .= " data-" . self::DATA_INITIAL_VALUES . "='" . json_encode($selected, JSON_NUMERIC_CHECK) . "'";
 		} else {
 			$ret .= '"';
 		}
@@ -4002,8 +4010,8 @@ EOT;
 					'id' => $groupId,
 					'default' => $lastGroup === $dfltGroup,
 				];
-				$groupData = "data-group-info='".json_encode($groupData)."'";
-				$ret .= '<optgroup '.$groupData.' data-group-id="'.$groupId.'" label="'.$lastGroup.'">'."\n";
+				$groupData = "data-" . self::DATA_GROUP_INFO . "='" . json_encode($groupData) . "'";
+				$ret .= '<optgroup ' . $groupData . ' data-' . self::DATA_GROUP_ID . '="' . $groupId . '" label="' . $lastGroup . '">' . "\n";
 			}
 			$encodedKey = $this->enc($key);
 			$ret .= '<option value="'.$encodedKey.'"';
@@ -4034,7 +4042,7 @@ EOT;
 				$ret .= $dataHtml;
 			}
 			if ($lastGroup) {
-				$ret .= ' data-group-id="'.$groupId.'"';
+				$ret .= ' data-' . self::DATA_GROUP_ID . '="' . $groupId . '"';
 			}
 			$escape		&& $value = $this->enc($value);
 			$strip_tags && $value = strip_tags($value);

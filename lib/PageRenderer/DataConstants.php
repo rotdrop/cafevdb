@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
+
 /**
  * Define some constants for consistency.
  */
@@ -35,7 +37,6 @@ class DataConstants
   public const DATA_META_DATA = 'meta-data';
   public const DATA_SEALED_VALUE = 'sealed-value';
   public const DATA_CRYPTO_HASH = 'crypto-hash';
-  public const DATA_PME_VALUES = 'pme-values';
 
   public const CLASS_META_DATA_POPUP = self::DATA_META_DATA . '-popup';
   public const CLASS_LAZY_DECRYPTION = 'lazy-decryption';
@@ -56,4 +57,12 @@ class DataConstants
     'compKeySep' => PMETableViewBase::COMP_KEY_SEP,
     'joinFieldNameSeparator' => PMETableViewBase::JOIN_FIELD_NAME_SEPARATOR,
   ];
+
+  const DATA_PME_GROUP_ID = PME::DATA_GROUP_ID;
+  const DATA_PME_GROUP_INFO = PME::DATA_GROUP_INFO;
+  const DATA_PME_INITIAL_VALUES = PME::DATA_INITIAL_VALUES;
+  const DATA_PME_ORIGINAL_VALUE = PME::DATA_ORIGINAL_VALUE;
+  const DATA_PME_PME_VALUES = PME::DATA_PME_VALUES;
+  const DATA_PME_TAB_ID = PME::DATA_TAB_ID;
+  const DATA_PME_TAB_INDEX = PME::DATA_TAB_INDEX;
 }
