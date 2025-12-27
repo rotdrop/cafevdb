@@ -25,6 +25,7 @@ import { generateEntities, dtos } from './entity-repository-setup.ts';
 import { beforeAll, jest } from '@jest/globals';
 import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { fetch as fetchEntity, find as findEntity } from '@/src/services/entity-repository.ts';
+import type { ObjectEntries } from '../../../../src/types/type-traits';
 
 const entityIdentifiers = {
   ProjectParticipant: { project: 1, musician: 1 },
@@ -41,8 +42,8 @@ jest.mock('@nextcloud/axios', () => {
     ...originalModule,
     default: {
       get: async (url: string) => {
-        // url: 'http://localhost/ocs/v2.php/apps/cafevdb//v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
-        const prefix = '/ocs/v2.php/apps/cafevdb//v1/entitites/';
+        // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
+        const prefix = '/ocs/v2.php/apps/cafevdb/v1/entitites/';
         const urlInfo = URL.parse(url);
         if (!urlInfo?.pathname.startsWith(prefix)) {
           throw Error(`Unexpected URL "${url}".`);
@@ -79,8 +80,8 @@ beforeAll(generateEntities);
 
 describe('Fetch entities', () => {
   it('Should work ;)', async () => {
-    for (const [entityName, identifier] of Object.entries(entityIdentifiers)) {
-      await fetchEntity(entityName as keyof EntityMap, identifier);
+    for (const [entityName, identifier] of Object.entries(entityIdentifiers) as ObjectEntries<typeof entityIdentifiers>) {
+      await fetchEntity({ entityName, identifier });
       const flattenedIdentifier = Object.values(identifier).join(':');
       const entity = findEntity(entityName as keyof EntityMap, flattenedIdentifier);
       expect(entity).toBeDefined();

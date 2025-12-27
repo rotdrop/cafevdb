@@ -46,6 +46,7 @@ import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
 import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import type { ProjectParticipant, ProjectParticipantField, ProjectParticipantFieldDataOption, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
+import searchEntities from '../services/search-entities.ts';
 
 require('./jquery-readonly.ts');
 require('../legacy/nextcloud/jquery/octemplate.js');
@@ -114,6 +115,10 @@ const autocompleteFocusHandler = function(this: HTMLInputElement) {
 };
 
 /**
+ * Fetch the participant "extra" fields for the given project. The
+ * call is forwarded to the Vue part of of the frontend code which
+ * also has to take care of the error handling.
+ *
  * @param projectId The id of the project.
  *
  * @param multiplicity If given restrict to the given multiplicity.
@@ -125,17 +130,15 @@ const getProjectParticipantFields = async (
   multiplicity?: EnumParticipantFieldMultiplicity,
   type?: EnumParticipantFieldDataType,
 ) => {
-  try {
-    const data: ProjectParticipantField[] = await $.get(generateAppUrl('projects/' + projectId + '/participant-fields'), {
+  const data = await searchEntities({
+    entityName: 'ProjectParticipantField',
+    findBy: {
+      project: projectId,
       multiplicity,
       type,
-    }).promise();
-    return data;
-  } catch (error) {
-    const xhr = error as JQuery.jqXHR;
-    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
-    return null;
-  }
+    },
+  });
+  return Object.values(data.ProjectParticipantField ?? {});
 };
 
 /**
@@ -189,7 +192,6 @@ const confirmedReceivablesUpdate = async (
   participants: Pick<ProjectParticipant, 'musicianId'|'publicName'|'personalPublicName'>[],
   updateStrategy: UpdateStrategy,
 ) => {
-  console.info('RECEIVABLES', receivables);
   let confirmed = true;
   if (updateStrategy === 'replace') {
     confirmed = await Dialogs.confirm(
@@ -276,15 +278,13 @@ const confirmedReceivablesUpdate = async (
       break;
     }
     const key = receivable.key;
-    const receivableLabel = receivable.label;
-    console.info('RECEIVABLE', key, receivableLabel);
+    const receivableLabel = receivable.label ?? fieldName;
     for (const participant of participants) {
       if (cancel) {
         break;
       }
       const musicianId = participant.musicianId;
       const musicianName = participant.personalPublicName;
-      console.info('MUSICIAN', musicianId, musicianName);
 
       single || $progressWrapper.dialog(
         'option',
@@ -304,7 +304,6 @@ const confirmedReceivablesUpdate = async (
               updateStrategy,
             },
           }).promise();
-        console.info(data);
         for (const key of receivableAccumulatorProperties) {
           statistics[key] += data[key];
         }
@@ -325,7 +324,6 @@ const confirmedReceivablesUpdate = async (
         const failData = await new Promise<Ajax.AjaxFailData>((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
         cancel = t(appName, 'Error');
         single || $progressWrapper.dialog('close');
-        console.info('FAIL DATA', failData);
         throw new Error(failData.error, { cause: failData.xhr });
       }
     }

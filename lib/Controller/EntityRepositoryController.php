@@ -76,6 +76,10 @@ class EntityRepositoryController extends OCSController
    * The parameters $find and $findBy are mutually exclusive, but one of $find
    * or $findBy has to be given.
    *
+   * @param ?string $sortBy Base64 encoded array of sort criteria as
+   * understood by
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::findBy().
+   *
    * @param ?int $limit
    *
    * @param int $offset
@@ -87,16 +91,17 @@ class EntityRepositoryController extends OCSController
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'GET',
-    url: '/v1/entities/{entityName}',
-    defaults: ['depths' => 2],
+    url: '/v1/entities/{entityName}/{depth}',
+    defaults: ['depth' => 0],
   )]
   public function getEntities(
     string $entityName,
     ?string $find = null,
     ?string $findBy = null,
+    ?string $sortBy = null,
     ?int $limit = null,
     int $offset = 0,
-    int $depth = 2,
+    int $depth = 0,
   ): DataResponse {
     if (($find === null) === ($findBy === null)) {
       throw new OCS\OCSBadRequestException(
@@ -124,7 +129,7 @@ class EntityRepositoryController extends OCSController
         if ($entity === null) {
           throw new Exceptions\DatabaseEntityNotFoundException(
             $this->l->t(
-              'Unable to find the entity "%1$s" identified b y "%2$s".',
+              'Unable to find the entity "%1$s" identified by "%2$s".',
               [$entityName, print_r($identifier, true)],
             ),
             entityClassName: $entityName,

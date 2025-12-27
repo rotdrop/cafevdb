@@ -23,10 +23,13 @@
 
 import type {
   EntityDto,
-  EntityFieldMetadata,
-  EntityMap,
+  EntityFieldMapping,
   EntityFieldMappingType,
-  // EntityMetadataMap,
+  EntityFieldMetadata,
+  EntityFieldNames,
+  EntityFieldType,
+  EntityMap,
+  EntityNames,
 } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import type {
   EntityReference,
@@ -34,11 +37,21 @@ import type {
 } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
 import * as EntityRepository from './entity-repository.ts';
 
-const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto: EntityDto<E>): Promise<EntityMap[E]> => {
+export type FrontEndEntity<N extends EntityNames> = {
+  [K in EntityFieldNames<N>]: EntityFieldMapping<N, K> extends 'owned'
+    ? K extends keyof EntityMap[N]
+      ? EntityMap[N][K]
+      : never
+    : EntityFieldMapping<N, K> extends 'to-one'
+      ? Promise<FrontEndEntity<EntityFieldType<N, K> > >
+      : Record<string|number, Promise<FrontEndEntity<EntityFieldType<N, K> > > >;
+};
+
+const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto: EntityDto<E>): Promise<FrontEndEntity<E> > => {
   const metadata: { [K in keyof EntityMap[E]]: EntityFieldMetadata<E> } =
     (await import(`../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
 
-  const entity: EntityMap[E] = <EntityMap[E]>{};
+  const entity: FrontEndEntity<E> = <FrontEndEntity<E> >{};
   for (const fieldName of Object.keys(metadata)) {
     const fieldInfo: EntityFieldMetadata<E> = metadata[fieldName];
     switch (fieldInfo.mapping as EntityFieldMappingType) {
@@ -50,7 +63,14 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
           Object.defineProperty(
             entity,
             fieldName, {
-              get: () => EntityRepository.find(targetEntity, identifier),
+              get: async () => {
+                let result = EntityRepository.find(targetEntity, identifier);
+                if (result === undefined) {
+                  await EntityRepository.fetch(targetEntity, identifier);
+                  result = EntityRepository.find(targetEntity, identifier);
+                }
+                return result;
+              },
             },
           );
         } else {
@@ -61,14 +81,23 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
       case 'to-many': {
         const collection: EntityReferenceCollection<E> = entityDto[fieldName];
         const proxy = new Proxy(
-          collection, {
-            get(
-              collection: EntityReferenceCollection<E>,
+          collection.entities, {
+            get: async (
+              entities: EntityReferenceCollection<E>['entities'],
               field: string,
               _receiver: unknown,
-            ) {
-              const entityReference = collection.entities[field];
-              return EntityRepository.find(entityReference.entityClassName ?? collection.entityClassName, entityReference.flatIdentifier);
+            ) => {
+              if (entities[field] === undefined) {
+                return undefined;
+              }
+              const entityReference = entities[field];
+              const className = entityReference.entityClassName ?? collection.entityClassName;
+              let result = EntityRepository.find(className, entityReference.flatIdentifier);
+              if (result === undefined) {
+                await EntityRepository.fetch(className, entityReference.flatIdentifier);
+                result = EntityRepository.find(className, entityReference.flatIdentifier);
+              }
+              return result;
             },
           },
         );

@@ -49,6 +49,7 @@ import type { AnyPromise } from '../types/promise.d.ts';
 import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
 import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import type { EnumProjectTemporalType } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import useDatabaseEntities from './database-entities.ts';
 
 export { type EventMatrixEvent };
 
@@ -130,6 +131,8 @@ export default defineStore(storeId, () => {
   asyncSubscribe(POP_BUSY_STATE, () => popBusyState());
 
   const errorHandler = computed(() => errorHandlerProvider.errorHandler);
+
+  const databaseEntities = useDatabaseEntities();
 
   /*****************************************************************************
    *
@@ -395,5 +398,6 @@ export default defineStore(storeId, () => {
     getProject,
     searchProjects,
     projects,
+    databaseEntities,
   };
 });

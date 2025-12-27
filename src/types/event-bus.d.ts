@@ -24,6 +24,7 @@
 // import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
 import { messages } from '../app/notification.ts';
+import type { SearchArguments as SearchEntitiesArguments, search as searchEntities } from '../services/entity-repository.ts';
 
 import {
   ADD_CONTACTS_TO_PROJECT,
@@ -46,6 +47,7 @@ import {
   PROJECT_INSTRUMENTATION_NUMBERS_POPUP,
   PROJECT_PARTICIPANT_FIELDS_POPUP,
   PUSH_BUSY_STATE,
+  SEARCH_DATABASE_ENTITIES,
   SET_BUSY_FLAG,
   SET_DEBUG_MODES,
   SET_DEBUG_QUERY_SQL_FILTER,
@@ -66,6 +68,7 @@ import type { ComponentProps, PropsData } from '../mountable-component-names.ts'
 
 import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
 import type { GlobalState } from '../app/globalstate.ts';
+import type { EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
@@ -115,6 +118,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [SET_BUSY_FLAG]: { value: boolean },
     [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
 
+    [SEARCH_DATABASE_ENTITIES]: SearchEntitiesArguments<keyof EntityMap, number, null|number, number>,
     [SET_DEBUG_MODES]: SetterArgs<{ value: number }[], HTMLSelectElement>,
     [SET_DEBUG_QUERY_SQL_FILTER]: SetterArgs<string, HTMLSelectElement>,
     [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
@@ -137,6 +141,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [POP_BUSY_STATE]: number,
     /** The prior state of the flag. */
     [SET_BUSY_FLAG]: boolean,
+    /** Entity search result */
+    [SEARCH_DATABASE_ENTITIES]: Awaited<ReturnType<typeof searchEntities<keyof EntityMap> > >,
     /* Sanitizing post data */
     [LEGACY_SANITIZE_POST_DATA]: TemplatePostData,
   }
