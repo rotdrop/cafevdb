@@ -114,12 +114,13 @@ class MusicianCardBackend implements ICardBackend
     } else {
       $empty = true;
       $likePattern = '%' . $pattern . '%';
-      $criteria = [
-        // The very first entry is interpreted as an options array
-        Database\Constants::QUERY_OPTIONS_KEY => [ Database\Constants::QUERY_OPTION_WILDCARDS => true ],
-        'addressBookUri' => null,
-        [ '(|' => true ],
-      ];
+      $criteria = array_merge(
+        Database\Constants::WILDCARD_QUERY_OPTIONS,
+        [
+          'addressBookUri' => null,
+          [ '(|' => true ],
+        ],
+      );
       if (array_search('FN', $properties) !== false) {
         $empty = false;
         $criteria[] = [ 'displayName' => $likePattern ];

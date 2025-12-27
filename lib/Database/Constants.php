@@ -24,10 +24,13 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * Define some database specific constants like the desired character set and
  * collation
  */
+#[TSAttributes\TypeScript]
 class Constants
 {
   public const CHARACTER_SET = 'utf8mb4';
@@ -52,4 +55,7 @@ class Constants
    */
   public const QUERY_OPTIONS_KEY = '__OPTIONS__';
   public const QUERY_OPTION_WILDCARDS = 'LIKE';
+  public const WILDCARD_QUERY_OPTIONS = [
+    self::QUERY_OPTIONS_KEY => [ self::QUERY_OPTION_WILDCARDS => true ],
+  ];
 }
