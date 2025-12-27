@@ -779,7 +779,7 @@ class ContactsService
     );
 
     $gender = $musician->getGender();
-    switch ((string)$gender) {
+    switch ($gender) {
       case EnumGender::MALE:
         $vCard->add('GENDER', 'M');
         break;
