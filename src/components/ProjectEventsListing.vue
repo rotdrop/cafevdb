@@ -381,8 +381,8 @@ import { AppError } from '../types/errors.ts'
 import { generateUrl } from '@nextcloud/router'
 import type {
   CalendarUris,
-  EventMatrixEntry,
   EventMatrixEvent,
+  EventMatrixRow,
   Project,
   ProjectEventMatrix,
 } from '../stores/app-data.ts'
@@ -526,13 +526,13 @@ const calendarOrdering: { [Key in CalendarUris|'']: number } = {
   other: 40,
   '': 99,
 }
-const emptyEventMatrix: EventMatrixEntry[] = []
+const emptyEventMatrix: EventMatrixRow[] = []
 for (const uri of Object.keys(calendarOrdering) as ((CalendarUris|'')[])) {
   emptyEventMatrix.push({ name: t(appName, uri), uri, calendarId: -1, urlPath: '', events: [] })
 }
 emptyEventMatrix.sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri])
 
-const eventMatrix = computed<EventMatrixEntry[]>(
+const eventMatrix = computed<EventMatrixRow[]>(
   () => !projectEventMatrix.value
     ? emptyEventMatrix
     : Object.values(projectEventMatrix.value).sort((a, b) => calendarOrdering[a.uri] - calendarOrdering[b.uri]),
@@ -678,7 +678,6 @@ const syncProjectData = async (projectName: string) => {
   project.value = await appData.getProject(projectName) || null
   if (project.value) {
     await Promise.allSettled([
-      project.value.getCalendarEvents(),
       project.value.getEventMatrix(),
     ])
     if (projectEventMatrix.value) {
@@ -800,10 +799,10 @@ const syncProjectData = async (projectName: string) => {
   })
 }
 
-const toggleCalendarVisibility = (entry: EventMatrixEntry) => {
+const toggleCalendarVisibility = (entry: EventMatrixRow) => {
   expandedState.value[entry.uri] = !expandedState.value[entry.uri]
 }
-const showCalendarEvent = (matrixEntry: EventMatrixEntry, event?: EventMatrixEvent) => {
+const showCalendarEvent = (matrixEntry: EventMatrixRow, event?: EventMatrixEvent) => {
   const show = !!expandedState.value[matrixEntry.uri]
   if (!event) {
     return show
@@ -1183,7 +1182,7 @@ const handleProjectLink = async (event: EventMatrixEvent, linkToProject: boolean
   releaseEventListLock()
 }
 
-const deleteSingleEvent = async (matrixEntry: EventMatrixEntry, event: EventMatrixEvent) => {
+const deleteSingleEvent = async (matrixEntry: EventMatrixRow, event: EventMatrixEvent) => {
   // const { calendarObjectInstance, calendarObject } = await setCalendarObjectInstance(event)
   await setCalendarObjectInstance(event)
   // logger.debug('DELETE EVENT', {
@@ -1220,7 +1219,7 @@ const deleteSingleEvent = async (matrixEntry: EventMatrixEntry, event: EventMatr
   delete attachmentMark.value[event.instanceId]
 }
 
-const handleDeleteEvent = async (matrixEntry: EventMatrixEntry, event: EventMatrixEvent) => {
+const handleDeleteEvent = async (matrixEntry: EventMatrixRow, event: EventMatrixEvent) => {
   if (!calendarObjectInstanceStore || !projectEventMatrix.value) {
     return
   }

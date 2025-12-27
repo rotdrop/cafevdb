@@ -46,7 +46,9 @@ import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import useErrorHandler from './error-handler.ts';
 import type { AnyPromise } from '../types/promise.d.ts';
-import type { EventMatrixEvent } from '../../build/ts-types/php-modules/Service/DTO.ts';
+import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
+import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import type { EnumProjectTemporalType } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 
 export { type EventMatrixEvent };
 
@@ -66,16 +68,6 @@ export class AppDataStoreError extends AppError {
 
 const abortController = new AbortController();
 
-export type ProjectTypeTemporary = 'temporary';
-export type ProjectTypePermanent = 'permanent';
-export type ProjectTypeTemplate = 'template';
-export type ProjectTypeInvalid = '' | null | undefined;
-export type ProjectTemporalType =
-  | ProjectTypeTemporary
-  | ProjectTypePermanent
-  | ProjectTypeTemplate
-  | ProjectTypeInvalid;
-
 interface ProjectFolders {
   projectsfolder: string;
   projectparticipantsfolder: string;
@@ -84,52 +76,22 @@ interface ProjectFolders {
   balancesfolder: string;
 }
 
-interface ProjectEventEntity {
-  id: number;
-  projectId: number;
-  calendarId: number;
-  calendarUri: string;
-  eventUid: string;
-  seriesUid: null | string;
-  eventUri: string;
-  recurrenceId: number;
-  sequence: number;
-  type: 'VEVENT' | 'VTODO' | 'VJOURNAL' | 'VCARD';
-  absenceFieldId: null | number;
-}
+export type CalendarUris = keyof typeof CALENDARS;
 
-export type CalendarUris =
-  | 'concerts'
-  | 'rehearsals'
-  | 'other'
-  | 'management'
-  | 'finance';
-
-export interface EventMatrixEntry {
-  name: string; // displayName
-  uri: CalendarUris | '';
-  calendarId: number;
-  urlPath: string; // local url-path
-  events: EventMatrixEvent[];
-}
-
-export type ProjectEventMatrix = Record<number, EventMatrixEntry>;
+export { type EventMatrixRow };
+export type ProjectEventMatrix = Record<number, EventMatrixRow>;
 
 export interface Project {
   id: number;
   name: string;
   year: number;
   wikiPage: string;
-  type: ProjectTemporalType;
+  type: EnumProjectTemporalType;
   folders?: ProjectFolders;
-  calendarEvents?: ProjectEventEntity[];
   eventMatrix?: ProjectEventMatrix;
   getFolders: (
     errorHandler?: ErrorHandler,
   ) => Promise<undefined | ProjectFolders>;
-  getCalendarEvents: (
-    errorHandler?: ErrorHandler,
-  ) => Promise<undefined | ProjectEventEntity[]>;
   getEventMatrix: (
     errorHandler?: ErrorHandler,
   ) => Promise<undefined | ProjectEventMatrix>;
@@ -237,31 +199,6 @@ export default defineStore(storeId, () => {
       return state.projects?.[projectId] || undefined;
     }
   };
-  const stateGetProjectEvents = async (
-    project: Project,
-    errorHandler?: ErrorHandler,
-  ) => {
-    const projectId = project.id;
-    const url = generateAppUrl('projects/{projectId}/calendar-events', {
-      projectId,
-    });
-    try {
-      const response: AxiosResponse<ProjectEventEntity[]> = await axios.get(
-        url,
-        { signal: abortController.signal },
-      );
-      logger.debug('FETCH PROJECT EVENTS RESPONSE', response);
-      vueSet(project, 'calendarEvents', response.data);
-      return response.data;
-    } catch (e) {
-      stateHandleError(
-        e,
-        { action: 'getProjectEvents', projectId, url },
-        errorHandler,
-      );
-      return undefined;
-    }
-  };
   const stateGetEventMatrix = async (
     project: Project,
     errorHandler?: ErrorHandler,
@@ -320,8 +257,6 @@ export default defineStore(storeId, () => {
     }
     project.getFolders = (handler?: ErrorHandler) =>
       stateGetProjectFolders(project, handler || errorHandler);
-    project.getCalendarEvents = (handler?: ErrorHandler) =>
-      stateGetProjectEvents(project, handler || errorHandler);
     project.getEventMatrix = (handler?: ErrorHandler) =>
       stateGetEventMatrix(project, handler || errorHandler);
     vueSet(state.projects, projectId, project);
