@@ -338,7 +338,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
     $array['taxationStatutorySources'] = [];
     /** @var TaxationStatutorySource $taxationStatutorySource */
     foreach ($this->taxationStatutorySources as $taxationStatutorySource) {
-      $array['taxationStatutorySources'][(string)$taxationStatutorySource->getTaxType()] =
+      $array['taxationStatutorySources'][$taxationStatutorySource->getTaxType()->value] =
         $taxationStatutorySource->jsonSerialize();
     }
 
@@ -351,7 +351,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
     return 'notice('
       . $this->assessmentPeriodStart . '-' . $this->assessmentPeriodEnd
       . '@'
-      . implode('-', array_map(fn(Types\EnumTaxType $type) => $type. ' tax', $this->getTaxTypes()))
+      . implode('-', array_map(fn(Types\EnumTaxType $type) => $type->value . ' tax', $this->getTaxTypes()))
       . ')';
   }
 }
