@@ -300,7 +300,7 @@ FROM %2$s';
     /** @var AppStorage $appStorage */
     $appStorage = $this->appContainer->get(AppStorage::class);
     $accountsAutocompleteFile = $appStorage->getFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE, throw: false);
-    if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsExportFile->getMTime()) {
+    if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsAutocompleteFile->getMTime()) {
       return json_decode($accountsAutocompleteFile->getContent(), true);
     }
 

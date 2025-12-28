@@ -152,9 +152,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Project
    */
-  public function getProject():?Project
+  public function getProject():null|Project|int
   {
-    return $this->project;
+    return $this->project ?? null;
   }
 
   /**
@@ -176,9 +176,9 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getMusician():?Musician
+  public function getMusician():null|Musician|int
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**

@@ -68,7 +68,7 @@ class ProgressStatusController extends Controller
     try {
       $progress = $this->progressStatusService->get($id);
     } catch (Throwable $t) {
-      $this->logger->logException($t);
+      $this->logException($t);
       return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
     if (empty($progress)) {
