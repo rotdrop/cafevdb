@@ -34,10 +34,10 @@ import { generateOcsUrl } from '../toolkit/util/generate-url.ts';
 import { type EntityId, type EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { type EntityResponse } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
 import { EnumOrderByOptions } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Repositories.ts';
-import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS, WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
+import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS } from '../../build/ts-types/php-modules/Database/Constants.ts';
 import entityFactory, { type FrontEndEntity } from '../services/entity-factory.ts';
 import { AppError } from '../types/errors.ts';
-import type { DeepWriteable, ObjectEntries } from '../types/type-traits.d.ts';
+import type { NonNegInt, NumberTuple, ObjectEntries } from '../types/type-traits.d.ts';
 
 type EntityRepository<E extends keyof EntityMap> = {
   [Identifier: string]: FrontEndEntity<E>;
@@ -48,12 +48,12 @@ export const find = <N extends keyof EntityMap>(entityName: N, identifier: strin
   return repositories[entityName]?.[identifier] as FrontEndEntity<N>|undefined;
 };
 
-const loadEntities = async <const N extends keyof EntityMap>(url: string) => {
+const loadEntities = async <const N extends keyof EntityMap, D extends NumberTuple>(url: string) => {
   const response = await axios.get<OCSResponse<EntityResponse<N> > >(url);
   const responseRepositories = response.data.ocs.data.repositories;
   for (const entityName of Object.keys(responseRepositories) as N[]) {
     for (const [identifier, entityDto] of Object.entries(responseRepositories[entityName])) {
-      const entity = await entityFactory<N>(entityName, entityDto);
+      const entity = await entityFactory<N, D>(entityName, entityDto);
       if (repositories[entityName] === undefined) {
         vueSet(repositories, entityName, {});
       }
@@ -68,15 +68,17 @@ const loadEntities = async <const N extends keyof EntityMap>(url: string) => {
         Object.fromEntries(
           identifiers!.map(
             identifier => [identifier, find(entityName, identifier)!],
-          ) as [string, FrontEndEntity<typeof entityName>][],
+          ) as [string, FrontEndEntity<typeof entityName, D>][],
         ),
       ],
     ) as ObjectEntries<{
-      [K in N]: N extends K ? Record<string, FrontEndEntity<K> > : undefined|Record<string, FrontEndEntity<K> >;
+      [K in N]: N extends K ? Record<string, FrontEndEntity<K, D> > : undefined|Record<string, FrontEndEntity<K, D> >;
     }>,
   );
   return result;
 };
+
+export type Blah = FrontEndEntity<'Project', NonNegInt<1> >;
 
 export type FindByRecord = {
   [QUERY_OPTIONS_KEY]: { [QUERY_OPTION_WILDCARDS]: boolean },
@@ -99,9 +101,6 @@ export type SearchArguments<
   limit?: L,
   offset?: O,
 };
-
-export type Blah = DeepWriteable<typeof WILDCARD_QUERY_OPTIONS, 1>;
-export type Blub = Blah['__OPTIONS__'];
 
 /**
  * Search for entities of the given name. In order to separate "new"
@@ -150,7 +149,7 @@ export const search = async <
     offset,
   });
   try {
-    return await loadEntities<N>(url);
+    return await loadEntities<N, NonNegInt<D> >(url);
   } catch (e) {
     throw new AppError(
       { entityName, findBy, depth, limit, offset },
@@ -181,7 +180,7 @@ export const fetch = async <N extends keyof EntityMap, D extends number = 0>({
     depth,
   });
   try {
-    return await loadEntities<N>(url);
+    return await loadEntities<N, NonNegInt<D> >(url);
   } catch (e) {
     throw new AppError(
       { entityName, identifier, depth },

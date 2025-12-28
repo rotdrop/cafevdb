@@ -49,7 +49,7 @@ import type { search as searchRepository, SearchArguments } from './entity-repos
  */
 const search = async <
   N extends keyof EntityMap,
-  D extends number = 1,
+  D extends number = 0,
   L extends null|number = null,
   O extends number = 0,
 >({
@@ -63,7 +63,7 @@ const search = async <
     entityName, findBy, depth, limit, offset,
   });
 
-  return await getEmitResult<typeof SEARCH_DATABASE_ENTITIES>(result) as Awaited<ReturnType<typeof searchRepository<N> > >;
+  return await getEmitResult<typeof SEARCH_DATABASE_ENTITIES>(result) as Awaited<ReturnType<typeof searchRepository<N, D, L, O> > >;
 };
 
 export default search;

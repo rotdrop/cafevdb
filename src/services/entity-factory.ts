@@ -25,9 +25,10 @@ import type {
   EntityDto,
   EntityFieldMapping,
   EntityFieldMappingType,
+  EntityFieldNullable,
   EntityFieldMetadata,
   EntityFieldNames,
-  EntityFieldType,
+  EntityAssociationFieldType,
   EntityMap,
   EntityNames,
 } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
@@ -36,22 +37,27 @@ import type {
   EntityReferenceCollection,
 } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
 import * as EntityRepository from './entity-repository.ts';
+import type { DecToZero, NonNegInt, NullableIf, NumberTuple, Zero } from '../types/type-traits.d.ts';
 
-export type FrontEndEntity<N extends EntityNames> = {
+export type FrontEndEntity<N extends EntityNames, D extends NumberTuple = NonNegInt<0> > = {
   [K in EntityFieldNames<N>]: EntityFieldMapping<N, K> extends 'owned'
     ? K extends keyof EntityMap[N]
       ? EntityMap[N][K]
       : never
     : EntityFieldMapping<N, K> extends 'to-one'
-      ? Promise<FrontEndEntity<EntityFieldType<N, K> > >
-      : Record<string|number, Promise<FrontEndEntity<EntityFieldType<N, K> > > >;
+      ? Zero extends D
+        ? NullableIf<EntityFieldNullable<N, K>, Promise<FrontEndEntity<EntityAssociationFieldType<N, K>, DecToZero<D> > > >
+        : NullableIf<EntityFieldNullable<N, K>, FrontEndEntity<EntityAssociationFieldType<N, K>, DecToZero<D> > >
+      : Zero extends D
+        ? Record<string|number, Promise<FrontEndEntity<EntityAssociationFieldType<N, K>, DecToZero<D> > > >
+        : Record<string|number, FrontEndEntity<EntityAssociationFieldType<N, K>, DecToZero<D> > >;
 };
 
-const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto: EntityDto<E>): Promise<FrontEndEntity<E> > => {
+const entityFactory = async <E extends keyof EntityMap, D extends NumberTuple = Zero>(entityName: E, entityDto: EntityDto<E>): Promise<FrontEndEntity<E, D> > => {
   const metadata: { [K in keyof EntityMap[E]]: EntityFieldMetadata<E> } =
     (await import(`../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
 
-  const entity: FrontEndEntity<E> = <FrontEndEntity<E> >{};
+  const entity: FrontEndEntity<E, D> = <FrontEndEntity<E, D> >{};
   for (const fieldName of Object.keys(metadata)) {
     const fieldInfo: EntityFieldMetadata<E> = metadata[fieldName];
     switch (fieldInfo.mapping as EntityFieldMappingType) {
@@ -63,17 +69,16 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
           Object.defineProperty(
             entity,
             fieldName, {
-              get: async () => {
-                let result = EntityRepository.find(targetEntity, identifier);
-                if (result === undefined) {
-                  // @todo: this will not work for composite keys and complicated foreign keys
-                  await EntityRepository.fetch({
-                    entityName: targetEntity,
-                    identifier,
-                  });
-                  result = EntityRepository.find(targetEntity, identifier);
+              get: () => {
+                const result = EntityRepository.find(targetEntity, identifier);
+                if (result !== undefined) {
+                  return result;
                 }
-                return result;
+                // @todo: this will not work for composite keys and complicated foreign keys
+                return EntityRepository.fetch({
+                  entityName: targetEntity,
+                  identifier,
+                }).then(() => Promise.resolve(EntityRepository.find(targetEntity, identifier)));
               },
             },
           );
@@ -86,7 +91,7 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
         const collection: EntityReferenceCollection<E> = entityDto[fieldName];
         const proxy = new Proxy(
           collection.entities, {
-            get: async (
+            get: (
               entities: EntityReferenceCollection<E>['entities'],
               field: string,
               _receiver: unknown,
@@ -96,16 +101,15 @@ const entityFactory = async <E extends keyof EntityMap>(entityName: E, entityDto
               }
               const entityReference = entities[field];
               const className = entityReference.entityClassName ?? collection.entityClassName;
-              let result = EntityRepository.find(className, entityReference.flatIdentifier);
-              if (result === undefined) {
-                await EntityRepository.fetch({
-                  entityName: className,
-                  // @todo: this will not work for composite keys and complicated foreign keys
-                  identifier: entityReference.flatIdentifier,
-                });
-                result = EntityRepository.find(className, entityReference.flatIdentifier);
+              const result = EntityRepository.find(className, entityReference.flatIdentifier);
+              if (result !== undefined) {
+                return result;
               }
-              return result;
+              return EntityRepository.fetch({
+                entityName: className,
+                // @todo: this will not work for composite keys and complicated foreign keys
+                identifier: entityReference.flatIdentifier,
+              }).then(() => Promise.resolve(EntityRepository.find(className, entityReference.flatIdentifier)));
             },
           },
         );
