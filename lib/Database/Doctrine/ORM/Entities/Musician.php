@@ -43,11 +43,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Musician
- *
- * @property string $test
- *
- * @SuppressWarnings(PHPMD.UnusedPrivateField)
+ * Musician database entity, representing actually just any natural person,
+ * also used for non-musician busyness contacts.
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
@@ -56,6 +53,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
 #[LiteralTypeScriptProperty(propertyName: 'personalPublicName', typeScript: 'string', optional: false)]
+#[LiteralTypeScriptProperty(propertyName: 'publicName', typeScript: 'string', optional: false)]
 #[LiteralTypeScriptProperty(propertyName: 'streetAndNumber', typeScript: 'string', optional: false)]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
@@ -1635,15 +1633,42 @@ class Musician implements \ArrayAccess, \JsonSerializable
       + $this->originatedInvoices->count();
   }
 
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Most of the extra fields are just needed for the sake of
+   * mail-merge. So better move the code into a service class for just that
+   * purpose.
+   */
   public function jsonSerialize():array
   {
+    $gender = $this->getGender();
+    $genderAssumed = false;
+    if ($gender === null) {
+      $guessedGenders = $this->guessGender();
+      if (count($guessedGenders) == 1) {
+        $gender = array_values($guessedGenders)[0];
+        $genderAssumed = true;
+      }
+    }
+    $labelledPOBox = '';
+    if (!empty($this->getPoBox())) {
+      $l = \OCP\Server::get(\OCP\AppFramework\IAppContainer::class)->get(\OCP\IL10N::class);
+      $labelledPOBox = $l->t('P.O. Box') . ' ' . $this->getPoBox();
+    }
+    $personalPublicName = $this->getPublicName(firstNameFirst: true);
     return array_merge($this->toArray(), [
-      'publicName' => $this->getPublicName(firstNameFirst: true),
-      'personalPublicName' => $this->getPublicName(firstNameFirst: true),
+      'name' => $personalPublicName,
+      'publicName' => $personalPublicName,
+      'personalPublicName' => $personalPublicName,
       'displayName' => $this->displayName ?? $this->getPublicName(firstNameFirst: false),
       'streetAndNumber' => $this->street . ' ' . $this->streetNumber,
       'numberAndStreet' => $this->streetNumber . ' ' . $this->street,
+      'gender' => $gender,
+      'genderAssumed' => $genderAssumed,
+      'labelledPOBox' => $labelledPOBox,
+      'phone' => $this->getFixedLinePhone(),
+      'mobile' => $this->getMobilePhone(),
     ]);
   }
 
