@@ -417,7 +417,7 @@ class OpenDocumentFiller
       unset($noticeData['taxationStatutorySources']);
       $noticeData['taxTypes'] = [];
       foreach ($notice->getTaxTypes() as $type) {
-        $type = (string)$type;
+        $type = $type->value;
         $noticeData['taxTypes'][$taxKeys[$type]] = $taxNames[$type];
       }
       $taxes = [];
