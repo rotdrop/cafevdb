@@ -44,7 +44,7 @@ import {
 import { showSuccess } from '@nextcloud/dialogs';
 import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
 import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import type { ProjectParticipant, ProjectParticipantFieldDataOption, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
 import searchEntities from '../services/search-entities.ts';
 import type { FrontEndEntity } from '../services/entity-factory.ts';
@@ -167,6 +167,7 @@ const getProjectParticipants = async (projectId: number) => {
     findBy: {
       project: projectId,
     },
+    depth: 1, // make sure musician and project are populated
   });
   return Object.values(data.ProjectParticipant);
 };
@@ -190,8 +191,8 @@ export type UpdateStrategy = typeof IRecurringReceivablesGenerator.UPDATE_STRATE
  */
 const confirmedReceivablesUpdate = async (
   field: Pick<FrontEndEntity<'ProjectParticipantField'>, 'id'|'name'>,
-  receivables: Pick<ProjectParticipantFieldDataOption, 'key'|'label'/* |'data'|'limit' */>[],
-  participants: Pick<ProjectParticipant, 'musicianId'|'publicName'|'personalPublicName'>[],
+  receivables: Pick<FrontEndEntity<'ProjectParticipantFieldDataOption'>, 'key'|'label'/* |'data'|'limit' */>[],
+  participants: Awaited<ReturnType<typeof getProjectParticipants> >|{ musicianId: number, publicName: string, personalPublicName: string }[],
   updateStrategy: UpdateStrategy,
 ) => {
   let confirmed = true;
@@ -285,15 +286,18 @@ const confirmedReceivablesUpdate = async (
       if (cancel) {
         break;
       }
-      const musicianId = participant.musicianId;
-      const musicianName = participant.personalPublicName;
+      const [musicianId, musicianName] = 'musicianId' in participant
+        ? [participant.musicianId, participant.personalPublicName]
+        : [participant.musician.id, participant.musician.personalPublicName];
 
-      single || $progressWrapper.dialog(
-        'option',
-        'title',
-        t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
-          { fieldName, receivableLabel, musicianName }),
-      );
+      if (!single) {
+        $progressWrapper.dialog(
+          'option',
+          'title',
+          t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
+            { fieldName, receivableLabel, musicianName }),
+        );
+      }
 
       const request = 'option/regenerate';
       try {
@@ -750,7 +754,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     console.info('PARTICIPANTS', participants);
 
     // or parse the Dom:
-    const receivables: Pick<ProjectParticipantFieldDataOption, 'key'|'label'|'data'|'limit'>[] = [];
+    const receivables: Pick<FrontEndEntity<'ProjectParticipantFieldDataOption'>, 'key'|'label'|'data'|'limit'>[] = [];
     $row.closest('table').find('tr.data-option-row.active').each(function() {
       const $row = $(this);
       console.info('ROW', $row);
