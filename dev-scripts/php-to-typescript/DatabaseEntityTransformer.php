@@ -93,7 +93,10 @@ class DatabaseEntityTransformer extends DtoTransformer
   /** {@inheritdoc} */
   public function transform(ReflectionClass $class, string $name): null|TransformedType|TypesCollection
   {
+    $oldNullableOptional = $this->config->shouldConsiderNullAsOptional();
+    $this->config->nullToOptional(false); // the properties are guaranteed to be there, so ...
     $dtoType = parent::transform($class, $name);
+    $this->config->nullToOptional($oldNullableOptional);
 
     $collection = $this->classConstantsTransformer->transform($class, 'Constants\\' . $name);
     if ($collection) {

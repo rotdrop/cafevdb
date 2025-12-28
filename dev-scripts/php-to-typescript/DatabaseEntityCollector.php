@@ -72,19 +72,30 @@ class DatabaseEntityCollector extends DefaultCollector
   }
 
   /** {@inheritdoc} */
+  protected function resolveAlreadyTransformedType(ClassTypeReflector $reflector): TransformedType
+  {
+    $oldNullableOptional = $this->config->shouldConsiderNullAsOptional();
+    $this->config->nullToOptional(false);
+    $result = parent::resolveAlreadyTransformedType($reflector);
+    $this->config->nullToOptional($oldNullableOptional);
+
+    return $result;
+  }
+
+  /** {@inheritdoc} */
   protected function resolveTypeViaTransformer(ClassTypeReflector $reflector): null|TransformedType|TypesCollection
   {
     $transformerClass = DatabaseEntityTransformer::class;
     $reflectionClass = $reflector->getReflectionClass();
 
-    if (! class_exists($transformerClass)) {
+    if (!class_exists($transformerClass)) {
       throw InvalidTransformerGiven::classDoesNotExist(
         $reflectionClass,
         $transformerClass
       );
     }
 
-    if (! is_subclass_of($transformerClass, Transformer::class)) {
+    if (!is_subclass_of($transformerClass, Transformer::class)) {
       throw InvalidTransformerGiven::classIsNotATransformer(
         $reflectionClass,
         $transformerClass

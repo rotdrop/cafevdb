@@ -36,6 +36,11 @@ use Symfony\Component\Process\Exception as ProcessExceptions;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\FieldMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToOneAssociationMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToManyAssociationMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToOneOwningSideMapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping;
 
 /**
  * Generate enough meta-data for TypeScript to be able to define getters for
@@ -208,7 +213,7 @@ type EntityFieldId<N extends EntityNames, F extends EntityFieldNames<N> = Entity
         ? (EntityMetadataMap[N][F]['id'] extends boolean ? EntityMetadataMap[N][F]['id'] : never)
         : never)
     : never;
-export type EntityFieldType<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
+export type EntityAssociationFieldType<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > =
   F extends keyof EntityMetadataMap[N]
     ? ('type' extends keyof EntityMetadataMap[N][F]
         ? (EntityMetadataMap[N][F]['type'] extends keyof EntityMap ? EntityMetadataMap[N][F]['type'] : never)
@@ -220,13 +225,19 @@ export type EntityFieldMapping<N extends EntityNames, F extends EntityFieldNames
         ? EntityMetadataMap[N][F]['mapping']
         : never)
     : never;
+export type EntityFieldNullable<N extends EntityNames, F extends EntityFieldNames<N> = EntitiyFieldNames<N> > =
+  F extends keyof EntityMetadataMap[N]
+    ? ('nullable' extends keyof EntityMetadataMap[N][F]
+        ? EntityMetadataMap[N][F]['nullable']
+        : never)
+    : never;
 
 export type EntityDto<N extends EntityNames> = {
   [K in EntityFieldNames<N>]: EntityFieldMapping<N, K> extends 'owned'
     ? (K extends keyof EntityMap[N] ? EntityMap[N][K] : never)
     : (EntityFieldMapping<N, K> extends 'to-one'
-        ? EntityReference<EntityFieldType<N, K> >
-        : EntityReferenceCollection<EntityFieldType<N, K> >);
+        ? EntityReference<EntityAssociationFieldType<N, K> >
+        : EntityReferenceCollection<EntityAssociationFieldType<N, K> >);
 };
 
 export type EntityFieldMetadata<N extends EntityNames, F extends EntityFieldNames<N> = EntityFieldNames<N> > = {
@@ -312,7 +323,7 @@ export {
 
     // Ok, now fetch the meta data. For implementing kind-of entity-repositories
     // (read-only) in the frontend we just need the information if a field is an
-    // association, and if this is the case, whether it is to-on -- this yields a
+    // association, and if this is the case, whether it is to-one -- this yields a
     // simple getter -- or if it is to-may -- this yields an iterator.
     foreach ($entityNames as $entityName) {
       // $textSection->writeln('ENTITY ' . $entityName);
@@ -352,19 +363,39 @@ export {
           'fieldName' => $fieldName,
           'type' => $ownField['type'],
           'id' => !!$ownField['id'],
+          'nullable' => !!$ownField['nullable'],
           'mapping' => self::FIELD_TYPE_OWNED,
         ];
       }
       foreach ($metadata['associationMappings'] as $fieldName => $associationField) {
-        $multiplicity = str_contains($associationField['class'], 'ToOne')
-          ? self::FIELD_TYPE_TO_ONE
-          : self::FIELD_TYPE_TO_MANY;
+        $nullable = false;
+        if (str_contains($associationField['class'], 'ToOne')) {
+          $multiplicity = self::FIELD_TYPE_TO_ONE;
+          if (str_contains($associationField['class'], 'OwningSide')  || str_contains($associationField['class'], 'ManyToOne')) {
+            foreach ($associationField['joinColumns'] as $joinColumn) {
+              $nullable = !isset($joinColumn['nullable']) || $joinColumn['nullable'];
+              break;
+            }
+            if (!empty($associationField['inversedBy']) && isset($this->entityMetaInfo[$associationField['targetEntity']])) {
+              $this->entityMetaInfo[$associationField['targetEntity']][$associationField['inversedBy']]['nullable'] = $nullable;
+            }
+          } else {
+            // we need to inspect the owning side
+            if (!empty($associationField['mappedBy']) && isset($this->entityMetaInfo[$associationField['targetEntity']])) {
+              $nullable = $this->entityMetaInfo[$associationField['targetEntity']][$associationField['mappedBy']]['nullable'];
+            }
+          }
+        } else {
+          $multiplicity = self::FIELD_TYPE_TO_MANY;
+          $nullable = false; // this is always a collection
+        }
         $targetEntity = new ReflectionClass($associationField['targetEntity'])->getShortName();
         $metaInfo[$fieldName] = [
           'fieldName' => $fieldName,
           'id' => !!$associationField['id'],
           'mapping' => $multiplicity,
           'type' => $targetEntity,
+          'nullable' => $nullable,
         ];
       }
       $this->entityMetaInfo[$entityName] = $metaInfo;
