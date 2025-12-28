@@ -303,6 +303,11 @@ class EntitySerializer
         foreach ($missingProperties as $property) {
           $flatEntity[$property] = $jsonData[$property];
         }
+        foreach ($jsonData as $key => $value) {
+          if (is_scalar($value) && $value !== $flatEntity[$key]) {
+            $flatEntity[$key] = $value;
+          }
+        }
       }
       ksort($flatEntity);
       $this->repositories[$entityClassName][$flatIdentifier] = $flatEntity;
