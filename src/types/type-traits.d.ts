@@ -30,13 +30,16 @@ export type PickByValue<T, V> = Pick<T, { [K in keyof T]: T[K] extends V ? K : n
 //     [K in keyof T]: [keyof PickByValue<T, T[K]>, T[K]]
 // }[keyof T][];
 
-type IncDecHelper<N extends number, T extends unknown[] = []> = T['length'] extends N ? T : IncDecHelper<N, [...T, unknown]>;
-export type Increment<N extends number> = [...IncDecHelper<N>, unknown]['length'];
-type DecHelper<H> = H extends [unknown, ...infer T] ? T : never;
-export type Decrement<N extends number> = DecHelper<IncDecHelper<N> >['length'];
+export type NumberTuple = number[]|[];
+export type Zero = [];
+export type NonNegInt<N extends number, T extends NumberTuple = Zero> = T['length'] extends N ? T : NonNegInt<N, [...T, T['length']]>;
+export type Increment<N extends NumberTuple> = [...N, N['length']];
+export type Decrement<N extends NumberTuple> = N extends [...infer Decrement, number] ? NonNegInt<Decrement['length'], Decrement> : never;
+export type DecToZero<N extends NumberTuple> = Decrement<N> extends never ? NonNegInt<0> : Decrement<N>;
+
 export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
-type DeepWriteable<T, Limit extends number = 999> = {
-  -readonly [P in keyof T]: Limit extends 0 ? T[P] : DeepWriteable<T[P], Decrement<Limit> >;
+type DeepWriteable<T, Limit extends NonNegInt<999> > = {
+  -readonly [P in keyof T]: Limit extends NonNegInt<0> ? T[P] : DeepWriteable<T[P], Decrement<Limit> >;
 };
 type ShallowWriteable<T> = { -readonly [P in keyof T]: T[P] };
 export type Cast<X, Y> = X extends Y ? X : Y
@@ -44,7 +47,7 @@ type FromEntries<T> = T extends [infer Key, any][]
   ? { [K in Cast<Key, string>]: Extract<ArrayElement<T>, [K, any]>[1]}
   : { [key in string]: any }
 
-export type FromEntriesWithReadOnly<T> = FromEntries<DeepWriteable<T, 1> >
+export type FromEntriesWithReadOnly<T> = FromEntries<DeepWriteable<T, NonNegInt<1> > >
 
 declare global {
    interface ObjectConstructor {
@@ -59,3 +62,5 @@ export const isOne = (x: any): x is 1 => x === 1;
  * Helper to check if a type is undefined
  */
 export type IsUndefined<T> = [T] extends [undefined] ? true : false
+
+export type NullableIf<B, T> = true extends B ? null|T : T;
