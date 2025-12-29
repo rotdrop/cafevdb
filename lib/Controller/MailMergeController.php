@@ -42,6 +42,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -66,7 +67,6 @@ class MailMergeController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   /**
    * @var bool
@@ -225,7 +225,8 @@ class MailMergeController extends Controller
 
       if (empty($blocks['sender'])) {
         $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-        $templateData['sender'] = $this->flattenMusician($sender, only: []); // just the address data, no fancy things
+        $templateData['sender'] = EntityArrayAdapter::create($sender, depth: 0);
+
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
         $signature = $this->rolesService->dedicatedBoardMemberSignature(
@@ -239,7 +240,7 @@ class MailMergeController extends Controller
       }
 
       if (!empty($project)) {
-        $templateData['project'] = $this->flattenProject($project);
+        $templateData['project'] = EntityArrayAdapter::create($project, 1);
       }
 
       $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
@@ -362,7 +363,7 @@ class MailMergeController extends Controller
             $paymentData = [];
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-          $recipientData = $this->flattenMusician($recipient);
+          $recipientData = EntityArrayAdapter::create($recipient, depth: 2);
           if ($recipientData['addressSupplement'] == 'c/o ' . $recipientData['name']) {
             // clear the name and just keep the addressSupplement
             unset($recipientData['name']);

@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -48,7 +49,6 @@ class InstrumentInsuranceService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const ENTITY = Entities\InstrumentInsurance::class;
 
@@ -437,7 +437,7 @@ class InstrumentInsuranceService
     }
 
     $insuranceOverview = [
-      'billTo' => $this->flattenMusician($billToParty, only: []),
+      'billTo' => EntityArrayAdapter::create($billToParty, depth: 0),
       'taxRate' => $this->getTaxRate(),
       'broker' => $broker,
       'musicians' => [],

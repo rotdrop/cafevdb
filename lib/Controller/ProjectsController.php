@@ -60,7 +60,6 @@ class ProjectsController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const LIST_OPERATION_CREATE = 'create';
   const LIST_OPERATION_SUBSCRIBE = 'subscribe';

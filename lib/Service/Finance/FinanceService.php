@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
@@ -59,7 +60,6 @@ class FinanceService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   /**
@@ -369,7 +369,7 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $templateData = [
-      'recipient' => $this->flattenMusician($compositePayment->getMusician()),
+      'recipient' => EntityArrayAdapter::create($compositePayment->getMusician(), depth: 1),
       'payment' => [
         // amount need not be the donation amount
         'amount' => $compositePayment->getAmount(),
@@ -437,8 +437,8 @@ class FinanceService
     }
 
     $templateData = [
-      'originator' => $this->flattenMusician($invoice->getOriginator()),
-      'recipient' => $this->flattenMusician($invoice->getDebitor()),
+      'originator' => EntityArrayAdapter::create($invoice->getOriginator(), depth: 1),
+      'recipient' => EntityArrayAdapter::create($invoice->getDebitor(), depth: 1),
       'invoice' => [
         // amount need not be the donation amount
         'amount' => $amount->toDecimal(2),
@@ -541,7 +541,7 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $templateData = [
-      'recipient' => $this->flattenMusician($donationPayment->getMusician()),
+      'recipient' => EntityArrayAdapter::create($donationPayment->getMusician(), depth: 1),
       'donation' => [
         'amount' => $donationAmount,
         'dateOfReceipt' => $compositePayment->getDateOfReceipt(),

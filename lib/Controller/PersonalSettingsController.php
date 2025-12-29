@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -78,7 +79,6 @@ use OCA\RoundCube\Service\Config as RoundCubeConfig;
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const EMAIL_PROTO = [ 'smtp', 'imap' ];
@@ -2107,12 +2107,12 @@ class PersonalSettingsController extends Controller
 
         $project = $this->projectService->findById($this->getClubMembersProjectId());
         $this->entityManager = $this->di(EntityManager::class);
-        $flatProject = $this->flattenProject($project);
+        $flatProject = EntityArrayAdapter::create($project, depth: 1);
 
         /** @var InstrumentationService $instrumentationService */
         $instrumentationService = $this->di(InstrumentationService::class);
         $dummyRecipient = $instrumentationService->getDummyMusician(project: $project);
-        $flatRecipient = $this->flattenMusician($dummyRecipient);
+        $flatRecipient = EntityArrayAdapter::create($dummyRecipient, depth: 1);
 
         /** @var OpenDocumentFiller $documentFiller */
         $documentFiller = $this->di(OpenDocumentFiller::class);
@@ -2246,6 +2246,7 @@ class PersonalSettingsController extends Controller
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getExecutiveBoardProjectId(),
+                musicianOrId: $dummyRecipient,
                 formName: $templateName
               );
             } else {
@@ -2257,6 +2258,7 @@ class PersonalSettingsController extends Controller
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
+                musicianOrId: $dummyRecipient,
                 formName: $templateName,
               );
             } else {
@@ -2268,6 +2270,7 @@ class PersonalSettingsController extends Controller
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
                 $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
+                musicianOrId: $dummyRecipient,
                 formName: $templateName
               );
             } else {
