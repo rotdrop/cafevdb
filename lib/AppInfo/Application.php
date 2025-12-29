@@ -76,6 +76,7 @@ use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
 use OCA\CAFEVDB\AddressBook\ContactsAddressBook;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Middleware;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /*
  *
@@ -194,6 +195,14 @@ class Application extends App implements IBootstrap
     /* Doctrine DBAL needs a factory to be constructed. */
     $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
       return $c->query(EntityManager::class)->getConnection();
+    });
+
+    $context->registerService(IdentifierFlattener::class, function($c) {
+      $entityManager = $c->query(EntityManager::class);
+      return new IdentifierFlattener(
+        $entityManager->getUnitOfWork(),
+        $entityManager->getMetadataFactory(),
+      );
     });
 
     // Register Middleware
