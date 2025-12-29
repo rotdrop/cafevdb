@@ -46,11 +46,12 @@ use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Doctrine;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\Registration;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -73,8 +74,6 @@ class MockProvider
   public readonly string $appName;
 
   private array $instances = [];
-
-  private TestCase $mockOwner;
 
   private array $appConfigValues = [];
 
@@ -99,6 +98,8 @@ class MockProvider
   /**
    * Create a new instance.
    *
+   * @param TestCase $testCase
+   *
    * @return self
    */
   public static function create(TestCase $testCase): self
@@ -113,7 +114,7 @@ class MockProvider
   /**
    * @param string $className The name of the class to mock.
    *
-   * @return MockBuilder An instance tied to $this->mockOwner.
+   * @return MockBuilder An instance tied to $this->testCase.
    */
   protected function getMockBuilder(string $className):MockBuilder
   {
@@ -191,6 +192,20 @@ class MockProvider
     $instance->method('deleteAppValue')->willReturnCallback(
       function(string $appName, string $key): void {
         unset($this->appConfigValues[$appName . $key]);
+      },
+    );
+    $instance->method('getAppKeys')->willReturnCallback(
+      function(string $appName): array {
+        $appNameLen = strlen($appName);
+        $appKeys =
+          array_map(
+            fn(string $key) => substr($key, $appNameLen),
+            array_filter(
+              array_keys($this->appConfigValues),
+              fn(string $key) => str_starts_with($key, $appName),
+            ),
+          );
+        return $appKeys;
       },
     );
     $instance->method('getUserValue')->willReturnCallback(
@@ -678,6 +693,10 @@ class MockProvider
           return $this->instances[$service];
         }
         switch ($service) {
+          case Connection::class:
+            return $this->getEntityManager()->getConnection();
+          case EntityManager::class:
+            return $this->getEntityManager();
           case IEventDispatcher::class:
             return $this->getEventDispatcher();
           case IUserSession::class:

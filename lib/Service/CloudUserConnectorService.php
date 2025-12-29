@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use ReflectionClass;
 use Throwable;
+use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\App\IAppManager;
@@ -40,6 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Service\RequestService;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 
 /**
@@ -360,15 +363,15 @@ WHERE m.email IS NOT NULL AND m.email <> ""
           $this->logDebug('SQL ' . $currentStatement);
           if (str_starts_with($sql, 'CREATE')) {
             try {
-              $this->connection->prepare($sql . ' WITH CHECK OPTION')->execute();
+              $this->connection->prepare($sql . ' WITH CHECK OPTION')->executeQuery();
             } catch (DBALDriverException $e) {
               if ($e->getCode() != self::CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR) {
                 throw $e;
               }
-              $this->connection->prepare($sql)->execute();
+              $this->connection->prepare($sql)->executeQuery();
             }
           } else {
-            $this->connection->prepare($sql)->execute();
+            $this->connection->prepare($sql)->executeQuery();
           }
         }
       }
@@ -398,7 +401,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
         $viewName = $this->viewName($dataBaseName, self::USER_SQL_PREFIX, $name);
         $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
         $this->logDebug('SQL ' . $currentStatement);
-        $this->connection->prepare($currentStatement)->execute();
+        $this->connection->prepare($currentStatement)->executeQuery();
       }
     } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
@@ -419,7 +422,9 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    * @return array
    *
    * @bug Uses the internal structure of an app which is not under our
-   * controle.
+   * control.
+   *
+   * @throw UnexpectedValueException if the current database platform is neither MySQL nor PostrgreSQL.
    */
   private function generateUserSqlConfig(?string $dataBaseName = null, bool $withDbAuth = true):array
   {
@@ -439,9 +444,23 @@ WHERE m.email IS NOT NULL AND m.email <> ""
       $catchAllGroup = $orchestraName . ' ' . $this->l->t('Musicians');
     }
 
+    $platform = $this->connection->getDatabasePlatform();
+    if ($platform instanceof Platforms\AbstractMySQLPlatform) {
+      $driver = 'mysql';
+    } elseif ($platform instanceof Platforms\PostgreSQLPlatform) {
+      $driver = 'pgsql';
+    } else {
+      throw new UnexpectedValueException(
+        $this->l->t(
+          'Only MySQL and PostgreSQL are supported, but the database platform in use is "%s".',
+          new ReflectionClass($platform)->getShortName(),
+        )
+      );
+    }
+
     return [
-      'db.database' => $dataBaseName??$this->appDbName,
-      'db.driver' => $this->connection->getDriver()->getDatabasePlatform()->getName(),
+      'db.database' => $dataBaseName ?? $this->appDbName,
+      'db.driver' => $driver,
       'db.hostname' => $cloudDbHost,
       'db.password' => $cloudDbPass,
       'db.username' => $cloudDbUser,
@@ -1037,22 +1056,22 @@ SELECT t.* FROM " . $table . " t";
         $currentStatement = $statement;
         if (preg_match(self::CREATE_FUNCTION_REGEXP, $statement)) {
           $this->logInfo('SQL ' . $currentStatement);
-          $this->connection->prepare($currentStatement)->execute();
+          $this->connection->prepare($currentStatement)->executeQuery();
           $currentStatement = sprintf(self::GRANT_EXECUTE, $viewName, $cloudDbUser);
         } elseif (preg_match(self::CREATE_VIEW_REGEXP, $statement)) {
           $this->logInfo('SQL ' . $currentStatement);
           try {
-            $this->connection->prepare($currentStatement . ' WITH CHECK OPTION')->execute();
+            $this->connection->prepare($currentStatement . ' WITH CHECK OPTION')->executeQuery();
           } catch (DBALDriverException $e) {
             if ($e->getCode() != self::CHECK_OPTION_ON_NON_UPDATABLE_VIEW_ERROR) {
               throw $e;
             }
-            $this->connection->prepare($currentStatement)->execute();
+            $this->connection->prepare($currentStatement)->executeQuery();
           }
           $currentStatement = sprintf(self::GRANT_SELECT, $viewName, $cloudDbUser);
         }
         $this->logInfo('SQL ' . $currentStatement);
-        $this->connection->prepare($currentStatement)->execute();
+        $this->connection->prepare($currentStatement)->executeQuery();
       }
     } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
@@ -1088,7 +1107,7 @@ SELECT t.* FROM " . $table . " t";
           $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
         }
         $this->logDebug('SQL ' . $currentStatement);
-        $this->connection->prepare($currentStatement)->execute();
+        $this->connection->prepare($currentStatement)->executeQuery();
       }
     } catch (Throwable $t) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
