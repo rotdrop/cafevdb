@@ -405,15 +405,10 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     foreach ($this->metaData->identifier as $field) {
       $dbalType = null;
       if (isset($this->metaData->associationMappings[$field])) {
-        $association = $this->metaData->associationMappings[$field];
-        if (count($association->joinColumns) != 1) {
+        if (count($this->metaData->associationMappings[$field]['joinColumns']) != 1) {
           throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $association->joinColumns[0]->name;
-        $value = $this->entityManager->getReference(
-          $association->targetEntity,
-          [ $association->joinColumns[0]->referencedColumnName => $columnValues[$columnName] ],
-        );
+        $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]->name;
       } else {
         $columnName = $this->metaData->fieldMappings[$field]->columnName;
         if (!isset($columnValues[$columnName])) {
@@ -425,8 +420,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
             $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]->type);
-        $value = $columnValues[$columnName];
       }
+      $value = $columnValues[$columnName];
       if (!empty($dbalType) && is_string($value)) {
         $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
       }
