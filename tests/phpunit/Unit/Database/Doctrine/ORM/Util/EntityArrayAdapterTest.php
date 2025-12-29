@@ -110,8 +110,6 @@ class EntityArrayAdapterTest extends TestCase
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
 
-    $appContainer = $mockProvider->getAppContainer();
-
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
@@ -227,6 +225,7 @@ class EntityArrayAdapterTest extends TestCase
         'root' => $this->entityArrayAdapter,
       ]);
     } catch (InvalidArgumentException $e) {
+      // empty
     }
     $this->assertInstanceOf(InvalidArgumentException::class, $e);
 
@@ -238,6 +237,7 @@ class EntityArrayAdapterTest extends TestCase
         'flatIdentifier' => null,
       ]);
     } catch (InvalidArgumentException $e) {
+      // empty
     }
     $this->assertInstanceOf(InvalidArgumentException::class, $e);
   }

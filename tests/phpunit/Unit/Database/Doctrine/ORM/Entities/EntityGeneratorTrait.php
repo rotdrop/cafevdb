@@ -76,7 +76,7 @@ trait EntityGeneratorTrait
       $this->entityManager = $this->createStub(EntityManager::class);
     }
 
-    $appContainer = $mockProvider->getAppContainer($this);
+    $appContainer = $mockProvider->getAppContainer();
 
     /** @var InstrumentationService $this->instrumentationService */
     $this->instrumentationService = new InstrumentationService(
