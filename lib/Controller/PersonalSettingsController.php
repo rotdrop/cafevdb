@@ -1384,7 +1384,7 @@ class PersonalSettingsController extends Controller
         }
       case (array_shift(
         array_filter(
-          array_keys(ConfigConstant::CALENDARS),
+          array_keys(ConfigConstants::CALENDARS),
           fn(string $uri) => $uri . ConfigConstants::CALENDAR_KEY_POSTFIX == $parameter),
       ) ?? '') . ConfigConstants::CALENDAR_KEY_POSTFIX:
         $real = trim($value);
