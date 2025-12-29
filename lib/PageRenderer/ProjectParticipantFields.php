@@ -1008,7 +1008,7 @@ __EOT__;
       'css' => [ 'postfix' => [ 'participation-context', 'allow-empty' ], ],
       'select' => 'O',
       'values2' => Types\EnumParticipationContext::getL10NValues($this->l),
-      'default' => Types\EnumParticipationContext::UNRESTRICTED,
+      'default' => Types\EnumParticipationContext::UNRESTRICTED->value,
       'sort' => true,
       'align' => 'center',
       'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participation-context'],
