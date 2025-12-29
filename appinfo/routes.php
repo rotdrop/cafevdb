@@ -650,19 +650,20 @@ $routes = [
     /**
      * Personal data etc. of musicians
      */
-    [
-      'name' => 'musicians#get',
-      'verb' => 'GET',
-      'url' => '/musicians/details/{musicianId}',
-    ],
-    [
-      'name' => 'musicians#search',
-      'verb' => 'GET',
-      'url' => '/musicians/search/{pattern}',
-      'defaults' => [
-        'pattern' => '',
-      ],
-    ],
+    // obsolete, removed
+    // [
+    //   'name' => 'musicians#get',
+    //   'verb' => 'GET',
+    //   'url' => '/musicians/details/{musicianId}',
+    // ],
+    // [
+    //   'name' => 'musicians#search',
+    //   'verb' => 'GET',
+    //   'url' => '/musicians/search/{pattern}',
+    //   'defaults' => [
+    //     'pattern' => '',
+    //   ],
+    // ],
     // [
     //   'name' => 'projects#search_projects',
     //   'verb' => 'GET',

@@ -22,18 +22,19 @@
  */
 
 import { appName } from '../config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import type { Contact, Musician } from '../types/address-book.d.ts';
+import { translate as t, getCanonicalLocale } from '@nextcloud/l10n';
+import type { Contact } from '../types/address-book.d.ts';
 import { stringValue } from '../util/string-valued.ts';
+import type { FrontEndEntity } from '../services/entity-factory.ts';
 
 const addressItemUnknownLabel = (item: string) =>
   t(appName, '{item}: unknown', { item: t(appName, item) });
 
-export const musicianAddressPopup = (option: Musician) => {
+export const musicianAddressPopup = (option: FrontEndEntity<'Musician'>) => {
   if (option.id === 0) {
     return addressPopup(t(appName, 'selects all musicians'));
   }
-  const name = option.informalDisplayName || '';
+  const name = option.personalPublicName || '';
   const userId = option.userIdSlug ? ` (${option.userIdSlug})` : '';
   const email = option.email || addressItemUnknownLabel('email');
   const street = option.street || addressItemUnknownLabel('street');
@@ -41,12 +42,9 @@ export const musicianAddressPopup = (option: Musician) => {
   const postalCode = option.postalCode && option.postalCode !== '0' ? option.postalCode + ' ' : '';
   const city = option.city || addressItemUnknownLabel('city');
   const additionalInfo = [email, street + streetNumber, postalCode + city];
-  if (option.countryName) {
-    let country = option.countryName;
-    if (option.country) {
-      country += ` (${option.country})`;
-    }
-    additionalInfo.push(country);
+  if (option.country) {
+    const regionName = (new Intl.DisplayNames([getCanonicalLocale()], { type: 'region' })).of(option.country);
+    additionalInfo.push(`${regionName} (${option.country})`);
   }
   const content = `<h4>${name}${userId}</h4>` + additionalInfo.join('<br/>');
   return addressPopup(content);
@@ -82,7 +80,7 @@ export const contactAddressPopup = (option: Contact) => {
   let address: string[] = [];
   if (option.ADR && option.ADR.length > 0) {
     const adrValue = option.ADR[0];
-    address = stringValue(adrValue).split(';');
+    address = stringValue(adrValue)!.split(';');
   }
   const street = address[2] || addressItemUnknownLabel('street');
   const postalCode = (address[5] + ' ') || '';

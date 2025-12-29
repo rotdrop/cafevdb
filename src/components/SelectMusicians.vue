@@ -65,14 +65,13 @@ import {
 } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import axios from '@nextcloud/axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import { generateOcsUrl } from '../toolkit/util/generate-url.ts'
 import { musicianAddressPopup } from '../util/address-popup.ts'
 import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import type { AxiosResponse } from 'axios'
 import type { NcSelect } from '@nextcloud/vue'
+import { loadEntities } from '../services/entity-repository.ts'
 // import type { Musician } from '../types/address-book.d.ts'
 // import Console from '../util/console.ts'
 
@@ -99,7 +98,7 @@ interface Musician {
   email?: string,
   formalDisplayName: string,
   id: number,
-  informalDisplayName?: string,
+  personalPublicName?: string,
   nickName?: string,
   organization?: string,
   postalCode?: string,
@@ -278,7 +277,7 @@ const filterByProps = (musician: Musician, _label: string, query: string) => {
   if (musician.formalDisplayName.toLocaleLowerCase().search(lcQuery) > -1) {
     return true
   }
-  if ((musician.informalDisplayName?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
+  if ((musician.personalPublicName?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {
     return true
   }
   if (lcQuery.search('@') > -1) {
@@ -312,13 +311,12 @@ const findMusicians = async (query: string, musicianIds?: number[]) => {
     params.ids = musicianIds
   }
   try {
-    const response: AxiosResponse<Musician[]> = await axios.get(generateAppUrl(`musicians/search${query}`), { params })
-    if (response.data.length > 0) {
-      for (const musician of response.data) {
-        vueSet(musicians.value, musician.id, musician)
-      }
-      return true
+    const url = generateOcsUrl(`musicians/search${query}`)
+    const data = await loadEntities<'Musician'>(url, params)
+    for (const [id, musician] of Object.entries(data.Musician)) {
+      vueSet(musicians.value, id, musician)
     }
+    return Object.entries(data.Musician).length > 0
   } catch (error) {
     emit('error', error)
   }

@@ -64,21 +64,6 @@ const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
 const selectedOptionsKey = '_m_selectedOptions';
 
 /**
- * Get an array representation for one musician.
- *
- * @param musicianId The database if of the musician.
- */
-const getMusician = async (musicianId: number) => {
-  try {
-    return await $.get(generateAppUrl('musicians/details/' + musicianId)).promise();
-  } catch (e) {
-    const xhr = e as JQuery.jqXHR;
-    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
-    return null;
-  }
-};
-
-/**
  * Add several musicians.
  *
  * @param {jQuery} $form TBD.
@@ -958,5 +943,4 @@ export {
   ready,
   documentReady,
   contactValidation,
-  getMusician,
 };

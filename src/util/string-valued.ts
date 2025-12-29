@@ -24,6 +24,9 @@
 type StringWrapper = { value: string };
 export type StringValued = string|StringWrapper;
 
-export const stringValue = (arg: StringValued):string => (arg as StringWrapper).value ?? (arg as string);
+const isStringWrapper = (arg: unknown): arg is StringWrapper =>
+  typeof arg === 'object' && arg && 'value' in arg && typeof arg.value === 'string';
+
+export const stringValue = (arg?: StringValued) => isStringWrapper(arg) ? arg.value : arg;
 
 export default stringValue;

@@ -27,16 +27,17 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Uuid;
 
@@ -45,12 +46,9 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-class MusiciansController extends Controller
+class MusiciansController extends OCSController
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   public const SCOPE_MUSICIANS = 'musicians';
   public const SCOPE_CLUB_MEMBERS = 'club-members';
@@ -68,38 +66,14 @@ class MusiciansController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected ?string $userId,
-    protected ILogger $logger,
-    protected EntityManager $entityManager,
+    private EntityManager $entityManager,
+    private EntitySerializer $entitySerializer,
     protected ConfigService $configService,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-
-    $this->l = $this->l10n();
-    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->countryNames = $this->localeCountryNames();
-
   }
   // phpcs:enable
-
-  /**
-   * Get all the data of the given musician. This mess removes "circular"
-   * associations as we are really only interested into the data for this
-   * single person.
-   *
-   * @param int $musicianId
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function get(int $musicianId):DataResponse
-  {
-    $musician = $this->musiciansRepository->find($musicianId);
-
-    $musicianData = $this->getFlatMusician($musician);
-
-    return self::dataResponse($musicianData);
-  }
 
   /**
    * Search by user-id and names. Pattern may contain wildcards (* and %).
@@ -121,6 +95,7 @@ class MusiciansController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\ApiRoute(verb: 'GET', url: '/musicians/search/{pattern}', defaults: ['pattern' => ''])]
   public function search(
     string $pattern,
     ?int $limit = null,
@@ -129,7 +104,7 @@ class MusiciansController extends Controller
     ?int $projectId = null,
     array $ids = [],
     string $scope = self::SCOPE_MUSICIANS
-  ):DataResponse {
+  ): DataResponse {
 
     switch ($scope) {
       case self::SCOPE_ADDRESSBOOK:
@@ -202,40 +177,14 @@ class MusiciansController extends Controller
       $musicians = array_merge($musicians, $byIdMusicians);
     }
 
-    $musiciansData = [];
+    $this->entitySerializer->reset();
+    $entityNameSpace = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
+    $entityName = $entityNameSpace . '\\' . $entityName;
+    $this->entitySerializer->setCommonPrefix($entityNameSpace);
     /** @var Entities\Musician $musician */
     foreach ($musicians as $musician) {
-      if (Uuid::asUuid($musician->getSurName()) !== null) {
-        continue; // skip dummy musicians
-      }
-      $musiciansData[] = $this->getFlatMusician($musician, only: []);
+      $this->entitySerializer->addEntity($musician, 0);
     }
-
-    return self::dataResponse($musiciansData);
-  }
-
-  /**
-   * @param Entities\Musician $musician
-   *
-   * @param array $only
-   *
-   * @return array
-   */
-  private function getFlatMusician(Entities\Musician $musician, ?array $only = null):array
-  {
-    return array_merge(
-      [
-        'id' => $musician->getId(),
-        'firstName' => $musician->getFirstName(),
-        'surName' => $musician->getSurName(),
-        'displayName' => $musician->getDisplayName(),
-        'nickName' => $musician->getNickName(),
-        'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
-        'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
-        'userId' => $musician->getUserIdSlug(),
-        'countryName' => $this->countryNames[$musician->getCountry()] ?? '',
-      ],
-      $this->flattenMusician($musician, only: [])
-    );
+    return new DataResponse($this->entitySerializer->export());
   }
 }

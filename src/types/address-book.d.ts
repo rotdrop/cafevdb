@@ -47,19 +47,3 @@ export interface Contact {
   ADR?: StringValued[],
   ORG?: string,
 }
-
-export interface Musician {
-  city?: string,
-  country?: string,
-  countryName?: string,
-  email?: string,
-  formalDisplayName: string,
-  id: number,
-  informalDisplayName?: string,
-  nickName?: string,
-  organization?: string,
-  postalCode?: string,
-  street?: string,
-  streetNumber?: string,
-  userIdSlug?: string,
-}
