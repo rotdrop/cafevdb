@@ -29,6 +29,8 @@ use Exception;
 use RuntimeException;
 use Throwable;
 
+use Psr\Log\LogLevel;
+
 use OCP\IL10N;
 use OCP\IRequest;
 
@@ -45,6 +47,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase extends AbstractPageRenderer
@@ -1245,7 +1248,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
               foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
-                $this->debug('CALLING REMOVE ON ' . $entityClass . ' ' . print_r($entityId, true));
+                $this->logEntityId('CALLING REMOVE ON', $entityClass, $entityId);
                 $association->removeElement($entity);
               }
             }
@@ -1257,7 +1260,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
+              $this->logEntityId('CALLING ADD ON', $entityClass, $entityId);
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
@@ -1276,7 +1279,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             if (empty($entity)) {
               // This can happen, in particular with the new gmail
               // vs. googlemail sanitizer. Log this as an error for now.
-              $this->logError('Unable to find entity ' . $entityClass . ' with id ' . print_r($entityId, true));
+              $this->logEntityId('Unable to find entity', $entityClass, $entityId, LogLevel::ERROR);
               continue;
             }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
@@ -1294,15 +1297,19 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                * select boxes of the user interface.
                */
               if ($softDeleteable && !$entity->isDeleted()) {
-                $this->debug('ONLY SOFT DELETE ' . print_r($entityId, true));
+                $this->logEntityId('ONLY SOFT DELETE', $entityClass, $entityId);
                 $this->remove($entity);
               }
             } else {
               if ($softDeleteable && !$entity->isDeleted()) {
-                $this->debug('SOFT DELETE ' . print_r($entityId, true));
+                $this->logEntityId('SOFT DELETE', $entityClass, $entityId);
                 $this->remove($entity, true); // soft, need flush
               }
-              $this->debug('HARD DELETE ' . print_r($entityId, true) . ' ' . (int)($softDeleteable && (int)$entity->isDeleted()));
+              $this->logEntityId(
+                'HARD DELETE ' . (int)($softDeleteable && (int)$entity->isDeleted()),
+                $entityClass,
+                $entityId,
+              );
               $this->remove($entity); // hard
             }
             $this->flush();
@@ -1347,7 +1354,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $this->logEntityId('ENTITIY ID', $entityClass, $entityId);
 
               // maybe already there caused by ORM persist cascading
               $entity = $this->find($entityId);
@@ -1359,10 +1366,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                   if (is_numeric($value) && $value <= 0) {
                     // treat this as autoincrement or otherwise auto-generated ids
                     continue;
-                  }
-                  if ($meta->hasAssociation($key)) {
-                    $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-                    $value = $this->entityManager->getReference($entityName, $value);
                   }
                   $entity[$key] = $value;
                 }
@@ -1426,12 +1429,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $this->debug('REM ID '.print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $this->logEntityId('ENTITIY ID', $entityClass, $entityId);
               $entity = $this->find($entityId);
               if (empty($entity)) {
                 throw new Exception($this->l->t(
                   'Unable to find entity in table %s given id %s',
-                  [ $table, print_r($entityId, true) ]));
+                  [ $table, print_r($this->flatIdentifier($entityClass, $entityId), true) ]));
               }
               if (method_exists($entity, 'setDeleted')) {
                 $entity['deleted'] = null;
@@ -1470,10 +1473,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $this->debug('Entity not found, creating');
           $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
-            if ($meta->hasAssociation($key)) {
-              $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-              $value = $this->entityManager->getReference($entityName, $value);
-            }
             $entity[$key] = $value;
           }
         }
@@ -1758,7 +1757,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
+              $this->logEntityId('CALLING ADD ON', $entityClass, $entityId);
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
@@ -1816,20 +1815,16 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
               $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
-                if ($meta->hasAssociation($key)) {
-                  $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-                  $value = $this->entityManager->getReference($entityName, $value);
-                }
                 $entity[$key] = $value;
               }
               $needPersist = true;
             } else {
-              $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
+              $this->logEntityId('ENTITY ALREADY THERE', $entityClass, $entityId);
             }
 
             // set further properties ...
             $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
-            $this->debug('ENTITY ID ' . print_r($entityId, true));
+            $this->logEntityId('ENTITY ID', $entityClass, $entityId);
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
             $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
@@ -1890,10 +1885,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
-          if ($meta->hasAssociation($key)) {
-            $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-            $value = $this->entityManager->getReference($entityName, $value);
-          }
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
@@ -2008,7 +1999,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $meta = $this->classMetadata($entityName);
     $entityId = $meta->extractKeyValues($pmeRecordId);
 
-    $this->logInfo('ENTITY ' . $entityName . ' ' . print_r($entityId, true));
+    $this->logEntityId('ENTITY', $entityName, $entityId, LogLevel::INFO);
 
     return $entityId;
   }
@@ -2749,6 +2740,49 @@ ON {$mainTableAlias}.`{$field}` = {$alias}.value
     } else {
       $this->logDebug($message, $context, $shift);
     }
+  }
+
+  /**
+   * Print an entity id without causing print_r infinite recursion.
+   *
+   * @param string $prefix
+   *
+   * @param string $entityName
+   *
+   * @param array $entityId
+   *
+   * @param mixed $logLevel
+   *
+   * @return void
+   */
+  protected function logEntityId(string $prefix, string $entityName, array $entityId, mixed $logLevel = null): void
+  {
+    if (!$this->debugRequests && $logLevel === null) {
+      return;
+    }
+    if ($logLevel === null) {
+      $logLevel = $this->debugRequests ? LogLevel::INFO : LogLevel::DEBUG;
+    }
+    $flatId = $this->flattenIdentifier($entityName, $entityId);
+    $this->log($logLevel, $prefix . ' ' . $entityName . ' ' . print_r($flatId, true));
+  }
+
+  /**
+   * Debug helper, flatten an entity id.
+   *
+   * @param string $entityName
+   *
+   * @param array $entityId
+   *
+   * @return array
+   */
+  protected function flattenIdentifier(string $entityName, array $entityId): array
+  {
+    $meta = $this->entityManager->getClassMetadata($entityName);
+    $flattener = $this->appContainer()->get(IdentifierFlattener::class);
+    $flatId = $flattener->flattenIdentifier($meta, $entityId);
+
+    return $flatId;
   }
 
   /**
