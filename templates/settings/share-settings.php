@@ -163,14 +163,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                 class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
                 <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" value="<?= $_['outboxfolder']; ?>" />
-        <input <?= $_['outboxfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" name="<?= ConfigConstants::OUTBOX_FOLDER ?>-saved" value="<?= $_[ConfigConstants::OUTBOX_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::OUTBOX_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::OUTBOX_FOLDER ?>"
           name="<?= ConfigConstants::OUTBOX_FOLDER ?>"
           placeholder="<?= $l->t('Outbox-Folder'); ?>"
-          value="<?= $_['outboxfolder']; ?>"
-          title="<?= $toolTips['outboxfolder']; ?>"
+          value="<?= $_[ConfigConstants::OUTBOX_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::OUTBOX_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" name="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::OUTBOX_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::OUTBOX_FOLDER . '-force']; ?>" >
@@ -182,14 +182,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                 class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"
                 <?= $_[ConfigConstants::SHARED_FOLDER] != '' ? $off : 'disabled'; ?> >
         <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span><span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" value="<?= $_['documenttemplatesfolder']; ?>" />
-        <input <?= $_['documenttemplatesfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-saved" value="<?= $_[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>"
           name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>"
           placeholder="<?= $l->t('Document templates folder'); ?>"
-          value="<?= $_['documenttemplatesfolder']; ?>"
-          title="<?= $toolTips['documenttemplatesfolder']; ?>"
+          value="<?= $_[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" name="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::DOCUMENT_TEMPLATES_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::DOCUMENT_TEMPLATES_FOLDER . '-force']; ?>" >
@@ -227,14 +227,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
         <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" value="<?= $_['projectparticipantsfolder']; ?>" />
-        <input <?= $_['projectparticipantsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-saved" value="<?= $_[ConfigConstants::PROJECT_PARTICIPANTS_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::PROJECT_PARTICIPANTS_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>"
           name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>"
           placeholder="<?= $l->t('Participants Folder'); ?>"
-          value="<?= $_['projectparticipantsfolder']; ?>"
-          title="<?= $toolTips['projectparticipantsfolder']; ?>"
+          value="<?= $_[ConfigConstants::PROJECT_PARTICIPANTS_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::PROJECT_PARTICIPANTS_FOLDER]; ?>"
         />
         <span><b>/</b></span><span><?= $l->t('john.doe'); ?></span><span><b>/</b></span>
         <input type="checkbox" id="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_PARTICIPANTS_FOLDER ?>-force" class="checkbox"/>
@@ -251,14 +251,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
         <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" value="<?= $_['projectpostersfolder']; ?>" />
-        <input <?= $_['projectpostersfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-saved" value="<?= $_[ConfigConstants::PROJECT_POSTERS_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::PROJECT_POSTERS_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>"
           name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>"
           placeholder="<?= $l->t('Posters Folder'); ?>"
-          value="<?= $_['projectpostersfolder']; ?>"
-          title="<?= $toolTips['projectpostersfolder']; ?>"
+          value="<?= $_[ConfigConstants::PROJECT_POSTERS_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::PROJECT_POSTERS_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::PROJECT_POSTERS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECT_POSTERS_FOLDER . '-force']; ?>" >
@@ -274,14 +274,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
         <span><b>/</b></span><span><?= $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?= $l->t('PROJECT'); ?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" value="<?= $_['projectpublicdownloadsfolder']; ?>" />
-        <input <?= $_['projectpublicdownloadsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-saved" value="<?= $_[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>"
           name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>"
           placeholder="<?= $l->t('Participants Downloads'); ?>"
-          value="<?= $_['projectpublicdownloadsfolder']; ?>"
-          title="<?= $toolTips['projectpublicdownloadsfolder']; ?>"
+          value="<?= $_[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" name="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER . '-force']; ?>" >
@@ -314,14 +314,14 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
         <span><b>.../</b></span><span class="<?= ConfigConstants::SHARED_FOLDER ?>"><?= $_[ConfigConstants::SHARED_FOLDER]; ?></span>
         <span><b>/</b></span><span class="<?= ConfigConstants::FINANCE_FOLDER ?>"><?= $_[ConfigConstants::FINANCE_FOLDER];?></span>
         <span><b>/</b></span>
-        <input type="hidden" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" value="<?= $_['transactionsfolder']; ?>" />
-        <input <?= $_['transactionsfolder'] != '' ? 'disabled' : ''; ?>
+        <input type="hidden" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-saved" value="<?= $_[ConfigConstants::TRANSACTIONS_FOLDER]; ?>" />
+        <input <?= $_[ConfigConstants::TRANSACTIONS_FOLDER] != '' ? 'disabled' : ''; ?>
           type="text"
           id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>"
           name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>"
           placeholder="<?= $l->t('transactions'); ?>"
-          value="<?= $_['transactionsfolder']; ?>"
-          title="<?= $toolTips['transactionsfolder']; ?>"
+          value="<?= $_[ConfigConstants::TRANSACTIONS_FOLDER]; ?>"
+          title="<?= $toolTips[ConfigConstants::TRANSACTIONS_FOLDER]; ?>"
         />
         <input type="checkbox" id="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" name="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" class="checkbox"/>
         <label for="<?= ConfigConstants::TRANSACTIONS_FOLDER ?>-force" title="<?= $toolTips[ConfigConstants::TRANSACTIONS_FOLDER . '-force']; ?>" >

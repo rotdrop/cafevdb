@@ -383,8 +383,17 @@ class PersonalForm
             $this->parameterFromConfig($templateParameters, $proto.$key);
           }
         }
-        foreach (['user', 'password', 'fromname', 'fromaddress', 'FromDomain', 'testname', 'testaddress', 'testmode'] as $key) {
-          $this->parameterFromConfig($templateParameters, 'email' . $key);
+        foreach ([
+          ConfigConstants::EMAIL_USER,
+          ConfigConstants::EMAIL_PASSWORD,
+          ConfigConstants::EMAIL_FROM_NAME_KEY,
+          ConfigConstants::EMAIL_FROM_ADDRESS_KEY,
+          ConfigConstants::EMAIL_FROM_DOMAIN_KEY,
+          ConfigConstants::EMAIL_TEST_NAME_KEY,
+          ConfigConstants::EMAIL_TEST_ADDRESS_KEY,
+          ConfigConstants::EMAIL_TEST_MODE,
+        ] as $key) {
+          $this->parameterFromConfig($templateParameters, $key);
         }
         $announcementsMailingList = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
         $announcementsMailingListName = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_DISPLAY_NAME_KEY);
