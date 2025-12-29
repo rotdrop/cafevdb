@@ -452,8 +452,8 @@ class ProjectParticipantField implements \ArrayAccess
   {
     if ($participationContext === null) {
       $this->participationContext = null;
-    } elseif ((string)$participationContext !== ((string)$this->participationContext ?? '')) {
-      $this->participationContext = new ParticipationContext($participationContext);
+    } elseif (ParticipationContext::get($participationContext) != $this->participationContext) {
+      $this->participationContext = ParticipationContext::get($participationContext);
     }
 
     return $this;
@@ -818,6 +818,6 @@ class ProjectParticipantField implements \ArrayAccess
   /** {@inheritdoc} */
   public function __toString():string
   {
-    return $this->name . '@' . $this->id . '[' . $this->dataType . ':' . $this->multiplicity . ']';
+    return $this->name . '@' . $this->id . '[' . $this->dataType->value . ':' . $this->multiplicity->value . ']';
   }
 }
