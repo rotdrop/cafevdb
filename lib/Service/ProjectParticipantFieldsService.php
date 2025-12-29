@@ -1200,7 +1200,8 @@ class ProjectParticipantFieldsService
         function() use ($field) {
           $defaultValue = $field->getDefaultValue();
           if ($defaultValue === null) {
-            $this->logInfo('NO DEFAULT VALUE', [ 'exception' => new \Exception('BLAH') ]);
+            // can happen, in particular for recurring receivables.
+            $this->logInfo('NO DEFAULT VALUE');
             return;
           }
           $needFlush = false;
