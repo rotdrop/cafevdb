@@ -26,6 +26,7 @@ import { beforeAll, jest } from '@jest/globals';
 import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
 import { fetch as fetchEntity, find as findEntity } from '@/src/services/entity-repository.ts';
 import type { ObjectEntries } from '../../../../src/types/type-traits';
+import type { AxiosRequestConfig } from 'axios';
 
 const entityIdentifiers = {
   ProjectParticipant: { project: 1, musician: 1 },
@@ -41,7 +42,7 @@ jest.mock('@nextcloud/axios', () => {
     __esModule: true,
     ...originalModule,
     default: {
-      get: async (url: string) => {
+      get: async (url: string, options: AxiosRequestConfig) => {
         // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
         const prefix = '/ocs/v2.php/apps/cafevdb/v1/entities/';
         const urlInfo = URL.parse(url);
@@ -49,8 +50,14 @@ jest.mock('@nextcloud/axios', () => {
         if (!pathName?.startsWith(prefix)) {
           throw Error(`Unexpected URL "${url}", path "${pathName}" does not start with "${prefix}".`);
         }
-        const depth = +(urlInfo?.searchParams?.get('depth') ?? 0);
-        const identifier = JSON.parse(atob(urlInfo?.searchParams?.get('find') ?? ''));
+        const axiosQueryParams = options.params ?? {};
+        const queryParams = {
+          depth: urlInfo?.searchParams?.get('depth'),
+           find: urlInfo?.searchParams?.get('find'),
+          ...axiosQueryParams,
+        };
+        const depth = +(queryParams.depth ?? 0);
+        const identifier = JSON.parse(atob(queryParams.find ?? ''));
         const entityName = urlInfo!.pathname.substring(prefix.length);
         switch (entityName) {
           case 'Musician':

@@ -48,8 +48,11 @@ export const find = <N extends keyof EntityMap>(entityName: N, identifier: strin
   return repositories[entityName]?.[identifier] as FrontEndEntity<N>|undefined;
 };
 
-const loadEntities = async <const N extends keyof EntityMap, D extends NumberTuple>(url: string) => {
-  const response = await axios.get<OCSResponse<EntityResponse<N> > >(url);
+export const loadEntities = async <const N extends keyof EntityMap, D extends NumberTuple = NonNegInt<0> >(
+  url: string,
+  queryParams: Record<string|number, null|number|string|(number|string)[]|Record<string|number, unknown> >,
+) => {
+  const response = await axios.get<OCSResponse<EntityResponse<N> > >(url, { params: queryParams });
   const responseRepositories = response.data.ocs.data.repositories;
   for (const entityName of Object.keys(responseRepositories) as N[]) {
     for (const [identifier, entityDto] of Object.entries(responseRepositories[entityName])) {
@@ -77,8 +80,6 @@ const loadEntities = async <const N extends keyof EntityMap, D extends NumberTup
   );
   return result;
 };
-
-export type Blah = FrontEndEntity<'Project', NonNegInt<1> >;
 
 export type FindByRecord = {
   [QUERY_OPTIONS_KEY]: { [QUERY_OPTION_WILDCARDS]: boolean },
@@ -140,16 +141,17 @@ export const search = async <
   offset = 0 as O,
 }: SearchArguments<N, D, L, O>) => {
 
-  const url = generateOcsUrl('v1/entities/{entityName}/{depth}', {
+  const url = generateOcsUrl('v1/entities/{entityName}/{depth}');
+  const queryParams = {
     entityName,
     depth,
     findBy: btoa(JSON.stringify(findBy)),
     orderBy: orderBy ? btoa(JSON.stringify(orderBy)) : null,
     limit,
     offset,
-  });
+  };
   try {
-    return await loadEntities<N, NonNegInt<D> >(url);
+    return await loadEntities<N, NonNegInt<D> >(url, queryParams);
   } catch (e) {
     throw new AppError(
       { entityName, findBy, depth, limit, offset },
@@ -175,12 +177,13 @@ export const fetch = async <N extends keyof EntityMap, D extends number = 0>({
   identifier,
   depth = 0 as D,
 }: FetchArguments<N, D>) => {
-  const url = generateOcsUrl(`v1/entities/${entityName}`, {
+  const url = generateOcsUrl(`v1/entities/${entityName}`);
+  const queryParams = {
     find: btoa(JSON.stringify(identifier)),
     depth,
-  });
+  };
   try {
-    return await loadEntities<N, NonNegInt<D> >(url);
+    return await loadEntities<N, NonNegInt<D> >(url, queryParams);
   } catch (e) {
     throw new AppError(
       { entityName, identifier, depth },
