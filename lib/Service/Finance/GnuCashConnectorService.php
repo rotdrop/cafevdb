@@ -189,7 +189,7 @@ FROM %2$s';
         ],
       );
       $this->logInfo('SQL ' . $sql);
-      $this->connection->prepare($sql)->execute();
+      $this->connection->prepare($sql)->executeQuery();
 
       $gncSchemaManager->renameTable($gncTable, $gncTable . '_old');
 
@@ -201,7 +201,7 @@ FROM %2$s';
           ],
         );
         $this->logInfo('SQL ' . $sql);
-        $gncConnection->prepare($sql)->execute();
+        $gncConnection->prepare($sql)->executeQuery();
       } catch (Throwable $t) {
         $this->logException($t);
         $gncSchemaManager->renameTable($gncTable . '_old', $gncTable);

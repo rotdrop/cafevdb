@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ class InitialDatabaseSetup implements IMigration
     $connection = $this->entityManager->getConnection();
     $schemaSql = file_get_contents(self::INITIAL_SQL);
     $schemaStatement = $connection->prepare($schemaSql);
-    $schemaStatement->execute();
+    $schemaStatement->executeQuery();
     return true;
   }
 }
