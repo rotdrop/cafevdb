@@ -247,55 +247,100 @@ export default defineStore(storeId, () => {
       entityClassName: 'Project',
       flatIdentifier: projectId,
     };
-    const stateProject = new Proxy(
-      projectReference,
-      {
-        get: (_entityReference, field, _receiver) => {
-          switch (field) {
-            case 'wikiPage': {
-              // see ProjectService::projectWikiLink()
-              const project = databaseEntities.find('Project', projectId)!;
-              return `${globalState.wikiNameSpace ?? ''}:${globalState.projectsFolder ?? ''}:${project.name ?? ''}`;
-            }
-            case 'folders':
-              return state.projectFolders[projectId] ?? undefined;
-            case 'getFolders':
-              return (handler?: ErrorHandler) => stateGetProjectFolders(+projectId, handler || errorHandler);
-            case 'eventMatrix':
-              return state.projectEvents[projectId] ?? undefined;
-            case 'getEventMatrix':
-              return (handler?: ErrorHandler) => stateGetEventMatrix(+projectId, handler || errorHandler);
-            default: {
-              const project = databaseEntities.find('Project', projectId)!;
-              return project[field];
-            }
+    const proxyHandler: ProxyHandler<EntityReference<'Project'> > = {
+      get: (entityReference, field, _receiver) => {
+        switch (field) {
+          case 'wikiPage': {
+            // see ProjectService::projectWikiLink()
+            const project = databaseEntities.find('Project', projectId)!;
+            return `${globalState.wikiNameSpace ?? ''}:${globalState.projectsFolder ?? ''}:${project.name ?? ''}`;
           }
-        },
-        has: (_entityReference, field) => {
-          switch (field) {
+          case 'folders':
+            return state.projectFolders[projectId] ?? undefined;
+          case 'getFolders':
+            return (handler?: ErrorHandler) => stateGetProjectFolders(+projectId, handler || errorHandler);
+          case 'eventMatrix':
+            return state.projectEvents[projectId] ?? undefined;
+          case 'getEventMatrix':
+            return (handler?: ErrorHandler) => stateGetEventMatrix(+projectId, handler || errorHandler);
+          case '__ob__':
+          case '__v_skip':
+            return Reflect.get(entityReference, field);
+          default: {
+            const project = databaseEntities.find('Project', projectId)!;
+            if (field === 'hasOwnProperty') {
+              return function(key: string|symbol) {
+                return proxyHandler.has!(entityReference, key);
+              };
+            }
+            return Reflect.get(project, field);
+          }
+        }
+      },
+      has: (entityReference, field) => {
+        switch (field) {
+          case 'wikiPage':
+          case 'folders':
+          case 'getFolders':
+          case 'eventMatrix':
+          case 'getEventMatrix':
+            return true;
+          case '__ob__':
+          case '___v_skip':
+            return Reflect.has(entityReference, field);
+          default: {
+            const project = databaseEntities.find('Project', projectId)!;
+            return field in project;
+          }
+        }
+      },
+      ownKeys: (entityReference) => {
+        const project = databaseEntities.find('Project', projectId)!;
+        return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project), ...Reflect.ownKeys(entityReference).filter(key => key === '__ob__' || key === '__v_skip')];
+      },
+      set: (entityReference, field, value) => {
+        if (field === '__ob__' || field === '__v_skip') {
+          return Reflect.set(entityReference, field, value);
+        }
+        throw new AppDataStoreError(
+          { entityReference, field, value },
+          t(appName, 'App-store projects may not be modified.'),
+        );
+      },
+      getOwnPropertyDescriptor: (entityRefererence, key) => {
+        if (key === '__ob__' || key === '__v_skip') {
+          return Reflect.getOwnPropertyDescriptor(entityRefererence, key);
+        } else {
+          switch (key) {
             case 'wikiPage':
             case 'folders':
             case 'getFolders':
             case 'eventMatrix':
             case 'getEventMatrix':
-              return true;
+              // non-existing properties must be configurable ...
+              return { enumerable: true, configurable: true, value: proxyHandler.get!(entityRefererence, key, undefined) };
             default: {
               const project = databaseEntities.find('Project', projectId)!;
-              return field in project;
+              if (key in project) {
+                return Reflect.getOwnPropertyDescriptor(project, key);
+              }
+              return undefined;
             }
           }
-        },
-        ownKeys: (_entityReference) => {
-          const project = databaseEntities.find('Project', projectId)!;
-          return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project)];
-        },
-        set: (entityReference, field, value) => {
-          throw new AppDataStoreError(
-            { entityReference, field, value },
-            t(appName, 'App-store projects may not be modified.'),
-          );
-        },
+        }
       },
+      defineProperty: (entityReference, key, descriptor) => {
+        // console.trace('DEFINE PROP', { entityReference, key, descriptor });
+        // return Reflect.defineProperty(entityReference, key, descriptor);
+        if (key === '__ob__' || key === '__v_skip') {
+          return Reflect.defineProperty(entityReference, key, descriptor);
+        }
+        return true;
+      },
+    };
+    const stateProject = new Proxy<EntityReference<'Project'> >(
+      projectReference,
+      proxyHandler,
     ) as unknown as Project;
     vueSet(state.projects, projectId, stateProject);
     vueSet(state.projectsByName, project.name, stateProject);
@@ -401,8 +446,8 @@ export default defineStore(storeId, () => {
     () => currentProject.value?.name || '',
   );
 
-  const setCurrentProject = async (
-    projectKey: string | number,
+  const setCurrentProject = (
+    projectKey?: string | number,
     handler?: ErrorHandler,
   ) => {
     if (projectKey === currentProjectId.value
@@ -410,7 +455,10 @@ export default defineStore(storeId, () => {
       return currentProject.value;
     }
     if (projectKey) {
-      currentProject.value = await getProject(projectKey, handler);
+      return getProject(projectKey, handler).then(project => {
+        currentProject.value = project;
+        return Promise.resolve(currentProject.value);
+      });
     } else {
       currentProject.value = undefined;
     }
@@ -418,24 +466,24 @@ export default defineStore(storeId, () => {
   };
 
   return {
-    logger: loggerRef,
-    errorHandler,
-    pushErrorHandler: errorHandlerProvider.pushHandler,
-    popErrorHandler: errorHandlerProvider.popHandler,
-    busyFlag,
-    setBusyFlag,
     busyCount,
+    busyFlag,
     busyState,
-    pushBusyState,
-    popBusyState,
-    setCurrentProject,
     currentProject,
     currentProjectId,
     currentProjectName,
-    projectMode,
-    getProject,
-    searchProjects,
-    projects,
     databaseEntities,
+    errorHandler,
+    getProject,
+    logger: loggerRef,
+    popBusyState,
+    popErrorHandler: errorHandlerProvider.popHandler,
+    projectMode,
+    projects,
+    pushBusyState,
+    pushErrorHandler: errorHandlerProvider.pushHandler,
+    searchProjects,
+    setBusyFlag,
+    setCurrentProject,
   };
 });

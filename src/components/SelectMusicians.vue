@@ -24,7 +24,7 @@
   <SelectWithSubmitButton ref="select"
                           v-model="inputValObjects"
                           v-bind="$attrs"
-                          label="formalDisplayName"
+                          label="publicName"
                           :options="musiciansArray"
                           :selectable="isSelectable"
                           :options-limit="100"
@@ -43,14 +43,14 @@
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
     </template>
     <template #selected-option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
     </template>
   </SelectWithSubmitButton>
@@ -72,11 +72,10 @@ import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/compon
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { NcSelect } from '@nextcloud/vue'
 import { loadEntities } from '../services/entity-repository.ts'
-// import type { Musician } from '../types/address-book.d.ts'
-// import Console from '../util/console.ts'
+import Console from '../util/console.ts'
 
-// const COMPONENT_NAME = 'SelectMusicians'
-// const logger = new Console(COMPONENT_NAME)
+const COMPONENT_NAME = 'SelectMusicians'
+const logger = new Console(COMPONENT_NAME)
 
 type SearchParameters = {
   limit: null|number,
@@ -85,9 +84,9 @@ type SearchParameters = {
   ids?: number[],
 }
 
-interface MusicianIdObject {
+export interface MusicianIdObject {
   id: number,
-  formalDisplayName: string,
+  publicName: string,
 }
 
 // Pre Vue 3.3 cannot handle imported complex types here.
@@ -96,7 +95,7 @@ interface Musician {
   country?: string,
   countryName?: string,
   email?: string,
-  formalDisplayName: string,
+  publicName: string,
   id: number,
   personalPublicName?: string,
   nickName?: string,
@@ -146,7 +145,11 @@ const musicians = ref<Record<number, Musician> >({})
 const ajaxLoading = ref(false)
 
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
-const musiciansArray = computed(() => Object.values(musicians.value))
+const musiciansArray = computed(() => {
+  const result = Object.values(musicians.value)
+  logger.info('MUS ARRAY', { result })
+  return result
+})
 const provideSelectAll = computed(() =>
   props.selectAllOption === undefined ? props.multiple : props.selectAllOption,
 )
@@ -238,7 +241,7 @@ const getData = async () => {
 const resetMusicians = () => {
   musicians.value = {}
   if (provideSelectAll.value) {
-    vueSet(musicians.value, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
+    vueSet(musicians.value, 0, { id: 0, publicName: t(appName, '** everybody **') })
   }
 }
 
@@ -251,7 +254,7 @@ const getValueObjects = (noUndefined: boolean) => {
       if (id === 0) {
         everybody = true
       }
-      return musicians.value[id] || (noUndefined ? null : { id, formalDisplayName: id })
+      return musicians.value[id] || (noUndefined ? null : { id, publicName: id })
     },
   ).filter((musician) => musician !== null && musician !== undefined)
   if (provideSelectAll.value) {
@@ -274,7 +277,7 @@ const nextcloudSelectSearch = (query: string) => findMusicians(query)
 const filterByProps = (musician: Musician, _label: string, query: string) => {
   const lcQuery = query.toLocaleLowerCase()
 
-  if (musician.formalDisplayName.toLocaleLowerCase().search(lcQuery) > -1) {
+  if (musician.publicName.toLocaleLowerCase().search(lcQuery) > -1) {
     return true
   }
   if ((musician.personalPublicName?.toLocaleLowerCase().search(lcQuery) ?? -1) > -1) {

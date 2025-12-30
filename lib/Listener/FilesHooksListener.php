@@ -167,12 +167,22 @@ class FilesHooksListener implements IEventListener
       /** @var EntityManager $entityManager */
       $entityManager = $this->appContainer->get(EntityManager::class);
       try {
-        $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
-        // $this->logInfo('MUS ID ' . print_r($musicianId, true));
-      } catch (\Throwable $t) {
+        $musician = $entityManager->getRepository(Entities\Musician::class)->findByUserId($userId);
+      } catch (Throwable $t) {
         // ignore
         $this->logException($t);
+        $musician = null;
+      }
+      if ($musician === null) {
+        $this->logInfo('No Musician for uid ' . $userId);
         $musicianId = 0;
+        $musicianPublicName = null;
+        $musicianPersonalPublicName = null;
+      } else {
+        /** @var Entities\Musician $musician */
+        $musicianId = $musician->getId();
+        $musicianPublicName = $musician->getPublicName(firstNameFirst: false);
+        $musicianPersonalPublicName = $musician->getPublicName(firstNameFirst: true);
       }
 
       /** @var IContactsManager $contactsManager */
@@ -211,6 +221,8 @@ class FilesHooksListener implements IEventListener
         'personal' => [
           'userId' => $userId,
           'musicianId' => $musicianId,
+          'musicianPublicName' => $musicianPublicName,
+          'musicianPersonalPublicName' => $musicianPersonalPublicName,
         ],
         'contacts' => [
           'addressBooks' => self::flattenAddressBooks($contactsManager->getUserAddressBooks()),

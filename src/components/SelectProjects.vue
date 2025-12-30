@@ -38,7 +38,18 @@
                           :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
                           v-on="$listeners"
                           @search="findProjects"
-  />
+  >
+    <template #option="option">
+      <NcEllipsisedOption :name="getOptionLabel(option)"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+    <template #selected-option="option">
+      <NcEllipsisedOption :name="getOptionLabel(option)"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+  </SelectWithSubmitButton>
 </template>
 <script setup lang="ts">
 import { appName } from '../config.ts'
@@ -55,6 +66,7 @@ import type { Project } from '../stores/app-data.ts'
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
 import type { EnumProjectTemporalType } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts'
+import { NcEllipsisedOption, NcSelect } from '@nextcloud/vue'
 
 type OnlyIdType = { id: number }
 type ProjectItemType = Project | (OnlyIdType & { name: string, year: number, type: EnumProjectTemporalType|'' })
@@ -101,7 +113,7 @@ const id = ref<null|string>(null)
 
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
 const projectsArray = computed(() => {
-  logger.info('RECOMPUTE PROJECTS ARRAY')
+  // logger.info('RECOMPUTE PROJECTS ARRAY')
   // const groupedValues = {}
   // for (const project of Object.values(this.projects)) {
   //   const year = project.year
@@ -115,7 +127,7 @@ const projectsArray = computed(() => {
   //   }
   // }
   // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
-  logger.info('PROJECTS', projects.value)
+  // logger.info('PROJECTS', projects.value)
   const result: ProjectItemType[] = Object.values(projects.value).sort((a, b) => {
     const p1 = a as Project
     const p2 = b as Project
@@ -124,6 +136,7 @@ const projectsArray = computed(() => {
     return p1year === p2year ? p1.name.localeCompare(p2.name) : -(p1year - p2year)
   })
   if (result.length === 0) {
+    logger.info('FINAL PROJECT ARRAY EMPTY')
     return []
   }
   let index = 0
@@ -136,6 +149,8 @@ const projectsArray = computed(() => {
     ++index
     while (++index < result.length && result[index].year === year) { /* nothing */ }
   }
+  // logger.info('FINAL PROJECTS ARRAY', { result })
+  // logger.info('FINAL PROJECT NAMES', result.map(project => project.name))
   return result
 })
 
@@ -168,9 +183,7 @@ watch(() => props.value, async () => {
   ajaxLoading.value = false
 })
 
-const select = ref(null)
-
-const isSelectable = (option: Project) => option.id > 0
+const isSelectable = (option: ProjectItemType) => option.id > 0
 
 const getProjectObject = (id: number) => {
   return projects.value[id] || { id, name: id, year: -1, type: '' }
@@ -184,9 +197,15 @@ const getValueObjects = () => {
 const emit = defineEmits(['error'])
 
 const findProjects = async (query: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await appData.searchProjects(query, <E extends AppError>(error: E) => emit('error', { error, context: error.context }))
   return true
+}
+
+const select = ref<null | typeof SelectWithSubmitButton>(null)
+const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))
+
+const getOptionLabel = (option: ProjectItemType) => {
+  return ncSelect.value ? String(option[ncSelect.value.localLabel]) : t(appName, 'undefined')
 }
 </script>
 <style lang="scss">

@@ -87,40 +87,41 @@
         />
       </li>
       <li class="files-tab-entry flex clickable"
-          @click="toggleMenuHandlerHelper(recipientsSourceComponent)"
+          @click="toggleMenuHandlerHelper(recipientsSourceMenu)"
       >
         <div class="files-tab-entry__avatar icon-group-white" />
         <div class="files-tab-entry__desc">
           <h5>{{ t(appId, 'Recipients') }}</h5>
         </div>
         <NcActions id="files-tabs-entry__recipients-base"
-                   ref="recipientsSourceComponent"
+                   ref="recipientsSourceMenu"
         >
           <NcActionRadio ref="radioDatabase"
+                         v-model="recipientsSource"
                          name="recipientsSource"
                          value="database"
-                         :checked="recipientsSource === 'database'"
                          :disabled="senderId <= 0"
-                         @change="toggleRecipientsSource"
+                         @change="$refs.recipientsSourceMenu.closeMenu()"
           >
             {{ t(appId, 'Musician\'s Datebase') }}
           </NcActionRadio>
           <NcActionRadio ref="radioContacts"
+                         v-model="recipientsSource"
                          name="recipientsSource"
                          value="contacts"
-                         :checked="recipientsSource === 'contacts'"
                          :disabled="senderId <= 0"
-                         @change="toggleRecipientsSource"
+                         @change="$refs.recipientsSourceMenu.closeMenu()"
           >
             {{ t(appId, 'Addressbooks') }}
           </NcActionRadio>
           <NcActionRadio v-if="false"
                          ref="givenContact"
+                         v-model="recipientsSource"
                          name="recipientsSource"
                          value="input"
-                         :checked="recipientsSource === 'input'"
+                         :close-after-click="true"
                          :disabled="true || senderId <= 0"
-                         @change="toggleRecipientsSource"
+                         @change="$refs.recipientsSourceMenu.closeMenu()"
           >
             {{ t(appId, 'Enter Address') }}
           </NcActionRadio>
@@ -202,13 +203,13 @@ import { generateUrl } from '@nextcloud/router'
 import getInitialState from '../toolkit/util/initial-state.ts'
 import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
-import SelectMusicians from '../components/SelectMusicians.vue'
+import SelectMusicians, { type MusicianIdObject } from '../components/SelectMusicians.vue'
 import SelectProjects from '../components/SelectProjects.vue'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import md5 from 'blueimp-md5'
 import type { LegacyFileInfo } from '@nextcloud/files'
 import type { Project } from '../stores/app-data.ts'
-import type { Contact, AddressBook, Musician } from '../types/address-book.d.ts'
+import type { Contact, AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import { tooltips } from '../util/tooltips.ts'
 import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
@@ -222,17 +223,12 @@ import type {
   ContactKeys,
   MailMergePayload,
 } from '../types/ajax/mail-merge.ts'
+import type { FrontEndEntity } from '../services/entity-factory.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)
 
-type MusicianModel = {
-  id: number
-}
-
-interface RadioInputEvent extends Event {
-  target: HTMLInputElement,
-}
+type Musician = FrontEndEntity<'Musician'>;
 
 interface TargetedMouseEvent extends MouseEvent {
   target: HTMLInputElement,
@@ -241,7 +237,7 @@ interface TargetedMouseEvent extends MouseEvent {
 type NcActionsType = typeof NcActions
 
 const fileInfo = ref<null|LegacyFileInfo>(null)
-const sender = ref<undefined|MusicianModel>(undefined)
+const sender = ref<undefined|MusicianIdObject>(undefined)
 const project = ref<undefined|Project>(undefined)
 const recipients = ref<Musician[]>([])
 const allAddressBooks = ref<Record<string, AddressBook> >({})
@@ -358,7 +354,10 @@ let initialState: null|InitialState
 const getData = async () => {
   initialState = getInitialState<InitialState>({ section: 'files' })
   if (initialState && initialState.personal.musicianId > 0) {
-    sender.value = { id: initialState.personal.musicianId }
+    sender.value = {
+      id: initialState.personal.musicianId,
+      publicName: initialState.personal.musicianPublicName,
+    }
   }
   logger.info('INITIAL STATE', initialState)
   logger.info('SENDER', sender.value)
@@ -373,7 +372,10 @@ const resetState = () => {
   recipients.value = []
   project.value = undefined
   if (initialState && initialState.personal.musicianId > 0) {
-    sender.value = { id: initialState.personal.musicianId }
+    sender.value = {
+      id: initialState.personal.musicianId,
+      publicName: initialState.personal.musicianPublicName,
+    }
   }
 }
 
@@ -398,15 +400,7 @@ const handleToggleMenu = (menu: typeof NcActions, event: TargetedMouseEvent) => 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const recipientsSourceComponent = ref<any>(null)
-
-const toggleRecipientsSource = (event: RadioInputEvent) => {
-  logger.info('RECIPIENTS', recipientsSource.value)
-  logger.info('EVENT', event)
-  recipientsSource.value = event!.target.value
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recipientsSourceComponent.value.closeMenu()
-}
+const recipientsSourceMenu = ref<any>(null)
 
 const mailMergeHandlerHelper = (operation: MailMergeOperation) =>
   (event: MouseEvent) => handleMailMergeRequest(operation, event as TargetedMouseEvent)
