@@ -27,6 +27,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use ReflectionClass;
+
 use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
@@ -46,9 +50,11 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
+#[TSAttributes\TypeScript]
 class MusiciansController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const SCOPE_MUSICIANS = 'musicians';
   public const SCOPE_CLUB_MEMBERS = 'club-members';
@@ -59,16 +65,13 @@ class MusiciansController extends OCSController
   /** @var Repositories\MusiciansRepository */
   private $musiciansRepository;
 
-  /** @var array */
-  private $countryNames;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    private EntityManager $entityManager,
     private EntitySerializer $entitySerializer,
     protected ConfigService $configService,
+    protected EntityManager $entityManager,
     protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
@@ -163,23 +166,24 @@ class MusiciansController extends OCSController
       $criteria[] = [ 'projectParticipation.project' => $project ];
     }
 
-    $musicians = $this->musiciansRepository->findBy($criteria, [
+    $repository = $this->getDatabaseRepository(Entities\Musician::class);
+
+    $musicians = $repository->findBy($criteria, [
       'surName' => 'ASC',
       'firstName' => 'ASC'
     ], $limit, $offset);
 
-    if ($limit !== null && count($ids) > 0) {
-      $criteria = [ [ 'id' => $ids ] ];
+    if (count($ids) > 0) {
+      $criteria = [ 'id' => $ids ];
       if ($project !== null) {
-        $criteria[] = [ 'projectParticipation.project' => $project ];
+        $criteria['projectParticipation.project'] = $project;
       }
-      $byIdMusicians = $this->musiciansRepository->findBy($criteria);
+      $byIdMusicians = $repository->findBy($criteria);
       $musicians = array_merge($musicians, $byIdMusicians);
     }
 
     $this->entitySerializer->reset();
     $entityNameSpace = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
-    $entityName = $entityNameSpace . '\\' . $entityName;
     $this->entitySerializer->setCommonPrefix($entityNameSpace);
     /** @var Entities\Musician $musician */
     foreach ($musicians as $musician) {
