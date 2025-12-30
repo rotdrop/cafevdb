@@ -140,11 +140,8 @@ export const search = async <
   limit = null as L,
   offset = 0 as O,
 }: SearchArguments<N, D, L, O>) => {
-
-  const url = generateOcsUrl('v1/entities/{entityName}/{depth}');
+  const url = generateOcsUrl(`v1/entities/${entityName}/${depth}`);
   const queryParams = {
-    entityName,
-    depth,
     findBy: btoa(JSON.stringify(findBy)),
     orderBy: orderBy ? btoa(JSON.stringify(orderBy)) : null,
     limit,
@@ -177,10 +174,9 @@ export const fetch = async <N extends keyof EntityMap, D extends number = 0>({
   identifier,
   depth = 0 as D,
 }: FetchArguments<N, D>) => {
-  const url = generateOcsUrl(`v1/entities/${entityName}`);
+  const url = generateOcsUrl(`v1/entities/${entityName}/${depth}`);
   const queryParams = {
     find: btoa(JSON.stringify(identifier)),
-    depth,
   };
   try {
     return await loadEntities<N, NonNegInt<D> >(url, queryParams);
