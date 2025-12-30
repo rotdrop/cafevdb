@@ -47,6 +47,9 @@ class FolderValueResponse extends MessagesResponse
    * @param array $data
    *
    * @return NameIdValueResponse
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): FolderValueResponse
   {

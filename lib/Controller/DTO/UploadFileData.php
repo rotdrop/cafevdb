@@ -60,6 +60,9 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @return IBANMetatData
    *
    * @throws InvalidArgumentException
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

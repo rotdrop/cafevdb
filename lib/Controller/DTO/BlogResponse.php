@@ -49,6 +49,9 @@ class BlogResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $date
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

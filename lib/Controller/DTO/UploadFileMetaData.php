@@ -59,6 +59,9 @@ class UploadFileMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $data
    *
    * @return IBANMetatData
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): UploadFileMetaData
   {

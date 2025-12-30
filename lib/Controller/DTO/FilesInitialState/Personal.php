@@ -41,6 +41,8 @@ class Personal extends AbstractDTO
   public function __construct(
     public readonly string $userId,
     public readonly int $musicianId,
+    public readonly ?string $musicianPublicName,
+    public readonly ?string $musicianPersonalPublicName,
   ) {
   }
 
@@ -50,6 +52,9 @@ class Personal extends AbstractDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
@@ -58,6 +63,8 @@ class Personal extends AbstractDTO
     return new self(
       userId: $userId,
       musicianId: $musicianId,
+      musicianPublicName: $musicianPublicName,
+      musicianPersonalPublicName: $musicianPersonalPublicName,
     );
   }
 }

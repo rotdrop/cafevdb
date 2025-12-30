@@ -66,6 +66,9 @@ class FilesInitialState extends AbstractDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

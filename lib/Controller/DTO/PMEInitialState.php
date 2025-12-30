@@ -56,6 +56,9 @@ class PMEInitialState extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

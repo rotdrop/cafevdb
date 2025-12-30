@@ -47,6 +47,9 @@ class IBANMetaData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $ibanMetaData
    *
    * @return IBANMetatData
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $ibanMetaData): IBANMetaData
   {
