@@ -83,6 +83,8 @@ class FilesInitialStateTest extends TestCase
       'personal' => [
         'userId' => 'STRING',
         'musicianId' => 1,
+        'musicianPublicName' => 'STRING',
+        'musicianPersonalPublicName' => 'STRING',
       ],
       'contacts' => [
         'addressBooks' => ['THIS IS AN ARRAY'],
