@@ -59,6 +59,7 @@ describe('Generate Musician Entity from DTO object', () => {
     expect(entityDtos.length).toBe(1);
     const entityDto = entityDtos[0];
     const musician = await entityFactory(entityName, entityDto);
+    expect(musician.publicName).toBeTruthy();
     for (const [, participant] of Object.entries(musician.projectParticipation)) {
       expect(await participant).toBe(entities.ProjectParticipant['1:1']);
     }

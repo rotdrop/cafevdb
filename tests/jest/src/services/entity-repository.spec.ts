@@ -21,70 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { generateEntities, dtos } from './entity-repository-setup.ts';
-import { beforeAll, jest } from '@jest/globals';
+import { entityIdentifiers } from './mock-axios-entity-repository-controller.ts';
 import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
-import { fetch as fetchEntity, find as findEntity } from '@/src/services/entity-repository.ts';
-import type { ObjectEntries } from '../../../../src/types/type-traits';
-import type { AxiosRequestConfig } from 'axios';
-
-const entityIdentifiers = {
-  ProjectParticipant: { project: 1, musician: 1 },
-  Project: { id: 1 },
-  Musician: { id: 1 },
-} as const;
-
-// Mock axios and set the type
-jest.mock('@nextcloud/axios', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/axios');
-
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: {
-      get: async (url: string, options: AxiosRequestConfig) => {
-        // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
-        const prefix = '/ocs/v2.php/apps/cafevdb/v1/entities/';
-        const urlInfo = URL.parse(url);
-        const pathName = urlInfo?.pathname;
-        if (!pathName?.startsWith(prefix)) {
-          throw Error(`Unexpected URL "${url}", path "${pathName}" does not start with "${prefix}".`);
-        }
-        const axiosQueryParams = options.params ?? {};
-        const queryParams = {
-          depth: urlInfo?.searchParams?.get('depth'),
-           find: urlInfo?.searchParams?.get('find'),
-          ...axiosQueryParams,
-        };
-        const depth = +(queryParams.depth ?? 0);
-        const identifier = JSON.parse(atob(queryParams.find ?? ''));
-        const entityName = urlInfo!.pathname.substring(prefix.length);
-        switch (entityName) {
-          case 'Musician':
-          case 'Project':
-            if (identifier.id !== 1) {
-              throw Error(`Unexpected identifier for "${entityName}".`);
-            }
-            break;
-          case 'ProjectParticipant':
-            if (identifier.project !== 1 || identifier.musician !== 1) {
-              throw Error(`Unexpected identifier for "${entityName}".`);
-            }
-            break;
-          default:
-            throw Error(`Unexpected entity name "${entityName}".`);
-        }
-        await generateEntities([entityName], depth);
-        // console.info('ENTITIES', { entities, dtos });
-        return {
-          data: dtos[entityName],
-        };
-      },
-    },
-  };
-});
-
-beforeAll(generateEntities);
+import { fetch as fetchEntity, find as findEntity, search as searchEntities } from '@/src/services/entity-repository.ts';
+import type { ObjectEntries } from '@/src/types/type-traits';
+import { describe, it, expect } from '@jest/globals';
 
 describe('Fetch entities', () => {
   it('Should work ;)', async () => {
@@ -102,5 +43,27 @@ describe('Fetch entities', () => {
     }))
       .rejects
       .toThrow('Unable to fetch entity');
+  });
+  it('Should find existing entities', async () => {
+    const query = '%Test%';
+    const findBy = { '(|name': query, id: query, ')': true };
+    const result = await searchEntities({ entityName: 'Project', findBy });
+    const entity = result?.Project?.['1'];
+    expect(entity).toBeDefined();
+  });
+  it('Should return empty result', async () => {
+    const query = '%TestFooBlah%';
+    const findBy = { '(|name': query, id: query, ')': true };
+    const result = await searchEntities({ entityName: 'Project', findBy });
+    const entity = result?.Project?.['1'];
+    expect(entity).toBeUndefined();
+  });
+  it('Search for unknown entity throw ;)', async () => {
+    await expect(searchEntities({
+      entityName: 'Instrument',
+      findBy: {},
+    }))
+      .rejects
+      .toThrow('Unable to search for entities');
   });
 });

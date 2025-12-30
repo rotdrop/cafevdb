@@ -20,8 +20,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import { jest } from '@jest/globals';
 import './app-l10n-tests.ts';
+import { jest } from '@jest/globals';
 
 jest.mock('../../../../src/app/globalstate.ts', () => {
   const originalModule: object = jest.requireActual('../../../../src/app/globalstate.ts');

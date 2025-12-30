@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setSilent as setLoggerSilent } from '../../src/toolkit/util/mock-console.ts';
+import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 import {
   mount,
   // shallowMount,
