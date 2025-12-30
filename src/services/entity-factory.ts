@@ -57,8 +57,10 @@ const entityFactory = async <E extends keyof EntityMap, D extends NumberTuple = 
   const metadata: { [K in keyof EntityMap[E]]: EntityFieldMetadata<E> } =
     (await import(`../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
 
+  const dtoStructure = Object.fromEntries(Object.keys(entityDto).map(key => [key, true]));
   const entity: FrontEndEntity<E, D> = <FrontEndEntity<E, D> >{};
   for (const fieldName of Object.keys(metadata)) {
+    delete dtoStructure[fieldName];
     const fieldInfo: EntityFieldMetadata<E> = metadata[fieldName];
     switch (fieldInfo.mapping as EntityFieldMappingType) {
       case 'to-one': {
@@ -125,6 +127,10 @@ const entityFactory = async <E extends keyof EntityMap, D extends NumberTuple = 
         entity[fieldName] = entityDto[fieldName];
         break;
     }
+  }
+  // also include any extra data
+  for (const extra of Object.keys(dtoStructure)) {
+    entity[extra] = entityDto[extra];
   }
   return entity;
 };
