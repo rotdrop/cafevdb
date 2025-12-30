@@ -1,9 +1,12 @@
+const findRoot = require('find-root');
+const path = require('path');
+
 module.exports = {
   // plugins: ['import'],
   settings: {
     'import/resolver': {
       jest: {
-        jestConfigFile: './jest.config.ts',
+        jestConfigFile: path.resolve(findRoot(), './jest.config.ts'),
       },
     },
   },
