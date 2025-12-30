@@ -29,6 +29,7 @@ use Exception;
 
 use GenderDetector;
 
+use OCA\CAFEVDB\AppInfo\Application;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -1653,13 +1654,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
     }
     $labelledPOBox = '';
     if (!empty($this->getPoBox())) {
-      $l = \OCP\Server::get(\OCP\AppFramework\IAppContainer::class)->get(\OCP\IL10N::class);
+      $l = Application::get(\OCP\IL10N::class);
       $labelledPOBox = $l->t('P.O. Box') . ' ' . $this->getPoBox();
     }
     $personalPublicName = $this->getPublicName(firstNameFirst: true);
     return array_merge($this->toArray(), [
       'name' => $personalPublicName,
-      'publicName' => $personalPublicName,
+      'publicName' => $this->getPublicName(firstNameFirst: false),
       'personalPublicName' => $personalPublicName,
       'displayName' => $this->displayName ?? $this->getPublicName(firstNameFirst: false),
       'streetAndNumber' => $this->street . ' ' . $this->streetNumber,
