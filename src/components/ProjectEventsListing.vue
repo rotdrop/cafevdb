@@ -480,8 +480,8 @@ const origin = prev
   ? {
     location: {
       name: prev.name,
-      param: currentRoute.params,
-      query: currentRoute.query,
+      params: { ...currentRoute.params },
+      query: { ...currentRoute.query },
     },
     transition: currentRoute.transition,
   }
@@ -704,6 +704,7 @@ const syncProjectData = async (projectName: string) => {
           }
           const nowSeconds = Math.round(Date.now() / 1000 / 3600) * 3600
           const params = {
+            ...currentRoute.params,
             allDay: true,
             dtstart: nowSeconds,
             dtend: nowSeconds,
@@ -736,6 +737,7 @@ const syncProjectData = async (projectName: string) => {
           const context = {}
           const eventObject = btoa(event.urlPath)
           const params = {
+            ...currentRoute.params,
             object: eventObject,
             // recurrenceId: event.times.start.stamp, // event.recurrenceId is different
             recurrenceId: +event.recurrenceId > 0 ? event.recurrenceId : event.times.start.stamp,
