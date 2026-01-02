@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ require('jquery-ui/themes/base/autocomplete.css');
 
 const balancingAccountsAutocompleteOptions: JQueryUI.AutocompleteOptions = {
   source: [],
-  position: { my: 'left bottom', at: 'left top', collision: 'none' },
+  position: { my: 'right center', at: 'left center', collision: 'flipfit flipfit' },
   minLength: 0,
   select(event, ui) {
     // trigger blur event for validation
@@ -91,10 +91,14 @@ const participantOptionHandlers = (
           $row.find<HTMLInputElement>('td.balancing-account ' + pmeInputSelector)
             .each(function() {
               const $input = $(this);
+              const autocompleteOptions = { ...balancingAccountsAutocompleteOptions };
+              autocompleteOptions.position.of = $input;
+              autocompleteOptions.position.within = $input.closest('.ui-dialog');
               $input
-                .autocomplete(balancingAccountsAutocompleteOptions)
+                .autocomplete(autocompleteOptions)
                 .on('focus', autocompleteFocusHandler);
               $input.autocomplete('option', 'source', balancingAccountsAutocompleteData[autocompleteFlavour]);
+              $input.autocomplete('widget').css({ 'max-height': '100%', 'overflow-y': 'scroll' });
             });
         });
     });
