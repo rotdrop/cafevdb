@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
-  LEGACY_PME_UPDATE,
+  LEGACY_HISTORY_UPDATE,
   LEGACY_RECORD_POPUP,
   LEGACY_SANITIZE_POST_DATA,
   LEGACY_UPDATE_EVENTS_SELECTION,
@@ -105,7 +105,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     [LEGACY_PAGE_CLEANUP]: undefined,
     [LEGACY_PAGE_FINALIZE]: undefined,
     [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template?: string|null, projectId?: number|null, projectName?: string|undefined, keepHistory: boolean, },
-    [LEGACY_PME_UPDATE]: { post: TemplatePostData, htmlBody: string, action: 'push'|'replace', },
+    [LEGACY_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: 'push'|'replace', },
     [LEGACY_RECORD_POPUP]: { entityId: number, projectId?: number, projectName?: string, template: string },
     [LEGACY_SANITIZE_POST_DATA]: { post: TemplatePostData },
     [LEGACY_UPDATE_EVENTS_SELECTION]: { origin?: string, projectId: number, projectName?: string, selection: string[] },

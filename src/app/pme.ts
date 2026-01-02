@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ import 'selectize/dist/scss/selectize.bootstrap.scss';
 import mergician from 'mergician';
 import {
   LEGACY_PAGE_CLEANUP,
-  LEGACY_PME_UPDATE,
+  LEGACY_HISTORY_UPDATE,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import {
@@ -442,7 +442,7 @@ const pmePost = (post: JQuery.PlainObject|string) => {
     .then(
       function(htmlContent, _textStatus, request) {
         console.info('RESOLVE IN PME POST');
-        const historyAction = request.getResponseHeader('X-' + appName + '-history-action');
+        const historyAction = request.getResponseHeader(`X-${appName}-history-action`);
         return $.Deferred().resolve(htmlContent, historyAction, post).promise();
       },
       function(xhr, status, errorThrown) {
@@ -1313,7 +1313,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
 
       pmeDestroyVueComponents(container);
 
-      await asyncEmit(LEGACY_PME_UPDATE, {
+      await asyncEmit(LEGACY_HISTORY_UPDATE, {
         post,
         htmlBody,
         action,
@@ -1744,7 +1744,7 @@ const installInputChosen = function(containerSel: string|JQuery, onlyClass?: str
   installInputSelectize(containerSel);
 };
 
-const installTabHandler = function(containerSel: string|JQuery, changeCallback: () => void = () => {}) {
+const installTabHandler = (containerSel: string|JQuery, changeCallback: () => void = () => {}) => {
 
   const $container = pmeContainer(containerSel);
 

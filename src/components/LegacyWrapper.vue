@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -164,7 +164,7 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
-  LEGACY_PME_UPDATE,
+  LEGACY_HISTORY_UPDATE,
   LEGACY_SANITIZE_POST_DATA,
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
@@ -634,7 +634,7 @@ const legacyPageLoadHandler = asyncSubscribe(
   },
 )
 const legacyPmeHistoryUpdateHandler = asyncSubscribe(
-  LEGACY_PME_UPDATE,
+  LEGACY_HISTORY_UPDATE,
   (eventData) => {
     logger.debug('LEGACY PME HISTORY UPDATE', eventData)
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
@@ -684,7 +684,7 @@ onUnmounted(() => {
   errorHandlerProvider.popHandler()
   asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
   asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
-  asyncUnSubscribe(LEGACY_PME_UPDATE, legacyPmeHistoryUpdateHandler)
+  asyncUnSubscribe(LEGACY_HISTORY_UPDATE, legacyPmeHistoryUpdateHandler)
   asyncUnSubscribe(LEGACY_SANITIZE_POST_DATA, legacyPostMetaDataHandler)
 })
 
