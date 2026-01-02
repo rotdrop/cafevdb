@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,7 +59,15 @@ export const LEGACY_AJAX_ERROR = appEventName('legacy-ajax-error');
 export const LEGACY_PAGE_CLEANUP = appEventName('legacy-page-cleanup');
 export const LEGACY_PAGE_FINALIZE = appEventName('legacy-page-finalize');
 export const LEGACY_PAGE_LOAD = appEventName('legacy-page-load');
+/**
+ * Push or replace a complete history record.
+ */
 export const LEGACY_HISTORY_UPDATE = appEventName('legacy-history-update');
+/**
+ * Patch the current history post data with given data and push or
+ * replace history with the resulting state.
+ */
+export const LEGACY_HISTORY_PATCH = appEventName('legacy-history-patch');
 export const LEGACY_SANITIZE_POST_DATA = appEventName('legacy-sanitize-post-data');
 export const LEGACY_UPDATE_EVENTS_SELECTION = appEventName('legacy-update-events-selection');
 

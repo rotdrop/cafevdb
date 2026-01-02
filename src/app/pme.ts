@@ -82,8 +82,9 @@ import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize/dist/scss/selectize.bootstrap.scss';
 import mergician from 'mergician';
 import {
-  LEGACY_PAGE_CLEANUP,
+  LEGACY_HISTORY_PATCH,
   LEGACY_HISTORY_UPDATE,
+  LEGACY_PAGE_CLEANUP,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
 import {
@@ -1789,7 +1790,12 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
       $table.removeClass(oldTabClasses).addClass(tabClasses);
 
       // Record the tab in the form data
-      $form.find('input[name="' + pmeSys('cur_tab') + '"]').val($tabAnchor.data('tabIndex'));
+      const tabPostData = {
+        [pmeSys('cur_tab')]: $tabAnchor.data('tabIndex'),
+      };
+      for (const [name, value] of Object.entries(tabPostData)) {
+        $form.find(`input[name="${name}"]`).val(value);
+      }
 
       // for styling and logic ...
       $form.find(tabsSelector).removeClass('selected');
@@ -1818,6 +1824,12 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
       $.fn.cafevTooltip.remove();
 
       changeCallback();
+
+      console.info('TRY RECORD TAB CHANGE IN HISTORY');
+      asyncEmit(LEGACY_HISTORY_PATCH, {
+        patch: tabPostData,
+        action: 'push',
+      });
 
       return false;
     });

@@ -161,10 +161,11 @@ import {
 } from '../services/async-event-bus.ts'
 import {
   LEGACY_AJAX_ERROR,
+  LEGACY_HISTORY_PATCH,
+  LEGACY_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
-  LEGACY_HISTORY_UPDATE,
   LEGACY_SANITIZE_POST_DATA,
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
@@ -185,6 +186,7 @@ import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wi
 import { AppError } from '../types/errors.ts'
 import Console from '../util/console.ts'
 import { JQueryAjaxError } from '../types/ajax/jqxhr-error.ts'
+import { storeToRefs } from 'pinia'
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 
 const COMPONENT_NAME = 'LegacyWrapper'
@@ -266,9 +268,14 @@ const wikiManualSection = computed(() => dokuWikiSection([
 const wikiManualUrl = computed(() => dokuWikiUrl(wikiManualSection.value))
 const wikiManualUrlTarget = computed(() => dokuWikiUrlTarget(wikiManualSection.value))
 const busyState = computed(() => appData.busyState)
-const currentHistoryState = computed(() => browserHistory.currentHistoryState)
-const atHistoryBase = computed(() => browserHistory.atHistoryBase)
-const atHistoryTop = computed(() => browserHistory.atHistoryTop)
+const {
+  currentHistoryState,
+  atHistoryBase,
+  atHistoryTop,
+} = storeToRefs(browserHistory)
+// const currentHistoryState = computed(() => browserHistory.currentHistoryState)
+// const atHistoryBase = computed(() => browserHistory.atHistoryBase)
+// const atHistoryTop = computed(() => browserHistory.atHistoryTop)
 const pmePrefix = computed(() => globalState.PHPMyEdit.pmePrefix)
 const pmeSelector = (token: string, element: string) =>
   (element || '') + '.' + pmePrefix.value + '-' + token
@@ -633,10 +640,25 @@ const legacyPageLoadHandler = asyncSubscribe(
     }
   },
 )
-const legacyPmeHistoryUpdateHandler = asyncSubscribe(
+const legacyHistoryPatchHandler = asyncSubscribe(
+  LEGACY_HISTORY_PATCH,
+  ({ patch, action }) => {
+    logger.debug('LEGACY HISTORY PATCH', {
+      patch,
+      action,
+      current: currentHistoryState.value,
+      currentPost: currentHistoryState.value.post,
+    })
+    return updateLegacyRoute(
+      { ...currentHistoryState.value.post, ...currentRoute.params, ...patch },
+      action,
+    )
+  },
+)
+const legacyHistoryUpdateHandler = asyncSubscribe(
   LEGACY_HISTORY_UPDATE,
   (eventData) => {
-    logger.debug('LEGACY PME HISTORY UPDATE', eventData)
+    logger.debug('LEGACY HISTORY UPDATE', eventData)
     return updateLegacyRoute(eventData.post, eventData.action, eventData.htmlBody)
   },
 )
@@ -684,7 +706,8 @@ onUnmounted(() => {
   errorHandlerProvider.popHandler()
   asyncUnSubscribe(LEGACY_AJAX_ERROR, legacyAjaxErrorHandler)
   asyncUnSubscribe(LEGACY_PAGE_LOAD, legacyPageLoadHandler)
-  asyncUnSubscribe(LEGACY_HISTORY_UPDATE, legacyPmeHistoryUpdateHandler)
+  asyncUnSubscribe(LEGACY_HISTORY_UPDATE, legacyHistoryUpdateHandler)
+  asyncUnSubscribe(LEGACY_HISTORY_PATCH, legacyHistoryPatchHandler)
   asyncUnSubscribe(LEGACY_SANITIZE_POST_DATA, legacyPostMetaDataHandler)
 })
 
