@@ -100,7 +100,7 @@ const updateBalancingAccountsAutocompleteData = (dataType?: EnumParticipantField
 
 const fetchBalancingAccountsAutocompleteData = async (projectId: number, dataType?: EnumParticipantFieldDataType) => {
   try {
-    const data = getBalancingAccountsAutocomplete(projectId);
+    const data = await getBalancingAccountsAutocomplete(projectId);
     Object.assign(balancingAccountsAutocompleteData, data);
     updateBalancingAccountsAutocompleteData(dataType);
   } catch (error) {
