@@ -6,7 +6,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,8 +84,6 @@ function getPassword(?string $prompt = null, bool $stars = false)
   return $password;
 }
 
-use OCA\CAFEVDB\Service\EncryptionService;
-
 $appDir = __DIR__ . '/..';
 
 if (getenv('CAFEVDB_USER') !== false) {
@@ -146,6 +144,8 @@ $userSession = \OC::$server->get(\OCP\IUserSession::class);
 $user = $userManager->get($cafevDbUser);
 $userSession->setUser($user);
 
+use OCA\CAFEVDB\Service\EncryptionService;
+
 $encryptionService = \OC::$server->get(EncryptionService::class);
 $encryptionService->bind($cafevDbUser, $cafevDbPassword);
 
@@ -179,4 +179,18 @@ use OCA\CAFEVDB\Database\EntityManager;
 $entityManager = \OC::$server->query(EntityManager::class);
 $entityManager->decorateClassMetadata(false);
 
-ConsoleRunner::run(new SingleManagerProvider($entityManager));
+$cli = ConsoleRunner::createApplication(new SingleManagerProvider($entityManager));
+
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Tools\Console\ConsoleRunner as MigrationsConsoleRunner;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\JsonFile;
+
+$configurationLoader = new JsonFile(__DIR__ . '/../appinfo/migrations.json');
+$dependencyFactory = DependencyFactory::fromEntityManager(
+  $configurationLoader,
+  new ExistingEntityManager($entityManager),
+);
+MigrationsConsoleRunner::addCommands($cli, $dependencyFactory);
+
+$cli->run();

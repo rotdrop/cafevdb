@@ -21,6 +21,7 @@
     "firehed/dbal-logger": "^2.0.0",
     "doctrine/annotations": "*",
     "doctrine/dbal": "^4.0",
+    "doctrine/migrations": "*",
     "doctrine/orm": "dev-production/3.6.x/cafevdb",
     "gedmo/doctrine-extensions": "3.x-dev",
     "maennchen/zipstream-php": "^3.0.0",
