@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,6 +58,8 @@ trait EntityGeneratorTrait
 
   private InstrumentationService $instrumentationService;
 
+  private MockProvider $mockProvider;
+
   /**
    * {@inheritdoc}
    *
@@ -68,7 +70,7 @@ trait EntityGeneratorTrait
     parent::setup();
 
     /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $mockProvider = MockProvider::create($this);
 
     if ($persist) {
       $this->entityManager = $mockProvider->getEntityManager($this);

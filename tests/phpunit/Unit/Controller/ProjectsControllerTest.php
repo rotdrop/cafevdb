@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test the ProjectsController class. */
@@ -91,10 +92,13 @@ class ProjectsControllerTest extends TestCase
 
   private ProjectsController $projectsController;
 
+  private $server;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
     $this->setupEventsService();
+
     $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
 
     /** @var IRequest $request */

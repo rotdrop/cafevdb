@@ -36,12 +36,14 @@ use OCA\CAFEVDB\Settings\Admin;
 use OCA\CAFEVDB\Settings\AdminInitialState;
 use OCA\CAFEVDB\Tests\MockProvider;
 
+use Psr\Log\LoggerInterface;
+use OCP\AppFramework\IAppContainer;
+
 /**
  * Test the initial state DTO of the admin settings.
  */
 #[Attributes\CoversClass(AdminInitialState::class)]
 #[Attributes\CoversClass(FontFileNames::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 class AdminInitialStateTest extends TestCase
 {
   private AdminInitialState $configData;
@@ -49,9 +51,6 @@ class AdminInitialStateTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
-
     // generate some fonts ...
     $fonts = [];
     foreach (array_slice(PhpSpreadsheet\Shared\Font::FONT_FILE_NAMES, 0, 2) as $family => $filesArray) {
