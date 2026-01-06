@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,52 +22,52 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine;
+namespace OCA\CAFEVDB\Common;
 
+use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console;
 
-use OCA\CAFEVDB\Common\ConsoleLogger;
+use OCP\ILogger;
 
-/**
- * Doctrine\Deprecations\Deprecation always logs with level 'notice'. We wrap
- * therefore another Psr-logger to just map all levels to the wanted one.
- */
-class DeprecationLogger extends ConsoleLogger
+/** A PSR logger which logs to the console if in CLI mode. */
+class ConsoleLogger extends AbstractLogger
 {
-  /** @var mixed $logLevel */
-  protected mixed $logLevel = null;
-
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /** {@inheritdoc} */
   public function __construct(
-    private ConsoleLogger $actualLogger
+    ConsoleOutput $consoleOutput,
+    bool $isCLI,
+    protected LoggerInterface $logger,
   ) {
-  }
-  // phpcs:enable
-
-  /**
-   * @param mixed $level
-   *
-   * @return self
-   */
-  public function setLogLevel(mixed $level): self
-  {
-    $this->logLevel = $level;
-
-    return $this;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getLogLevel(): mixed
-  {
-    return $this->logLevel;
+    if ($isCLI) {
+      $this->logger = new Console\Logger\ConsoleLogger($consoleOutput);
+    }
   }
 
   /** {@inheritdoc} */
   public function log($level, string|\Stringable $message, array $context = []): void
   {
-    $level = $this->isCLI ? LogLevel::WARNING : $this->logLevel;
-    $this->actualLogger->log($level, $message, $context);
+    switch ($level) {
+      case ILogger::DEBUG:
+        $level = LogLevel::DEBUG;
+        break;
+      case ILogger::INFO:
+        $level = LogLevel::INFO;
+        break;
+      case ILogger::WARN:
+        $level = LogLevel::WARNING;
+        break;
+      case ILogger::ERROR:
+        $level = LogLevel::ERROR;
+        break;
+      case ILogger::FATAL:
+        $level = LogLevel::EMERGENCY;
+        break;
+      default:
+        // pass
+        break;
+    }
+    $this->logger->log($level, $message, $context);
   }
 }

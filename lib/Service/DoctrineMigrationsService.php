@@ -24,10 +24,14 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\JsonFile;
+use OCA\CAFEVDB\Common\ConsoleLogger;
+use OCA\CAFEVDB\Database\Doctrine\Migrations as MigrationsNamespace;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 
 /** Manage doctrine database migrations. */
 class DoctrineMigrationsService
@@ -36,14 +40,10 @@ class DoctrineMigrationsService
 
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ILogger $logger,
+    ConsoleLogger $logger,
     protected EntityManager $entityManager,
   ) {
-
-    // $configurationLoader = new JsonFile(__DIR__ . '/../appinfo/migrations.json');
-    // $dependencyFactory = DependencyFactory::fromEntityManager(
-    //   $configurationLoader,
-    //   new ExistingEntityManager($entityManager),
+    $this->logger = $logger;
   }
   // phpcs:enable
 
@@ -56,5 +56,40 @@ class DoctrineMigrationsService
       return null;
     }
     return $version;
+  }
+
+  /**
+   * Generate the "Dependency factory" needed to run the Doctrine Migrations services.
+   *
+   * @return DependencyFactory
+   */
+  public function getDependencyFactory(): DependencyFactory
+  {
+    /** @var ClassMetadata $versionMetadata */
+    $versionMetadata = $this->entityManager->getClassMetadata(DoctrineMigrationsVersion::class);
+    $configuration = [
+      'table_storage' => [
+        'table_name' => $versionMetadata->getTableName(),
+        'version_column_name' => $versionMetadata->getFieldMapping('version')->columnName,
+        'version_column_length' => $versionMetadata->getFieldMapping('version')->length,
+        'executed_at_column_name' => $versionMetadata->getFieldMapping('executedAt')->columnName,
+        'execution_time_column_name' => $versionMetadata->getFieldMapping('executionTime')->columnName,
+      ],
+      'migrations_paths' => [
+        MigrationsNamespace::class => realpath(__DIR__ . '/../Database/Doctrine/Migrations'),
+      ],
+      'all_or_nothing' => true,
+      'transactional' => true,
+      'check_database_platform' => true,
+      'organize_migrations' => 'none',
+      'connection' => null,
+      'em' => null,
+    ];
+    $configurationLoader = new ConfigurationArray($configuration);
+    return DependencyFactory::fromEntityManager(
+      $configurationLoader,
+      new ExistingEntityManager($this->entityManager),
+      $this->logger,
+    );
   }
 }

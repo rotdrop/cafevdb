@@ -1,0 +1,22 @@
+--- doctrine/migrations/src/Generator/SqlGenerator.php~	2025-11-20 12:15:36.000000000 +0100
++++ doctrine/migrations/src/Generator/SqlGenerator.php	2026-01-04 14:06:38.924845702 +0100
+@@ -51,7 +51,7 @@
+         $maxLength            = $lineLength - 18 - 8; // max - php code length - indentation
+         foreach ($sql as $query) {
+             if (
+-                $storageConfiguration instanceof TableMetadataStorageConfiguration
++                false && $storageConfiguration instanceof TableMetadataStorageConfiguration
+                 && stripos($query, $storageConfiguration->getTableName()) !== false
+             ) {
+                 continue;
+--- doctrine/migrations/src/DependencyFactory.php.orig	2025-11-20 12:15:36.000000000 +0100
++++ doctrine/migrations/src/DependencyFactory.php	2026-01-04 18:52:15.777531588 +0100
+@@ -206,7 +206,7 @@
+             $excludedTables = [];
+ 
+             $metadataConfig = $this->getConfiguration()->getMetadataStorageConfiguration();
+-            if ($metadataConfig instanceof TableMetadataStorageConfiguration) {
++            if (false && $metadataConfig instanceof TableMetadataStorageConfiguration) {
+                 $excludedTables[] = sprintf('/^%s$/', preg_quote($metadataConfig->getTableName(), '/'));
+             }
+ 

@@ -32,6 +32,10 @@
     "symfony/cache": "^6",
     "symfony/string": "*"
   },
+  "provide": {
+    "psr/log": "^3.0.0",
+    "symfony/console": "^6.0.0"
+  },
   "repositories": [
     {
       "type": "path",
@@ -65,7 +69,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
-    "cweagans/composer-patches": "^1.7"
+    "cweagans/composer-patches": "^1.7",
+    "doctrine/sql-formatter": "*"
   },
   "autoload-dev": {
     "psr-4": {
@@ -84,6 +89,9 @@
       "doctrine/dbal": {
         "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch",
         "Fix MariaDB default values for date(time) stuff": "../composer-patches/doctrine/dbal/fix-mariadb-datetime-defaults.patch"
+      },
+      "doctrine/migrations": {
+        "Include the migration versions storage into the changeset": "../composer-patches/doctrine/migrations/include-versions-table-in-changeset.patch"
       },
       "symfony/string": {
         "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"

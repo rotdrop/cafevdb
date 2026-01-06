@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 
 /** Manage database migrations. */
-class LegacyMigrationsService
+class LegacyMigrationsService implements MigrationsServiceInterface
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -73,22 +73,14 @@ class LegacyMigrationsService
   }
   // phpcs:enable
 
-  /**
-   * Check whether there need any migrations to be applied.
-   *
-   * @return bool
-   */
+  /** {@inheritdoc} */
   public function needsMigration():bool
   {
     $this->ensureMigrationsAreLoaded();
     return !empty($this->unappliedMigrations);
   }
 
-  /**
-   * Apply all found migrations, stop when one is failing.
-   *
-   * @return void
-   */
+  /** {@inheritdoc} */
   public function applyAll():void
   {
     $this->ensureMigrationsAreLoaded();
@@ -103,10 +95,7 @@ class LegacyMigrationsService
     }
   }
 
-  /**
-   * @return array All unapplied migrations. The migration classes are
-   * instatiated using depency injection with the app-container.
-   */
+  /** {@inheritdoc} */
   public function getUnapplied():array
   {
     if (!$this->entityManager->connected()) {
@@ -116,10 +105,7 @@ class LegacyMigrationsService
     return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->unappliedMigrations);
   }
 
-  /**
-   * @return array All applied migrations. The migration classes are
-   * instatiated using depency injection with the app-container.
-   */
+  /** {@inheritdoc} */
   public function getApplied():array
   {
     if (!$this->entityManager->connected()) {
@@ -129,10 +115,7 @@ class LegacyMigrationsService
     return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->appliedMigrations);
   }
 
-  /**
-   * @return array Get all migration classes, instantiate all of them via
-   * dependency injection with the app-container.
-   */
+  /** {@inheritdoc} */
   public function getAll():array
   {
     if (!$this->entityManager->connected()) {
@@ -141,21 +124,13 @@ class LegacyMigrationsService
     return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->findMigrations(self::MIGRATIONS_FOLDER));
   }
 
-  /** @return string The latest migration in the migrations folder. */
-  public function getLatest():string
+  /** {@inheritdoc} */
+  public function getLatest(): ?string
   {
     return $this->findLatestVersion();
   }
 
-  /**
-   * Apply the migration with the given version.
-   *
-   * @param string $version
-   *
-   * @return void
-   *
-   * @throws InvalidArgumentException
-   */
+  /** {@inheritdoc} */
   public function apply(string $version):void
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
@@ -166,13 +141,7 @@ class LegacyMigrationsService
     }
   }
 
-  /**
-   * Get the description of the migration with the given version.
-   *
-   * @param string $version
-   *
-   * @return null|string The description or null if the migration could not be found.
-   */
+  /** {@inheritdoc} */
   public function description(string $version):string
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);

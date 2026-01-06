@@ -6,7 +6,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
 require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
 
-use OCA\CAFEVDB\Wrapped;
+use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\DevScripts\PhpToTypeScript;
 
 use Spatie\TypeScriptTransformer\Transformers;
@@ -72,6 +72,6 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
 );
 
 $phpToTypeScript->run(
-  new \Symfony\Component\Console\Input\ArgvInput,
-  new \Symfony\Component\Console\Output\ConsoleOutput,
+  input: new \Symfony\Component\Console\Input\ArgvInput,
+  output: \OCP\Server::get(ConsoleOutput::class),
 );

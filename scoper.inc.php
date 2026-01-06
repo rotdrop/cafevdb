@@ -12,6 +12,8 @@ return [
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
+    'Psr\\Log',
+    'Symfony\\Component\\Console',
     // 'OC',
     //'OCA',
     //'OCP',

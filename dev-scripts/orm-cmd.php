@@ -176,21 +176,17 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleM
 use OCA\CAFEVDB\Database\EntityManager;
 
 /** @var EntityManager */
-$entityManager = \OC::$server->query(EntityManager::class);
+$entityManager = \OCP\Server::get(EntityManager::class);
 $entityManager->decorateClassMetadata(false);
 
 $cli = ConsoleRunner::createApplication(new SingleManagerProvider($entityManager));
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Tools\Console\ConsoleRunner as MigrationsConsoleRunner;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\JsonFile;
+use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 
-$configurationLoader = new JsonFile(__DIR__ . '/../appinfo/migrations.json');
-$dependencyFactory = DependencyFactory::fromEntityManager(
-  $configurationLoader,
-  new ExistingEntityManager($entityManager),
-);
+$dependencyFactory = \OCP\Server::get(DoctrineMigrationsService::class)->getDependencyFactory();
 MigrationsConsoleRunner::addCommands($cli, $dependencyFactory);
 
-$cli->run();
+use OCA\CAFEVDB\Common\ConsoleOutput;
+
+$cli->run(output: \OCP\Server::get(ConsoleOutput::class));
