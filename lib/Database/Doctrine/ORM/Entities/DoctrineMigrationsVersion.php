@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class DoctrineMigrationsVersion implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
 
   /**
    * This is actually the full class-name (including namespace) of the migration, not only the version.
@@ -86,13 +87,13 @@ class DoctrineMigrationsVersion implements \ArrayAccess
   /**
    * Set executedAt.
    *
-   * @param null|DateTimeImmutable $executedAt
+   * @param mixed $executedAt
    *
    * @return Migration
    */
-  public function setExecutedAt(?DateTimeImmutable $executedAt): self
+  public function setExecutedAt(mixed $executedAt): self
   {
-    $this->executedAt = $executedAt;
+    $this->executedAt = self::convertToDateTime($executedAt);
 
     return $this;
   }
