@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -115,7 +115,7 @@ abstract class AbstractMigration implements IMigration
         if ($connection->isTransactionActive()) {
           try {
             $connection->rollBack();
-          } catch (\Throwable $t2) {
+          } catch (Throwable $t2) {
             $t = new Exceptions\DatabaseMigrationException($this->l->t('Rollback of Migration "%s" failed.', $this->description()), $t->getCode(), $t);
           }
         }
