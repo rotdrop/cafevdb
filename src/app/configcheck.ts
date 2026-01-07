@@ -60,7 +60,7 @@ function documentReady() {
     setBusyIndicators(true, $container, false);
 
     // check for pending migrations and handle them
-    $.get(generateAppUrl('maintenance/migrationsüöä'))
+    $.get(generateAppUrl('maintenance/migrations'))
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, function() {
           setBusyIndicators(false, $container, false);
