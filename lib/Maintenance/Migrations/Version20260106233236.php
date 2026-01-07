@@ -24,8 +24,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
+use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
 /**

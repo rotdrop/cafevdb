@@ -36,13 +36,15 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations\Legacy as LegacyMigrations;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Service\LegacyMigrationsService;
+use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventSubscriber;
+use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
 
 /** Test aspects of the LegacyMigrationsService class. */
 #[Attributes\CoversClass(LegacyMigrationsService::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
@@ -55,7 +57,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventSubscriber;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\Version20260106233236::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration::class)]
@@ -119,11 +120,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventSubscriber;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\SepaBulkTransactionsBalancingData::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UpdateTableTaxationStatutorySources::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UseDecimalForExactFractions::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260106233236::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -179,6 +180,13 @@ class LegacyMigrationsServiceTest extends TestCase
   }
 
   /** @return void */
+  public function testGetMigrationServiceInterface(): void
+  {
+    $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
+    $this->assertInstanceOf(LegacyMigrationsService::class, $service);
+  }
+
+  /** @return void */
   public function testApplyFinal(): void
   {
     $result = $this->migrationsService->getAll();
@@ -220,7 +228,7 @@ CREATE TABLE Migrations (
 SQL;
     $connection = $this->entityManager->getConnection();
     foreach ($createTables as $sql) {
-      $statement = $connection->prepare($sql)->executeQuery();
+      $connection->prepare($sql)->executeQuery();
     }
     $this->migrationsService->apply($finalVersion);
 
@@ -240,8 +248,13 @@ SQL;
     $applied = $doctrineMigrationsService->getApplied();
     $this->assertEquals(1, count($applied));
 
+    $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
+    $this->assertInstanceOf(DoctrineMigrationsService::class, $service);
+
     foreach (['Migrations', 'ExtLogEntries', 'DoctrineMigrationsVersions'] as $table) {
       $connection->prepare('DROP TABLE ' . $table)->executeQuery();
     }
+
+
   }
 }

@@ -86,7 +86,7 @@ class CreateTableDoctrineMigrationsVersions extends AbstractMigration
     }
     $unapplied = $this->doctrineMigrationsService->getUnapplied();
     if (empty($unapplied)) {
-      throw UnexpectedValueException(
+      throw new UnexpectedValueException(
         $this->l->t('Unable to switch to Doctrine migrations as the initial database migration does not seem to be available.'),
       );
     }

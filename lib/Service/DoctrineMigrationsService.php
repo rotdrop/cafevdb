@@ -30,14 +30,14 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\ConsoleLogger;
-use OCA\CAFEVDB\Database\Doctrine\Migrations as MigrationsNamespace;
+use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\TableNotFoundException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Exception\MigrationClassNotFound;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\AvailableMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\ExecutedMigration;
@@ -249,7 +249,7 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
         'execution_time_column_name' => $versionMetadata->getFieldMapping('executionTime')->columnName,
       ],
       'migrations_paths' => [
-        MigrationsNamespace::class => realpath(__DIR__ . '/../Database/Doctrine/Migrations'),
+        MigrationsNamespace::class => realpath(__DIR__ . '/../Maintenance/Migrations'),
       ],
       'all_or_nothing' => true,
       'transactional' => true,
@@ -259,7 +259,7 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
       'em' => null,
     ];
     $configurationLoader = new ConfigurationArray($configuration);
-    return MigrationsNamespace\DependencyFactory::fromEntityManager(
+    return DependencyFactory::fromEntityManager(
       configurationLoader: $configurationLoader,
       emLoader: new ExistingEntityManager($this->entityManager),
       logger: $this->logger,

@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Database\Doctrine\Migrations;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
@@ -47,9 +48,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 /** Test aspects of the DoctrineMigrationsService class. */
 #[Attributes\CoversClass(DoctrineMigrationsListener::class)]
 #[Attributes\CoversClass(DoctrineMigrationsService::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260106233236::class)]
 #[Attributes\CoversClass(Migrations\AbstractMigration::class)]
 #[Attributes\CoversClass(Migrations\DependencyFactory::class)]
-#[Attributes\CoversClass(Migrations\Version20260106233236::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
