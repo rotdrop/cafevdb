@@ -86,6 +86,16 @@ class LegacyMigrationsService implements MigrationsServiceInterface
   }
 
   /** {@inheritdoc} */
+  public function getApplied():array
+  {
+    if (!$this->entityManager->connected()) {
+      return [];
+    }
+    $this->ensureMigrationsAreLoaded();
+    return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->appliedMigrations);
+  }
+
+  /** {@inheritdoc} */
   public function getUnapplied():array
   {
     if (!$this->entityManager->connected()) {

@@ -130,7 +130,7 @@ class DoctrineMigrationsServiceTest extends TestCase
   ];
 
   /** @return void */
-  public function testUnapplied(): void
+  public function testGetUnapplied(): void
   {
     $result = $this->migrationsService->getUnapplied();
     $this->assertArrayHasKey(array_keys(self::UNAPPLIED)[0], $result);
@@ -156,10 +156,14 @@ class DoctrineMigrationsServiceTest extends TestCase
     }
     $result = $this->migrationsService->getUnapplied();
     $this->assertEquals([], $result);
+    $result = $this->migrationsService->getApplied();
+    $this->assertEquals(count($unapplied), count($result));
     foreach (array_reverse(array_keys($unapplied)) as $version) {
       $this->migrationsService->apply($version, EnumMigrationDirection::DOWN);
     }
     $result = $this->migrationsService->getUnapplied();
     $this->assertEquals(count($unapplied), count($result));
+    $result = $this->migrationsService->getApplied();
+    $this->assertEquals(0, count($result));
   }
 }

@@ -36,8 +36,18 @@ use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 interface MigrationsServiceInterface
 {
   /**
-   * @return array All unapplied migrations. The migration classes are
-   * instatiated using depency injection with the app-container.
+   * @return array<string, string> All applied migrations. The migration
+   * classes are instatiated using depency injection with the
+   * app-container. The return value is an array holding the migration
+   * descriptions keyed by the version. The array is sorted by version.
+   */
+  public function getApplied(): array;
+
+  /**
+   * @return array<string, string> All unapplied migrations. The migration
+   * classes are instatiated using depency injection with the
+   * app-container. The return value is an array holding the migration
+   * descriptions keyed by the version. The array is sorted by version.
    */
   public function getUnapplied(): array;
 

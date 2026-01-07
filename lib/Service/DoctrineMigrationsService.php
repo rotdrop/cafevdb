@@ -66,6 +66,30 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
   // phpcs:enable
 
   /** {@inheritdoc} */
+  public function getApplied(): array
+  {
+    $dependencyFactory = $this->getDependencyFactory();
+    $allMigrations = $dependencyFactory->getMigrationPlanCalculator()->getMigrations();
+    $executedMigrations = $dependencyFactory->getMetadataStorage()->getExecutedMigrations();
+    $executedVersions = array_map(
+      fn(ExecutedMigration $migration): string => substr((string)$migration->getVersion(), -14),
+      $executedMigrations->getItems(),
+    );
+    $applied = array_map(fn() => null, array_flip($executedVersions));
+    /** @var AvailableMigration $migration */
+    foreach ($allMigrations->getItems() as $migration) {
+      $version = substr((string)$migration->getVersion(), -14);
+      if (in_array($version, $executedVersions)) {
+        $applied[$version] = $migration->getMigration()->getDescription();
+      }
+    }
+
+    ksort($applied);
+
+    return $applied;
+  }
+
+  /** {@inheritdoc} */
   public function getUnapplied(): array
   {
     $dependencyFactory = $this->getDependencyFactory();
@@ -84,6 +108,8 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
       }
       $unapplied[$version] = $migration->getMigration()->getDescription();
     }
+
+    ksort($unapplied);
 
     return $unapplied;
   }
