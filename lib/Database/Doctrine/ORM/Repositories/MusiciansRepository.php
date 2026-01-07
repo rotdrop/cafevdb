@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright 2020-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -290,7 +290,7 @@ class MusiciansRepository extends EntityRepository
   public static function createInstrumentsCriteria(array $instrumentIds, ?string $alias = null): Criteria
   {
     $field = ($alias ? $alias . '.' : '').instrument;
-    return Criteria::create()
+    return Criteria::create(true)
       ->andWhere(Criteria::expr()->in($field, $instrumentIds));
   }
 }

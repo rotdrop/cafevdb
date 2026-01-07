@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as Partici
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Order;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -436,7 +437,7 @@ class Project implements \ArrayAccess
     if ($this->participantFields instanceof \OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection) {
       $this->participantFields->initialize();
     }
-    $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    $fields = $this->participantFields->matching(Criteria::create(true)->orderBy(['tab' => Order::Ascending, 'displayOrder' => Order::Descending]));
     if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
       $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
         $context = $field->getParticipationContext();
