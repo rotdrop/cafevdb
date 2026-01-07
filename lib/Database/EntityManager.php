@@ -387,6 +387,11 @@ class EntityManager extends EntityManagerDecorator
   /** {@inheritdoc} */
   public function close():void
   {
+    foreach ($this->getEventManager()->getAllListeners() as $event => $eventListeners) {
+      foreach ($eventListeners as $listener) {
+        $this->getEventManager()->removeEventListener($event, $listener);
+      }
+    }
     parent::close();
     $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
   }
