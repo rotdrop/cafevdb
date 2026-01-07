@@ -226,7 +226,7 @@ class MockProvider
         if (empty(self::$originalInstances[$service])) {
           self::$originalInstances[$service] = $appContainer->get($service);
         }
-        \OC::$server->registerService($service, function() use ($service, $mockContainer, $appContainer) {
+        $factory = function() use ($service, $mockContainer, $appContainer) {
           $result = $mockContainer->get($service);
           if ($result === null) {
             if (empty(self::$originalInstances[$service])) {
@@ -236,7 +236,9 @@ class MockProvider
             }
           }
           return $result;
-        });
+        };
+        \OC::$server->registerService($service, $factory);
+        $appContainer->registerService($service, $factory);
       }
     }
     // echo get_class($appContainer->get(LoggerInterface::class)) . PHP_EOL;
@@ -936,6 +938,26 @@ class MockProvider
         // echo __CLASS__ . '::' . __METHOD__ . ': RETURNING NEW ' . $service . PHP_EOL;
         return $newInstance;
       },
+    );
+
+    $instance->method('resolve')->willReturnCallback(
+      function(string $service) {
+        $oldInstance = $this->instances[$service] ?? null;
+        unset($this->instances[$service]);
+        if (!empty(self::$mockedServices[$service])) {
+          $instance = self::$mockedServices[$service]($this);
+        }
+        if ($oldInstance) {
+          $this->instances[$service] = $oldInstance;
+        } else {
+          unset($this->instances[$service]);
+        }
+        if (empty($instance)) {
+          $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
+          $instance = $app->getContainer()->resolve($service);
+        }
+        return $instance;
+      }
     );
 
     $instance->expects($this->never())->method('registerMiddleWare');

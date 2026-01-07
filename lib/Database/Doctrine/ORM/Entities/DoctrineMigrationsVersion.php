@@ -41,7 +41,7 @@ class DoctrineMigrationsVersion implements \ArrayAccess
   /**
    * This is actually the full class-name (including namespace) of the migration, not only the version.
    */
-  #[ORM\Column(type: 'string', length: 255, options: ['fixed' => true, 'collation' => 'ascii_general_bin'])]
+  #[ORM\Column(type: 'string', length: 191)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   private string $version;

@@ -151,13 +151,6 @@ class LegacyMigrationsServiceTest extends TestCase
   }
 
   /** @return void */
-  public function testGetLatest(): void
-  {
-    $result = $this->migrationsService->getLatest();
-    $this->assertNull($result);
-  }
-
-  /** @return void */
   public function testGetAll(): void
   {
     $result = $this->migrationsService->getAll();

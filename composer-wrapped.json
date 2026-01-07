@@ -91,7 +91,7 @@
         "Fix MariaDB default values for date(time) stuff": "../composer-patches/doctrine/dbal/fix-mariadb-datetime-defaults.patch"
       },
       "doctrine/migrations": {
-        "Include the migration versions storage into the changeset": "../composer-patches/doctrine/migrations/include-versions-table-in-changeset.patch"
+        "Make the DependencyFactory extendable": "../composer-patches/doctrine/migrations/extendable-dependency-factory.patch"
       },
       "symfony/string": {
         "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"

@@ -24,17 +24,33 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use InvalidArgumentException;
+
+use OCP\AppFramework\IAppContainer;
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Common\ConsoleLogger;
 use OCA\CAFEVDB\Database\Doctrine\Migrations as MigrationsNamespace;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\AvailableMigration;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\ExecutedMigration;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\Version;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\MigratorConfiguration;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Exception\MigrationClassNotFound;
 
-/** Manage doctrine database migrations. */
-class DoctrineMigrationsService
+/**
+ * Manage doctrine database migrations. As Doctrine\Migrations comes with its
+ * own complete set of console commands it is not necessary to provide much
+ * services, we just need getUnapplied() and apply() in order to service the
+ * frontend MigrationsController.
+ */
+class DoctrineMigrationsService implements MigrationsServiceInterface
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
@@ -42,24 +58,88 @@ class DoctrineMigrationsService
   public function __construct(
     ConsoleLogger $logger,
     protected EntityManager $entityManager,
+    protected IAppContainer $appContainer,
+    protected IL10N $l,
   ) {
     $this->logger = $logger;
   }
   // phpcs:enable
 
-  /** @return ?string The latest applied migration. null if none has been applied yet. */
-  public function getLatest(): ?string
+  /** {@inheritdoc} */
+  public function getUnapplied(): array
   {
-    $aliasResolver = $this->getDependencyFactory()->getVersionAliasResolver();
-    $version = (string)$aliasResolver->resolveVersionAlias('current');
-    if ($version === '0') {
-      return null;
+    $dependencyFactory = $this->getDependencyFactory();
+    $allMigrations = $dependencyFactory->getMigrationPlanCalculator()->getMigrations();
+    $executedMigrations = $dependencyFactory->getMetadataStorage()->getExecutedMigrations();
+    $executedVersions = array_map(
+      fn(ExecutedMigration $migration): string => substr((string)$migration->getVersion(), -14),
+      $executedMigrations->getItems(),
+    );
+    $unapplied = [];
+    /** @var AvailableMigration $migration */
+    foreach ($allMigrations->getItems() as $migration) {
+      $version = substr((string)$migration->getVersion(), -14);
+      if (in_array($version, $executedVersions)) {
+        continue;
+      }
+      $unapplied[$version] = $migration->getMigration()->getDescription();
     }
-    return $version;
+
+    return $unapplied;
+  }
+
+  /** {@inheritdoc} */
+  public function apply(string $version, EnumMigrationDirection $direction = EnumMigrationDirection::UP): void
+  {
+    $dependencyFactory = $this->getDependencyFactory();
+    $dependencyFactory->getMetadataStorage()->ensureInitialized();
+    $planCalculator = $dependencyFactory->getMigrationPlanCalculator();
+    $migrationClassName = MigrationsNamespace::class . '\\Version' . $version;
+    try {
+      $plan = $planCalculator->getPlanForVersions(
+        array_map(static fn (string $version): Version => new Version($version), [$migrationClassName]),
+        $direction->value,
+      );
+    } catch (MigrationClassNotFound $t) {
+      throw new InvalidArgumentException(
+        $this->l->t('A migration with the version "%s" does not exist.', $version),
+        previous: $t,
+      );
+    }
+    $numTransactional = 0;
+    $numNonTransactional = 0;
+    foreach ($plan->getItems() as $planItem) {
+      $transactional = (int)$planItem->getMigration()->isTransactional();
+      $numTransactional += $transactional;
+      $numNonTransactional += 1 - $transactional;
+    }
+    if ($numTransactional == 0) {
+      $allOrNothing = false;
+    } elseif ($numNonTransactional == 0) {
+      $allOrNothing = true;
+    } else {
+      throw new InvalidArgumentException(
+        $this->l->t(
+          'The migration with the version "%s" involves other additional migrations,'
+          . ' however, this mixed structural and content changes which is not supported at the moment.', $version),
+      );
+    }
+
+    $this->logInfo('Executing {version} {direction}', [
+      'direction' => $plan->getDirection(),
+      'version' => $version,
+    ]);
+    $migrator = $dependencyFactory->getMigrator();
+    $migratorConfiguration = new MigratorConfiguration()
+      ->setDryRun(false)
+      ->setTimeAllQueries(true)
+      ->setAllOrNothing($allOrNothing);
+    /* $sql = */$migrator->migrate($plan, $migratorConfiguration);
   }
 
   /**
-   * Generate the "Dependency factory" needed to run the Doctrine Migrations services.
+   * Generate the "Dependency factory" needed to run the Doctrine Migrations
+   * services. This is also used by the setup code of the CLI commands.
    *
    * @return DependencyFactory
    */
@@ -86,10 +166,11 @@ class DoctrineMigrationsService
       'em' => null,
     ];
     $configurationLoader = new ConfigurationArray($configuration);
-    return DependencyFactory::fromEntityManager(
-      $configurationLoader,
-      new ExistingEntityManager($this->entityManager),
-      $this->logger,
+    return MigrationsNamespace\DependencyFactory::fromEntityManager(
+      configurationLoader: $configurationLoader,
+      emLoader: new ExistingEntityManager($this->entityManager),
+      logger: $this->logger,
+      appContainer: $this->appContainer,
     );
   }
 }

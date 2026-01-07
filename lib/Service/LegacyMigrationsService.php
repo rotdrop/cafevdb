@@ -36,6 +36,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\IMigration;
@@ -73,26 +74,15 @@ class LegacyMigrationsService implements MigrationsServiceInterface
   }
   // phpcs:enable
 
-  /** {@inheritdoc} */
+  /**
+   * Check whether there need any migrations to be applied.
+   *
+   * @return bool
+   */
   public function needsMigration():bool
   {
     $this->ensureMigrationsAreLoaded();
     return !empty($this->unappliedMigrations);
-  }
-
-  /** {@inheritdoc} */
-  public function applyAll():void
-  {
-    $this->ensureMigrationsAreLoaded();
-    foreach ($this->unappliedMigrations as $version => $className) {
-      $this->logInfo('Trying to apply migration ' . $version . ', PHP-class ' . $className);
-      try {
-        $this->applyMigration($version, $className);
-      } catch (Throwable $t) {
-        $this->logException($t);
-        break;
-      }
-    }
   }
 
   /** {@inheritdoc} */
@@ -105,17 +95,12 @@ class LegacyMigrationsService implements MigrationsServiceInterface
     return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->unappliedMigrations);
   }
 
-  /** {@inheritdoc} */
-  public function getApplied():array
-  {
-    if (!$this->entityManager->connected()) {
-      return [];
-    }
-    $this->ensureMigrationsAreLoaded();
-    return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->appliedMigrations);
-  }
-
-  /** {@inheritdoc} */
+  /**
+   * Get all migration classes, instantiate all of them via
+   * dependency injection with the app-container.
+   *
+   * @return array<string, string> Array of migration descriptions keyed by migration version.
+   */
   public function getAll():array
   {
     if (!$this->entityManager->connected()) {
@@ -125,32 +110,17 @@ class LegacyMigrationsService implements MigrationsServiceInterface
   }
 
   /** {@inheritdoc} */
-  public function getLatest(): ?string
+  public function apply(string $version, EnumMigrationDirection $direction = EnumMigrationDirection::UP):void
   {
-    return $this->findLatestVersion();
-  }
-
-  /** {@inheritdoc} */
-  public function apply(string $version):void
-  {
+    if ($direction != EnumMigrationDirection::UP) {
+      throw new InvalidArgumentException($this->l->t('Legacy migrations cannot be undone.'));
+    }
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
     if (!empty($allMigrations[$version])) {
       $this->applyMigration($version, $allMigrations[$version]);
     } else {
       throw new InvalidArgumentException($this->l->t('A migration with the version "%s" does not exist.', $version));
     }
-  }
-
-  /** {@inheritdoc} */
-  public function description(string $version):string
-  {
-    $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
-    if (empty($allMigrations[$version])) {
-      return null;
-    }
-    /** @var IMigration $instance */
-    $instance = $this->appContainer->get($allMigrations[$version]);
-    return $instance->description();
   }
 
   /**

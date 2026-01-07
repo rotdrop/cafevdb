@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
+
 /**
  * Interface for database migration services. The actual implementation
  * (e.g. Doctrine\Migrations) typically provides much more functionality
@@ -34,57 +36,21 @@ namespace OCA\CAFEVDB\Service;
 interface MigrationsServiceInterface
 {
   /**
-   * Check whether there need any migrations to be applied.
-   *
-   * @return bool
-   */
-  public function needsMigration(): bool;
-
-  /**
-   * Apply all found migrations, stop when one is failing.
-   *
-   * @return void
-   */
-  public function applyAll(): void;
-
-  /**
    * @return array All unapplied migrations. The migration classes are
    * instatiated using depency injection with the app-container.
    */
   public function getUnapplied(): array;
 
   /**
-   * @return array All applied migrations. The migration classes are
-   * instatiated using depency injection with the app-container.
-   */
-  public function getApplied(): array;
-
-  /**
-   * @return array Get all migration classes, instantiate all of them via
-   * dependency injection with the app-container.
-   */
-  public function getAll(): array;
-
-  /** @return string The latest applied migration, if any. */
-  public function getLatest(): ?string;
-
-  /**
    * Apply the migration with the given version.
    *
    * @param string $version
    *
+   * @param EnumMigrationDirection $direction
+   *
    * @return void
    *
-   * @throws InvalidArgumentException
+   * @throws InvalidArgumentException If the given migration does not exist.
    */
-  public function apply(string $version): void;
-
-  /**
-   * Get the description of the migration with the given version.
-   *
-   * @param string $version
-   *
-   * @return null|string The description or null if the migration could not be found.
-   */
-  public function description(string $version): string;
+  public function apply(string $version, EnumMigrationDirection $direction = EnumMigrationDirection::UP): void;
 }

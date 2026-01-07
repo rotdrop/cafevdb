@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ function documentReady() {
     setBusyIndicators(true, $container, false);
 
     // check for pending migrations and handle them
-    $.get(generateAppUrl('maintenance/migrations/unapplied'))
+    $.get(generateAppUrl('maintenance/migrationsüöä'))
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, function() {
           setBusyIndicators(false, $container, false);
@@ -91,7 +91,7 @@ function documentReady() {
               return;
             }
             setBusyIndicators(true, $container, false);
-            $.post(generateAppUrl('maintenance/migrations/apply/all'))
+            $.post(generateAppUrl('maintenance/migrations/apply'))
               .fail(function(xhr, status, errorThrown) {
                 Ajax.handleError(xhr, status, errorThrown, function() {
                   setBusyIndicators(false, $container, false);

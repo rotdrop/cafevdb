@@ -249,22 +249,22 @@ $routes = [
       'url' => '/settings/app/get/{parameter}',
       'verb' => 'POST',
     ],
-    // migrations, maintenance
-    [
-      'name' => 'migrations#service_switch',
-      'url' => '/maintenance/migrations/{topic}/{subTopic}',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'migrations#getDescription',
-      'url' => '/maintenance/migrations/description/{$migrationVersion}',
-      'verb' => 'GET',
-    ],
-    [
-      'name' => 'migrations#get',
-      'url' => '/maintenance/migrations/{what}',
-      'verb' => 'GET',
-    ],
+    // // migrations, maintenance
+    // [
+    //   'name' => 'migrations#service_switch',
+    //   'url' => '/maintenance/migrations/{topic}/{subTopic}',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'migrations#getDescription',
+    //   'url' => '/maintenance/migrations/description/{$migrationVersion}',
+    //   'verb' => 'GET',
+    // ],
+    // [
+    //   'name' => 'migrations#get',
+    //   'url' => '/maintenance/migrations/{what}',
+    //   'verb' => 'GET',
+    // ],
     // blog
     [ // generate template for editor popup
       'name' =>  'blog#edit_entry',

@@ -24,14 +24,19 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use InvalidArgumentException;
 use ReflectionClass;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Common\ConsoleLogger;
 use OCA\CAFEVDB\Common\ConsoleOutput;
+use OCA\CAFEVDB\Database\Doctrine\Migrations;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
@@ -40,8 +45,11 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 
 /** Test aspects of the DoctrineMigrationsService class. */
-#[Attributes\CoversClass(DoctrineMigrationsService::class)]
 #[Attributes\CoversClass(DoctrineMigrationsListener::class)]
+#[Attributes\CoversClass(DoctrineMigrationsService::class)]
+#[Attributes\CoversClass(Migrations\AbstractMigration::class)]
+#[Attributes\CoversClass(Migrations\DependencyFactory::class)]
+#[Attributes\CoversClass(Migrations\Version20260106233236::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -63,6 +71,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
@@ -72,6 +82,8 @@ class DoctrineMigrationsServiceTest extends TestCase
   private EntityManager $entityManager;
 
   private DoctrineMigrationsService $migrationsService;
+
+  private IL10N $l;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -94,16 +106,16 @@ class DoctrineMigrationsServiceTest extends TestCase
       logger: $mockProvider->getLoggerInterface(),
     );
 
+    $appContainer = $mockProvider->getAppContainer();
+
+    $this->l = $mockProvider->getL10N();
+
     $this->migrationsService = new DoctrineMigrationsService(
       logger: $consoleLogger,
       entityManager: $this->entityManager,
+      appContainer: $appContainer,
+      l: $this->l,
     );
-  }
-
-  /** @return void */
-  public function tearDown(): void
-  {
-    // stop the server?
   }
 
   /** @return void */
@@ -113,10 +125,41 @@ class DoctrineMigrationsServiceTest extends TestCase
     $this->assertInstanceOf(DependencyFactory::class, $factory);
   }
 
+  private const UNAPPLIED = [
+    '20260106233236' => 'Initial database setup.',
+  ];
+
   /** @return void */
-  public function testGetLatest(): void
+  public function testUnapplied(): void
   {
-    $result = $this->migrationsService->getLatest();
-    echo $result . PHP_EOL;
+    $result = $this->migrationsService->getUnapplied();
+    $this->assertArrayHasKey(array_keys(self::UNAPPLIED)[0], $result);
+    $first = reset($result);
+    $expected = array_values(self::UNAPPLIED)[0];
+    $expected = [$expected, $this->l->t($expected)];
+    $this->assertTrue(in_array($first, $expected));
+  }
+
+  /** @return void */
+  public function testApplyInvalidArgument(): void
+  {
+    $this->expectException(InvalidArgumentException::class);
+    $this->migrationsService->apply('HutzliPutzli');
+  }
+
+  /** @return void */
+  public function testApply(): void
+  {
+    $unapplied = $this->migrationsService->getUnapplied();
+    foreach (array_keys($unapplied) as $version) {
+      $this->migrationsService->apply($version, EnumMigrationDirection::UP);
+    }
+    $result = $this->migrationsService->getUnapplied();
+    $this->assertEquals([], $result);
+    foreach (array_reverse(array_keys($unapplied)) as $version) {
+      $this->migrationsService->apply($version, EnumMigrationDirection::DOWN);
+    }
+    $result = $this->migrationsService->getUnapplied();
+    $this->assertEquals(count($unapplied), count($result));
   }
 }
