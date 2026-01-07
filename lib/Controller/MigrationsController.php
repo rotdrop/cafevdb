@@ -62,13 +62,11 @@ class MigrationsController extends Controller
   // phpcs:enable
 
   /**
-   * @param string $what
-   *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/maintenance/migrations')]
-  public function get(string $what):DataResponse
+  public function get():DataResponse
   {
     return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getUnapplied(), ]);
   }
@@ -82,7 +80,7 @@ class MigrationsController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/maintenance/migrations/apply')]
-  public function post(string $topic, string $subTopic):DataResponse
+  public function post():DataResponse
   {
     $unapplied = $this->migrationsService->getUnapplied();
     $applied = [];
