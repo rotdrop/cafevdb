@@ -39,7 +39,8 @@ class DeprecationLogger extends ConsoleLogger
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private ConsoleLogger $actualLogger
+    private ConsoleLogger $actualLogger,
+    private bool $isCLI,
   ) {
   }
   // phpcs:enable
