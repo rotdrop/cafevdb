@@ -47,7 +47,7 @@ class DoctrineMigrationsVersion implements \ArrayAccess
   #[ORM\GeneratedValue(strategy: 'NONE')]
   private string $version;
 
-  #[ORM\Column(type: 'datetime', nullable: true)]
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   private ?DateTimeImmutable $executedAt = null;
 
   #[ORM\Column(type: 'integer', length: 11, nullable: true)]

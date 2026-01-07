@@ -30,10 +30,16 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\CAFEVDB\Common\ConsoleLogger;
+use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Maintenance\Migrations\Legacy as LegacyMigrations;
+use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Service\LegacyMigrationsService;
-use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
+use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventSubscriber;
 
 /** Test aspects of the LegacyMigrationsService class. */
 #[Attributes\CoversClass(LegacyMigrationsService::class)]
@@ -47,6 +53,12 @@ use OCA\CAFEVDB\Tests\DatabaseProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\Version20260106233236::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
@@ -58,6 +70,7 @@ use OCA\CAFEVDB\Tests\DatabaseProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerClosedEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\AddBalancingAccountToProjectParticipantFieldEntities::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\AddDonationFlagToProjectPayment::class)]
@@ -70,6 +83,7 @@ use OCA\CAFEVDB\Tests\DatabaseProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CorrectLanguageField::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateExplodeFunction::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateGnuCashTables::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateTableDoctrineMigrationsVersions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateTableDonationReceipts::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateTableInvoices::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\CreateTableInvoicesV2::class)]
@@ -106,12 +120,16 @@ use OCA\CAFEVDB\Tests\DatabaseProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UpdateTableTaxationStatutorySources::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UseDecimalForExactFractions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
@@ -121,11 +139,13 @@ class LegacyMigrationsServiceTest extends TestCase
 
   private LegacyMigrationsService $migrationsService;
 
+  private MockProvider $mockProvider;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $mockProvider = MockProvider::create($this);
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
@@ -147,6 +167,7 @@ class LegacyMigrationsServiceTest extends TestCase
   /** @return void */
   public function tearDown(): void
   {
+    $this->entityManager->close();
     // stop the server?
   }
 
@@ -155,5 +176,72 @@ class LegacyMigrationsServiceTest extends TestCase
   {
     $result = $this->migrationsService->getAll();
     $this->assertEquals('00000000000000', array_keys($result)[0]);
+  }
+
+  /** @return void */
+  public function testApplyFinal(): void
+  {
+    $result = $this->migrationsService->getAll();
+    $finalVersion = array_key_last($result);
+    $className = LegacyMigrations::class . '\\Version' . $finalVersion;
+    $finalInstance = $this->mockProvider->getAppContainer()->get($className);
+    $this->assertInstanceOf(LegacyMigrations\CreateTableDoctrineMigrationsVersions::class, $finalInstance);
+
+    $createTables = [];
+    $createTables[] = <<<'SQL'
+CREATE TABLE ExtLogEntries (
+  id INT AUTO_INCREMENT NOT NULL,
+  action VARCHAR(8) NOT NULL,
+  logged_at DATETIME(6) NOT NULL,
+  object_class VARCHAR(191) NOT NULL,
+  version INT NOT NULL,
+  data LONGTEXT DEFAULT NULL,
+  username VARCHAR(191) DEFAULT NULL,
+  remote_address VARCHAR(45) DEFAULT NULL,
+  object_id VARCHAR(573) DEFAULT NULL,
+  INDEX log_class_lookup_idx (object_class),
+  INDEX log_date_lookup_idx (logged_at),
+  INDEX log_user_lookup_idx (username),
+  INDEX log_version_lookup_idx (object_id, object_class, version),
+  INDEX log_action_lookup_idx (action, object_class),
+  INDEX log_action_class_lookup_idx (action),
+  PRIMARY KEY (id)
+) DEFAULT CHARACTER SET utf8mb4 ROW_FORMAT = DYNAMIC
+SQL;
+    $createTables[] = <<<'SQL'
+CREATE TABLE Migrations (
+  version CHAR(14) NOT NULL COLLATE `ascii_general_ci`,
+  migration_class_name VARCHAR(512) NOT NULL,
+  run_count INT DEFAULT 1 NOT NULL,
+  created DATETIME(6) DEFAULT NULL,
+  updated DATETIME(6) DEFAULT NULL,
+  PRIMARY KEY (version)
+) DEFAULT CHARACTER SET utf8mb4
+SQL;
+    $connection = $this->entityManager->getConnection();
+    foreach ($createTables as $sql) {
+      $statement = $connection->prepare($sql)->executeQuery();
+    }
+    $this->migrationsService->apply($finalVersion);
+
+    $consoleLogger = new ConsoleLogger(
+      consoleOutput: $this->createStub(ConsoleOutput::class),
+      isCLI: false,
+      logger: $this->mockProvider->getLoggerInterface(),
+    );
+
+    $doctrineMigrationsService = new DoctrineMigrationsService(
+      logger: $consoleLogger,
+      entityManager: $this->entityManager,
+      appContainer: $this->mockProvider->getAppContainer(),
+      l: $this->mockProvider->getL10N(),
+    );
+
+    $applied = $doctrineMigrationsService->getApplied();
+    $this->assertEquals(1, count($applied));
+
+    foreach (['Migrations', 'ExtLogEntries', 'DoctrineMigrationsVersions'] as $table) {
+      $connection->prepare('DROP TABLE ' . $table)->executeQuery();
+    }
   }
 }

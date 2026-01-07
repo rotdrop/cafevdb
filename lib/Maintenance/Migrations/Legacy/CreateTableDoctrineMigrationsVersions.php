@@ -118,6 +118,7 @@ class CreateTableDoctrineMigrationsVersions extends AbstractMigration
         previous: $t,
       );
     }
+    $this->doctrineMigrationsService->clearCache();
     $applied = $this->doctrineMigrationsService->getApplied();
     if (empty($applied[$versionString])) {
       throw new Exceptions\DatabaseMigrationException(

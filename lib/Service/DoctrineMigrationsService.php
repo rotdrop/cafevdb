@@ -34,15 +34,16 @@ use OCA\CAFEVDB\Database\Doctrine\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\TableNotFoundException;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Exception\MigrationClassNotFound;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\AvailableMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Metadata\ExecutedMigration;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\Version;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\MigratorConfiguration;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Exception\MigrationClassNotFound;
+use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Version\Version;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Manage doctrine database migrations. As Doctrine\Migrations comes with its
@@ -53,6 +54,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\Exception\MigrationClassNotFound;
 class DoctrineMigrationsService implements MigrationsServiceInterface
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  private ?array $appliedMigrations = null;
+
+  private ?array $unappliedMigrations = null;
+
+  private ?array $executedMigrations = null;
 
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -65,16 +72,55 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
   }
   // phpcs:enable
 
+  /**
+   * Clear the runtime cache of migrations.
+   *
+   * @return void
+   */
+  public function clearCache(): void
+  {
+    $this->executedMigrations =
+      $this->appliedMigrations =
+      $this->unappliedMigrations = null;
+  }
+
+  /**
+   * Get a flat array of already executed migrations from the versions table
+   * from the DB.
+   *
+   * @return array<string>
+   */
+  private function getExecutedMigrations(): array
+  {
+    if ($this->executedMigrations !== null) {
+      return $this->executedMigrations;
+    }
+    // Costly, it will also do a table diff.
+    // $executedMigrations = $dependencyFactory->getMetadataStorage()->getExecutedMigrations();
+    // $executedVersions = array_map(
+    //   fn(ExecutedMigration $migration): string => substr((string)$migration->getVersion(), -14),
+    //   $executedMigrations->getItems(),
+    // );
+    try {
+      $versions = $this->entityManager->getRepository(DoctrineMigrationsVersion::class)->findAll();
+      $this->executedMigrations = array_map(fn(DoctrineMigrationsVersion $version) => substr($version->getVersion(), -14), $versions);
+    } catch (TableNotFoundException) {
+      // ok then: empty
+      $this->executedMigrations = [];
+    }
+    return $this->executedMigrations;
+  }
+
   /** {@inheritdoc} */
   public function getApplied(): array
   {
+    if ($this->appliedMigrations !== null) {
+      return $this->appliedMigrations;
+    }
+
     $dependencyFactory = $this->getDependencyFactory();
     $allMigrations = $dependencyFactory->getMigrationPlanCalculator()->getMigrations();
-    $executedMigrations = $dependencyFactory->getMetadataStorage()->getExecutedMigrations();
-    $executedVersions = array_map(
-      fn(ExecutedMigration $migration): string => substr((string)$migration->getVersion(), -14),
-      $executedMigrations->getItems(),
-    );
+    $executedVersions = $this->getExecutedMigrations();
     $applied = array_map(fn() => null, array_flip($executedVersions));
     /** @var AvailableMigration $migration */
     foreach ($allMigrations->getItems() as $migration) {
@@ -86,19 +132,20 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
 
     ksort($applied);
 
-    return $applied;
+    $this->appliedMigrations = $applied;
+
+    return $this->appliedMigrations;
   }
 
   /** {@inheritdoc} */
   public function getUnapplied(): array
   {
+    if ($this->unappliedMigrations !== null) {
+      return $this->unappliedMigrations;
+    }
     $dependencyFactory = $this->getDependencyFactory();
     $allMigrations = $dependencyFactory->getMigrationPlanCalculator()->getMigrations();
-    $executedMigrations = $dependencyFactory->getMetadataStorage()->getExecutedMigrations();
-    $executedVersions = array_map(
-      fn(ExecutedMigration $migration): string => substr((string)$migration->getVersion(), -14),
-      $executedMigrations->getItems(),
-    );
+    $executedVersions = $this->getExecutedMigrations();
     $unapplied = [];
     /** @var AvailableMigration $migration */
     foreach ($allMigrations->getItems() as $migration) {
@@ -111,7 +158,9 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
 
     ksort($unapplied);
 
-    return $unapplied;
+    $this->unappliedMigrations = $unapplied;
+
+    return $this->unappliedMigrations;
   }
 
   /** {@inheritdoc} */
@@ -134,7 +183,8 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
     }
     $numTransactional = 0;
     $numNonTransactional = 0;
-    foreach ($plan->getItems() as $planItem) {
+    $planItems = $plan->getItems();
+    foreach ($planItems as $planItem) {
       $transactional = (int)$planItem->getMigration()->isTransactional();
       $numTransactional += $transactional;
       $numNonTransactional += 1 - $transactional;
@@ -161,6 +211,23 @@ class DoctrineMigrationsService implements MigrationsServiceInterface
       ->setTimeAllQueries(true)
       ->setAllOrNothing($allOrNothing);
     /* $sql = */$migrator->migrate($plan, $migratorConfiguration);
+
+    foreach ($planItems as $planItem) {
+      $versionString = substr((string)$planItem->getVersion(), -14);
+      $description = $planItem->getMigration()->getDescription();
+      if ($direction === EnumMigrationDirection::UP) {
+        $this->appliedMigrations[$versionString] = $description;
+        unset($this->unappliedMigrations[$versionString]);
+        $this->executedMigrations[] = $versionString;
+      } else {
+        $this->unappliedMigrations[$versionString] = $description;
+        unset($this->appliedMigrations[$versionString]);
+        $index = array_search($versionString, $this->executedMigrations);
+        if ($index !== false) {
+          unset($this->executedMigrations[$versionString]);
+        }
+      }
+    }
   }
 
   /**
