@@ -1,0 +1,11 @@
+--- doctrine/migrations/src/Metadata/Storage/TableMetadataStorage.php~	2026-01-07 14:24:00.084510961 +0100
++++ doctrine/migrations/src/Metadata/Storage/TableMetadataStorage.php	2026-01-07 15:02:23.413917714 +0100
+@@ -88,7 +88,7 @@
+ 
+             $executedAt = $row[strtolower($this->configuration->getExecutedAtColumnName())] ?? '';
+             $executedAt = $executedAt !== ''
+-                ? DateTimeImmutable::createFromFormat($this->platform->getDateTimeFormatString(), $executedAt)
++                ? DateTimeImmutable::createFromFormat($this->platform->getDateTimeFormatString() . '+', $executedAt)
+                 : null;
+ 
+             $executionTime = isset($row[strtolower($this->configuration->getExecutionTimeColumnName())])
