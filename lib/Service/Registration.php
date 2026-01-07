@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,6 +74,19 @@ class Registration
    */
   public static function register(IRegistrationContext $context):void
   {
+    $context->registerService(
+      MigrationsServiceInterface::class,
+      function(ContainerInterface $container) {
+        /** @var DoctrineMigrationsService $doctrineMigrationsService */
+        $doctrineMigrationsService = $container->get(DoctrineMigrationsService::class);
+        if (count($doctrineMigrationsService->getApplied()) > 0) {
+          return $doctrineMigrationsService;
+        } else {
+          return $container->get(LegacyMigrationsService::class);
+        }
+      }
+    );
+
     $context->registerServiceAlias(
       Finance\SepaBulkTransactionService::EXPORT_SERVICE_ALIAS . 'aqbanking',
       Finance\AqBankingBulkTransactionExporter::class);

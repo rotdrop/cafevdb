@@ -70,7 +70,7 @@ class ConfigCheckService
     private CardDavService $cardDavService,
     private EventsService $eventsService,
     private AddressBookProvider $addressBookProvider,
-    private LegacyMigrationsService $migrationsService,
+    private MigrationsServiceInterface $migrationsService,
     private SimpleSharingService $sharingService,
   ) {
     $this->l = $this->l10n();
@@ -1261,9 +1261,9 @@ class ConfigCheckService
   /** @return bool */
   public function noUnappliedMigrations():bool
   {
-    if ($this->migrationsService->needsMigration()) {
-      $migrations = $this->migrationsService->getUnapplied();
-      throw new RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $migrations)));
+    $unappliedMigrations = $this->migrationsService->getUnapplied();
+    if (count($unappliedMigrations) > 0)  {
+      throw new RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $unappliedMigrations)));
     }
     return true;
   }

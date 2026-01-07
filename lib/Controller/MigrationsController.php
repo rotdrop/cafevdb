@@ -35,7 +35,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\LegacyMigrationsService as MigrationsService;
+use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX end-points for database migrations. */
@@ -53,7 +53,7 @@ class MigrationsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private MigrationsService $migrationsService,
+    private MigrationsServiceInterface $migrationsService,
     protected ConfigService $configService,
     protected IL10N $l,
   ) {
