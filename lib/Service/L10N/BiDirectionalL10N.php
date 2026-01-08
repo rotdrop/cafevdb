@@ -96,7 +96,12 @@ class BiDirectionalL10N
     if (isset($this->translations[self::FORWARD][$phrase])) {
       return $this->translations[self::FORWARD][$phrase];
     }
-    return $this->l->t(str_replace('%', '%%', $phrase));
+    $escaped = str_replace('%', '%%', $phrase);
+    $result = $this->l->t($escaped);
+    if ($result == $phrase) {
+      $result = $this->l->t(ucfirst($escaped));
+    }
+    return $result;
   }
 
   /**
@@ -133,7 +138,7 @@ class BiDirectionalL10N
     $dir = realpath(__DIR__);
     $appDir = substr($dir, 0, strrpos($dir, $this->appName)).$this->appName;
 
-    foreach (glob($appDir.DIRECTORY_SEPARATOR.'l10n'.DIRECTORY_SEPARATOR.'*.csv') as $file) {
+    foreach (glob($appDir.DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR . '*.csv') as $file) {
       $this->mergeCSV($file);
     }
   }
@@ -143,7 +148,7 @@ class BiDirectionalL10N
    *
    * @return void
    */
-  public function mergeCSV(string $fileName):void
+  protected function mergeCSV(string $fileName):void
   {
     $newTranslations = self::parseCSV($fileName, $this->targetLang, $this->keyLang);
     $this->translations = Util::arrayMergeRecursive($this->translations, $newTranslations);
@@ -175,6 +180,7 @@ class BiDirectionalL10N
     $targetLookup = [];
     $keyLookup = [];
     for ($row = fgetcsv($file, escape: ''); !empty($row); $row = fgetcsv($file, escape: '')) {
+      // print_r($row);
       if (empty($row[$targetColumn]) || empty($row[$keyColumn])) {
         continue;
       }
