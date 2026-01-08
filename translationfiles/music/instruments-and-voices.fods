@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" office:version="1.4" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
- <office:meta><meta:initial-creator>Claus-Justus Heine</meta:initial-creator><meta:creation-date>2020-11-04T23:16:33.509988690</meta:creation-date><meta:generator>LibreOffice/25.2.7.2$Linux_X86_64 LibreOffice_project/520$Build-2</meta:generator><dc:date>2026-01-07T22:23:48.453595522</dc:date><meta:editing-duration>PT1H23M34S</meta:editing-duration><meta:editing-cycles>20</meta:editing-cycles><dc:creator>Claus-Justus Heine</dc:creator><meta:document-statistic meta:table-count="1" meta:cell-count="568" meta:object-count="0"/></office:meta>
+ <office:meta><meta:initial-creator>Claus-Justus Heine</meta:initial-creator><meta:creation-date>2020-11-04T23:16:33.509988690</meta:creation-date><meta:generator>LibreOffice/25.2.7.2$Linux_X86_64 LibreOffice_project/520$Build-2</meta:generator><dc:date>2026-01-08T18:37:39.193845782</dc:date><meta:editing-duration>PT1H46M31S</meta:editing-duration><meta:editing-cycles>24</meta:editing-cycles><dc:creator>Claus-Justus Heine</dc:creator><meta:document-statistic meta:table-count="1" meta:cell-count="595" meta:object-count="0"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
    <config:config-item config:name="VisibleAreaTop" config:type="int">0</config:config-item>
    <config:config-item config:name="VisibleAreaLeft" config:type="int">0</config:config-item>
    <config:config-item config:name="VisibleAreaWidth" config:type="int">45260</config:config-item>
-   <config:config-item config:name="VisibleAreaHeight" config:type="int">51026</config:config-item>
+   <config:config-item config:name="VisibleAreaHeight" config:type="int">53284</config:config-item>
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view1</config:config-item>
      <config:config-item-map-named config:name="Tables">
       <config:config-item-map-entry config:name="Tabelle1">
-       <config:config-item config:name="CursorPositionX" config:type="int">6</config:config-item>
-       <config:config-item config:name="CursorPositionY" config:type="int">55</config:config-item>
+       <config:config-item config:name="CursorPositionX" config:type="int">2</config:config-item>
+       <config:config-item config:name="CursorPositionY" config:type="int">62</config:config-item>
        <config:config-item config:name="ActiveSplitRange" config:type="short">2</config:config-item>
-       <config:config-item config:name="PositionLeft" config:type="int">2</config:config-item>
+       <config:config-item config:name="PositionLeft" config:type="int">1</config:config-item>
        <config:config-item config:name="PositionRight" config:type="int">0</config:config-item>
        <config:config-item config:name="PositionTop" config:type="int">0</config:config-item>
-       <config:config-item config:name="PositionBottom" config:type="int">42</config:config-item>
+       <config:config-item config:name="PositionBottom" config:type="int">36</config:config-item>
        <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
        <config:config-item config:name="ZoomValue" config:type="int">146</config:config-item>
        <config:config-item config:name="PageViewZoomValue" config:type="int">60</config:config-item>
@@ -31,7 +31,7 @@
       </config:config-item-map-entry>
      </config:config-item-map-named>
      <config:config-item config:name="ActiveTable" config:type="string">Tabelle1</config:config-item>
-     <config:config-item config:name="HorizontalScrollbarWidth" config:type="int">3759</config:config-item>
+     <config:config-item config:name="HorizontalScrollbarWidth" config:type="int">2079</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ZoomValue" config:type="int">146</config:config-item>
      <config:config-item config:name="PageViewZoomValue" config:type="int">60</config:config-item>
@@ -94,7 +94,7 @@
    <config:config-item config:name="LoadReadonly" config:type="boolean">false</config:config-item>
    <config:config-item config:name="PrinterName" config:type="string">HP_OfficeJet_Pro_9020_series</config:config-item>
    <config:config-item config:name="PrinterPaperFromSetup" config:type="boolean">false</config:config-item>
-   <config:config-item config:name="PrinterSetup" config:type="base64Binary">AwL+/0hQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9PZmZpY2VKZXRfUHJvXzkwMjBfc2VyaQAWAAMAyAAAAAAAAgAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfT2ZmaWNlSmV0X1Byb185MDIwX3NlcmllcwpvcmllbnRhdGlvbj1Qb3J0cmFpdApjb3BpZXM9MQpjb2xsYXRlPWZhbHNlCm1hcmdpbmFkanVzdG1lbnQ9MCwwLCcwLDAKY29sb3JkZXB0aD0yNApjb2xvcmRldmljZT0wClBQRENvbnRleHREYXRhCklucHV0U2xvdDpBdXRvAER1cGxleDpOb25lAFBhZ2VTaXplOkE0AAASAENPTVBBVF9EVVBMRVhfTU9ERQ8ARHVwbGV4TW9kZTo6T2ZmDABQUklOVEVSX05BTUUcAEhQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXMLAERSSVZFUl9OQU1FIQBDVVBTOkhQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXM=</config:config-item>
+   <config:config-item config:name="PrinterSetup" config:type="base64Binary">AwL+/0hQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9PZmZpY2VKZXRfUHJvXzkwMjBfc2VyaQAWAAMAyAAAAAAAAgAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfT2ZmaWNlSmV0X1Byb185MDIwX3NlcmllcwpvcmllbnRhdGlvbj1Qb3J0cmFpdApjb3BpZXM9MQpjb2xsYXRlPWZhbHNlCm1hcmdpbmFkanVzdG1lbnQ9MCwwLCcwLDAKY29sb3JkZXB0aD0yNApjb2xvcmRldmljZT0wClBQRENvbnRleHREYXRhClBhZ2VTaXplOkE0AER1cGxleDpOb25lAElucHV0U2xvdDpBdXRvAAASAENPTVBBVF9EVVBMRVhfTU9ERQ8ARHVwbGV4TW9kZTo6T2ZmDABQUklOVEVSX05BTUUcAEhQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXMLAERSSVZFUl9OQU1FIQBDVVBTOkhQX09mZmljZUpldF9Qcm9fOTAyMF9zZXJpZXM=</config:config-item>
    <config:config-item config:name="RasterIsVisible" config:type="boolean">false</config:config-item>
    <config:config-item config:name="RasterResolutionX" config:type="int">1000</config:config-item>
    <config:config-item config:name="RasterResolutionY" config:type="int">1000</config:config-item>
@@ -270,79 +270,17 @@
    <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#cd5c5c" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
    <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
-  <style:style style:name="ce34" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#20b2aa" fo:border-left="2.49pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="2.49pt solid #000000"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce35" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#20b2aa" fo:border-left="2.49pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce36" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#ffdead" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce37" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="none" fo:background-color="#ffdead" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce38" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="2.49pt solid #000000" fo:background-color="#ffdead" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce39" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:background-color="#cd5c5c" fo:border="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce40" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:background-color="#ffdead" fo:border="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce41" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="none" fo:background-color="#ffdead" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce42" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border="0.06pt solid #000000"/>
-  </style:style>
-  <style:style style:name="ce43" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="2.49pt solid #000000" fo:background-color="#ffdead" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce44" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#cd5c5c" fo:border-left="0.06pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce45" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#ffdead" fo:border-left="0.06pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce46" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="none" fo:background-color="#ffdead" fo:border-left="0.06pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce47" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000"/>
-  </style:style>
-  <style:style style:name="ce48" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="2.49pt solid #000000" fo:background-color="#ffdead" fo:border-left="0.06pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce17" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#cd5c5c" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
   <style:style style:name="ce18" style:family="table-cell" style:parent-style-name="Default">
    <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#20b2aa" fo:border-left="2.49pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="2.49pt solid #000000"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="ce19" style:family="table-cell" style:parent-style-name="Default">
-   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#20b2aa" fo:border-left="2.49pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000"/>
    <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
   <style:style style:name="ce20" style:family="table-cell" style:parent-style-name="Default">
    <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#ffdead" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
    <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="ce19" style:family="table-cell" style:parent-style-name="Default">
+   <style:table-cell-properties fo:border-bottom="0.06pt solid #000000" fo:background-color="#20b2aa" fo:border-left="2.49pt solid #000000" fo:border-right="2.49pt solid #000000" fo:border-top="0.06pt solid #000000"/>
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
   <style:style style:name="ce21" style:family="table-cell" style:parent-style-name="Default">
    <style:table-cell-properties fo:border-bottom="none" fo:background-color="#ffdead" fo:border-left="2.49pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000" style:vertical-align="top"/>
@@ -413,9 +351,6 @@
    </style:footer-style>
   </style:page-layout>
   <style:style style:name="T1" style:family="text">
-   <style:text-properties style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="10pt" fo:language="de" fo:country="DE" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:text-underline-mode="continuous" style:text-overline-mode="continuous" style:text-line-through-mode="continuous" style:font-name-asian="DejaVu Sans" style:font-size-asian="10pt" style:language-asian="zh" style:country-asian="CN" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-name-complex="DejaVu Sans" style:font-size-complex="10pt" style:language-complex="hi" style:country-complex="IN" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
-  </style:style>
-  <style:style style:name="T2" style:family="text">
    <style:text-properties style:font-name="Liberation Serif" fo:font-size="10pt" fo:font-weight="normal" style:text-underline-style="none" style:text-underline-color="font-color" style:text-line-through-type="none" fo:font-style="normal" style:text-outline="false" fo:text-shadow="none" style:text-line-through-mode="continuous" fo:language="de" fo:country="DE" style:language-asian="zh" style:country-asian="CN" style:language-complex="hi" style:country-complex="IN" style:font-name-asian="DejaVu Sans" style:font-name-complex="DejaVu Sans" style:font-size-asian="10pt" style:font-size-complex="10pt" style:font-weight-asian="normal" style:font-weight-complex="normal" style:font-style-asian="normal" style:font-style-complex="normal" style:text-emphasize="none" style:font-relief="none" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
  </office:automatic-styles>
@@ -438,7 +373,7 @@
      <text:p><text:sheet-name>???</text:sheet-name><text:s/>(<text:title>???</text:title>)</text:p>
     </style:region-left>
     <style:region-right>
-     <text:p><text:date style:data-style-name="N2" text:date-value="2026-01-08">00.00.0000</text:date>, <text:time style:data-style-name="N2" text:time-value="09:10:40.658636365">00:00:00</text:time></text:p>
+     <text:p><text:date style:data-style-name="N2" text:date-value="2026-01-08">00.00.0000</text:date>, <text:time style:data-style-name="N2" text:time-value="18:14:40.508317588">00:00:00</text:time></text:p>
     </style:region-right>
    </style:header>
    <style:header-left style:display="false"/>
@@ -461,7 +396,7 @@
     <table:table-column table:style-name="co5" table:default-cell-style-name="ce24"/>
     <table:table-column table:style-name="co6" table:default-cell-style-name="ce29"/>
     <table:table-row table:style-name="ro1">
-     <table:table-cell table:style-name="ce17" office:value-type="string" calcext:value-type="string">
+     <table:table-cell table:style-name="ce1" office:value-type="string" calcext:value-type="string">
       <text:p>en</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="ce23" office:value-type="string" calcext:value-type="string">
@@ -486,6 +421,26 @@
      </table:table-cell>
      <table:table-cell table:style-name="ce23" table:number-columns-repeated="4"/>
      <table:table-cell table:style-name="ce28"/>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>wind</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>à vent</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Blas</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>a fiato</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>dukhovye</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>de viento</text:p>
+     </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce19" office:value-type="string" calcext:value-type="string">
@@ -693,14 +648,14 @@
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>angliiskii rozhok</text:p>
      </table:table-cell>
-     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T2">corno inglés; </text:span>cuerno inglés</text:p>
+     <table:table-cell office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">corno inglés; </text:span>cuerno inglés</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce21" office:value-type="string" calcext:value-type="string">
       <text:p>recorder</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="ce25" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T2">flûte à bec;flûte douce; flûte </text:span>droite</text:p>
+     <table:table-cell table:style-name="ce25" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">flûte à bec;flûte douce; flûte </text:span>droite</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>Blockflöte</text:p>
@@ -760,7 +715,7 @@
       <text:p>hautbois d&apos;amore;hautbois d&apos;amore</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
-      <text:p>Liebesoboe</text:p>
+      <text:p>Oboe d’amore; Liebesoboe</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>oboe d&apos;amore</text:p>
@@ -795,7 +750,26 @@
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>mednye dukhovye instrumenty</text:p>
      </table:table-cell>
-     <table:table-cell table:style-name="ce30" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T2">instrumentos de metal; cobre; instrumentos de </text:span>instrumentos de viento-metal; metales</text:p>
+     <table:table-cell table:style-name="ce30" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">instrumentos de metal; cobre; </text:span>instrumentos de viento-metal; metales</text:p>
+     </table:table-cell>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>brass</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>de cuivre</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Blech</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>ottone</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>mednye dukhovye</text:p>
+     </table:table-cell>
+     <table:table-cell table:style-name="ce30" office:value-type="string" calcext:value-type="string"><text:p><text:span text:style-name="T1">de metal; cobre; </text:span>de viento-metal; metales</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
@@ -1191,6 +1165,26 @@
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>plucked</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>à cordes pincées</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Zupf</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>a pizzico</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>shchipkovye</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>punteados</text:p>
+     </table:table-cell>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>cimbalom</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
@@ -1323,6 +1317,26 @@
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>instrumentos de tecla</text:p>
+     </table:table-cell>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>keyboard</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>à clavier</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Tasten</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>a tastiera</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>klavishnyi</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>de tecla</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="ro1">
@@ -1466,17 +1480,29 @@
       <text:p>piano</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
-      <text:p>Piano; Klavier</text:p>
+      <text:p>Klavier; Pianoforte; Piano</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>piano</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
-      <text:p>fortep&apos;iano</text:p>
+      <text:p>fortepiano</text:p>
      </table:table-cell>
      <table:table-cell office:value-type="string" calcext:value-type="string">
       <text:p>piano</text:p>
      </table:table-cell>
+    </table:table-row>
+    <table:table-row table:style-name="ro1">
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>grand piano</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>piano à queue</text:p>
+     </table:table-cell>
+     <table:table-cell office:value-type="string" calcext:value-type="string">
+      <text:p>Flügel</text:p>
+     </table:table-cell>
+     <table:table-cell table:number-columns-repeated="3"/>
     </table:table-row>
     <table:table-row table:style-name="ro1">
      <table:table-cell table:style-name="ce19" office:value-type="string" calcext:value-type="string">
