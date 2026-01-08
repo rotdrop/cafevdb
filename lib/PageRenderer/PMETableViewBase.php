@@ -282,7 +282,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     ];
 
     foreach ($cgiDefault as $key => $default) {
-      $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+      $this->{lcFirst($key)} = $default($this->request->getParam($key) ?? null);
     }
 
     $this->defaultFDD = $this->createDefaultFDD();
