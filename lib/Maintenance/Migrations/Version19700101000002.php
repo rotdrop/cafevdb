@@ -54,18 +54,27 @@ final class Version19700101000002 extends AbstractMigration
     return $this->l->t('Add standard instrument families');
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * This is a structural migration and thus cannot be transactional on
+   * MariaDB / MySQL.
+   */
+  public function isTransactional(): bool
+  {
+    return true;
+  }
+
   /** {@inheritdoc} */
   public function up(Schema $schema): void
   {
     // this up() migration is auto-generated, please modify it to your needs
-
   }
 
   /** {@inheritdoc} */
   public function down(Schema $schema): void
   {
     // this down() migration is auto-generated, please modify it to your needs
-
   }
 
   /** {@inheritdoc} */
