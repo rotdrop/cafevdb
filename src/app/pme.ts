@@ -1623,7 +1623,7 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
         persist: false,
         hideSelected: false,
         openOnFocus: true, // false,
-        items: $self.attr(`data-${DATA_PME_INITIAL_VALUES}`),
+        items: JSON.parse($self.attr(`data-${DATA_PME_INITIAL_VALUES}`) ?? '[]'),
         // closeAfterSelect: true,
         create: false,
         inputClass: pmeToken('selectize-input'),
