@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,6 +51,11 @@ class WebBrowserHistoryState implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 256, nullable: false)]
   protected string $userId;
 
+  /**
+   * Created time stamp. This is not automatically inserted by Gedmo or the
+   * database server but explicitly set by the controller class in order to
+   * have better control.
+   */
   #[ORM\Column(type: 'datetime_immutable', nullable: false)]
   protected ?DateTimeImmutable $created = null;
 

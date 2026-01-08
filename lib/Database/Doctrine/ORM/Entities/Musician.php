@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,13 +60,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\AutoIncrementTrait;
-  use CAFEVDB\Traits\CreatedAtEntity;
   use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-  use CAFEVDB\Traits\UpdatedAt;
   use CAFEVDB\Traits\UuidTrait;
 
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
@@ -263,9 +262,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /** @var Collection<Invoice> */
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private Collection $originatedInvoices;
-
-  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeImmutable $updated = null;
 
   /**
    * If non null then this is the URI of an address-book which is the primary source

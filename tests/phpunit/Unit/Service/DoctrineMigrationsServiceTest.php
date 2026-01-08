@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\CoversClass(DoctrineMigrationsService::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version19700101000002::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260108084800::class)]
 #[Attributes\CoversClass(Migrations\AbstractMigration::class)]
 #[Attributes\CoversClass(Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

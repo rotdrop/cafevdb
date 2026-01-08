@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,8 +45,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\AutoIncrementTrait;
-  use CAFEVDB\Traits\CreatedAtEntity;
-  use CAFEVDB\Traits\UpdatedAtEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /** @var string */
   protected static $type = DirEntryType::GENERIC;
