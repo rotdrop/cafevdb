@@ -120,6 +120,7 @@
     "js-file-download": "^0.4.12",
     "jsdoc": "^4.0.4",
     "jsdoc-babel": "^0.5.0",
+    "jsonlint": "^1.6.3",
     "luxon": "^3.5.0",
     "mergician": "^1.0.3",
     "mini-css-extract-plugin": "^2.4.5",

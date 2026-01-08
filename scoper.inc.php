@@ -12,6 +12,8 @@ return [
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
+    'Psr\\Log',
+    'Symfony\\Component\\Console',
     // 'OC',
     //'OCA',
     //'OCP',
@@ -111,6 +113,13 @@ return [
         return $content;
       }
       return preg_replace('/namespace .+;/', '', $content);
+    },
+    // Doctrine Migrations Generator
+    function(string $filePath, string $prefix, string $content): string {
+      if (!str_ends_with($filePath, 'vendor-wrapped/doctrine/migrations/src/Generator/Generator.php')) {
+        return $content;
+      }
+      return str_replace('use Doctrine', 'use OCA\\CAFEVDB\\Wrapped\\Doctrine', $content);
     },
   ],
 ];

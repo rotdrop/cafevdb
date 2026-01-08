@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,6 +69,8 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::Class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -187,38 +189,42 @@ class FinanceServiceTest extends TestCase
   public function testValidateSepaAccount(): void
   {
     $account = clone $this->musician->getSepaBankAccounts()->first();
-    $result = $this->financeService->validateSepaAccount($account);
+    $this->financeService->validateSepaAccount($account);
 
     $account = clone $this->musician->getSepaBankAccounts()->first();
     $account->setBankAccountOwner('öäü');
     try {
-      $result = $this->financeService->validateSepaAccount($account);
+      $this->financeService->validateSepaAccount($account);
       throw Exception('Code should not be reached');
     } catch (InvalidArgumentException) {
+      //
     }
 
     $account = clone $this->musician->getSepaBankAccounts()->first();
     $account->setIban('DE00XXXXXXXXXXXXXXX');
     try {
-      $result = $this->financeService->validateSepaAccount($account);
+      $this->financeService->validateSepaAccount($account);
       throw Exception('Code should not be reached');
     } catch (InvalidArgumentException) {
+      //
     }
 
     $account = clone $this->musician->getSepaBankAccounts()->first();
     $account->setBLZ(12312312);
     try {
-      $result = $this->financeService->validateSepaAccount($account);
+      $this->financeService->validateSepaAccount($account);
       throw Exception('Code should not be reached');
     } catch (InvalidArgumentException) {
+      //
     }
 
     $account = clone $this->musician->getSepaBankAccounts()->first();
     $account->setBIC('123');
     try {
-      $result = $this->financeService->validateSepaAccount($account);
+      $this->financeService->validateSepaAccount($account);
       throw Exception('Code should not be reached');
     } catch (InvalidArgumentException) {
+      // so what ...
     }
   }
 

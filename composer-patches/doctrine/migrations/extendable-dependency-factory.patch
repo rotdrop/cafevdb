@@ -1,0 +1,37 @@
+--- doctrine/migrations/src/DependencyFactory.php.orig	2026-01-04 18:53:28.096250025 +0100
++++ doctrine/migrations/src/DependencyFactory.php	2026-01-07 09:03:38.695349004 +0100
+@@ -85,7 +85,7 @@
+         ConnectionLoader $connectionLoader,
+         LoggerInterface|null $logger = null,
+     ): self {
+-        $dependencyFactory                      = new self($logger);
++        $dependencyFactory                      = new static($logger);
+         $dependencyFactory->configurationLoader = $configurationLoader;
+         $dependencyFactory->connectionLoader    = $connectionLoader;
+ 
+@@ -97,14 +97,14 @@
+         EntityManagerLoader $emLoader,
+         LoggerInterface|null $logger = null,
+     ): self {
+-        $dependencyFactory                      = new self($logger);
++        $dependencyFactory                      = new static($logger);
+         $dependencyFactory->configurationLoader = $configurationLoader;
+         $dependencyFactory->emLoader            = $emLoader;
+ 
+         return $dependencyFactory;
+     }
+ 
+-    private function __construct(LoggerInterface|null $logger)
++    protected function __construct(LoggerInterface|null $logger)
+     {
+         if ($logger === null) {
+             return;
+@@ -424,7 +424,7 @@
+         ));
+     }
+ 
+-    private function getDependency(string $id, callable $callback): mixed
++    protected function getDependency(string $id, callable $callback): mixed
+     {
+         if (! isset($this->inResolution[$id]) && array_key_exists($id, $this->factories) && ! array_key_exists($id, $this->dependencies)) {
+             $this->inResolution[$id] = true;

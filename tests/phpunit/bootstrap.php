@@ -35,3 +35,5 @@ $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
 // stop and cleanup potentially running db-servers
 register_shutdown_function([$databaseProvider, 'stopServer']);
+
+error_reporting(E_ALL);

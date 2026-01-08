@@ -3,6 +3,7 @@
 "Woodwind instruments",,,,,
 "wind instruments","instruments à vent","Blasinstrumente","strumenti a fiato","dukhovye instrumenty","instrumentos de viento"
 "woodwind instruments","les bois; instruments à vent en bois","Holzblasinstrumente","legno","dereviannye dukhovye instrumenty","instrumentos de madera"
+"wood","les bois; en bois","Holz","legno","dereviannye","de madera"
 "reeds","anches",,,"trosti",
 "double reeds","anches doubles",,,"double reeds",
 "flute","flûte;grande flûte;flûte traversière","Flöte; Querflöte","flauto","fleita","flauta"
@@ -29,6 +30,7 @@
 "euphonium","euphonium","Euphonium","eufonio","evfonium","euphonium"
 "Stringed instruments",,,,,
 "string instruments","instrument à cordes;instrument à cordes frottées","Saiteninstrumente","strumenti a corda;strumenti archi","strunnye instrumenty","instrumentos de cuerdas"
+"string","à cordes;à cordes frottées","Saiten","a corda;archi","strunnye","de cuerdas"
 "strings","cordes","Streicher","archi","struny","cuerdas"
 "violin","violon","Violine; Geige","violino","skripka","violín"
 "viola","alto","Viola; Bratsche","viola","viola","viola"
@@ -56,6 +58,7 @@
 "piano","piano","Piano; Klavier","piano","fortep'iano","piano"
 "Percussion instruments",,,,,
 "percussion instruments","instruments à percussion","Schlaginstrumente;Perkussionsinstrumente","strumenti a percussione","udarnye instrumenty","instrumentos de percusión"
+"percussion","à percussion","Schlag;Perkussion","a percussione","udarnye","de percusión"
 "bass drum","grosse caisse","Grosse Trommel","cassa; grancassa;gran cassa","bol'shoi baraban","bombo"
 "castenets","castagnettes","Kastagnetten","castagnette","kastan'ety","castañuelas"
 "cowbells","cloches à vache",,,"caubel",
@@ -75,7 +78,7 @@
 "computer","ordinateur","Computerklänge",,"kompiuter",
 "ondes martenot","ondes martenot",,,,
 "synthesizer","synthétiseur",,"sintetizzatore","sintezator",
-"tape","bande","Tonbande; Zuspielband","nastro","magnitofonnaia lenta","banda"
+"tape","bande","Tonband","nastro","magnitofonnaia lenta","banda"
 "Other instruments",,,,,
 "dulcimer; dulcimer hammered",,"Hackbrett","salterio","tsimbaly","dulcema"
 "harmonica","harmonica","Mundharmonika",,"gubnaia garmoshika",

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,19 @@
 
 namespace OCA\CAFEVDB\Tests;
 
+use ReflectionClass;
 use ReflectionMethod;
+use ReflectionProperty;
 use RuntimeException;
+use SplObjectStorage;
 use UnexpectedValueException;
 
 use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\TestCase;
+
+use Pimple\Container as InnerContainer;
+use OC\Session\Memory as MemorySession;
+use OC\AppFramework\Utility\SimpleContainer;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
@@ -40,9 +47,12 @@ use OCP\IL10N;
 use OCP\L10N\IFactory as L10NFactory;
 use OCP\IRequest;
 use OCP\IUser;
+use OCP\ISession;
 use OCP\IUserSession;
 use OCP\Security\IHasher;
 use Psr\Log\LoggerInterface;
+
+use OCA\BAV\Service\BAV as BankAccountValidator;
 
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Crypto;
@@ -75,11 +85,30 @@ class MockProvider
 
   private array $instances = [];
 
+  private static array $mockedServices;
+
+  private static array $originalInstances = [];
+
+  private static InnerContainer $serverContainerSnapshot;
+
+  private static InnerContainer $appContainerSnapshot;
+
   private array $appConfigValues = [];
 
   private array $userConfigValues = [];
 
   private ReflectionMethod $getMockBuilderMethod;
+
+  public const TEST_IBAN = 'DE02700100800030876808';
+  public const IBAN_INFO = [
+    'iban' => self::TEST_IBAN,
+    'country' => 'Deutschland (DE)',
+    'bic' => 'PBNKDEFFXXX',
+    'blz' => '70010080',
+    'account' => '0030876808',
+    'bank' => 'Postbank Ndl der Deutsche Bank',
+    'city' => 'München',
+  ];
 
   /** {@inheritdoc} */
   private function __construct(
@@ -90,9 +119,9 @@ class MockProvider
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
     $this->appName = $app->get('appName');
 
-    $this->instances[LoggerInterface::class] = $logger;
-
     $this->getMockBuilderMethod = new ReflectionMethod($this->testCase, 'getMockBuilder');
+
+    $this->registerServices();
   }
 
   /**
@@ -109,6 +138,111 @@ class MockProvider
       databaseProvider: \OCP\Server::get(DatabaseProvider::class),
       logger: \OCP\Server::get(Logger::class),
     );
+  }
+
+  /**
+   * Take a snapshot of the given container. This ain't pretty, so better find
+   * a way not to inject mock objects into the container, as those cannot be
+   * shared accross tests. As long as we do this we take a snapshot of the
+   * container and restore that afterwards.
+   *
+   * @param SimpleContainer $container Server- or app-container.
+   *
+   * @return InnerContainer Level-one clone of the inner container used inside
+   * the SimpleContainer class. That means: the cached objects as such are
+   * kept, but the containers storing the objects are cloned.
+   */
+  private static function snapshotContainer(SimpleContainer $container): InnerContainer
+  {
+    $innerContainer = new ReflectionProperty(SimpleContainer::class, 'container')->getValue($container);
+    $reflectionContainer = new ReflectionClass($innerContainer);
+    $snapshot = new InnerContainer;
+    /** @var ReflectionProperty $property */
+    foreach ($reflectionContainer->getProperties() as $propertyAccessor) {
+      $property = $propertyAccessor->getValue($innerContainer);
+      if (is_object($property) && get_class($property) === SplObjectStorage::class) {
+        $snapshotProperty = new SplObjectStorage();
+        $snapshotProperty->addAll($property);
+        $property = $snapshotProperty;
+      }
+      $propertyAccessor->setValue($snapshot, $property);
+    }
+    $snapshot->offsetUnset(\OC\DateTimeZone::class);
+    return $snapshot;
+  }
+
+  /**
+   * Restore the previously generated snapshot.
+   *
+   * @param SimpleContainer $container
+   *
+   * @param InnerContainer $snapshot
+   *
+   * @return void
+   */
+  private static function restoreContainer(SimpleContainer $container, InnerContainer $snapshot): void
+  {
+    /** @var InnerContainer $innerContainer */
+    $innerContainer = new ReflectionProperty(SimpleContainer::class, 'container')->getValue($container);
+    // print_r($innerContainer->keys());
+    // print_r($snapshot->keys());
+    $reflectionContainer = new ReflectionClass($innerContainer);
+    /** @var ReflectionProperty $propertyAccessor */
+    foreach ($reflectionContainer->getProperties() as $propertyAccessor) {
+      $property = $propertyAccessor->getValue($snapshot);
+      if (is_object($property) && get_class($property) === SplObjectStorage::class) {
+        /** @var SplObjectStorage $property */
+        /** @var SplObjectStorage $containerProperty */
+        $containerProperty = new SplObjectStorage();
+        $containerProperty->addAll($property);
+        $property = $containerProperty;
+      }
+      $propertyAccessor->setValue($innerContainer, $property);
+    }
+  }
+
+  /** @return void */
+  private function registerServices(): void
+  {
+    self::$mockedServices = self::$mockedServices ?? self::getMockedServices();
+    $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
+    $appContainer = $app->get(IAppContainer::class);
+    $appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
+    \OC::$server->registerService(LoggerInterface::class, fn() => $this->logger);
+    if (empty(self::$serverContainerSnapshot)) {
+      self::$serverContainerSnapshot = self::snapshotContainer(\OC::$server);
+      self::$appContainerSnapshot = self::snapshotContainer($appContainer);
+    } else {
+      self::restoreContainer(\OC::$server, self::$serverContainerSnapshot);
+      self::restoreContainer($appContainer, self::$appContainerSnapshot);
+    }
+    $mockContainer = $this->getAppContainer();
+    foreach (array_keys(self::$mockedServices) as $service) {
+      if (str_starts_with($service, \OCA\CAFEVDB::class)) {
+        $appContainer->registerService($service, function() use ($service, $mockContainer) {
+          return $mockContainer->get($service);
+        });
+      } else {
+        if (empty(self::$originalInstances[$service])) {
+          self::$originalInstances[$service] = $appContainer->get($service);
+        }
+        $factory = function() use ($service, $mockContainer, $appContainer) {
+          $result = $mockContainer->get($service);
+          if ($result === null) {
+            if (empty(self::$originalInstances[$service])) {
+              $result = $appContainer->get($service);
+            } else {
+              $result = self::$originalInstances[$service];
+            }
+          }
+          return $result;
+        };
+        \OC::$server->registerService($service, $factory);
+        $appContainer->registerService($service, $factory);
+      }
+    }
+    // echo get_class($appContainer->get(LoggerInterface::class)) . PHP_EOL;
+    // echo get_class(\OC::$server->get(LoggerInterface::class)) . PHP_EOL;
   }
 
   /**
@@ -210,26 +344,32 @@ class MockProvider
     );
     $instance->method('getUserValue')->willReturnCallback(
       function(string $userId, string $appName, string $key, mixed $default = null) {
+        $value = $default;
         if (isset($this->userConfigValues[$userId . $appName . $key])) {
-          return $this->userConfigValues[$userId . $appName . $key];
-        }
-        if ($userId == self::EXECUTIVE_BOARD_UID && $appName == 'core') {
+          $value = $this->userConfigValues[$userId . $appName . $key];
+        } elseif ($userId == self::EXECUTIVE_BOARD_UID && $appName == 'core') {
           // Default to German stuff as this is the only region where the app
           // is used ATM.
           switch ($key) {
             case 'timezone':
-              return 'Europe/Berlin';
+              $value = 'Europe/Berlin';
+              break;
             case 'lang':
-              return 'de';
+              $value = 'de';
+              break;
             case 'locale':
-              return 'de';
+              $value = 'de';
+              break;
           }
         }
-        return $default;
+        return $value;
       },
     );
     $instance->method('setUserValue')->willReturnCallback(
       function(string $userId, string $appName, string $key, mixed $value) {
+        if ($key == 'timezone') {
+          print_r(compact('userId', 'appName', 'key', 'value'));
+        }
         $this->userConfigValues[$userId . $appName . $key] = $value;
       },
     );
@@ -590,6 +730,26 @@ class MockProvider
   }
 
   /**
+   * @return ISession
+   */
+  public function getSession(): ISession
+  {
+    $className = ISession::class;
+
+    if ($this->instances[$className] ?? null) {
+      return $this->instances[$className];
+    }
+
+    $instance = new MemorySession;
+    $instance->set('user_id', $this->getUser()->getUID());
+    // $instance->set('timezone', :
+
+    $this->instances[$className] = $instance;
+
+    return $instance;
+  }
+
+  /**
    * @return IUserSession
    */
   public function getUserSession(): IUserSession
@@ -600,10 +760,11 @@ class MockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder(IUserSession::class)
+    $instance = $this->getMockBuilder(\OC\User\Session::class)
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('getUser')->willReturn($this->getUser());
+    $instance->method('getSession')->willReturn($this->getSession());
 
     $this->instances[$className] = $instance;
 
@@ -634,9 +795,7 @@ class MockProvider
     return $instance;
   }
 
-  /**
-   * @return IL10N
-   */
+  /** @return IL10N */
   public function getL10N(): IL10N
   {
     $className = IL10N::class;
@@ -650,6 +809,55 @@ class MockProvider
     $instance = $factory->get($this->appName, 'de');
 
     $this->instances[$className] = $instance;
+
+    return $instance;
+  }
+
+  /**
+   * Fake the bank account validator as obtaining real result is really
+   * involved and would result in a round-trip to the Deutsche Bundesbank and
+   * excessive database operations.
+   *
+   * @return BAV
+   */
+  public function getBankAccountValidator(): BankAccountValidator
+  {
+    $className = BankAccountValidator::class;
+
+    if ($this->instances[$className] ?? null) {
+      return $this->instances[$className];
+    }
+
+    $instance = $this->getMockBuilder($className)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $instance->method('getMainAgency')
+      ->with(self::IBAN_INFO['blz'])
+      ->willReturn(new class() {
+        /** @return string */
+        public function getBIC() {
+          return MockProvider::IBAN_INFO['bic'];
+        }
+        /** @return string */
+        public function getName() {
+          return MockProvider::IBAN_INFO['bank'];
+        }
+        /** @return string */
+        public function getCity() {
+          return MockProvider::IBAN_INFO['city'];
+        }
+      });
+    $instance->method('isValidBank')
+      ->with(self::IBAN_INFO['blz'])
+      ->willReturn(true);
+    $instance->method('isValidAccount')
+      ->with(self::IBAN_INFO['account'])
+      ->willReturn(true);
+
+    $this->instances[$className] = $instance;
+
+    $instance->expects($this->never())->method('update');
 
     return $instance;
   }
@@ -672,6 +880,31 @@ class MockProvider
     }
   }
 
+  /** @return array */
+  private static function getMockedServices(): array
+  {
+    return [
+      BankAccountValidator::class => fn(self $self) => $self->getBankAccountValidator(),
+      ConfigService::class => fn(self $self) => $self->getConfigService(),
+      Connection::class => fn(self $self) => $self->getEntityManager()->getConnection(),
+      EncryptionService::class => fn(self $self) => $self->getEncryptionService(),
+      EntityManager::class => fn(self $self) => $self->getEntityManager(),
+      IConfig::class => fn(self $self) => $self->getCloudConfig(),
+      IEventDispatcher::class => fn(self $self) => $self->getEventDispatcher(),
+      IL10N::class => fn(self $self) => $self->getL10N(),
+      ISession::class => fn(self $self) => $self->getSession(),
+      IUserSession::class => fn(self $self) => $self->getUserSession(),
+      Registration::USER_LOCALE => fn(self $self) => 'de_DE.UTF-8',
+      lcfirst(Registration::USER_LOCALE) => fn(self $self) => 'de_DE.UTF-8',
+      RepositoryFactory::class => fn(self $self) => $self->getRepositoryFactory(),
+      UndoableRunQueue::class => fn(self $self) => new UndoableRunQueue(
+        $self->getAppContainer(),
+        $self->getLoggerInterface(),
+        $self->getL10N(),
+      ),
+    ];
+  }
+
   /**
    * @return IAppContainer
    */
@@ -692,35 +925,8 @@ class MockProvider
         if (!empty($this->instances[$service])) {
           return $this->instances[$service];
         }
-        switch ($service) {
-          case Connection::class:
-            return $this->getEntityManager()->getConnection();
-          case EntityManager::class:
-            return $this->getEntityManager();
-          case IEventDispatcher::class:
-            return $this->getEventDispatcher();
-          case IUserSession::class:
-            return $this->getUserSession();
-          case ConfigService::class:
-            return $this->getConfigService();
-          case EncryptionService::class:
-            return $this->getEncryptionService();
-          case IConfig::class:
-            return $this->getCloudConfig();
-          case RepositoryFactory::class:
-            return $this->getRepositoryFactory();
-          case UndoableRunQueue::class:
-            return new UndoableRunQueue(
-              $this->getAppContainer(),
-              $this->getLoggerInterface(),
-              $this->getL10N(),
-            );
-          case lcfirst(Registration::USER_LOCALE):
-          case Registration::USER_LOCALE:
-            return 'de_DE.UTF-8';
-          // case ucfirst(Registration::APP_LOCALE):
-          // case Registration::APP_LOCALE:
-          //   return self::CONFIG_MOCK_VALUES[ConfigConstants::ORCHESTRA_LOCALE_KEY];
+        if (!empty(self::$mockedServices[$service])) {
+          return self::$mockedServices[$service]($this);
         }
         $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
         // try to generate "the real thing"
@@ -732,6 +938,26 @@ class MockProvider
         // echo __CLASS__ . '::' . __METHOD__ . ': RETURNING NEW ' . $service . PHP_EOL;
         return $newInstance;
       },
+    );
+
+    $instance->method('resolve')->willReturnCallback(
+      function(string $service) {
+        $oldInstance = $this->instances[$service] ?? null;
+        unset($this->instances[$service]);
+        if (!empty(self::$mockedServices[$service])) {
+          $instance = self::$mockedServices[$service]($this);
+        }
+        if ($oldInstance) {
+          $this->instances[$service] = $oldInstance;
+        } else {
+          unset($this->instances[$service]);
+        }
+        if (empty($instance)) {
+          $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
+          $instance = $app->getContainer()->resolve($service);
+        }
+        return $instance;
+      }
     );
 
     $instance->expects($this->never())->method('registerMiddleWare');

@@ -387,6 +387,11 @@ class EntityManager extends EntityManagerDecorator
   /** {@inheritdoc} */
   public function close():void
   {
+    foreach ($this->getEventManager()->getAllListeners() as $event => $eventListeners) {
+      foreach ($eventListeners as $listener) {
+        $this->getEventManager()->removeEventListener($event, $listener);
+      }
+    }
     parent::close();
     $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
   }
@@ -545,8 +550,12 @@ class EntityManager extends EntityManagerDecorator
   {
     $conParams = $this->connectionParameters($params);
 
+    /** @var Doctrine\Common\EventManager $eventManager */
+    /** @var ORM\Configuration $config */
     list($config, $eventManager) = $this->createSimpleConfiguration();
     list($config, $eventManager, $attributeReader) = $this->createGedmoConfiguration($config, $eventManager);
+
+    $eventManager->addEventSubscriber($this->appContainer->get(Listeners\DoctrineMigrationsListener::class));
 
     $this->attributeReader = $attributeReader;
 
