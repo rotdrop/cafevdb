@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
  */
 final class Version19700101000002 extends AbstractMigration
 {
-  private const INSTRUMENT_FAMILY_NAMES = [
+  public const INSTRUMENT_FAMILY_NAMES = [
     'strings',
     'string',
     'plucked',
@@ -47,7 +47,7 @@ final class Version19700101000002 extends AbstractMigration
     'miscellaneous',
     'not an instrument',
   ];
-  private const INSTRUMENTS = [
+  public const INSTRUMENTS = [
     'violin' => [
       'sort' => 1,
       'families' => ['strings', 'string'],
@@ -216,9 +216,13 @@ final class Version19700101000002 extends AbstractMigration
         ->setName($name)
         ->setSortOrder($instrumentInfo['sort'])
         ;
+
       foreach ($instrumentInfo['families'] as $familyName) {
         $instrument->getFamilies()->set($familyName, $families[$familyName]);
+        // not really necessary here ...
+        $families[$familyName]->getInstruments()->set($name, $instrument);
       }
+      $this->entityManager->persist($instrument);
     }
 
     $this->entityManager->flush();
