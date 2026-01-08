@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
  */
 final class Version19700101000002 extends AbstractMigration
 {
-  private const FAMILY_NAMES = [
+  private const INSTRUMENT_FAMILY_NAMES = [
     'strings',
     'string',
     'plucked',
@@ -46,6 +46,128 @@ final class Version19700101000002 extends AbstractMigration
     'keyboard',
     'miscellaneous',
     'not an instrument',
+  ];
+  private const INSTRUMENTS = [
+    'violin' => [
+      'sort' => 1,
+      'families' => ['strings', 'string'],
+    ],
+    'viola' => [
+      'sort' => 2,
+      'families' => ['strings', 'string'],
+    ],
+    'violoncello' => [
+      'sort' => 3,
+      'families' => ['strings', 'string'],
+    ],
+    'double bass' => [
+      'sort' => 4,
+      'families' => ['strings', 'string'],
+    ],
+    'flute' => [
+      'sort' => 10,
+      'families' => ['wood', 'wind'],
+    ],
+    'piccolo' => [
+      'sort' => 11,
+      'families' => ['wood', 'wind'],
+    ],
+    'oboe' => [
+      'sort' => 20,
+      'families' => ['wood', 'wind'],
+    ],
+    'English horn' => [
+      'sort' => 25,
+      'families' => ['wood', 'wind'],
+    ],
+    'clarinet' => [
+      'sort' => 30,
+      'families' => ['wood', 'wind'],
+    ],
+    'bass clarinet' => [
+      'sort' => 35,
+      'families' => ['wood', 'wind'],
+    ],
+    'bassoon' => [
+      'sort' => 40,
+      'families' => ['wood', 'wind'],
+    ],
+    'natural horn' => [
+      'sort' => 50,
+      'families' => ['brass', 'wind'],
+    ],
+    'trumpet' => [
+      'sort' => 60,
+      'families' => ['brass', 'wind'],
+    ],
+    'trombone' => [
+      'sort' => 70,
+      'families' => ['brass', 'wind'],
+    ],
+    'bass trombone' => [
+      'sort' => 71,
+      'families' => ['brass', 'wind'],
+    ],
+    'tuba' => [
+      'sort' => 80,
+      'families' => ['brass', 'wind'],
+    ],
+    'harp' => [
+      'sort' => 90,
+      'families' => ['string', 'plucked'],
+    ],
+    'guitar' => [
+      'sort' => 95,
+      'families' => ['string', 'plucked'],
+    ],
+    'timpani' => [
+      'sort' => 100,
+      'families' => ['percussion'],
+    ],
+    'drum' => [
+      'sort' => 105,
+      'families' => ['percussion'],
+    ],
+    'bass drum' => [
+      'sort' => 110,
+      'families' => ['percussion'],
+    ],
+    'cymbals' => [
+      'sort' => 201,
+      'families' => ['percussion'],
+    ],
+    'glockenspiel' => [
+      'sort' => 203,
+      'families' => ['percussion'],
+    ],
+    'xylophone' => [
+      'sort' => 400,
+      'families' => ['percussion'],
+    ],
+    'piano' => [
+      'sort' => 5000,
+      'families' => ['keyboard'],
+    ],
+    'organ' => [
+      'sort' => 5010,
+      'families' => ['keyboard'],
+    ],
+    'harpsichord' => [
+      'sort' => 5015,
+      'families' => ['keyboard'],
+    ],
+    'celesta' => [
+      'sort' => 5020,
+      'families' => ['keyboard'],
+    ],
+    'bandoneon' => [
+      'sort' => 5025,
+      'families' => ['keyboard'],
+    ],
+    'accordion' => [
+      'sort' => 5030,
+      'families' => ['keyboard'],
+    ],
   ];
 
   /** {@inheritdoc} */
@@ -80,12 +202,25 @@ final class Version19700101000002 extends AbstractMigration
   /** {@inheritdoc} */
   public function preUp(Schema $schema): void
   {
-    foreach (self::FAMILY_NAMES as $family) {
+    $families = [];
+    foreach (self::INSTRUMENT_FAMILY_NAMES as $familyName) {
       $family = new Entities\InstrumentFamily()
-        ->setFamily($family)
+        ->setFamily($familyName)
         ;
       $this->entityManager->persist($family);
+      $families[$familyName] = $family;
     }
+
+    foreach (self::INSTRUMENTS as $name => $instrument) {
+      $instrument = new Entities\Instrument()
+        ->setName($name)
+        ->setSortOrder($instrument['sort'])
+        ;
+      foreach ($instrument['families'] as $familyName) {
+        $instrument->getFamilies()->set($familyName, $families[$familyName]);
+      }
+    }
+
     $this->entityManager->flush();
   }
 }
