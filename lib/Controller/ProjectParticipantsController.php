@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -107,11 +107,14 @@ class ProjectParticipantsController extends Controller
    * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/add-musicians')]
   public function addMusicians(
     int $projectId,
     string|ParticipationContext $participationContext,
     ?int $musicianId = null,
-  ):Response {
+  ): Response {
+
+    $participationContext = ParticipationContext::get($participationContext);
     // Multi-mode:
     // projectId: ID
     // projectName: NAME
@@ -230,6 +233,7 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'post', url: '/projects/participants/validate/instruments/{context}')]
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
     null|string|array $recordId = [],
@@ -452,6 +456,7 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/files/{operation}')]
   public function files(
     string $operation,
     int $musicianId,
@@ -1030,6 +1035,7 @@ class ProjectParticipantsController extends Controller
    * @return OCP\AppFramework\Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', urL: '/projects/participants/mailing-list/{operation}')]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,
@@ -1189,7 +1195,7 @@ class ProjectParticipantsController extends Controller
    * ];
    * ```
    */
-  public static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email):array
+  private static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email):array
   {
     $status = $listsService->getSubscriptionStatus($listId, $email);
     $displayStatus = $status;

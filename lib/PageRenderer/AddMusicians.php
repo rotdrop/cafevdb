@@ -50,7 +50,7 @@ class AddMusicians extends Musicians
 
   const TEMPLATE = parent::ADD_TEMPLATE;
 
-  protected null|string|ParticipationContext $participationContext = null;
+  protected ?ParticipationContext $participationContext = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -87,7 +87,9 @@ class AddMusicians extends Musicians
     );
 
     $this->findProject(enforce: true);
-    $this->participationContext = $this->request['participationContext'] ?? null;
+    if ($this->request['participationContext'] ?? null) {
+      $this->participationContext = ParticipationContext::get($this->request['participationContext']);
+    }
   }
 
   /** {@inheritdoc} */
@@ -168,7 +170,7 @@ GROUP BY __t1.instrument_id',
     // $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
     $opts['cgi']['persist']['projectId'] = $this->projectId;
-    $opts['cgi']['persist']['participationContext'] = $this->participationContext;
+    $opts['cgi']['persist']['participationContext'] = $this->participationContext->value;
 
     $this->logDebug('JOIN TABLES ' . print_r($joinTables, true));
 

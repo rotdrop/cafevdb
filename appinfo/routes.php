@@ -392,21 +392,21 @@ $routes = [
     /**
      * Project Participants
      */
-    [
-      'name' => 'project_participants#validate_instruments_selection',
-      'url' => '/projects/participants/validate/instruments/{context}',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'project_participants#add_musicians',
-      'url' => '/projects/participants/add-musicians',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'project_participants#files',
-      'url' => '/projects/participants/files/{operation}',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'project_participants#validate_instruments_selection',
+    //   'url' => '/projects/participants/validate/instruments/{context}',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'project_participants#add_musicians',
+    //   'url' => '/projects/participants/add-musicians',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'project_participants#files',
+    //   'url' => '/projects/participants/files/{operation}',
+    //   'verb' => 'POST',
+    // ],
     // /**
     //  * Project instruments and voices
     //  *
@@ -426,11 +426,11 @@ $routes = [
     //   'url' => '/projects/mailing-lists/{operation}',
     //   'verb' => 'POST',
     // ],
-    [
-      'name' => 'project_participants#mailing_list_subscriptions',
-      'url' => '/projects/participants/mailing-list/{operation}',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'project_participants#mailing_list_subscriptions',
+    //   'url' => '/projects/participants/mailing-list/{operation}',
+    //   'verb' => 'POST',
+    // ],
     /**
      * Musicians
      */

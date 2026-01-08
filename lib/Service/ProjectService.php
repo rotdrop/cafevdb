@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -2031,7 +2031,7 @@ Whatever.',
    *
    * @param int|Entities\Project $projectOrId The project-id for the destination project.
    *
-   * @param string|ParticipationContext $participationContext Either project-participants or project-associates.
+   * @param ParticipationContext $participationContext Either project-participants or project-associates.
    *
    * @return array
    * ```
@@ -2052,7 +2052,7 @@ Whatever.',
   public function addMusicians(
     array $musicianIds,
     int|Entities\Project $projectOrId,
-    string|ParticipationContext $participationContext,
+    ParticipationContext $participationContext,
   ):array {
     if (!($projectOrId instanceof Entities\Project)) {
       $project = $this->repository->find($projectOrId);
@@ -2087,7 +2087,7 @@ Whatever.',
    *
    * @param Entities\Project $project Database entity.
    *
-   * @param string|ParticipationContext $participationContext Either
+   * @param ParticipationContext $participationContext Either
    * ParticipationContext::PARTICIPANTS or ParticipationContext::ASSOCIATES.
    *
    * @param array $status Status array by reference.
@@ -2099,7 +2099,7 @@ Whatever.',
   private function addOneMusician(
     mixed $id,
     Entities\Project $project,
-    string|ParticipationContext $participationContext,
+    ParticipationContext $participationContext,
     ?array &$status,
   ):bool {
     $status = [];
@@ -3381,7 +3381,7 @@ Whatever.',
    *
    * @param Entities\ProjectParticipant $participant The victim.
    *
-   * @param string|ParticipationContext $participationContext If \null just
+   * @param ParticipationContext $participationContext If unrestricted just
    * delete the participant. If refered from
    * PageRenderer\ProjectParticipants::TEMPLATE then remove non-virtual
    * instruments and delete the participant if no instruments/roles from the
@@ -3396,7 +3396,7 @@ Whatever.',
    */
   public function deleteProjectParticipant(
     Entities\ProjectParticipant $participant,
-    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
+    ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):void {
     $publicName = $participant->getPublicName();
     $thisParticipantsContext = $participant->getParticipationContext();
