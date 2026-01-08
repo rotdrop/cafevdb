@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -367,7 +367,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
           $columnValues[$columnName] = $value;
         }
       } else {
-        $columnName = $this->metaData->fieldMappings[$field]['columnName'];
+        $columnName = $this->metaData->fieldMappings[$field]->columnName;
         $columnValues[$columnName] = $value;
       }
     }
@@ -640,7 +640,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
         }
         $columnName = $meta->associationMappings[$field]['joinColumns'][0]->name;
       } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
+        $columnName = $meta->fieldMappings[$field]->columnName;
       }
       $entityId[$field] = $columnName;
     }
