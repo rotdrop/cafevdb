@@ -211,12 +211,12 @@ final class Version19700101000002 extends AbstractMigration
       $families[$familyName] = $family;
     }
 
-    foreach (self::INSTRUMENTS as $name => $instrument) {
+    foreach (self::INSTRUMENTS as $name => $instrumentInfo) {
       $instrument = new Entities\Instrument()
         ->setName($name)
-        ->setSortOrder($instrument['sort'])
+        ->setSortOrder($instrumentInfo['sort'])
         ;
-      foreach ($instrument['families'] as $familyName) {
+      foreach ($instrumentInfo['families'] as $familyName) {
         $instrument->getFamilies()->set($familyName, $families[$familyName]);
       }
     }
