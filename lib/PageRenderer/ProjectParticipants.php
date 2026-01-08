@@ -303,13 +303,13 @@ class ProjectParticipants extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
-      $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
-      '-' . $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
+      '-' . self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users
@@ -717,7 +717,7 @@ GROUP BY t.id';
     // kind of a hack, in principle this should go to the global join structure
     // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -760,7 +760,7 @@ GROUP BY t.id';
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $instrumentNames[$instrument];
               },
@@ -1503,8 +1503,8 @@ GROUP BY t.id';
   public function beforeUpdateRemoveDependentVoices(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     // sanitize instrumentation numbers
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
 
     $debugColumns = [ $instrumentsColumn, $voicesColumn ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
@@ -1587,7 +1587,7 @@ GROUP BY t.id';
     }
 
     if ($participationStatus == ParticipationStatus::ASSOCIATED) {
-      $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+      $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
       $instruments = Util::explode(',', $newValues[$instrumentsColumn] ?? '');
       $nonInstruments = array_keys($this->getNonInstruments());
       $realInstruments = array_diff($instruments, $nonInstruments);
@@ -1634,8 +1634,8 @@ GROUP BY t.id';
    */
   public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
-    $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voiceField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
     $debugColumns = [ $instrumentField, $voiceField, ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');

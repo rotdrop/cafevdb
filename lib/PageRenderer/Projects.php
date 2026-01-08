@@ -499,7 +499,7 @@ class Projects extends PMETableViewBase
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $this->l->t('%1$s, #voices', $instrumentNames[$instrument]);
               },
@@ -1200,8 +1200,8 @@ class Projects extends PMETableViewBase
     }
 
     // sanitize instrumentation numbers
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
 
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
@@ -1286,8 +1286,8 @@ class Projects extends PMETableViewBase
 
     Util::unsetValue($changed, 'mailing_list_id');
 
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
     if (array_search($instrumentsColumn, $changed) !== false
         || array_search($voicesColumn, $changed) !== false) {
 
@@ -1385,7 +1385,7 @@ class Projects extends PMETableViewBase
       $this->debug('NEW PROJECT ID ' . $newProjectId);
 
       // clone participants fields if not empty, list of names is given
-      $participantFields = $newVals[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
+      $participantFields = $newVals[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
       $participantFields = Util::explode(',', $participantFields);
       $this->debug('PARTICIPANT FIELDS ' . print_r($participantFields, true));
 

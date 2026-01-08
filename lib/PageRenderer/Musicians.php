@@ -226,7 +226,7 @@ abstract class Musicians extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'display_name',
       'sur_name',
       'first_name',
@@ -635,7 +635,7 @@ GROUP BY t.id';
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'orchestra' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',

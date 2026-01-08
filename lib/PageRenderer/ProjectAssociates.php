@@ -235,11 +235,11 @@ class ProjectAssociates extends ProjectParticipants
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'organization'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'organization'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users

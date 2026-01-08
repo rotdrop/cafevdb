@@ -392,7 +392,7 @@ WHERE dsf.id IS NOT NULL',
         'project_id',
         'musician_id',
         'id',
-        $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
+        self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
       ];
     }
 
@@ -1531,8 +1531,8 @@ WHERE dsf.id IS NOT NULL',
                 $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
                 continue 2;
               case 'balance_documents_folder_id':
-              case $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
-              case $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
+              case self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
+              case self::joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
                 continue 2;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
@@ -1658,8 +1658,8 @@ WHERE dsf.id IS NOT NULL',
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
 
     if (!$this->isCompositeRowTag($oldValues[$rowTagKey])) {
       $paymentId = $oldValues[$rowTagKey] ?? $oldValues[$paymentIdKey];
@@ -1740,11 +1740,11 @@ WHERE dsf.id IS NOT NULL',
     $oldValues['is_donation'] = $oldValues['is_donation'] ?? 0;
     $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
 
-    $compositeKey = $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $compositeKey = $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
 
-    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+    $musicianId = $newValues[self::joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $oldValues['musician_id'] =
       $newValues['musician_id'] = $musicianId;
 
@@ -1778,11 +1778,11 @@ WHERE dsf.id IS NOT NULL',
       foreach ($dataSets as $dataSet) {
         ${$dataSet . 'Values'} = array_merge(
           ${$dataSet . 'Values'}, [
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id') => $projectId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id') => $fieldId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key') => $receivableKey,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id') => $pme->rec['id'],
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id') => $projectId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id') => $fieldId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key') => $receivableKey,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id') => $pme->rec['id'],
           ]);
 
         // index all values by the key in order to please the
@@ -1828,7 +1828,7 @@ WHERE dsf.id IS NOT NULL',
       $unsetTags[] = 'supporting_document_id';
 
       // handled on the split-level
-      $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
+      $unsetTags[] = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
 
       foreach ($unsetTags as $tag) {
         unset($newValues[$tag]);
@@ -1840,7 +1840,7 @@ WHERE dsf.id IS NOT NULL',
     $nullables = [
       'sepa_transaction_id',
       'balance_documents_folder_id',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'),
+      self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'),
     ];
     foreach ($nullables as $key) {
       foreach (['old', 'new'] as $dataSet) {
@@ -1895,16 +1895,16 @@ WHERE dsf.id IS NOT NULL',
 
     $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
 
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
 
-    $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
-    $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
+    $amountKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
+    $subjectKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
 
     if (!empty($newValues[$rowTagKey]) && !$this->isCompositeRowTag($newValues[$rowTagKey])) {
       // Sub-payment, redirect to change mode
 
-      $compositeKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
+      $compositeKeyKey = self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
 
       // redirect to change operation ...
       $oldValues = $newValues;
@@ -1940,11 +1940,11 @@ WHERE dsf.id IS NOT NULL',
     // extract project-id, field-id, receivable_key from the composite-option-key select
     list($projectId, $fieldId, $receivableKey) = explode(
       self::COMP_KEY_SEP,
-      $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')],
+      $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')],
       3
     );
 
-    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+    $musicianId = $newValues[self::joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $newValues['musician_id'] = $musicianId;
 
     if (($newValues[$amountKey]??null) === null) {
@@ -1957,12 +1957,12 @@ WHERE dsf.id IS NOT NULL',
     } else {
       $newValues['subject'] = $newValues[$subjectKey];
     }
-    unset($newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')]);
+    unset($newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')]);
 
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
 
     $newValues['project_id'] = $projectId;
 

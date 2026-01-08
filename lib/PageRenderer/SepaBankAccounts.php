@@ -271,10 +271,10 @@ class SepaBankAccounts extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'id'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'id'),
       'sequence',
-      $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
+      self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
     ];
 
     // Group by for to-many joins
@@ -1151,7 +1151,7 @@ received so far'),
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $accountSequence = 'sequence';
-    $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $readOnlyKeys = [ $accountSequence, $debitMandateSequenceKey ];
     $unsafeChanged = array_intersect($changed, $readOnlyKeys);
     if (!empty($unsafeChanged)) {
@@ -1163,7 +1163,7 @@ received so far'),
     }
     $debitMandateSequence = $newValues[$debitMandateSequenceKey];
 
-    $mandateNonRecurring = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
+    $mandateNonRecurring = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
     $newValues[$mandateNonRecurring] = (int)$newValues[$mandateNonRecurring];
     $oldValues[$mandateNonRecurring] = (int)$oldValues[$mandateNonRecurring];
     if ($oldValues[$mandateNonRecurring] == $newValues[$mandateNonRecurring]) {
@@ -1174,7 +1174,7 @@ received so far'),
     }
 
     // Remove "written-mandate-id" because it is handled separately
-    $writtenMandateIdKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
+    $writtenMandateIdKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
     unset($newValues[$writtenMandateIdKey]);
     unset($oldValues[$writtenMandateIdKey]);
     Util::unsetValue($changed, $writtenMandateIdKey);
@@ -1273,14 +1273,14 @@ received so far'),
 
     $maxSequence = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->sequenceMax($musician);
     $debitMandateSequence = $maxSequence + 1;
-    $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $newValues[$debitMandateSequenceKey] = $debitMandateSequence;
 
     // add some missing values
-    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
+    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
       $newValues['sequence'];
-    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
-      $newValues[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')];
+    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
+      $newValues[self::joinTableFieldName(self::PROJECTS_TABLE, 'id')];
 
     // convert to the KEY:VALUE format understood by beforeInsert...
     foreach ($newValues as $key => $value) {

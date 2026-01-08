@@ -200,7 +200,7 @@ class TaxationStatutorySources extends PMETableViewBase
     $opts['sort_field'] = [
       'country',
       'tax_type',
-      // $this->joinTableFieldName(self::TABLE . self::VALUES_TABLE_SEP . 'L10NTaxTypes', 'l10n_value'),
+      // self::joinTableFieldName(self::TABLE . self::VALUES_TABLE_SEP . 'L10NTaxTypes', 'l10n_value'),
       'law',
     ];
 

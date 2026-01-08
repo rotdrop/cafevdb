@@ -106,7 +106,7 @@ trait ParticipantTotalFeesTrait
             $table = self::participantFieldTableName($fieldId);
             $fieldValues = [ 'key' => null, 'value' => null ];
             foreach ($fieldValues as $fieldName => &$fieldValue) {
-              $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
+              $label = self::joinTableFieldName($table, 'option_'.$fieldName);
               if (!isset($pme->fdn[$label])) {
                 throw new Exceptions\DatabaseLegacyException($this->l->t('Data for monetary field "%s" not found', $label));
               }
@@ -254,8 +254,8 @@ trait ParticipantTotalFeesTrait
    */
   public function totalFeesPreFilterTrigger(PHPMyEdit $pme, string $op, string $step):bool
   {
-    $summaryName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount');
-    $outstandingName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
+    $summaryName = self::joinTableFieldName(PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount');
+    $outstandingName = self::joinTableFieldName(PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
 
     if (!isset($pme->fdn[$summaryName])) {
       // happens if there are no finance fields.

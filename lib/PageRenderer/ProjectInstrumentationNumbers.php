@@ -158,9 +158,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['groupby_fields'] = array_keys($opts['key']);
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'name'),
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'voice',
     ];
 

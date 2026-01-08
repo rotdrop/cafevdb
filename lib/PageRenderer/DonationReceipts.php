@@ -270,8 +270,8 @@ class DonationReceipts extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [
       'id',
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
     ];
 
     // Options you wish to give the users
@@ -811,8 +811,8 @@ class DonationReceipts extends PMETableViewBase
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $remapFields = [
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      $this->joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {
@@ -852,8 +852,8 @@ class DonationReceipts extends PMETableViewBase
     }
 
     $remapFields = [
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      $this->joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {

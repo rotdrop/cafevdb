@@ -984,7 +984,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             throw new RuntimeException($this->l->t('Table "%s": missing identifier for field "%s" and grouping field "%s" already set.', [ $table, $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
-          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
             'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
             'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
@@ -1000,7 +1000,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // We try to copy with this problem by checking for the colon syntax
           // and not doing this hack if we find a usual
           // KEY1:VALUE1,KEY2:VALUE2,... field.
-          $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
+          $deletedField = self::joinTableFieldName($joinInfo, 'deleted');
           if (!empty($oldValues[$deletedField]) && !str_contains($oldValues[$deletedField], self::JOIN_KEY_SEP)) {
             $deletedKeys = Util::explode(self::VALUES_SEP, $oldValues[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
@@ -1038,7 +1038,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           } elseif (isset($pivotColumn['value'])) {
             $identifier[$key] = $pivotColumn['value'];
           } elseif (isset($pivotColumn['self'])) {
-            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $selfField = self::joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField, ];
           } else {
             throw new RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
@@ -1395,7 +1395,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
               foreach ($identifierColumns as $key) {
                 // Always set the field with explicitly matching name
-                $selfField = $this->joinTableFieldName($joinInfo, $key);
+                $selfField = self::joinTableFieldName($joinInfo, $key);
                 if (isset($newValues[$selfField])) {
                   $newValues[$selfField] = $identifierColumnValues[$key];
                 }
@@ -1403,7 +1403,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
                 if ($pivotColumn === false) {
                   // assume that the 'column' component contains the keys.
-                  $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                  $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
                   $masterField = self::joinTableMasterFieldName($joinInfo);
                   $newValues[$masterField] = $newValues[$keyField] = $identifierColumnValues[$key];
                 } elseif (!is_array($pivotColumn)) {
@@ -1556,7 +1556,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         if (array_search($keyColumn, $missingKeys) === false) {
           continue;
         }
-        $joinFieldName = $this->joinTableFieldName($joinInfo, $joinColumn);
+        $joinFieldName = self::joinTableFieldName($joinInfo, $joinColumn);
         if (isset($newValues[$joinFieldName])) {
           $newValues[$keyColumn] = $newValues[$joinFieldName];
           $changed[] = $keyColumn;
@@ -1616,7 +1616,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             throw new RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
-          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = Util::explode(self::VALUES_SEP, $newValues[$keyField]);
 
           if (isset($changeSet[$joinInfo['column']])) {
@@ -1649,7 +1649,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             // defaulted if not yet known. This can only be used
             // together with the 'multiple' case and must not
             // introduce additional deletions and modifications.
-            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $selfField = self::joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField ];
           } else {
             throw new RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
@@ -1846,7 +1846,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
             foreach ($identifierColumns as $key) {
               // Always set the field with explicitly matching name
-              $selfField = $this->joinTableFieldName($joinInfo, $key);
+              $selfField = self::joinTableFieldName($joinInfo, $key);
               if (isset($newValues[$selfField])) {
                 $newValues[$selfField] = $identifierColumnValues[$key];
               }
@@ -1854,7 +1854,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
               if ($pivotColumn === false) {
                 // assume that the 'column' component contains the keys.
-                $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
                 $masterField = self::joinTableMasterFieldName($joinInfo);
                 $newValues[$masterField] = $newValues[$keyField] = $identifierColumnValues[$key];
               } elseif (!is_array($pivotColumn)) {
@@ -1928,7 +1928,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               foreach (['identifier', 'filter'] as $columnRestriction) {
                 foreach (($childJoinInfo[$columnRestriction]??[]) as $column => $target) {
                   if ($target === $key) {
-                    // $newValues[$this->joinTableFieldName($table, $column)] = $newValues[$key];
+                    // $newValues[self::joinTableFieldName($table, $column)] = $newValues[$key];
                     $childChangeSet[$column] = $key;
                   }
                 }
@@ -2345,25 +2345,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * Compute the index into the phpMyEdit field-description data of
-   * the given $tableInfo and $column.
-   *
-   * @param array $fieldDescriptionData See phpMyEdit source code and
-   * look-out for "fdd".
-   *
-   * @param string|array $tableInfo @see joinTableFieldName().
-   *
-   * @param string $column @see joinTableFieldName().
-   *
-   * @return bool|int Result of array_search().
-   */
-  protected function fieldIndex(array $fieldDescriptionData, $tableInfo, string $column)
-  {
-    $fieldName = $this->joinTableFieldName($tableInfo, $column);
-    return array_search($fieldName, array_keys($fieldDescriptionData));
-  }
-
-  /**
    * Generate a join-table field, given join-table and field name.
    *
    * @param array $fieldDescriptionData See phpMyEdit source code and
@@ -2390,7 +2371,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'input' => 'S',
       'values' => [],
     ];
-    $fieldName = $this->joinTableFieldName($tableInfo, $column);
+    $fieldName = self::joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
     $fdd = Util::arrayMergeRecursive($defaultFDD, $fdd);
     $joinInfo = null;

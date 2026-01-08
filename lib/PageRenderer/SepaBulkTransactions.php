@@ -232,7 +232,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       '-submission_dead_line',
       '-created',
       'id',
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
     ];
     $opts['groupby_fields'] = [ 'id' ];
     $opts['groupby_where'] = true;
@@ -763,7 +763,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       );
     }
 
-    $rowTagKey = $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
+    $rowTagKey = self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
 
     $paymentId = null;
 

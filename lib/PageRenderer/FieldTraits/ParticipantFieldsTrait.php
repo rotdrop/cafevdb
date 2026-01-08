@@ -2343,17 +2343,17 @@ GROUP BY " . $fdAlias . ".option_key",
 
       $tableName = self::participantFieldTableName($fieldId);
 
-      $keyName = $this->joinTableFieldName($tableName, 'option_key');
-      $valueName = $this->joinTableFieldName($tableName, 'option_value');
-      $depositName = $this->joinTableFieldName($tableName, 'deposit');
-      $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
+      $keyName = self::joinTableFieldName($tableName, 'option_key');
+      $valueName = self::joinTableFieldName($tableName, 'option_value');
+      $depositName = self::joinTableFieldName($tableName, 'deposit');
+      $groupFieldName = self::joinTableFieldName($tableName, 'musician_id');
 
       $optionTableName = self::participantFieldOptionsTableName($fieldId);
-      $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
-      $optionBalancingAccountName = $this->joinTableFieldName($optionTableName, 'balancing_account');
+      $optionLabelName = self::joinTableFieldName($optionTableName, 'label');
+      $optionBalancingAccountName = self::joinTableFieldName($optionTableName, 'balancing_account');
       $optionKeyName = self::joinTableFieldName($optionTableName, 'key');
 
-      $supportingDocumentName = $this->joinTableFieldName($tableName, 'supporting_document_id');
+      $supportingDocumentName = self::joinTableFieldName($tableName, 'supporting_document_id');
 
       // label and balancing account may only be tweaked for recurring multiplicity
       if ($fieldMultiplicity != FieldMultiplicity::RECURRING) {

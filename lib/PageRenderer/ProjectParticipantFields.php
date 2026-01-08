@@ -249,7 +249,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      '-' . $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      '-' . self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
       'project_id',
       '-display_order',
       'name' ,
@@ -1416,7 +1416,7 @@ __EOT__;
     // our PME legacy join table stuff.
     $optionValues = [];
     foreach ($newValues['data_options'] as $key => $allowedValue) {
-      $keyField = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
+      $keyField = self::joinTableFieldName(self::OPTIONS_TABLE, 'key');
       $optionValues[$keyField][] = $key;
       foreach ($allowedValue as $field => $value) {
         if ($field == 'key') {
@@ -1438,7 +1438,7 @@ __EOT__;
         } elseif ($field === 'deposit') {
           $value = RationalNumber::create($value)->toDecimal(2);
         }
-        $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
+        $field = self::joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = $value === null ? null : $key . self::JOIN_KEY_SEP . $value;
       }
       if (($newMultiplicity == FieldMultiplicity::SIMPLE
