@@ -41,10 +41,10 @@ final class Version19700101000001 extends AbstractMigration
   }
 
   /**
+   * {@inheritdoc}
+   *
    * This is a structural migration and thus cannot be transactional on
    * MariaDB / MySQL.
-   *
-   * {@inheritdoc}
    */
   public function isTransactional(): bool
   {
