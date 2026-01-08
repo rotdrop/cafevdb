@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260106233236 extends AbstractMigration
+final class Version19700101000001 extends AbstractMigration
 {
   /** {@inheritdoc} */
   public function getDescription(): string

@@ -120,7 +120,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\SepaBulkTransactionsBalancingData::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UpdateTableTaxationStatutorySources::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UseDecimalForExactFractions::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260106233236::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
@@ -246,7 +247,7 @@ SQL;
     );
 
     $applied = $doctrineMigrationsService->getApplied();
-    $this->assertEquals(1, count($applied));
+    $this->assertEquals(2, count($applied));
 
     $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
     $this->assertInstanceOf(DoctrineMigrationsService::class, $service);

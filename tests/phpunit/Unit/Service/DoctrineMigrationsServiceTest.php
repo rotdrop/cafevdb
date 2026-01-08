@@ -48,7 +48,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 /** Test aspects of the DoctrineMigrationsService class. */
 #[Attributes\CoversClass(DoctrineMigrationsListener::class)]
 #[Attributes\CoversClass(DoctrineMigrationsService::class)]
-#[Attributes\CoversClass(MigrationsNamespace\Version20260106233236::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version19700101000002::class)]
 #[Attributes\CoversClass(Migrations\AbstractMigration::class)]
 #[Attributes\CoversClass(Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
@@ -81,6 +82,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 class DoctrineMigrationsServiceTest extends TestCase
 {
   private EntityManager $entityManager;
@@ -130,7 +137,7 @@ class DoctrineMigrationsServiceTest extends TestCase
   }
 
   private const UNAPPLIED = [
-    '20260106233236' => 'Initial database setup.',
+    '19700101000001' => 'Initial database setup.',
   ];
 
   /** @return void */

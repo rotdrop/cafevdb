@@ -90,18 +90,22 @@ class CreateTableDoctrineMigrationsVersions extends AbstractMigration
         $this->l->t('Unable to switch to Doctrine migrations as the initial database migration does not seem to be available.'),
       );
     }
-    $versionString = array_keys($unapplied)[0];
+    // per convention initial setup migrations as tagged with the year
+    // 1970. Those will be marked as applied here.
+    $setupMigrations = array_filter(array_keys($unapplied), fn(string $versionString) => str_starts_with($versionString, '1970'));
     $this->entityManager->beginTransaction();
     try {
-      $setupVersion = new Entities\DoctrineMigrationsVersion()
-        ->setVersion(DoctrineMigrations::class . '\\Version' . $versionString)
-        ->setExecutedAt(new DateTimeImmutable)
-        ->setExecutionTime(0)
-        ;
-      $this->entityManager->persist($setupVersion);
+      foreach ($setupMigrations as $versionString) {
+        $setupVersion = new Entities\DoctrineMigrationsVersion()
+          ->setVersion(DoctrineMigrations::class . '\\Version' . $versionString)
+          ->setExecutedAt(new DateTimeImmutable)
+          ->setExecutionTime(0)
+          ;
+        $this->entityManager->persist($setupVersion);
+        $this->logInfo('NEW ENTITY ' . print_r($setupVersion, true));
+      }
       $this->entityManager->flush();
       $this->entityManager->commit();
-      $this->logInfo('NEW ENTITY ' . print_r($setupVersion, true));
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
         try {
