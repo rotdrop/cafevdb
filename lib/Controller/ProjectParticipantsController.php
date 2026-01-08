@@ -1035,7 +1035,7 @@ class ProjectParticipantsController extends Controller
    * @return OCP\AppFramework\Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontPageRoute(verb: 'POST', urL: '/projects/participants/mailing-list/{operation}')]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/projects/participants/mailing-list/{operation}')]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,
