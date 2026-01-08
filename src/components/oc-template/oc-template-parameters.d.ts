@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,13 +59,13 @@ export type TemplateParameters = {
   musicianAddressViewTemplate: {
     id: number;
     personalPublicName: string;
-    email?: string;
-    fixedLinePhone?: string;
-    mobilePhone?: string;
-    addressSupplement?: string;
+    email?: null|string;
+    fixedLinePhone?: null|string;
+    mobilePhone?: null|string;
+    addressSupplement?: null|string;
     streetAndNumber: string;
-    postalCode?: string;
-    country?: string;
+    postalCode?: null|string;
+    country?: null|string;
     duplicatesProbability: number;
     reasons: string;
   };
