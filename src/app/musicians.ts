@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.ts';
 import * as Notification from './notification.ts';
 import { selected as selectedValues } from './select-utils.ts';
+import { rec as pmeRec } from './pme-record-id.ts';
 import {
   token as pmeToken,
   data as pmeData,
@@ -375,9 +376,9 @@ const contactValidation = function(container?: string|JQuery) {
   $mailingListOperations.filter('.reload').trigger('click', [{ setup: true }]);
 
   const $address = $form.find<HTMLInputElement>('input.musician-address');
-  const city = $address.filter('.city');
-  const street = $address.filter('.street');
-  const postalCode = $address.filter('.postal-code');
+  const $city = $address.filter('.city');
+  const $street = $address.filter('.street');
+  const $postalCode = $address.filter('.postal-code');
 
   const $countrySelect = $form.find<HTMLSelectElement>('select.musician-address.country');
   const $allAddressFields = $($address).add($countrySelect);
@@ -388,41 +389,43 @@ const contactValidation = function(container?: string|JQuery) {
   });
 
   const updateAutocompleteData = function() {
-    postalCode.data('oldValue', null);
-    postalCode.trigger('blur');
+    $postalCode.data('oldValue', null);
+    $postalCode.trigger('blur');
   };
 
   const needAutocompleteUpdate = function() {
     return ($countrySelect.data('oldValue') !== $countrySelect.val()
-            || city.data('oldValue') !== city.val()
-            || postalCode.data('oldValue') !== postalCode.val());
+            || $city.data('oldValue') !== $city.val()
+            || $postalCode.data('oldValue') !== $postalCode.val());
   };
 
-  $address
-    .autocomplete({
-      source: [],
-      minLength: 0,
-      open(event, _ui) {
-        const $input = $(event.target);
-        const $results = $input.autocomplete('widget');
-        const top = $results.position().top;
-        const height = $results.outerHeight()!;
-        const inputHeight = $input.outerHeight()!;
-        const newTop = top - height - inputHeight;
+  $address.each(function() {
+    $(this)
+      .autocomplete({
+        source: [],
+        minLength: 0,
+        open(event, _ui) {
+          const $input = $(event.target);
+          const $results = $input.autocomplete('widget');
+          const top = $results.position().top;
+          const height = $results.outerHeight()!;
+          const inputHeight = $input.outerHeight()!;
+          const newTop = top - height - inputHeight;
 
-        $results.css('top', newTop + 'px');
-      },
-      select(event, ui) {
-        const $input = $(event.target);
-        $input.val(ui.item.value);
-        $input.trigger('blur');
-      },
-    })
-    .on('focus, click', function() {
-      if (!$(this).autocomplete('widget').is(':visible')) {
-        $(this).autocomplete('search', '');
-      }
-    });
+          $results.css('top', newTop + 'px');
+        },
+        select(event, ui) {
+          const $input = $(event.target);
+          $input.val(ui.item.value);
+          $input.trigger('blur');
+        },
+      })
+      .on('focus, click', function() {
+        if (!$(this).autocomplete('widget').is(':visible')) {
+          $(this).autocomplete('search', '');
+        }
+      });
+  });
 
   // Inject a text input element for possible suggestions for the country setting.
   const $countryInput = $<HTMLInputElement>('<input type="text"'
@@ -506,8 +509,8 @@ const contactValidation = function(container?: string|JQuery) {
           return;
         }
 
-        city.autocomplete('option', 'source', data.cities);
-        postalCode.autocomplete('option', 'source', data.postalCodes);
+        $city.autocomplete('option', 'source', data.cities);
+        $postalCode.autocomplete('option', 'source', data.postalCodes);
 
         $address.each(function() {
           const $this = $(this);
@@ -567,12 +570,12 @@ const contactValidation = function(container?: string|JQuery) {
           return;
         }
 
-        if (street.autocomplete('instance') === undefined) {
-          console.error('STREET INPUT ELEMENT LACKS AUTOCOMPLETE WIDGET', street);
+        if ($street.autocomplete('instance') === undefined) {
+          console.error('STREET INPUT ELEMENT LACKS AUTOCOMPLETE WIDGET', $street);
         } else {
-          street.autocomplete('option', 'source', data.streets);
-          const sourceSize = street.autocomplete('option', 'source').length;
-          street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+          $street.autocomplete('option', 'source', data.streets);
+          const sourceSize = $street.autocomplete('option', 'source').length;
+          $street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
 
           Notification.messages(data.message);
         }
@@ -804,6 +807,11 @@ const ready = function(container?: string|JQuery) {
   );
 
   $selectMusicianInstruments.on('change', function(this: HTMLSelectElement) {
+    if (!pmeRec($container)) {
+      // without musician id no validation, probably adding a new one!
+      return false;
+    }
+
     const $self = $(this);
 
     PHPMyEdit.tableDialogLock($container, true);
