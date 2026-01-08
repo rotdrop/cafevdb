@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -102,9 +102,6 @@ class InstrumentsRepository extends EntityRepository
   /**
    * Prepare ofor grouping select options by instrument family.
    *
-   * @param bool $useEntities Use full entites instead of mere names in the
-   * look-up tables.
-   *
    * @return array<string, array<string|int, string>>
    *
    * ```php
@@ -119,7 +116,7 @@ class InstrumentsRepository extends EntityRepository
    *
    * @todo Does such a function belong into the entity repository? OTOH ...
    */
-  public function describeAll(bool $useEntities = false)
+  public function describeAll()
   {
     $byId = $byName = $nameGroups = $idGroups = $familyCollector = [];
 
@@ -134,7 +131,7 @@ class InstrumentsRepository extends EntityRepository
       sort($families);
       //$this->log('ID '.$id.' INST '.$instrument.' FAM '.print_r($families, true));
       $family = implode(',', $families);
-      $byName[$instrument] = $byId[$id] = $useEntities ? $entity : $instrument;
+      $byName[$instrument] = $byId[$id] = $instrument;
       $nameGroups[$instrument] = $idGroups[$id] = $family;
       $familyCollector[] = $family;
     }
