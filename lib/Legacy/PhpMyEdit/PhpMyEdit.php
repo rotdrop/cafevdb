@@ -5,7 +5,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -7150,11 +7150,11 @@ EOT;
 		} else {
 			$this->close_dbh = true;
 			$this->dbh = null;
-			$this->dbp = $this->sd.$opts['db'].$this->ed.'.';
-			$this->hn  = $opts['hn'];
-			$this->un  = $opts['un'];
-			$this->pw  = $opts['pw'];
-			$this->db  = $opts['db'];
+			$this->dbp = ($this->sd . ($opts['db'] ?? '')) . $this->ed . '.';
+			$this->hn  = $opts['hn'] ?? null;
+			$this->un  = $opts['un'] ?? null;
+			$this->pw  = $opts['pw'] ?? null;
+			$this->db  = $opts['db'] ?? null;
 		}
 		$this->tb  = $opts['tb'];
 		// Other variables§

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -161,6 +161,13 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $this->cgi = $options['cgi'];
       $this->operation = $this->get_sys_cgi_var('operation');
       $this->determineOperation();
+    }
+
+    if (!empty($options['fdd'])) {
+      if (!isset($options['execute'])) {
+        $options['execute'] = false;
+      }
+      parent::__construct($options); // oh oh
     }
   }
 
