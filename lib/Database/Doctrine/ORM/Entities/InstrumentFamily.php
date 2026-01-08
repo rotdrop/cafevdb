@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ class InstrumentFamily implements \ArrayAccess
   private ?string $untranslatedFamily;
 
   /** @var Collection<Instrument> */
-  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', indexBy: 'name', orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Collection $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

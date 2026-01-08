@@ -22,38 +22,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Service;
-
-use InvalidArgumentException;
-use ReflectionClass;
+namespace OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCP\IL10N;
-
-use OCA\CAFEVDB\Common\ConsoleLogger;
-use OCA\CAFEVDB\Common\ConsoleOutput;
-use OCA\CAFEVDB\Database\Doctrine\Migrations;
-use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
-use OCA\CAFEVDB\Service\DoctrineMigrationsService;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
-use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
+use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432 as Migration;
 
-/** Test aspects of the DoctrineMigrationsService class. */
-#[Attributes\CoversClass(DoctrineMigrationsListener::class)]
-#[Attributes\CoversClass(DoctrineMigrationsService::class)]
-#[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]
-#[Attributes\CoversClass(MigrationsNamespace\Version19700101000002::class)]
-#[Attributes\CoversClass(MigrationsNamespace\Version20260108084800::class)]
-#[Attributes\CoversClass(MigrationsNamespace\Version20260108115432::class)]
-#[Attributes\CoversClass(Migrations\AbstractMigration::class)]
-#[Attributes\CoversClass(Migrations\DependencyFactory::class)]
+/** Test aspects of the given migration. */
+#[Attributes\CoversClass(Migration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -66,9 +45,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
@@ -79,7 +60,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
@@ -88,96 +73,32 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
-class DoctrineMigrationsServiceTest extends TestCase
+class Version20260108115432Test extends TestCase
 {
-  private EntityManager $entityManager;
-
-  private DoctrineMigrationsService $migrationsService;
-
-  private IL10N $l;
+  use SetupMigrationTrait {
+    SetupMigrationTrait::setup as migrationSetup;
+    SetupMigrationTrait::tearDown as migrationTearDown;
+  }
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
-
-    /** @var DatabaseProvider $databaseProvider */
-    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
-
-    if (!$databaseProvider->getDatabaseConfig()) {
-      $databaseProvider->startServer();
-    }
-
-    $this->entityManager = $mockProvider->getEntityManager();
-
-    $consoleLogger = new ConsoleLogger(
-      consoleOutput: $this->createStub(ConsoleOutput::class),
-      isCLI: false,
-      logger: $mockProvider->getLoggerInterface(),
-    );
-
-    $appContainer = $mockProvider->getAppContainer();
-
-    $this->l = $mockProvider->getL10N();
-
-    $this->migrationsService = new DoctrineMigrationsService(
-      logger: $consoleLogger,
-      entityManager: $this->entityManager,
-      appContainer: $appContainer,
-      l: $this->l,
-    );
+    $version = substr(__FILE__, -22, 14);
+    $this->migrationSetup($version);
   }
 
-  /** @return void */
-  public function testGetDependencyFactory(): void
+  /** {@inheritdoc} */
+  public function tearDown(): void
   {
-    $factory = $this->migrationsService->getDependencyFactory();
-    $this->assertInstanceOf(DependencyFactory::class, $factory);
+    $this->migrationTearDown();
   }
 
-  private const UNAPPLIED = [
-    '19700101000001' => 'Initial database setup.',
-  ];
-
-  /** @return void */
-  public function testGetUnapplied(): void
+  /** {@inheritdoc} */
+  public function testApplyMigration(): void
   {
-    $result = $this->migrationsService->getUnapplied();
-    $this->assertArrayHasKey(array_keys(self::UNAPPLIED)[0], $result);
-    $first = reset($result);
-    $expected = array_values(self::UNAPPLIED)[0];
-    $expected = [$expected, $this->l->t($expected)];
-    $this->assertTrue(in_array($first, $expected));
-  }
-
-  /** @return void */
-  public function testApplyInvalidArgument(): void
-  {
-    $this->expectException(InvalidArgumentException::class);
-    $this->migrationsService->apply('HutzliPutzli');
-  }
-
-  /** @return void */
-  public function testApply(): void
-  {
-    $unapplied = $this->migrationsService->getUnapplied();
-    foreach (array_keys($unapplied) as $version) {
-      $this->migrationsService->apply($version, EnumMigrationDirection::UP);
-    }
-    $result = $this->migrationsService->getUnapplied();
-    $this->assertEquals([], $result);
-    $result = $this->migrationsService->getApplied();
-    $this->assertEquals(count($unapplied), count($result));
-    foreach (array_reverse(array_keys($unapplied)) as $version) {
-      $this->migrationsService->apply($version, EnumMigrationDirection::DOWN);
-    }
-    $result = $this->migrationsService->getUnapplied();
-    $this->assertEquals(count($unapplied), count($result));
-    $result = $this->migrationsService->getApplied();
-    $this->assertEquals(0, count($result));
   }
 }

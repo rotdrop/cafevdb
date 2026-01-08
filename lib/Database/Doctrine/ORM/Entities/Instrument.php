@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ class Instrument implements \ArrayAccess
   use CAFEVDB\Traits\AutoIncrementTrait;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedName')]
-  #[ORM\Column(type: 'string', length: 128, nullable: false)]
+  #[ORM\Column(type: 'string', length: 128, nullable: false, unique: true)]
   private string $name;
 
   private ?string $untranslatedName;
@@ -61,7 +61,7 @@ class Instrument implements \ArrayAccess
   #[ORM\JoinTable]
   #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
-  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Collection $families;
 
   /** @var Collection<MusicianInstrument> */
