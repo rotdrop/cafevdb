@@ -98,14 +98,14 @@ trait SetupMigrationTrait
     $latest = null;
     $unapplied = $this->migrationsService->getUnapplied();
     foreach (array_keys($unapplied) as $version) {
-      if ((int)$version > (int)$upToVersion) {
+      if ($upToVersion != 'latest' && (int)$version > (int)$upToVersion) {
         break;
       }
       $this->migrationsService->apply($version, EnumMigrationDirection::UP);
       $latest = $version;
       $this->appliedVersions[] = $version;
     }
-    if ($latest != $upToVersion) {
+    if ($upToVersion != 'latest' && $latest != $upToVersion) {
       throw new UnexpectedValueException("Migration '{$upToVersion}' does not seem to exist.");
     }
 
