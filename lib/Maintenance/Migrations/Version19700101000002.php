@@ -45,7 +45,7 @@ final class Version19700101000002 extends AbstractMigration
     'percussion',
     'keyboard',
     'miscellaneous',
-    'not an instrument',
+    Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY,
   ];
   public const INSTRUMENTS = [
     'violin' => [
@@ -202,6 +202,9 @@ final class Version19700101000002 extends AbstractMigration
   /** {@inheritdoc} */
   public function preUp(Schema $schema): void
   {
+    // Otherwise the English names will be recorded as translations.
+    $oldL10n = $this->entityManager->setTranslatableL10n(null);
+
     $families = [];
     foreach (self::INSTRUMENT_FAMILY_NAMES as $familyName) {
       $family = new Entities\InstrumentFamily()
@@ -211,7 +214,15 @@ final class Version19700101000002 extends AbstractMigration
       $families[$familyName] = $family;
     }
 
-    foreach (self::INSTRUMENTS as $name => $instrumentInfo) {
+    $instruments = self::INSTRUMENTS;
+    foreach (Entities\ProjectInstrument::NON_INSTRUMENTS as $nonInstrumentName) {
+      $instruments[$nonInstrumentName] = [
+        'families' => [Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY],
+        'sort' => 0x7fffffff,
+      ];
+    }
+
+    foreach ($instruments as $name => $instrumentInfo) {
       $instrument = new Entities\Instrument()
         ->setName($name)
         ->setSortOrder($instrumentInfo['sort'])
@@ -226,5 +237,8 @@ final class Version19700101000002 extends AbstractMigration
     }
 
     $this->entityManager->flush();
+
+    // restore locale settting
+    $this->entityManager->setTranslatableL10n($oldL10n);
   }
 }
