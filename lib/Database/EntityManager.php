@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -760,8 +760,9 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener->setTranslatableLocale($localeCode);
     $translatableListener->setDefaultLocale(ConfigConstants::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
-    $translatableListener->setPersistDefaultLocaleTranslation(true);
+    $translatableListener->setPersistDefaultLocaleTranslation(false);
     $translatableListener->setAnnotationReader($attributeReader);
+    $translatableListener->setDefaultTranslationValue(null);
     $evm->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
@@ -1421,12 +1422,7 @@ class EntityManager extends EntityManagerDecorator
    */
   protected function getLocaleCode(?IL10N $l10n): string
   {
-    $locale = $l10n->getLocaleCode();
-    if ($locale === null) {
-      $locale = ConfigConstants::DEFAULT_LOCALE;
-    } else {
-      $locale = $this->l->getLocaleCode();
-    }
+    $locale = $l10n?->getLocaleCode() ?? ConfigConstants::DEFAULT_LOCALE;
     if (strpos($locale, '_') === false) {
       $locale = $locale . '_' . strtoupper($locale);
     }
