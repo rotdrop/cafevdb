@@ -109,14 +109,19 @@ class Version19700101000002Test extends TestCase
   public function testInstruments(): void
   {
     $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findAll();
-    $this->assertEquals(count(Migration::INSTRUMENTS), count($instruments));
+    $this->assertEquals(
+      count(Migration::INSTRUMENTS)
+      +
+      count(Entities\ProjectInstrument::NON_INSTRUMENTS),
+      count($instruments),
+    );
     foreach (Migration::INSTRUMENTS as $instrumentName => $instrumentInfo) {
       $instrument = $this->entityManager->getRepository(Entities\Instrument::class)->findOneBy(['name' => $instrumentName]);
       $this->assertInstanceOf(Entities\Instrument::class, $instrument);
       foreach ($instrumentInfo['families'] as $familyName) {
         $family = $instrument->getFamilies()->get($familyName);
         $this->assertInstanceOf(Entities\InstrumentFamily::class, $family);
-        $this->assertEquals($instrument, $family->getInstruments()->get($instrument->getName()));
+        $this->assertEquals($instrument, $family->getInstruments()->get($instrument->getUntranslatedName()));
       }
     }
   }
@@ -137,7 +142,7 @@ class Version19700101000002Test extends TestCase
       foreach ($instrumentNames as $instrumentName) {
         $instrument = $family->getInstruments()->get($instrumentName);
         $this->assertInstanceOf(Entities\Instrument::class, $instrument);
-        $this->assertEquals($family, $instrument->getFamilies()->get($family->getFamily()));
+        $this->assertEquals($family, $instrument->getFamilies()->get($family->getUntranslatedFamily()));
       }
     }
   }
