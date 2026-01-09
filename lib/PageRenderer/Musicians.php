@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -302,7 +302,7 @@ abstract class Musicians extends PMETableViewBase
       'options'  => 'AVCPD',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',  // auto increment
+      'default'  => null,
       'sort'     => true,
     ];
 
@@ -1118,8 +1118,3 @@ GROUP BY t.id';
     return true; // but run further triggers if appropriate
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
