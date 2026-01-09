@@ -168,14 +168,14 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
 
       // Association defined as Id field
       $self                   = $this;
-      $joinColumns            = $class->associationMappings[$fieldName]['joinColumns'];
+      $joinColumns            = $class->associationMappings[$fieldName]->joinColumns;
       $assocQuotedColumnNames = array_map(
         function ($joinColumn) use ($platform, $self)
         {
           return $self->getQuotedName(
             $platform,
-            $joinColumn['name'],
-            isset($joinColumn['quoted'])
+            $joinColumn->name,
+            isset($joinColumn->quoted)
           );
         },
         $joinColumns
