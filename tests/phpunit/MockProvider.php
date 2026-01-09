@@ -892,6 +892,7 @@ class MockProvider
       IConfig::class => fn(self $self) => $self->getCloudConfig(),
       IEventDispatcher::class => fn(self $self) => $self->getEventDispatcher(),
       IL10N::class => fn(self $self) => $self->getL10N(),
+      IRequest::class => fn(self $self) => $self->getRequest(),
       ISession::class => fn(self $self) => $self->getSession(),
       IUserSession::class => fn(self $self) => $self->getUserSession(),
       Registration::USER_LOCALE => fn(self $self) => 'de_DE.UTF-8',
