@@ -126,6 +126,11 @@ class PhpMyEdit
 	const DATA_TAB_ID = 'tab-id';
 	const DATA_TAB_INDEX = 'tab-index';
 
+	const CGI_PREFIX_KEY = 'prefix';
+	const CGI_SYS_KEY = 'sys';
+	const CGI_DATA_KEY = 'data';
+	const CGI_OPERATION_KEY = 'operation';
+
 	// Class variables {{{
 
 	// Database handling
@@ -462,11 +467,11 @@ class PhpMyEdit
 			$key_rec = $this->rec;
 		}
 		if (empty($key_rec)) {
-			$recordQueryData = $this->cgi['prefix']['sys'].$sysName.'=""';
+			$recordQueryData = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$sysName.'=""';
 		} else {
 			$data = [];
 			foreach ($key_rec as $key => $value) {
-				$data[] = $this->cgi['prefix']['sys'].$sysName.'['.$key.']'.'='.$value;
+				$data[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$sysName.'['.$key.']'.'='.$value;
 			}
 			$recordQueryData = implode('&', $data);
 		}
@@ -2332,7 +2337,7 @@ class PhpMyEdit
 				}
 				if (is_array($mc)) {
 					foreach ($mc as $idx => $cmp) {
-						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'['.rawurlencode($idx).']='.rawurlencode($cmp);
+						$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$lc.'['.rawurlencode($idx).']='.rawurlencode($cmp);
 					}
 					$mc = implode(' ', $mc);
 				}
@@ -2362,7 +2367,7 @@ class PhpMyEdit
 						if ($qf_op == '') {
 							$qf_op	 = ($not ? 'NOT ' : '').'IN';
 						}
-						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
+						$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
 					$fqn_flags = $fqn_flags ??
 							   (isset($this->fdd[$k][self::FDD_VALUES]['description']) ? self::OMIT_DESC : self::COOKED);
@@ -2390,7 +2395,7 @@ class PhpMyEdit
 					'oper' => '=',
 					'value' => "'$afilter'",
 				];
-				$this->qfn .= '&'.$this->cgi['prefix']['sys'].$li.'='.rawurlencode($mi);
+				$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$li.'='.rawurlencode($mi);
 			} else if (isset($m)) {
 				if ($m == '*') {
 					continue;
@@ -2428,8 +2433,8 @@ class PhpMyEdit
 							'value' => "$afilter",
 						];
 					}
-					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
-					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
+					$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l .'='.rawurlencode($m);
+					$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$lc.'='.rawurlencode($mc);
 				} else {
 
 					/**
@@ -2667,7 +2672,7 @@ class PhpMyEdit
 						}
 					}
 					$qo[$k] = $ar;
-					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'='.rawurlencode($m);
+					$this->qfn .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'='.rawurlencode($m);
 				}
 			}
 		}
@@ -2790,7 +2795,7 @@ class PhpMyEdit
 <form class="{$css_class}"
       method="post"
       action="{$page_name}"
-      name="{$this->cgi['prefix']['sys']}form"
+      name="{$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY]}form"
 EOT;
 			foreach (($this->data['form'] ?? []) as $key => $value) {
 				$form .= '
@@ -2981,13 +2986,13 @@ EOT;
 
 				//$escape	    = true;
 				if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
-					echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
+					echo $this->htmlRadioCheck($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 											   $css_class_name, $vals, $groups, $titles, $data,
 											   $selected,
 											   $multiple, $readonly, $mandatory,
 											   $strip_tags, $escape, $helptip, $attributes);
 				} else {
-					echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
+					echo $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data, $selected,
 										   $multiple, $readonly, $mandatory, $strip_tags, $escape,
 										   $helptip, $attributes);
@@ -2997,7 +3002,7 @@ EOT;
 				$mandatory  = $this->mandatory($k);
 				$attributes = $this->htmlAttributes(self::OPERATION_ADD, $k, []);
 				echo $this->htmlTextarea(
-					$this->cgi['prefix']['data'].$this->fds[$k],
+					$this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 					$css_class_name,
 					$k,
 					$value,
@@ -3036,7 +3041,7 @@ EOT;
 				echo $this->htmlAttributes(self::OPERATION_ADD, $k, [], $readonly);
 
 				echo ($readonly !== false ? ' '.$readonly : '');
-				echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'"';
+				echo ' name="',$this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],'"';
 				echo $len_props,' value="';
 				echo $value;
 				echo '" />';
@@ -3254,12 +3259,12 @@ EOT;
 				$readonly = 'disabled';
 			}
 			if ($this->col_has_checkboxes($k) || $this->col_has_radio_buttons($k)) {
-				echo $this->htmlRadioCheck($this->cgi['prefix']['data'].$this->fds[$k],
+				echo $this->htmlRadioCheck($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 										   $css_class_name, $vals, $groups, $titles, $data,
 										   $selected, $multiple, $readonly, $mandatory,
 										   $strip_tags, $escape, $help, $attributes);
 			} else {
-				echo $this->htmlSelect($this->cgi['prefix']['data'].$this->fds[$k],
+				echo $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 									   $css_class_name, $vals, $groups, $titles, $data, $selected,
 									   $multiple, $readonly, $mandatory, $strip_tags, $escape,
 									   $help, $attributes);
@@ -3269,7 +3274,7 @@ EOT;
 			$mandatory = $this->mandatory($k);
 			$attributes = $this->htmlAttributes($operation, $k, $row);
 			echo $this->htmlTextarea(
-				$this->cgi['prefix']['data'].$this->fds[$k],
+				$this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],
 				$css_class_name,
 				$k,
 				$row[self::QUERY_FIELD . $k],
@@ -3307,7 +3312,7 @@ EOT;
 			echo $this->htmlAttributes($operation, $k, $row, $readonly);
 
 			echo ($readonly !== false ? ' '.$readonly : '');
-			echo ' name="' . $this->cgi['prefix']['data'] . $this->fds[$k] . '"';
+			echo ' name="' . $this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY] . $this->fds[$k] . '"';
 			echo ' value="';
 			if ($this->col_has_datemask($k)) {
 				echo $this->makeUserTimeString($k, $row);
@@ -3356,7 +3361,7 @@ EOT;
 		echo '<input class="',$this->getCSSclass('value', null, true, $css_postfix),'" type="password"';
 		echo $this->printTooltip($help);
 		echo ($this->disabled($k) ? ' disabled' : '');
-		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
+		echo ' name="',$this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$this->fds[$k],'" value="';
 		echo $this->enc($row[self::QUERY_FIELD . $k]),'"',$len_props,' />',"\n";
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
@@ -3521,10 +3526,10 @@ EOT;
 		$page = $this->page_name;
 		$keyRecordQuery = $this->key_record_query_data($key);
 		$url  = $keyRecordQuery.'&'.
-			$this->cgi['prefix']['sys'].'fm'.'='.$this->fm.'&'.
-			$this->cgi['prefix']['sys'].'np'.'='.$this->inc.'&'.
-			$this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
-		$url .= '&'.$this->cgi['prefix']['sys'].'qfn'.'='.rawurlencode($this->qfn).$this->qfn;
+			$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'fm'.'='.$this->fm.'&'.
+			$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'np'.'='.$this->inc.'&'.
+			$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'fl'.'='.$this->fl;
+		$url .= '&'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'qfn'.'='.rawurlencode($this->qfn).$this->qfn;
 		$url .= '&'.$this->get_sfn_cgi_vars().$this->cgi['persist'];
 		$ar	  = array(
 			'key'	=> $keyRecordQuery,
@@ -3842,7 +3847,7 @@ EOT;
 			$css_classes);
 		array_unshift($css_classes, $first_css);
 
-		if (!str_starts_with($name, $this->cgi['prefix']['sys'])) {
+		if (!str_starts_with($name, $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY])) {
 			$suffixes = [ ':'.$name, '' ];
 		} else {
 			$suffixes = [''];
@@ -3885,7 +3890,7 @@ EOT;
 		if($disabled === -1) return;
 		$markdisabled = $disabled ? ' disabled' : '';
 		$ret = '<input'.$markdisabled.' type="submit" class="'.$css_class_name
-			.'" name="'.$this->cgi['prefix']['sys'].ltrim($markdisabled).$name
+			.'" name="'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].ltrim($markdisabled).$name
 			.'" value="'.(isset($this->labels[$label]) ? $this->labels[$label] : $label);
 		$ret .='"';
 		if(isset($style)) $ret .= ' style="'.$style.'"';
@@ -3902,12 +3907,12 @@ EOT;
 	 */
 	function htmlHiddenSys($name, $value, $css = null) /* {{{ */
 	{
-		return $this->htmlHidden($this->cgi['prefix']['sys'].$name, $value, $css);
+		return $this->htmlHidden($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$name, $value, $css);
 	} /* }}} */
 
 	function htmlHiddenData($name, $value, $css = null) /* {{{ */
 	{
-		return $this->htmlHidden($this->cgi['prefix']['data'].$name, $value, $css);
+		return $this->htmlHidden($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$name, $value, $css);
 	} /* }}} */
 
 	function htmlHidden($name, $value, $css = null) /* {{{ */
@@ -4344,7 +4349,7 @@ EOT;
 		$i	 = 0;
 		foreach ($alternative_sfn as $val) {
 			$ret != '' && $ret .= '&';
-			$ret .= rawurlencode($this->cgi['prefix']['sys'].'sfn')."[$i]=".rawurlencode($val);
+			$ret .= rawurlencode($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'sfn')."[$i]=".rawurlencode($val);
 			$i++;
 		}
 		return $ret;
@@ -4353,9 +4358,9 @@ EOT;
 	function get_default_cgi_prefix($type) /* {{{ */
 	{
 		switch ($type) {
-		case 'operation':	return 'PME_op_';
-		case 'sys':			return 'PME_sys_';
-		case 'data':		return 'PME_data_';
+		case self::CGI_OPERATION_KEY:	return 'PME_op_';
+		case self::CGI_SYS_KEY:			return 'PME_sys_';
+		case self::CGI_DATA_KEY:		return 'PME_data_';
 		}
 		return '';
 	} /* }}} */
@@ -4363,17 +4368,17 @@ EOT;
 	function get_sys_cgi_var($name, $default_value = null) /* {{{ */
 	{
 		if (isset($this)) {
-			return $this->get_cgi_var($this->cgi['prefix']['sys'].$name, $default_value);
+			return $this->get_cgi_var($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$name, $default_value);
 		}
-		return phpMyEdit::get_cgi_var(phpMyEdit::get_default_cgi_prefix('sys').$name, $default_value);
+		return PhpMyEdit::get_cgi_var(PhpMyEdit::get_default_cgi_prefix(self::CGI_SYS_KEY).$name, $default_value);
 	} /* }}} */
 
 	function get_data_cgi_var($name, $default_value = null) /* {{{ */
 	{
 		if (isset($this)) {
-			return $this->get_cgi_var($this->cgi['prefix']['data'].$name, $default_value);
+			return $this->get_cgi_var($this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY].$name, $default_value);
 		}
-		return phpMyEdit::get_cgi_var(phpMyEdit::get_default_cgi_prefix('data').$name, $default_value);
+		return PhpMyEdit::get_cgi_var(PhpMyEdit::get_default_cgi_prefix(self::CGI_DATA_KEY).$name, $default_value);
 	} /* }}} */
 
 	function get_cgi_var($name, $default_value = null) /* {{{ */
@@ -4666,7 +4671,7 @@ EOT;
 			$enabled	 = $this->$enabled_fnc();
 			if ($name != self::OPERATION_ADD && ! $this->total_recs && strstr('LF', $this->page_type))
 				$enabled = false;
-			return $this->htmlSubmit('operation', ucfirst($name),
+			return $this->htmlSubmit(self::CGI_OPERATION_KEY, ucfirst($name),
 									 $this->getCSSclass($name, $position), $enabled ? 0 : $disabled);
 		}
 		if ($name == 'misc') {
@@ -4674,15 +4679,15 @@ EOT;
 			$cssname     = $this->misccss;
 			$nav = '<span class="'.$this->getCSSclass($cssname, $position, null, $this->misccss2).'">';
 			$nav .= $this->htmlSubmit(
-				'operation', ucfirst($name),
+				self::CGI_OPERATION_KEY, ucfirst($name),
 				$this->getCSSclass([ $cssname, 'commit' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to select the result of the current query
 			$nav .= $this->htmlSubmit(
-				'operation', '+',
+				self::CGI_OPERATION_KEY, '+',
 				$this->getCSSclass([ $cssname, 'all', 'all+' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			// One button to deselect the result of the current query
 			$nav .= $this->htmlSubmit(
-				'operation', '-',
+				self::CGI_OPERATION_KEY, '-',
 				$this->getCSSclass([ $cssname, 'all', 'all-' ], $position, null, $this->misccss2), $enabled ? 0 : $disabled);
 			$nav .= '</span>';
 			return $nav;
@@ -4721,7 +4726,7 @@ EOT;
 		if ($name == 'goto_text') {
 			$ret = '<span class="'.$this->getCSSclass('goto', $position).'">';
 			$ret .= '<input type="text" class="'.$this->getCSSclass('gotopn', $position).$listAllClass.'"';
-			$ret .= ' name="'.$this->cgi['prefix']['sys'].'navpn'.$position.'" value="'.($current_page+1).'"';
+			$ret .= ' name="'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'navpn'.$position.'" value="'.($current_page+1).'"';
 			$ret .= ' size="'.(strlen($total_pages)+1).'" maxlength="'.(strlen($total_pages)+1).'"';
 			$ret .= $this->display_button('goto_combo', $position);
 			$ret .= '</span>';
@@ -4734,7 +4739,7 @@ EOT;
 			for ($i = 0; $i < $total_pages; $i++) {
 				$kv_array[$this->inc * $i] = $i + 1;
 			}
-			return $this->htmlSelect($this->cgi['prefix']['sys'].ltrim($disabledControls['goto']).'navfm'.$position,
+			return $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].ltrim($disabledControls['goto']).'navfm'.$position,
 									 $this->getCSSclass('goto', $position).$listAllClass,
 									 $kv_array, null, null, null, (string)$this->fm,
 									 false, $disabledControls['goto'], false, false, true,
@@ -4774,7 +4779,7 @@ EOT;
 				}
 			}
 			$disabled = $this->total_recs <= 1;
-			return $this->htmlSelect($this->cgi['prefix']['sys'].'navnp'.$position,
+			return $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'navnp'.$position,
 									 $this->getCSSclass('pagerows', $position),
 									 $kv_array, null, null, null, $selected,
 									 false, $disabled, false, false, false,
@@ -4860,7 +4865,7 @@ EOT;
 		// }
 		//if ($fields != false) {
 		$css_class_name = $this->getCSSclass(self::OPERATION_FILTER);
-		$css_sys = $this->getCSSclass('sys');
+		$css_sys = $this->getCSSclass(self::CGI_SYS_KEY);
 		$hidden = $this->filter_operation() ? '' : ' '.$this->getCSSclass('hidden');
 		echo '<tr class="',$css_class_name,$hidden,'">',"\n";
 		echo '<td class="',$css_class_name,' ',$css_sys,'" colspan="',$this->sys_cols,'">';
@@ -4929,14 +4934,14 @@ EOT;
 				$escape	  = $this->fdd[$k]['escape'] ?? false;
 				$attributes = $this->htmlAttributes(self::OPERATION_FILTER, $k, []);
 				echo '<div class="'.$negate_css_class_name.'">';
-				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
+				echo $this->htmlRadioCheck($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'_comp',
 										   $negate_css_class_name,
 										   array('not' => $this->labels['Not']), null, null, null,
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
 				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.self::QUERY_FIELD_IDX,
+				echo $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.self::QUERY_FIELD_IDX,
 									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
@@ -4956,7 +4961,7 @@ EOT;
 					$css_comp_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-comp', null, null, $css_postfix);
 
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
-					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
+					echo $this->htmlSelect($this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l.'_comp',
 										   $css_comp_class_name,
 										   self::COMP_OPS, null, null, null, $mc);
 					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-numeric', null, null);
@@ -4964,7 +4969,7 @@ EOT;
 					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-text', null, null);
 				}
 				$css_class_name = $css_second_class_name . ' ' . $css_class_name . ' tooltip-wide';
-				$name = $this->cgi['prefix']['sys'].$l;
+				$name = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
 				echo ' '.$this->fetchToolTip($css_class_name, $name, strtok($css_class_name, ' ') . '-text');
@@ -4989,8 +4994,8 @@ EOT;
 			$disabled = true;
 			$css_class_name .= ' '.$this->getCSSclass('default');
 		}
-		$css_sys = $this->getCSSclass('sys');
-		$css_data = $this->getCSSclass('data');
+		$css_sys = $this->getCSSclass(self::CGI_SYS_KEY);
+		$css_data = $this->getCSSclass(self::CGI_DATA_KEY);
 		$css_clear = $this->getCSSclass('clear');
 		$htmlSorting = implode(', ', $this->sort_fields_w);
 		echo '<tr class="' . $css_class_name . '">' . "\n";
@@ -5021,8 +5026,8 @@ EOT;
 		$text_query = implode(' AND ', $queries);
 		if ($text_query != '' || $this->display['query'] === 'always') {
 			$css_class_name = $this->getCSSclass('queryinfo');
-			$css_sys = $this->getCSSclass('sys');
-			$css_data = $this->getCSSclass('data');
+			$css_sys = $this->getCSSclass(self::CGI_SYS_KEY);
+			$css_data = $this->getCSSclass(self::CGI_DATA_KEY);
 			$css_clear = $this->getCSSclass('clear');
 			$disabled = false;
 			if ($text_query == '') {
@@ -5273,7 +5278,7 @@ EOT;
 		 * if we have filters, Changes or Deletes enabled
 		 */
 		if ($this->sys_cols) {
-			echo '<th class="',$this->getCSSclass('header'),' ',$this->getCSSclass('sys').'" colspan="',$this->sys_cols,'">';
+			echo '<th class="',$this->getCSSclass('header'),' ',$this->getCSSclass(self::CGI_SYS_KEY).'" colspan="',$this->sys_cols,'">';
 			if ($this->filter_enabled()) {
 				if ($this->display['query'] === 'always') {
 					// use Javascript/CSS driven hide/show logic
@@ -5389,19 +5394,19 @@ EOT;
 
 		if ($this->nav_text_links() || $this->nav_graphic_links()) {
 			$qstrparts = array();
-			strlen($this->fl)			  > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fl'.'='.$this->fl;
-			strlen($this->fm)			  > 0 && $qstrparts[] = $this->cgi['prefix']['sys'].'fm'.'='.$this->fm;
-			$qstrparts[] = $this->cgi['prefix']['sys'].'np'.'='.$this->inc;
+			strlen($this->fl)			  > 0 && $qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'fl'.'='.$this->fl;
+			strlen($this->fm)			  > 0 && $qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'fm'.'='.$this->fm;
+			$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'np'.'='.$this->inc;
 			count($this->sfn)			  > 0 && $qstrparts[] = $this->get_sfn_cgi_vars();
 			strlen($this->cgi['persist']) > 0 && $qstrparts[] = $this->cgi['persist'];
 			foreach ($this->mrecs as $key => $value) {
-				$qstrparts[] = $this->cgi['prefix']['sys'].'mrecs['.$key.']='.$value;
+				$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs['.$key.']='.$value;
 			}
 			$qpview		 = $qstrparts;
 			$qpcopy		 = $qstrparts;
 			$qpchange	 = $qstrparts;
 			$qpdelete	 = $qstrparts;
-			$qp_prefix	 = $this->cgi['prefix']['sys'].'operation'.'='.$this->cgi['prefix']['operation'];
+			$qp_prefix	 = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].self::CGI_OPERATION_KEY.'='.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_OPERATION_KEY];
 			$qpview[]	 = $qp_prefix.'View';
 			$qpcopy[]	 = $qp_prefix.'Copy';
 			$qpchange[]	 = $qp_prefix.'Change';
@@ -5489,9 +5494,9 @@ EOT;
 			echo
 				'<tr class="'.$this->getCSSclass('row', null, 'next', $this->css['row'], $row).' '.$operationCss.'"'."\n".
 				'    data-'.$this->css['prefix'].'-options="'.$this->options.'"'."\n".
-				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'"."\n".
-				'    data-'.$this->cgi['prefix']['sys']."groupby_rec='".$groupbyRecordData."'"."\n".
-				'    data-'.$this->cgi['prefix']['sys']."mrec_rec='".$mrecRecordData."'"."\n".
+				'    data-'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY]."rec='".$recordData."'"."\n".
+				'    data-'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY]."groupby_rec='".$groupbyRecordData."'"."\n".
+				'    data-'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY]."mrec_rec='".$mrecRecordData."'"."\n".
 				'>';
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
@@ -5524,7 +5529,7 @@ EOT;
 						$navButtons = array();
 						if ($this->view_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
-								'operation',
+								self::CGI_OPERATION_KEY,
 								$viewTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('view-navigation'),
 								$this->view_enabled() == false,
@@ -5532,7 +5537,7 @@ EOT;
 						}
 						if ($this->change_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
-								'operation',
+								self::CGI_OPERATION_KEY,
 								$changeTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('change-navigation'),
 								$this->change_enabled() == false,
@@ -5540,7 +5545,7 @@ EOT;
 						}
 						if ($this->copy_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
-								'operation',
+								self::CGI_OPERATION_KEY,
 								$copyTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('copy-navigation'),
 								$this->copy_enabled() == false,
@@ -5548,7 +5553,7 @@ EOT;
 						}
 						if ($this->delete_nav_displayed()) {
 							$navButtons[] =$this->htmlSubmit(
-								'operation',
+								self::CGI_OPERATION_KEY,
 								$deleteTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('delete-navigation'),
 								$this->delete_enabled() == false,
@@ -5588,7 +5593,7 @@ EOT;
 					}
 					if ($this->nav_buttons()) {
 						echo '<td class="',$css_class_name,'"><input class="',$css_class_name;
-						echo '" type="radio" name="'.$this->cgi['prefix']['sys'].'rec';
+						echo '" type="radio" name="'.$this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'rec';
 						echo '" value="',$this->enc($recordData),'"';
 						if ((empty($this->rec) && $first) || ($this->rec == $key_rec)) {
 							echo ' checked';
@@ -5609,7 +5614,7 @@ EOT;
 					if ($this->nav_custom_multi()) {
 						$css	  = $this->getCSSclass([ $this->misccss, 'check' ], null, null, $this->misccss2);
 						$misccss  = $this->getCSSclass('misc');
-						$namebase = $this->cgi['prefix']['sys'].'mrecs';
+						$namebase = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs';
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
 
@@ -7023,7 +7028,7 @@ EOT;
 	 *
 	 * @return array
 	 * ```
-	 * [ 'operation' => OPERATION, 'rec' => REC, 'groupby_rec' => GROUPBY_REC ]
+	 * [ self::CGI_OPERATION_KEY => OPERATION, 'rec' => REC, 'groupby_rec' => GROUPBY_REC ]
 	 * ```
 	 */
 	public function recordIdFromRequest()
@@ -7033,7 +7038,7 @@ EOT;
 		$groupby_rec = [];
 
 		// Get operation.
-		$operation = $this->get_sys_cgi_var('operation');
+		$operation = $this->get_sys_cgi_var(self::CGI_OPERATION_KEY);
 
 		/* Getting rid of text-links makes it necessary to
 		 * attach further information to the operation
@@ -7070,7 +7075,7 @@ EOT;
 		if (isset($opreq['query'])) {
 			parse_str($opreq['query'], $opquery);
 		}
-		$key = $this->cgi['prefix']['sys'].'rec';
+		$key = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'rec';
 		if (isset($opquery[$key])) {
 			if (is_string($opquery[$key])) {
 				$tryJson = json_decode($opquery[$key], true);
@@ -7080,7 +7085,7 @@ EOT;
 		if (!empty($rec) && !is_array($rec)) {
 			$rec = [ array_keys($this->key)[0] => $rec ];
 		}
-		$key = $this->cgi['prefix']['sys'].'groupby_rec';
+		$key = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'groupby_rec';
 		if (isset($opquery[$key])) {
 			if (is_string($opquery[$key])) {
 				$tryJson = json_decode($opquery[$key], true);
@@ -7088,7 +7093,7 @@ EOT;
 			$groupby_rec = $tryJson??$opquery[$key];
 		}
 
-		return compact('operation', 'rec', 'groupby_rec');
+		return compact(self::CGI_OPERATION_KEY, 'rec', 'groupby_rec');
 	}
 
 	protected function normalizeFilters(null|string|array $filters):array
@@ -7300,9 +7305,9 @@ EOT;
 
 		// CGI variables
 		$this->cgi = @$opts['cgi'];
-		foreach (array('operation', 'sys', 'data') as $type) {
-			if (! isset($this->cgi['prefix'][$type])) {
-				$this->cgi['prefix'][$type] = $this->get_default_cgi_prefix($type);
+		foreach (array(self::CGI_OPERATION_KEY, self::CGI_SYS_KEY, self::CGI_DATA_KEY) as $type) {
+			if (! isset($this->cgi[self::CGI_PREFIX_KEY][$type])) {
+				$this->cgi[self::CGI_PREFIX_KEY][$type] = $this->get_default_cgi_prefix($type);
 			}
 		}
 		// Sorting variables
@@ -7339,15 +7344,15 @@ EOT;
 		$this->dfltsfn = $opts['sort_field'];
 
 		list(
-			'operation' => $this->operation,
+			self::CGI_OPERATION_KEY => $this->operation,
 			'rec' => $this->rec,
 			'groupby_rec' => $this->groupby_rec,
 		) = $this->recordIdFromRequest();
 
 		/*-***************************************************************/
 
-		$oper_prefix_len = strlen($this->cgi['prefix']['operation']);
-		if (!strncmp($this->cgi['prefix']['operation'], $this->operation ?? '', $oper_prefix_len)) {
+		$oper_prefix_len = strlen($this->cgi[self::CGI_PREFIX_KEY][self::CGI_OPERATION_KEY]);
+		if (!strncmp($this->cgi[self::CGI_PREFIX_KEY][self::CGI_OPERATION_KEY], $this->operation ?? '', $oper_prefix_len)) {
 			$this->operation = $this->labels[substr($this->operation, $oper_prefix_len)];
 		}
 		// Persistent values.
@@ -7363,7 +7368,7 @@ EOT;
 				// We need to handle sys_mrecs in a special way: never
 				// use absolute indices, because this kills the
 				// information submitted by the user (checkboxes)
-				if ($key == $this->cgi['prefix']['sys'].'mrecs') {
+				if ($key == $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs') {
 					foreach ($val as $key2 => $val2) {
 						$this->cgi['persist'] .= '&'.rawurlencode($key)
 							.'[]='.rawurlencode($val2);
