@@ -39,10 +39,10 @@ trait AutoIncrementTrait
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected int $id = 0;
+  protected ?int $id = null;
 
   /**
-   * Set id.
+   * Set the id. Enforce null for 0 as this is what ORM expects.
    *
    * @param ?int $id
    *
@@ -50,7 +50,7 @@ trait AutoIncrementTrait
    */
   public function setId(?int $id): self
   {
-    $this->id = $id ?? 0;
+    $this->id = $id ? $id : null;
 
     return $this;
   }
@@ -62,6 +62,6 @@ trait AutoIncrementTrait
    */
   public function getId(): ?int
   {
-    return $this->id ?? null;
+    return $this->id ? $this->id : null;
   }
 }
