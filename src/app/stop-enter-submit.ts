@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,15 +43,16 @@ const textLikeInputTypes = [
  * Stop enter-keypress from submitting the form if the active element
  * was a text-like input.
  *
- * @param {object} evt jQuery event.
+ * @param evt jQuery event.
  */
-const stopEnterSubmit = function(evt) {
-  evt = evt || event;
-  const node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+const stopEnterSubmit = function<T extends HTMLElement = HTMLElement>(evt: JQuery.KeyPressEvent<T>|KeyboardEvent) {
+  const node = evt.target ?? null;
   if ((evt.which === 13)
       && textLikeInputTypes.findIndex((type) => type === node.type) >= 0) {
     evt.preventDefault();
+    evt.stopImmediatePropagation();
     $(node).trigger('blur');
+    return false;
   }
   return true;
 };

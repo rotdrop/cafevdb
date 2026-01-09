@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@
 
 import { globalState, $, appName, appPrefix, appContainerSelector } from './globals.ts';
 import * as CAFEVDB from './cafevdb.ts';
-// import * as Dialogs from './dialogs.ts';
 import * as Page from './page.ts';
 import * as ProjectExtra from './project-participant-fields.ts';
 import * as SepaBulkTransactions from './sepa-bulk-transactions.ts';
@@ -41,9 +40,7 @@ import type { TableLoadCallback } from './pme-state.ts';
 
 const documentReady = function() {
 
-  console.info('KEYPRESS', { blah: document.onkeydown });
-
-  document.onkeydown = stopEnterSubmit;
+  $('body').on('keypress', '*', stopEnterSubmit);
 
   Dialogs.attachDialogHandlers();
 
