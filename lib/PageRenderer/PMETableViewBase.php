@@ -1545,7 +1545,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $missingKeys[] = $key;
       }
     }
-    $this->debug('MISSING '.print_r($missingKeys, true));
+    $this->debug('MISSING ' . print_r($missingKeys, true));
 
     // try to fill missing keys of the master table by set keys of join columns
     foreach ($this->joinStructure as $joinInfo) {
@@ -1568,7 +1568,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       }
     }
 
-    $this->debug('NEWVALS '.print_r($newValues, true));
+    $this->debug('NEWVALS ' . print_r($newValues, true));
     $changeSets = [];
     foreach ($changed as $field) {
       if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
@@ -1671,7 +1671,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // wrap into just another array in order to handle 'self' key-value provider
           $addIdentifier[$addKey] = [ $addIdentifier[$addKey] ];
         }
-        $this->debug('ADDIDS INITIAL: '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS INITIAL: ' . print_r($addIdentifier, true));
 
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
@@ -1690,7 +1690,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
           unset($idValues); // break reference
           unset($idValuesTuple); // break reference
-          $this->debug('ADDIDS INITIALIZED: '.print_r($addIdentifier, true));
+          $this->debug('ADDIDS INITIALIZED: ' . print_r($addIdentifier, true));
 
           // explode key values
           $selfValues = Util::explodeIndexedMulti($newValues[$selfField]);
@@ -1736,7 +1736,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           Util::unsetValue($changed, $selfField);
         }
 
-        $this->debug('ADDIDS FINALLY: '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS FINALLY: ' . print_r($addIdentifier, true));
         $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
 
         if (!empty($joinInfo['association'])) {
@@ -1749,7 +1749,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
 
           $association = $masterEntity[$joinInfo['association']];
-          $this->debug(get_class($association).': '.$association->count());
+          $this->debug(get_class($association) . ': ' . $association->count());
 
           // add entries by adding them to the association of the
           // master entity
@@ -1777,7 +1777,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // VALUE_N must not contain commas and colons
           $multipleValues[$column] = [
             'data' => [],
-            'default' => $pme->fdd[$field]['default']??null,
+            'default' => $pme->fdd[$field]['default'] ?? null,
           ];
           if (!str_starts_with($field, $table . self::JOIN_KEY_SEP)) {
             // This happens if the master table injects auto-increment ids. In
@@ -1799,7 +1799,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
         }
 
-        $this->debug('MULTIPLE VALUES '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUES ' . print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
@@ -1828,7 +1828,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
             $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
-              $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
+              $value = $dataItem['data'][$multipleIndex] ?? $dataItem['default'];
               $this->debug('Set ' . $entityClass . '::' . $column . ' -> ' . $value);
               $meta->setColumnValue($entity, $column, $value);
               $setAgain[] = fn() => $meta->setColumnValue($entity, $column, $value);
@@ -1987,7 +1987,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     if (empty($table)) {
       $entityName = null;
       foreach ($this->joinStructure as $table => $joinInfo) {
-        if (($joinInfo['flags']??self::JOIN_FLAGS_NONE) & self::JOIN_MASTER) {
+        if (($joinInfo['flags'] ?? self::JOIN_FLAGS_NONE) & self::JOIN_MASTER) {
           $entityName = $joinInfo['entity'];
           break;
         }
