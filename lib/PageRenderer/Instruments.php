@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
@@ -97,7 +96,6 @@ class Instruments extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
-    private BiDirectionalL10N $musicL10n,
   ) {
     parent::__construct(
       self::TEMPLATE,
@@ -207,7 +205,7 @@ class Instruments extends PMETableViewBase
       'size'      => 11,
       'align'     => 'right',
       'sort'      => true,
-      'default'   => '0',  // auto increment
+      'default'   => null,  // auto increment
     ];
 
     // set the locale into the joinstructure
