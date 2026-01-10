@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -182,12 +182,14 @@ trait EntityManagerTrait
       if ($useTransaction && $flush) {
         $this->entityManager->beginTransaction();
       }
+      if ($hard && method_exists($entity, 'setDeleted')) {
+        $entity->setDeleted('now');
+      }
       $this->entityManager->remove($entity);
-      if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
+      if ($hard && !method_exists($entity, 'setDeleted')) {
         $this->flush();
         $this->entityManager->remove($entity);
       }
-
       if ($flush) {
         $this->flush();
         if ($useTransaction) {
