@@ -3244,10 +3244,11 @@ EOT;
 			// requested we emit a hidden input (or hidden inputs, if
 			// multiple) with all the selected values.
 			if ($this->readonly($k)) {
-				$hiddenValues = trim($selected);
+				$hiddenValues = $selected;
 				if (!is_array($hiddenValues)) {
 					$hiddenValues = self::explodeValueArray($hiddenValues);
 				}
+				$hiddenValues = array_map(fn(string $arg) => trim($arg), $hiddenValues);
 				$array = $multiple ? '[]' : '';
 				if (empty($hiddenValues)) {
 					$hiddenValues[] = '';
@@ -3758,7 +3759,7 @@ EOT;
 
 	protected function printTooltip($tooltip)
 	{
-		if (!empty(trim(html_entity_decode($tooltip)))) {
+		if (!empty($tooltip) && !empty(trim(html_entity_decode($tooltip)))) {
 			return ' title="' . $this->enc($tooltip) . '"';
 		}
 		return '';
@@ -4597,7 +4598,7 @@ EOT;
 		echo $but_str,'</td>',"\n";
 		// Message is now written here
 		//echo '</td>',"\n";
-		if (strlen(@$this->message) > 0) {
+		if (strlen($this->message ?? '') > 0) {
 			echo '<td class="',$this->getCSSclass('message', $position),'">',$this->message,'</td>',"\n";
 		}
 		echo '</tr></table>',"\n";
