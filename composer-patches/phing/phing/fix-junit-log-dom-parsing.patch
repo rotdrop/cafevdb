@@ -1,0 +1,23 @@
+--- phing/phing/src/Phing/Task/Ext/PhpUnit/PHPUnitReportTask.php.orig	2026-01-10 15:37:49.443880375 +0100
++++ phing/phing/src/Phing/Task/Ext/PhpUnit/PHPUnitReportTask.php	2026-01-10 15:37:56.843997636 +0100
+@@ -234,14 +234,19 @@
+         } else {
+             $nodes = $xp->query("/testsuites/testsuite/testsuite");
+ 
++            $firstChild = $xp->query("/testsuites/testsuite")->item(0);
++
+             foreach ($nodes as $node) {
+                 $children = $xp->query("./testsuite", $node);
+ 
+                 if ($children->length) {
+                     $this->handleChildren($rootElement, $children);
+-                    $rootElement->firstChild->removeChild($node);
++                    $firstChild->removeChild($node);
+                 }
+             }
++
++            // remove the first child which simply holds the summary ...
++            $rootElement->removeChild($firstChild);
+         }
+     }
+ 

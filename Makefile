@@ -2,7 +2,7 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020,2021,2022,2023,2024,2025
+# @copyright Claus-Justus Heine 2020-2026
 #
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
@@ -54,7 +54,7 @@ TINYMCE_VERSION=7
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
-
+PHING=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
 
 ###############################################################################
 #
@@ -157,7 +157,7 @@ dev-setup: pre-build composer namespace-wrapper
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
 
-$(PHPUNIT): composer.lock
+$(PHING) $(PHPUNIT): composer.lock
 
 .PHONY: php-scoper-install
 php-scoper-install: composer
@@ -537,11 +537,43 @@ verifydb: $(ABSSRCDIR)/vendor-wrapped
 updatesql: $(ABSSRCDIR)/vendor-wrapped
 	$(ORM_CLI) orm:clear-cache:metadata; $(ORM_CLI) orm:schema-tool:update --dump-sql
 
-#@@ Runs integration test for PHP code
-phpunit: $(PHPUNIT)
-	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --coverage-html $(ABSBUILDDIR)/php-code-coverage
-	$(PHPUNIT) -c phpunit.integration.xml
+PHPUNIT_OUTPUT=$(BUILDDIR)/artifacts/tests/phpunit
+PHPUNIT_JUNIT_LOG=$(PHPUNIT_OUTPUT)/junit-log.xml
+PHPUNIT_JUNIT_LOG_HTML=$(PHPUNIT_OUTPUT)/junit-log
+PHING_BUILD_XML=$(PHPUNIT_OUTPUT)/phing-build.xml
+
+#@@ Runs unit tests for PHP code
+phpunit: dophpunit $(PHPUNIT_JUNIT_LOG_HTML)/index.html
 .PHONY: phpunit
+
+#@@ Post-process junit-log xml file
+phpjunit-log: $(PHPUNIT_JUNIT_LOG_HTML)/index.html
+.PHONY: phpjunit-log
+
+dophpunit: $(PHPUNIT)
+	$(PHP) $(PHPCOVERAGE) $(PHPUNIT)\
+ -c phpunit.xml\
+ --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
+ --log-junit $(PHPUNIT_JUNIT_LOG)
+#	$(PHPUNIT) -c phpunit.integration.xml
+.PHONY: dophpunit
+
+$(PHPUNIT_JUNIT_LOG): # dophpunit
+
+$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in Makefile
+	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
+
+$(PHPUNIT_JUNIT_LOG_HTML):
+	mkdir -p $@
+
+$(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
+	$(PHING) -f $(PHING_BUILD_XML)
+
+#@@ Runs phpunit with a filter
+phpunitfilter:
+	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
+	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
+.PHONY: phpunitfilter
 
 run-jest:
 	npm run jest

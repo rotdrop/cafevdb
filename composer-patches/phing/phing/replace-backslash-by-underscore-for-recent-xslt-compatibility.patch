@@ -1,0 +1,52 @@
+--- phing/phing/etc/phpunit-frames.xsl.orig	2026-01-10 15:39:36.552565035 +0100
++++ phing/phing/etc/phpunit-frames.xsl	2026-01-10 15:39:49.363764855 +0100
+@@ -101,7 +101,7 @@
+     <!-- @bug there will be a problem with inner classes having the same name, it will be overwritten -->
+     <xsl:for-each select="/testsuites/testsuite[@package = $name]">
+         <xsl:variable name="class.dir">
+-            <xsl:value-of select="translate(@name,'/','_')"/>
++            <xsl:value-of select="translate(translate(@name,'/','_'), '\', '_')"/>
+         </xsl:variable>
+         <exsl:document href="efile://{$output.dir}/{$package.dir}/{$class.dir}.html">
+             <xsl:apply-templates select="." mode="class.details"/>
+@@ -224,7 +224,7 @@
+     <html>
+         <head>
+             <title>Unit Test Results: Class <xsl:value-of select="$class.name"/></title>
+-            <xsl:if test="$output.sorttable = 1">           
++            <xsl:if test="$output.sorttable = 1">
+                 <script language="JavaScript" src="http://www.phing.info/support/sorttable.js"/>
+             </xsl:if>
+             <xsl:call-template name="create.stylesheet.link">
+@@ -291,7 +291,7 @@
+                 <xsl:for-each select="/testsuites/testsuite[./@package = $name]">
+                     <xsl:sort select="@name"/>
+                     <xsl:variable name="class.dir">
+-                        <xsl:value-of select="translate(@name,'/','_')"/>
++                        <xsl:value-of select="translate(translate(@name,'/','_'), '\', '_')"/>
+                     </xsl:variable>
+                     <tr>
+                         <td nowrap="nowrap">
+@@ -336,7 +336,7 @@
+                 <xsl:attribute name="href">
+                     <xsl:if test="not($package.name='')">
+                         <xsl:value-of select="translate($package.name,'.','/')"/><xsl:text>/</xsl:text>
+-                    </xsl:if><xsl:value-of select="translate(@name,'/','_')"/><xsl:text>.html</xsl:text>
++                    </xsl:if><xsl:value-of select="translate(translate(@name,'/','_'), '\', '_')"/><xsl:text>.html</xsl:text>
+                 </xsl:attribute>
+                 <xsl:value-of select="@name"/>
+             </a>
+@@ -603,7 +603,7 @@
+             </xsl:choose>
+         </xsl:attribute>
+         <xsl:variable name="class.dir">
+-            <xsl:value-of select="translate(@name,'/','_')"/>
++            <xsl:value-of select="translate(translate(@name,'/','_'), '\', '_')"/>
+         </xsl:variable>
+         <td><a href="{$class.dir}.html"><xsl:value-of select="@name"/></a></td>
+         <td><xsl:apply-templates select="@tests"/></td>
+@@ -686,4 +686,3 @@
+     <xsl:value-of select="format-number($value,'0.00%')"/>
+ </xsl:template>
+ </xsl:stylesheet>
+-

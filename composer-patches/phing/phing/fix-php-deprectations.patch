@@ -1,0 +1,11 @@
+--- phing/phing/src/Phing/Io/ExtendedFileStream.php.orig	2026-01-10 18:30:23.583016634 +0100
++++ phing/phing/src/Phing/Io/ExtendedFileStream.php	2026-01-10 18:35:21.864458148 +0100
+@@ -32,6 +32,8 @@
+ {
+     private $fp;
+ 
++    public $context;
++
+     public static function registerStream()
+     {
+         if (!in_array('efile', stream_get_wrappers())) {

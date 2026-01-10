@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="cafevdb" default="gen-report" basedir="%BASEDIR%">
+  <target name="gen-report">
+    <phpunitreport infile="%INFILE%"
+                   format="frames"
+                   todir="%OUTPUTDIR%"
+                   styledir="./vendor-bin/phpunit/vendor/phing/phing/etc/"
+                   />
+  </target>
+</project>
