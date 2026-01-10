@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -197,7 +197,7 @@ class InstrumentFamilies extends PMETableViewBase
       'size'      => 11,
       'align'     => 'right',
       'sort'      => true,
-      'default'  => '0',  // auto increment
+      'default'  => null,  // auto increment
       ];
 
     // set the locale into the join-structure
