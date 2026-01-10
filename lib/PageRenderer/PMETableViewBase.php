@@ -371,38 +371,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     return $pmeOptions;
   }
 
-  /**
-   * @return array The translated field-multiplicity names.
-   *
-   * @see DBTypes\EnumParticipantFieldMultiplicity
-   */
-  protected function participantFieldMultiplicityNames():array
-  {
-    $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
-    $result = [];
-    foreach ($multiplicities as $tag) {
-      $slug = 'extra field ' . $tag;
-      $result[$tag] = $this->l->t($slug);
-    }
-    return $result;
-  }
-
-  /**
-   * @return array The translated field-data-type names.
-   *
-   * @see DBTypes\EnumParticipantFieldDataType
-   */
-  protected function participantFieldDataTypeNames():array
-  {
-    $dataTypes = array_values(DBTypes\EnumParticipantFieldDataType::toArray());
-    $result = [];
-    foreach ($dataTypes as $tag) {
-      $slug = 'extra field type '.$tag;
-      $result[$tag] = $this->l->t($slug);
-    }
-    return $result;
-  }
-
   /** @return null|string $this->template. */
   public function template():?string
   {

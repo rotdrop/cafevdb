@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -430,7 +430,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'multiplicity', ], ],
       'default' => FieldMultiplicity::SIMPLE->value,
-      'values2' => $this->participantFieldMultiplicityNames(),
+      'values2' => FieldMultiplicity::getL10NValues($this->l),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
         return [ $tag, $this->toolTipsService['participant-field-multiplicity' . ':' . $tag] ];
       }, FieldMultiplicity::toArray()),
@@ -467,7 +467,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'data-type', ], ],
       'default' => 'text',
-      'values2' => $this->participantFieldDataTypeNames(),
+      'values2' => FieldDataType::getL10NValues($this->l),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
         return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
       }, FieldDataType::toArray()),
