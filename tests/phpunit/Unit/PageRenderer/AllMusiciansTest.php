@@ -583,7 +583,7 @@ class AllMusiciansTest extends TestCase
     $domDoc->loadHTML($html, LIBXML_PEDANTIC);
   }
 
-    /** {@inheritdoc} */
+  /** {@inheritdoc} */
   #[Attributes\Depends('testRenderView')]
   public function testRenderDelete(): void
   {
