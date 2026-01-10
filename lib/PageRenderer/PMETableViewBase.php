@@ -2021,9 +2021,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * This trigger simply deletes the given entity and prevents the
-   * legacy PHPMyEdit class to do the deletion in order to benefit
-   * from ORM. No fancy things are done, simply the deletion.
+   * This trigger simply deletes the given entity and prevents the legacy
+   * PHPMyEdit class to do the deletion in order to benefit from the ORM. It
+   * is always attempted to hard-delete entities, soft-deleteable entities
+   * have to protect "themselves" by a suitable hardDelete "decider class".
    *
    * @param PHPMyEdit $pme The phpMyEdit instance.
    *
@@ -2042,7 +2043,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   public function beforeDeleteSimplyDoDelete(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $entityId = $this->legacyRecordToEntityId($pme->rec);
-    $this->remove($entityId, true);
+
+    // always try hard-delete, in-use soft-deleteable entities have to protect
+    // "themselves" by a suitable "hard-delete decider".
+    $this->remove($entityId, flush: true, hard: true);
 
     $changed = []; // disable PME delete query
 
