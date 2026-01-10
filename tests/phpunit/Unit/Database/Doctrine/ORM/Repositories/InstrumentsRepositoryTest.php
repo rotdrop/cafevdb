@@ -63,6 +63,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
@@ -82,35 +83,33 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class InstrumentsRepositoryTest extends TestCase
 {
-  use SetupMigrationTrait {
-    SetupMigrationTrait::setup as migrationSetup;
-    SetupMigrationTrait::tearDown as migrationTearDown;
-  }
+  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
   private InstrumentsRepository $repository;
 
-  /** {@inheritdoc} */
-  public function setup(): void
+  /** @return InstrumentsRepository */
+  public function getRepository(): InstrumentsRepository
   {
-    $this->migrationSetup('latest');
-
-    $this->repository = $this->entityManager->getRepository(Entities\Instrument::class);
-  }
-
-  /** {@inheritdoc} */
-  public function tearDown(): void
-  {
-    $this->migrationTearDown();
+    $this->repository = $this->repository ?? $this->getEntityManager()->getRepository(Entities\Instrument::class);
+    return $this->repository;
   }
 
   private const EXPECTED_INFO_KEYS = [
     'families', 'byId', 'byName', 'idGroups', 'nameGroups',
   ];
 
+  /** @return void */
+  public function testDatabaseSetup(): void
+  {
+    $this->applyMigrations('latest');
+    $this->assertEquals([], self::$migrationsService->getUnapplied());
+  }
 
   /** {@inheritdoc} */
+  #[Attributes\Depends('testDatabaseSetup')]
   public function testDescribeAll(): void
   {
+    $this->getRepository();
     $instrumentInfo = $this->repository->describeALL();
     $instruments = $this->repository->findAll();
     $this->assertEqualsCanonicalizing(self::EXPECTED_INFO_KEYS, array_keys($instrumentInfo));
@@ -133,9 +132,11 @@ class InstrumentsRepositoryTest extends TestCase
     $this->assertEqualsCanonicalizing($allGroups, $instrumentInfo['families']);
   }
 
-  /** {@inheritdoc} */
+  /** @return void */
+  #[Attributes\Depends('testDatabaseSetup')]
   public function testFindNonInstruments(): void
   {
+    $this->getRepository();
     $result = $this->repository->findNonInstruments();
     /** @var Entities\Instrument $nonInstrument */
     foreach ($result as $nonInstrument) {
@@ -165,13 +166,24 @@ class InstrumentsRepositoryTest extends TestCase
   /**
    * Use by the ContactsService class.
    *
-   * {@inheritdoc}
+   * @return void
    */
+  #[Attributes\Depends('testDatabaseSetup')]
   public function testFindNames(): void
   {
+    $this->getRepository();
     $all = $this->repository->findAll();
     $result = $this->repository->findNames();
 
     $this->assertEquals(count($all), count($result));
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testDescribeAll')]
+  #[Attributes\Depends('testFindNonInstruments')]
+  #[Attributes\Depends('testFindNames')]
+  public function testDatabaseTeardown(): void
+  {
+    $this->unapplyMigrations();
   }
 }

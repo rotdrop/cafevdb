@@ -122,6 +122,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Legacy\UseDecimalForExactFractions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
@@ -198,6 +199,23 @@ class LegacyMigrationsServiceTest extends TestCase
     $finalInstance = $this->mockProvider->getAppContainer()->get($className);
     $this->assertInstanceOf(LegacyMigrations\CreateTableDoctrineMigrationsVersions::class, $finalInstance);
 
+    $consoleLogger = new ConsoleLogger(
+      consoleOutput: $this->createStub(ConsoleOutput::class),
+      isCLI: false,
+      logger: $this->mockProvider->getLoggerInterface(),
+    );
+
+    $doctrineMigrationsService = new DoctrineMigrationsService(
+      logger: $consoleLogger,
+      entityManager: $this->entityManager,
+      appContainer: $this->mockProvider->getAppContainer(),
+      l: $this->mockProvider->getL10N(),
+    );
+    $applied = $doctrineMigrationsService->getApplied();
+    $this->assertEquals(0, count($applied));
+    $unapplied = $doctrineMigrationsService->getUnapplied();
+    $initialVersions = array_filter(array_keys($unapplied), fn(string $key) => str_starts_with($key, '19700101'));
+
     $createTables = [];
     $createTables[] = <<<'SQL'
 CREATE TABLE ExtLogEntries (
@@ -235,21 +253,9 @@ SQL;
     }
     $this->migrationsService->apply($finalVersion);
 
-    $consoleLogger = new ConsoleLogger(
-      consoleOutput: $this->createStub(ConsoleOutput::class),
-      isCLI: false,
-      logger: $this->mockProvider->getLoggerInterface(),
-    );
-
-    $doctrineMigrationsService = new DoctrineMigrationsService(
-      logger: $consoleLogger,
-      entityManager: $this->entityManager,
-      appContainer: $this->mockProvider->getAppContainer(),
-      l: $this->mockProvider->getL10N(),
-    );
-
+    $doctrineMigrationsService->clearCache();
     $applied = $doctrineMigrationsService->getApplied();
-    $this->assertEquals(2, count($applied));
+    $this->assertEquals(count($initialVersions), count($applied));
 
     $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
     $this->assertInstanceOf(DoctrineMigrationsService::class, $service);

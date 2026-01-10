@@ -86,6 +86,8 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -348,7 +350,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->never())->method('findBy');
     $this->entityManager->expects($this->never())->method('getRepository');
     $this->expectException(OCS\OCSBadRequestException::class);
-    $response = $this->callGetEntities(
+    /* $response = */$this->callGetEntities(
       entityName: Entities\Project::class,
       find: null,
       findBy: null,
@@ -365,7 +367,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->expects($this->never())->method('findBy');
     $this->entityManager->expects($this->never())->method('getRepository');
     $this->expectException(OCS\OCSBadRequestException::class);
-    $response = $this->callGetEntities(
+    /* $response = */$this->callGetEntities(
       entityName: Entities\Project::class,
       find: '',
       findBy: '',
@@ -383,7 +385,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->entityManager->expects($this->once())->method('getRepository');
     $identifier = [ 'id' => -1 ];
     try {
-      $response = $this->callGetEntities(
+      /* $response = */$this->callGetEntities(
         entityName: Entities\Project::class,
         find: base64_encode(json_encode($identifier)),
         findBy: null,

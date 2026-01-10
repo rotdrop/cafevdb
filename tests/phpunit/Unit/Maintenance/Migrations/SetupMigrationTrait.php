@@ -49,13 +49,11 @@ trait SetupMigrationTrait
 {
   private EntityManager $entityManager;
 
-  private DoctrineMigrationsService $migrationsService;
-
-  private IL10N $l;
+  private static DoctrineMigrationsService $migrationsService;
 
   private MockProvider $mockProvider;
 
-  private array $appliedVersions = [];
+  private static array $appliedVersions = [];
 
   /**
    * Setup the migrations service and apply all migrations up to the given
@@ -66,44 +64,49 @@ trait SetupMigrationTrait
    *
    * @return void
    */
-  public function setup(string $upToVersion): void
+  public function applyMigrations(string $upToVersion): void
   {
     /** @var MockProvider $mockProvider */
-    $this->mockProvider = $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
     if (!$databaseProvider->getDatabaseConfig()) {
+      // echo 'STARTING DB SERVER' . PHP_EOL;
       $databaseProvider->startServer();
     }
 
-    $this->entityManager = $mockProvider->getEntityManager();
+    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
 
     $consoleLogger = new ConsoleLogger(
       consoleOutput: $this->createStub(ConsoleOutput::class),
       isCLI: false,
-      logger: $mockProvider->getLoggerInterface(),
+      logger: $this->mockProvider->getLoggerInterface(),
     );
 
-    $appContainer = $mockProvider->getAppContainer();
+    $appContainer = $this->mockProvider->getAppContainer();
 
-    $this->migrationsService = new DoctrineMigrationsService(
+    self::$migrationsService = new DoctrineMigrationsService(
       logger: $consoleLogger,
       entityManager: $this->entityManager,
       appContainer: $appContainer,
-      l: $mockProvider->getL10N(),
+      l: $this->mockProvider->getL10N(),
     );
 
+    $applied = self::$migrationsService->getApplied();
+    $this->assertEqualsCanonicalizing(self::$appliedVersions, array_keys($applied));
+
     $latest = null;
-    $unapplied = $this->migrationsService->getUnapplied();
+    $unapplied = self::$migrationsService->getUnapplied();
     foreach (array_keys($unapplied) as $version) {
       if ($upToVersion != 'latest' && (int)$version > (int)$upToVersion) {
         break;
       }
-      $this->migrationsService->apply($version, EnumMigrationDirection::UP);
+      // echo 'APPLY ' . $version . PHP_EOL;
+      self::$migrationsService->apply($version, EnumMigrationDirection::UP);
       $latest = $version;
-      $this->appliedVersions[] = $version;
+      self::$appliedVersions[] = $version;
     }
     if ($upToVersion != 'latest' && $latest != $upToVersion) {
       throw new UnexpectedValueException("Migration '{$upToVersion}' does not seem to exist.");
@@ -113,8 +116,18 @@ trait SetupMigrationTrait
     $this->entityManager->clear();
     $this->entityManager->getConfiguration()->getMetadataCache()->clear();
     $this->setDependencyInput(
-      array_merge($this->dependencyInput(), [$this->migrationsService]),
+      array_merge($this->dependencyInput(), [self::$migrationsService]),
     );
+  }
+
+  /** @return EntityManager */
+  public function getEntityManager(): EntityManager
+  {
+    /** @var MockProvider $mockProvider */
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
+
+    return $this->entityManager;
   }
 
   /**
@@ -122,10 +135,20 @@ trait SetupMigrationTrait
    *
    * @return void
    */
-  public function tearDown(): void
+  public function unapplyMigrations(): void
   {
-    foreach (array_reverse($this->appliedVersions) as $version) {
-      $this->migrationsService->apply($version, EnumMigrationDirection::DOWN);
+    $this->getEntityManager();
+
+    foreach (array_reverse(self::$appliedVersions) as $version) {
+      self::$migrationsService->apply($version, EnumMigrationDirection::DOWN);
+      // echo 'UNAPPLY ' . $version . PHP_EOL;
     }
+    $this->assertEquals([], self::$migrationsService->getApplied());
+    self::$appliedVersions = [];
+
+    // The migrations table has to be dropped manually
+    $sql = 'DROP TABLE IF EXISTS DoctrineMigrationsVersions';
+    $connection = $this->entityManager->getConnection();
+    $connection->prepare($sql)->executeQuery();
   }
 }

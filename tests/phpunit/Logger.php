@@ -44,11 +44,11 @@ class Logger extends AbstractLogger
   public function __construct(
     ILogFactory $logFactory,
   ) {
-    $logFolder = realpath(__DIR__ . '/../../build') . '/log/';
+    $logFolder = realpath(__DIR__ . '/../../build') . '/artifacts/tests/phpunit/';
     if (!file_exists($logFolder)) {
       mkdir($logFolder, 0777, true);
     }
-    $this->wrappedLogger = $logFactory->getCustomPsrLogger($logFolder . 'test.json', 'file');
+    $this->wrappedLogger = $logFactory->getCustomPsrLogger($logFolder . 'cloud-log.json', 'file');
     $this->wrappedLogger->info('*** TEST RUN START ***');
   }
 

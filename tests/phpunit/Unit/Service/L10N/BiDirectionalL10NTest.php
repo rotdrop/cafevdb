@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Repositories;
+namespace OCA\CAFEVDB\Tests\Unit\Service\L10N;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;

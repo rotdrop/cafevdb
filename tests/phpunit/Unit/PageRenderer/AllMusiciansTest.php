@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\PageRenderer;
 
+use DOMDocument;
 use Throwable;
 
 use PHPUnit\Framework\TestCase;
@@ -49,8 +50,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\CoversClass(PageRenderer\AllMusicians::class)]
 #[Attributes\CoversClass(PageRenderer\Musicians::class)]
 #[Attributes\CoversClass(PageRenderer\PMETableViewBase::class)]
-#[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
@@ -71,6 +72,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
@@ -81,8 +83,10 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\InvoiceNumberHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
@@ -101,6 +105,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
@@ -115,10 +120,13 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -134,10 +142,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class AllMusiciansTest extends TestCase
 {
-  use SetupMigrationTrait {
-    SetupMigrationTrait::setup as migrationSetup;
-    SetupMigrationTrait::tearDown as migrationTearDown;
-  }
+  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
   private PageRenderer\AllMusicians $renderer;
 
@@ -147,17 +152,23 @@ class AllMusiciansTest extends TestCase
 
   private array $postData = [];
 
+  private static bool $migrationsApplied = false;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->migrationSetup('latest');
+    if (!self::$migrationsApplied) {
+      $this->applyMigrations('latest');
+      self::$migrationsApplied = true;
+    }
 
-    /** @var MockProvider $mockProvider */
-    $mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
 
     $appContainer = $this->mockProvider->getAppContainer();
 
-    $this->request = $mockProvider->getRequest();
+    $this->request = $this->mockProvider->getRequest();
     $this->request->method('getParam')->willReturnCallback(
       function(string $key, mixed $default = null) {
         return $this->postData[$key] ?? $default;
@@ -168,7 +179,7 @@ class AllMusiciansTest extends TestCase
 
     // what a mess ...
     $this->renderer = new PageRenderer\AllMusicians(
-      configService: $mockProvider->getConfigService(),
+      configService: $this->mockProvider->getConfigService(),
       entityManager: $this->entityManager,
       request: $this->request,
       phpMyEdit: $this->phpMyEdit,
@@ -185,20 +196,22 @@ class AllMusiciansTest extends TestCase
   }
 
   /** {@inheritdoc} */
-  public function tearDown(): void
-  {
-    $this->migrationTearDown();
-  }
-
-  /** {@inheritdoc} */
-  public function testSetup(): void
+  public function testApplyMigrations(): void
   {
     $this->assertNotNull($this->renderer->shortTitle());
     $this->assertNotEmpty($this->renderer->navigationItems());
   }
 
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testDelete')]
+  public function testUnapplyMigrations(): void
+  {
+    $this->unapplyMigrations();
+    self::$migrationsApplied = false;
+  }
+
   // phpcs:disable
-  private const ADD_MUSICIAN_FORM_DATA = 'template=all-musicians&table=Musicians&templateRenderer=template%3Aall-musicians&musicianId=&projectId=0&projectName=&recordsPerPage=40&participationStatusFddIndex=22&instrummentsFddIndex=19&PME_sys_mtable=Musicians&PME_sys_mkey%5Bid%5D=int&PME_sys_qf14=max&PME_sys_qf18_comp=%3D&PME_sys_qf38_comp=%3D&PME_sys_qf46_comp=%3D&PME_sys_qf51_comp=%3D&PME_sys_qf52_comp=%3D&PME_sys_qf14=max&PME_sys_qf28=&PME_sys_cur_tab=all&PME_sys_qfn=%26PME_sys_qf14%3Dmax%26PME_sys_qf28%3D&PME_sys_rec=&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=1&PME_sys_op_name=add&PME_data_id=0&PME_data_organization=&PME_data_job_title=&PME_data_sur_name=Musterperson&PME_data_first_name=Max+Maria&PME_data_nick_name=Max&PME_data_display_name=&PME_data_display_name_personal=&PME_data_gender=&PME_data_user_id_slug=&PME_data_deleted=&PME_data_MusicianInstruments%3Ainstrument_id%5B%5D=6&PME_data_MusicianInstruments%3Ainstrument_id%5B%5D=3&PME_data_Instruments%3Asort_order=&PME_data_default_participation_status=&PME_data_cloud_account_disabled%5B%5D=1&PME_data_mobile_phone=&PME_data_fixed_line_phone=&PME_data_MusicianEmailAddresses%40all%3Aaddress%5B%5D=himself%2Bmax-maria-musterperson%40claus-justus-heine.de&PME_data_email=himself%2Bmax-maria-musterperson%40claus-justus-heine.de&PME_data_mailing_list=invite&PME_data_address_supplement=&PME_data_street=&PME_data_street_number=&PME_data_po_box=&PME_data_postal_code=&PME_data_city=&PME_data_country=DE&PME_data_birthday=&PME_data_remarks=&PME_data_language=&PME_data_SepaDebitMandates%3Amandate_reference=&PME_data_SepaDebitMandates%3Adeleted=&PME_data_SepaBankAccounts%3Aiban=&PME_data_SepaBankAccounts%3Adeleted=&PME_data_address_book_uri=&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Aall-musicians&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Neue+Person&reloadName=PME_sys_operation&reloadValue=Neue+Person&modalDialog=true&modified=true&PME_sys_applyadd=Anwenden&PME_sys_applyadd=Anwenden';
+  private const ADD_MUSICIAN_SUBMIT_FORM_DATA = 'template=all-musicians&table=Musicians&templateRenderer=template%3Aall-musicians&musicianId=&projectId=0&projectName=&recordsPerPage=40&participationStatusFddIndex=22&instrummentsFddIndex=19&PME_sys_mtable=Musicians&PME_sys_mkey%5Bid%5D=int&PME_sys_qf14=max&PME_sys_qf18_comp=%3D&PME_sys_qf38_comp=%3D&PME_sys_qf46_comp=%3D&PME_sys_qf51_comp=%3D&PME_sys_qf52_comp=%3D&PME_sys_qf14=max&PME_sys_qf28=&PME_sys_cur_tab=all&PME_sys_qfn=%26PME_sys_qf14%3Dmax%26PME_sys_qf28%3D&PME_sys_rec=&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=1&PME_sys_op_name=add&PME_data_id=0&PME_data_organization=&PME_data_job_title=&PME_data_sur_name=Musterperson&PME_data_first_name=Max+Maria&PME_data_nick_name=Max&PME_data_display_name=&PME_data_display_name_personal=&PME_data_gender=&PME_data_user_id_slug=&PME_data_deleted=&PME_data_MusicianInstruments%3Ainstrument_id%5B%5D=6&PME_data_MusicianInstruments%3Ainstrument_id%5B%5D=3&PME_data_Instruments%3Asort_order=&PME_data_default_participation_status=&PME_data_cloud_account_disabled%5B%5D=1&PME_data_mobile_phone=&PME_data_fixed_line_phone=&PME_data_MusicianEmailAddresses%40all%3Aaddress%5B%5D=himself%2Bmax-maria-musterperson%40claus-justus-heine.de&PME_data_email=himself%2Bmax-maria-musterperson%40claus-justus-heine.de&PME_data_mailing_list=invite&PME_data_address_supplement=&PME_data_street=&PME_data_street_number=&PME_data_po_box=&PME_data_postal_code=&PME_data_city=&PME_data_country=DE&PME_data_birthday=&PME_data_remarks=&PME_data_language=&PME_data_SepaDebitMandates%3Amandate_reference=&PME_data_SepaDebitMandates%3Adeleted=&PME_data_SepaBankAccounts%3Aiban=&PME_data_SepaBankAccounts%3Adeleted=&PME_data_address_book_uri=&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Aall-musicians&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Neue+Person&reloadName=PME_sys_operation&reloadValue=Neue+Person&modalDialog=true&modified=true&PME_sys_applyadd=Anwenden&PME_sys_applyadd=Anwenden';
   // phpcs:enable
 
   private const BEFORE_INSERT_DO_INSERT_ALL_DATA = [
@@ -346,8 +359,11 @@ class AllMusiciansTest extends TestCase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function testInsertUpdateDelete(): void
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testInsert(): void
   {
+    $this->assertTrue(self::$migrationsApplied);
+
     $oldValues = [];
     $newValues = self::BEFORE_INSERT_DO_INSERT_ALL_DATA;
     $changed = array_keys(self::BEFORE_INSERT_DO_INSERT_ALL_DATA);
@@ -389,8 +405,15 @@ class AllMusiciansTest extends TestCase
     $this->assertEquals(1, $musterPerson->getEmailAddresses()->count());
     $this->assertEquals(self::BEFORE_INSERT_DO_INSERT_ALL_DATA['email'], $musterPerson->getEmail());
     $this->assertEquals($musterPerson->getEmail(), $musterPerson->getEmailAddresses()->first()->getAddress());
+  }
 
-    // update also needs the pme record to be set.
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testInsert')]
+  public function testUpdate(): void
+  {
+    /** @var Entities\Musician $musterPerson */
+    $musterPerson = $this->entityManager->getRepository(Entities\Musician::class)->findOneBy(['surName' => 'Musterperson']);
+
     $oldValues = self::BEFORE_UPDATE_DO_UPDATE_ALL_DATA['oldValues'];
     $newValues = self::BEFORE_UPDATE_DO_UPDATE_ALL_DATA['newValues'];
     $changed = self::BEFORE_UPDATE_DO_UPDATE_ALL_DATA['changed'];
@@ -405,6 +428,9 @@ class AllMusiciansTest extends TestCase
       $newValues['created'] = $musterPerson->getUpdated()->format('Y-m-d H:i:s');
     $oldValues['uuid'] =
       $newValues['uuid'] = (string)$musterPerson->getUuid();
+
+    $this->renderer->render(execute: false);
+    $this->phpMyEdit->tb = PageRenderer\AllMusicians::TABLE;
 
     // the code needs an active transaction, so supply one, no need to catch
     // exceptions.
@@ -437,6 +463,20 @@ class AllMusiciansTest extends TestCase
       $musterPerson->getInstruments()->count(),
     );
     $this->assertEquals($newValues['nick_name'], $musterPerson->getNickName());
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testRenderList')]
+  #[Attributes\Depends('testRenderAdd')]
+  #[Attributes\Depends('testRenderChange')]
+  #[Attributes\Depends('testRenderView')]
+  #[Attributes\Depends('testRenderDelete')]
+  public function testDelete(): void
+  {
+    /** @var Entities\Musician $musterPerson */
+    $musterPerson = $this->entityManager->getRepository(Entities\Musician::class)->findOneBy(['surName' => 'Musterperson']);
+    $this->renderer->render(execute: false);
+    $this->phpMyEdit->tb = PageRenderer\AllMusicians::TABLE;
 
     parse_str(self::DELETE_MUSICIAN_FORM_DATA, $this->postData);
     $this->postData['musicianId'] = $musterPerson->getId();
@@ -472,5 +512,116 @@ class AllMusiciansTest extends TestCase
 
     $musterPerson = $this->entityManager->getRepository(Entities\Musician::class)->findOneBy(['surName' => 'Musterperson']);
     $this->assertEquals(null, $musterPerson);
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testUpdate')]
+  public function testRenderList(): void
+  {
+    $this->postData['template'] = PageRenderer\AllMusicians::TEMPLATE;
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  // phpcs:disable
+  private const ADD_MUSICIAN_FORM_DATA = 'export=&PME_sys_navfmup=0&PME_sys_navnpup=40&template=all-musicians&table=Musicians&templateRenderer=template%3Aall-musicians&musicianId=&projectId=&projectName=&recordsPerPage=40&participationStatusFddIndex=22&instrummentsFddIndex=19&PME_sys_fl=0&PME_sys_qfn=&PME_sys_fm=0&PME_sys_np=40&PME_sys_cur_tab=0&PME_sys_qf9=&PME_sys_qf10=&PME_sys_qf14=&PME_sys_qf18_comp=%3D&PME_sys_qf18=&PME_sys_qf26=&PME_sys_qf27=&PME_sys_qf28=&PME_sys_qf29=&PME_sys_qf31=&PME_sys_qf32=&PME_sys_qf33=&PME_sys_qf34=&PME_sys_qf35=&PME_sys_qf36=&PME_sys_qf38_comp=%3D&PME_sys_qf38=&PME_sys_qf39=&PME_sys_qf46_comp=%3D&PME_sys_qf46=&PME_sys_qf47=&PME_sys_qf48=&PME_sys_qf50=&PME_sys_qf51_comp=%3D&PME_sys_qf51=&PME_sys_qf52_comp=%3D&PME_sys_qf52=&export=&PME_sys_navfmdown=0&PME_sys_navnpdown=40&PME_sys_mtable=Musicians&PME_sys_mkey%5Bid%5D=int&PME_sys_reloadOuterForm=&PME_sys_operation=Neue+Person&PME_sys_cur_tab=all&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Aall-musicians&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Neue+Person&reloadName=PME_sys_operation&reloadValue=Neue+Person&modalDialog=true&modified=false&PME_sys_operation=Neue+Person';
+  // phpcs:enable
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testUpdate')]
+  public function testRenderAdd(): void
+  {
+    $this->postData['template'] = PageRenderer\AllMusicians::TEMPLATE;
+    parse_str(self::ADD_MUSICIAN_FORM_DATA, $this->postData);
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  // phpcs:disable
+  private const VIEW_MUSICIAN_FORM_DATA = 'export=&PME_sys_navfmup=0&PME_sys_navnpup=40&template=all-musicians&table=Musicians&templateRenderer=template%3Aall-musicians&musicianId=&projectId=&projectName=&recordsPerPage=40&participationStatusFddIndex=22&instrummentsFddIndex=19&PME_sys_fl=0&PME_sys_qfn=&PME_sys_fm=0&PME_sys_np=40&PME_sys_cur_tab=0&PME_sys_qf9=&PME_sys_qf10=&PME_sys_qf14=&PME_sys_qf18_comp=%3D&PME_sys_qf18=&PME_sys_qf26=&PME_sys_qf27=&PME_sys_qf28=&PME_sys_qf29=&PME_sys_qf31=&PME_sys_qf32=&PME_sys_qf33=&PME_sys_qf34=&PME_sys_qf35=&PME_sys_qf36=&PME_sys_qf38_comp=%3D&PME_sys_qf38=&PME_sys_qf39=&PME_sys_qf46_comp=%3D&PME_sys_qf46=&PME_sys_qf47=&PME_sys_qf48=&PME_sys_qf50=&PME_sys_qf51_comp=%3D&PME_sys_qf51=&PME_sys_qf52_comp=%3D&PME_sys_qf52=&export=&PME_sys_navfmdown=0&PME_sys_navnpdown=40&PME_sys_mtable=Musicians&PME_sys_mkey%5Bid%5D=int&PME_sys_reloadOuterForm=&PME_sys_operation=Anzeigen%3FPME_sys_rec%5Bid%5D%3D1%26PME_sys_groupby_rec%5Bid%5D%3D1%26PME_sys_mrec_rec%5Bid%5D%3D1&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Aall-musicians&initialViewOperation=true&initialName=PME_sys_operation&initialValue=Anzeigen%3FPME_sys_rec%5Bid%5D%3D1%26PME_sys_groupby_rec%5Bid%5D%3D1%26PME_sys_mrec_rec%5Bid%5D%3D1&reloadName=PME_sys_operation&reloadValue=Anzeigen%3FPME_sys_rec%5Bid%5D%3D1%26PME_sys_groupby_rec%5Bid%5D%3D1%26PME_sys_mrec_rec%5Bid%5D%3D1&modalDialog=true&modified=false&PME_sys_operation=Anzeigen%3FPME_sys_rec%5Bid%5D%3D1%26PME_sys_groupby_rec%5Bid%5D%3D1%26PME_sys_mrec_rec%5Bid%5D%3D1';
+  // phpcs:enable
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testUpdate')]
+  public function testRenderView(): void
+  {
+    parse_str(self::VIEW_MUSICIAN_FORM_DATA, $this->postData);
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+    /** {@inheritdoc} */
+  #[Attributes\Depends('testRenderView')]
+  public function testRenderDelete(): void
+  {
+    $postString = str_replace('Anzeigen', 'Löschen', self::VIEW_MUSICIAN_FORM_DATA);
+    parse_str($postString, $this->postData);
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testUpdate')]
+  public function testRenderChange(): void
+  {
+    $postString = str_replace('Anzeigen', 'Ändern', self::VIEW_MUSICIAN_FORM_DATA);
+    parse_str($postString, $this->postData);
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
   }
 }
