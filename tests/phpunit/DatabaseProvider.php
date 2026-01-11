@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,8 @@ class DatabaseProvider
   private const DATABASE_CLIENT = 'mariadb';
 
   private const DATABASE_USER = 'phpunit';
+
+  public const CLOUD_DB_USER = 'nextcloud';
 
   private const DATABASE_PASSWORD = 'nothing';
 
@@ -153,10 +155,15 @@ skip-networking
 
     $dbUser = self::DATABASE_USER;
     $dbPassword = self::DATABASE_PASSWORD;
+    $cloudDbUser = self::CLOUD_DB_USER;
 
     $initSql = "DELETE FROM mysql.user WHERE USER = '';
 CREATE USER '{$dbUser}'@'%' IDENTIFIED BY '{$dbPassword}';
 GRANT USAGE ON *.* TO '{$dbUser}'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+CREATE USER '{$cloudDbUser}'@'%' IDENTIFIED BY '{$dbPassword}';
+GRANT USAGE ON *.* TO '{$cloudDbUser}'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+CREATE USER '{$cloudDbUser}'@'localhost' IDENTIFIED BY '{$dbPassword}';
+GRANT USAGE ON *.* TO '{$cloudDbUser}'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
 CREATE DATABASE {$this->appName};
 CREATE DATABASE {$this->appName}_cloud_connector;
 GRANT ALL PRIVILEGES ON {$this->appName}.* TO {$dbUser}@`%` WITH GRANT OPTION;

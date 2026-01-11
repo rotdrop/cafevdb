@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
 
 use ReflectionClass;
 use Throwable;
@@ -171,9 +172,13 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   ];
 
   const GRANT_EXECUTE = 'GRANT EXECUTE ON FUNCTION %1$s TO %2$s@\'localhost\'';
+  const REVOKE_EXECUTE = 'REVOKE EXECUTE ON FUNCTION %1$s FROM %2$s@\'localhost\'';
   const GRANT_INSERT = 'GRANT INSERT ON %1$s TO %2$s@\'localhost\'';
+  const REVOKE_INSERT = 'REVOKE INSERT ON %1$s FROM %2$s@\'localhost\'';
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
+  const REVOKE_SELECT = 'REVOKE SELECT ON %1$s FROM %2$s@\'localhost\'';
   const GRANT_FIELD_UPDATE = 'GRANT UPDATE (%3$s) ON %1$s TO %2$s@\'localhost\'';
+  const REVOKE_FIELD_UPDATE = 'REVOKE IF EXISTS UPDATE (%3$s) ON %1$s FROM %2$s@\'localhost\'';
 
   const PRIVILEGES = [
     'ProjectApplications' => [
@@ -335,7 +340,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    *
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
-   * databse. If null the views are created in the standard databse.
+   * databse. If null the views are created in the standard database.
    *
    * @return void
    *
@@ -389,7 +394,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    *
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
-   * databse. If null the views are created in the standard databse.
+   * databse. If null the views are created in the standard database.
    *
    * @return void
    */
@@ -905,7 +910,7 @@ SELECT t.*,
   (t.id = " . $memberProjectId . ") AS club_members,
   (t.id = " . $executiveBoardProjectId . ") AS executive_board
   FROM " . $table . " t
-  WHERE t.type = '" . ProjectType::TEMPORARY . "' OR t.type = '" . ProjectType::PERMANENT . "'";
+  WHERE t.type = '" . ProjectType::TEMPORARY->value . "' OR t.type = '" . ProjectType::PERMANENT->value . "'";
 
     // Export also the mapping to the web-pages maintained in the CMS.
     $table = 'ProjectWebPages';
@@ -1098,13 +1103,29 @@ SELECT t.* FROM " . $table . " t";
   {
     $statements = $this->generateMusicianPersonalizedViewsStatements($dataBaseName);
 
+    $cloudDbUser = $this->checkAndGetCloudDbUser();
     $currentStatement = null;
     try {
-      foreach ($statements as $viewName => $sql) {
-        if (strpos($sql, 'FUNCTION') !== false) {
-          $currentStatement = sprintf('DROP FUNCTION IF EXISTS %1$s', $viewName);
+      foreach ($statements as $key => $sql) {
+        if (preg_match(self::CREATE_FUNCTION_REGEXP, $sql)) {
+          $currentStatement = sprintf(self::REVOKE_EXECUTE, $key, $cloudDbUser);
+          $this->logDebug('SQL ' . $currentStatement);
+          $this->connection->prepare($currentStatement)->executeQuery();
+          $currentStatement = sprintf('DROP FUNCTION IF EXISTS %1$s', $key);
+        } elseif (preg_match(self::CREATE_VIEW_REGEXP, $sql)) {
+          $currentStatement = sprintf(self::REVOKE_SELECT, $key, $cloudDbUser);
+          $this->logDebug('SQL ' . $currentStatement);
+          $this->connection->prepare($currentStatement)->executeQuery();
+          $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $key);
         } else {
-          $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
+          $matches = null;
+          if (preg_match('/GRANT\s*([^ ]+)\s*([^ ]+)?\s*ON\s*([^ ]+)\s*TO\s*([^ ]+)/', $sql, $matches)) {
+            array_shift($matches);
+            $currentStatement = sprintf('REVOKE %1$s %2$s ON %3$s FROM %4$s', ...$matches);
+            $this->logDebug('SQL ' . $currentStatement);
+            $this->connection->prepare($currentStatement)->executeQuery();
+          }
+          continue;
         }
         $this->logDebug('SQL ' . $currentStatement);
         $this->connection->prepare($currentStatement)->executeQuery();

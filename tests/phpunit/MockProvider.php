@@ -97,6 +97,8 @@ class MockProvider
 
   private array $userConfigValues = [];
 
+  private array $systemConfigValues = [];
+
   private ReflectionMethod $getMockBuilderMethod;
 
   public const TEST_IBAN = 'DE02700100800030876808';
@@ -378,6 +380,18 @@ class MockProvider
         unset($this->userConfigValues[$userId . $appName . $key]);
       },
     );
+    $instance->method('setSystemValue')->willReturnCallback(
+      function(string $key, mixed $value): void {
+        $this->systemConfigValues[$key] = $value;
+      }
+    );
+    $instance->method('getSystemValue')->willReturnCallback(
+      function(string $key, mixed $default = null): mixed {
+        // echo $key . ' => ' . ($this->systemConfigValues[$key] ?? $default) . PHP_EOL;
+        return $this->systemConfigValues[$key] ?? $default;
+      }
+    );
+
     $this->instances[$className] = $instance;
 
     $instance->expects($this->never())->method('setSystemValues');

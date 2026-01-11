@@ -31,11 +31,12 @@ use PHPUnit\Framework\TestCase;
 use OCP\App\IAppManager;
 use OCP\IConfig;
 
-use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Tests\DatabaseProvider;
+use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
 /**
  * Test aspects of the CloudUserConnectorService.
@@ -56,22 +57,42 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class CloudUserConnectorServiceTest extends TestCase
 {
+  use SetupMigrationTrait;
+
   private string $appName;
 
   private IConfig $cloudConfig;
@@ -82,21 +103,24 @@ class CloudUserConnectorServiceTest extends TestCase
 
   private IAppManager $appManager;
 
+  private MockProvider $mockProvider;
+
+  private DatabaseProvider $databaseProvider;
+
   /** @return void */
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    /** @var DatabaseProvider $databaseProvider */
-    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
+    $this->databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
-    if (!$databaseProvider->getDatabaseConfig()) {
-      $databaseProvider->startServer();
+    if (!$this->databaseProvider->getDatabaseConfig()) {
+      $this->databaseProvider->startServer();
     }
 
     // Instantiate the entity-manager, this is needed in order to use our test-database.
-    $mockProvider->getEntityManager();
+    $this->getEntityManager();
 
     $this->appManager = $this->getMockBuilder(IAppManager::class)
       ->getMock();
@@ -104,19 +128,19 @@ class CloudUserConnectorServiceTest extends TestCase
       ->expects($this->never())
       ->method('getAppInfo');
 
-    $this->appName = $mockProvider->appName;
+    $this->appName = $this->mockProvider->appName;
 
-    $this->cloudConfig = $mockProvider->getCloudConfig();
+    $this->cloudConfig = $this->mockProvider->getCloudConfig();
 
-    $this->encryptionService = $mockProvider->getEncryptionService();
+    $this->encryptionService = $this->mockProvider->getEncryptionService();
 
     $this->cloudUserConnectorService = new CloudUserConnectorService(
       appName: $this->appName,
-      appContainer: $mockProvider->getAppContainer(),
-      logger: $mockProvider->getLoggerInterface(),
-      l: $mockProvider->getL10N(),
+      appContainer: $this->mockProvider->getAppContainer(),
+      logger: $this->mockProvider->getLoggerInterface(),
+      l: $this->mockProvider->getL10N(),
       cloudConfig: $this->cloudConfig,
-      encryptionService: $mockProvider->getEncryptionService(),
+      encryptionService: $this->mockProvider->getEncryptionService(),
       appManager: $this->appManager,
     );
   }
@@ -208,5 +232,23 @@ class CloudUserConnectorServiceTest extends TestCase
     $number = 47;
     $groupId = $this->cloudUserConnectorService->projectGroupId($number);
     $this->assertEquals($this->appName . '_' .  $number, $groupId);
+  }
+
+  /** @return void */
+  public function testGenerateCloudUserViews(): void
+  {
+    $this->applyMigrations('latest');
+    $cloudConnectorDatabase = $this->appName . '_cloud_connector';
+    $dbConfig = $this->databaseProvider->getDatabaseConfig();
+    $this->cloudConfig->setSystemValue('dbhost', $dbConfig[ConfigConstants::APP_DB_SERVER]);
+    $this->cloudConfig->setSystemValue('dbuser', DatabaseProvider::CLOUD_DB_USER);
+
+    $this->cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);
+    $this->cloudUserConnectorService->removeUserSqlViews($cloudConnectorDatabase);
+
+    $this->cloudUserConnectorService->updateMusicianPersonalizedViews($cloudConnectorDatabase);
+    $this->cloudUserConnectorService->removeMusicianPersonalizedViews($cloudConnectorDatabase);
+
+    $this->unapplyMigrations();
   }
 }
