@@ -42,7 +42,7 @@ trait TranslatableEnumTrait
   use BackedEnumTrait;
   use CamelCaseToDashesTrait;
 
-  public const L10N_TAG = 'ENUMVALUE';
+  public const L10N_TAG = 'ENUM_VALUE';
 
   /**
    * @param IL10N $l
