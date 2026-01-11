@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,10 @@ use OCP\IL10N;
 /** General static utility routines. */
 class Util
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait {
+    camelCaseToDashes as public;
+    dashesToCamelCase as public;
+  }
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait {
     convertToDateTime as public;
   }
@@ -537,48 +541,6 @@ class Util
     date_default_timezone_set($oldtz);
 
     return $result;
-  }
-
-  /**
-   * Take any dashed or "underscored" lower-case string and convert to
-   * camel-case.
-   *
-   * @param null|string $string The string to convert.
-   *
-   * @param bool $capitalizeFirstCharacter Self explaining.
-   *
-   * @param string $dashes Characters to replace.
-   *
-   * @return null|string Return null if $string is null, otherwise the result of the substitutions.
-   */
-  public static function dashesToCamelCase(?string $string, bool $capitalizeFirstCharacter = false, string $dashes = '_-'):?string
-  {
-    if ($string === null) {
-      return null;
-    }
-    $str = str_replace(str_split($dashes), '', ucwords($string, $dashes));
-
-    if (!$capitalizeFirstCharacter) {
-      $str[0] = strtolower($str[0]);
-    }
-
-    return $str;
-  }
-
-  /**
-   * Take an camel-case string and convert to lower-case with dashes
-   * or underscores between the words. First letter may or may not
-   * be upper case.
-   *
-   * @param string $string String to work on.
-   *
-   * @param string $separator Separator to use, defaults to '-'.
-   *
-   * @return string
-   */
-  public static function camelCaseToDashes(string $string, string $separator = '-'):string
-  {
-    return strtolower(preg_replace('/([A-Z]|[0-9]+|[[:punct:]]+)/', $separator.'$1', lcfirst($string)));
   }
 
   /**
