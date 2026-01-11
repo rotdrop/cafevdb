@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 trait AutoIncrementTrait
 {
   /**
+   * The property must be nullable as ORM expects null as uninitialized
+   * autoincrement value and unfortunately does not accept 0. For TypeScript
+   * we really do not want this as TS only received initialized entities.
+   *
    * This must be protected as otherwise inheritance is not possible:
    * althought the consuming class can change the visibility of a method, it
    * may not change the visibility of a property.
@@ -39,6 +45,7 @@ trait AutoIncrementTrait
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+  #[TSAttributes\LiteralTypeScriptType('number')]
   protected ?int $id = null;
 
   /**
