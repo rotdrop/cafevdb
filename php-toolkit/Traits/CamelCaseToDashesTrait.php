@@ -69,6 +69,6 @@ trait CamelCaseToDashesTrait
    */
   protected static function camelCaseToDashes(string $string, string $separator = '-'):string
   {
-    return strtolower(preg_replace('/([A-Z]|[0-9]+|[[:punct:]]+)/', $separator.'$1', lcfirst($string)));
+    return strtolower(preg_replace('/([A-Z]|[0-9]+|[[:punct:]]+)/', $separator . '$1', lcfirst($string)));
   }
 }
