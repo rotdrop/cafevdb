@@ -63,9 +63,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 trait SetupEventsServiceTrait
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   private EventsService $eventsService;
 
@@ -102,7 +100,7 @@ trait SetupEventsServiceTrait
    */
   public function setup(): void
   {
-    $this->entitySetup(persist: false);
+    $this->generateProjectParticipant(persist: false);
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider ?? MockProvider::create($this);

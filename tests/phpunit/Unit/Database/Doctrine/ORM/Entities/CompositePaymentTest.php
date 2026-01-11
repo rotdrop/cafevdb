@@ -83,16 +83,14 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 class CompositePaymentTest extends TestCase
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   private FinanceService $financeService;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup();
+    $this->generateProjectParticipant();
 
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);

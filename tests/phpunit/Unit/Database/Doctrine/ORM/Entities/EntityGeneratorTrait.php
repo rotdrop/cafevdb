@@ -54,21 +54,23 @@ trait EntityGeneratorTrait
   protected const MUSICIAN_BLZ = '12030000';
   protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber*in, Konto';
 
+  protected const RECEIVABLE_OPTION_KEY = '2b826186-ef29-11f0-a81f-27218343fe72';
+
   private EntityManager $entityManager;
 
   private InstrumentationService $instrumentationService;
 
   private MockProvider $mockProvider;
 
+  private array $entities = [];
+
   /**
    * {@inheritdoc}
    *
    * @return void
    */
-  public function setup(bool $persist = false, ?DateTimeInterface $now = null): void
+  public function generateProjectParticipant(bool $persist = false, ?DateTimeInterface $now = null): void
   {
-    parent::setup();
-
     /** @var MockProvider $mockProvider */
     $this->mockProvider = $mockProvider = MockProvider::create($this);
 
@@ -105,6 +107,10 @@ trait EntityGeneratorTrait
   /** @return Entities\ProjectParticipantFieldDatum */
   protected function generateReceivable(): Entities\ProjectParticipantFieldDatum
   {
+    if (!empty($this->entities[Entities\ProjectParticipantFieldDatum::class])) {
+      return $this->entities[Entities\ProjectParticipantFieldDatum::class];
+    }
+
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
       ->setId(0)
@@ -126,7 +132,7 @@ trait EntityGeneratorTrait
       ->set($generator->getKey(), $generator);
     $option = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
-      ->setKey(Uuid::create())
+      ->setKey(Uuid::asUuid(self::RECEIVABLE_OPTION_KEY))
       ->setLabel('ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß');
     $field->getDataOptions()->set($option->getKey(), $option);
     $datum = new Entities\ProjectParticipantFieldDatum()
@@ -137,26 +143,41 @@ trait EntityGeneratorTrait
     $field->getFieldData()->add($datum);
     $this->musician->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
 
+    $this->entities[Entities\ProjectParticipantFieldDatum::class] = $datum;
+
     return $datum;
   }
 
   /** @return Entities\CompositePayment */
   protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
   {
+    if (!empty($this->entities[Entities\CompositePayment::class])) {
+      return $this->entities[Entities\CompositePayment::class];
+    }
+
     $datum = $this->generateReceivable();
 
     /** @var Entities\ProjectPayment $projectPayment */
     $projectPayment = new Entities\ProjectPayment()
+      ->setId(1)
       ->setProjectParticipant($this->participant)
       ->setReceivable($datum)
+      ->setReceivableOption($datum->getDataOption())
       ->setAmount($datum->getOptionValue());
 
     /** @var Entities\CompositePayment $compositePayment */
-    $compositePayment = new Entities\CompositePayment()->setProjectParticipant(
-      $this->participant,
-    );
+    $compositePayment = new Entities\CompositePayment()
+      ->setId(1)
+      ->setProjectParticipant($this->participant)
+      ;
+    $this->musician->getPayments()->add($compositePayment);
+    $this->participant->getPayments()->add($compositePayment);
+    $projectPayment->setCompositePayment($compositePayment);
+
     $compositePayment->getProjectPayments()->add($projectPayment);
     $compositePayment->updateSubject($transliterate);
+
+    $this->entities[Entities\CompositePayment::class] = $compositePayment;
 
     return $compositePayment;
   }
@@ -166,14 +187,21 @@ trait EntityGeneratorTrait
    */
   protected function generateSepaBankAccount(): Entities\SepaBankAccount
   {
+    if (!empty($this->entities[Entities\SepaBankAccount::class])) {
+      return $this->entities[Entities\SepaBankAccount::class];
+    }
+
     $entity = new Entities\SepaBankAccount()
       ->setMusician($this->musician)
-      ->setSequence(1)
+      ->setSequence($this->musician->getSepaBankAccounts()->count() + 1)
       ->setIban(self::MUSICIAN_IBAN)
       ->setBic(self::MUSICIAN_BIC)
       ->setBlz(self::MUSICIAN_BLZ)
       ->setBankAccountOwner(self::MUSICIAN_BANK_ACCOUNT_OWNER);
     $this->musician->getSepaBankAccounts()->add($entity);
+
+    $this->entities[Entities\SepaBankAccount::class] = $entity;
+
     return $entity;
   }
 
@@ -182,14 +210,44 @@ trait EntityGeneratorTrait
    */
   protected function generateSepaBankTransfer(): Entities\SepaBankTransfer
   {
-    $entity = new Entities\SepaBankTransfer()->setDueDate('2099-01-01');
+    if (!empty($this->entities[Entities\SepaBankTransfer::class])) {
+      return $this->entities[Entities\SepaBankTransfer::class];
+    }
+
+    $entity = new Entities\SepaBankTransfer()
+      ->setId(1)
+      ->setDueDate('2099-01-01')
+      ;
     $bankAccount = $this->generateSepaBankAccount();
     $payment = $this->generateCompositePayment();
     $payment->setSepaBankAccount($bankAccount);
     $entity->getPayments()->set($this->musician->getId(), $payment);
+    $payment->setSepaTransaction($entity);
+
+    $this->entities[Entities\SepaBankTransfer::class] = $entity;
 
     return $entity;
   }
+
+  // /**
+  //  * @return Entities\SepaBankTransfer
+  //  */
+  // protected function generateSepaDebitNote(): Entities\SepaDebitNote
+  // {
+  //   if (!empty($this->entities[Entities\SepaDebitNote::class])) {
+  //     return $this->entities[Entities\SepaDebitNote::class];
+  //   }
+
+  //   $entity = new Entities\SepaDebitNote()->setDueDate('2099-01-01');
+  //   $bankAccount = $this->generateSepaBankAccount();
+  //   $payment = $this->generateCompositePayment();
+  //   $payment->setSepaBankAccount($bankAccount);
+  //   $entity->getPayments()->set($this->musician->getId(), $payment);
+
+  //   $this->entities[Entities\SepaDebitNote::class] = $entity;
+
+  //   return $entity;
+  // }
 
   const PROJECT_EVENT_DATA = [
     [

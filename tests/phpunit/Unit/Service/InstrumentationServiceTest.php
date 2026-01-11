@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,15 +62,13 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 class InstrumentationServiceTest extends TestCase
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
     $now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2024-01-01 00:00:00');
-    $this->entitySetup(now: $now);
+    $this->generateProjectParticipant(now: $now);
   }
 
   /** @return void */

@@ -35,6 +35,7 @@ use OCP\AppFramework\OCS;
 use OCP\IRequest;
 use OC\AppFramework\Middleware\OCSMiddleware;
 
+use OCA\CAFEVDB\Controller\EnumMusiciansSearchScope;
 use OCA\CAFEVDB\Controller\MusiciansController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
@@ -108,9 +109,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class MusiciansControllerTest extends TestCase
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   private const OCS_OK = [
     'status' => 'ok',
@@ -131,7 +130,7 @@ class MusiciansControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup(persist: false);
+    $this->generateProjectParticipant(persist: false);
 
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
@@ -252,7 +251,7 @@ class MusiciansControllerTest extends TestCase
     ?string $projectName = null,
     ?int $projectId = null,
     array $ids = [],
-    string $scope = MusiciansController::SCOPE_MUSICIANS,
+    string $scope = EnumMusiciansSearchScope::MUSICIANS->value,
     bool $throw = true,
   ): array {
     $this->ocsMiddleware->beforeController($this->musiciansController, 'search');

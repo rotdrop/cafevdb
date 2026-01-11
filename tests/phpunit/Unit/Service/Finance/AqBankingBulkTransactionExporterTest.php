@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,9 +81,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 class AqBankingBulkTransactionExporterTest extends TestCase
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   private const CONFIG_MOCK = [
     ConfigConstants::BANK_ACCOUNT_OWNER => 'Örchester e.V.',
@@ -96,7 +94,7 @@ class AqBankingBulkTransactionExporterTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup();
+    $this->generateProjectParticipant();
 
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
     // $appName = $app->get('AppName');

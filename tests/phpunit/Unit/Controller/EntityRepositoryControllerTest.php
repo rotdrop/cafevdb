@@ -105,9 +105,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class EntityRepositoryControllerTest extends TestCase
 {
-  use EntityGeneratorTrait {
-    EntityGeneratorTrait::setup as entitySetup;
-  }
+  use EntityGeneratorTrait;
 
   private const OCS_OK = [
     'status' => 'ok',
@@ -130,7 +128,7 @@ class EntityRepositoryControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->entitySetup(persist: false);
+    $this->generateProjectParticipant(persist: false);
 
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
