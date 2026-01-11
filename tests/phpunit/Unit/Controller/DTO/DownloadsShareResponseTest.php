@@ -62,7 +62,7 @@ class DownloadsShareResponseTest extends TestCase
   public function testFromArray(): void
   {
     $this->expectNotToPerformAssertions();
-    $dto = DTO\DownloadsShareResponse::fromArray([
+    /* $dto = */DTO\DownloadsShareResponse::fromArray([
       'messages' => ['MESSAGE'],
       'expires' => DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
       'share' => 'SHARE',
