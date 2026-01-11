@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
   <div :class="['files-tab', ...cloudVersionClasses]">
     <ul>
       <li class="files-tab-entry flex clickable"
-          @click="toggleMenuHandlerHelper($refs.mailMergeOperations)"
+          @click="(event) => toggleMenuHandlerHelper(event, mailMergeOperations)"
       >
         <div class="files-tab-entry__avatar icon-play-white" />
         <div class="files-tab-entry__desc">
@@ -87,7 +87,7 @@
         />
       </li>
       <li class="files-tab-entry flex clickable"
-          @click="toggleMenuHandlerHelper(recipientsSourceMenu)"
+          @click="(event) => toggleMenuHandlerHelper(event, recipientsSourceMenu)"
       >
         <div class="files-tab-entry__avatar icon-group-white" />
         <div class="files-tab-entry__desc">
@@ -97,31 +97,31 @@
                    ref="recipientsSourceMenu"
         >
           <NcActionRadio ref="radioDatabase"
-                         v-model="recipientsSource"
+                         v-model:model-value="recipientsSource"
                          name="recipientsSource"
                          value="database"
                          :disabled="senderId <= 0"
-                         @change="$refs.recipientsSourceMenu.closeMenu()"
+                         @change="closeMenu(recipientsSourceMenu)"
           >
             {{ t(appId, 'Musician\'s Datebase') }}
           </NcActionRadio>
           <NcActionRadio ref="radioContacts"
-                         v-model="recipientsSource"
+                         v-model:model-value="recipientsSource"
                          name="recipientsSource"
                          value="contacts"
                          :disabled="senderId <= 0"
-                         @change="$refs.recipientsSourceMenu.closeMenu()"
+                         @change="closeMenu(recipientsSourceMenu)"
           >
             {{ t(appId, 'Addressbooks') }}
           </NcActionRadio>
           <NcActionRadio v-if="false"
                          ref="givenContact"
-                         v-model="recipientsSource"
+                         v-model:model-value="recipientsSource"
                          name="recipientsSource"
                          value="input"
                          :close-after-click="true"
                          :disabled="true || senderId <= 0"
-                         @change="$refs.recipientsSourceMenu.closeMenu()"
+                         @change="closeMenu(recipientsSourceMenu)"
           >
             {{ t(appId, 'Enter Address') }}
           </NcActionRadio>
@@ -356,7 +356,7 @@ const getData = async () => {
   if (initialState && initialState.personal.musicianId > 0) {
     sender.value = {
       id: initialState.personal.musicianId,
-      publicName: initialState.personal.musicianPublicName,
+      publicName: initialState.personal.musicianPublicName!,
     }
   }
   logger.info('INITIAL STATE', initialState)
@@ -374,7 +374,7 @@ const resetState = () => {
   if (initialState && initialState.personal.musicianId > 0) {
     sender.value = {
       id: initialState.personal.musicianId,
-      publicName: initialState.personal.musicianPublicName,
+      publicName: initialState.personal.musicianPublicName!,
     }
   }
 }
@@ -384,12 +384,13 @@ onBeforeMount(async () => {
   logger.info('SENDER ID', senderId.value)
 })
 
-const toggleMenuHandlerHelper = (element: unknown) => {
-  return (event: MouseEvent) => handleToggleMenu(element as NcActionsType, event as TargetedMouseEvent)
-}
+// @todo Check with Vue3 whether this idiotic trampoline is still
+// necessary, it only exists in order to satisfy the only half-working
+// TS support.
+const toggleMenuHandlerHelper = (event: MouseEvent, menu?: NcActionsType) => handleToggleMenu(event, menu!)
 
-const handleToggleMenu = (menu: typeof NcActions, event: TargetedMouseEvent) => {
-  if (event.target.closest('.action-item')) {
+const handleToggleMenu = (event: MouseEvent, menu: NcActionsType) => {
+  if ((event.target! as HTMLInputElement).closest('.action-item')) {
     return
   }
   if (menu.opened) {
@@ -399,8 +400,11 @@ const handleToggleMenu = (menu: typeof NcActions, event: TargetedMouseEvent) => 
   }
 }
 
+const closeMenu = (menu?: NcActionsType) => { menu!.closeMenu() }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const recipientsSourceMenu = ref<any>(null)
+const recipientsSourceMenu = ref<NcActionsType>()
+const mailMergeOperations = ref<NcActionsType>()
 
 const mailMergeHandlerHelper = (operation: MailMergeOperation) =>
   (event: MouseEvent) => handleMailMergeRequest(operation, event as TargetedMouseEvent)
