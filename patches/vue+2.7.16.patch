@@ -1,0 +1,28 @@
+diff --git a/node_modules/vue/dist/vue.runtime.common.dev.js b/node_modules/vue/dist/vue.runtime.common.dev.js
+index 09d78fe..a1eb78d 100644
+--- a/node_modules/vue/dist/vue.runtime.common.dev.js
++++ b/node_modules/vue/dist/vue.runtime.common.dev.js
+@@ -5140,6 +5140,9 @@ function assertType(value, type, vm) {
+     else if (expectedType === 'Array') {
+         valid = isArray(value);
+     }
++    else  if (type === null) {
++        valid = value === null;
++    }
+     else {
+         try {
+             valid = value instanceof type;
+diff --git a/node_modules/vue/dist/vue.runtime.esm.js b/node_modules/vue/dist/vue.runtime.esm.js
+index 1d6f518..63a9651 100644
+--- a/node_modules/vue/dist/vue.runtime.esm.js
++++ b/node_modules/vue/dist/vue.runtime.esm.js
+@@ -5205,6 +5205,9 @@ function assertType(value, type, vm) {
+     else if (expectedType === 'Array') {
+         valid = isArray(value);
+     }
++    else  if (type === null) {
++        valid = value === null;
++    }
+     else {
+         try {
+             valid = value instanceof type;
