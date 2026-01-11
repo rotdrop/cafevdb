@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 #[Attributes\CoversClass(DTO\FilesInitialState\SharingFiles::class)]
 #[Attributes\CoversClass(DTO\FilesInitialState\SharingFilesFolders::class)]
 #[Attributes\CoversClass(DTO\FilesInitialState\SharingFilesSubFolders::class)]
+#[Attributes\CoversClass(DTO\AddressBook::class)]
 class FilesInitialStateTest extends TestCase
 {
   /**
@@ -87,7 +88,16 @@ class FilesInitialStateTest extends TestCase
         'musicianPersonalPublicName' => 'STRING',
       ],
       'contacts' => [
-        'addressBooks' => ['THIS IS AN ARRAY'],
+        'addressBooks' => [
+          'key' => [
+            'displayName' => 'Display Name',
+            'key' => 'key',
+            'uri' => 'http://whatever',
+            'isShared' => false,
+            'isSystemAddressBook' => false,
+            'permissions' => 13,
+          ],
+        ],
       ],
       EnumPersonalSettingsKey::DEBUG_MODE->value => ConfigConstants::DEBUG_ALL,
     ]);

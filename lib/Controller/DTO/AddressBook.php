@@ -20,28 +20,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @phpcs:disable PEAR.Commenting.ClassComment.Missing
- * @phpcs:disable PEAR.Commenting.FunctionComment.Missing
- * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
- * @phpcs:disable Squiz.Commenting.ClassComment.Missing
- * @phpcs:disable Squiz.Commenting.FunctionComment.Missing
  */
 
-namespace OCA\CAFEVDB\Controller\DTO\FilesInitialState;
+namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
-use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
-use OCA\CAFEVDB\Controller\DTO\AddressBook;
-
-#[TSAttributes\InlineTypeScriptType]
-class Contacts extends AbstractDTO
+/** DTO for transferring addressbook info to the frontend. */
+class AddressBook extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    /** @var array<string, AddressBook> */
-    public readonly array $addressBooks,
+    public readonly string $displayName,
+    public readonly string $key,
+    public readonly string $uri,
+    public readonly bool $isShared,
+    public readonly bool $isSystemAddressBook,
+    public readonly int $permissions,
   ) {
   }
 
@@ -59,13 +52,16 @@ class Contacts extends AbstractDTO
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    foreach ($addressBooks as &$addressBook) {
-      if (!($addressBook instanceof AddressBook)) {
-        $addressBook = AddressBook::fromArray($addressBook);
-      }
+    if (empty($messages) && !empty($data['message'])) {
+      $messages = [$data['message']];
     }
     return new self(
-      addressBooks: $addressBooks,
+      displayName: $displayName,
+      key: $key,
+      uri: $uri,
+      isShared: $isShared,
+      isSystemAddressBook: $isSystemAddressBook,
+      permissions: $permissions,
     );
   }
 }

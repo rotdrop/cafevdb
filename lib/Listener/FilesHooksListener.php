@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,7 @@ use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\DTO\FilesInitialState;
+use OCA\CAFEVDB\Controller\EnumInitialStateKey;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -61,12 +62,12 @@ class FilesHooksListener implements IEventListener
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const EVENT = [
+  public const EVENT = [
     LoadAdditionalScriptsEvent::class,
     LoadSidebar::class,
   ];
 
-  const ASSET_BASENAME = [
+  private const ASSET_BASENAME = [
     LoadAdditionalScriptsEvent::class => [
       Constants::JS => 'files-hooks',
       Constants::CSS => null,
@@ -197,7 +198,7 @@ class FilesHooksListener implements IEventListener
       $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
       $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('donation-receipts');
 
-      $initialState->provideInitialState('files', FilesInitialState::fromArray([
+      $initialState->provideInitialState(EnumInitialStateKey::FILES->value, FilesInitialState::fromArray([
         'sharing' => [
           'files' => [
             'folders' => [

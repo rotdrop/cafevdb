@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2025 Claus-Justus Heine
+ * @copyright 2022, 2025, 2026, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Traits;
 
 use OCP\IAddressBook;
 
+use OCA\CAFEVDB\Controller\DTO\AddressBook as AddressBookDTO;
 
 /** Convert address-book data to flat arrays. */
 trait ContactsTrait
@@ -33,22 +34,22 @@ trait ContactsTrait
   /**
    * @param array<int, IAddressBook> $addressBooks
    *
-   * @return array<int, array> Flattened address-books
+   * @return array<int, AddressBookDTO> Flattened address-books
    */
-  protected static function flattenAddressBooks(array $addressBooks):array
+  protected static function flattenAddressBooks(array $addressBooks): array
   {
     $result = [];
     /** @var IAddressBook $addressBook */
     foreach ($addressBooks as $addressBook) {
       $key = $addressBook->getKey();
-      $result[$key] = [
-        'displayName' => $addressBook->getDisplayName(),
-        'key' => $key,
-        'uri' => $addressBook->getUri(),
-        'isShared' => $addressBook->isShared(),
-        'isSystemAddressBook' => $addressBook->isSystemAddressBook(),
-        'permissions' => $addressBook->getPermissions(),
-      ];
+      $result[$key] = new AddressBookDTO(
+        displayName: $addressBook->getDisplayName(),
+        key: $key,
+        uri: $addressBook->getUri(),
+        isShared: $addressBook->isShared(),
+        isSystemAddressBook: $addressBook->isSystemAddressBook(),
+        permissions: $addressBook->getPermissions(),
+      );
     }
     return $result;
   }
