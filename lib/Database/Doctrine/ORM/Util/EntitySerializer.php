@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -181,7 +181,7 @@ class EntitySerializer
       if (empty($id)) {
         throw new Exceptions\DatabaseMissingIdentifierException(
           $this->l->t('Unable to determine the identifier values for an instance of "%s".', get_class($entity)),
-          get_class($entity),
+          entityClassName: get_class($entity),
         );
       }
       $flatIdentifier = $this->flattenIdentifier($metaData, $id);
@@ -193,11 +193,14 @@ class EntitySerializer
             $this->entities[$entityClassName][] = $flatIdentifier;
           }
         }
-        if (($this->entityDepths[$entityClassName][$flatIdentifier] ?? -1) == $depth) {
+        if (($this->entityDepths[$entityClassName][$flatIdentifier] ?? -1) >= $depth) {
           return;
         }
         $existing = true;
       }
+
+      // must be set before recursing
+      $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
 
       $flatEntity = [];
 
@@ -215,13 +218,13 @@ class EntitySerializer
               $flatEntity[$field] = null;
               break;
             }
-            $targetClassName = $this->stripCommonPrefix($associationMapping->targetEntity);
             $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+            $targetClassName = $this->stripCommonPrefix($targetMetaData->getName());
             $targetId = $targetMetaData->getIdentifierValues($targetEntity);
             if (empty($targetId)) {
-              throw Exceptions\DatabaseMissingIdentifierException(
+              throw new Exceptions\DatabaseMissingIdentifierException(
                 $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
-                $targetClassName,
+                entityClassName: $targetClassName,
               );
             }
             $flatTargetIdentifier = $this->flattenIdentifier($targetMetaData, $targetId);
@@ -267,9 +270,9 @@ class EntitySerializer
               $key = $keyConvert($key, $targetMetaData);
               $targetId = $targetMetaData->getIdentifierValues($targetEntity);
               if (empty($targetId)) {
-                throw Exceptions\DatabaseMissingIdentifierException(
+                throw new Exceptions\DatabaseMissingIdentifierException(
                   $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
-                  $targetClassName,
+                  entityClassName: $targetClassName,
                 );
               }
               $entityName = $this->stripCommonPrefix($targetMetaData->getName());
@@ -315,7 +318,6 @@ class EntitySerializer
         if (!$existing) {
           $this->entities[$entityClassName][] = $flatIdentifier;
         }
-        $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
       }
     } catch (Throwable $t) {
       $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
