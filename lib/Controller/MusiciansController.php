@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,6 @@
  */
 
 namespace OCA\CAFEVDB\Controller;
-
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use ReflectionClass;
 
@@ -50,20 +48,10 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-#[TSAttributes\TypeScript]
 class MusiciansController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-
-  public const SCOPE_MUSICIANS = 'musicians';
-  public const SCOPE_CLUB_MEMBERS = 'club-members';
-  public const SCOPE_EXECUTIVE_BOARD = 'executive-board';
-  public const SCOPE_CLOUD_USERS = 'cloud-users';
-  public const SCOPE_ADDRESSBOOK = 'addressbook';
-
-  /** @var Repositories\MusiciansRepository */
-  private $musiciansRepository;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -106,20 +94,22 @@ class MusiciansController extends OCSController
     ?string $projectName = null,
     ?int $projectId = null,
     array $ids = [],
-    string $scope = self::SCOPE_MUSICIANS
+    string $scope = EnumMusiciansSearchScope::MUSICIANS->value,
   ): DataResponse {
 
+    $scope = EnumMusiciansSearchScope::get($scope);
+
     switch ($scope) {
-      case self::SCOPE_ADDRESSBOOK:
-      case self::SCOPE_CLOUD_USERS:
+      case EnumMusiciansSearchScope::ADDRESSBOOK:
+      case EnumMusiciansSearchScope::CLOUD_USERS:
         return self::grumble($this->l->t('Picking users from the cloud or the address-books is not yet supported, sorry.'));
-      case self::SCOPE_EXECUTIVE_BOARD:
+      case EnumMusiciansSearchScope::EXECUTIVE_BOARD:
         $projectId = $this->getExecutiveBoardProjectId();
         break;
-      case self::SCOPE_CLUB_MEMBERS:
+      case EnumMusiciansSearchScope::CLUB_MEMBERS:
         $projectId = $this->getClubMembersProjectId();
         break;
-      case self::SCOPE_MUSICIANS:
+      case EnumMusiciansSearchScope::MUSICIANS:
         // just go
         break;
     }

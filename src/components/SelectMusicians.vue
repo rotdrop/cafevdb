@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -73,14 +73,15 @@ import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOptio
 import type { NcSelect } from '@nextcloud/vue'
 import { loadEntities } from '../services/entity-repository.ts'
 import Console from '../util/console.ts'
+import { type EnumMusiciansSearchScope } from '../../build/ts-types/php-modules/Controller.ts'
 
 const COMPONENT_NAME = 'SelectMusicians'
 const logger = new Console(COMPONENT_NAME)
 
 type SearchParameters = {
   limit: null|number,
-  scope: string,
-  projectId?: number,
+  scope: EnumMusiciansSearchScope,
+  projectId?: null|number,
   ids?: number[],
 }
 
@@ -108,32 +109,32 @@ interface Musician {
 
 const props = withDefaults(
   defineProps<{
-    value?: Musician|Musician[]|MusicianIdObject|MusicianIdObject[],
-    searchable?: boolean,
-    searchScope?: string,
-    multiple: boolean,
-    label: string,
-    clearable?: boolean,
     clearAction?: boolean,
-    resetAction?: boolean,
-    projectId?: number,
-    placeholder?: string,
-    selectAllOption?: boolean,
+    clearable?: boolean,
+    label: string,
     loading?: boolean,
     loadingIndicator?: boolean,
+    multiple: boolean,
+    placeholder?: string,
+    projectId?: number,
+    resetAction?: boolean,
+    searchScope?: EnumMusiciansSearchScope,
+    searchable?: boolean,
+    selectAllOption?: boolean,
+    value?: Musician|Musician[]|MusicianIdObject|MusicianIdObject[],
   }>(), {
-    value: undefined,
-    searchable: true,
-    searchScope: 'musicians',
-    multiple: true,
-    clearable: true,
     clearAction: true,
-    resetAction: false,
-    projectId: 0,
-    placeholder: undefined,
-    selectAllOption: undefined,
+    clearable: true,
     loading: false,
     loadingIndicator: true,
+    multiple: true,
+    placeholder: undefined,
+    projectId: 0,
+    resetAction: false,
+    searchScope: 'musicians',
+    searchable: true,
+    selectAllOption: undefined,
+    value: undefined,
   },
 )
 
