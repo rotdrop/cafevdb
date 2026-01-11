@@ -196,7 +196,9 @@ class InstrumentsTest extends TestCase
     $domDoc->loadHTML($html, LIBXML_PEDANTIC);
   }
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const ADD_INSTRUMENT_FORM_DATA = 'template=instruments&musicianId=0&projectId=0&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_qf8_comp=%3D&PME_sys_qf10_comp=%3D&PME_sys_qf11_comp=%3D&PME_sys_cur_tab=&PME_sys_qfn=&PME_sys_rec=&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=0&PME_sys_op_name=add&PME_data_name=TestInstrument&PME_data_sort_order=17&PME_data_InstrumentFamilies%3Aid%5B%5D=4&PME_data_InstrumentFamilies%3Aid%5B%5D=6&PME_data_InstrumentFamilies%3Aid%5B%5D=5&PME_data_deleted=&PME_data_usage=&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Neuer+Datensatz&reloadName=PME_sys_operation&reloadValue=Neuer+Datensatz&modalDialog=true&modified=true&PME_sys_applyadd=Anwenden&PME_sys_applyadd=Anwenden';
+  // phpcs:enable
 
   private const ADD_INSTRUMENT_NEWVALS = [
     'TableFieldTranslations__master_key_' => '',
@@ -257,7 +259,9 @@ class InstrumentsTest extends TestCase
     $this->assertEquals(0, $newInstrument->usage());
   }
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const CHANGE_INSTRUMENT_FORM_DATA = 'template=instruments&musicianId=0&projectId=0&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_qf8_comp=%3D&PME_sys_qf10_comp=%3D&PME_sys_qf11_comp=%3D&PME_sys_cur_tab=&PME_sys_qfn=&PME_sys_rec%5Bid%5D=48&PME_sys_groupby_rec%5Bid%5D=48&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=0&PME_sys_op_name=change&PME_data_id=48&PME_data_name=TestInstrumentChanged&PME_data_sort_order=18&PME_data_InstrumentFamilies%3Aid%5B%5D=4&PME_data_InstrumentFamilies%3Aid%5B%5D=6&PME_data_InstrumentFamilies%3Aid%5B%5D=7&PME_data_deleted=&PME_data_usage=0&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Change%3FPME_sys_rec%3D%257B%2522id%2522%253A%252248%2522%257D%26PME_sys_groupby_rec%3D%257B%2522id%2522%253A%252248%2522%257D&reloadName=PME_sys_operation&reloadValue=Change%3FPME_sys_rec%3D%257B%2522id%2522%253A%252248%2522%257D%26PME_sys_groupby_rec%3D%257B%2522id%2522%253A%252248%2522%257D&modalDialog=true&modified=true&PME_sys_morechange=Anwenden&PME_sys_morechange=Anwenden';
+  // phpcs:enable
 
   private const CHANGE_INSTRUMENT_DATA = [
     'newValues' => [
@@ -342,12 +346,14 @@ class InstrumentsTest extends TestCase
     $this->assertEqualsCanonicalizing(explode(PageRenderer\DataConstants::VALUES_SEP, self::CHANGE_INSTRUMENT_DATA['newValues']['InstrumentFamilies:id']), $familyIds);
   }
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const DELETE_INSTRUMENT_FORM_DATA = 'template=instruments&musicianId=0&projectId=0&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_qf8_comp=%3D&PME_sys_qf10_comp=%3D&PME_sys_qf11_comp=%3D&PME_sys_cur_tab=&PME_sys_qfn=&PME_sys_rec%5Bid%5D=48&PME_sys_groupby_rec%5Bid%5D=48&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=0&PME_sys_op_name=delete&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D48%26PME_sys_groupby_rec%5Bid%5D%3D48%26PME_sys_mrec_rec%5Bid%5D%3D48&reloadName=PME_sys_operation&reloadValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D48%26PME_sys_groupby_rec%5Bid%5D%3D48%26PME_sys_mrec_rec%5Bid%5D%3D48&modalDialog=true&modified=true&PME_sys_savedelete=L%C3%B6schen&PME_sys_savedelete=L%C3%B6schen&PME_sys_operation=Null';
+  // phpcs:enable
 
   // #[Attributes\Depends('testRenderAdd')]
-  // #[Attributes\Depends('testRenderChange')]
-  // #[Attributes\Depends('testRenderView')]
-  // #[Attributes\Depends('testRenderDelete')]
+  #[Attributes\Depends('testRenderChange')]
+  #[Attributes\Depends('testRenderView')]
+  #[Attributes\Depends('testRenderDelete')]
   /** {@inheritdoc} */
   #[Attributes\Depends('testRenderList')]
   public function testDelete(): void
@@ -393,7 +399,9 @@ class InstrumentsTest extends TestCase
     $this->assertEquals(null, $newInstrument);
   }
 
+  // phpcs:disable Generic.Files.LineLength.TooLong
   private const INDIVIDUAL_ENTITY_FORM_DATA = 'PME_sys_navfmup=0&PME_sys_navnpup=40&template=instruments&musicianId=&projectId=&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_fl=0&PME_sys_qfn=&PME_sys_fm=0&PME_sys_np=40&PME_sys_cur_tab=&PME_sys_qf7=&PME_sys_qf8_comp=%3D&PME_sys_qf8=&PME_sys_qf10_comp=%3D&PME_sys_qf10=&PME_sys_qf11_comp=%3D&PME_sys_qf11=&PME_sys_qf12=&PME_sys_navfmdown=0&PME_sys_navnpdown=40&PME_sys_reloadOuterForm=&PME_sys_operation=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_groupby_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_mrec_rec%5Bid%5D%3D@ENTITY_ID@&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_groupby_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_mrec_rec%5Bid%5D%3D@ENTITY_ID@&reloadName=PME_sys_operation&reloadValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_groupby_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_mrec_rec%5Bid%5D%3D@ENTITY_ID@&modalDialog=true&modified=false&PME_sys_operation=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_groupby_rec%5Bid%5D%3D@ENTITY_ID@%26PME_sys_mrec_rec%5Bid%5D%3D@ENTITY_ID@';
+  // phpcs:enable
 
   /** {@inheritdoc} */
   #[Attributes\Depends('testChange')]
@@ -456,6 +464,31 @@ class InstrumentsTest extends TestCase
     $newInstrumentId = $newInstrument->getId();
     $postString = str_replace('@ENTITY_ID@', $newInstrumentId, self::INDIVIDUAL_ENTITY_FORM_DATA);
     $postString = str_replace('Anzeigen', 'Ändern', $postString);
+    parse_str($postString, $this->postData);
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  // phpcs:disable Generic.Files.LineLength.TooLong
+  private const RENDER_ADD_INSTRUMENT_FORM_DATA = 'PME_sys_navfmup=0&PME_sys_navnpup=40&template=instruments&musicianId=&projectId=&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_fl=0&PME_sys_qfn=&PME_sys_fm=0&PME_sys_np=40&PME_sys_cur_tab=&PME_sys_qf7=&PME_sys_qf8_comp=%3D&PME_sys_qf8=&PME_sys_qf10_comp=%3D&PME_sys_qf10=&PME_sys_qf11_comp=%3D&PME_sys_qf11=&PME_sys_qf12=&PME_sys_navfmdown=0&PME_sys_navnpdown=40&PME_sys_reloadOuterForm=&PME_sys_operation=Neuer+Datensatz&PME_sys_cur_tab=all&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=Neuer+Datensatz&reloadName=PME_sys_operation&reloadValue=Neuer+Datensatz&modalDialog=true&modified=false&PME_sys_operation=Neuer+Datensatz';
+  // phpcs:enable
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testChange')]
+  public function testRenderAdd(): void
+  {
+    $postString = self::RENDER_ADD_INSTRUMENT_FORM_DATA;
     parse_str($postString, $this->postData);
     ob_start();
     try {
