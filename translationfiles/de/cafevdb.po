@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2026-01-11 13:03+0100\n"
-"PO-Revision-Date: 2026-01-11 13:19+0100\n"
+"PO-Revision-Date: 2026-01-11 13:42+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -20684,7 +20684,7 @@ msgstr "lesen und schreiben"
 #: lib/Database/Doctrine/DBAL/Types/EnumAttachmentOrigin.php:30
 #, php-format
 msgid "ENUM_VALUE_ATTACHMENT_ORIGIN: upload"
-msgstr "laden"
+msgstr "Hochladen"
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin".
 #. TRANSLATORS: CLOUD => cloud
