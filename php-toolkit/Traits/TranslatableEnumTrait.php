@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use OCP\IL10N;
 trait TranslatableEnumTrait
 {
   use BackedEnumTrait;
+  use CamelCaseToDashesTrait;
 
   public const L10N_TAG = 'ENUMVALUE';
 
@@ -67,6 +68,11 @@ trait TranslatableEnumTrait
   /** @return string */
   public static function l10nTag(): string
   {
-    return self::L10N_TAG . ': ';
+    $classBaseName = substr(__CLASS__, strrpos(__CLASS__, '\\') + 1);
+    if (str_starts_with($classBaseName, 'Enum')) {
+      $classBaseName = substr($classBaseName, strlen('Enum'));
+    }
+    $classBaseName = strtoupper(self::camelCaseToDashes($classBaseName, separator: '_'));
+    return self::L10N_TAG . '_' . $classBaseName . ': ';
   }
 }
