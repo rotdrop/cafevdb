@@ -16,7 +16,7 @@
   "autoload-dev": {
     "psr-4": {
       "OCA\\CAFEVDB\\Tests\\": "../../tests/phpunit/",
-      "OCA\\CAFEVDB\\Toolkit\\": "../../lib/Toolkit/"
+      "OCA\\CAFEVDB\\": "../../lib/"
     }
   },
   "extra": {
