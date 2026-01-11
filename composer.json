@@ -55,7 +55,6 @@
     "tuqqu/gender-detector": "^0.5.2",
     "guzzlehttp/promises": "2.2.0",
     "guzzlehttp/psr7": "2.7.1",
-    "paragonie/constant_time_encoding": "v2.6.3",
     "symfony/translation": "v6.4.30"
   },
   "provide": {
