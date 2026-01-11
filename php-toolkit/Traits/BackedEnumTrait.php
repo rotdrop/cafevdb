@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace OCA\RotDrop\Toolkit\Traits;
 
 use InvalidArgumentException;
+use ReflectionClass;
 use Throwable;
-use ValueError;
 use TypeError;
+use ValueError;
 
 /**
  * Some convenience stuff for PHP enums.
@@ -82,7 +83,7 @@ trait BackedEnumTrait
       try {
         $instance = self::{$instanceOrCaseOrValue};
       } catch (Throwable $t) {
-        $class = new \ReflectionClass($t);
+        $class = new ReflectionClass($t);
         $ctor = $class->getConstructor();
         $ctor->invoke($t, $t->getMessage(), $t->getCode(), $e);
         $invalid = $instanceOrCaseOrValue ?? 'NULL';
