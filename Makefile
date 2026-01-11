@@ -563,10 +563,8 @@ $(PHPUNIT_JUNIT_LOG): # dophpunit
 $(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in Makefile
 	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
 
-$(PHPUNIT_JUNIT_LOG_HTML):
-	mkdir -p $@
-
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
+	mkdir -p $(PHPUNIT_JUNIT_LOG_HTML)
 	$(PHING) -f $(PHING_BUILD_XML)
 
 #@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line.
