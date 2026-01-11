@@ -569,7 +569,7 @@ $(PHPUNIT_JUNIT_LOG_HTML):
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
 	$(PHING) -f $(PHING_BUILD_XML)
 
-#@@ Runs phpunit with a filter
+#@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line.
 phpunitfilter:
 	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
