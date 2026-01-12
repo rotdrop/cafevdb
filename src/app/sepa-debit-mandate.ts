@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -982,10 +982,10 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
         },
       });
     })
-    .done(function(data) {
+    .done(function(data: SepaDebitMandateValidation) {
       if (!Ajax.validateResponse(
         data,
-        ['suggestions', 'message'],
+        ['suggestions', 'messages'],
         validateUnlock)) {
         // One special case: if the user has submitted an IBAN
         // and the BLZ appeared to be valid after all checks,
@@ -994,15 +994,15 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
         if (data.blz) {
           $('input.bankAccountBLZ').val(data.blz);
         }
-        $(dialogId + ' #msg').html(data.message);
+        $(dialogId + ' #msg').html(data.messages.join(' '));
         $(dialogId + ' #msg').show();
         return false;
       }
       if (changed === 'orchestraMember') {
-        $('input[name="mandateProjectId"]').val(data.mandateProjectId);
+        $('input[name="mandateProjectId"]').val(data.mandateProjectId ?? '');
         // $('input[name="MandateProjectName"]').val(data.mandateProjectName);
-        $('input[name="mandateReference"]').val(data.reference);
-        $('legend.mandateCaption .reference').html(data.reference);
+        $('input[name="mandateReference"]').val(data.reference ?? '');
+        $('legend.mandateCaption .reference').html(data.reference ?? '');
       }
       // if (data.value) {
       //   $(element).val(data.value);
@@ -1022,20 +1022,19 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
       if (data.reference) {
         $('span.reference').html(data.reference);
       }
-      if (data.nonRecurring !== undefined) {
-        if (data.nonRecurring) {
+      if (data.mandateNonRecurring !== undefined) {
+        if (data.mandateNonRecurring) {
           $('#sepa-debit-mandate-dialog .debitRecurringInfo').removeClass('permanent').addClass('once');
         } else {
           $('#sepa-debit-mandate-dialog .debitRecurringInfo').removeClass('once').addClass('permanent');
         }
       }
-      Notification.messages(data.message, { timeout: 15 });
+      Notification.messages(data.messages, { timeout: 15 });
 
-      if (data.suggestions !== '') {
+      if (data.suggestions?.length) {
         const hints = t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
             + ' '
-            + data.suggestions
-            + '. '
+            + data.suggestions.join(' ')
             + t(appName, 'Please do not accept these alternatives lightly!');
         $(dialogId + ' .suggestions').html(hints).show();
       } else {
