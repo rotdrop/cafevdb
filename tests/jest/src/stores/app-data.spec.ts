@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -105,7 +105,7 @@ describe('app-data store', () => {
     expect(project).toBeDefined();
     const projectEntity = entities.Project['1'];
     for (const key of Object.keys(projectEntity)) {
-      expect(project[key]).toEqual(projectEntity[key]);
+      expect(project![key]).toEqual(projectEntity[key]);
     }
   });
 
@@ -119,7 +119,7 @@ describe('app-data store', () => {
     expect(appData.currentProjectName).toEqual('');
     expect(appData.projectMode).toBeFalsy();
 
-    let setResult: Project;
+    let setResult: undefined|Project|Promise<Project|undefined>;
     setResult = await appData.setCurrentProject(project.id);
     expect(setResult).toEqual(project);
     expect(appData.currentProject).toEqual(project);
