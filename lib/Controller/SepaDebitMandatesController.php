@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -111,6 +111,7 @@ class SepaDebitMandatesController extends Controller
    * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/validate')]
   public function mandateValidate(string $changed):Response
   {
     $missing = [];
@@ -558,6 +559,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/dialog')]
   public function mandateForm(
     int $projectId,
     int $musicianId,
@@ -625,7 +627,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
 
       if (empty($bankAccount)) {
         $bankAccount = (new Entities\SepaBankAccount)
-          ->setBankAccountOwner($musician->getPublicName())
+          ->setMusician($musician)
           ->setSequence(0);
       }
     }
@@ -769,6 +771,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/store')]
   public function mandateStore(
     $projectId,
     // SEPA "id"
@@ -1078,6 +1081,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/pre-filled')]
   public function preFilledMandateForm(
     ?int $projectId,
     int $musicianId,
@@ -1119,6 +1123,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/delete')]
   public function mandateDelete(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
@@ -1132,6 +1137,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/disable')]
   public function mandateDisable(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
@@ -1145,6 +1151,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/reactivate')]
   public function mandateReactivate(int $musicianId, int $mandateSequence):Reponse
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
@@ -1162,6 +1169,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/hardcopy/{operation}')]
   public function mandateHardcopy(string $operation, int $musicianId, ?int $mandateSequence, bool $force = false):Response
   {
     switch ($operation) {
@@ -1487,7 +1495,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     int $musicianId,
     int $mandateSequence,
     string $operation,
-  ):Response {
+  ): Response {
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -1577,6 +1585,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/delete')]
   public function accountDelete(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
@@ -1590,6 +1599,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/disable')]
   public function accountDisable(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
@@ -1603,6 +1613,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/reactivate')]
   public function accountReactivate(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ class SepaDebitMandate extends SepaBankAccount
     ?array $messages,
     public readonly int $mandateSequence,
     public readonly bool $mandateDeleted,
-    public readonly string $mandateReference,
+    public readonly ?string $mandateReference,
     public readonly ?EnumSepaDebitMandateRevocationStatus $state,
     public readonly ?string $contents,
   ) {
@@ -68,7 +68,7 @@ class SepaDebitMandate extends SepaBankAccount
     static::initKeys();
     extract($data);
     try {
-      if ($state !== null) {
+      if (($state ?? null) !== null) {
         $state = EnumSepaDebitMandateRevocationStatus::get($state);
       }
     } catch (InvalidArgumentException $e) {

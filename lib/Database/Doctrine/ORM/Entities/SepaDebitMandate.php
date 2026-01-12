@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use DateTimeInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
@@ -114,7 +116,7 @@ class SepaDebitMandate implements \ArrayAccess
   private ?DateTimeImmutable $lastUsedDate;
 
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
-  private ?DatabaseStorageFile $writtenMandate;
+  private ?DatabaseStorageFile $writtenMandate = null;
 
   /**
    * @var Collection<ProjectPayment>
@@ -135,14 +137,14 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Set sequence
    *
-   * @param null|int $sequence
+   * @param ?int $sequence
    *
    * @return SepaDebitMandate
    *
    * @todo Detangle mandate reference generation from setting
    * sequences here. Perhaps a slug-handler ...
    */
-  public function setSequence(?int $sequence):SepaDebitMandate
+  public function setSequence(?int $sequence): SepaDebitMandate
   {
     $this->sequence = $sequence;
     $this->adjustMandateReference();
@@ -153,21 +155,21 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get sequence.
    *
-   * @return null|int
+   * @return ?int
    */
-  public function getSequence():?int
+  public function getSequence(): ?int
   {
-    return $this->sequence;
+    return $this->sequence ?? null;
   }
 
   /**
-   * Set musician or musician-id
+   * Set musician.
    *
-   * @param int|Musician $musician
+   * @param Musician $musician
    *
    * @return SepaDebitMandate
    */
-  public function setMusician($musician):SepaDebitMandate
+  public function setMusician(Musician $musician): SepaDebitMandate
   {
     $this->musician = $musician;
 
@@ -177,11 +179,11 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return null|int|Musician
+   * @return ?Musician
    */
-  public function getMusician():?Musician
+  public function getMusician(): ?Musician
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**
@@ -191,7 +193,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setSepaBankAccount(SepaBankAccount $sepaBankAccount):SepaDebitMandate
+  public function setSepaBankAccount(SepaBankAccount $sepaBankAccount): SepaDebitMandate
   {
     $this->sepaBankAccount = $sepaBankAccount;
 
@@ -203,7 +205,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function getSepaBankAccount():SepaBankAccount
+  public function getSepaBankAccount(): SepaBankAccount
   {
     return $this->sepaBankAccount;
   }
@@ -215,7 +217,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setMandateReference(string $mandateReference)
+  public function setMandateReference(string $mandateReference): SepaDebitMandate
   {
     $this->mandateReference = $mandateReference;
 
@@ -225,21 +227,21 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get mandateReference.
    *
-   * @return null|string
+   * @return ?string
    */
-  public function getMandateReference():?string
+  public function getMandateReference(): ?string
   {
-    return $this->mandateReference;
+    return $this->mandateReference ?? null;
   }
 
   /**
    * Set project or project-id
    *
-   * @param int|Project $project
+   * @param Project $project
    *
    * @return SepaDebitMandate
    */
-  public function setProject($project):SepaDebitMandate
+  public function setProject(Project $project): SepaDebitMandate
   {
     $this->project = $project;
 
@@ -249,21 +251,21 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return null|int|Project
+   * @return nullProject
    */
-  public function getProject():?Project
+  public function getProject(): ?Project
   {
-    return $this->project;
+    return $this->project ?? null;
   }
 
   /**
    * Set mandateDate.
    *
-   * @param string|\DateTimeInterface $mandateDate
+   * @param mixed $mandateDate
    *
    * @return SepaDebitMandate
    */
-  public function setMandateDate($mandateDate):SepaDebitMandate
+  public function setMandateDate(mixed $mandateDate): SepaDebitMandate
   {
     $this->mandateDate = self::convertToDateTime($mandateDate);
     return $this;
@@ -272,9 +274,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get mandateDate.
    *
-   * @return \DateTimeInterface
+   * @return DateTimeInterface
    */
-  public function getMandateDate():\DateTimeInterface
+  public function getMandateDate(): DateTimeInterface
   {
     return $this->mandateDate;
   }
@@ -286,7 +288,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setPreNotificationCalendarDays(int $preNotificationCalendarDays):SepaDebitMandate
+  public function setPreNotificationCalendarDays(int $preNotificationCalendarDays): SepaDebitMandate
   {
     $this->preNotificationCalendarDays = $preNotificationCalendarDays;
     return $this;
@@ -297,7 +299,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return int
    */
-  public function getPreNotificationCalendarDays():int
+  public function getPreNotificationCalendarDays(): int
   {
     return $this->preNotificationCalendarDays;
   }
@@ -309,7 +311,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setPreNotificationBusinessDays(?int $preNotificationBusinessDays):SepaDebitMandate
+  public function setPreNotificationBusinessDays(?int $preNotificationBusinessDays): SepaDebitMandate
   {
     $this->preNotificationBusinessDays = $preNotificationBusinessDays;
 
@@ -321,7 +323,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return int|null
    */
-  public function getPreNotificationBusinessDays():?int
+  public function getPreNotificationBusinessDays(): ?int
   {
     return $this->preNotificationBusinessDays;
   }
@@ -333,7 +335,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setLastUsedDate($lastUsedDate):SepaDebitMandate
+  public function setLastUsedDate($lastUsedDate): SepaDebitMandate
   {
     $this->lastUsedDate = self::convertToDateTime($lastUsedDate);
     return $this;
@@ -342,9 +344,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get lastUsedDate.
    *
-   * @return null|\DateTimeInterface
+   * @return ?DateTimeInterface
    */
-  public function getLastUsedDate():?\DateTimeInterface
+  public function getLastUsedDate(): ?DateTimeInterface
   {
     return $this->lastUsedDate;
   }
@@ -356,7 +358,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setNonRecurring(bool $nonRecurring):SepaDebitMandate
+  public function setNonRecurring(bool $nonRecurring): SepaDebitMandate
   {
     $this->nonRecurring = $nonRecurring;
 
@@ -368,7 +370,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return bool
    */
-  public function getNonRecurring():bool
+  public function getNonRecurring(): bool
   {
     return $this->nonRecurring;
   }
@@ -376,11 +378,11 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Set writtenMandate.
    *
-   * @param null|DatabaseStorageFile $writtenMandate
+   * @param ?DatabaseStorageFile $writtenMandate
    *
    * @return SepaDebitMandate
    */
-  public function setWrittenMandate(?DatabaseStorageFile $writtenMandate):SepaDebitMandate
+  public function setWrittenMandate(?DatabaseStorageFile $writtenMandate): SepaDebitMandate
   {
     $this->writtenMandate = $writtenMandate;
 
@@ -390,9 +392,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get writtenMandate.
    *
-   * @return null|DatabaseStorageFile
+   * @return ?DatabaseStorageFile
    */
-  public function getWrittenMandate():?DatabaseStorageFile
+  public function getWrittenMandate(): ?DatabaseStorageFile
   {
     return $this->writtenMandate;
   }
@@ -404,7 +406,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return SepaDebitMandate
    */
-  public function setPayments(Collection $payments):SepaDebitMandate
+  public function setPayments(Collection $payments): SepaDebitMandate
   {
     $this->payments = $payments;
 
@@ -416,7 +418,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPayments():Collection
+  public function getPayments(): Collection
   {
     return $this->payments;
   }
@@ -426,7 +428,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->payments->count();
   }
@@ -444,7 +446,7 @@ class SepaDebitMandate implements \ArrayAccess
   #[ORM\PreFlush]
   public function adjustMandateReference():void
   {
-    if ($this->sequence !== null && $this->mandateReference !== null) {
+    if ($this->getSequence() !== null && $this->getMandateReference() !== null) {
       $this->mandateReference = preg_replace(
         '/[+][0-9]{2}$/',
         sprintf('+%02d', $this->sequence),

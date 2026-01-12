@@ -443,66 +443,66 @@ $routes = [
     /**
      * Finance and stuff
      */
-    [
-      'name' => 'sepa_debit_mandates#mandate_validate',
-      'url' => '/finance/sepa/debit-mandates/validate',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#mandate_form',
-      'url' => '/finance/sepa/debit-mandates/dialog',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#mandate_store',
-      'url' => '/finance/sepa/debit-mandates/store',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#mandate_delete',
-      'url' => '/finance/sepa/debit-mandates/delete',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#mandate_disable',
-      'url' => '/finance/sepa/debit-mandates/disable',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#mandate_reactivate',
-      'url' => '/finance/sepa/debit-mandates/reactivate',
-      'verb' => 'POST',
-    ],
-    [ // upload hard copy
-      'name' => 'sepa_debit_mandates#mandate_hardcopy',
-      'url' => '/finance/sepa/debit-mandates/hardcopy/{operation}',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#account_delete',
-      'url' => '/finance/sepa/bank-accounts/delete',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#account_disable',
-      'url' => '/finance/sepa/bank-accounts/disable',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#account_reactivate',
-      'url' => '/finance/sepa/bank-accounts/reactivate',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#pre_filled_mandate_form',
-      'url' => '/finance/sepa/debit-mandates/pre-filled',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'sepa_debit_mandates#iban_info',
-      'url' => '/finance/sepa/iban-info/{iban}',
-      'verb' => 'GET',
-    ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_validate',
+    //   'url' => '/finance/sepa/debit-mandates/validate',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_form',
+    //   'url' => '/finance/sepa/debit-mandates/dialog',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_store',
+    //   'url' => '/finance/sepa/debit-mandates/store',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_delete',
+    //   'url' => '/finance/sepa/debit-mandates/delete',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_disable',
+    //   'url' => '/finance/sepa/debit-mandates/disable',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#mandate_reactivate',
+    //   'url' => '/finance/sepa/debit-mandates/reactivate',
+    //   'verb' => 'POST',
+    // ],
+    // [ // upload hard copy
+    //   'name' => 'sepa_debit_mandates#mandate_hardcopy',
+    //   'url' => '/finance/sepa/debit-mandates/hardcopy/{operation}',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#account_delete',
+    //   'url' => '/finance/sepa/bank-accounts/delete',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#account_disable',
+    //   'url' => '/finance/sepa/bank-accounts/disable',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#account_reactivate',
+    //   'url' => '/finance/sepa/bank-accounts/reactivate',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#pre_filled_mandate_form',
+    //   'url' => '/finance/sepa/debit-mandates/pre-filled',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'sepa_debit_mandates#iban_info',
+    //   'url' => '/finance/sepa/iban-info/{iban}',
+    //   'verb' => 'GET',
+    // ],
     [
       'name' => 'sepa_bulk_transactions#service_switch',
       'url' => '/finance/sepa/bulk-transactions/{topic}',
