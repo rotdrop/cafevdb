@@ -123,7 +123,7 @@ class SepaDebitMandatesController extends Controller
       } elseif ($value !== '') {
         switch ($validation) {
           case FILTER_VALIDATE_INT:
-            if (filter_var($value, $validation, ['options' => ['min_range' => 1]]) === false) {
+            if (filter_var($value, $validation, ['options' => ['min_range' => 0]]) === false) {
               $failed[$required] = $value;
             }
             break;
