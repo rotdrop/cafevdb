@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -267,14 +267,14 @@ defineExpose({
 })
 
 // computed
-const projectFolder = computed(() => project.value?.folders?.projectsfolder || null)
+const projectFolder = computed(() => project.value?.folders?.projectsFolder || null)
 const projectFolderLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectFolder.value))
 const projectFolderLinkTarget = computed(() => md5(projectFolderLink.value))
 const wikiPage = computed(() => project.value?.wikiPage || '')
 const projectNotesLink = computed(() => nextcloudGenerateUrl('/apps/dokuwiki?wikiPage=' + wikiPage.value))
 const projectEventsLink = computed(() => nextcloudGenerateUrl('/apps/calendar'))
 const financeMode = computed(() => ((globalState?.userPermissions || 0) & Authorization.PERMISSION_FINANCE) && globalState?.financeMode)
-const projectBalanceFolder = computed(() => project.value?.folders?.balancesfolder || null)
+const projectBalanceFolder = computed(() => project.value?.folders?.balancesFolder || null)
 const financialBalanceLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectBalanceFolder.value))
 const financialBalanceLinkTarget = computed(() => md5(financialBalanceLink.value))
 
