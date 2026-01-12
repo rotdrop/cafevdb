@@ -615,25 +615,25 @@ $routes = [
      *
      * @todo compare OCS encryption controller.
      */
-    [
-      'name' => 'crypto#unseal',
-      'verb' => 'POST',
-      'url' => '/crypto/decryption/unseal/{mode}',
-      'defaults' => [
-        'mode' => 'single',
-      ],
-      'requirements' => [
-        'mode' => '^(single|)$',
-      ],
-    ],
-    [
-      'name' => 'crypto#batch_unseal',
-      'verb' => 'POST',
-      'url' => '/crypto/decryption/unseal/{mode}',
-      'requirements' => [
-        'mode' => 'batch',
-      ],
-    ],
+    // [
+    //   'name' => 'crypto#unseal',
+    //   'verb' => 'POST',
+    //   'url' => '/crypto/decryption/unseal/{mode}',
+    //   'defaults' => [
+    //     'mode' => 'single',
+    //   ],
+    //   'requirements' => [
+    //     'mode' => '^(single|)$',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'crypto#batch_unseal',
+    //   'verb' => 'POST',
+    //   'url' => '/crypto/decryption/unseal/{mode}',
+    //   'requirements' => [
+    //     'mode' => 'batch',
+    //   ],
+    // ],
     /**
      * Manage mailing list subscriptions
      */

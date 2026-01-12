@@ -32,11 +32,47 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 
 use OCA\CAFEVDB\Controller\CryptoController;
+use OCA\CAFEVDB\Controller\DTO\IBANMetaData;
 use OCA\CAFEVDB\Controller\DTO\UnsealedData;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the CryptoController. */
 #[Attributes\CoversClass(CryptoController::class)]
+#[Attributes\CoversClass(IBANMetaData::class)]
+#[Attributes\CoversClass(UnsealedData::class)]
+#[Attributes\CoversMethod(FinanceService::class, 'getIbanInfo')]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\FinanceService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class CryptoControllerTest extends TestCase
 {
   private CryptoController $cryptoController;
@@ -83,5 +119,19 @@ class CryptoControllerTest extends TestCase
       $this->assertNull($item->context);
       $this->assertNull($item->metaData);
     }
+
+    $result = $this->cryptoController->batchUnseal(
+      sealedData: [ MockProvider::TEST_IBAN ],
+      metaData: CryptoController::META_DATA_IBAN,
+    );
+    $this->assertInstanceOf(DataResponse::class, $result);
+    $this->assertEquals(Http::STATUS_OK, $result->getStatus());
+    $data = $result->getData();
+    json_encode($data, JSON_THROW_ON_ERROR);
+    $this->assertEquals(1, count($data));
+    $item = $data[0];
+    $this->assertInstanceOf(UnsealedData::class, $item);
+    $this->assertInstanceOf(IBANMetaData::class, $item->metaData);
+    $this->assertEqualsCanonicalizing(MockProvider::IBAN_INFO, $item->metaData->jsonSerialize());
   }
 }
