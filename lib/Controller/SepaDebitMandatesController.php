@@ -112,7 +112,7 @@ class SepaDebitMandatesController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/validate')]
-  public function mandateValidate(string $changed):Response
+  public function mandateValidate(string $changed): Response
   {
     $missing = [];
     $failed = [];
