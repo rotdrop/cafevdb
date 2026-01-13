@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ const vueConstructors: Record<string, VueConstructor> = {};
 
 export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, async (event) => {
-    if (!vueConstructors[event.name]) {
+    if (!vueConstructors[event.name as string]) {
       let vueComponent: VueConstructor;
       switch (event.name) {
         case MountableComponents.DOKU_WIKI_WRAPPER:

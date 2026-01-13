@@ -70,6 +70,7 @@ import type { ComponentProps, PropsData } from '../mountable-component-names.ts'
 import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
 import type { GlobalState } from '../app/globalstate.ts';
 import type { EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
+import type { LegacyPageActionsMenu } from './components';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
@@ -97,7 +98,7 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [EMAIL_POPUP]: { projectId?: number, projectName?: string, reopen?: boolean, post?: Record<string, any> },
     [GET_VUE_COMPONENT]: {
-      name: keyof ComponentPorps,
+      name: keyof ComponentProps,
       propsData: PropsData<keyof ComponentProps>,
     }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
     [GLOBAL_STATE_INITIALIZED]: GlobalState,
@@ -137,6 +138,8 @@ declare module '@rotdrop/async-nextcloud-event-bus' {
   }
 
   export interface EventResults {
+    /* Vue action menus opened in legacy pages */
+    [GET_VUE_COMPONENT]: LegacyPageActionsMenu,
     /** The current value of the counter. */
     [PUSH_BUSY_STATE]: number,
     /** The current value of the counter. */

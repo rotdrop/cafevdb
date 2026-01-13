@@ -28,30 +28,27 @@ import {
 } from './pme-selectors.ts';
 import {
   emit as asyncEmit,
-  getEmitResult,
+  awaitEmit,
 } from '../services/async-event-bus.ts';
 import {
   PAGE_TEMPLATE_ACTION_MENU,
   GET_VUE_COMPONENT,
 } from '../event-bus-events.ts';
 import type { ComponentProps } from '../mountable-component-names.ts';
-import type { LegacyPageActionsMenu } from '../types/components.d.ts';
 
-const actionMenu = async function(
+const actionMenu = async function<K extends keyof ComponentProps>(
   $container: JQuery,
   template: string,
-  vueMenuName: keyof ComponentProps,
+  vueMenuName: K,
 ) {
 
   const generateVueMenu = async ($actionMenu: JQuery) => {
     const propsData = { template, ...$actionMenu.data('actionMenu') };
     propsData.enableOverviewItem = $container.find(pmeFormSelector).hasClass(pmeToken('list'));
-    const vueMenu: LegacyPageActionsMenu = await getEmitResult(
-      asyncEmit(GET_VUE_COMPONENT, {
-        name: vueMenuName,
-        propsData,
-      }),
-    );
+    const vueMenu = await awaitEmit(GET_VUE_COMPONENT, {
+      name: vueMenuName,
+      propsData,
+    });
     const vueComponents = $container.data('vueComponents') || [];
     if (vueComponents.length === 0) {
       $container.data('vueComponents', vueComponents);
@@ -68,7 +65,6 @@ const actionMenu = async function(
     .off('click', actionTriggerSelector)
     .on('click', actionTriggerSelector, async function(event) {
 
-      // @ts-expect-error: 2339
       $.fn.cafevTooltip.hide();
 
       const $actionMenu = $(this).parent();
