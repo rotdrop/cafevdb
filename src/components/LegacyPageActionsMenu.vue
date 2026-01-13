@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@
                :force-menu="true"
                force-semantic-type="menu"
                :open.sync="open"
+               @opened="handleOpenedEvent"
                @closed="handleClosedEvent"
     >
       <NcActionCaption v-if="showMenuCaption"
@@ -183,14 +184,23 @@ const nextFrame = () => {
     requestAnimationFrame(resolve)
   }))
 }
+const openedPromise = Promise.withResolvers()
+openedPromise.resolve()
+const handleOpenedEvent = () => {
+  openedPromise.resolve()
+}
 const openMenu = async (x?: number, y?: number) => {
   logger.debug('-> openMenu()', x, y, positioned.value)
+  if (!open.value) {
+    Object.assign(openedPromise, { ...Promise.withResolvers() })
+  }
   setPosition(x, y)
   open.value = true
   if (positioned.value) {
     await nextTick()
     triggerButton.value?.$el.blur()
   }
+  await openedPromise.promise
   logger.debug('<- openMenu()', x, y, positioned.value)
 }
 const moveToAnchor = async (event?: MouseEvent) => {

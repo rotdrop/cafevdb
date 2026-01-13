@@ -22,11 +22,11 @@
  -->
 <template>
   <LegacyPageActionsMenu ref="actions"
-                         :menu-caption="projectName"
+                         :menu-caption="actualProjectName"
                          :enable-overview-item="enableOverviewItem"
                          :entity-id="entityId"
                          :project-id="entityId"
-                         :project-name="projectName"
+                         :project-name="actualProjectName"
                          :template="template"
   >
     <template #actions>
@@ -217,10 +217,11 @@ const logger = new Console(COMPONENT_NAME)
 const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
   enableOverviewItem?: boolean,
   entityId: number,
-  projectName: string,
+  projectName?: string,
   template: string,
 }>(), {
   enableOverviewItem: true,
+  projectName: undefined,
 })
 
 const appData = useAppDataStore()
@@ -252,10 +253,10 @@ const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
-  actions.value && actions.value.closeMenu()
+  return actions.value?.closeMenu()
 }
 const openMenu = (x?: number, y?: number) => {
-  actions.value && actions.value.openMenu(x, y)
+  return actions.value?.openMenu(x, y)
 }
 
 // we need to expose some methods in order to allow legacy code to
@@ -267,6 +268,7 @@ defineExpose({
 })
 
 // computed
+const actualProjectName = computed(() => project.value?.name ?? props.projectName ?? 'unknown')
 const projectFolder = computed(() => project.value?.folders?.projectsFolder || null)
 const projectFolderLink = computed(() => nextcloudGenerateUrl('/apps/files/?dir=' + projectFolder.value))
 const projectFolderLinkTarget = computed(() => md5(projectFolderLink.value))
@@ -297,7 +299,7 @@ const toProjectRouteData = (template: string):RouterLocation => {
     params: {
       template,
       projectId: '' + props.entityId,
-      projectName: props.projectName,
+      projectName: actualProjectName.value,
     },
   }
 }
@@ -314,7 +316,7 @@ const openInstrumentationNumbers = (event: MouseEvent) => {
   closeNavigation()
   asyncEmit(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, {
     projectId: props.entityId,
-    projectName: props.projectName,
+    projectName: actualProjectName.value,
   })
 }
 const openParticipantFields = (event: MouseEvent) => {
@@ -323,7 +325,7 @@ const openParticipantFields = (event: MouseEvent) => {
   closeNavigation()
   asyncEmit(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, {
     projectId: props.entityId,
-    projectName: props.projectName,
+    projectName: actualProjectName.value,
   })
 }
 const openProjectNotes = (event: MouseEvent) => {
@@ -332,7 +334,7 @@ const openProjectNotes = (event: MouseEvent) => {
   closeNavigation()
   asyncEmit(BusEvents.WIKI_POPUP, {
     wikiPage: project.value!.wikiPage,
-    popupTitle: t(appName, 'Project Wiki for {projectName}', { projectName: props.projectName }),
+    popupTitle: t(appName, 'Project Wiki for {projectName}', { projectName: actualProjectName.value }),
   })
 }
 const openProjectEvents = (event: MouseEvent) => {
@@ -343,7 +345,7 @@ const openProjectEvents = (event: MouseEvent) => {
     name: PROJECT_EVENTS_LISTING_NAME,
     params: {
       ...currentRoute.params,
-      eventsProjectName: props.projectName,
+      eventsProjectName: actualProjectName.value,
     },
     query: currentRoute.query,
   }
@@ -355,7 +357,7 @@ const openProjectEmail = (event: MouseEvent) => {
   closeNavigation()
   asyncEmit(BusEvents.EMAIL_POPUP, {
     projectId: props.entityId,
-    projectName: props.projectName,
+    projectName: actualProjectName.value,
     reopen: true,
   })
 }

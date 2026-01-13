@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,17 +20,14 @@
  */
 
 import { appName } from '../config.ts';
-import Vue from 'vue';
 import type { RouterOptions, Route } from 'vue-router';
 import { generateUrl } from '@nextcloud/router';
-import appRoutes from './routes.js';
+import appRoutes from './routes.ts';
 import Router, { isNavigationFailure, NavigationFailureType } from 'vue-router';
 import Console from '../util/console.ts';
 
 const COMPONENT_NAME = 'app-router';
 const logger = new Console(COMPONENT_NAME);
-
-Vue.use(Router);
 
 const base = generateUrl('/apps/' + appName);
 

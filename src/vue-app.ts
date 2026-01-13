@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
 // import { sync } from 'vuex-router-sync'
 import Vue from 'vue';
+import Router from 'vue-router';
 import CAFeVDB from './CAFeVDB.vue';
 import router from './router/app-router.ts';
 import { createPinia, PiniaVuePlugin } from 'pinia';
@@ -41,6 +42,7 @@ import { provideMountableComponents } from './services/mountable-components.ts';
 // window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
 // window.__VUE__ = Vue;
 
+Vue.use(Router);
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 

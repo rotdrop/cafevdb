@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,27 @@
 import { generateEntities, dtos } from './entity-repository-setup.ts';
 import { beforeAll, jest } from '@jest/globals';
 import type { AxiosRequestConfig } from 'axios';
+import type { ProjectFoldersResponse as ProjectFolders } from '@/build/ts-types/php-modules/Controller/DTO.ts';
 
 export const entityIdentifiers = {
   ProjectParticipant: { project: 1, musician: 1 },
   Project: { id: 1 },
   Musician: { id: 1 },
 } as const;
+
+export const projectsFolder = 'orchestra/projects';
+export const projectFolders = {
+  balancesFolder: 'orchestra/finance/balances/projects',
+  projectParticipantsFolder: 'participants',
+  projectPostersFolder: 'posters',
+  projectPublicDownloadsFolder: 'downlaods',
+  projectsFolder,
+};
+
+/* eslint-disable camelcase */
+// @ts-expect-error 2339
+window._oc_webroot = '';
+/* eslint-enable camelcase */
 
 // Mock axios and set the type
 jest.mock('@nextcloud/axios', () => {
@@ -41,6 +56,19 @@ jest.mock('@nextcloud/axios', () => {
     default: {
       get: async (url: string, options: AxiosRequestConfig) => {
         // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
+        if (url.endsWith('cafevdb/tooltips')) {
+          const result = {
+            data: Object.fromEntries(
+              (options?.params?.keys ?? []).map((key: string) => [key, `TranslationTag ${key}`]),
+            ),
+          };
+          return result;
+        } else if (url.endsWith('/apps/cafevdb/projects/1/folder/all')) {
+          const result: { data: ProjectFolders } = {
+            data: projectFolders,
+          };
+          return result;
+        }
         const prefix = '/ocs/v2.php/apps/cafevdb/v1/entities/';
         const urlInfo = URL.parse(url);
         const pathName = urlInfo?.pathname;
@@ -133,6 +161,7 @@ jest.mock('@nextcloud/axios', () => {
         await generateEntities([entityName as keyof typeof dtos], +depth);
         // console.info('ENTITIES', { entities, dtos });
         return {
+          // poor human beings faking Axios reponse: we really really do only need the data property
           data: dtos[entityName],
         };
       },
