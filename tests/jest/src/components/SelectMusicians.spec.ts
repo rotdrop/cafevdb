@@ -53,54 +53,12 @@ jest.mock('@nextcloud/initial-state', () => {
             default:
               return null;
           }
-        // case appName:
-        //   switch (section) {
-        //     case INITIAL_STATE_SECTION: {
-        //       const result: AdminInitialState = {
-        //         officeFonts: {},
-        //         authorizationGroupSuffixes: AUTHORIZATION_GROUP_SUFFIXES,
-        //         cloudUserBackend: 'LDAP',
-        //         haveCloudUserBackendConfig: false,
-        //         isAdmin: false,
-        //         isSubAdmin: false,
-        //         officeFontsFolder: '',
-        //         personalAppSettingsLink: '',
-        //         sharedFolder: '',
-        //         userAndGroupBackends: [],
-        //       };
-        //       return result;
-        //     }
-        //     default:
-        //       return null;
-        //   }
-        default:
+default:
           return null;
       }
     }),
   };
 });
-
-// const PROJECT_ID = 1;
-
-// // Mock axios and set the type
-// jest.mock('@nextcloud/axios', () => {
-//   const originalModule: object = jest.requireActual('@nextcloud/axios');
-
-//   return {
-//     __esModule: true,
-//     ...originalModule,
-//     default: {
-//       get: async (url: string) => {
-//         switch (url) {
-//           case '/index.php/apps/cafevdb/projects':
-//             return [PROJECT_ID];
-//         }
-//         // switch (url) {
-//         // }
-//       },
-//     },
-//   };
-// });
 
 const localVue = createLocalVue();
 localVue.directive('tooltip', Tooltip);
