@@ -18,6 +18,8 @@ delete (preset as any).globals['ts-jest'];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (preset as any).transformIgnorePatterns;
 
+const includeCss = false;
+
 const ignorePatterns = [
   '@buttercup/',
   '@nextcloud/',
@@ -55,6 +57,10 @@ const ignorePatterns = [
   'web-namespaces',
   'zwitch', // ESM dependency of remark-gfm
 ];
+
+if (includeCss) {
+  ignorePatterns.push('.*[.]css$');
+}
 
 const config: Config = deepmerge(
   preset,
@@ -148,6 +154,7 @@ const config: Config = deepmerge(
     // ],
     moduleFileExtensions: [
       'mjs',
+      'css',
     ],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
@@ -254,6 +261,7 @@ const config: Config = deepmerge(
     transform: {
       '^.+\\.tsx?$': ['ts-jest', { babelConfig: true, useESM: true, tsconfig: './tests/jest/tsconfig.json' }],
       '^.+\\.mjs$': require.resolve('babel-jest'),
+      // '^.+\\.css$': ['jest-transform-css', { modules: true }] as [string, Record<string, unknown>],
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -279,5 +287,17 @@ const config: Config = deepmerge(
     // watchman: true,
   },
 );
+
+if (includeCss) {
+  delete config.moduleNameMapper!['\\.(s?css|less)$'];
+  for (const [key, value] of Object.entries(config.transform!)) {
+    if (key.match(/css[|]/)) {
+      config.transform![key.replace(/css[|]/, '')] = value;
+      delete config.transform![key];
+    }
+  }
+  config.transform!['^.+\\.css$'] = require.resolve('jest-transform-css');
+  // { modules: true }] as [string, Record<string, unknown>];
+}
 
 export default config;
