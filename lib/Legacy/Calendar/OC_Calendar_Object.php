@@ -22,7 +22,7 @@
  */
 
 /*
- * Copyright (c) 2020, 2021, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2020, 2021, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *               Copied and stripped down for my orchestra admin app.
  *
  * Copyright (c) 2011 Jakob Sack <mail@jakobsack.de>
@@ -567,21 +567,21 @@ class OC_Calendar_Object
    */
   public function updateVCalendarFromRequest(mixed $request, mixed $vcalendar)
   {
-    $accessclass = isset($request["accessclass"]) ? $request["accessclass"] : null;
-    $summary = $request["summary"];
-    $location = $request["location"];
-    $categories = explode(',', $request["categories"]);
-    $allday = isset($request["allday"]);
-    $from = $request["from"];
-    $to  = $request["to"];
+    $accessclass = isset($request['accessclass']) ? $request['accessclass'] : null;
+    $summary = $request['summary'];
+    $location = $request['location'];
+    $categories = explode(',', $request['categories']);
+    $allday = isset($request['allDay']);
+    $from = $request['from'];
+    $to  = $request['to'];
     if (!$allday) {
       $fromtime = $request['fromtime'];
       $totime = $request['totime'];
     }
     $vevent = $vcalendar->VEVENT;
     // $this->logInfo(get_class($vcalendar));
-    $description = $request["description"];
-    $repeat = $request["repeat"];
+    $description = $request['description'];
+    $repeat = $request['repeat'];
     if ($repeat != 'doesnotrepeat') {
       $rrule = '';
       $interval = $request['interval'];
@@ -722,9 +722,9 @@ class OC_Calendar_Object
         $rrule .= ';UNTIL=' . $bydate_year . $bydate_month . $bydate_day;
       }
       $vevent->RRULE = $rrule;
-      $repeat = "true";
+      $repeat = 'true';
     } else {
-      $repeat = "false";
+      $repeat = 'false';
     }
 
     $now = new DateTime('now');
@@ -772,7 +772,7 @@ class OC_Calendar_Object
       unset($vevent->CATEGORIES);
     }
 
-    /*if ($repeat == "true") {
+    /*if ($repeat == 'true') {
       $vevent->RRULE = $repeat;
       }*/
 
