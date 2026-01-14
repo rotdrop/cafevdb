@@ -2226,7 +2226,7 @@ class EventsService
     if (empty($taskData['calendar'])) {
       return null;
     }
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarType::VTODO);
     if (empty($vCalendar)) {
       return null;
     }
@@ -2259,7 +2259,7 @@ class EventsService
    *   'categories' => <list, comma separated>,
    *   'description' => TEXT,
    *   'repeat' => 'doesnotrepeat',
-   *   'calendar' => CALID
+   *   'calendar' => CALIDbn
    * ]
    * ```
    *
@@ -2277,7 +2277,7 @@ class EventsService
     if (empty($eventData['calendar'])) {
       return null;
     }
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarService::VEVENT);
+    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarType::VEVENT);
     if (empty($vCalendar)) {
       return null;
     }

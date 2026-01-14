@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020 - 2025 Claus-Justus Heine
+ * @copyright 2020 - 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,11 +47,6 @@ class VCalendarService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  const VTODO = VCalendarType::VTODO;
-  const VEVENT = VCalendarType::VEVENT;
-  const VCARD = VCalendarType::VCARD;
-  const VJOURNAL = VCalendarType::VJOURNAL;
-
   const ALARM_ACTION_DISPLAY = 'DISPLAY';
   const ALARM_ACTION_AUDIO = 'AUDIO';
   const ALARM_ACTION_EMAIL = 'EMAIL';
@@ -74,7 +69,7 @@ class VCalendarService
   /**
    * @param mixed $vObjectData HTTP request submitted event data.
    *
-   * @param string $kind What kind of object to create.
+   * @param VCalendarType $kind What kind of object to create.
    * ```
    * $eventData = [
    *   'title' => 'Title',
@@ -119,12 +114,12 @@ class VCalendarService
    *
    * @return null|VCalendar
    */
-  public function createVCalendarFromRequest(mixed $vObjectData, string $kind = self::VEVENT):?VCalendar
+  public function createVCalendarFromRequest(mixed $vObjectData, VCalendarType $kind = VCalendarType::VEVENT):?VCalendar
   {
     switch ($kind) {
-      case self::VEVENT:
+      case VCalendarType::VEVENT:
         return $this->createVEventFromRequest($vObjectData);
-      case 'VTODO':
+      case VCalendarType::VTODO:
         return $this->createVTodoFromRequest($vObjectData);
       default:
         return null;
@@ -320,16 +315,16 @@ class VCalendarService
    *
    * @param mixed $objectData Calendar object description from HTTP request.
    *
-   * @param string $kind What kind of object to create.
+   * @param VCalendarType $kind What kind of object to create.
    *
    * @return null|VCalendar
    */
-  public function updateVCalendarFromRequest(VCalendar $vCalendar, mixed $objectData, string $kind = self::VEVENT):?VCalendar
+  public function updateVCalendarFromRequest(VCalendar $vCalendar, mixed $objectData, VCalendarType $kind = VCalendarType::VEVENT):?VCalendar
   {
     switch ($kind) {
-      case self::VEVENT:
+      case VCalendarType::VEVENT:
         return $this->updateVEventFromRequest($vCalendar, $objectData);
-      case 'VTODO':
+      case VCalendarType::VTODO:
         return $this->updateVTodoFromRequest($vCalendar, $objectData);
       default:
         return null;
@@ -396,15 +391,13 @@ class VCalendarService
    *
    * @param VCalendar $vCalendar VCalendar object.
    *
-   * @param string|VCalendarType $type Defaults to 'VEVENT'
+   * @param VCalendarType $type Defaults to 'VEVENT'.
    *
    * @return array
    */
-  public static function getAllVObjects(VCalendar $vCalendar, string|VCalendarType $type = self::VEVENT):array
+  public static function getAllVObjects(VCalendar $vCalendar, VCalendarType $type = VCalendarType::VEVENT):array
   {
-    if ($type instanceof VCalendarType) {
-      $type = $type->value;
-    }
+    $type = $type->value;
 
     $vObjects = [];
     foreach ($vCalendar->children() as $child) {
@@ -461,18 +454,18 @@ class VCalendarService
    *
    * @param VCalendar $vCalendar Sabre DAV calendar object.
    *
-   * @return string Either VEVENT, VTODO, VJOURNAL or VCARD.
+   * @return ?VCalendarType
    */
-  public static function getVObjectType(VCalendar $vCalendar):string
+  public static function getVObjectType(VCalendar $vCalendar): ?VCalendarType
   {
     if (isset($vCalendar->VEVENT)) {
-      return self::VEVENT;
+      return VCalendarType::VEVENT;
     } elseif (isset($vCalendar->VTODO)) {
-      return self::VTODO;
+      return VCalendarType::VTODO;
     } elseif (isset($vCalendar->VJOURNAL)) {
-      return self::VJOURNAL;
+      return VCalendarType::VJOURNAL;
     } elseif (isset($vCalendar->VCARD)) {
-      return self::VCARD;
+      return VCalendarType::VCARD;
     } else {
       throw new InvalidArgumentException('Called with empty or no VComponent');
     }
