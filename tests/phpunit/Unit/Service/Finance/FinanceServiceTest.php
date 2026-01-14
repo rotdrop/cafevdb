@@ -38,15 +38,20 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test the SepaBulkTransactionsService */
 #[Attributes\CoversClass(FinanceService::class)]
+#[Attributes\CoversClass(CalDavService::class)]
+#[Attributes\CoversClass(EventsService::class)]
+#[Attributes\CoversClass(VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
@@ -58,6 +63,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDataOption::class)]
@@ -66,6 +72,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::Class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
@@ -83,34 +90,33 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 class FinanceServiceTest extends TestCase
 {
-  use EntityGeneratorTrait;
+  use SetupEventsServiceTrait;
 
   private FinanceService $financeService;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->generateProjectParticipant(persist: false);
+    $this->generateEventsService();
 
-    /** @var MockProvider $mockProvider */
-    $mockProvider = MockProvider::create($this);
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $configService = $mockProvider->getConfigService();
-    $entityManager = $this->createStub(EntityManager::class);
-    $invoicesRepository = $this->createStub(EntityRepository::class);
-    $invoicesRepository->method('findLike')->willReturn([]);
-    $entityManager->method('getRepository')->willReturnCallback(
-      function (string $className) use ($invoicesRepository) {
-        switch ($className) {
-          case Entities\Invoice::class:
-            return $invoicesRepository;
-          default:
-            return $this->createStub(EntityRepository::class);
-        }
-      },
-    );
+    // $this->configService = $this->mockProvider->getConfigService();
+    // $this->entityManager = $this->createStub(EntityManager::class);
+    // $invoicesRepository = $this->createStub(EntityRepository::class);
+    // $invoicesRepository->method('findLike')->willReturn([]);
+    // $this->entityManager->method('getRepository')->willReturnCallback(
+    //   function (string $className) use ($invoicesRepository) {
+    //     switch ($className) {
+    //       case Entities\Invoice::class:
+    //         return $invoicesRepository;
+    //       default:
+    //         return $this->createStub(EntityRepository::class);
+    //     }
+    //   },
+    // );
 
-    $eventsService = $this->createStub(EventsService::class);
+    // $this->eventsService = $this->createStub(EventsService::class);
 
     $organizationalRolesService = $this->createStub(OrganizationalRolesService::class);
     $organizationalRolesService->method('treasurerContact')
@@ -140,10 +146,12 @@ class FinanceServiceTest extends TestCase
         },
       );
 
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository');
+
     $this->financeService = new FinanceService(
-      configService: $configService,
-      entityManager: $entityManager,
-      eventsService: $eventsService,
+      configService: $this->configService,
+      entityManager: $this->entityManager,
+      eventsService: $this->eventsService,
       rolesService: $organizationalRolesService,
     );
   }

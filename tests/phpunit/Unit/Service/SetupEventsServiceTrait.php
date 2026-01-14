@@ -79,6 +79,8 @@ trait SetupEventsServiceTrait
    */
   private array $calendarData = [];
 
+  private array $createdCalendarData = [];
+
   private $defaultCalendars = [];
 
   private IAppContainer $appContainer;
@@ -98,7 +100,7 @@ trait SetupEventsServiceTrait
    *
    * @return void
    */
-  public function setup(): void
+  public function generateEventsService(): void
   {
     $this->generateProjectParticipant(persist: false);
 
@@ -128,8 +130,32 @@ trait SetupEventsServiceTrait
 
     /** @var CalDavBackend $this->calDavBackend */
     $this->calDavBackend = $this->getMockBuilder(CalDavBackend::class)
+      ->onlyMethods(['getCalendarObject', 'createCalendarObject', 'getCalendarById', 'unshare'])
       ->disableOriginalConstructor()
       ->getMock();
+    $this->calDavBackend->method('createCalendarObject')
+      ->willReturnCallback(
+        // should return the etag
+        function($calendarId, $objectUri, $calendarData, $calendarType = CalDavBackend::CALENDAR_TYPE_CALENDAR): ?string {
+          $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
+          $rowData = [
+            'calendarid' => $calendarId,
+            'uri' => $objectUri,
+            'calendardata' => $calendarData,
+            'lastmodified' => time(),
+            'etag' => $extraData['etag'],
+            'size' => $extraData['size'],
+            'componenttype' => $extraData['componentType'],
+            'firstoccurence' => $extraData['firstOccurence'],
+            'lastoccurence' => $extraData['lastOccurence'],
+            'classification' => $extraData['classification'],
+            'uid' => $extraData['uid'],
+            'calendartype' => $calendarType,
+          ];
+          $this->createdCalendarData[$calendarId][$objectUri] = $rowData;
+          return null;
+        }
+      );
     $this->calDavBackend->method('getCalendarObject')
       ->willReturnCallback(
         function(
@@ -140,6 +166,9 @@ trait SetupEventsServiceTrait
           $rowIndex = $this->calendarObjects[$calendarId][$objectUri] ?? null;
           if ($rowIndex !== null) {
             return $this->rowToCalendarObject($this->calendarData[$rowIndex]);
+          }
+          if (!empty($this->createdCalendarData[$calendarId][$objectUri])) {
+            return $this->rowToCalendarObject($this->createdCalendarData[$calendarId][$objectUri]);
           }
           echo 'NOT FOUND ' . $calendarId . ' ' . $objectUri . PHP_EOL;
           print_r($this->calendarObjects);
@@ -224,8 +253,14 @@ trait SetupEventsServiceTrait
             $repository->expects($this->never())->method('getEntityManager')->willReturn($this->entityManager);
             return $repository;
 
+          case Entities\Invoice::class:
+            $repository = $this->createStub(EntityRepository::class);
+            $repository->method('findLike')->willReturn([]);
+            return $repository;
+
+          default:
+            return $this->createStub(EntityRepository::class);
         }
-        return null;
       },
     );
 
@@ -241,6 +276,9 @@ trait SetupEventsServiceTrait
       ),
     );
 
+    $this->calendarManager->expects($this->never())->method('clear');
+    $this->calDavBackend->expects($this->never())->method('unshare');
+
     $this->eventsService = new EventsService(
       userSession: $mockProvider->getUserSession(),
       configService: $mockProvider->getConfigService(),
@@ -250,19 +288,6 @@ trait SetupEventsServiceTrait
       vCalendarService: $vCalendarService,
       dateTimeFormatter: \OCP\Server::get(IDateTimeFormatter::class),
     );
-  }
-
-  /**
-   * Just one silly do-nothing test to avoid "missing tests" complaints.
-   *
-   * @return void
-   */
-  public function testSetup(): void
-  {
-    $this->entityManager->expects($this->never())->method('getRepository');
-    $this->calendarManager->expects($this->never())->method('getCalendars');
-    $this->calDavBackend->expects($this->never())->method('getCalendarObject');
-    // $this->expectNotToPerformAssertions();
   }
 
   /**

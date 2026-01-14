@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,17 +74,14 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 class ProjectEventsControllerTest extends TestCase
 {
-  use SetupEventsServiceTrait
-  {
-    SetupEventsServiceTrait::setup as setupEventsService;
-  }
+  use SetupEventsServiceTrait;
 
   private ProjectEventsController $projectEventsController;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->setupEventsService();
+    $this->generateEventsService();
     $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
 
     /** @var IRequest $request */
@@ -107,6 +104,7 @@ class ProjectEventsControllerTest extends TestCase
     $this->entityManager->expects($this->never())->method('getRepository');
   }
 
+  /* phpcs:disable Generic.Files.LineLength.TooLong */
   private const INPUT_VALUE_RESULTS = [
     [
       'calendarId' => 1,
@@ -215,6 +213,7 @@ class ProjectEventsControllerTest extends TestCase
       'calendarObject' => '{"timeRange":"2025-03-07","objectId":"L3JlbW90ZS5waHAvZGF2L2NhbGVuZGFycy9qb2huLmRvZS9maW5hbmNlX3NoYXJlZF9ieV9jYWxlbmRhci5vd25lci9DOUQ5MjkxMi1GOEQ3LTExRUYtODkyQy0zRjM1M0M2RDUwNEQuaWNz","recurrenceId":0}',
     ],
   ];
+  /* phpcs:enable Generic.Files.LineLength.TooLong */
 
   /** {@inheritdoc} */
   public function testMakeInputValue(): void
@@ -227,7 +226,7 @@ class ProjectEventsControllerTest extends TestCase
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
     $matrixEvents = [];
-    foreach ($matrix as $rowIndex => $matrixRow) {
+    foreach ($matrix as $matrixRow) {
       $matrixEvents = array_merge($matrixEvents, $matrixRow->events);
     }
     foreach ($matrixEvents as $index => $matrixEvent) {

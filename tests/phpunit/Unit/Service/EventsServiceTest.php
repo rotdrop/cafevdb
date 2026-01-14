@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -92,6 +92,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 class EventsServiceTest extends TestCase
 {
   use SetupEventsServiceTrait;
+
+  /** {@inheritdoc} */
+  public function setup(): void
+  {
+    $this->generateEventsService();
+
+    // $this->entityManager->expects($this->never())->method('getRepository');
+  }
 
   /** @return void */
   public function testEvents(): void
@@ -224,7 +232,7 @@ class EventsServiceTest extends TestCase
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
     $matrixEvents = [];
-    foreach ($matrix as $rowIndex => $matrixRow) {
+    foreach ($matrix as $matrixRow) {
       $matrixEvents = array_merge($matrixEvents, $matrixRow->events);
     }
     foreach ($matrixEvents as $index => $matrixEvent) {
@@ -308,7 +316,7 @@ class EventsServiceTest extends TestCase
     $calendars = $this->eventsService->defaultCalendars();
     $matrix = $this->eventsService->eventMatrix($events, $calendars);
     $matrixEvents = [];
-    foreach ($matrix as $rowIndex => $matrixRow) {
+    foreach ($matrix as $matrixRow) {
       $matrixEvents = array_merge($matrixEvents, $matrixRow->events);
     }
     foreach ($matrixEvents as $index => $matrixEvent) {

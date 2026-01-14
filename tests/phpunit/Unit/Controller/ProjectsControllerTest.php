@@ -43,13 +43,12 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test the ProjectsController class. */
+#[Attributes\CoversClass(EventsService::class)]
 #[Attributes\CoversClass(ProjectsController::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventTimes::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\HumanDateTime::class)]
-#[Attributes\CoversMethod(EventsService::class, 'eventMatrix')]
-#[Attributes\CoversMethod(ProjectsController::class, 'get')]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
@@ -68,7 +67,6 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
@@ -85,19 +83,16 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 class ProjectsControllerTest extends TestCase
 {
-  use SetupEventsServiceTrait
-  {
-    SetupEventsServiceTrait::setup as setupEventsService;
-  }
+  use SetupEventsServiceTrait;
 
   private ProjectsController $projectsController;
 
-  private $server;
+  // private $server;
 
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->setupEventsService();
+    $this->generateEventsService();
 
     $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
 
