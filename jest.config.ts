@@ -84,7 +84,7 @@ const config: Config = deepmerge(
     // collectCoverageFrom: undefined,
 
     // The directory where Jest should output its coverage files
-    coverageDirectory: './build/jest-coverage',
+    coverageDirectory: './build/artifacts/jest/coverage',
 
     // An array of regexp pattern strings used to skip coverage collection
     // coveragePathIgnorePatterns: [
