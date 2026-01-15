@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,7 +75,14 @@ trait AppConfigTrait
     $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
-      $default = $cloudConfig->getAppValue($this->appName, $oldConfigKey, $default);
+      $oldKeyValue = $cloudConfig->getAppValue($this->appName, $oldConfigKey, null);
+      // install using the new key
+      if ($oldKeyValue !== null) {
+        $this->setAppValue($key, $oldKeyValue);
+        if ($cloudConfig->getAppValue($this->appName, $key, null) === $oldKeyValue) {
+          $cloudConfig->deleteAppValue($this->appName, $oldConfigKey);
+        }
+      }
     }
     return $cloudConfig->getAppValue($this->appName, $key, $default);
   }
