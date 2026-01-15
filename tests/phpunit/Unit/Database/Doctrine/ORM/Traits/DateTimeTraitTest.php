@@ -24,7 +24,7 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Traits;
+namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Traits;
 
 use DateTime;
 use DateTimeImmutable;
@@ -41,7 +41,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon as WrappedCarbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as WrappedCarbonImmutable;
 
@@ -49,9 +49,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as WrappedCarbonImmutable;
 class TestClass
 {
   use DateTimeTrait {
-    DateTimeTrait::ensureDate as public;
     DateTimeTrait::convertToDateTime as public;
-    DateTimeTrait::convertToTimezoneDate as public;
   }
 }
 
@@ -61,27 +59,12 @@ class DateTimeTraitTest extends TestCase
 {
   private const DATE_TIME_CLASSES = [
     DateTime::class => false,
-    DateTimeImmutable::class => true,
+    DateTimeImmutable::class => false,
     Carbon::class => false,
-    CarbonImmutable::class => true,
+    CarbonImmutable::class => false,
     WrappedCarbon::class => false,
     WrappedCarbonImmutable::class => true,
   ];
-
-  /** {@inheritdoc} */
-  public function setup(): void
-  {
-  }
-
-  /** {@inheritdoc} */
-  public function testEnsureDate(): void
-  {
-    $this->assertEquals(new DateTimeImmutable('@1'), TestClass::ensureDate(null));
-    foreach (array_keys(self::DATE_TIME_CLASSES) as $class) {
-      $date = new $class;
-      $this->assertTrue($date === TestClass::ensureDate($date));
-    }
-  }
 
   /** {@inheritdoc} */
   public function testConvertToDateTime(): void
@@ -101,37 +84,6 @@ class DateTimeTraitTest extends TestCase
       $this->assertEquals(true, false, 'InvalidArgumentException not thrown');
     } catch (Throwable $t) {
       $this->assertInstanceOf(InvalidArgumentException::class, $t);
-    }
-  }
-
-  private const TIMEZONE_DATES = [
-    'null' => '{
-    "date": "2024-01-01 00:00:00.000000",
-    "timezone_type": 3,
-    "timezone": "Europe\/Berlin"
-}',
-    'Europe/Berlin' => '{
-    "date": "2024-01-01 00:00:00.000000",
-    "timezone_type": 3,
-    "timezone": "Europe\/Berlin"
-}',
-    'UTC' => '{
-    "date": "2024-01-01 00:00:00.000000",
-    "timezone_type": 3,
-    "timezone": "UTC"
-}',
-  ];
-
-  /** {@inheritdoc} */
-  public function testConvertToTimezoneDate(): void
-  {
-    $timeZone = new DateTimeZone('Europe/Berlin');
-    $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', '2024-01-01 01:47:13', $timeZone);
-    foreach (self::TIMEZONE_DATES as $tz => $output) {
-      $timeZone = $tz === 'null' ? null : new DateTimeZone($tz);
-      $date = TestClass::convertToTimezoneDate($dateTime, $timeZone);
-      // echo json_encode($date, JSON_PRETTY_PRINT) . PHP_EOL;
-      $this->assertEquals($output, json_encode($date, JSON_PRETTY_PRINT));
     }
   }
 }
