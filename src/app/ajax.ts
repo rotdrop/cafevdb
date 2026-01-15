@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 - 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 - 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -368,7 +368,7 @@ const ajaxFailData = (
   textStatus: string,
   errorThrown: string,
 ) => {
-  console.info('AJAX FAIL DATA ARGS', {
+  console.debug('AJAX FAIL DATA ARGS', {
     xhr,
     textStatus,
     errorThrown,
@@ -417,7 +417,7 @@ const ajaxFailData = (
       console.log('unknown response');
     }
   }
-  console.info('AJAX FAIL DATA RETURN', { data });
+  console.debug('AJAX FAIL DATA RETURN', { data });
   return data;
 };
 

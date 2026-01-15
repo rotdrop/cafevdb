@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -487,6 +487,7 @@ const updatePersonalSettings = async (
   await asyncEmit(event, {
     value,
   })
+  logger.info('AFTER AWAIT EMIT')
   await nextTick()
   settingsLocked.value = false
 }

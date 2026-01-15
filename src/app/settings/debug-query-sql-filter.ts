@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import { SET_DEBUG_QUERY_SQL_FILTER } from '../../event-bus-events.ts';
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(SET_DEBUG_QUERY_SQL_FILTER, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control);
+  return setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
@@ -48,15 +48,15 @@ const setter = (value: string, showMessage?: typeof Notification.messages, _$con
   globalState.debugQuerySqlFilter = value;
   return new Promise((resolve, reject) =>
     $.post(setPersonalUrl('debugQuerySqlFilter'), { value })
-      .done(async function(data) {
+      .done(function(data) {
         showMessage(data.messages);
         console.log(data);
         resolve(data);
       })
-      .fail(async function(xhr, status, errorThrown) {
-        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown);
         // console.error(data);
-        reject(errorThrown);
+        reject(xhr);
       }),
   );
 };

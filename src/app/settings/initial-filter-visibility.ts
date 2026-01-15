@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import { SET_INITIAL_FILTER_VISIBILITY as EVENT } from '../../event-bus-events.t
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
 subscribe(EVENT, (event) => {
-  setter(event?.value, event?.showMessage, event?.$control);
+  return setter(event?.value, event?.showMessage, event?.$control);
 });
 
 /**
@@ -60,7 +60,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
       })
       .fail(async function(xhr, status, errorThrown) {
         await Ajax.handleError(xhr, status, errorThrown);
-        reject(errorThrown);
+        reject(xhr);
       }),
   );
 };
