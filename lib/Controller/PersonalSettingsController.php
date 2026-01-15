@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -213,10 +213,10 @@ class PersonalSettingsController extends Controller
 
       case EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER:
         $realValue = Util::normalizeSpaces($value);
-        $this->setUserValue(EnumSimpleSettingsKey::DEBUG_QUERY_SQL_FILTER, $realValue);
+        $this->setUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, $realValue);
         return (new DTO\ValueResponse(
           messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
-          value: $debug
+          value: $realValue,
         ))->response();
 
       case EnumPersonalSettingsKey::WYSIWYG_EDITOR:
@@ -228,7 +228,7 @@ class PersonalSettingsController extends Controller
         $this->setUserValue($parameter, $value);
         return (new DTO\ValueResponse(
           messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
-          value: $debug
+          value: $value,
         ))->response();
 
       case EnumPersonalSettingsKey::ENCRYPTION_KEY:
