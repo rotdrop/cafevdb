@@ -1825,11 +1825,15 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
 
       changeCallback();
 
-      console.info('TRY RECORD TAB CHANGE IN HISTORY');
-      asyncEmit(LEGACY_HISTORY_PATCH, {
-        patch: tabPostData,
-        action: 'push',
-      });
+      // try update the route to reflect the tab change, but not when
+      // changing tabs in JQ dialogs.
+      if ($this.closest('.ui-dialog').length === 0) {
+        console.info('TRY RECORD TAB CHANGE IN HISTORY');
+        asyncEmit(LEGACY_HISTORY_PATCH, {
+          patch: tabPostData,
+          action: 'push',
+        });
+      }
 
       return false;
     });
