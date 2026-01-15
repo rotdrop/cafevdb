@@ -686,7 +686,7 @@ OC.L10N.register(
     "Debit notes submission hard-deadline for %s" : "Harte Ausschlussfrist Lastschrift-Einreichung für %s",
     "Debit notes due for %s" : "Lastschriften fällig für %s",
     "Debit notes pre-notification deadline for %s" : "Lastschrift-Vorab-Informations-Frist für %s",
-    "Bank transfers submission deadline for %s" : "Überweisung -- Einreichungsfirst für %s",
+    "Bank transfers submission deadline for %s" : "Überweisung -- Einreichungsfrist für %s",
     "Bank transfers due for %s" : "Fälligkeit Überweisungen für %s",
     "Due date: %s." : "Fälligkeitstermin: %s.",
     "Bulk-transaction-id: %d" : "Datenbank-Id des Sammelauftrags: %s",
