@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -189,7 +189,7 @@ trait ConfigTrait
   }
 
   /**
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param mixed $value Value to set.
    *
@@ -197,19 +197,19 @@ trait ConfigTrait
    *
    * @return void
    */
-  protected function setUserValue(string $key, mixed $value, ?string $userId = null): void
+  protected function setUserValue(string|EnumPersonalSettingsKey $key, mixed $value, ?string $userId = null): void
   {
     $this->configService->setUserValue($key, $value, $userId);
   }
 
   /**
-   * @param string $key Config key.
+   * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param null|string $userId Use the current user if null.
    *
    * @return void
    */
-  protected function deleteUserValue(string $key, ?string $userId = null): void
+  protected function deleteUserValue(string|EnumPersonalSettingsKey $key, ?string $userId = null): void
   {
     $this->configService->deleteUserValue($key, $userId);
   }
