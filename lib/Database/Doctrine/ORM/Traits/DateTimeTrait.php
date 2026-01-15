@@ -50,12 +50,12 @@ trait DateTimeTrait
    *
    * @return null|\DateTimeImmutable
    */
-  public static function convertToDateTime($dateTime):?CarbonImmutable
+  public static function convertToDateTime($dateTime): ?CarbonImmutable
   {
     if ($dateTime instanceof CarbonImmutable || $dateTime === null) {
       return $dateTime;
     } else {
-      CarbonImmutable::instance(self::convertToDateTimeImmutable($dateTime));
+      return CarbonImmutable::instance(self::convertToDateTimeImmutable($dateTime));
     }
   }
 }
