@@ -215,7 +215,7 @@ class PersonalSettingsController extends Controller
         $realValue = Util::normalizeSpaces($value);
         $this->setUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, $realValue);
         return (new DTO\ValueResponse(
-          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          messages: [$this->l->t('Setting %2$s to %1$s', [$realValue, $key->value])],
           value: $realValue,
         ))->response();
 
@@ -227,7 +227,7 @@ class PersonalSettingsController extends Controller
         }
         $this->setUserValue($parameter, $value);
         return (new DTO\ValueResponse(
-          messages: [$this->l->t('Setting %2$s to %1$s', [$debug, $key->value])],
+          messages: [$this->l->t('Setting %2$s to %1$s', [$value, $key->value])],
           value: $value,
         ))->response();
 
