@@ -170,6 +170,7 @@
                                   :submit-button="false"
           />
           <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugMode & DEBUG_QUERY)"
+                                     :value="globalState.debugQuerySqlFilter"
                                      :label="t(appId, 'SQL Filter')"
                                      :placeholder="t(appId, 'SQL filter regexp')"
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
@@ -487,7 +488,6 @@ const updatePersonalSettings = async (
   await asyncEmit(event, {
     value,
   })
-  logger.info('AFTER AWAIT EMIT')
   await nextTick()
   settingsLocked.value = false
 }
