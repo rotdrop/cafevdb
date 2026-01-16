@@ -2486,8 +2486,19 @@ Whatever.',
       }
       throw new Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
     }
-    $project->setMailingListId($listId);
-    $this->flush();
+    $this->entityManager->beginTransaction();
+    try {
+      $project->setMailingListId($listId);
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
+      }
+    }
 
     return $listInfo;
   }
