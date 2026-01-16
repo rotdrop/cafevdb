@@ -2515,8 +2515,19 @@ Whatever.',
     }
 
     $listsService->deleteList($listId);
-    $project->setMailingListId(null);
-    $this->flush();
+    $this->entityManager->beginTransaction();
+    try {
+      $project->setMailingListId(null);
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
+      }
+    }
   }
 
   /**
