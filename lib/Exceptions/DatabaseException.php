@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,6 @@
 namespace OCA\CAFEVDB\Exceptions;
 
 /** Base-class for database exceptions. */
-class DatabaseException extends Exception
+class DatabaseException extends \OCA\CAFEVDB\Toolkit\Exceptions\DatabaseException
 {
 }

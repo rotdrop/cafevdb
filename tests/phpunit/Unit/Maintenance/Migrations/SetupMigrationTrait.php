@@ -40,6 +40,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
+use OCA\CAFEVDB\Service\LegacyMigrationsService;
+use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
@@ -143,12 +145,17 @@ trait SetupMigrationTrait
       self::$migrationsService->apply($version, EnumMigrationDirection::DOWN);
       // echo 'UNAPPLY ' . $version . PHP_EOL;
     }
-    $this->assertEquals([], self::$migrationsService->getApplied());
-    self::$appliedVersions = [];
 
     // The migrations table has to be dropped manually
     $sql = 'DROP TABLE IF EXISTS DoctrineMigrationsVersions';
     $connection = $this->entityManager->getConnection();
     $connection->prepare($sql)->executeQuery();
+
+    // self::$migrationsService->clearCache();
+    $this->assertEquals([], self::$migrationsService->getApplied());
+    self::$appliedVersions = [];
+
+    // $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
+    // echo get_class($service) . PHP_EOL;
   }
 }

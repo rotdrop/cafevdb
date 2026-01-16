@@ -132,7 +132,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
@@ -186,6 +186,7 @@ class LegacyMigrationsServiceTest extends TestCase
   /** @return void */
   public function testGetMigrationServiceInterface(): void
   {
+    // echo __METHOD__ . PHP_EOL;
     $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
     $this->assertInstanceOf(LegacyMigrationsService::class, $service);
   }

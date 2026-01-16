@@ -239,6 +239,12 @@ APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
 APP_TOOLKIT_NS = CAFEVDB
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
+
+# fixup the php-toolkit and replace "use Doctrine\" by our scoped version
+app-toolkit-stamp: $(APP_TOOLKIT_DEST)/README.md Makefile
+	find $(APP_TOOLKIT_DEST)/Doctrine -name "*.php" -exec sed -i -e 's/use Doctrine\\/use $(WRAPPER_NAMESPACE)\\Doctrine\\/g' -e 's/extends \\Doctrine/extends \\$(WRAPPER_NAMESPACE)\\Doctrine/g' {} \;
+	date > $@
+
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 
 TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --outputs))
@@ -351,6 +357,8 @@ realclean: distclean
 	rm -f stats.json
 	rm -rf js/*
 	rm -rf css/*
+	rm -f *-stamp
+	rm -f *hash*
 .PHONY: realclean
 
 # Builds the source and appstore package
