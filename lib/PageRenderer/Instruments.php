@@ -113,7 +113,7 @@ class Instruments extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Delete Instrument');
@@ -130,7 +130,7 @@ class Instruments extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function headerText()
+  public function headerText(): string
   {
     $header = $this->shortTitle();
 
@@ -160,9 +160,9 @@ class Instruments extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => $template,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . $template,
     ];
 
     // Name of field which is the unique key

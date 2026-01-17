@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
@@ -37,16 +38,20 @@ trait ProjectModeNavigationItemTrait
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem
   {
-    return Util::arrayMergeRecursive(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-      ]);
+    return SidebarNavigationItem::fromArray(
+      Util::arrayMergeRecursive(
+        parent::navigationItem($projectId, $projectName)->toArray(),
+        [
+          'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
+        ],
+      ),
+    );
   }
 
   /** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     $items = ($this->projectId > 0)
       ? array_merge(
@@ -94,9 +99,9 @@ trait ProjectModeNavigationItemTrait
     return array_values(
       array_filter(
         $items,
-        fn($item) => ($item['template'] != static::TEMPLATE
-                      && ($item['template'] != PageRenderer\InstrumentFamilies::TEMPLATE
-                          || static::TEMPLATE == PageRenderer\Instruments::TEMPLATE)),
+        fn(SidebarNavigationItem $item) => ($item->template != static::TEMPLATE
+                                            && ($item->template != PageRenderer\InstrumentFamilies::TEMPLATE
+                                                || static::TEMPLATE == PageRenderer\Instruments::TEMPLATE)),
       )
     );
   }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -212,7 +212,7 @@ class SepaBankAccounts extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove this Bank-Account?');
@@ -261,7 +261,7 @@ class SepaBankAccounts extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
+      PersistentCGIKeys::TEMPLATE => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
     ];

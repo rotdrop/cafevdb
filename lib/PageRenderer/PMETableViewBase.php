@@ -37,6 +37,7 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\LegacyPageController;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -490,14 +491,14 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /** @return string Short title for heading. */
-  abstract public function shortTitle();
+  abstract public function shortTitle(): string;
 
   /**
    * @return Header text informations.
    *
    * @todo Display in popup in order not to bloat the small header space.
    */
-  public function headerText()
+  public function headerText(): string
   {
     return $this->shortTitle();
   }

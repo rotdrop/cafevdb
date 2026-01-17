@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCP\IGroupManager;
 use OCP\IUserManager;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Service\AuthorizationService\EnumAppPermissions;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
@@ -62,21 +63,15 @@ class AuthorizationService
   public const FINANCE_GROUP_SUFFIX = '-' . self::FINANCE;
   public const EMAIL_GROUP_SUFFIX = '-' . self::EMAIL;
 
-  public const PERMISSION_NONE = 0;
-  public const PERMISSION_FRONTEND = (1 << 0);
-  public const PERMISSION_ADDRESSBOOK = (1 << 1);
-  public const PERMISSION_FILESYSTEM = (1 << 2);
-  public const PERMISSION_CALENDAR = (1 << 3);
-  public const PERMISSION_FINANCE = (1 << 4);
-  public const PERMISSION_MANAGEMENT = (1 << 5);
-  public const PERMISSION_EMAIL = (1 << 6);
-  public const PERMISSION_ALL = self::PERMISSION_FRONTEND
-    | self::PERMISSION_ADDRESSBOOK
-    | self::PERMISSION_FILESYSTEM
-    | self::PERMISSION_CALENDAR
-    | self::PERMISSION_FINANCE
-    | self::PERMISSION_MANAGEMENT
-    | self::PERMISSION_EMAIL;
+  public const PERMISSION_NONE = EnumAppPermissions::NONE->value;
+  public const PERMISSION_FRONTEND = EnumAppPermissions::FRONTEND->value;
+  public const PERMISSION_ADDRESSBOOK = EnumAppPermissions::ADDRESSBOOK->value;
+  public const PERMISSION_FILESYSTEM = EnumAppPermissions::FILESYSTEM->value;
+  public const PERMISSION_CALENDAR = EnumAppPermissions::CALENDAR->value;
+  public const PERMISSION_FINANCE = EnumAppPermissions::FINANCE->value;
+  public const PERMISSION_MANAGEMENT = EnumAppPermissions::MANAGEMENT->value;
+  public const PERMISSION_EMAIL = EnumAppPermissions::EMAIL->value;
+  public const PERMISSION_ALL = EnumAppPermissions::ALL->value;
 
   /**
    * @var array

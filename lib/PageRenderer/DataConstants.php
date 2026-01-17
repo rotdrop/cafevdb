@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,14 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
 
 /**
- * Define some constants for consistency.
+ * Define some constants in order to avoid typos and to enforce consistent
+ * naming.
  */
 #[TSAttributes\TypeScript]
 class DataConstants
 {
+  public const RENDERER_PREFIX_TAG = 'template:';
+
   public const DATA_META_DATA = 'meta-data';
   public const DATA_SEALED_VALUE = 'sealed-value';
   public const DATA_CRYPTO_HASH = 'crypto-hash';

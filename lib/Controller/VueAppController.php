@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2025
+ * @copyright Claus-Justus Heine 2025, 2026
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\AppFramework\IAppContainer;
@@ -39,8 +40,10 @@ use OCP\Util;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util as CommonUtil;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem as RendererNavigationItem;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -51,7 +54,6 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -158,8 +160,11 @@ class VueAppController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  public function navigation(string $template, ?int $projectId = null, ?string $projectName = null)
-  {
+  public function navigation(
+    string $template,
+    ?int $projectId = null,
+    ?string $projectName = null,
+  ): DataResponse|JSONResponse {
     $template = urldecode($template);
     if ($template == 'home') {
       $navigationItems = [
@@ -180,15 +185,25 @@ class VueAppController extends Controller
       $navigationItems = $renderer->navigationItems();
     }
     $userPermissions = $this->authorizationService->getUserPermissions();
-    $navigationItems = array_filter($navigationItems, fn($item) => ($item['permissions'] === ($item['permissions'] & $userPermissions)));
-    foreach ($navigationItems as &$item) {
-      $item['nameKey'] = $item['name'];
-      $item['name'] = $this->toolTipsService[$item['name']] ?: $item['name'];
-      $item['tooltipKey'] = $item['tooltip'];
-      $item['tooltip'] = $this->toolTipsService[$item['tooltip']] ?: $item['tooltip'];
-    }
-    return self::dataResponse([
-      'navigation' => $navigationItems,
-    ]);
+    $navigationItems = array_filter(
+      $navigationItems,
+      fn(RendererNavigationItem $item) => ($item->permissions === ($item->permissions & $userPermissions)),
+    );
+    return new DTO\NavigationItemsResponse(
+      navigation: array_map(
+        function(RendererNavigationItem $item): DTO\SidebarNavigationItem {
+          return new DTO\SidebarNavigationItem(
+            template: $item->template,
+            name: $this->toolTipsService[$item->name] ?: $item->name,
+            nameKey: $item->name,
+            tooltip: $this->toolTipsService[$item->tooltip] ?: $item->tooltip,
+            tooltipKey: $item->tooltip,
+            templateParameters: $item->templateParameters,
+            permissions: $item->permissions,
+          );
+        },
+        $navigationItems,
+      ),
+    )->response();
   }
 }

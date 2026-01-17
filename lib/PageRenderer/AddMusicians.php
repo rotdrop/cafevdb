@@ -87,13 +87,13 @@ class AddMusicians extends Musicians
     );
 
     $this->findProject(enforce: true);
-    if ($this->request['participationContext'] ?? null) {
-      $this->participationContext = ParticipationContext::get($this->request['participationContext']);
+    if ($this->request->getParam(PersistentCGIKeys::PARTICIPATION_CONTEXT) ?? null) {
+      $this->participationContext = ParticipationContext::get($this->request->getParam(PersistentCGIKeys::PARTICIPATION_CONTEXT));
     }
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     $shortTitle = parent::commonShortTitle();
     if ($shortTitle === null) {

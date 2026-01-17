@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -79,13 +79,13 @@ class AllMusicians extends Musicians
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return parent::commonShortTitle() ?? $this->l->t('Overview over all registered musicians');
   }
 
   /** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     return [
       AllMusicians::navigationItem(),

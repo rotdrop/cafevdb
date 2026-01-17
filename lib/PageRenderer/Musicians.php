@@ -156,7 +156,7 @@ abstract class Musicians extends PMETableViewBase
    *
    * @return null|string Common short title or null.
    */
-  protected function commonShortTitle():?string
+  protected function commonShortTitle(): ?string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove all data of the displayed person?');
@@ -173,7 +173,7 @@ abstract class Musicians extends PMETableViewBase
   }
 
   /*** {@inheritdoc} */
-  public function headerText()
+  public function headerText(): string
   {
     $title = $this->toolTipsService['page-renderer:' . $this->template . ':header-text'];
     return '<div class="' . $this->cssPrefix() . '-header-text"'
@@ -211,7 +211,7 @@ abstract class Musicians extends PMETableViewBase
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
     $opts['cgi']['persist'] = [
-      'template' => $template,
+      PersistentCGIKeys::TEMPLATE => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
       // overwrite to catch copy/insert

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -179,7 +179,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       $pageNavigation,
       $toolTipsService,
     );
-    $this->bulkTransactionExpanded = $this->request['bulkTransactionExpanded'];
+    $this->bulkTransactionExpanded = $this->request->getParam('bulkTransactionExpanded');
 
     $this->findProject(enforce: false);
 
@@ -187,7 +187,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
   }
@@ -218,7 +218,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
+      PersistentCGIKeys::TEMPLATE => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
       'bulkTransactionExpanded' => $this->bulkTransactionExpanded,

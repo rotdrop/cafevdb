@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,11 +38,10 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -114,9 +113,7 @@ class Projects extends PMETableViewBase
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     //
-    private EventsService $eventsService,
     private MailingListsService $listsService,
-    private OrganizationalRolesService $orgaRolesService,
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
@@ -145,17 +142,23 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
+    $orchestraName = ucfirst(
+      $this->getConfigValue(
+        ConfigConstants::ORCHESTRA_NAME_KEY,
+        '** ' . $this->l->t('unconfigured') . '! **',
+      ),
+    );
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)), $this->projectName]);
+      return $this->l->t("%s Project %s", [ $orchestraName, $this->projectName]);
     } else {
-      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)) ]);
+      return $this->l->t("%s Projects", [ $orchestraName ]);
     }
   }
 
   /** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     return [
       AllMusicians::navigationItem(),
@@ -168,9 +171,9 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem
   {
-    $item = parent::navigationItem($projectId, $projectName);
+    $item = parent::navigationItem($projectId, $projectName)->toArray();
 
     $currentYear = date('Y');
     $pmeOptions = \OC::$server->get(IPMEOptions::class);
@@ -179,7 +182,7 @@ class Projects extends PMETableViewBase
     $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field . '_comp'] = '>=';
     $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field] = $currentYear - 1;
 
-    return $item;
+    return SidebarNavigationItem::fromArray($item);
   }
 
   /** {@inheritdoc} */
@@ -209,7 +212,7 @@ class Projects extends PMETableViewBase
     // is just the request parameter, while Template below will define
     // the value of $this->template after form submit.
     $opts['cgi']['persist'] = [
-      'template' => $template,
+      PersistentCGIKeys::TEMPLATE => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
       // overwrite with record id to catch changes after copy/insert
@@ -1024,7 +1027,7 @@ class Projects extends PMETableViewBase
       );
 
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
-    if (!empty($this->request[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')])) {
+    if (!empty($this->request->getParam($this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')))) {
       // unset the year filter, as it does not make sense
       //
       // Leave to the user ...

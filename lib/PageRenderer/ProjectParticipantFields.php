@@ -193,7 +193,7 @@ class ProjectParticipantFields extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->projectId > 0) {
       return $this->l->t("Participant-Fields for Project %s", [ $this->projectName ]);
@@ -236,7 +236,7 @@ class ProjectParticipantFields extends PMETableViewBase
     ];
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
+      PersistentCGIKeys::TEMPLATE => $template,
       'table' => $opts['tb'],
       'templateRenderer' => 'template:'.$template,
     ];
