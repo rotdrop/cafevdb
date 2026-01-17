@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,7 +77,7 @@ asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]) => {
+const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg']) => {
   const entityId = data.entityId;
   const tableOptions = {
     dialogHolderCSSId: template + '-overview',

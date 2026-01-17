@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -134,7 +134,10 @@ const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false) {
  * @param post.projectName Name of the project.
  * @param post.projectId Database id of the project.
  */
-const instrumentationNumbersPopup = (containerSel: string, post: AsyncNextcloudEvents[typeof BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP]) => {
+const instrumentationNumbersPopup = (
+  containerSel: string,
+  post: AsyncNextcloudEvents[typeof BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP]['arg'],
+) => {
   // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
@@ -178,7 +181,7 @@ const instrumentationNumbersPopup = (containerSel: string, post: AsyncNextcloudE
  */
 const participantFieldsPopup = (
   containerSel: string,
-  post: AsyncNextcloudEvents[typeof BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP],
+  post: AsyncNextcloudEvents[typeof BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP]['arg'],
 ) => {
   // Prepate the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
@@ -223,7 +226,7 @@ const participantFieldsPopup = (
  */
 const projectViewPopup = async function(
   containerSel: string,
-  post: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP],
+  post: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg'],
 ) {
   const projectId = post.projectId || post.entityId;
   const tableOptions = {
