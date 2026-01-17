@@ -178,19 +178,19 @@ $routes = [
       'verb' => 'GET',
     ],
     //
-    [
-      'name' => 'page#loader',
-      'url' => '/page/loader/{renderAs}',
-      'verb' => 'POST',
-      'defaults' => [ 'renderAs' => 'user' ],
-    ],
-    [
-      'name' => 'page#remember',
-      'url' => '/page/remember/{renderAs}',
-      'verb' => 'POST',
-      'defaults' => [ 'renderAs' => 'user' ],
-    ],
     // [
+    //   'name' => 'page#loader',
+    //   'url' => '/page/loader/{renderAs}',
+    //   'verb' => 'POST',
+    //   'defaults' => [ 'renderAs' => 'user' ],
+    // ],
+    // [
+    //   'Name' => 'page#remember',
+    //   'url' => '/page/remember/{renderAs}',
+    //   'verb' => 'POST',
+    //   'defaults' => [ 'renderAs' => 'user' ],
+    // ],
+    // // [
     //   'name' => 'pme_table#service_switch',
     //   'url' => '/page/pme/{topic}', // load or export
     //   'verb' => 'POST',
@@ -753,11 +753,11 @@ $routes = [
      * Perform mail-merge with musician or contact data, used by the files
      * side-bar plugin.
      */
-    [
-      'name' => 'mail_merge#merge',
-      'verb' => 'POST',
-      'url' => '/documents/mail-merge',
-    ],
+    // [
+    //   'name' => 'mail_merge#merge',
+    //   'verb' => 'POST',
+    //   'url' => '/documents/mail-merge',
+    // ],
   ],
 ];
 
