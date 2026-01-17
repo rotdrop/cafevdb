@@ -643,7 +643,10 @@ class MockProvider
       ->disableOriginalConstructor()
       ->getMock();
     $instance->method('getUserPermissions')->willReturnCallback(
-      function(string $uid) {
+      function(?string $uid = null) {
+        if ($uid === null) {
+          $uid = $this->getUser()->getUID();
+        }
         switch ($uid) {
           case self::EXECUTIVE_BOARD_UID:
             return AuthorizationService::PERMISSION_ALL;
@@ -909,6 +912,7 @@ class MockProvider
       IRequest::class => fn(self $self) => $self->getRequest(),
       ISession::class => fn(self $self) => $self->getSession(),
       IUserSession::class => fn(self $self) => $self->getUserSession(),
+      'userId' => fn(self $self) => $self->getUserSession()->getUser()->getUID(),
       Registration::USER_LOCALE => fn(self $self) => 'de_DE.UTF-8',
       lcfirst(Registration::USER_LOCALE) => fn(self $self) => 'de_DE.UTF-8',
       RepositoryFactory::class => fn(self $self) => $self->getRepositoryFactory(),

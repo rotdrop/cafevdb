@@ -52,6 +52,7 @@ class Projects extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\InstrumentsTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
@@ -66,7 +67,7 @@ class Projects extends PMETableViewBase
   private const MAX_POSTER_COLUMNS = 4;
 
   /** @var Entities\Project */
-  private ?Entities\Project $project = null;
+  protected ?Entities\Project $project;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -129,10 +130,7 @@ class Projects extends PMETableViewBase
     if (!($this->projectId > 0)) {
       $this->projectId = $this->pmeRecordId['id'] ?? null;
     }
-    if ($this->projectId > 0) {
-      $this->project = $this->projectService->findById($this->projectId);
-      $this->projectName = $this->project->getName();
-    }
+    $this->findProject(enforce: false);
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Project'));

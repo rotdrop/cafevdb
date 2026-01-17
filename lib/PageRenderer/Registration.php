@@ -33,7 +33,14 @@ use OCA\CAFEVDB\Constants;
 /** Register template-names as dependency injection tags. */
 class Registration
 {
-  private const LEGACY_TEMPLATES = [
+  /**
+   * @var array<string, string>
+   *
+   * Template name - classname map. self::register() establishes service
+   * aliases from (DataConstants::RENDERER_PREFIX_TAG . TEMPLATE) to the class
+   * instantiation service.
+   */
+  public const LEGACY_TEMPLATES = [
     AddMusicians::TEMPLATE => AddMusicians::class,
     AllMusicians::TEMPLATE => AllMusicians::class,
     Blog::TEMPLATE => Blog::class,
@@ -87,32 +94,32 @@ class Registration
 
     // @todo find a cleaner way for the following
 
-    $context->registerService('export:' . AllMusicians::TEMPLATE, function($c) {
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . AllMusicians::TEMPLATE, function($c) {
       $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . AllMusicians::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerService('export:' . ProjectParticipants::TEMPLATE, function($c) {
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . ProjectParticipants::TEMPLATE, function($c) {
       $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . ProjectParticipants::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
-    $context->registerService('export:' . ProjectAssociates::TEMPLATE, function($c) {
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . ProjectAssociates::TEMPLATE, function($c) {
       $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . ProjectAssociates::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
-    $context->registerService('export:' . SepaBankAccounts::TEMPLATE, function($c) {
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . SepaBankAccounts::TEMPLATE, function($c) {
       $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . SepaBankAccounts::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerServiceAlias('export:' . InstrumentInsurances::TEMPLATE, Export\InsuranceSpreadsheetExporter::class);
+    $context->registerServiceAlias(DataConstants::EXPORTER_PREFIX_TAG . InstrumentInsurances::TEMPLATE, Export\InsuranceSpreadsheetExporter::class);
   }
 }

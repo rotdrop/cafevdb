@@ -99,7 +99,6 @@ class InstrumentFamilies extends PMETableViewBase
       pageNavigation: $pageNavigation,
       toolTipsService: $toolTipsService,
     );
-    $this->projectMode = false;
     $this->getDatabaseRepository(Entities\InstrumentFamily::class)->findAll();
     $this->flush();
   }

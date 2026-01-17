@@ -175,7 +175,7 @@ class VueAppController extends Controller
     } else {
       try {
         /** @var $renderer PageRenderer\IPageRenderer */
-        $renderer = $this->appContainer->query(PageRenderer\DataConstants::RENDERER_PREFIX_TAG . $template);
+        $renderer = $this->appContainer->get(PageRenderer\DataConstants::RENDERER_PREFIX_TAG . $template);
       } catch (Throwable $t) {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('Unable to generate the navigation menu for page "%s".', $template),

@@ -110,6 +110,8 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var Entities\Project */
   private ?Entities\Project $project = null;
 
+  private array $scopeNames;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -141,12 +143,7 @@ class InstrumentInsurances extends PMETableViewBase
       $this->projectName = $this->getClubMembersProjectName();
     }
 
-    $scopes = array_values(Types\EnumGeographicalScope::toArray());
-
-    $this->scopeNames = [];
-    foreach ($scopes as $tag) {
-      $this->scopeNames[$tag] = $this->l->t($tag);
-    }
+    $this->scopeNames = Types\EnumGeographicalScope::getL10NValues($this->l);
   }
   // phpcs:enable
 

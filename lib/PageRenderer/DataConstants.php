@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as PME;
 class DataConstants
 {
   public const RENDERER_PREFIX_TAG = 'template:';
+  public const EXPORTER_PREFIX_TAG = 'export:';
 
   public const DATA_META_DATA = 'meta-data';
   public const DATA_SEALED_VALUE = 'sealed-value';
