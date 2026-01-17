@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -246,6 +246,8 @@ class EmailFormController extends Controller
    * @param ?string $currentTemplate The selected template.
    *
    * @return string Rendered HTML template.
+   *
+   * @SuppressWarnings(PHPMD.UnusedPrivateMethod) (accesed indirectly throw method variable)
    */
   private function templateEmailOptions(Composer $composer, ?string $currentTemplate = null):string
   {
@@ -272,7 +274,7 @@ class EmailFormController extends Controller
    */
   private function draftEmailOptions(Composer $composer):string
   {
-    $templateParamters = [
+    $templateParameters = [
       self::DRAFT_EMAILS => $composer->draftEmails(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
       'dateTimeZone' => $this->getDateTimeZone(),
@@ -280,7 +282,7 @@ class EmailFormController extends Controller
 
     $tmpl = $this->templateResponse(
       'emailform/part.draft-email-options',
-      $templateParamters,
+      $templateParameters,
     );
     return $tmpl->render();
   }
