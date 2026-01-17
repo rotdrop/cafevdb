@@ -130,7 +130,7 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 
 all: help
 
-pre-build: php-scoper-install app-toolkit
+pre-build: php-scoper-install app-toolkit-stamp
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
@@ -423,7 +423,7 @@ $(GH_PAGES_PHPDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(PHPDOC_HTML)/index.h
 	cp -a $(PHPDOC_HTML)/. $(GH_PAGES_PHPDOC_HTML)/.
 
 .PHONY: pre-php-docs
-pre-php-docs: app-toolkit
+pre-php-docs: app-toolkit-stamp
 
 .PHONY: phpdoc
 phpdoc: pre-php-docs $(PHPDOC_HTML)/index.html
