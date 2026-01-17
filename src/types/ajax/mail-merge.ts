@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export type { MailMergeResponse } from '../../../build/ts-types/php-modules/Controller/DTO.ts';
+
 export const MailMergeDataset = 'dataset';
 export const MailMergeDownload = 'download';
 export const MailMergeCloud = 'cloud';
@@ -49,14 +51,6 @@ export interface MailMergePayload {
   operation: MailMergeOperation,
   limit?: number,
   offset?: null,
-}
-
-export interface MailMergeResponse {
-  message: string,
-  cloudFolder: string,
-  cloudFiles: string[],
-  count: number,
-  senderId: number,
 }
 
 export {};

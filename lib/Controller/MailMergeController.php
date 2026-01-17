@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
@@ -133,6 +134,7 @@ class MailMergeController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/documents/mail-merge' )]
   public function merge(
     null|Int|string $senderId = null,
     ?string $fileName = null,
@@ -268,11 +270,13 @@ class MailMergeController extends Controller
             } else {
               $cloudFolder->newFile($filledFileName, $fileData);
               $mailMergeCount = 1;
-              return self::dataResponse([
-                'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-                'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-                'count' => $mailMergeCount,
-              ]);
+              return new DTO\MailMergeResponse(
+                messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+                cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                cloudFiles: [],
+                count: $mailMergeCount,
+                senderId: $sender->getId(),
+              )->response();
             }
           case self::OPERATION_DATASET:
             $fillData = $this->documentFiller->fillData($templateData);
@@ -412,13 +416,13 @@ class MailMergeController extends Controller
               case self::OPERATION_CLOUD:
                 $cloudFolder->newFile($filledFileName, $fileData);
                 $mailMergeCount = 1;
-                return self::dataResponse([
-                  'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-                  'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-                  'cloudFiles' => [ $filledFileName ],
-                  'count' => $mailMergeCount,
-                  'senderId' => $sender->getId(),
-                ]);
+                return new DTO\MailMergeResponse(
+                  messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+                  cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                  cloudFiles: [ $filledFileName ],
+                  count: $mailMergeCount,
+                  senderId: $sender->getId(),
+                )->response();
               case self::OPERATION_DOWNLOAD:
               case self::OPERATION_DATASET:
                 return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
@@ -440,13 +444,13 @@ class MailMergeController extends Controller
 
         switch ($operation) {
           case self::OPERATION_CLOUD:
-            return self::dataResponse([
-              'message' => $this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount),
-              'cloudFolder' => substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
-              'cloudFiles' => $cloudFiles,
-              'count' => $mailMergeCount,
-              'senderId' => $sender->getId(),
-            ]);
+            return new DTO\MailMergeResponse(
+              messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+              cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+              cloudFiles: $cloudFiles,
+              count: $mailMergeCount,
+              senderId: $sender->getId(),
+            )->response();
           case self::OPERATION_DOWNLOAD:
           case self::OPERATION_DATASET:
             $zipStream->finish();

@@ -212,7 +212,7 @@ import type { Project } from '../stores/app-data.ts'
 import type { Contact, AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import { tooltips } from '../util/tooltips.ts'
-import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import type { FilesInitialState as InitialState, MailMergeResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 import {
   MailMergeDataset,
   MailMergeDownload,
@@ -442,9 +442,9 @@ const handleMailMergeRequest = async (operation: MailMergeOperation, event: Targ
       }
       break
     case MailMergeCloud: {
-      const response = await axios.post(ajaxUrl, postData)
+      const response = await axios.post<MailMergeResponse>(ajaxUrl, postData)
       const cloudFolder = response.data.cloudFolder
-      const message = response.data.message
+      const message = response.data.messages.join(' ')
       logger.info('CLOUD RESPONSE', response)
       const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
       showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })

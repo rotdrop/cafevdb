@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ import type { NewMenuEntry } from '@nextcloud/files';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
 import logoSvg from '../img/cafevdb.svg?raw';
-import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
+import type { FilesInitialState, UploadFileData } from '../build/ts-types/php-modules/Controller/DTO.ts';
 import Console from './util/console.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import type {
@@ -606,14 +606,16 @@ class InvoicesEntry implements NewMenuEntry {
           conflict: EnumAddDocumentConflictAction.RENAME,
         };
 
-        const moveResponse = await axios.post(moveUrl, moveData);
+        const moveResponse = await axios.post<UploadFileData[]>(moveUrl, moveData);
 
         logger.debug('MAIL MERGE RESPONSES', {
           moveResponse,
           response,
         });
 
-        showInfo(moveResponse.data[0].message);
+        if (moveResponse.data[0].message) {
+          showInfo(moveResponse.data[0].message);
+        }
         showInfo(t(appName, 'Reloading file list.'));
 
         emit('files:config:updated', {});
