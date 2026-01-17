@@ -140,7 +140,7 @@ skip-networking
         throw new RuntimeException('Error file "' . $serverErrorFile . '" did not change after ' . $timeout . ' seconds.');
       }
       $consume = 10;
-      while (fread($errorFp, filesize($serverErrorFile)) && --$consume > 0);
+      while (fread($errorFp, max(4096, filesize($serverErrorFile))) && --$consume > 0);
       $serverFeedback = file_get_contents($serverErrorFile);
       if (str_contains($serverFeedback, self::SERVER_READY_STATEMENT)) {
         break;

@@ -34,6 +34,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -43,6 +44,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Test aspects of the AllMusicians page renderer. */
 #[Attributes\CoversClass(PageRenderer\Instruments::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
@@ -59,6 +61,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
@@ -95,13 +98,14 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
@@ -180,7 +184,7 @@ class InstrumentsTest extends TestCase
   #[Attributes\Depends('testChange')]
   public function testRenderList(): void
   {
-    $this->postData['template'] = PageRenderer\Instruments::TEMPLATE;
+    $this->postData[PersistentCGIKeys::TEMPLATE] = PageRenderer\Instruments::TEMPLATE;
     ob_start();
     try {
       $this->renderer->render(execute: true);
@@ -350,7 +354,7 @@ class InstrumentsTest extends TestCase
   private const DELETE_INSTRUMENT_FORM_DATA = 'template=instruments&musicianId=0&projectId=0&projectName=&recordsPerPage=40&table=Instruments&templateRenderer=template%3Ainstruments&PME_sys_qf8_comp=%3D&PME_sys_qf10_comp=%3D&PME_sys_qf11_comp=%3D&PME_sys_cur_tab=&PME_sys_qfn=&PME_sys_rec%5Bid%5D=48&PME_sys_groupby_rec%5Bid%5D=48&PME_sys_fm=0&PME_sys_np=40&PME_sys_fl=0&PME_sys_op_name=delete&PME_sys_reloadOuterForm=&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Ainstruments&initialViewOperation=false&initialName=PME_sys_operation&initialValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D48%26PME_sys_groupby_rec%5Bid%5D%3D48%26PME_sys_mrec_rec%5Bid%5D%3D48&reloadName=PME_sys_operation&reloadValue=L%C3%B6schen%3FPME_sys_rec%5Bid%5D%3D48%26PME_sys_groupby_rec%5Bid%5D%3D48%26PME_sys_mrec_rec%5Bid%5D%3D48&modalDialog=true&modified=true&PME_sys_savedelete=L%C3%B6schen&PME_sys_savedelete=L%C3%B6schen&PME_sys_operation=Null';
   // phpcs:enable
 
-  // #[Attributes\Depends('testRenderAdd')]
+  #[Attributes\Depends('testRenderAdd')]
   #[Attributes\Depends('testRenderChange')]
   #[Attributes\Depends('testRenderView')]
   #[Attributes\Depends('testRenderDelete')]

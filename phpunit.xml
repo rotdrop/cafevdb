@@ -10,6 +10,7 @@
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnSkippedTests="true"
          executionOrder="depends,defects"
          failOnPhpunitDeprecation="true"
          failOnRisky="true"

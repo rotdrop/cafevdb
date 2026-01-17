@@ -34,6 +34,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -52,6 +53,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\CoversClass(PageRenderer\PMETableViewBase::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
@@ -126,16 +128,17 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
@@ -518,7 +521,7 @@ class AllMusiciansTest extends TestCase
   #[Attributes\Depends('testUpdate')]
   public function testRenderList(): void
   {
-    $this->postData['template'] = PageRenderer\AllMusicians::TEMPLATE;
+    $this->postData[PersistentCGIKeys::TEMPLATE] = PageRenderer\AllMusicians::TEMPLATE;
     ob_start();
     try {
       $this->renderer->render(execute: true);
@@ -542,7 +545,7 @@ class AllMusiciansTest extends TestCase
   #[Attributes\Depends('testUpdate')]
   public function testRenderAdd(): void
   {
-    $this->postData['template'] = PageRenderer\AllMusicians::TEMPLATE;
+    $this->postData[PersistentCGIKeys::TEMPLATE] = PageRenderer\AllMusicians::TEMPLATE;
     parse_str(self::ADD_MUSICIAN_FORM_DATA, $this->postData);
     ob_start();
     try {
