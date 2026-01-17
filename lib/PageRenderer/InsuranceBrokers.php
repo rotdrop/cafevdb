@@ -62,13 +62,12 @@ class InsuranceBrokers extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->projectId = $this->getClubMembersProjectId();
@@ -98,7 +97,6 @@ class InsuranceBrokers extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -118,9 +116,9 @@ class InsuranceBrokers extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,12 +23,12 @@
 
 // silly support function for stripping template: from a string
 
-export const RENDERER_TAG = 'template:';
+import { DataConstants } from '../../build/ts-types/php-modules/PageRenderer.ts';
 
-export const templateRenderer = function(template: string) {
-  return RENDERER_TAG + template;
-};
+const RENDERER_PREFIX = DataConstants.RENDERER_PREFIX_TAG;
+export type RendererPrefixType = typeof DataConstants.RENDERER_PREFIX_TAG;
+export type TemplateRenderer<S extends string, T extends RendererPrefixType = RendererPrefixType> = `${T}${S}`;
 
-export const templateFromRenderer = function(templateRenderer: string) {
-  return templateRenderer.replace(RENDERER_TAG, '');
-};
+export const templateRenderer = <S extends string>(template: S): TemplateRenderer<S> => `${RENDERER_PREFIX}${template}`;
+
+export const templateFromRenderer = <S extends string>(templateRenderer: TemplateRenderer<S>): S => templateRenderer.replace(RENDERER_PREFIX, '') as S;

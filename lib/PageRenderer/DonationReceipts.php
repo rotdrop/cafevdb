@@ -55,8 +55,8 @@ class DonationReceipts extends PMETableViewBase
   public const AMOUNT_CHECK_FAILURE = 'amount-check-failure';
 
   public const FORM_DATA = [
-    'template' => self::TEMPLATE,
-    'table' => self::TABLE,
+    PersistentCGIKeys::TEMPLATE => self::TEMPLATE,
+    PersistentCGIKeys::TABLE => self::TABLE,
     'self-test-failure' => self::AMOUNT_CHECK_FAILURE,
   ];
 
@@ -162,8 +162,6 @@ class DonationReceipts extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -185,7 +183,6 @@ class DonationReceipts extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -256,9 +253,9 @@ class DonationReceipts extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

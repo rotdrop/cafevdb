@@ -102,14 +102,12 @@ class TaxationStatutorySources extends PMETableViewBase
     protected GeoCodingService $geoCodingService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
   }
   // phpcs:enable
@@ -123,7 +121,6 @@ class TaxationStatutorySources extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -143,9 +140,9 @@ class TaxationStatutorySources extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = array(
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       );
 
     // Name of field which is the unique key

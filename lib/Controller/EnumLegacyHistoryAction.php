@@ -1,10 +1,11 @@
+<?php
 /**
- * Orchestra member, musicion and project management application.
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +22,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface NavigationItem {
-  template: string,
-  name: string,
-  nameKey: string,
-  tooltip: string,
-  tooltipKey: string,
-  templateParameters: Record<string, any>,
-  permissions: number,
-}
+namespace OCA\CAFEVDB\Controller;
 
-export {}
+/** History action for the LegacyPageController. */
+enum EnumLegacyHistoryAction: string
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case PUSH = 'push';
+  case REPLACE = 'replace';
+}

@@ -64,8 +64,6 @@ class InsuranceRates extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      template: self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -100,7 +98,6 @@ class InsuranceRates extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -120,9 +117,9 @@ class InsuranceRates extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

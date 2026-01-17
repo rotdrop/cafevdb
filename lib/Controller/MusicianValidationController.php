@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\GeoCodingService;
@@ -71,7 +72,7 @@ class MusicianValidationController extends Controller
 
     $this->l = $this->l10N();
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->dataPrefix = $this->request['dataPrefix']['musicians']??'';
+    $this->dataPrefix = $this->request[PersistentCGIKeys::DATA_PREFIX]['musicians'] ?? '';
   }
 
   /**

@@ -123,14 +123,12 @@ class InstrumentInsurances extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->showDisabled = true; // otherwise it is too confusing.
@@ -161,7 +159,6 @@ class InstrumentInsurances extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -181,11 +178,11 @@ class InstrumentInsurances extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
-      'projectId' => $this->projectId,
-      'projectName' => $this->projectName,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::PROJECT_ID => $this->projectId,
+      PersistentCGIKeys::PROJECT_NAME => $this->projectName,
     ];
 
     // Name of field which is the unique key

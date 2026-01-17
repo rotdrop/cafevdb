@@ -163,11 +163,11 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   protected const PME_NAVIGATION_MULTI = 'GUDM';
 
   protected const PERSISTENT_CGI_KEYS = [
-    'template',
-    'musicianId',
-    'projectId',
-    'projectName',
-    'recordsPerPage',
+    PersistentCGIKeys::TEMPLATE,
+    PersistentCGIKeys::MUSICIAN_ID,
+    PersistentCGIKeys::PROJECT_ID,
+    PersistentCGIKeys::PROJECT_NAME,
+    PersistentCGIKeys::RECORDS_PER_PAGE,
   ];
 
   /** @var IL10N */
@@ -250,8 +250,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
   /** {@inheritdoc} */
   protected function __construct(
-    protected string $template,
-    //
     protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected IRequest $request,
@@ -304,8 +302,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     ];
 
     foreach (self::PERSISTENT_CGI_KEYS as $key) {
-      $pmeOptions['cgi']['persist'][$key] = $this->{lcFirst($key)};
+      $member = lcFirst($key);
+      if (isset($this->{$member})) {
+        $pmeOptions['cgi']['persist'][$key] = $this->{$member};
+      }
     }
+    $pmeOptions['cgi']['persist'][PersistentCGIKeys::TEMPLATE] = static::TEMPLATE;
 
     $pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
@@ -375,17 +377,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   /** @return null|string $this->template. */
   public function template():?string
   {
-    return $this->template;
-  }
-
-  /**
-   * @param string $template Template name to set.
-   *
-   * @return void
-   */
-  protected function setTemplate(string $template):void
-  {
-    $this->template = $template;
+    return static::TEMPLATE;
   }
 
   /**
@@ -487,7 +479,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   /** @return null|string */
   public function cssClass():string
   {
-    return $this->template;
+    return static::TEMPLATE;
   }
 
   /** @return string Short title for heading. */

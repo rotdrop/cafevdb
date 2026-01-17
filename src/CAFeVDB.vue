@@ -330,8 +330,10 @@ import Console from './util/console.ts'
 import { AppError } from './types/errors.ts'
 import { options as tooltipOptions } from 'floating-vue'
 import md5 from 'blueimp-md5'
-import type { NavigationItem } from './types/ajax/navigation-items.d.ts'
-import type { ConfigCheckResponse } from '../build/ts-types/php-modules/Controller/DTO.ts'
+import type {
+  ConfigCheckResponse,
+  SidebarNavigationItem as NavigationItem,
+} from '../build/ts-types/php-modules/Controller/DTO.ts'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)

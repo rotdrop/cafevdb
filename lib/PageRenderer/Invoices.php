@@ -76,7 +76,7 @@ class Invoices extends PMETableViewBase
   const ROW_TAG_PREFIX = '0;';
 
   /** @var array */
-  private $invoiceExpanded = [];
+  private $entityRowsExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -332,8 +332,6 @@ WHERE dsf.id IS NOT NULL',
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -341,7 +339,7 @@ WHERE dsf.id IS NOT NULL',
       pageNavigation: $pageNavigation,
       toolTipsService: $toolTipsService,
     );
-    $this->invoiceExpanded = $this->request->getParam('invoiceExpanded');
+    $this->entityRowsExpanded = $this->request->getParam(PersistentCGIKeys::ENTITY_ROWS_EXPANDED);
 
     $this->findProject(enforce: false);
 
@@ -367,8 +365,6 @@ WHERE dsf.id IS NOT NULL',
    */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
-
     $projectMode = $this->projectId > 0;
 
     $opts            = [];
@@ -382,10 +378,10 @@ WHERE dsf.id IS NOT NULL',
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
-      'invoiceExpanded' => $this->invoiceExpanded,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::INVOICE_EXPANDED => $this->entityRowsExpanded,
     ];
 
     // Name of field which is the unique key
@@ -433,7 +429,7 @@ WHERE dsf.id IS NOT NULL',
         $lastCompositeId = $invoiceId;
         $oddInvoiceItem = true;
         $cssClasses[] = 'first';
-        if (!($this->invoiceExpanded[$invoiceId]??false)) {
+        if (!($this->entityRowsExpanded[$invoiceId]??false)) {
           $cssClasses[] = 'following-hidden';
         }
         // $cssClasses[] = 'disable-row-click';
@@ -530,7 +526,7 @@ WHERE dsf.id IS NOT NULL',
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
         if ($this->isCompositeRow($row, $pme)) {
-          $html = '<input type="hidden" class="expanded-marker" name="invoiceExpanded['.$recordId['id'].']" value="'.(int)($this->invoiceExpanded[$recordId['id']]??0).'"/>';
+          $html = '<input type="hidden" class="expanded-marker" name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']" value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
           }

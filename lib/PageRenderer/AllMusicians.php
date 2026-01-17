@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Musicians table. */
 class AllMusicians extends Musicians
 {
-  const TEMPLATE = parent::ALL_TEMPLATE;
+  const TEMPLATE = 'all-musicians';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -60,21 +60,19 @@ class AllMusicians extends Musicians
     PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
-      //
-      $contactsService,
-      $geoCodingService,
-      $insuranceService,
-      $listsService,
-      $musicianService,
-      $phoneNumberService,
+      contactsService: $contactsService,
+      geoCodingService: $geoCodingService,
+      insuranceService: $insuranceService,
+      listsService: $listsService,
+      musicianService: $musicianService,
+      phoneNumberService: $phoneNumberService,
     );
   }
 

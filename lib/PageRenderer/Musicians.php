@@ -61,8 +61,6 @@ abstract class Musicians extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
-  protected const ALL_TEMPLATE = 'all-musicians';
-  protected const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
   const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
@@ -108,12 +106,10 @@ abstract class Musicians extends PMETableViewBase
 
   /** {@inheritdoc} */
   public function __construct(
-    string $template,
-    //
     ConfigService $configService,
     EntityManager $entityManager,
     IRequest $request,
-    PHPMyEdit $phpMyEdit,
+    PHPMyEdit $pme,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     //
@@ -125,14 +121,12 @@ abstract class Musicians extends PMETableViewBase
     private PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      $template,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $pme,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if (empty($this->musicianId)) {
@@ -175,7 +169,7 @@ abstract class Musicians extends PMETableViewBase
   /*** {@inheritdoc} */
   public function headerText(): string
   {
-    $title = $this->toolTipsService['page-renderer:' . $this->template . ':header-text'];
+    $title = $this->toolTipsService['page-renderer:' . static::TEMPLATE . ':header-text'];
     return '<div class="' . $this->cssPrefix() . '-header-text"'
       . ($title ? ' title="' . $title . '"' : '')
       . '>'
@@ -191,7 +185,6 @@ abstract class Musicians extends PMETableViewBase
    */
   protected function generatePMEOptions():array
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -207,15 +200,13 @@ abstract class Musicians extends PMETableViewBase
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
 
-    // Install values for after form-submit, e.g. $this->template ATM
-    // is just the request parameter, while Template below will define
-    // the value of $this->template after form submit.
+    // Data injected via invisible input fields into the from submit.
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       // overwrite to catch copy/insert
-      'musicianId' => $this->musicianId,
+      PersistentCGIKeys::MUSICIAN_ID => $this->musicianId,
     ];
 
     // Name of field which is the unique key
@@ -1081,8 +1072,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     return [ 'opts' => $opts, 'joinTables' => $joinTables ];
   }

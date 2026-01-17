@@ -215,13 +215,12 @@ class ProjectParticipants extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      static::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->findProject(enforce: true);
@@ -246,7 +245,6 @@ class ProjectParticipants extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
     $instruments     = $instrumentInfo['byId'];
@@ -289,10 +287,10 @@ class ProjectParticipants extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.self::TEMPLATE,
-      'dataPrefix' => [
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::DATA_PREFIX => [
         'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
       ],
     ];
@@ -1471,8 +1469,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     $opts = $this->mergeDefaultOptions($opts);
 

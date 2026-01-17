@@ -120,10 +120,10 @@ class PmeTableController extends Controller
     }
 
     if ($dialogMode || $reloadAction) {
-      $historyAction = PageController::HISTORY_ACTION_REPLACE;
+      $historyAction = EnumLegacyHistoryAction::REPLACE;
     } else {
       $this->historyService->save($this->request->getParams());
-      $historyAction = PageController::HISTORY_ACTION_PUSH;
+      $historyAction = EnumLegacyHistoryAction::PUSH;
     }
 
     $template = 'pme-table';
@@ -139,7 +139,7 @@ class PmeTableController extends Controller
       $templateParameters,
     );
 
-    $response->addHeader('X-' . $this->appName . '-history-action', $historyAction);
+    $response->addHeader('X-' . $this->appName . '-history-action', $historyAction->value);
 
     return $response;
   }

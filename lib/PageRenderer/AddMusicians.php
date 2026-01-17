@@ -48,7 +48,7 @@ class AddMusicians extends Musicians
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  const TEMPLATE = parent::ADD_TEMPLATE;
+  const TEMPLATE = 'add-musicians';
 
   protected ?ParticipationContext $participationContext = null;
 
@@ -69,21 +69,19 @@ class AddMusicians extends Musicians
     PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
-      //
-      $contactsService,
-      $geoCodingService,
-      $insuranceService,
-      $listsService,
-      $musicianService,
-      $phoneNumberService,
+      contactsService: $contactsService,
+      geoCodingService: $geoCodingService,
+      insuranceService: $insuranceService,
+      listsService: $listsService,
+      musicianService: $musicianService,
+      phoneNumberService: $phoneNumberService,
     );
 
     $this->findProject(enforce: true);
@@ -169,8 +167,8 @@ GROUP BY __t1.instrument_id',
     );
     // $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
-    $opts['cgi']['persist']['projectId'] = $this->projectId;
-    $opts['cgi']['persist']['participationContext'] = $this->participationContext->value;
+    $opts['cgi']['persist'][PersistentCGIKeys::PROJECT_ID] = $this->projectId;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_CONTEXT] = $this->participationContext->value;
 
     $this->logDebug('JOIN TABLES ' . print_r($joinTables, true));
 
@@ -214,8 +212,8 @@ GROUP BY __t1.instrument_id',
 
     $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
-    ++$opts['cgi']['persist']['participationStatusFddIndex'];
-    ++$opts['cgi']['persist']['instrummentsFddIndex'];
+    ++$opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX];
+    ++$opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX];
 
     // Filter out already registered musicians
     $opts[PHPMyEdit::OPT_HAVING]['AND'] = [];

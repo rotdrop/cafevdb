@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2025
+ * @copyright Claus-Justus Heine 2014-2026
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@ use InvalidArgumentException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
 use OCP\IURLGenerator;
@@ -39,9 +41,12 @@ use Psr\Log\LoggerInterface;
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\AssetService;
@@ -54,16 +59,13 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
-/** Main UI entry point providing the front pages. */
-class PageController extends Controller
+/** UI entry point providing the non-Vue front pages. */
+class LegacyPageController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
-
-  public const HISTORY_ACTION_REPLACE = 'replace';
-  public const HISTORY_ACTION_PUSH = 'push';
 
   /** @var array
    *
@@ -104,17 +106,24 @@ class PageController extends Controller
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/page/remember/{renderAs}',
+    defaults: [
+      'renderAs' => 'user',
+    ],
+  )]
   #[Attributes\AllowIFrameSelf]
-  public function remember(string $renderAs):Http\Response
+  public function remember(string $renderAs): DataResponse|JSONResponse
   {
     $this->historyService->save($this->request->getParams());
     return $this->loader(
-      $renderAs,
-      $this->request['template'],
-      $this->request['projectName'],
-      $this->request['projectId'],
-      $this->request['musicianId'],
-      historyAction: self::HISTORY_ACTION_PUSH,
+      renderAs: $renderAs,
+      template: $this->request[PersistentCGIKeys::TEMPLATE],
+      projectName: $this->request[PersistentCGIKeys::PROJECT_NAME],
+      projectId: $this->request[PersistentCGIKeys::PROJECT_ID],
+      musicianId: $this->request[PersistentCGIKeys::MUSICIAN_ID],
+      historyAction: EnumLegacyHistoryAction::PUSH->value,
     );
   }
 
@@ -136,6 +145,13 @@ class PageController extends Controller
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/page/loader/{renderAs}',
+    defaults: [
+      'renderAs' => 'user',
+    ],
+  )]
   #[Attributes\AllowIFrameSelf]
   public function loader(
     string $renderAs,
@@ -143,20 +159,21 @@ class PageController extends Controller
     ?string $projectName = '',
     mixed $projectId = null,
     mixed $musicianId = null,
-    string $historyAction = self::HISTORY_ACTION_PUSH,
-  ) {
+    string $historyAction = EnumLegacyHistoryAction::PUSH->value,
+  ): DataResponse|JSONResponse {
+    $historyAction = EnumLegacyHistoryAction::get($historyAction);
     if ($renderAs != Constants::RENDER_AS_PARTS) {
       throw new InvalidArgumentException($this->l->t('This controller can no longer serve front-page requests, in may only be accessed by the Vue frontend.'));
     }
 
-    if ($historyAction != self::HISTORY_ACTION_PUSH) {
-      $this->logInfo('HISTORY ACTION ' . $historyAction);
+    if ($historyAction != EnumLegacyHistoryAction::PUSH) {
+      $this->logInfo('HISTORY ACTION ' . $historyAction->value);
     }
 
     $template = $this->getTemplate($template, $renderAs);
     $this->logDebug("Try load template ".$template);
     /** @var IPageRenderer $renderer */
-    $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
+    $renderer = $this->appContainer->get(DataConstants::RENDERER_PREFIX_TAG . $template);
     if (empty($renderer)) {
       // in principle this cannot happen has the DI container should already
       // have issued a QueryNotFoundException.
@@ -248,15 +265,15 @@ class PageController extends Controller
       Constants::RENDER_AS_BLANK,
     )->render();
 
-    return self::dataResponse([
+    return DTO\LegacyPageLoaderResponse::fromArray([
       'template' => $template,
-      'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)['templateParameters'],
+      'defaultTemplateParameters' => $renderer->navigationItem($projectId, $projectName)->templateParameters,
       'headerHtml' => $renderer->headerText(), // actually html
       'bodyHtml' => $pageHtml,
       'cssPrefix' => $renderer->cssPrefix(),
       'cssClass' => $renderer->cssClass(),
       'historyAction' => $historyAction,
-    ]);
+    ])->response();
   }
 
   /**
@@ -266,7 +283,7 @@ class PageController extends Controller
    *
    * @return string
    */
-  private function getTemplate(?string $template, string $renderAs):string
+  private function getTemplate(?string $template, string $renderAs): string
   {
     // Replace colons back to path separators. All our template parameters are
     // alpha-numeric with the exception that they man contain path separators

@@ -26,26 +26,24 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-/**
- * DTO for the page navigation item of a template renderer, this is used to
- * generate navigation links in the left side-bar of the vue-app.
- */
-class NavigationItemsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
-{
-  /** Array of navigation items of array of arrays */
-  #[TSAttributes\LiteralTypeScriptType('Controller.DTO.SidebarNavigationItem[]')]
-  public readonly array $navigation;
+use OCA\CAFEVDB\Controller\EnumLegacyHistoryAction;
 
+/**
+ * DTO for the legacy page loader response.
+ */
+class LegacyPageLoaderResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+{
   /** {@inheritdoc} */
   public function __construct(
-    array $navigation,
+    public readonly string $template,
+    #[TSAttributes\LiteralTypeScriptType('Record<string, unknown>')]
+    public readonly array $defaultTemplateParameters,
+    public readonly string $headerHtml,
+    public readonly string $bodyHtml,
+    public readonly string $cssPrefix,
+    public readonly string $cssClass,
+    public readonly EnumLegacyHistoryAction $historyAction,
   ) {
-    foreach ($navigation as $key => $item) {
-      if (!($item instanceof SidebarNavigationItem)) {
-        $navigation[$key] = SidebarNavigationItem::fromArray($item);
-      }
-    }
-    $this->navigation = $navigation;
   }
 
   /**
@@ -62,8 +60,15 @@ class NavigationItemsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseD
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    $historyAction = EnumLegacyHistoryAction::get($historyAction);
     return new self(
-      navigation: $navigation,
+      template: $template,
+      defaultTemplateParameters: $defaultTemplateParameters,
+      headerHtml: $headerHtml,
+      bodyHtml: $bodyHtml,
+      cssPrefix: $cssPrefix,
+      cssClass: $cssClass,
+      historyAction: $historyAction,
     );
   }
 }

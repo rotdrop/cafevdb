@@ -92,8 +92,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -134,7 +132,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template       = $this->template;
     $projectId      = $this->projectId;
     $projectMode    = $this->projectId > 0;
     $instrumentInfo = $this->getInstrumentInfo();
@@ -148,9 +145,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['tb'] = self::TABLE;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

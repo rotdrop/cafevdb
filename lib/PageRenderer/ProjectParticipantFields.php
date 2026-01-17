@@ -174,14 +174,12 @@ class ProjectParticipantFields extends PMETableViewBase
     protected ProjectParticipantFieldsService $participantFieldsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->findProject(enforce: false);
@@ -207,7 +205,6 @@ class ProjectParticipantFields extends PMETableViewBase
   {
     $this->newOptionKey = Uuid::create();
 
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
 
@@ -236,9 +233,9 @@ class ProjectParticipantFields extends PMETableViewBase
     ];
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

@@ -199,7 +199,6 @@ class ProjectAssociates extends ProjectParticipants
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
     $instrumentsFilter = array_keys($this->getNonInstruments());
@@ -221,10 +220,10 @@ class ProjectAssociates extends ProjectParticipants
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.self::TEMPLATE,
-      'dataPrefix' => [
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::DATA_PREFIX => [
         'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
       ],
     ];
@@ -1196,8 +1195,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     $opts[PHPMyEdit::OPT_FILTERS]['AND'] = [
       '$table.project_id = ' . $this->projectId,

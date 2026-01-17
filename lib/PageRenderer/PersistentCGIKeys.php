@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,34 +24,22 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-/** Abstract base HTML renderer.*/
-abstract class Renderer implements IRenderer
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+/** Provide some constants to enforce consistency and avoid typos. */
+#[TSAttributes\TypeScript]
+class PersistentCGIKeys
 {
-  /** @var string */
-  protected string $template;
-
-  /**
-   * Show the underlying template page. This is supposed to echo html
-   * code to stdout. This is the default do-nothing implementation.
-   *
-   * @param bool $execute Kind of dry-run if set to false.
-   *
-   * @return void
-   */
-  public function render(bool $execute = true):void
-  {
-    echo '';
-  }
-
-  /** {@inheritdoc} */
-  public function cssPrefix():string
-  {
-    return 'cafevdb-page';
-  }
-
-  /** {@inheritdoc} */
-  public function cssClass():string
-  {
-    return static::TEMPLATE;
-  }
+  public const TABLE = 'table';
+  public const TEMPLATE = 'template';
+  public const TEMPLATE_RENDERER = 'templateRenderer';
+  public const MUSICIAN_ID = 'musicianId';
+  public const PROJECT_ID = 'projectId';
+  public const PROJECT_NAME = 'projectName';
+  public const RECORDS_PER_PAGE = 'recordsPerPage';
+  public const INSTRUMENTS_FDD_INDEX = 'instrumentsFddIndex';
+  public const PARTICIPATION_STATUS_FDD_INDEX = 'participationStatusFddIndex';
+  public const PARTICIPATION_CONTEXT = 'participationContext';
+  public const DATA_PREFIX = 'dataPrefix';
+  public const ENTITY_ROWS_EXPANDED = 'entityRowsExpanded';
 }

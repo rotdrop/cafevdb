@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@ import { initialState, appName } from './config.ts';
 import type { PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
+import { type TemplateRenderer } from './template-renderer.ts';
 
-export type TableDialogOptions = {
+export type TableDialogOptions<S extends string = string> = {
   ambientContainerSelector: string;
   dialogHolderCSSId: string;
   reloadName: string;
@@ -42,7 +43,7 @@ export type TableDialogOptions = {
   initialName: string;
   initialValue: string;
   modified: boolean;
-  templateRenderer: string;
+  templateRenderer: TemplateRenderer<S>;
   template?: string;
   modalDialog?: boolean;
   projectId?: number;

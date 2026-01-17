@@ -36,7 +36,7 @@ import type {
 } from './pme-state.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import * as Ajax from './ajax.ts';
-import { templateFromRenderer } from './template-renderer.ts';
+import { templateFromRenderer, type TemplateRenderer } from './template-renderer.ts';
 import pageBusyIcon from './busy-icon.ts';
 import * as Notification from './notification.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
@@ -912,7 +912,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
     // This just does not work.
     return false;
   }
-  const templateRenderer = $templateRenderer.val()! as string;
+  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<string>;
 
   let viewOperation = false;
 
@@ -1298,7 +1298,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
     modalizer(true);
   }
 
-  const templateRenderer = $templateRenderer.val() as string;
+  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<string>;
   const template = templateFromRenderer(templateRenderer);
 
   const result = pseudoSubmitPost($form, $element, resetFilter);

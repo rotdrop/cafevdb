@@ -118,14 +118,12 @@ class Projects extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if (!($this->projectId > 0)) {
@@ -188,7 +186,6 @@ class Projects extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $instrumentInfo  = $this->getInstrumentInfo();
@@ -208,16 +205,14 @@ class Projects extends PMETableViewBase
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
 
-    // Install values for after form-submit, e.g. $this->template ATM
-    // is just the request parameter, while Template below will define
-    // the value of $this->template after form submit.
+    // Data injected into the form submit via invisible inputs.
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       // overwrite with record id to catch changes after copy/insert
-      'projectId' => $this->projectId,
-      'projectName' => $this->projectName,
+      PersistentCGIKeys::PROJECT_ID => $this->projectId,
+      PersistentCGIKeys::PROJECT_NAME => $this->projectName,
     ];
 
     // Name of field which is the unique key

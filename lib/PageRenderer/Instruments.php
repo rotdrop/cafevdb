@@ -98,14 +98,12 @@ class Instruments extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
     $this->getDatabaseRepository(Entities\Instrument::class)->findAll();
     $this->flush();
@@ -140,7 +138,6 @@ class Instruments extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -160,9 +157,9 @@ class Instruments extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
       PersistentCGIKeys::TABLE => $opts['tb'],
-      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . $template,
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

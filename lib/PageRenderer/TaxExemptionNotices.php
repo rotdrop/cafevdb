@@ -90,8 +90,6 @@ class TaxExemptionNotices extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -118,7 +116,6 @@ class TaxExemptionNotices extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -139,9 +136,9 @@ class TaxExemptionNotices extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

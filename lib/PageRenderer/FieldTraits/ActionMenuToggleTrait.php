@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ trait ActionMenuToggleTrait
   protected function generateActionMenuToggle(array $data):string
   {
     $data = htmlspecialchars(json_encode($data));
-    return '<span class="vue-action-menu-placeholder ' . self::TEMPLATE . ' flex-container flex-center" data-action-menu=\'' . $data . '\'>
+    return '<span class="vue-action-menu-placeholder ' . static::TEMPLATE . ' flex-container flex-center" data-action-menu=\'' . $data . '\'>
   <button class="trigger vue-mount-point flex-container flex-center flex-justify-center" style="margin:0;padding:0;">
     <span class="button-icon flex-container flex-center flex-justify-center" style="width:34px;height:34px">' . self::DOTS_SVG . '</span>
   </button>

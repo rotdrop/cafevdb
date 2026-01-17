@@ -57,7 +57,7 @@ class SepaBulkTransactions extends PMETableViewBase
   protected $cssClass = self::TEMPLATE;
 
   /** @var array */
-  private $bulkTransactionExpanded = [];
+  private $entityRowsExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -171,15 +171,14 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     private SepaBulkTransactionService $bulkTransactionService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
-    $this->bulkTransactionExpanded = $this->request->getParam('bulkTransactionExpanded');
+    $this->entityRowsExpanded = $this->request->getParam(PersistentCGIKeys::ENTITY_ROWS_EXPANDED);
 
     $this->findProject(enforce: false);
 
@@ -195,7 +194,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
 
@@ -218,10 +216,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
-      'bulkTransactionExpanded' => $this->bulkTransactionExpanded,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::BULK_TRANSACTION_EXPANDED => $this->entityRowsExpanded,
     ];
 
     // Name of field which is the unique key
@@ -293,7 +291,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $lastBulkTransactionId = $bulkTransactionId;
         $oddCompositePayment = true;
         $cssClasses[] = 'first';
-        if (empty($this->bulkTransactionExpanded[$bulkTransactionId])) {
+        if (empty($this->entityRowsExpanded[$bulkTransactionId])) {
           $cssClasses[] = 'following-hidden';
         }
         $cssClasses[] = $evenOdd[(int)$oddBulkTransaction];
@@ -345,7 +343,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
         if ($this->isBulkTransactionRow($row, $pme)) {
-          $html = '<input type="hidden" class="expanded-marker" name="bulkTransactionExpanded['.$recordId['id'].']" value="'.(int)($this->bulkTransactionExpanded[$recordId['id']]??0).'"/>';
+          $html = '<input type="hidden" class="expanded-marker" name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']" value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
           }
