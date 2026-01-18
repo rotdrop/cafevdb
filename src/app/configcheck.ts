@@ -24,7 +24,6 @@
 import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import * as Page from './page.ts';
-import * as ProgressStatus from './progress-status.ts';
 import * as Ajax from './ajax.ts';
 import * as Dialogs from './dialogs.ts';
 import * as Notification from './notification.ts';
@@ -130,35 +129,6 @@ function documentReady() {
       });
   };
   addReadyCallback(handleMigrations);
-
-  $container.on('click', '.progress-status.button', function() {
-    console.info('Hello World');
-    if (ProgressStatus.poll.active()) {
-      ProgressStatus.poll.stop();
-      return false;
-    }
-    $.post(generateAppUrl('foregroundjob/progress/create'), { target: 100, current: 0 })
-      .fail(Ajax.handleError)
-      .done(function(data) {
-        console.log('Progress Create', data);
-        const id = data.id;
-        ProgressStatus.poll(
-          id,
-          {
-            update(_id, current, target, _data) {
-              $('#progress-status-info').html(current + ' of ' + target);
-              console.info(current, target);
-              return current < target;
-            },
-            fail: Ajax.handleError,
-          });
-        $.post(generateAppUrl('foregroundjob/progress/test'), { id, target: 100, data: { foo: 'bar' } })
-          .fail(Ajax.handleError)
-          .done(function() {});
-      });
-    return false;
-  });
-
 }
 
 export {

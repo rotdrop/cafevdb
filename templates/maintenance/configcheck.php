@@ -90,21 +90,6 @@ log-in again in order to be able to access the encrypted values.',
       value="<?php echo $l->t('Test again'); ?>"
       id="configrecheck"
     />
-    <!-- <a href="#" class="new-event button">NewEventDialog</a>
-         <a href="#"
-         class="edit-event button"
-         data-uri="E59CC606-AB43-443F-ACC8-3EA742ADD672.ics"
-         data-calendar-id="30">EditEventDialog</a>
-         <input id="edit-event-test-uri" type="text" name="uri" placeholder="uri"/>
-         <input id="edit-event-test-calendar-id" type="number" name="calendar-id" placeholder="calendar-id"/>
-         <a href="#" class="geo-coding button">TestGeoCodingCache</a>
-    <br/>
-    <br/>
-    <div class="<?php echo $css_pfx; ?>-playground">
-      <a href="#" class="progress-status button">TestProgressStatus</a>
-      <span id="progress-status-info"></span>
-      <a href="#" class="pdfletter-download button">TestPdfLetter</a>
-    </div> -->
   </form>
   <br/>
   <!-- <br/>
