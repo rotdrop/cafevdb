@@ -1401,23 +1401,24 @@ class ProjectService
   */
     $orchestra = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
     $orchestra = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01, $orchestra);
+    $l10nProjectTypes = ProjectType::getL10NValues($this->l);
 
     $projects = [];
-    foreach (ProjectType::toArray() as $projectType) {
-      $projects[$projectType] = $this->repository->findBy(
+    foreach (ProjectType::cases() as $projectType) {
+      $projects[$projectType->value] = $this->repository->findBy(
         [
           [ '!id' => $exclude ],
           [ 'type' => $projectType ],
         ],
         [ 'year' => 'DESC', 'name' => 'ASC' ]);
-      if ($projects[$projectType] === null) {
+      if ($projects[$projectType->value] === null) {
         $this->logInfo('NULL PROJECTS? ' . $projectType);
       }
     }
     $projects = array_merge(
-      $projects[ProjectType::PERMANENT],
-      $projects[ProjectType::TEMPORARY],
-      $projects[ProjectType::TEMPLATE],
+      $projects[ProjectType::PERMANENT->value],
+      $projects[ProjectType::TEMPORARY->value],
+      $projects[ProjectType::TEMPLATE->value],
     );
 
     $page = "====== ".($this->l->t('Projects of %s', [$orchestra]))."======\n\n";
@@ -1427,7 +1428,7 @@ class ProjectService
     foreach ($projects as $project) {
       $currentProjectGroup = $project->getType() == ProjectType::TEMPORARY
         ? $project->getYear()
-        : $this->l->t($project->getType());
+        : $l10nProjectTypes[$project->getType()->value];
       if ($currentProjectGroup != $projectGroup) {
         $projectGroup = $currentProjectGroup;
         $page .= "\n==== " . $projectGroup . "====\n";
@@ -1672,14 +1673,14 @@ Whatever.',
       $articleIds[$article['articleId']] = $idx;
     }
 
-    $categories = [ [ 'id' => $this->getConfigValue('redaxoPreview'),
-                      'name' => $this->l->t('Preview') ],
-                    [ 'id' => $this->getConfigValue('redaxoRehearsals'),
-                      'name' => $this->l->t('Rehearsals') ],
-                    [ 'id' => $this->getConfigValue('redaxoArchive'),
-                      'name' => $this->l->t('Archive') ],
-                    [ 'id' => $this->getConfigValue('redaxoTrashbin'),
-                      'name' => $this->l->t('Trashbin')] ];
+    $categories = [];
+    foreach (ConfigConstants::CMS_CATEGORIES as $categorySlug) {
+      $ucfSlug = ucfirst($categorySlug);
+      $categories[] = [
+        'id' => $this->getConfigValue(ConfigConstants::CMS_PREFIX . $ucfSlug),
+        'name' => $this->l->t($ucfSlug),
+      ];
+    }
     $projectPages = [];
     $otherPages = [];
     foreach ($categories as $category) {
