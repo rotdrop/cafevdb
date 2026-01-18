@@ -188,7 +188,9 @@ class FinanceServiceTest extends TestCase
       ->setMandateReference('')
       ->setSequence(1);
     $reference = $this->financeService->generateSepaMandateReference($sepaDebitMandate);
-    $this->assertEquals('0001-0001-MM-TESTPROJECTXXXX2099+01', $reference);
+
+    $prefix = strtoupper(sprintf('%04x-%04x', $this->project->getId() & 0xffff, $this->musician->getId() & 0xffff));
+    $this->assertEquals($prefix . '-MM-TESTPROJECTXXXX2099+01', $reference);
   }
 
   /** @return void */
