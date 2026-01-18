@@ -22,7 +22,7 @@
  */
 
 // mock-defining imports must come first
-import '../services/mock-axios-entity-repository-controller.ts';
+import { entityIdentifiers } from '../services/mock-axios-entity-repository-controller.ts';
 import { entities } from '../services/entity-repository-setup.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 // normal imports
@@ -101,9 +101,9 @@ describe('app-data store', () => {
 
   it('should get a project by id or name', async () => {
     const appData = useAppDataStore();
-    const project = await appData.getProject(1);
+    const project = await appData.getProject(entityIdentifiers.Project.id);
     expect(project).toBeDefined();
-    const projectEntity = entities.Project['1'];
+    const projectEntity = entities.Project[entityIdentifiers.Project.id];
     for (const key of Object.keys(projectEntity)) {
       expect(project![key]).toEqual(projectEntity[key]);
     }

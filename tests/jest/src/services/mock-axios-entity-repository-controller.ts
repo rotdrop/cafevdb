@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { generateEntities, dtos } from './entity-repository-setup.ts';
+import { generateEntities, dtos, entities } from './entity-repository-setup.ts';
 import { beforeAll, jest } from '@jest/globals';
 import type { AxiosRequestConfig } from 'axios';
 import type { ProjectFoldersResponse as ProjectFolders } from '@/build/ts-types/php-modules/Controller/DTO.ts';
@@ -30,7 +30,7 @@ export const entityIdentifiers = {
   ProjectParticipant: { project: 1, musician: 1 },
   Project: { id: 1 },
   Musician: { id: 1 },
-} as const;
+};
 
 export const projectsFolder = 'orchestra/projects';
 export const projectFolders = {
@@ -63,7 +63,7 @@ jest.mock('@nextcloud/axios', () => {
             ),
           };
           return result;
-        } else if (url.endsWith('/apps/cafevdb/projects/1/folder/all')) {
+        } else if (url.endsWith(`/apps/cafevdb/projects/${entityIdentifiers.Project.id}/folder/all`)) {
           const result: { data: ProjectFolders } = {
             data: projectFolders,
           };
@@ -88,13 +88,17 @@ jest.mock('@nextcloud/axios', () => {
           const identifier = JSON.parse(atob(queryParams.find ?? '{}'));
           switch (entityName) {
             case 'Musician':
+              if (identifier.id !== entityIdentifiers.Musician.id) {
+                throw Error(`Unexpected identifier for "${entityName}".`);
+              }
+              break;
             case 'Project':
-              if (identifier.id !== 1) {
+              if (identifier.id !== entityIdentifiers.Project.id) {
                 throw Error(`Unexpected identifier for "${entityName}".`);
               }
               break;
             case 'ProjectParticipant':
-              if (identifier.project !== 1 || identifier.musician !== 1) {
+              if (identifier.project !== entityIdentifiers.Project.id || identifier.musician !== entityIdentifiers.Musician.id) {
                 throw Error(`Unexpected identifier for "${entityName}".`);
               }
               break;
@@ -119,13 +123,13 @@ jest.mock('@nextcloud/axios', () => {
           }
           switch (entityName) {
             case 'Musician': {
-              if ((namePattern && 'Max Musterperson'.match(namePattern)) || (idPattern && '1'.match(idPattern))) {
+              if ((namePattern && 'Max Musterperson'.match(namePattern)) || (idPattern && ('' + entityIdentifiers.Musician.id).match(idPattern))) {
                 found = true;
               }
               break;
             }
             case 'Project': {
-              if ((namePattern && 'TestProject2026'.match(namePattern)) || (idPattern && '1'.match(idPattern))) {
+              if ((namePattern && 'TestProject2026'.match(namePattern)) || (idPattern && ('' + entityIdentifiers.Project.id).match(idPattern))) {
                 found = true;
               }
               break;
@@ -169,4 +173,10 @@ jest.mock('@nextcloud/axios', () => {
   };
 });
 
-beforeAll(generateEntities);
+beforeAll(async () => {
+  await generateEntities();
+  entityIdentifiers.Project.id = +Object.keys(entities.Project)[0];
+  entityIdentifiers.Musician.id = +Object.keys(entities.Musician)[0];
+  entityIdentifiers.ProjectParticipant.project = entityIdentifiers.Project.id;
+  entityIdentifiers.ProjectParticipant.musician = entityIdentifiers.Musician.id;
+});

@@ -6,7 +6,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,18 +44,20 @@ $outputDir = rtrim($argv[2], '/');
 $outputFile = rtrim($argv[3], '/');
 $depth = $argv[4];
 
+$id = EntityRepositoryControllerTest::FAKED_ENTITY_ID;
+
 switch ($entityName) {
   case 'Project':
     // $entityName = Entities\Project::class;
-    $find = base64_encode(json_encode([ 'id' => 1 ]));
+    $find = base64_encode(json_encode([ 'id' => $id ]));
     break;
   case 'Musician':
     // $entityName = Entities\Musician::class;
-    $find = base64_encode(json_encode([ 'id' => 1 ]));
+    $find = base64_encode(json_encode([ 'id' => $id ]));
     break;
   case 'ProjectParticipant':
     // $entityName = Entities\ProjectParticipant::class;
-    $find = base64_encode(json_encode([ 'project' => 1, 'musician' => 1 ]));
+    $find = base64_encode(json_encode([ 'project' => $id, 'musician' => $id ]));
     break;
   default:
     throw new InvalidArgumentException("Unsupported entity: {$entityName}");

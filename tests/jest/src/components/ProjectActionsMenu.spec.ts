@@ -97,19 +97,18 @@ const router = new VueRouter({
 
 describe('ProjectActionsMenu component', () => {
 
-  const propsData = {
-    entityId: entityIdentifiers.Project.id,
-    projectName: undefined,
-    enableOverviewItem: true,
-    template: 'projects',
-  };
-
   let wrapper: ReturnType<typeof mount<VueComponent> >;
 
   beforeEach(() => {
-
     const errorHandlerStore = useErrorHandler();
     errorHandlerStore.pushHandler(<E extends AppError>(error: E) => { console.error('Error handler called', error); });
+
+    const propsData = {
+      entityId: +entityIdentifiers.Project.id,
+      projectName: undefined,
+      enableOverviewItem: true,
+      template: 'projects',
+    };
 
     wrapper = mount(VueComponent, {
       propsData,

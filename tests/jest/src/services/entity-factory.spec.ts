@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,13 +60,13 @@ describe('Generate Musician Entity from DTO object', () => {
     const entityDto = entityDtos[0];
     const musician = await entityFactory(entityName, entityDto);
     expect(musician.publicName).toBeTruthy();
-    for (const [, participant] of Object.entries(musician.projectParticipation)) {
-      expect(await participant).toBe(entities.ProjectParticipant['1:1']);
-    }
-    const participant = await musician.projectParticipation[1];
-    expect(participant).toBe(entities.ProjectParticipant['1:1']);
-    expect(await participant.project).toBe(entities.Project[1]);
-    expect(await participant.musician).toBe(entities.Musician[1]);
+    expect(Object.entries(musician.projectParticipation).length).toBe(1);
+    const projectId = Object.keys(musician.projectParticipation)[0];
+    const participant = await musician.projectParticipation[projectId];
+    const musicianId = musician.id;
+    expect(participant).toBe(entities.ProjectParticipant[`${projectId}:${musicianId}`]);
+    expect(await participant.project).toBe(entities.Project[projectId]);
+    expect(await participant.musician).toBe(entities.Musician[musicianId]);
     expect(await participant.musician === musician).toBeFalsy();
   });
 });

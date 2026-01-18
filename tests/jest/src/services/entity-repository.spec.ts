@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,14 +48,14 @@ describe('Fetch entities', () => {
     const query = '%Test%';
     const findBy = { '(|name': query, id: query, ')': true };
     const result = await searchEntities({ entityName: 'Project', findBy });
-    const entity = result?.Project?.['1'];
+    const entity = result?.Project?.[entityIdentifiers.Project.id];
     expect(entity).toBeDefined();
   });
   it('Should return empty result', async () => {
     const query = '%TestFooBlah%';
     const findBy = { '(|name': query, id: query, ')': true };
     const result = await searchEntities({ entityName: 'Project', findBy });
-    const entity = result?.Project?.['1'];
+    const entity = result?.Project?.[entityIdentifiers.Project.id];
     expect(entity).toBeUndefined();
   });
   it('Search for unknown entity throw ;)', async () => {
