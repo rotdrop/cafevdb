@@ -38,6 +38,8 @@
 
 namespace OCA\CAFEVDB\Legacy\PhpMyEdit;
 
+use BackedEnum;
+
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)
  * @SuppressWarnings(PHPMD.Superglobals)
@@ -644,6 +646,9 @@ class PhpMyEdit
 	 */
 	public function enc($string, $double_encode = false)
 	{
+		if ($string instanceof BackedEnum) {
+			$string = $string->value;
+		}
 		return htmlspecialchars(
 			$string ?? '',
 			flags: ENT_COMPAT | ENT_SUBSTITUTE | ENT_HTML401,
