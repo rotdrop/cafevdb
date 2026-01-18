@@ -40,8 +40,15 @@ use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test the EntityRepositoryController. */
-#[Attributes\CoversClass(Controller\ProgressStatusController::class)]
+#[Attributes\CoversClass(Common\PlainFileProgressStatus::class)]
+#[Attributes\CoversClass(Controller\DTO\MessagesResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\ProgressResponse::class)]
+#[Attributes\CoversClass(Controller\ProgressStatusController::class)]
+#[Attributes\CoversClass(Service\ProgressStatusService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class ProgressStatusControllerTest extends TestCase
 {
   private const START = 17;

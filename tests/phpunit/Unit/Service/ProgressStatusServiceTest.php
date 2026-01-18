@@ -57,7 +57,7 @@ class ProgressStatusServiceTest extends TestCase
 
   private Service\ProgressStatusService $service;
 
-  static mixed $progressId;
+  private static mixed $progressId;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -93,7 +93,7 @@ class ProgressStatusServiceTest extends TestCase
     );
     $this->assertInstanceOf(Common\IProgressStatus::class, $progressStatus);
     $this->assertEquals(self::START + 1, $progressStatus->getCurrent());
-    $this->assertEquals(self::STOP + 1 , $progressStatus->getTarget());
+    $this->assertEquals(self::STOP + 1, $progressStatus->getTarget());
     $this->assertEquals('update', $progressStatus->getData()['key']);
     $this->assertEquals($id, $progressStatus->getId());
 
