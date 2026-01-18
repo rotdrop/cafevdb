@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,24 +24,30 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 
-use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 
 /** AJAX end-point for progress status. */
+#[TSAttributes\TypeScript]
 class ProgressStatusController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  public const GET_URL = '/foregroundjob/progress/{id}';
+  public const POST_URL = '/foregroundjob/progress/{operation}';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -52,27 +58,34 @@ class ProgressStatusController extends Controller
     protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-
-    $this->progressStatusService = $progressStatusService;
   }
   // phpcs:enable
 
   /**
    * @param string $id
    *
-   * @return Http\Response
+   * @return Http\DataResponse|Http\JSONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  public function get(string $id):Http\Response
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: self::GET_URL)]
+  public function get(string $id): Http\DataResponse|Http\JsONResponse
   {
     try {
       $progress = $this->progressStatusService->get($id);
     } catch (Throwable $t) {
-      $this->logException($t);
-      return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+      throw new Exceptions\EnduserNotificationException(
+        message: $this->l->t('Caught an exception.'),
+        previous: $t,
+        context: ['id' => $id],
+      );
     }
     if (empty($progress)) {
-      return self::grumble($this->l->t('Unable to find the status of the job "%s"', [ $id ]));
+      throw new Exceptions\EnduserNotificationException(
+        message: $this->l->t('Unable to find the status of the job "%s"', [ $id ]),
+        context: ['id' => $id],
+      );
     }
     return self::progressResponse($progress);
   }
@@ -80,68 +93,85 @@ class ProgressStatusController extends Controller
   /**
    * @param string $operation
    *
-   * @return Http\Response
+   * @return Http\DataResponse|Http\JSONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  public function action(string $operation):Http\Response
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: self::POST_URL)]
+  public function action(string $operation): Http\DataResponse|Http\JSONResponse
   {
+    $operation = EnumProgressStatusOperation::get($operation);
     switch ($operation) {
-      case 'create':
+      case EnumProgressStatusOperation::CREATE:
+        $current = $this->request->getParam('current', null);
+        $target = $this->request->getParam('target', null);
+        $data = $this->request->getParam('data', null);
         try {
           $progress = $this->progressStatusService->create(
-            $this->request['current'],
-            $this->request['target'],
-            $this->request['data']
+            start: $current,
+            stop: $target,
+            data: $data,
           );
           return self::progressResponse($progress);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Caught an exception.'),
+            previous: $t,
+            context: compact('current', 'target', 'data'),
+          );
         }
         break;
-      case 'update':
+      case EnumProgressStatusOperation::UPDATE:
+        $id = $this->request->getParam('id');
         try {
-          $progress = $this->progressStatusService->get($this->request['id']);
+          $progress = $this->progressStatusService->get($id);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Caught an exception.'),
+            previous: $t,
+            context: compact('id'),
+          );
         }
         try {
-          foreach ([ 'current', 'target', 'data' ] as $key) {
-            ${$key} = $this->request[$key]?:null;
-          }
+          $current = $this->request->getParam('current', null);
+          $target = $this->request->getParam('target', null);
+          $data = $this->request->getParam('data', null);
           $progress->update($current, $target, $data);
           return self::progressResponse($progress);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Caught an exception.'),
+            previous: $t,
+            context: compact('id', 'current', 'target', 'data'),
+          );
         }
         break;
-      case 'delete':
+      case EnumProgressStatusOperation::DELETE:
+        $id = $this->request->getParam('id');
         try {
-          $progress = $this->progressStatusService->get($this->request['id']);
+          $progress = $this->progressStatusService->get($id);
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Caught an exception.'),
+            previous: $t,
+            context: compact('id'),
+          );
         }
         try {
           $progress->delete();
-          return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
+          return new DTO\MessagesResponse(
+            messages: [$this->l->t('Progress "%s" successfully deleted.', $this->request->getParam('id'))],
+          )->response();
         } catch (Throwable $t) {
-          $this->logException($t);
-          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+          throw new Exceptions\EnduserNotificationException(
+            message: $this->l->t('Caught an exception.'),
+            previous: $t,
+            context: compact('id'),
+          );
         }
-      case 'test':
-        $target = $this->request['target']?:100;
-        $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
-        for ($i = 0; $i <= $progress->getTarget(); $i++) {
-          $progress->update($i);
-          usleep(500000);
-        }
-        return self::dataResponse([]);
-        break;
       default:
-        return self::grumble($this->l->t('Unknown Request'));
+        throw new Exceptions\EnduserNotificationException($this->l->t('Unknown Request'));
     }
   }
 
@@ -150,7 +180,7 @@ class ProgressStatusController extends Controller
    *
    * @return DataResponse
    */
-  private static function progressResponse(IProgressStatus $progress):DataResponse
+  private static function progressResponse(IProgressStatus $progress): Http\DataResponse|Http\JsONResponse
   {
     return DTO\ProgressResponse::fromArray([
       'id' => $progress->getId(),

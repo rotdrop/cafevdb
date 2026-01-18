@@ -25,6 +25,8 @@ import $ from './jquery.ts';
 import * as Ajax from './ajax.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { ProgressResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { GET_URL, POST_URL } from '../../build/ts-types/php-modules/Controller/ProgressStatusController.ts';
+import type { EnumProgressStatusOperation } from '../../build/ts-types/php-modules/Controller.ts';
 
 require('progressbar.scss');
 
@@ -43,8 +45,9 @@ type ProgressResponseData = ProgressResponse['data'];
  * @param data TBD.
  */
 const createProgressStatus = (target: number, current: number, data?: ProgressResponseData) => {
+  const operation: EnumProgressStatusOperation = 'create';
   return $.post(
-    generateAppUrl('foregroundjob/progress/create'),
+    generateAppUrl(POST_URL, { operation }),
     { target: target || 100, current: current || 0, data });
 };
 
@@ -78,7 +81,7 @@ const pollProgressStatus = (id: string, parameters: Partial<PollOptions>) => {
       console.info('PROGRESS STOPPED');
       return;
     }
-    $.get(generateAppUrl('foregroundjob/progress/' + id))
+    $.get(generateAppUrl(GET_URL, { id }))
       .done(function(data: ProgressResponse) {
         clearTimeout(progressTimer);
         progressTimer = undefined;
@@ -110,8 +113,9 @@ const pollProgressStatus = (id: string, parameters: Partial<PollOptions>) => {
 };
 
 const deleteProgressStatus = function(id: string) {
+  const operation: EnumProgressStatusOperation = 'delete';
   return $.post(
-    generateAppUrl('foregroundjob/progress/delete'), { id });
+    generateAppUrl(POST_URL, { operation }), { id });
 };
 
 pollProgressStatus.stop = function() {

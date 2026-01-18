@@ -283,16 +283,16 @@ $routes = [
       'verb' => 'GET',
     ],
     // progress status for ongoing long-runners
-    [
-      'name' => 'progress_status#get',
-      'url' => '/foregroundjob/progress/{id}',
-      'verb' => 'GET',
-    ],
-    [
-      'name' => 'progress_status#action',
-      'url' => '/foregroundjob/progress/{operation}',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'progress_status#get',
+    //   'url' => '/foregroundjob/progress/{id}',
+    //   'verb' => 'GET',
+    // ],
+    // [
+    //   'name' => 'progress_status#action',
+    //   'url' => '/foregroundjob/progress/{operation}',
+    //   'verb' => 'POST',
+    // ],
     // CSP violation logging
     [
       'name' => 'csp_violation#post',
