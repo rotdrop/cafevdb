@@ -57,7 +57,7 @@ trait AutoIncrementTrait
    */
   public function setId(?int $id): self
   {
-    $this->id = $id ? $id : null;
+    $this->id = ($id ?? 0) > 0 ? $id : null;
 
     return $this;
   }
@@ -69,6 +69,6 @@ trait AutoIncrementTrait
    */
   public function getId(): ?int
   {
-    return $this->id ? $this->id : null;
+    return ($this->id ?? 0) > 0 ? $this->id : null;
   }
 }
