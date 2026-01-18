@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021-2025 Claus-Justus Heine
+ * @copyright 2020, 2021-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1160,9 +1160,9 @@ class EventsService
    *
    * @return null|string Return the configured calendar id.
    */
-  private function getCalendarId(string $uri):?string
+  private function getCalendarId(string $uri): ?string
   {
-    return $this->getConfigValue($uri.'calendar'.'id');
+    return $this->getConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX);
   }
 
   /**
@@ -1172,9 +1172,9 @@ class EventsService
    *
    * @return void
    */
-  private function deleteCalendarId(string $uri):void
+  private function deleteCalendarId(string $uri): void
   {
-    $this->deleteConfigValue($uri.'calendar'.'id');
+    $this->deleteConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX);
   }
 
   /**
@@ -1184,9 +1184,9 @@ class EventsService
    *
    * @return string
    */
-  private function getCalendarDisplayName(string $uri):string
+  private function getCalendarDisplayName(string $uri): string
   {
-    return $this->getConfigValue($uri.'calendar');
+    return $this->getConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $uri);
   }
 
   /**
@@ -1198,9 +1198,9 @@ class EventsService
    *
    * @return bool
    */
-  private function setCalendarDisplayName(string $uri, string $displayName):bool
+  private function setCalendarDisplayName(string $uri, string $displayName): void
   {
-    return $this->setConfigValue($uri.'calendar', $displayName);
+    $this->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $displayName);
   }
 
   /**
