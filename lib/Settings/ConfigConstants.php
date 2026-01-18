@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -119,6 +119,8 @@ class ConfigConstants
     self::PROJECT_PARTICIPANTS_SKELETON_FOLDER,
     self::PROJECT_MANAGEMENT_SKELETON_FOLDER,
   ];
+
+  public const CMS_PREFIX = 'redaxo';
 
   public const CMS_CATEGORIES = [
     'preview',

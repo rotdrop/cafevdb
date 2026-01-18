@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,11 +74,11 @@ foreach ($webPageTemplates as $template) {
     <fieldset id="redaxocategories"><legend><?php echo $l->t('Redaxo Categories');?></legend>
       <?php
       foreach (ConfigConstants::CMS_CATEGORIES as $categorySlug) {
-        $class = 'redaxo';
+        $class = ConfigConstants::CMS_PREFIX;
         $ucSlug = ucfirst($categorySlug);
-        $id = $class.$ucSlug;
+        $id = $class . $ucSlug;
         $name = $id;
-        $title = $class.'-'.$categorySlug;
+        $title = $class . '-' . $categorySlug;
         ?>
         <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
           <input type="text"
