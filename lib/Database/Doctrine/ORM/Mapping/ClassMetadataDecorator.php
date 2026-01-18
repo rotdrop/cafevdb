@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use InvalidArgumentException;
 use ReflectionClass;
 use Stringable;
+use Throwable;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -305,7 +306,11 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
           $indexBy = $targetAssociation['indexBy'] ?? null;
           // $orderBy = $targetAssociation['orderBy']; complicated
           if (!empty($indexBy)) {
-            $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
+            // $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
+            $indexByValue = (string)$this->getColumnValue($entity, $indexBy);
+            if ($inversedByValue->contains($entity)) {
+              $inversedByValue->removeElement($entity);
+            }
             $inversedByValue->set($indexByValue, $entity);
           } elseif (!$inversedByValue->contains($entity)) {
             $inversedByValue->add($entity);
@@ -350,6 +355,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
         $targetField = $targetMeta->fieldNames[$targetColumn];
         if ($value instanceof $targetEntity) {
           $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
+          // try to maintain connectivity if it does not cause additional direct database access
+          $this->updateInverseSide($entity, $association, $value, $targetMeta);
         } else {
           // avoid references with empty identifiers
           if (empty($value)) {

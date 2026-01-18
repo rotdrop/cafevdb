@@ -65,7 +65,7 @@ class Instrument implements \ArrayAccess
   private Collection $families;
 
   /** @var Collection<MusicianInstrument> */
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', indexBy: 'musician_id',  fetch: 'EXTRA_LAZY')]
   private Collection $musicianInstruments;
 
   /** @var Collection<ProjectInstrument> */

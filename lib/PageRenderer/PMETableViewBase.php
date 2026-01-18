@@ -1324,12 +1324,9 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
                 $entity = new $entityClass;
                 foreach ($entityId as $key => $value) {
-                  if (is_numeric($value) && $value <= 0) {
-                    // treat this as autoincrement or otherwise auto-generated ids
-                    continue;
-                  }
                   $entity[$key] = $value;
                 }
+                $meta->getIdentifierColumnValues($entity);
                 $needPersist = true;
               } else {
                 $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
@@ -1778,6 +1775,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               foreach ($entityId as $key => $value) {
                 $entity[$key] = $value;
               }
+              $meta->getIdentifierColumnValues($entity);
               $needPersist = true;
             } else {
               $this->logEntityId('ENTITY ALREADY THERE', $entityClass, $entityId);
