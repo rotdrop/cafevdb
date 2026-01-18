@@ -839,4 +839,38 @@ END:VCALENDAR',
       self::DATA,
     );
   }
+
+  public const CALENDAR_OWNER = 'calendar.owner';
+
+  private const CALENDARS = [
+    ['id' => '45','principaluri' => 'principals/users/cameratashareholder','displayname' => 'rehearsals','uri' => 'rehearsals','synctoken' => '13835','description' => NULL,'calendarorder' => '0','calendarcolor' => NULL,'timezone' => NULL,'components' => 'VEVENT,VTODO','transparent' => '0','deleted_at' => NULL],
+    ['id' => '46','principaluri' => 'principals/users/cameratashareholder','displayname' => 'concerts','uri' => 'concerts','synctoken' => '349','description' => NULL,'calendarorder' => '0','calendarcolor' => NULL,'timezone' => NULL,'components' => 'VEVENT,VTODO','transparent' => '0','deleted_at' => NULL],
+    ['id' => '47','principaluri' => 'principals/users/cameratashareholder','displayname' => 'other','uri' => 'other','synctoken' => '523','description' => NULL,'calendarorder' => '0','calendarcolor' => NULL,'timezone' => NULL,'components' => 'VEVENT,VTODO','transparent' => '0','deleted_at' => NULL],
+    ['id' => '48','principaluri' => 'principals/users/cameratashareholder','displayname' => 'Management','uri' => 'management','synctoken' => '126186','description' => NULL,'calendarorder' => '0','calendarcolor' => NULL,'timezone' => NULL,'components' => 'VEVENT,VTODO','transparent' => '0','deleted_at' => NULL],
+    ['id' => '49','principaluri' => 'principals/users/cameratashareholder','displayname' => 'Finance','uri' => 'finance','synctoken' => '9145','description' => NULL,'calendarorder' => '0','calendarcolor' => NULL,'timezone' => NULL,'components' => 'VEVENT,VTODO','transparent' => '0','deleted_at' => NULL],
+  ];
+
+  /**
+   * Generate some fake NC oc_calendar rows.
+   *
+   * @param array<int, string> $calendars uri => id.
+   *
+   * @param IL10N $l For the translated display name.
+   *
+   * @return array Flat array of rows, indexed by calendar id.
+   */
+  public static function getCalendarRows(array $calendars, IL10N $l): array
+  {
+    $rows = [];
+    foreach (self::CALENDARS as $row) {
+      if (empty($calendars[$row['uri']])) {
+        continue;
+      }
+      $row['principaluri'] = 'principals/users/' . self::CALENDAR_OWNER;
+      $row['id'] = $calendars[$row['uri']];
+      $row['displayname'] = $l->t($row['uri']);
+      $rows[$row['id']] = $row;
+    }
+    return $rows;
+  }
 }

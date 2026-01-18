@@ -45,6 +45,15 @@ use OCA\CAFEVDB\Tests\MockProvider;
 /** Trait class in order to generate entities without database access. */
 trait EntityGeneratorTrait
 {
+  /**
+   * The id of "faked" entities. We set this to a high number s.t. it is out
+   * of the way of real entities generated in the test database.
+   *
+   * \OCA\CAFEVDB\Service\Finance\FinanceService assumes that ids have no more
+   * than 4 decimal digits ...
+   */
+  public const FAKED_ENTITY_ID = 9999;
+
   protected Entities\Musician $musician;
   protected Entities\Project $project;
   protected Entities\ProjectParticipant $participant;
@@ -90,7 +99,7 @@ trait EntityGeneratorTrait
     );
 
     $this->project = new Entities\Project()
-      ->setId(1)
+      ->setId(self::FAKED_ENTITY_ID)
       ->setName('TestProject2099')
       ->setYear(2099);
     $this->musician = $this->instrumentationService->getDummyMusician(
@@ -98,10 +107,12 @@ trait EntityGeneratorTrait
       persist: $persist,
       now: $now,
     );
-    $this->musician->setId(1);
+    $this->musician->setId(self::FAKED_ENTITY_ID);
     $this->participant = $this->musician->getProjectParticipantOf(
       $this->project,
     );
+    $this->project->getParticipants()->clear();
+    $this->project->getParticipants()->set($this->musician->getId(), $this->participant);
   }
 
   /** @return Entities\ProjectParticipantFieldDatum */
@@ -113,7 +124,7 @@ trait EntityGeneratorTrait
 
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
-      ->setId(0)
+      ->setId(0) // ? why ?
       ->setProject($this->project)
       ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES)
       ->setMultiplicity(
@@ -148,7 +159,11 @@ trait EntityGeneratorTrait
     return $datum;
   }
 
-  /** @return Entities\CompositePayment */
+  /**
+   * @param ?Closure $transliterate Transliterator to force SEPA compliance of fields.
+   *
+   * @return Entities\CompositePayment
+   */
   protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
   {
     if (!empty($this->entities[Entities\CompositePayment::class])) {
@@ -159,7 +174,7 @@ trait EntityGeneratorTrait
 
     /** @var Entities\ProjectPayment $projectPayment */
     $projectPayment = new Entities\ProjectPayment()
-      ->setId(1)
+      ->setId(self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ->setReceivable($datum)
       ->setReceivableOption($datum->getDataOption())
@@ -167,7 +182,7 @@ trait EntityGeneratorTrait
 
     /** @var Entities\CompositePayment $compositePayment */
     $compositePayment = new Entities\CompositePayment()
-      ->setId(1)
+      ->setId(self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ;
     $this->musician->getPayments()->add($compositePayment);
@@ -215,7 +230,7 @@ trait EntityGeneratorTrait
     }
 
     $entity = new Entities\SepaBankTransfer()
-      ->setId(1)
+      ->setId(self::FAKED_ENTITY_ID)
       ->setDueDate('2099-01-01')
       ;
     $bankAccount = $this->generateSepaBankAccount();
@@ -565,7 +580,7 @@ trait EntityGeneratorTrait
   public static function addProjectEvents(Entities\Project $project, array $calendars): void
   {
     $calendarEvents = $project->getCalendarEvents();
-    $index = 1;
+    $index = self::FAKED_ENTITY_ID;
     foreach (self::PROJECT_EVENT_DATA as $row) {
       $projectEvent = new Entities\ProjectEvent();
       $projectEvent->setId($index++)

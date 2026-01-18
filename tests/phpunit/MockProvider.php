@@ -85,13 +85,15 @@ class MockProvider
 
   private array $instances = [];
 
+  private static IAppContainer $appContainer;
+
   private static array $mockedServices;
 
   private static array $originalInstances = [];
 
   private static InnerContainer $serverContainerSnapshot;
 
-  private static InnerContainer $appContainerSnapshot;
+  private static array $appContainerSnapshots = [];
 
   private array $appConfigValues = [];
 
@@ -203,45 +205,71 @@ class MockProvider
     }
   }
 
+  /**
+   * Register a service globally.
+   *
+   * @param string $service Service or class-name
+   */
+  private function registerService(string $service): void
+  {
+    $otherAppContainer = null;
+    if (str_starts_with($service, \OCA::class) && !str_starts_with($service, \OCA\CAFEVDB::class)) {
+      $appContainers = new ReflectionProperty(\OC\ServerContainer::class, 'appContainers')->getValue(\OC::$server);
+      [, $app] = explode('\\', $service, 3);
+      $app = strtolower($app);
+      $otherAppContainer = $appContainers[$app] ?? null;
+    }
+    $appContainer = self::$appContainer;
+    $mockContainer = $this->getAppContainer();
+    if (str_starts_with($service, \OCA\CAFEVDB::class)) {
+      $appContainer->registerService($service, function() use ($service, $mockContainer) {
+        return $mockContainer->get($service);
+      });
+    } else {
+      if (empty(self::$originalInstances[$service])) {
+        self::$originalInstances[$service] = $appContainer->get($service);
+      }
+      $factory = function() use ($service, $mockContainer, $appContainer) {
+        $result = $mockContainer->get($service);
+        if ($result === null) {
+          if (empty(self::$originalInstances[$service])) {
+            $result = $appContainer->get($service);
+          } else {
+            $result = self::$originalInstances[$service];
+          }
+        }
+        return $result;
+      };
+      \OC::$server->registerService($service, $factory);
+      $appContainer->registerService($service, $factory);
+      if ($otherAppContainer) {
+        $otherAppContainer->registerService($service, $factory);
+      }
+    }
+  }
+
   /** @return void */
   private function registerServices(): void
   {
     self::$mockedServices = self::$mockedServices ?? self::getMockedServices();
     $app = \OCP\Server::get(\OCA\CAFEVDB\AppInfo\Application::class);
-    $appContainer = $app->get(IAppContainer::class);
-    $appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
+    self::$appContainer = $app->get(IAppContainer::class);
+    self::$appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
     \OC::$server->registerService(LoggerInterface::class, fn() => $this->logger);
+    $appContainers = new ReflectionProperty(\OC\ServerContainer::class, 'appContainers')->getValue(\OC::$server);
     if (empty(self::$serverContainerSnapshot)) {
       self::$serverContainerSnapshot = self::snapshotContainer(\OC::$server);
-      self::$appContainerSnapshot = self::snapshotContainer($appContainer);
+      foreach ($appContainers as $app => $container) {
+        self::$appContainerSnapshots[$app] = self::snapshotContainer($container);
+      }
     } else {
       self::restoreContainer(\OC::$server, self::$serverContainerSnapshot);
-      self::restoreContainer($appContainer, self::$appContainerSnapshot);
-    }
-    $mockContainer = $this->getAppContainer();
-    foreach (array_keys(self::$mockedServices) as $service) {
-      if (str_starts_with($service, \OCA\CAFEVDB::class)) {
-        $appContainer->registerService($service, function() use ($service, $mockContainer) {
-          return $mockContainer->get($service);
-        });
-      } else {
-        if (empty(self::$originalInstances[$service])) {
-          self::$originalInstances[$service] = $appContainer->get($service);
-        }
-        $factory = function() use ($service, $mockContainer, $appContainer) {
-          $result = $mockContainer->get($service);
-          if ($result === null) {
-            if (empty(self::$originalInstances[$service])) {
-              $result = $appContainer->get($service);
-            } else {
-              $result = self::$originalInstances[$service];
-            }
-          }
-          return $result;
-        };
-        \OC::$server->registerService($service, $factory);
-        $appContainer->registerService($service, $factory);
+      foreach (self::$appContainerSnapshots as $app => $container) {
+        self::restoreContainer($appContainers[$app], self::$appContainerSnapshots[$app]);
       }
+    }
+    foreach (array_keys(self::$mockedServices) as $service) {
+      $this->registerService($service);
     }
     // echo get_class($appContainer->get(LoggerInterface::class)) . PHP_EOL;
     // echo get_class(\OC::$server->get(LoggerInterface::class)) . PHP_EOL;
@@ -886,14 +914,20 @@ class MockProvider
    *
    * @param mixed $instance
    *
+   * @param bool $global Install into the server container.
+   *
    * @return void
    */
-  public function registerClassInstance(string $className, mixed $instance): void
+  public function registerClassInstance(string $className, mixed $instance, bool $global = false): void
   {
     if ($instance === null) {
       unset($this->instances[$className]);
     } else {
       $this->instances[$className] = $instance;
+    }
+    if ($global) {
+      // echo 'REGISTER GLOBALLY ' . $className . PHP_EOL;
+      $this->registerService($className);
     }
   }
 

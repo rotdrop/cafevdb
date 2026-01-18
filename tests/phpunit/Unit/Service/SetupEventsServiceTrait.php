@@ -63,37 +63,16 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 trait SetupEventsServiceTrait
 {
+  use SetupCalendarBackendTrait;
   use EntityGeneratorTrait;
 
   private EventsService $eventsService;
 
-  /**
-   * @var array<string, array>
-   *
-   * Some faked DB rows for generating calendar objects.
-   */
-  private array $calendarObjects = [];
-
-  /**
-   * Flat array of fake database rows of calendar objects.
-   */
-  private array $calendarData = [];
-
-  private array $createdCalendarData = [];
-
-  private $defaultCalendars = [];
-
   private IAppContainer $appContainer;
-
-  private ConfigService $configService;
 
   private EntityManager $entityManager;
 
   private MockProvider $mockProvider;
-
-  private CalDavBackend $calDavBackend;
-
-  private CalendarManager $calendarManager;
 
   /**
    * {@inheritdoc}
@@ -103,6 +82,7 @@ trait SetupEventsServiceTrait
   public function generateEventsService(): void
   {
     $this->generateProjectParticipant(persist: false);
+    $this->generateCalendarBackend();
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider ?? MockProvider::create($this);
@@ -113,141 +93,11 @@ trait SetupEventsServiceTrait
 
     $mockProvider->getCloudConfig();
 
-    $this->configService = $mockProvider->getConfigService();
-    $calendarId = 1;
-    foreach (array_keys(ConfigConstants::CALENDARS) as $uri) {
-      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $l->t('uri'));
-      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $calendarId);
-      $this->defaultCalendars[$uri] = $calendarId;
-      ++$calendarId;
-    }
-
-    $this->calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
-    foreach ($this->calendarData as $index => $row) {
-      $this->calendarObjects[$row['calendarid']][$row['uri']] = $index;
+    $calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
+    foreach ($calendarData as $row) {
+      $this->calendarObjects[$row['calendarid'] . '-' . $row['uri']] = $row;
     }
     self::addProjectEvents($this->project, $this->defaultCalendars);
-
-    $calDavBackendMethods = [
-      'createCalendarObject' => function(
-        $calendarId,
-        $objectUri,
-        $calendarData,
-        $calendarType = CalDavBackend::CALENDAR_TYPE_CALENDAR
-      ): ?string {
-        $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
-        $rowData = [
-          'calendarid' => $calendarId,
-          'uri' => $objectUri,
-          'calendardata' => $calendarData,
-          'lastmodified' => time(),
-          'etag' => $extraData['etag'],
-          'size' => $extraData['size'],
-          'componenttype' => $extraData['componentType'],
-          'firstoccurence' => $extraData['firstOccurence'],
-          'lastoccurence' => $extraData['lastOccurence'],
-          'classification' => $extraData['classification'],
-          'uid' => $extraData['uid'],
-          'calendartype' => $calendarType,
-        ];
-        $this->createdCalendarData[$calendarId][$objectUri] = $rowData;
-        return null;
-      },
-      'getCalendarById' => function(int $calendarId): ?array {
-        if ($calendarId < 1 || $calendarId > count($this->defaultCalendars)) {
-          return null;
-        }
-        $calendars = array_flip($this->defaultCalendars);
-        return [
-          'principaluri' => 'principals/users/calendar.owner',
-          'uri' => $calendars[$calendarId],
-        ];
-      },
-      'getCalendarObject' => function(
-        $calendarId,
-        $objectUri,
-        int $calendarType = CalDavBackend::CALENDAR_TYPE_CALENDAR,
-      ): ?array {
-        $rowIndex = $this->calendarObjects[$calendarId][$objectUri] ?? null;
-        if ($rowIndex !== null) {
-          return $this->rowToCalendarObject($this->calendarData[$rowIndex]);
-        }
-        if (!empty($this->createdCalendarData[$calendarId][$objectUri])) {
-          return $this->rowToCalendarObject($this->createdCalendarData[$calendarId][$objectUri]);
-        }
-        echo 'NOT FOUND ' . $calendarId . ' ' . $objectUri . PHP_EOL;
-        print_r($this->calendarObjects);
-        return null;
-      },
-      'unshare' => null,
-      'updateCalendarObject' => function(
-        $calendarId,
-        $objectUri,
-        $calendarData,
-        $calendarType = self::CALENDAR_TYPE_CALENDAR,
-      ) {
-        $extraData = $this->getDenormalizedData($calendarData);
-        if (isset($this->calendarObjects[$calendarId][$objectUri])) {
-          $data = 'calendarObjects';
-        } elseif (isset($this->createdCalendarData[$calendarId][$objectUri])) {
-          $data = 'createdCalendarData';
-        }
-        $rowData = [
-          'calendarid' => $calendarId,
-          'uri' => $objectUri,
-          'calendardata' => $calendarData,
-          'lastmodified' => time(),
-          'etag' => $extraData['etag'],
-          'size' => $extraData['size'],
-          'componenttype' => $extraData['componentType'],
-          'firstoccurence' => $extraData['firstOccurence'],
-          'lastoccurence' => $extraData['lastOccurence'],
-          'classification' => $extraData['classification'],
-          'uid' => $extraData['uid'],
-          'calendartype' => $calendarType,
-        ];
-        $this->{$data} = $rowData;
-        return null;
-      },
-    ];
-
-    /** @var CalDavBackend $this->calDavBackend */
-    $this->calDavBackend = $this->getMockBuilder(CalDavBackend::class)
-      ->onlyMethods(array_keys($calDavBackendMethods))
-      ->disableOriginalConstructor()
-      ->getMock();
-    foreach (array_filter($calDavBackendMethods) as $method => $implementation) {
-      $this->calDavBackend
-        ->method($method)
-        ->willReturnCallback($implementation);
-    }
-
-    /** @var CalendarManager $calendarManager */
-    $this->calendarManager = $this->getMockBuilder(CalendarManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->calendarManager->method('getCalendars')
-      ->willReturnCallback(
-        function() use ($l) : array {
-          $calendars = [];
-          foreach ($this->defaultCalendars as $uri => $id) {
-            $calendar = $this->createStub(ICalendar::class);
-            // $calendar = $this->getMockBuilder(ICalendar::class)
-            //   ->disableOriginalConstructor()
-            //   ->getMock();
-            $calendar->method('getKey')->willReturn((string)$id);
-            $calendar->method('getdisplayName')->willReturn($l->t(ucfirst($uri) . ' (calendar.owner)'));
-            $calendars[] = $calendar;
-          }
-          return $calendars;
-        },
-      );
-
-    $calDavService = new CalDavService(
-      configService: $this->configService,
-      calendarManager: $this->calendarManager,
-      calDavBackend: $this->calDavBackend,
-    );
 
     $this->entityManager = $this->getMockBuilder(EntityManager::class)
       ->disableOriginalConstructor()
@@ -300,51 +150,15 @@ trait SetupEventsServiceTrait
     /** @var ProjectService $projectService */
     $projectService = $this->createStub(ProjectService::class);
 
-    $vCalendarService = new VCalendarService(
-      configService: $mockProvider->getConfigService(),
-      legacyCalendarObject: new OC_Calendar_Object(
-        userSession: $mockProvider->getUserSession(),
-        l: $mockProvider->getL10N(),
-        dateTimeZone: $this->createStub(IDateTimeZone::class),
-      ),
-    );
-
-    $this->calendarManager->expects($this->never())->method('clear');
-    $this->calDavBackend->expects($this->never())->method('unshare');
-
     $this->eventsService = new EventsService(
       userSession: $mockProvider->getUserSession(),
-      configService: $mockProvider->getConfigService(),
+      configService: $this->configService,
       entityManager: $this->entityManager,
       projectService: $projectService,
-      calDavService: $calDavService,
-      vCalendarService: $vCalendarService,
+      calDavService: $this->calDavService,
+      vCalendarService: $this->vCalendarService,
       dateTimeFormatter: \OCP\Server::get(IDateTimeFormatter::class),
     );
-  }
-
-  /**
-   * This has been copied from the original OCA\DAV\CalDAV\CalDavBackend.
-   *
-   * @param array $row Database row.
-   *
-   * @return array
-   */
-  private static function rowToCalendarObject(array $row): array
-  {
-    return [
-      'id' => $row['id'],
-      'uri' => $row['uri'],
-      'uid' => $row['uid'],
-      'lastmodified' => $row['lastmodified'],
-      'etag' => '"' . $row['etag'] . '"',
-      'calendarid' => $row['calendarid'],
-      'size' => (int)$row['size'],
-      'calendardata' => $row['calendardata'],
-      'component' => strtolower($row['componenttype']),
-      'classification' => (int)$row['classification'],
-      '{' . \OCA\DAV\DAV\Sharing\Plugin::NS_NEXTCLOUD . '}deleted-at' => $row['deleted_at'] === null ? $row['deleted_at'] : (int)$row['deleted_at'],
-    ];
   }
 
   /**

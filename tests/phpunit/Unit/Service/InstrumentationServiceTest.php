@@ -77,8 +77,8 @@ class InstrumentationServiceTest extends TestCase
     // already called in setup, test whether the entities are consistent.
     $this->assertEquals(1, $this->project->getParticipants()->count());
     $this->assertEquals(1, $this->musician->getProjectParticipation()->count());
-    $this->assertEquals(1, $this->musician->getId());
-    $this->assertEquals(1, $this->project->getId());
+    $this->assertEquals(self::FAKED_ENTITY_ID, $this->musician->getId());
+    $this->assertEquals(self::FAKED_ENTITY_ID, $this->project->getId());
     $this->assertEquals($this->participant, $this->project->getParticipants()->first());
     $this->assertEquals($this->participant, $this->musician->getProjectParticipantOf($this->project));
     $this->assertEquals($this->participant, $this->musician->getProjectParticipation()->first());

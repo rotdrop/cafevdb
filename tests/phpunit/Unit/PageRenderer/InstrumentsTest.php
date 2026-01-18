@@ -44,7 +44,10 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Test aspects of the AllMusicians page renderer. */
 #[Attributes\CoversClass(PageRenderer\Instruments::class)]
-#[Attributes\CoversClass(\OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem::class)]
+#[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
+#[Attributes\CoversClass(PageRenderer\PME\Config::class)]
+#[Attributes\CoversClass(PageRenderer\Projects::class)]
+#[Attributes\CoversClass(PageRenderer\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
@@ -88,9 +91,6 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Projects::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
@@ -304,7 +304,7 @@ class InstrumentsTest extends TestCase
     ],
   ];
 
-/** {@inheritdoc} */
+  /** {@inheritdoc} */
   #[Attributes\Depends('testAdd')]
   public function testChange(): void
   {
