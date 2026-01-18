@@ -288,6 +288,11 @@ const pmeFormInit = (containerSel: string|JQuery) => {
      */
     const verifyYearName = function(action: 'name'|'year'|'submit', $button?: JQuery) {
 
+      if ((action === 'name' || action === 'year') && !oldProjectName && !$name.val()) {
+        // new form, do not complain yet
+        return;
+      }
+
       if ($container.data('project-validating')) {
         return;
       }
