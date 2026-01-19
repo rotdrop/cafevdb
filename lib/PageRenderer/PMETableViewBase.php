@@ -34,7 +34,6 @@ use Psr\Log\LogLevel;
 use OCP\IL10N;
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Controller\LegacyPageController;
@@ -1539,8 +1538,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     }
     $this->debug('CHANGESETS: ' . print_r($changeSets, true));
 
-    $setAgain = [];
-
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
       $changeSet = $changeSets[$table] ?? [];
@@ -1790,7 +1787,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $value = $dataItem['data'][$multipleIndex] ?? $dataItem['default'];
               $this->debug('Set ' . $entityClass . '::' . $column . ' -> ' . $value);
               $meta->setColumnValue($entity, $column, $value);
-              $setAgain[] = fn() => $meta->setColumnValue($entity, $column, $value);
             }
 
             // persist
@@ -1847,11 +1843,9 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
-          $value = $newValues[$field];
-          $this->debug('TRY SET ' . $column . ' => ' . $value);
-          $meta->setColumnValue($entity, $column, $value);
+          $this->debug('TRY SET ' . $column . ' => ' . $newValues[$field]);
+          $meta->setColumnValue($entity, $column, $newValues[$field]);
           Util::unsetValue($changed, $field);
-          $setAgain[] = fn() => $meta->setColumnValue($entity, $column, $value);
         }
 
         if (!($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) || !empty($entity[$joinInfo['column']])) {
@@ -1868,7 +1862,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         // joined entities which are yet to be inserted.
         if ($joinInfo['flags'] & self::JOIN_MASTER) {
           $this->flush();
-
           $masterEntity = $entity;
           $identifier = $meta->getIdentifierColumnValues($masterEntity);
           foreach (array_keys($this->pme->key) as $key) {
@@ -1901,17 +1894,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
-    $this->entityManager->registerPreCommitAction(
-      new GenericUndoable(
-        function() use ($setAgain) {
-          foreach ($setAgain as $setter) {
-            $setter();
-          }
-          $this->flush();
-        },
-        sortOrder: -1,
-      ),
-    );
 
     // As this is not time critical we should perhaps reload the master entity
     // from the database in order to sanitize all associations.
