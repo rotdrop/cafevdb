@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
  * (Some) personal settings keys.
  */
-#[TypeScript(options: ['nativeEnums' => true])]
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumPersonalSettingsKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
