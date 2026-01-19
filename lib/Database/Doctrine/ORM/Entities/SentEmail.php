@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class SentEmail
   private string $messageId;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sentEmail', fetch: 'EXTRA_LAZY')]
-  private Project $project;
+  private ?Project $project;
 
   #[Gedmo\Blameable(on: 'create')]
   #[ORM\Column(nullable: true)]
@@ -430,11 +430,11 @@ class SentEmail
   /**
    * Sets project.
    *
-   * @param null|Project $project
+   * @param ?Project $project
    *
    * @return SentEmail $this
    */
-  public function setProject(?Project $project):SentEmail
+  public function setProject(?Project $project): SentEmail
   {
     $this->project = $project;
 
@@ -446,7 +446,7 @@ class SentEmail
    *
    * @return Project
    */
-  public function getProject():?Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
