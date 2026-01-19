@@ -28,7 +28,7 @@
     "@iframe-resizer/parent": "^5.4.4",
     "@jest/globals": "^30.2.0",
     "@jsdoc/salty": "^0.2.9",
-    "@nextcloud/app-calendar": "github:rotdrop/nextcloud-app-calendar.git#production/cafevdb/stable6.0",
+    "@nextcloud/app-calendar": "github:rotdrop/nextcloud-app-calendar.git#production/cafevdb/stable6.1",
     "@nextcloud/app-logreader": "github:nextcloud/logreader#stable32",
     "@nextcloud/auth": "^2.1.0",
     "@nextcloud/axios": "^2.4.0",
