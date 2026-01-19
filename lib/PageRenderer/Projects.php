@@ -1291,7 +1291,7 @@ class Projects extends PMETableViewBase
       // convenience in either case, otherwise adding musicians to the
       // ProjectParticipants table fails.
       foreach (['old', 'new'] as $dataSet) {
-        $dataArray = $dataSet . 'Vals';
+        $dataArray = $dataSet . 'Values';
         ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??'');
         foreach (${$dataSet . 'Instruments'} as $instrument) {
           ${$dataArray}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
