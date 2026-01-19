@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -163,7 +163,8 @@ class CloudLogger implements QueryLogger
 
     $this->currentQuery['executionMS'] = microtime(true) - $this->start;
 
-    $this->logInfo(print_r($this->currentQuery, true), [], 10, true);
+    $msg = print_r($this->currentQuery, true);
+    $this->logInfo($msg, [ 'exception' => new \Exception($msg) ], 0, true);
 
     $this->currentQuery = null;
     $this->start = null;
