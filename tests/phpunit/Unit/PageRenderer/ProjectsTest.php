@@ -38,7 +38,10 @@ use OCP\Files\Node;
 use OCP\Files\Folder;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Listener;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -54,9 +57,19 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
 /** Test aspects of the AllMusicians page renderer. */
+#[Attributes\CoversClass(Entities\Project::class)]
+#[Attributes\CoversClass(Entities\ProjectEvent::class)]
+#[Attributes\CoversClass(Entities\ProjectWebPage::class)]
+#[Attributes\CoversClass(Events\AfterProjectDeletedEvent::class)]
+#[Attributes\CoversClass(Events\ProjectEvent::class)]
+#[Attributes\CoversClass(Events\ProjectUpdatedEvent::class)]
+#[Attributes\CoversClass(Listener\CalendarObjectCreatedEventListener::class)]
+#[Attributes\CoversClass(Listener\ProjectEventEntityListener::class)]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]
 #[Attributes\CoversClass(PageRenderer\Registration::class)]
+#[Attributes\CoversClass(ProjectService::class)]
+#[Attributes\CoversClass(Repositories\ProjectWebPagesRepository::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
@@ -72,6 +85,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
@@ -79,7 +93,6 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
@@ -98,11 +111,9 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Events\AfterProjectDeletedEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerClosedEvent::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Events\ProjectEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\UndoableRunQueueException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
@@ -114,6 +125,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
@@ -124,7 +136,6 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
@@ -209,16 +220,33 @@ class ProjectsTest extends TestCase
     $service = \OCA\Redaxo\Service\RPC::class;
     $cmsRpc = $this->createStub($service);
     $mockProvider->registerClassInstance($service, $cmsRpc, global: false);
+    $cmsRpc->method('addArticle')->willReturnCallback(
+      function($pageName, $category, $pageTemplate) use (&$id) {
+        return [
+          [
+            'articleId' => $id++,
+            'articleName' => $pageName,
+            'categoryId' => $category,
+            'priority' => 13,
+          ],
+        ];
+      }
+    );
+    $cmsRpc->method('articlesByName')->willReturn([]);
 
     $service = \OCA\DokuWiki\Service\AuthDokuWiki::class;
     $wikiRpc = $this->createStub($service);
     $mockProvider->registerClassInstance($service, $wikiRpc, global: false);
+    $wikiRpc->method('getPage')->willReturn('some string');
 
     $id = 13;
     foreach (ConfigConstants::CMS_CATEGORIES as $cmsCategory) {
       $ucfSlug = ucfirst($cmsCategory);
       $configService->setConfigValue(ConfigConstants::CMS_PREFIX . $ucfSlug, $id++);
+      $configService->setConfigValue(ConfigConstants::CMS_PREFIX . $ucfSlug . 'Module', $id++);
     }
+    $configService->setConfigValue(ConfigConstants::CMS_PREFIX . 'SubPageTemplate', 13);
+    $configService->setConfigValue(ConfigConstants::CMS_PREFIX . 'ConcertModule', 13);
 
     $configService->setConfigValue(ConfigConstants::SHARED_FOLDER, 'orchestra');
     $configService->setConfigValue(ConfigConstants::PROJECTS_FOLDER, 'projects');
@@ -300,7 +328,7 @@ class ProjectsTest extends TestCase
     'ProjectInstrumentationNumbers:instrument_id' => '15,14,16,6',
     'ProjectInstrumentationNumbers:voice' => '',
     'ProjectInstrumentationNumbers:quantity' => '0',
-    'mailing_list_id' => 'keep-empty',
+    'mailing_list_id' => 'create',
     'registration_start_date' => '31.01.2099',
     'registration_deadline' => '28.02.2099',
   ];
@@ -398,21 +426,22 @@ class ProjectsTest extends TestCase
       $this->assertTrue(in_array($number->getInstrument()->getId(), $instrumentIds));
     }
 
+    // The project registration event.
+    $this->assertEquals(1, $project->getCalendarEvents()->count());
+
     // Hard to test:
     // - no wiki
     // - no redaxo
     // - no file system
     //
-    // Probably need integration tests, but even those would be hard to setup.
-    //
-    // $this->renderer->afterInsertTrigger(
-    //   pme: $this->phpMyEdit,
-    //   op: 'do not care',
-    //   step: 'do not care',
-    //   oldValues: $oldValues,
-    //   changed: $changed,
-    //   newValues: $newValues,
-    // );
+    $this->renderer->afterInsertTrigger(
+      pme: $this->phpMyEdit,
+      op: 'do not care',
+      step: 'do not care',
+      oldValues: $oldValues,
+      changed: $changed,
+      newValues: $newValues,
+    );
   }
 
   private const BEFORE_CHANGED_TRIGGER_DATA = [
@@ -469,6 +498,19 @@ class ProjectsTest extends TestCase
       );
 
       $this->assertEquals(true, $result);
+      $this->assertEmpty($changed);
+
+      // pme would recompute the change-set ...
+      $changed = ['name'];
+
+      $this->renderer->afterUpdateTrigger(
+        pme: $this->phpMyEdit,
+        op: 'do not care',
+        step: 'do not care',
+        oldValues: $oldValues,
+        changed: $changed,
+        newValues: $newValues,
+      );
 
       $this->entityManager->commit();
     } catch (Throwable $t) {
@@ -478,13 +520,10 @@ class ProjectsTest extends TestCase
       throw $t;
     }
 
-    $this->assertEmpty($changed);
-
     $this->entityManager->clear();
     $entity = $repository->find(['id' => $entityId]);
     $this->assertNotNull($entity);
     $this->assertEquals(self::BEFORE_CHANGED_TRIGGER_DATA['newValues']['name'], $entity->getName());
-
   }
 
   // phpcs:disable Generic.Files.LineLength.TooLong

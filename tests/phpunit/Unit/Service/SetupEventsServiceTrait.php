@@ -95,7 +95,7 @@ trait SetupEventsServiceTrait
 
     $calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
     foreach ($calendarData as $row) {
-      $this->calendarObjects[$row['calendarid'] . '-' . $row['uri']] = $row;
+      self::$calendarObjects[$row['calendarid'] . '-' . $row['uri']] = $row;
     }
     self::addProjectEvents($this->project, $this->defaultCalendars);
 
@@ -146,9 +146,11 @@ trait SetupEventsServiceTrait
         }
       },
     );
+    $this->mockProvider->registerClassInstance(EntityManager::class, $this->entityManager, global: true);
 
     /** @var ProjectService $projectService */
     $projectService = $this->createStub(ProjectService::class);
+    $this->mockProvider->registerClassInstance(ProjectService::class, $projectService, global: true);
 
     $this->eventsService = new EventsService(
       userSession: $mockProvider->getUserSession(),

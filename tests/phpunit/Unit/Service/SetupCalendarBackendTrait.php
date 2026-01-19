@@ -34,11 +34,13 @@ use PHPUnit\Framework\TestCase;
 use Sabre\CalDAV\Xml\Property\ScheduleCalendarTransp;
 use Sabre\CalDAV\Xml\Property\SupportedCalendarComponentSet;
 
+use OCP\Calendar\Events\CalendarObjectCreatedEvent;
+use OCP\Calendar\Events\CalendarObjectUpdatedEvent;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\IDateTimeFormatter;
-use OCP\IL10N;
 use OCP\IDateTimeZone;
+use OCP\IL10N;
 
 use OCA\DAV\CalDAV\CalDavBackend;
 
@@ -67,7 +69,7 @@ trait SetupCalendarBackendTrait
    *
    * Faked NC oc_calendarobjects rows, indexed by calendar id and VObject URI.
    */
-  private array $calendarObjects = [];
+  private static array $calendarObjects = [];
 
   private $defaultCalendars = [];
 
@@ -164,8 +166,17 @@ trait SetupCalendarBackendTrait
           'uid' => $extraData['uid'],
           'calendartype' => $calendarType,
         ];
-        $this->calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
-        return null; // empty etag
+        self::$calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
+        $etag = null;
+        $event = new CalendarObjectCreatedEvent(
+          $calendarId,
+          $this->calDavBackend->getCalendarById($calendarId),
+          [],
+          $rowData,
+          $etag,
+        );
+        \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
+        return $etag; // empty etag
       },
       'getCalendarById' => function(int $calendarId): ?array {
         $row = $this->sharedCalendarRows[$calendarId] ?? null;
@@ -198,12 +209,13 @@ trait SetupCalendarBackendTrait
         int $calendarType = CalDavBackend::CALENDAR_TYPE_CALENDAR,
       ): ?array {
         $key = "{$calendarId}-{$objectUri}";
-        if (!empty($this->calendarObjects[$key])) {
+        if (!empty(self::$calendarObjects[$key])) {
           return new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
-            ->invoke($this->calDavBackend, $this->calendarObjects[$key]);
+            ->invoke($this->calDavBackend, self::$calendarObjects[$key]);
         }
+        echo new \Exception('')->getTraceAsString() . PHP_EOL;
         echo 'NOT FOUND ' . $calendarId . ' ' . $objectUri . PHP_EOL;
-        print_r(array_keys($this->calendarObjects));
+        print_r(array_keys(self::$calendarObjects));
         return null;
       },
       'unshare' => null,
@@ -214,11 +226,6 @@ trait SetupCalendarBackendTrait
         $calendarType = self::CALENDAR_TYPE_CALENDAR,
       ) {
         $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
-        if (isset($this->calendarObjects[$calendarId][$objectUri])) {
-          $data = 'calendarObjects';
-        } elseif (isset($this->createdCalendarData[$calendarId][$objectUri])) {
-          $data = 'createdCalendarData';
-        }
         $rowData = [
           'calendarid' => $calendarId,
           'uri' => $objectUri,
@@ -233,8 +240,17 @@ trait SetupCalendarBackendTrait
           'uid' => $extraData['uid'],
           'calendartype' => $calendarType,
         ];
-        $this->{$data} = $rowData;
-        return null;
+        self::$calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
+        $etag = null;
+        $event = new CalendarObjectUpdatedEvent(
+          $calendarId,
+          $this->calDavBackend->getCalendarById($calendarId),
+          [],
+          $rowData,
+          $etag,
+        );
+        \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
+        return $etag;
       },
     ];
     // print_r(array_keys($calDavBackendMethods));

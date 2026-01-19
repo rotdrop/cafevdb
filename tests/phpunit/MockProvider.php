@@ -41,14 +41,16 @@ use OC\AppFramework\Utility\SimpleContainer;
 use OCP\AppFramework\IAppContainer;
 use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Calendar\Events\CalendarObjectCreatedEvent;
+use OCP\Calendar\Events\CalendarObjectUpdatedEvent;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\L10N\IFactory as L10NFactory;
 use OCP\IRequest;
-use OCP\IUser;
 use OCP\ISession;
+use OCP\IUser;
 use OCP\IUserSession;
+use OCP\L10N\IFactory as L10NFactory;
 use OCP\Security\IHasher;
 use Psr\Log\LoggerInterface;
 
@@ -829,9 +831,22 @@ class MockProvider
       return $this->instances[$className];
     }
 
+    $originalDispatcher = self::$originalInstances[$className] ?? null;
     $instance = $this->getMockBuilder(IEventDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
+    $instance->method('dispatchTyped')->willReturnCallback(
+      function(mixed $event) use ($originalDispatcher) {
+        switch (get_class($event)) {
+          case CalendarObjectCreatedEvent::class:
+          case CalendarObjectUpdatedEvent::class:
+            if ($originalDispatcher) {
+              $originalDispatcher->dispatchTyped($event);
+            }
+            break;
+        }
+      },
+    );
 
     $this->instances[$className] = $instance;
 
