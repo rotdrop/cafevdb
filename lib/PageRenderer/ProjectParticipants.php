@@ -1707,7 +1707,7 @@ GROUP BY t.id';
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
-    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::PARTICIPANTS());
+    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::PARTICIPANTS);
 
     $changed = []; // disable PME delete query
 
