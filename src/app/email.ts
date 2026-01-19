@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -834,12 +834,13 @@ const emailFormCompositionHandlers = (
         const operation = data.operation;
         const topic = data.topic;
         const requestData = data.requestData;
+        let message = Array.isArray(data.messages) ? data.messages.join(' ') : undefined;
         switch (operation) {
           case 'send':
             SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
             SelectUtils.replaceOptions($sentEmailsSelector, requestData.sentEmailOptions);
-            if (data.message !== undefined && data.caption !== undefined) {
-              Dialogs.info(data.message, data.caption, undefined, true, true);
+            if (message !== undefined && data.caption !== undefined) {
+              Dialogs.info(message, data.caption, undefined, true, true);
               $('body').find('.modal-wrapper--small')
                 .toggleClass('.modal-wrapper--small', false)
                 .toggleClass('.modal-wrapper--large', true);
@@ -1030,10 +1031,9 @@ const emailFormCompositionHandlers = (
             break; // delete
           default:
             postponeEnable = true;
-            data.message =
-            t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
+            message = t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
             data.caption = t(appName, 'Error');
-            Dialogs.alert(data.message, data.caption, validateUnlock, true, true);
+            Dialogs.alert(message, data.caption, validateUnlock, true, true);
             break;
         } // switch (operation)
 
@@ -1042,8 +1042,8 @@ const emailFormCompositionHandlers = (
           if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
           }
-          if (data.message !== undefined) {
-            debugText += data.message;
+          if (message !== undefined) {
+            debugText += message;
           }
           if (data.debug !== undefined) {
             debugText += '<pre>' + data.debug + '</pre>';
@@ -1200,8 +1200,8 @@ const emailFormCompositionHandlers = (
             if (data.caption !== undefined) {
               debugText += '<div class="error caption">' + data.caption + '</div>';
             }
-            if (data.message !== undefined) {
-              debugText += data.message;
+            if (Array.isArray(data.messages)) {
+              debugText += data.messages.join(' ');
             }
             const hasPreviewMessages = data.requestData && data.requestData.previewData;
             if (hasPreviewMessages) {

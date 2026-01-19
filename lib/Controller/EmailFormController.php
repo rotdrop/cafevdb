@@ -414,7 +414,7 @@ class EmailFormController extends Controller
               $requestData['previewData'] = $html;
             } else {
               return self::dataResponse([
-                'message' => $this->l->t('Preview generation successful.'),
+                'messages' => [$this->l->t('Preview generation successful.')],
                 'contents' => $html,
               ]);
             }
@@ -872,7 +872,7 @@ class EmailFormController extends Controller
         'projectName' => $projectName,
         'projectId' => $projectId,
         'caption' => $caption,
-        'message' => $messageText,
+        'messages' => [$messageText],
         'requestData' => $requestData,
         'debug' => htmlspecialchars($debugText),
       ]);
@@ -883,7 +883,7 @@ class EmailFormController extends Controller
         'projectName' => $projectName,
         'projectId' => $projectId,
         'caption' => $caption,
-        'message' => $messageText,
+        'messages' => [$messageText],
         'requestData' => $requestData,
         'debug' => htmlspecialchars($debugText),
       ]);
@@ -1210,7 +1210,7 @@ class EmailFormController extends Controller
 
           if ($maxUploadFileSize >= 0 and $totalSize > $maxUploadFileSize) {
             return self::grumble([
-              'message' => $this->l->t('Not enough storage available'),
+              'messages' => [$this->l->t('Not enough storage available')],
               'upload_max_file_size' => $maxUploadFileSize,
               'max_human_file_size' => $maxHumanFileSize,
             ]);
