@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -137,7 +137,7 @@ const myPersonalRecordDialog = (recordOrNumber: number|Record<string, number>, o
 
     // the proper record id is an object { project_id, musician_id }.
     // eslint-disable-next-line camelcase
-    record.project_id = options.projectId ?? 0;
+    record = { musician_id: record.musicianId, project_id: options.projectId! };
   } else {
     tableOptions.table = 'Musicians';
     tableOptions.template = 'all-musicians';
