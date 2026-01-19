@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,17 +90,14 @@ declare namespace Chosen {
 declare namespace JQueryUI {
   interface ButtonOptions {
     icons?: never,
-    text?: never,
+    text?: string, // just the "text" attribute of the button element
+    html?: string, // just the "html" attribute of the button element
     icon?: string,
     iconPosition?: 'beginning'|'end'|'top'|'bottom',
-    showLabel?: boolean,
+    showLabel?: boolean, // ... but will just do nothin
+    showText?: boolean, // ... from the docu, but is also an no-op
     label?: string,
-    classes?: {
-      'ui-button'?: string,
-      'ui-button-icon'?: string,
-      'ui-button-icon-space'?: string,
-    },
-    click?: (event?: Event) => void,
+    click?: (event?: JQuery.TriggeredEvent) => void,
     // aditional HTML attributes
     [key: string]: string|unknown,
   }

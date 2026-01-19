@@ -2091,7 +2091,12 @@ const emailFormCompositionHandlers = (
             } as Selectize.IOptions,
             buttons: [
               {
-                label: t(appName, 'Save Contacts'),
+                // "text" is documented, however, this is just the
+                // "text" content of the generated button
+                // node. Likewise we could as well inject HTML by
+                // exchanging "text" by "html". Buggy docs: useLabel
+                // and useText are no-ops.
+                text: t(appName, 'Save Contacts'),
                 class: 'save-contacts',
                 title: t(
                   appName, 'Save the selected supplementary emails to the address-book for later reusal.'),
