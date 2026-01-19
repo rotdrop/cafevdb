@@ -683,8 +683,12 @@ class FinanceService
 
       if (!empty($bankAccount)) {
         $info = $this->getIbanInfo($bankAccount->getIban());
-        $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
-
+        $this->logInfo('BANK INFO ' . print_r($info, true));
+        if (isset($info['bank']) && isset($info['city'])) {
+          $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
+        } else {
+          $bank = '';
+        }
         $formData = array_merge($formData, [
           ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
           ConfigConstants::BANK_ACCOUNT_IBAN => $bankAccount->getIban(),
