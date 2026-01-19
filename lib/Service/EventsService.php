@@ -1789,7 +1789,7 @@ class EventsService
    * Unconditionally register the given event with the given project. Each
    * sibling of a recurring event gets its own slot here.
    *
-   * @param int|Entities\Project $projectOrId The project or its id.
+   * @param Entities\Project $project The project.
    *
    * @param string $calendarURI The URI of the calender the event belongs to.
    *
@@ -1822,7 +1822,7 @@ class EventsService
    * where NEW_STATUS is true if a new event has been registered.
    */
   private function register(
-    mixed $projectOrId,
+    Entities\Project $project,
     string $calendarURI,
     string $eventUID,
     int $sequence,
@@ -1843,7 +1843,7 @@ class EventsService
       $relatedEvents = [ $eventUID ];
     }
 
-    $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
+    $projectId = $project->getId();
 
     $siblings = $this->findRelatedEvents($projectId, $calendarId, $relatedEvents);
 
@@ -1878,7 +1878,7 @@ class EventsService
     if (empty($entity)) {
       // $this->logInfo('SIBLINGS FOR REC-ID ' . count($siblings[$recurrenceId] ?? []) . ' || ' . print_r(array_keys($siblings), true) . ' || RELATED ' . print_r($relatedEvents, true));
       $entity = new Entities\ProjectEvent();
-      $entity->setProject($projectOrId)
+      $entity->setProject($project)
         ->setCalendarUri($calendarURI)
         ->setCalendarId($calendarId)
         ->setRecurrenceId($recurrenceId)
@@ -1886,6 +1886,7 @@ class EventsService
         ->setSeriesUid($seriesUid);
       $added = true;
       $this->persist($entity);
+      $project->getCalendarEvents()->add($entity);
       $this->projectEventSiblings[$projectId][$calendarId][$recurrenceId][$eventUID] = $entity;
     } else {
       $added = false;
@@ -2726,8 +2727,8 @@ class EventsService
     // The members app needs to be manually loaded for the routes to be loaded
     \OC_App::loadApp('cafevdbmembers');
     $registrationUrl  = $this->urlGenerator()->linkToRouteAbsolute(
-      'cafevdbmembers.project_registration.page', [
-        'projectName' => $projectName,
+      'cafevdbmembers.ProjectRegistration.showShare', [
+        'token' => $projectName,
       ]);
     $registrationEventData = [
       'summary' => $l->t('Registration for %s', $projectName),
