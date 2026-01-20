@@ -29,6 +29,7 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\IAppContainer;
@@ -38,7 +39,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\Composer;
@@ -329,19 +330,21 @@ class EmailFormController extends Controller
     string $topic,
     ?int $projectId,
     ?string $projectName
-  ):DataResponse {
+  ): DataResponse|JSONResponse {
     $caption = ''; ///< Optional status message caption.
     $messageText = ''; ///< Optional status message.
     $debugText = ''; ///< Diagnostic output, only enabled on request.
 
     $defaultData = [
-      'operation' => 'update',
-      'topic' => self::TOPIC_UNSPECIFIC,
+      'operation' => EnumEmailFormComposerOperation::UPDATE,
+      'topic' => EnumEmailFormComposerTopic::UNSPECIFIC,
       'projectId' => $projectId,
       'projectName' => $projectName,
       'bulkTransactionId' => -1,
     ];
-    $requestData = array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, []));
+    $requestData = DTO\EmailFormComposerRequestData::fromArray(
+      array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, [])),
+    )->toArray();
     $projectId   = $requestData['projectId'];
     $projectName = $requestData['projectName'];
 
@@ -354,14 +357,16 @@ class EmailFormController extends Controller
 
     if (isset($requestData['singleItem'])) {
       $requestData['errorStatus'] = false;
-      $requestData['diagnostics'] = '';
+      $requestData['diagnostics'] = [];
     } else {
       $requestData['errorStatus'] = $composer->errorStatus();
       $requestData['diagnostics'] = $composer->statusDiagnostics();
     }
 
+    $operation = EnumEmailFormComposerOperation::get($operation);
+    $topic = EnumEmailFormComposerTopic::get($topic);
     switch ($operation) {
-      case 'send':
+      case EnumEmailFormComposerOperation::SEND:
         $composer->sendMessages();
         $diagnostics = $composer->statusDiagnostics();
         $requestData['errorStatus'] = $composer->errorStatus();
@@ -388,12 +393,12 @@ class EmailFormController extends Controller
           // Update list of drafts after sending the message (draft has
           // been deleted)
           $requestData['draftEmailOptions'] = $this->draftEmailOptions($composer);
-          $requestData['sendEmailOptions'] = $this->sentEmailOptions($composer);
+          $requestData['sentEmailOptions'] = $this->sentEmailOptions($composer);
         }
         break;
-      case 'preview':
+      case EnumEmailFormComposerOperation::PREVIEW:
         switch ($topic) {
-          case self::TOPIC_UNSPECIFIC:
+          case EnumEmailFormComposerTopic::UNSPECIFIC:
             $previewMessages = $composer->previewMessages();
             $templateParameters = [
               'appName' => $this->appName,
@@ -420,14 +425,14 @@ class EmailFormController extends Controller
             }
         }
         break;
-      case 'cancel':
+      case EnumEmailFormComposerOperation::CANCEL:
         $composer->cleanDrafts();
         $composer->cleanTemporaries();
         $composer->cleanAttachmentDownloads();
         break;
-      case 'update':
+      case EnumEmailFormComposerOperation::UPDATE:
         switch ($topic) {
-          case self::TOPIC_UNSPECIFIC:
+          case EnumEmailFormComposerTopic::UNSPECIFIC:
             $fileAttachments = $composer->fileAttachments();
             $eventAttachments = $composer->eventAttachments();
 
@@ -481,50 +486,49 @@ class EmailFormController extends Controller
               $templateParameters,
             )->render();
             break;
-          case 'element':
-            $formElements = $requestData['formElement'];
-            $formElements = is_array($formElements) ? $formElements : [ $formElements ];
+          case EnumEmailFormComposerTopic::ELEMENT:
+            $formElements = $requestData['formElements'];
             foreach ($formElements as $formElement) {
-              switch (strtolower($formElement)) {
-                case 'to':
-                  $elementData[$formElement] = $composer->toStringArray();
+              switch ($formElement) {
+                case EnumEmailFormComposerElement::TO:
+                  $elementData[$formElement->value] = $composer->toStringArray();
                   break;
-                case 'subjecttag':
-                  $subjectTagPrefix = $this->getConfigValue('bulkEmailSubjectTag');
+                case EnumEmailFormComposerElement::SUBJECT_TAG:
+                  $subjectTagPrefix = $this->getConfigValue(ConfigConstants::BULK_EMAIL_SUBJECT_TAG);
                   $subjectTag = trim($composer->subjectTag(), '[]');
                   if (!empty($subjectTagPrefix) && str_starts_with($subjectTag, $subjectTagPrefix)) {
                     $subjectTag = substr($subjectTag, strlen($subjectTagPrefix) + 1);
                   }
-                  $elementData[$formElement] = $subjectTag;
+                  $elementData[$formElement->value] = $subjectTag;
                   break;
-                case 'fileattachments':
+                case EnumEmailFormComposerElement::FILE_ATTACHEMENTS:
                   $fileAttachments = $composer->fileAttachments();
-                  $elementData[$formElement] = [
+                  $elementData[$formElement->value] = [
                     'options' => PageNavigation::selectOptions($composer->fileAttachmentOptions()),
                     'attachments' => $fileAttachments,
                   ];
                   break;
-                case 'eventattachments':
+                case EnumEmailFormComposerElement::EVENT_ATTACHMENTS:
                   $eventAttachments = $composer->eventAttachments();
-                  $elementData[$formElement] = [
+                  $elementData[$formElement->value] = [
                     'options' => PageNavigation::selectOptions($composer->eventAttachmentOptions($projectId, $eventAttachments)),
                     'attachments' => $eventAttachments,
                   ];
                   break;
                 default:
-                  return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement));
+                  return self::grumble($this->l->t("Unknown form element: `%s'.", $formElement->value));
               }
             }
             break;
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $requestData['formElement'] = $formElements ?? null;
+        $requestData['formElements'] = $formElements ?? null;
         $requestData['elementData'] = $elementData;
         break;
-      case 'load':
+      case EnumEmailFormComposerOperation::LOAD:
         switch ($topic) {
-          case 'sent':
+          case EnumEmailFormComposerTopic::SENT:
             $value = $requestData['sentMessagesSelector'];
             if (!$composer->loadSentEmail($value)) {
               return self::grumble($this->l->t('Unable to load sent email with message-id "%s".', $value));
@@ -620,7 +624,7 @@ class EmailFormController extends Controller
             $requestData['recipientsForm'] = $rcptData;
 
             break;
-          case 'template':
+          case EnumEmailFormComposerTopic::TEMPLATE:
             $value = $requestData['templateMessagesSelector'];
             if (!$composer->loadTemplate($value)) {
               throw new Exceptions\EnduserNotificationException(
@@ -632,7 +636,7 @@ class EmailFormController extends Controller
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
-          case 'draft':
+          case EnumEmailFormComposerTopic::DRAFT:
             $value = $requestData['draftMessagesSelector'];
             if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
               return self::grumble($this->l->t('Invalid draft name "%s".', $value));
@@ -762,7 +766,6 @@ class EmailFormController extends Controller
               $templateParameters,
             )->render();
 
-            $requestData['composerForm'] = $msgData;
             $requestData['recipientsForm'] = $rcptData;
 
             if (!$composer->errorStatus()) {
@@ -773,10 +776,10 @@ class EmailFormController extends Controller
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
         break; // load
-      case 'save':
+      case EnumEmailFormComposerOperation::SAVE:
         $selected = null;
         switch ($topic) {
-          case 'template':
+          case EnumEmailFormComposerTopic::TEMPLATE:
             $selected =
               $emailTemplateName = Util::normalizeSpaces($requestData['templateMessagesSelector']);
             if (empty($emailTemplateName)) {
@@ -791,7 +794,7 @@ class EmailFormController extends Controller
               $requestData['diagnostics'] = $composer->statusDiagnostics();
             }
             break;
-          case 'draft':
+          case EnumEmailFormComposerTopic::DRAFT:
             if ($composer->storeDraft()) {
               $requestData['messageDraftId'] = $composer->messageDraftId();
             } else {
@@ -806,20 +809,20 @@ class EmailFormController extends Controller
           $requestData['diagnostics']['caption'] =
             $this->l->t('%s could not be saved', ucfirst($topic));
         } else {
-          $emailOptions = $topic . 'EmailOptions';
+          $emailOptions = $topic->value . 'EmailOptions';
           $requestData[$emailOptions] = $this->$emailOptions($composer, $selected);
         }
         break;
-      case 'delete':
+      case EnumEmailFormComposerOperation::DELETE:
         switch ($topic) {
-          case 'template':
+          case EnumEmailFormComposerTopic::TEMPLATE:
             $composer->deleteTemplate($requestData['templateMessagesSelector']);
             $composer->setDefaultTemplate();
             $requestData[self::EMAIL_TEMPLATE_NAME] = $composer->currentEmailTemplate();
             $requestData['message'] = $composer->messageText();
             $requestData['subject'] = $composer->subject();
             break;
-          case 'draft':
+          case EnumEmailFormComposerTopic::DRAFT:
             if ($composer->deleteDraft()) {
               $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
               $requestData['messageDraftId'] = 0;
@@ -834,7 +837,7 @@ class EmailFormController extends Controller
         $emailOptions = $topic . 'EmailOptions';
         $requestData[$emailOptions] = $this->$emailOptions($composer);
         break;
-      case 'validateEmailRecipients':
+      case EnumEmailFormComposerOperation::VALIDATE_EMAIL_RECIPIENTS:
         $composer->validateFreeFormAddresses(
           $requestData['header'],
           $requestData['recipients']
@@ -850,8 +853,9 @@ class EmailFormController extends Controller
         return self::grumble($this->l->t("Unknown request: `%s'.", $operation));
     }
 
-    if ($requestData['errorStatus']) {
-      $caption = $requestData['diagnostics']['caption'];
+    $requestData = DTO\EmailFormComposerRequestData::fromArray($requestData);
+    if ($requestData->errorStatus) {
+      $caption = $requestData->diagnostics['caption'];
 
       $roles = $this->appContainer->get(OrganizationalRolesService::class);
       $messageText = $this->templateResponse(
@@ -859,34 +863,34 @@ class EmailFormController extends Controller
         [
           'projectName' => $projectName,
           'projectId' => $projectId,
-          'diagnostics' => $requestData['diagnostics'],
+          'diagnostics' => $requestData->diagnostics,
           'cloudAdminContact' => $roles->cloudAdminContact(),
           'dateTimeFormatter' => $this->dateTimeFormatter(),
           'urlGenerator' => $this->urlGenerator,
         ],
       )->render();
 
-      return self::grumble([
-        'operation' => $operation,
-        'topic' => $topic,
-        'projectName' => $projectName,
-        'projectId' => $projectId,
-        'caption' => $caption,
-        'messages' => [$messageText],
-        'requestData' => $requestData,
-        'debug' => htmlspecialchars($debugText),
-      ]);
+      return new DTO\EmailFormComposerResponse(
+        operation: $operation,
+        topic: $topic,
+        projectName: $projectName,
+        projectId: $projectId,
+        caption: $caption,
+        messages: [$messageText],
+        requestData: $requestData,
+        debug: htmlspecialchars($debugText),
+      )->response(Http::STATUS_BAD_REQUEST);
     } else {
-      return self::dataResponse([
-        'operation' => $operation,
-        'topic' => $topic,
-        'projectName' => $projectName,
-        'projectId' => $projectId,
-        'caption' => $caption,
-        'messages' => [$messageText],
-        'requestData' => $requestData,
-        'debug' => htmlspecialchars($debugText),
-      ]);
+      return new DTO\EmailFormComposerResponse(
+        operation: $operation,
+        topic: $topic,
+        projectName: $projectName,
+        projectId: $projectId,
+        caption: $caption,
+        messages: [$messageText],
+        requestData: $requestData,
+        debug: htmlspecialchars($debugText),
+      )->response();
     }
   }
 

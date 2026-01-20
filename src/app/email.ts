@@ -56,7 +56,22 @@ import type { UploadFile } from './file-upload.ts';
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
+import {
+  // type EnumEmailFormComposerOperation as ComposerOperation,
+  type EnumEmailFormComposerTopic as ComposerTopic,
+  type EnumEmailFormComposerElement,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import type {
+  // EmailFormComposerResponse,
+  EmailFormComposerRequestData as ComposerRequest,
+  EmailFormComposerResponse,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
 require('cafevdb-selectize.scss');
+
+type AttachmentElementData = {
+  options: string, // HTML fragment
+  attachments: Record<string, unknown>,
+}
 
 const selectizeOpenOnFocus = true;
 
@@ -80,24 +95,6 @@ const Email = {
   autoSaveDelete() {},
 };
 
-type ComposerRequest = {
-  attachedFiles?: string[];
-  autoSave?: boolean;
-  fileAttachments?: string;
-  formElement?: string;
-  formStatus?: 'submitted';
-  messageDraftId?: number;
-  noDebug?: boolean;
-  operation: 'send'|'cancel'|'save'|'delete'|'load'|'validateEmailRecipients'|'eventAttchments'|'update';
-  progressToken?: number|string;
-  projectId?: number;
-  projectName?: string;
-  send?: string;
-  singleItem?: boolean;
-  submitAll?: boolean;
-  topic?: string;
-};
-
 asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
   const $emailFormDialog = $('div#emailformdialog');
   $emailFormDialog.trigger(appName + ':events_changed', [event.selection]);
@@ -106,12 +103,12 @@ asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
 const generateEmailFormUrl: typeof generateAppUrl = (url, urlParams, urlOptions) =>
   generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
 
-const generateComposerUrl = (operation: string|ComposerRequest, topic?: string) => {
+const generateComposerUrl = (operation: string|ComposerRequest, topic?: ComposerTopic) => {
   if (typeof operation !== 'string') {
     topic = operation.topic;
     operation = operation.operation;
   }
-  topic = topic || Email.topicUnspecific;
+  topic = topic ?? 'general';
   return generateEmailFormUrl('composer/{operation}/{topic}', { operation, topic });
 };
 
@@ -125,7 +122,7 @@ function attachmentFromJSON(response: UploadFile) {
   const file: UploadFile = { ...response };
   file.status = 'new';
   const fileAttachmentsJSON = $fileAttachmentsHolder.val();
-  const fileAttachments = !fileAttachmentsJSON ? [] : JSON.parse(fileAttachmentsJSON);
+  const fileAttachments = !fileAttachmentsJSON ? [] : JSON.parse(fileAttachmentsJSON as string);
   fileAttachments.push(file);
   $fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
 }
@@ -183,7 +180,7 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
         return;
       }
 
-      for (const element of data.requestData.formElement) {
+      for (const element of data.requestData.formElements!) {
         switch (element.toLowerCase()) {
           case 'to': {
             const toSpan = $emailForm.find('span.email-recipients');
@@ -764,6 +761,7 @@ const emailFormCompositionHandlers = (
   const applyComposerControls = function<E extends HTMLElement>(
     this: E,
     request: ComposerRequest,
+    noDebug: boolean = false,
     validateLockCB: (lock: boolean) => void = () => {},
   ) {
 
@@ -804,7 +802,6 @@ const emailFormCompositionHandlers = (
       post += '&' + $.param({ emailComposer: request });
     }
 
-    const noDebug = !!request.noDebug;
     if (!noDebug) {
       $debugOutput.html('');
     }
@@ -820,7 +817,7 @@ const emailFormCompositionHandlers = (
           validateUnlock();
         });
       })
-      .done(function(data) {
+      .done(function(data: EmailFormComposerResponse) {
         let postponeEnable = false;
         $.fn.cafevTooltip.remove();
         if (!ajaxValidateResponse(
@@ -837,8 +834,8 @@ const emailFormCompositionHandlers = (
         let message = Array.isArray(data.messages) ? data.messages.join(' ') : undefined;
         switch (operation) {
           case 'send':
-            SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
-            SelectUtils.replaceOptions($sentEmailsSelector, requestData.sentEmailOptions);
+            SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions!);
+            SelectUtils.replaceOptions($sentEmailsSelector, requestData.sentEmailOptions!);
             if (message !== undefined && data.caption !== undefined) {
               Dialogs.info(message, data.caption, undefined, true, true);
               $('body').find('.modal-wrapper--small')
@@ -855,20 +852,17 @@ const emailFormCompositionHandlers = (
                 // replace the entire tab.
                 $.fn.cafevTooltip.remove();
                 WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
-                $panelHolder.html(requestData.elementData);
+                $panelHolder.html(requestData.elementData! as string);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
                 break;
               case 'element': {
-                const formElements = Array.isArray(requestData.formElement)
-                  ? requestData.formElement
-                  : [requestData.formElement];
-                for (const formElement of formElements) {
-                  const elementData = requestData.elementData[formElement];
+                const elementData = requestData.elementData as Record<EnumEmailFormComposerElement, unknown>;
+                for (const formElement of requestData.formElements!) {
                   switch (formElement) {
                     case 'to': {
+                      let rcpts = (elementData[formElement] as string[]).join(', ');
                       const toSpan = $fieldset.find('span.email-recipients');
-                      let rcpts = elementData;
                       if (rcpts.length === 0) {
                         rcpts = toSpan.data('placeholder');
                       }
@@ -880,8 +874,9 @@ const emailFormCompositionHandlers = (
                       break;
                     }
                     case 'fileAttachments': {
-                      const options = elementData.options;
-                      const fileAttachments = elementData.attachments;
+                      const data = elementData[formElement] as AttachmentElementData;
+                      const options = data.options;
+                      const fileAttachments = data.attachments;
                       const fileAttachmentsHolder = $fieldset.find('input.file-attachments');
                       fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
                       $fileAttachmentsRow.toggleClass('empty-selection', ($fileAttachmentsSelector.val() as string).length === 0);
@@ -891,7 +886,8 @@ const emailFormCompositionHandlers = (
                       break;
                     }
                     case 'eventAttachments': {
-                      const options = elementData.options;
+                      const data = elementData[formElement] as AttachmentElementData;
+                      const options = data.options;
                       // const eventAttachments = requestData.elementData.attachments;
                       $eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
                       $eventAttachmentsRow.toggleClass('empty-selection', ($eventAttachmentsSelector.val() as string).length === 0);
@@ -925,7 +921,7 @@ const emailFormCompositionHandlers = (
                 $fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
                 // currentTemplate.val(requestData.emailTemplateName);
                 WysiwygEditor.updateEditor(messageText, requestData.message);
-                $fieldset.find('input.email-subject').val(requestData.subject);
+                $fieldset.find('input.email-subject').val(requestData.subject!);
 
                 $templateEmailsSelector.next().removeClass('loading');
                 break;
@@ -935,20 +931,20 @@ const emailFormCompositionHandlers = (
 
                 // replace the entire composer tab
                 WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
-                $panelHolder.html(requestData.composerForm);
+                $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
 
                 // replace the recipients tab as well ...
                 const rcptPanelHolder = $dialogHolder.find('div#emailformrecipients');
-                rcptPanelHolder.html(requestData.recipientsForm);
+                rcptPanelHolder.html(requestData.recipientsForm!);
                 const $rcptFieldSet = $form.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
 
                 // adjust the title of the dialog
                 let dlgTitle = '';
-                if (requestData.projectId > 0) {
-                  dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName });
+                if ((requestData.projectId ?? 0) > 0) {
+                  dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName! });
                 } else {
                   dlgTitle = t(appName, 'Em@il Form');
                 }
@@ -972,13 +968,13 @@ const emailFormCompositionHandlers = (
 
                 // replace the entire composer tab
                 WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
-                $panelHolder.html(requestData.composerForm);
+                $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
 
                 // replace the recipients tab ...
                 const rcptPanelHolder = $dialogHolder.find('div#emailformrecipients');
-                rcptPanelHolder.html(requestData.recipientsForm);
+                rcptPanelHolder.html(requestData.recipientsForm!);
                 const $rcptFieldSet = $form.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
 
@@ -1003,13 +999,13 @@ const emailFormCompositionHandlers = (
           case 'save':
             switch (topic) {
               case 'template':
-                SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions);
+                SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
                 break;
               case 'draft': {
                 // perhaps rather use data stuff in the future ...
                 const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
-                dataItem.val(requestData.messageDraftId);
-                SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
+                dataItem.val(requestData.messageDraftId!);
+                SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions!);
                 break;
               }
             }
@@ -1019,12 +1015,12 @@ const emailFormCompositionHandlers = (
               case 'template':
                 // currentTemplate.val(requestData.emailTemplateName);
                 WysiwygEditor.updateEditor(messageText, requestData.message);
-                SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions);
+                SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
                 break;
               case 'draft': {
                 const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
                 dataItem.val('');
-                SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions);
+                SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions!);
                 break;
               }
             }
@@ -1155,12 +1151,13 @@ const emailFormCompositionHandlers = (
                 $this[0], {
                   operation: 'send',
                   progressToken,
-                  send: 'ThePointOfNoReturn',
+                  // send: 'ThePointOfNoReturn',
                   submitAll: true,
                   projectId: projectId(),
                   projectName: projectName(),
                 },
-                function(lock) {
+                false, // noDebug
+                function(lock: boolean) {
                   if (lock) {
                     $(window).on('beforeunload', function() {
                       return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
@@ -1280,11 +1277,11 @@ const emailFormCompositionHandlers = (
         operation: 'save',
         topic: 'draft',
         submitAll: true,
-        noDebug: true,
         projectId: projectId(),
         projectName: projectName(),
         autoSave: true,
       },
+      true,
       function(lock) {
         if (!lock) {
           // restart timer when ready
@@ -1319,10 +1316,10 @@ const emailFormCompositionHandlers = (
                 operation: 'delete',
                 topic: 'draft',
                 messageDraftId: draftId,
-                noDebug: true,
                 projectId: projectId(),
                 projectName: projectName(),
               },
+              true, // noDebug
             );
           } else {
             // perform a manual save to clear the "autoGenerated" flag
@@ -1332,11 +1329,12 @@ const emailFormCompositionHandlers = (
                 operation: 'save',
                 topic: 'draft',
                 submitAll: true,
-                noDebug: true,
                 projectId: projectId(),
                 projectName: projectName(),
                 autoSave: false,
-              });
+              },
+              true, // noDebug
+            );
           }
         },
         true,
@@ -1425,11 +1423,11 @@ const emailFormCompositionHandlers = (
             operation: 'save',
             topic: 'draft',
             submitAll: true,
-            noDebug: true,
             projectId: projectId(),
             projectName: projectName(),
             autoSave: false,
           },
+          true, // noDebug
         );
       }
       return false;
@@ -1525,7 +1523,8 @@ const emailFormCompositionHandlers = (
             projectId: projectId(),
             projectName: projectName(),
           },
-          function(lock) {
+          false, // noDebug
+          function(lock: boolean) {
             if (lock) {
               $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
             } else {
@@ -1569,7 +1568,8 @@ const emailFormCompositionHandlers = (
           projectId: projectId(),
           projectName: projectName(),
         },
-        function(lock) {
+        false, // noDebug
+        function(lock: boolean) {
           if (lock) {
             $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
           } else {
@@ -1677,7 +1677,7 @@ const emailFormCompositionHandlers = (
     const $self = $(this);
     const request = {
       operation: 'validateEmailRecipients',
-      recipients: $self.val(),
+      recipients: $self.val() as string|undefined,
       header,
       singleItem: true,
       projectId: projectId(),
@@ -1685,8 +1685,10 @@ const emailFormCompositionHandlers = (
     } as const;
     request[header] = request.recipients; // remove duplicate later
     applyComposerControls.call(
-      this, request,
-      function(lock) {
+      this,
+      request,
+      false, // noDebug
+      function(lock: boolean) {
         $sendButton.prop('disabled', lock);
         $self.prop('disabled', lock);
         // if (lock) {
@@ -1892,7 +1894,7 @@ const emailFormCompositionHandlers = (
       operation: 'update',
       topic: 'element',
       singleItem: true,
-      formElement: 'fileAttachments',
+      formElements: ['fileAttachments'],
       fileAttachments, // JSON data of all files
       formStatus: 'submitted',
       projectId: projectId(),
