@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@
  *
  */
 
-namespace OCA\CAFEVDB;
+namespace OCA\CAFEVDB\LegacyTemplates\EmailForm\Recipients;
 
 use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -74,36 +74,38 @@ $projectMailingListTitle = !empty($projectMailingList)
  ? $toolTips['emailform:recipients:filter:basic-set:project-mailing-list']
  : htmlspecialchars($l->t('The project mailing list is not configured or the mailing-list server is unreachable.'));
 
-/**
- * @param string $key
- *
- * @param null|string $subKey
- *
- * @return string
- */
-function cgiName(string $key, ?string $subKey = null):string
-{
-  return RecipientsFilter::POST_TAG . '[' . $key . ']' . ($subKey ? '[' . $subKey . ']' : '');
-}
+if (!function_exists(__NAMESPACE__ . '\\cgiName')) {
+  /**
+   * @param string $key
+   *
+   * @param null|string $subKey
+   *
+   * @return string
+   */
+  function cgiName(string $key, ?string $subKey = null):string
+  {
+    return RecipientsFilter::POST_TAG . '[' . $key . ']' . ($subKey ? '[' . $subKey . ']' : '');
+  }
 
-/**
- * @param string $key
- *
- * @return string
- */
-function basicSetName(string $key):string
-{
-  return cgiName(RecipientsFilter::BASIC_RECIPIENTS_SET_KEY) . '[]';
-}
+  /**
+   * @param string $key
+   *
+   * @return string
+   */
+  function basicSetName(string $key):string
+  {
+    return cgiName(RecipientsFilter::BASIC_RECIPIENTS_SET_KEY) . '[]';
+  }
 
-/**
- * @param string $key
- *
- * @return string
- */
-function basicSetValue(string $key):string
-{
-  return $key;
+  /**
+   * @param string $key
+   *
+   * @return string
+   */
+  function basicSetValue(string $key):string
+  {
+    return $key;
+  }
 }
 
 $recipientsSetFlags = array_keys(array_filter($basicRecipientsSet));
@@ -267,7 +269,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
               size="<?php echo count($participationStatusFilter); ?>"
               class="participation-status-filter"
               data-placeholder="<?php echo $l->t('Select Members by Status'); ?>"
-              name="emailRecipients[participationStatusFilter][]"
+              name="<?= RecipientsFilter::POST_TAG ?>[participationStatusFilter][]"
               <?php p($filterReadonly); ?>
       >
         <?php echo $this->inc('emailform/part.participation-status-filter', []); ?>
@@ -286,7 +288,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                 size="18"
                 class="instruments-filter"
                 data-placeholder="<?php echo $l->t('Select Instruments'); ?>"
-                name="emailRecipients[instrumentsFilter][]"
+                name="<?= RecipientsFilter::POST_TAG ?>[instrumentsFilter][]"
                 <?php p($filterReadonly); ?>
         >
           <?php echo $this->inc('emailform/part.instruments-filter', []); ?>
@@ -306,7 +308,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
               multiple="multiple"
               size="18"
               title="<?php echo $toolTips['emailform:recipients:choices']; ?>"
-              name="emailRecipients[selectedRecipients][]"
+              name="<?= RecipientsFilter::POST_TAG ?>[selectedRecipients][]"
               <?php p($filterReadonly); ?>
       >
         <?php echo PageNavigation::selectOptions($emailRecipientsChoices); ?>
@@ -323,7 +325,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
              value="<?php echo $l->t('Apply Filter'); ?>"
              class="instruments-filter-controls apply"
              title="<?php echo $toolTips['emailform:recipients:filter:apply']; ?>"
-             name="emailRecipients[applyInstrumentsFilter]"
+             name="<?= RecipientsFilter::POST_TAG ?>[applyInstrumentsFilter]"
              <?php p($filterReadonly); ?>
       />
       <input type="button"
@@ -332,7 +334,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
              class="instruments-filter-controls undo"
              title="<?php echo $toolTips['emailform:recipients:filter:undo']; ?>"
              disabled
-             name="emailRecipients[undoInstrumentsFilter]"
+             name="<?= RecipientsFilter::POST_TAG ?>[undoInstrumentsFilter]"
              <?php p($filterReadonly); ?>
       />
       <input type="button"
@@ -341,7 +343,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
              class="instruments-filter-controls redo"
              title="<?php echo $toolTips['emailform:recipients:filter:redo']; ?>"
              disabled
-             name="emailRecipients[redoInstrumentsFilter]"
+             name="<?= RecipientsFilter::POST_TAG ?>[redoInstrumentsFilter]"
              <?php p($filterReadonly); ?>
       />
       <input type="button"
@@ -349,7 +351,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
              value="<?php echo $l->t('Reset Filter'); ?>"
              class="instruments-filter-controls reset"
              title="<?php echo $toolTips['emailform:recipients:filter:reset']; ?>"
-             name="emailRecipients[resetInstrumentsFilter]"
+             name="<?= RecipientsFilter::POST_TAG ?>[resetInstrumentsFilter]"
              <?php p($filterReadonly); ?>
       />
     </span>
