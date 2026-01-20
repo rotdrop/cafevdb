@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -5135,7 +5135,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $tmpFilePath = AppStorage::PATH_SEP .AppStorage::DRAFTS_FOLDER .AppStorage::PATH_SEP . $tmpFile->getName();
 
-      $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD() : AttachmentOrigin::CLOUD();
+      $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD : AttachmentOrigin::CLOUD;
 
       // Remember the file in the data-base for cleaning up later
       $this->rememberTemporaryFile($tmpFilePath, $origin);
@@ -5865,7 +5865,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       }
       // Keep only the basename part as the folder is programmatically fixed.
       $attachment['name'] = basename($attachment['name']);
-      if ($attachment['origin'] == AttachmentOrigin::CLOUD) {
+      if (AttachmentOrigin::get($attachment['origin']) === AttachmentOrigin::CLOUD) {
         $cloudFileAttach[] = $attachment;
       } else {
         $localFileAttach[] = $attachment;
