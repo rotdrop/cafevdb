@@ -24,14 +24,21 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
+use InvalidArgumentException;
+use Throwable;
+
+use Sabre\VObject;
+
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\IRequest;
+use OCP\AppFramework\Http;
 
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
 /** Test aspects of the ProjectEventsController. */
@@ -60,6 +67,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
@@ -75,21 +83,35 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 class ProjectEventsControllerTest extends TestCase
 {
   use SetupEventsServiceTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = ProjectEventsController::class;
+  private const EXPECTED_ROUTES = ['download'];
 
   private ProjectEventsController $projectEventsController;
+
+  private array $postData = [];
 
   /** {@inheritdoc} */
   public function setup(): void
   {
     $this->generateEventsService();
-    $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
+
+    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
+
+    $mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
 
     /** @var IRequest $request */
-    $request = $this->createStub(IRequest::class);
-    $this->mockProvider->registerClassInstance(IRequest::class, $request);
+    $request = $mockProvider->getRequest();
+    $request->method('getParam')->willReturnCallback(
+      function(string $key, mixed $default = null) {
+        return $this->postData[$key] ?? $default;
+      }
+    );
 
     $this->projectEventsController = new ProjectEventsController(
-      appName: $this->mockProvider->appName,
+      appName: $mockProvider->appName,
       request: $request,
       configService: $this->configService,
       eventsService: $this->eventsService,
@@ -233,5 +255,43 @@ class ProjectEventsControllerTest extends TestCase
       $data = $this->projectEventsController->makeInputValue($matrixEvent);
       $this->assertEqualsCanonicalizing(self::INPUT_VALUE_RESULTS[$index], $data);
     }
+  }
+
+  /** @return void */
+  public function testDownload(): void
+  {
+    try {
+      $response = $this->projectEventsController->download(0, '');
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(InvalidArgumentException::class, $t);
+    }
+
+    $selectedEvents = [];
+    foreach (self::INPUT_VALUE_RESULTS as $inputValue) {
+      $selectedEvents[] = json_encode($inputValue, JSON_THROW_ON_ERROR);
+    }
+    $response = $this->projectEventsController->download(
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+      selectedEvents: $selectedEvents,
+    );
+    $this->assertInstanceOf(Http\DataDownloadResponse::class, $response);
+    $data = $response->render();
+    $result = VObject\Reader::read($data);
+    $this->assertInstanceOf(VObject\Component\VCalendar::class, $result);
+
+    $calendarIds = [];
+    foreach (self::INPUT_VALUE_RESULTS as $inputValue) {
+      $calendarIds[$inputValue['uri']] = $inputValue['calendarId'];
+    }
+    $response = $this->projectEventsController->download(
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+      calendarIds: $calendarIds,
+    );
+    $this->assertInstanceOf(Http\DataDownloadResponse::class, $response);
+    $data = $response->render();
+    $result = VObject\Reader::read($data);
+    $this->assertInstanceOf(VObject\Component\VCalendar::class, $result);
   }
 }

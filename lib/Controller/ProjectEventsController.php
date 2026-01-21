@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,6 @@ use OCA\CAFEVDB\Service\EventsService;
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
@@ -85,16 +84,26 @@ class ProjectEventsController extends Controller
   }
 
   /**
+   * @param int $projectId
+   *
+   * @param string $projectName
+   *
+   * @param array $selectedEvents
+   *
+   * @param array $calendarIds
+   *
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
-  public function download():Http\Response
-  {
-    $projectId = $this->request->getParam('projectId');
-    $projectName = $this->request->getParam(
-      'projectName');
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/events/download')]
+  public function download(
+    int $projectId,
+    string $projectName,
+    array $selectedEvents = [],
+    array $calendarIds = [],
+  ): Http\DataDownloadResponse {
 
-    if (empty($projectId) || empty($projectName)) {
+    if ($projectId <= 0 || empty($projectName)) {
       throw new InvalidArgumentException(
         $this->l->t(
           'Project-id AND -name have to be specified (%s / %s).', [
@@ -104,9 +113,6 @@ class ProjectEventsController extends Controller
         ),
       );
     }
-
-    $selectedEvents = array_unique($this->request->getParam('eventSelect', []));
-    $calendarIds = array_unique($this->request->getParam('calendarId', []));
 
     $exports = []; // array marking selected events
     foreach ($selectedEvents as $eventIdentifier) {
@@ -121,11 +127,12 @@ class ProjectEventsController extends Controller
       }
     }
 
-    $fileName = $projectName.'-'.$this->timeStamp().'.ics';
+    $fileName = $projectName . '-' . $this->timeStamp() . '.ics';
 
-    return $this->dataDownloadResponse(
+    return new Http\DataDownloadResponse(
       $this->eventsService->exportEvents($exports, $projectName),
       $fileName,
-      'text/calendar');
+      'text/calendar',
+    );
   }
 }
