@@ -43,7 +43,7 @@ index f3488a5..cab531b 100644
 +	},
  }
 diff --git a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
-index c5022c0..85c93e3 100644
+index 6903d58..1130c30 100644
 --- a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 +++ b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 @@ -593,7 +593,10 @@ export default defineStore('calendarObjectInstance', {
