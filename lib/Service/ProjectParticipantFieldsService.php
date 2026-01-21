@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1002,12 +1002,12 @@ class ProjectParticipantFieldsService
           ;
         if (false) {
           $absenceField
-            ->setFieldMultiplicity(FieldMultiplicity::MULTIPLE)
-            ->setFieldDataType(FieldDataType::TEXT);
+            ->setMultiplicity(FieldMultiplicity::MULTIPLE)
+            ->setDataType(FieldDataType::TEXT);
         } else {
           $absenceField
-            ->setFieldMultiplicity(FieldMultiplicity::SIMPLE)
-            ->setFieldDataType(FieldDataType::HTML);
+            ->setMultiplicity(FieldMultiplicity::SIMPLE)
+            ->setDataType(FieldDataType::HTML);
         }
         switch ($absenceField->getMultiplicity()) {
           case FieldMultiplicity::MULTIPLE:
@@ -1109,7 +1109,7 @@ class ProjectParticipantFieldsService
     FieldMultiplicity $multiplicity,
     FieldDataType $dataType,
     ?string $tooltip = null,
-  ):?Entities\ProjectParticipantField {
+  ): ?Entities\ProjectParticipantField {
     if ($multiplicity != FieldMultiplicity::SIMPLE) {
       return null;
     }
@@ -1117,8 +1117,8 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantField $field */
     $field = (new Entities\ProjectParticipantField)
            ->setName($name)
-           ->setFieldMultiplicity($multiplicity)
-           ->setFieldDataType($dataType)
+           ->setMultiplicity($multiplicity)
+           ->setDataType($dataType)
            ->setTooltip($tooltip);
     /** @var Entities\ProjectParticipantFieldDataOption $option */
     $option = (new Entities\ProjectParticipantFieldDataOption)
@@ -1126,6 +1126,7 @@ class ProjectParticipantFieldsService
             ->setTooltip($tooltip)
             ->setField($field);
     $field->getDataOptions()->set($option->getKey(), $option);
+    $field->setDefaultValue($option);
 
     return $field;
   }
@@ -1383,9 +1384,9 @@ class ProjectParticipantFieldsService
               // be added again and the files are still there.
 
               // this has to be precomputed, as this belongs to the old field type.
-              $field->setFieldDataType($oldType);
+              $field->setDataType($oldType);
               $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
-              $field->setFieldDataType($newType);
+              $field->setDataType($newType);
 
               $this->entityManager->registerPreCommitAction(
                 new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
@@ -1555,7 +1556,7 @@ class ProjectParticipantFieldsService
         }
         $tooltips = [];
         $participantData = [];
-        $field->setFieldMultiplicity($oldFieldMultiplicity);
+        $field->setMultiplicity($oldFieldMultiplicity);
         /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
         foreach ($field->getFieldData() as $fieldDatum) {
           /** @var Entities\ProjectParticipant $participant */
@@ -1605,7 +1606,7 @@ class ProjectParticipantFieldsService
           $activeDatum->setOptionValue($value);
           $needsFlush = true;
         }
-        $field->setFieldMultiplicity($newFieldMultiplicity);
+        $field->setMultiplicity($newFieldMultiplicity);
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         break;
       case FieldMultiplicity::PARALLEL:
