@@ -93,6 +93,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -110,6 +111,10 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class MusiciansControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = MusiciansController::class;
+  private const EXPECTED_ROUTES = ['ocs' => ['search']];
 
   private const OCS_OK = [
     'status' => 'ok',
@@ -147,6 +152,7 @@ class MusiciansControllerTest extends TestCase
     $this->projectsRepository->method('findOneBy')->willReturnCallback(
       fn(array $criteria) => $this->project->getName() == ($criteria['name'] ?? null) ? $this->project : null,
     );
+    $this->projectsRepository->expects($this->never())->method('createQueryBuilder');
 
     $this->musiciansRepository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
@@ -172,6 +178,7 @@ class MusiciansControllerTest extends TestCase
     $this->musiciansRepository->method('find')->willReturnCallback(
       fn(array $identifier) => $this->musician->getId() == ($identifier['id'] ?? null) ? $this->musician : null,
     );
+    $this->musiciansRepository->expects($this->never())->method('createQueryBuilder');
 
     $this->entityManager = $this->getMockBuilder(EntityManager::class)
       ->disableOriginalConstructor()
@@ -187,6 +194,7 @@ class MusiciansControllerTest extends TestCase
         return null;
       },
     );
+    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);

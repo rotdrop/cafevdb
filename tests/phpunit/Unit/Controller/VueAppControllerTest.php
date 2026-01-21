@@ -117,6 +117,14 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class VueAppControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = VueAppController::class;
+  private const EXPECTED_ROUTES = [
+    'index',
+    'indexfront',
+    'navigation',
+  ];
 
   private VueAppController $controller;
 

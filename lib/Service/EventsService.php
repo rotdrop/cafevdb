@@ -1091,12 +1091,14 @@ class EventsService
         $selection[$calendarId][$eventUri][] = $recurrenceId;
       }
     }
+    // print_r($selection);
     foreach ($selection as $calendarId => $eventUris) {
       foreach ($eventUris as $eventUri => $recurrenceIds) {
         $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
+        // print_r(array_keys($event));
         $vCalendar = VCalendarService::getVCalendar($event);
         if (!empty($recurrenceIds)) {
-          $siblings = $this->getVEventSiblings($event['calendarId'], $vCalendar);
+          $siblings = $this->getVEventSiblings($event['calendarid'], $vCalendar);
           $allRecurrenceIds = array_keys($siblings);
           if (count($recurrenceIds) == count($allRecurrenceIds)
               && array_diff($allRecurrenceIds, $recurrenceIds) == []

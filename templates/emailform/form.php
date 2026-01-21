@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB;
+namespace OCA\CAFEVDB\LegacyTemplates\EmailForm;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 $rowClass = $appName.'-'.'row';
@@ -83,7 +84,7 @@ $rowClass = $appName.'-'.'row';
     <form data-upload-id='1'
           id="attachment_upload_form"
           class="file-upload-form"
-          action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.email_form.attachment', [ 'source' => 'upload' ])); ?>"
+          action="<?php print_unescaped($urlGenerator->linkToRoute($appName.'.emailform.attachment', [ 'source' => AttachmentOrigin::UPLOAD->value ])); ?>"
           method="post"
           enctype="multipart/form-data"
           target="attachment_upload_target_1">

@@ -2364,7 +2364,7 @@ class PersonalSettingsController extends Controller
    *
    * @param array $hints Instructions, further info.
    *
-   * @return Http\DataResponse
+   * @return Http\DataResponse|Http\JSONResponse
    */
   private function setSimpleConfigValue(
     string|EnumSimpleSettingsKey $key,
@@ -2372,7 +2372,7 @@ class PersonalSettingsController extends Controller
     ?string $humanValue = null,
     ?array &$messages = null,
     ?array $hints = null,
-  ):Http\DataResponse {
+  ): Http\DataResponse|Http\JSONResponse {
     try {
       $key = EnumSimpleSettingsKey::get($key);
     } catch (Throwable $t) {

@@ -589,7 +589,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
    */
   public function cgiSysName(string $suffix = ''):string
   {
-    return $this->cgi['prefix']['sys'].$suffix;
+    return $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . $suffix;
   }
 
   /**
@@ -601,7 +601,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
    */
   public function cgiDataName(string $suffix = ''):string
   {
-    return $this->cgi['prefix']['data'].$suffix;
+    return $this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY] . $suffix;
   }
 
   /**

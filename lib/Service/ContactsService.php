@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\ConfigConstants;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -147,6 +147,7 @@ class ContactsService
    * ```
    * [
    *   [
+   *     'uid' => 'john.doe',
    *     'email' => 'email@address.com',
    *     'name'  => 'John Doe',
    *     'addressbook' => 'Bookname',

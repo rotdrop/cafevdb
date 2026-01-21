@@ -562,7 +562,8 @@ dophpunit: $(PHPUNIT)
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT)\
  -c phpunit.xml\
  --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
- --log-junit $(PHPUNIT_JUNIT_LOG)
+ --log-junit $(PHPUNIT_JUNIT_LOG)\
+ --display-all-issues
 #	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: dophpunit
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
+use BackedEnum;
 use InvalidArgumentException;
 
 use OCA\CAFEVDB\Controller\EnumFileUploadOrigin;
@@ -73,7 +74,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     }
     if (!empty($origin)) {
       try {
-        $origin = EnumFileUploadOrigin::get($origin);
+        $origin = EnumFileUploadOrigin::get($origin instanceof BackedEnum ? $origin->value : $origin);
       } catch (InvalidArgumentException $e) {
         throw $e;
       }

@@ -289,7 +289,7 @@ done automatically when cloud click "ok" or close this dialog window.
  */
 const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
   data: T,
-  required: (keyof T)[],
+  required: readonly (keyof T)[],
   errorCB: (arg: T) => void = () => {},
 ) => {
   const dialogCallback = () => {

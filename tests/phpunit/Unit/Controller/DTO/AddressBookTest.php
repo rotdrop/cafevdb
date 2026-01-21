@@ -32,13 +32,18 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\Constants as CoreConstants;
 
-use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\DTO\AddressBook as TestedDTO;
 
 /** Test consistency of the enum with constants from ConfigConstants */
-#[Attributes\CoversClass(DTO\AddressBook::class)]
+#[Attributes\CoversClass(TestedDTO::class)]
 class AddressBookTest extends TestCase
 {
-  private DTO\AddressBook $dto;
+  use TestResponseDTOTrait;
+
+  private const DTO_CLASS = TestedDTO::class;
+
+  private TestedDTO $dto;
+
   /**
    * {@inheritdoc}
    *
@@ -46,7 +51,7 @@ class AddressBookTest extends TestCase
    */
   public function setup(): void
   {
-    $this->dto = new DTO\AddressBook(
+    $this->dto = new TestedDTO(
       displayName: 'Display Name',
       key: 'key',
       uri: 'http://whatever',
@@ -54,26 +59,5 @@ class AddressBookTest extends TestCase
       isSystemAddressBook: false,
       permissions: CoreConstants::PERMISSION_READ,
     );
-  }
-
-  /** @return void */
-  public function testConstructor(): void
-  {
-    $this->expectNotToPerformAssertions();
-  }
-
-  /** @return void */
-  public function testFromArray(): void
-  {
-    $dto = DTO\AddressBook::fromArray(
-      $this->dto->jsonSerialize(),
-    );
-    $this->assertEqualsCanonicalizing($this->dto->jsonSerialize(), $dto->jsonSerialize());
-  }
-
-  /** @return void */
-  public function testJsonSerialization(): void
-  {
-    $this->assertNotEmpty(json_encode($this->dto, JSON_THROW_ON_ERROR));
   }
 }

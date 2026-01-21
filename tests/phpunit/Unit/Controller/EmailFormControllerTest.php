@@ -1,0 +1,502 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Tests\Unit\Controller;
+
+use DOMDocument;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+
+use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
+use OCP\IRequest;
+use OCP\IURLGenerator;
+use OCP\AppFramework\Http;
+
+use OCA\CAFEVDB\Controller;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\EmailFormController as TestedController;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions as PMEOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\EmailForm;
+use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage;
+use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
+
+#[Attributes\CoversClass(TestedController::class)]
+#[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
+#[Attributes\CoversClass(Controller\DTO\EmailWebFormResponse::class)]
+#[Attributes\CoversClass(EmailForm\Composer::class)]
+#[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
+/** Test the ProjectsController class. */
+#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\ProjectEventsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailTemplate::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\Util\Navigation::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\EventTimes::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DTO\HumanDateTime::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterReloadResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterSnapshotResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+class EmailFormControllerTest extends TestCase
+{
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockInstrumentsRepositoryTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const EXPECTED_ROUTES = [
+    'webform',
+    'composer',
+    'recipientsfilter',
+    'contacts',
+    'attachment',
+  ];
+
+  private const CONTROLLER_CLASS = TestedController::class;
+
+  private TestedController $testedController;
+
+  private PHPMyEdit $pme;
+
+  private array $postData = [];
+
+  private array $emailContacts = [];
+
+  /** {@inheritdoc} */
+  public function setup(): void
+  {
+    $this->generateEventsService();
+
+    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
+
+    self::$entityRepositories[Entities\Instrument::class] = $this->getInstrumentsRepositoryMock();
+    self::$entityRepositories[Entities\Musician::class] = $this->getMusiciansRepositoryMock();
+
+    $repository = $this->getMockBuilder(Repositories\EmailTemplatesRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $repository->method('list')->willReturn([]);
+    self::$entityRepositories[Entities\EmailTemplate::class] = $repository;
+
+    $repository = $this->getMockBuilder(Repositories\EmailDraftsRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $repository->method('list')->willReturn([]);
+    self::$entityRepositories[Entities\EmailDraft::class] = $repository;
+
+    foreach (self::$entityRepositories as $repository) {
+      $repository->expects($this->never())?->method('createQueryBuilder');
+    }
+
+    /** @var MockProvider $mockProvider */
+    $mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    // $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService);
+
+    /** @var IRequest $request */
+    $this->request = $this->createStub(IRequest::class);
+    $this->request->method('getParam')->willReturnCallback(
+      function(string $key, mixed $default = null) {
+        return $this->postData[$key] ?? $default;
+      },
+    );
+    $this->request->method('getParams')->willReturnCallback(fn() => $this->postData);
+    $mockProvider->registerClassInstance(IRequest::class, $this->request);
+
+    /** @var PHPMyEdit $pme */
+    $this->pme = $this->createStub(PHPMyEdit::class);
+    $pmeOptions = new PMEOptions([]);
+    foreach ([PHPMyEdit::CGI_SYS_KEY, PHPMyEdit::CGI_DATA_KEY, PHPMyEdit::CGI_OPERATION_KEY] as $key) {
+      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][$key] = $pmeOptions['cgi'][PHPMyEdit::CGI_PREFIX_KEY][$key];
+    }
+    $this->pme->method('cgiSysName')->willReturnCallback(
+      fn(string $suffix = ''): string
+      =>
+      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][PHPMyEdit::CGI_SYS_KEY] . $suffix,
+    );
+
+    /** @var ProjectParticipantFieldsService $projectParticipantFieldsService */
+    $projectParticipantFieldsService = $this->createStub(Service\ProjectParticipantFieldsService::class);
+
+    /** @var MusicianService $musiciansService */
+    $musiciansService = $this->createStub(Service\MusicianService::class);
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->createStub(Storage\UserStorage::class);
+
+    // Needed by e.g. OCA\CAFEVDB\EmailForm\Composer via app-container
+    $projectService = new Service\ProjectService(
+      configService: $this->configService,
+      entityManager: $this->entityManager,
+      userStorage: $userStorage,
+      participantFieldsService: $projectParticipantFieldsService,
+      musicianService: $musiciansService,
+      eventDispatcher: $this->mockProvider->getEventDispatcher(),
+    );
+    $mockProvider->registerClassInstance(Service\ProjectService::class, $projectService);
+
+    $contactsService = $this->createStub(Service\ContactsService::class);
+    $contactsService->method('emailContacts')->willReturn($this->emailContacts);
+    $contactsService->method('addEmailContact')->willReturnCallback(
+      function(array $emailContact, ?string $addressBookKey = null): ?array {
+        foreach (['email', 'name'] as $key) {
+          $this->assertArrayHasKey($key, $emailContact);
+        }
+        $this->emailContacts[] = $emailContact;
+        // should return contact from contacts-manager, but the EmailFormController only checks for non-null.
+        return $emailContact;
+      },
+    );
+
+    $this->configService->setConfigValue(ConfigConstants::EMAIL_FROM_NAME_KEY, 'EmailFromNameValue');
+    $this->configService->setConfigValue(ConfigConstants::EMAIL_FROM_ADDRESS_KEY, 'EmailFromAddressValue');
+
+    $this->testedController = new TestedController(
+      appName: $this->mockProvider->appName,
+      request: $this->request,
+      contactsService: $contactsService,
+      emailAddressService: $this->appContainer->get(Service\EmailAddressService::class),
+      urlGenerator: $this->appContainer->get(IURLGenerator::class),
+      pme: $this->pme,
+      pageNavigation: $this->appContainer->get(PageNavigation::class),
+      configService: $this->configService,
+      appContainer: $this->appContainer,
+    );
+
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+  }
+
+  /** @return void */
+  public function testSetup(): void
+  {
+  }
+
+  /**
+   * @param array $furtherParameters
+   *
+   * @return void
+   */
+  private function generateWebFormParameters(array $furtherParameters = []): void
+  {
+    $idx = 10;
+    $this->postData[PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $idx;
+    // echo 'SYSCGI' .  $this->pme->cgiSysName('qf' . $idx . '_idx') . PHP_EOL;
+    $this->postData[$this->pme->cgiSysName('qf' . $idx . '_idx')] = [
+      // 1, 2 ,3
+    ];
+    $idx = 11;
+    $this->postData[PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $idx;
+    $this->postData[$this->pme->cgiSysName('qf' . $idx . '_idx')] = [
+      // Types\EnumParticipationStatus::REGULAR,
+    ];
+    $this->postData = array_merge($this->postData, $furtherParameters);
+  }
+
+  /**
+   * @param array $furtherParameters
+   *
+   * @return void
+   */
+  private function generateProjectWebFormParameters(array $furtherParameters = []): void
+  {
+    $this->generateWebFormParameters(
+      array_merge([
+        'projectName' => $this->project->getName(),
+        'projectId' => $this->project->getId(),
+      ], $furtherParameters),
+    );
+  }
+
+  /** @return void */
+  public function testGenerateFormWithoutProject(): void
+  {
+    $this->generateWebFormParameters();
+    $response = $this->testedController->webForm();
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailWebFormResponse::class, $data);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(0, $data->projectId);
+    $this->assertEquals(null, $data->projectName);
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterHistory::class, $data->filterHistory);
+    $this->assertEquals(0, $data->filterHistory->historyPosition);
+    $this->assertEquals(1, $data->filterHistory->historySize);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testGenerateFormWithoutProject')]
+  public function testGenerateFormWithProject(): void
+  {
+    $this->generateProjectWebFormParameters();
+    $response = $this->testedController->webForm(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailWebFormResponse::class, $data);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals($this->project->getId(), $data->projectId);
+    $this->assertEquals($this->project->getName(), $data->projectName);
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterHistory::class, $data->filterHistory);
+    $this->assertEquals(0, $data->filterHistory->historyPosition);
+    $this->assertEquals(1, $data->filterHistory->historySize);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testGenerateFormWithProject')]
+  public function testRecipientsFilterHistorySnapshot(): void
+  {
+    $this->generateWebFormParameters([
+      EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+        EmailForm\RecipientsFilterCgiKeys::INSTRUMENTS_FILTER => [1,2,3],
+        EmailForm\RecipientsFilterCgiKeys::HISTORY_SNAPSHOT => 'whatever',
+        EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+      ],
+    ]);
+    $response = $this->testedController->recipientsFilter(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+      bulkTransactionId: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterSnapshotResponse::class, $data);
+    $this->assertNotInstanceOf(DTO\EmailFormRecipientsFilterResponse::class, $data);
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterHistory::class, $data->filterHistory);
+    $this->assertEquals(0, $data->filterHistory->historyPosition);
+    $this->assertEquals(2, $data->filterHistory->historySize);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testGenerateFormWithProject')]
+  public function testRecipientsFilterHistoryResetFilter(): void
+  {
+    $this->generateProjectWebFormParameters([
+      EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+        EmailForm\RecipientsFilterCgiKeys::RESET_INSTRUMENTS_FILTER => true,
+        EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+      ],
+    ]);
+    $response = $this->testedController->recipientsFilter(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+      bulkTransactionId: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterReloadResponse::class, $data);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(0, $data->filterHistory->historyPosition);
+    $this->assertEquals(1, $data->filterHistory->historySize);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testGenerateFormWithProject')]
+  public function testRecipientsFilterHistoryUndoRedo(): void
+  {
+    $this->testRecipientsFilterHistorySnapshot(); // generates an additional history record
+    unset($this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::HISTORY_SNAPSHOT]);
+    $this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::UNDO_INSTRUMENTS_FILTER] = true;
+    // print_r($this->postData);
+    /** @var EmailForm\RecipientsFilte $recipientsFilter */
+    $recipientsFilter = $this->appContainer->get(EmailForm\RecipientsFilter::class);
+    $filterHistory = $recipientsFilter->filterHistory();
+    $this->assertEquals(2, $filterHistory->historySize);
+    $this->assertEquals(0, $filterHistory->historyPosition);
+
+    // Forciblly unbind
+    new ReflectionProperty($recipientsFilter, 'requestParameters')->setValue($recipientsFilter, null);
+
+    $response = $this->testedController->recipientsFilter(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+      bulkTransactionId: null,
+      );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterReloadResponse::class, $data);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(2, $data->filterHistory->historySize);
+    $this->assertEquals(1, $data->filterHistory->historyPosition);
+
+    $onlyInstruments = array_map(
+      fn(array $optionInfo) => $optionInfo['value'],
+      array_filter(
+        $recipientsFilter->instrumentsFilter(),
+        fn(array $optionInfo) => $optionInfo['flags'] & PageNavigation::SELECTED,
+      ),
+    );
+    $this->assertEmpty($onlyInstruments); // initial state without filtered instruments.
+
+    unset($this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::UNDO_INSTRUMENTS_FILTER]);
+    $this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::REDO_INSTRUMENTS_FILTER] = true;
+
+    // Forciblly unbind
+    new ReflectionProperty($recipientsFilter, 'requestParameters')->setValue($recipientsFilter, null);
+
+    $response = $this->testedController->recipientsFilter(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+      bulkTransactionId: null,
+      );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterReloadResponse::class, $data);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(2, $data->filterHistory->historySize);
+    $this->assertEquals(0, $data->filterHistory->historyPosition);
+
+    $onlyInstruments = array_map(
+      fn(array $optionInfo) => $optionInfo['value'],
+      array_filter(
+        $recipientsFilter->instrumentsFilter(),
+        fn(array $optionInfo) => $optionInfo['flags'] & PageNavigation::SELECTED,
+      ),
+    );
+    $this->assertEqualsCanonicalizing(
+      $this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::INSTRUMENTS_FILTER],
+      $onlyInstruments,
+    );
+  }
+
+  private const FREE_FORM_RECIPIENTS = [
+    'Holger Hase <holger@hase.tld>' => [
+      'text' => 'Holger Hase <holger@hase.tld>',
+      'html' => 'Holger Hase <holger@hase.tld>',
+      'value' => 'holger@hase.tld',
+    ],
+    'bilbo@baggins.tld' => [
+      'text' => 'bilbo@baggins.tld',
+      'html' => 'bilbo@baggins.tld',
+      'value' => 'bilbo@baggins.tld',
+    ],
+    'frodo@baggins.tld (Frodo Baggins)' => [
+      'text' => 'Frodo Baggins <frodo@baggins.tld>',
+      'html' => 'Frodo Baggins <frodo@baggins.tld>',
+      'value' => 'frodo@baggins.tld',
+    ],
+  ];
+
+  /** @return void */
+  public function testListContacts(): void
+  {
+    $this->postData[Controller\EnumEmailFormContactsPostParams::FREE_FORM_RECIPIENTS->value] = implode(', ', array_keys(self::FREE_FORM_RECIPIENTS));
+    $result = $this->testedController->contacts(Controller\EnumEmailFormContactsOperation::LIST->value);
+    $this->assertInstanceOf(Http\JSONResponse::class, $result);
+    $data = $result->getData();
+    $this->assertInstanceOf(DTO\EmailFormListContactsResponse::class, $data);
+    $this->assertStringStartsWith('<select', $data->contents);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+  }
+
+  /** @return void */
+  public function testSaveContacts(): void
+  {
+    $this->postData[Controller\EnumEmailFormContactsPostParams::ADDRESS_BOOK_CANDIDATES->value] = array_values(self::FREE_FORM_RECIPIENTS);
+    $result = $this->testedController->contacts(Controller\EnumEmailFormContactsOperation::SAVE->value);
+    $this->assertInstanceOf(Http\Response::class, $result);
+    $this->assertEquals(Http::STATUS_OK, $result->getStatus());
+    foreach (self::FREE_FORM_RECIPIENTS as $recipient) {
+      $saved = array_filter($this->emailContacts, fn(array $contact) => $contact['email'] ?? null === $recipient['value']);
+      $this->assertTrue(count($saved) > 0);
+    }
+  }
+}
