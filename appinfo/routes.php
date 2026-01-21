@@ -172,11 +172,11 @@ $routes = [
       'url' => '/a/browser/history/{timestamp}',
       'verb' => 'DELETE',
     ],
-    [
-      'name' => 'projectEvents#matrix',
-      'url' => '/a/projects/{projectId}/events/matrix',
-      'verb' => 'GET',
-    ],
+    // [
+    //   'name' => 'projectEvents#matrix',
+    //   'url' => '/a/projects/{projectId}/events/matrix',
+    //   'verb' => 'GET',
+    // ],
     //
     // [
     //   'name' => 'page#loader',
@@ -376,11 +376,11 @@ $routes = [
     /**
      * Project events
      */
-    [
-      'name' => 'project_events#download',
-      'url' => '/projects/events/download',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'project_events#download',
+    //   'url' => '/projects/events/download',
+    //   'verb' => 'POST',
+    // ],
     /**
      * Project web-pages
      */
@@ -538,51 +538,51 @@ $routes = [
     /**
      * Email form, mass email sending
      */
-    [
-      'name' => 'email_form#web_form',
-      'url' => '/communication/email/outgoing/form',
-      'verb' => 'POST',
-    ],
-    [
-      'name' => 'email_form#recipients_filter',
-      'url' => '/communication/email/outgoing/recipients-filter',
-      'verb' => 'POST',
-    ],
-    /**
-     * Operations:
-     *
-     * - update
-     * - send
-     * - cancel
-     * - preview
-     * - save
-     * - delete
-     * - load
-     */
-    [
-      'name' => 'email_form#composer',
-      'url' => '/communication/email/outgoing/composer/{operation}/{topic}',
-      'verb' => 'POST',
-      'default' => [
-        'operation' => 'update',
-        'topic' => 'undefined',
-      ],
-    ],
-    /**
-     * Attach a file by uploading it to the server (source = upload)
-     * or choosing one from the cloud file-space (source = cloud).
-     */
-    [
-      'name' => 'email_form#attachment',
-      'url' => '/communication/email/outgoing/attachment/{source}',
-      'verb' => 'POST',
-      'defaults' => [ 'source' => 'upload' ],
-    ],
-    [
-      'name' => 'email_form#contacts',
-      'url' => '/communication/email/outgoing/contacts/{operation}',
-      'verb' => 'POST',
-    ],
+    // [
+    //   'name' => 'email_form#web_form',
+    //   'url' => '/communication/email/outgoing/form',
+    //   'verb' => 'POST',
+    // ],
+    // [
+    //   'name' => 'email_form#recipients_filter',
+    //   'url' => '/communication/email/outgoing/recipients-filter',
+    //   'verb' => 'POST',
+    // ],
+    // /**
+    //  * Operations:
+    //  *
+    //  * - update
+    //  * - send
+    //  * - cancel
+    //  * - preview
+    //  * - save
+    //  * - delete
+    //  * - load
+    //  */
+    // [
+    //   'name' => 'email_form#composer',
+    //   'url' => '/communication/email/outgoing/composer/{operation}/{topic}',
+    //   'verb' => 'POST',
+    //   'default' => [
+    //     'operation' => 'update',
+    //     'topic' => 'undefined',
+    //   ],
+    // ],
+    // /**
+    //  * Attach a file by uploading it to the server (source = upload)
+    //  * or choosing one from the cloud file-space (source = cloud).
+    //  */
+    // [
+    //   'name' => 'email_form#attachment',
+    //   'url' => '/communication/email/outgoing/attachment/{source}',
+    //   'verb' => 'POST',
+    //   'defaults' => [ 'source' => 'upload' ],
+    // ],
+    // [
+    //   'name' => 'email_form#contacts',
+    //   'url' => '/communication/email/outgoing/contacts/{operation}',
+    //   'verb' => 'POST',
+    // ],
     /**
      * General validations ...
      */
