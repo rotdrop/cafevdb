@@ -71,6 +71,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -84,6 +85,18 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 class ProjectsControllerTest extends TestCase
 {
   use SetupEventsServiceTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = ProjectsController::class;
+  private const EXPECTED_ROUTES = [
+    'validate',
+    'changeinstrumentation',
+    'mailinglists',
+    'get',
+    'post',
+    'delete',
+    'patch',
+  ];
 
   private ProjectsController $projectsController;
 

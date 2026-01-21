@@ -24,19 +24,18 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Controller\DTO;
 
-use DateTime;
-
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCP\Constants as CoreConstants;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterSnapshotResponse as TestedDTO;
 
-use OCA\CAFEVDB\Controller\DTO\AddressBook as TestedDTO;
-
-/** Test consistency of the enum with constants from ConfigConstants */
+/** Test consistency. */
 #[Attributes\CoversClass(TestedDTO::class)]
-class AddressBookTest extends TestCase
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+class EmailFormRecipientsFilterSnapshotResponseTest extends TestCase
 {
   use TestResponseDTOTrait;
 
@@ -52,12 +51,7 @@ class AddressBookTest extends TestCase
   public function setup(): void
   {
     $this->dto = new TestedDTO(
-      displayName: 'Display Name',
-      key: 'key',
-      uri: 'http://whatever',
-      isShared: false,
-      isSystemAddressBook: false,
-      permissions: CoreConstants::PERMISSION_READ,
+      filterHistory: new DTO\EmailFormRecipientsFilterHistory(historySize: 16, historyPosition: 6),
     );
   }
 }

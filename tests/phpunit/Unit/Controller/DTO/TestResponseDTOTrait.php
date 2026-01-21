@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,40 +24,24 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Controller\DTO;
 
-use DateTime;
+use OCP\AppFramework\Http;
 
-use PHPUnit\Framework\Attributes;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-
-use OCP\Constants as CoreConstants;
-
-use OCA\CAFEVDB\Controller\DTO\AddressBook as TestedDTO;
-
-/** Test consistency of the enum with constants from ConfigConstants */
-#[Attributes\CoversClass(TestedDTO::class)]
-class AddressBookTest extends TestCase
+/**
+ * Just test in order to avoid typos. The consuming test has to define the
+ * constant self::DTO_CLASS to the class name of the DTO that should be
+ * tested.
+ */
+trait TestResponseDTOTrait
 {
-  use TestResponseDTOTrait;
+  use TestDTOTrait;
 
-  private const DTO_CLASS = TestedDTO::class;
-
-  private TestedDTO $dto;
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return void
-   */
-  public function setup(): void
+  /** @return void */
+  public function testResponse(): void
   {
-    $this->dto = new TestedDTO(
-      displayName: 'Display Name',
-      key: 'key',
-      uri: 'http://whatever',
-      isShared: false,
-      isSystemAddressBook: false,
-      permissions: CoreConstants::PERMISSION_READ,
-    );
+    $httpStatus = Http::STATUS_BANDWIDTH_LIMIT_EXCEEDED;
+    $response = $this->dto->response($httpStatus);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals($httpStatus, $response->getStatus());
+    $this->assertInstanceOf(static::DTO_CLASS, $response->getData());
   }
 }

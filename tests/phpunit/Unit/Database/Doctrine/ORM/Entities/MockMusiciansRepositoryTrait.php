@@ -1,0 +1,69 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
+
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\MockObject\MockObject;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository as EntityRepository;
+
+/** Provide a mock for the instruments repository. */
+trait MockMusiciansRepositoryTrait
+{
+  use EntityGeneratorTrait;
+
+  /** @return InstrumentsRepository */
+  public function getMusiciansRepositoryMock(): EntityRepository
+  {
+    $repository = $this->getMockBuilder(EntityRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $repository->method('findBy')->willReturnCallback(
+      function(array $criteria) {
+        $participationProject = end($criteria)['projectParticipation.project'] ?? null;
+        if ($participationProject !== null && $participationProject != $this->project->getId()) {
+          return [];
+        }
+        $ids = $criteria['id'] ?? [];
+        if (in_array($this->musician->getId(), $ids)) {
+          return [ $this->musician ];
+        }
+        $pattern = $criteria['displayName'] ?? 'this will not match';
+        $pattern = trim($pattern, '%');
+        if (str_contains($this->musician->getPublicName(), $pattern)) {
+          return [ $this->musician ];
+        }
+        return [];
+      }
+    );
+    $repository->method('find')->willReturnCallback(
+      fn(array $identifier) => $this->musician->getId() == ($identifier['id'] ?? null) ? $this->musician : null,
+    );
+    $repository->expects($this->never())->method('createQueryBuilder');
+
+    return $repository;
+  }
+}

@@ -25,6 +25,8 @@
 namespace OCA\CAFEVDB\Tests\Unit\Controller\DTO;
 
 use DateTime;
+use ReflectionClass;
+use ReflectionClassConstant;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,11 +34,15 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\Constants as CoreConstants;
 
-use OCA\CAFEVDB\Controller\DTO\AddressBook as TestedDTO;
+use OCA\CAFEVDB\Controller;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestData as TestedDTO;
+use OCA\CAFEVDB\EmailForm\ComposerInputNames;
 
-/** Test consistency of the enum with constants from ConfigConstants */
+/** Test consistency. */
 #[Attributes\CoversClass(TestedDTO::class)]
-class AddressBookTest extends TestCase
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+class EmailFormComposerRequestDataTest extends TestCase
 {
   use TestResponseDTOTrait;
 
@@ -52,12 +58,8 @@ class AddressBookTest extends TestCase
   public function setup(): void
   {
     $this->dto = new TestedDTO(
-      displayName: 'Display Name',
-      key: 'key',
-      uri: 'http://whatever',
-      isShared: false,
-      isSystemAddressBook: false,
-      permissions: CoreConstants::PERMISSION_READ,
+      Controller\EnumEmailFormComposerOperation::UPDATE,
+      Controller\EnumEmailFormComposerTopic::UNSPECIFIC,
     );
   }
 }

@@ -76,6 +76,11 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class CryptoControllerTest extends TestCase
 {
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = CryptoController::class;
+  private const EXPECTED_ROUTES = ['batchunseal'];
+
   private CryptoController $cryptoController;
 
   private MockProvider $mockProvider;

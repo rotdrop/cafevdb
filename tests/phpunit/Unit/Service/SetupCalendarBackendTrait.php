@@ -45,18 +45,12 @@ use OCP\IL10N;
 use OCA\DAV\CalDAV\CalDavBackend;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /**
  * Mock the CalDavBackend and generate instances of our CalDavService and

@@ -66,6 +66,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\Registration;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
@@ -210,7 +211,9 @@ class MockProvider
   /**
    * Register a service globally.
    *
-   * @param string $service Service or class-name
+   * @param string $service Service or class-name.
+   *
+   * @return void
    */
   private function registerService(string $service): void
   {
@@ -873,6 +876,26 @@ class MockProvider
     return $instance;
   }
 
+  /** @return ToolTipsService */
+  public function getToolTipsService(): ToolTipsService
+  {
+    $className = ToolTipsService::class;
+
+    if ($this->instances[$className] ?? null) {
+      return $this->instances[$className];
+    }
+
+    $instance = new ToolTipsService(
+      appContainer: $this->getAppContainer(),
+      l: $this->getL10N(),
+      logger: $this->getLoggerInterface(),
+    );
+
+    $this->instances[$className] = $instance;
+
+    return $instance;
+  }
+
   /**
    * Fake the bank account validator as obtaining real result is really
    * involved and would result in a round-trip to the Deutsche Bundesbank and
@@ -965,6 +988,7 @@ class MockProvider
       Registration::USER_LOCALE => fn(self $self) => 'de_DE.UTF-8',
       lcfirst(Registration::USER_LOCALE) => fn(self $self) => 'de_DE.UTF-8',
       RepositoryFactory::class => fn(self $self) => $self->getRepositoryFactory(),
+      ToolTipsService::class => fn(self $self) => $self->getToolTipsService(),
       UndoableRunQueue::class => fn(self $self) => new UndoableRunQueue(
         $self->getAppContainer(),
         $self->getLoggerInterface(),
@@ -1033,5 +1057,39 @@ class MockProvider
     $this->instances[$className] = $instance;
 
     return $instance;
+  }
+
+  private static array $appRoutes;
+
+  /**
+   * Return the array of ROUTE_NAME => \Symfony\Component\Routing\Route of
+   * defined routes for this app.
+   *
+   * @return array<\Symfony\Component\Routing\Route>.
+   */
+  public function getAppRoutes(): array
+  {
+    if (self::$appRoutes ?? null) {
+      return self::$appRoutes;
+    }
+    $urlGenerator = $this->getAppContainer()->get(\OCP\IURLGenerator::class);
+    $routerProperty = new ReflectionProperty(\OC\URLGenerator::class, 'router');
+    /** @var \OC\URLGenerator::class $router */
+    $router = $routerProperty->getValue($urlGenerator);
+    $router->loadRoutes($this->appName);
+    $getCollection = new ReflectionMethod($router, 'getCollection');
+    // The router does define collections for each app but does not use them it seems.
+    // $collectionName = $this->appName
+    $collectionName = 'root';
+    /** @var Symfony\Component\Routing\RouteCollection $rootCollection */
+    $rootCollection = $getCollection->invoke($router, $collectionName);
+    // echo '#ROUTES ' . count($rootCollection->all()) . PHP_EOL;
+    /** @var Symfony\Component\Routing\Route $route */
+    self::$appRoutes = array_filter(
+      $rootCollection->all(),
+      fn(string $key) => str_starts_with($key, $this->appName . '.') || str_starts_with($key, 'ocs.' . $this->appName . '.'),
+      ARRAY_FILTER_USE_KEY,
+    );
+    return self::$appRoutes;
   }
 }

@@ -51,6 +51,11 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class ProgressStatusControllerTest extends TestCase
 {
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = Controller\ProgressStatusController::class;
+  private const EXPECTED_ROUTES = ['get', 'action'];
+
   private const START = 17;
   private const STOP = 117;
   private const DATA = [ 'key' => 'value' ];

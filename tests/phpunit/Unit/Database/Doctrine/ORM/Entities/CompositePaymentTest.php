@@ -72,6 +72,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(RationalNumber::class)]
 #[Attributes\UsesClass(Service\AuthorizationService::class)]
 #[Attributes\UsesClass(Service\EncryptionService::class)]
+#[Attributes\UsesClass(Service\ToolTipsService::class)]
 #[Attributes\UsesClass(Util::class)]
 #[Attributes\UsesClass(Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]

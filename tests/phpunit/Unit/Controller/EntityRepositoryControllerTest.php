@@ -88,6 +88,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
@@ -106,6 +107,10 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class EntityRepositoryControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = EntityRepositoryController::class;
+  private const EXPECTED_ROUTES = [ 'ocs' => ['getentities'] ];
 
   private const OCS_OK = [
     'status' => 'ok',
@@ -148,6 +153,7 @@ class EntityRepositoryControllerTest extends TestCase
     $this->projectsRepository->method('find')->willReturnCallback(
       fn(array $identifier) => $this->project->getId() == ($identifier['id'] ?? null) ? $this->project : null,
     );
+    $this->projectsRepository->expects($this->never())->method('createQueryBuilder');
 
     $this->musiciansRepository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
@@ -159,13 +165,16 @@ class EntityRepositoryControllerTest extends TestCase
       fn(array $identifier) => $this->musician->getId() == ($identifier['id'] ?? null) ? $this->musician : null,
     );
     $this->musiciansRepository->expects($this->never())->method('findBy');
+    $this->musiciansRepository->expects($this->never())->method('createQueryBuilder');
 
     $this->projectParticipantsRepository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
     $this->projectParticipantsRepository->method('findBy')->willReturnCallback(
       function(array $criteria) {
-        if (($criteria['project'] ?? 1) === 1 && ($criteria['musician'] ?? 1) === 1) {
+        $projectId = $this->project->getId();
+        $musicianId = $this->musician->getId();
+        if (($criteria['project'] ?? $projectId) === $projectId && ($criteria['musician'] ?? $musicianId) === $musicianId) {
           return [$this->participant];
         }
         return [];
@@ -173,13 +182,16 @@ class EntityRepositoryControllerTest extends TestCase
     );
     $this->projectParticipantsRepository->method('find')->willReturnCallback(
       function(array $identifier) {
-        if ($identifier['project'] === 1 && $identifier['musician'] === 1) {
+        $projectId = $this->project->getId();
+        $musicianId = $this->musician->getId();
+        if ($identifier['project'] === $projectId && $identifier['musician'] === $musicianId) {
           return $this->participant;
         }
         return null;
       },
     );
     $this->projectParticipantsRepository->expects($this->never())->method('findBy');
+    $this->projectParticipantsRepository->expects($this->never())->method('createQueryBuilder');
 
     $this->entityManager = $this->getMockBuilder(EntityManager::class)
       ->disableOriginalConstructor()
@@ -196,7 +208,8 @@ class EntityRepositoryControllerTest extends TestCase
         }
         return null;
       },
-    );
+     );
+     $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);

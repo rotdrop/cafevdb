@@ -82,6 +82,22 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class SepaDebitMandatesControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TestRoutesAreDefinedTrait;
+
+  private const CONTROLLER_CLASS = SepaDebitMandatesController::class;
+  private const EXPECTED_ROUTES = [
+    'mandatevalidate',
+    'mandateform',
+    'mandatestore',
+    'prefilledmandateform',
+    'mandatedelete',
+    'mandatedisable',
+    'mandatereactivate',
+    'mandatehardcopy',
+    'accountdelete',
+    'accountdisable',
+    'accountreactivate',
+  ];
 
   private SepaDebitMandatesController $controller;
 
