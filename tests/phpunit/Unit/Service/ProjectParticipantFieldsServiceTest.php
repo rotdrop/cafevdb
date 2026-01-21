@@ -92,4 +92,123 @@ class ProjectParticipantFieldsServiceTest extends TestCase
     );
     $this->assertInstanceOf(Entities\ProjectParticipantField::class, $field);
   }
+
+  /**
+   * @var array
+   *
+   * The purpose of hardcoding the expected value is to catch changes and
+   * force to think twice of it. Also, this instantiates some lines of code.
+   */
+  private const TYPE_MULTIPLICITY_SUPPORT_MATRIX = [
+    'simple' => [
+      'boolean' => false,
+      'cloud-file' => true,
+      'cloud-folder' => true,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => true,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'single' => [
+      'boolean' => true,
+      'cloud-file' => false,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => false,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'multiple' => [
+      'boolean' => false,
+      'cloud-file' => false,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => false,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'parallel' => [
+      'boolean' => false,
+      'cloud-file' => true,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => true,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'recurring' => [
+      'boolean' => false,
+      'cloud-file' => false,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => true,
+      'float' => false,
+      'html' => false,
+      'integer' => false,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'groupofpeople' => [
+      'boolean' => false,
+      'cloud-file' => false,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => false,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+    'groupsofpeople' => [
+      'boolean' => false,
+      'cloud-file' => false,
+      'cloud-folder' => false,
+      'date' => true,
+      'datetime' => true,
+      'db-file' => false,
+      'float' => true,
+      'html' => true,
+      'integer' => true,
+      'liabilities' => true,
+      'receivables' => true,
+      'text' => true,
+    ],
+  ];
+
+  /** @return void */
+  public function testIsSupportedType(): void
+  {
+    $supported = [];
+    foreach (FieldMultiplicity::cases() as $multiplicity) {
+      foreach (FieldDataType::cases() as $type) {
+        $supported[$multiplicity->value][$type->value] = $this->service->isSupportedType($multiplicity, $type);
+      }
+    }
+    $this->assertEqualsCanonicalizing(self::TYPE_MULTIPLICITY_SUPPORT_MATRIX, $supported);
+  }
 }

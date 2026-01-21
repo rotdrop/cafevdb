@@ -485,7 +485,7 @@ class ProjectParticipantFieldsService
    * @return null|string Sanitized file-name, no dots, no slashes, no
    * spaces. null if the argument was null.
    */
-  public static function sanitizeFileName(?string $name):?string
+  private static function sanitizeFileName(?string $name):?string
   {
     if (empty($name)) {
       return null;
@@ -686,7 +686,9 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Return the row with the key matching the argument $key.
+   * Return the row with the key matching the argument $key. This seems not be
+   * generally used, just by
+   * \OCA\CAFEVDB\PageRenderer\ProjectParticipantFields.
    *
    * @param string $key Allowed values key to search for.
    *
@@ -801,31 +803,6 @@ class ProjectParticipantFieldsService
       }
     }
     return json_encode(array_values($options));
-  }
-
-  /**
-   * Just forward to Repositories\ProjectParticipantFieldsRepository
-   *
-   * @param int $id
-   *
-   * @return null|Entities\ProjectParticipantField
-   */
-  public function find(int $id):?Entities\ProjectParticipantField
-  {
-    return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($id);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Just forward to Repositories\ProjectParticipantFieldsRepository
-   *
-   * @see OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
-   */
-  public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null):Collection
-  {
-    return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)
-      ->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   /**
