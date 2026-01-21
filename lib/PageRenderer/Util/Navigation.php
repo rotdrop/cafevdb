@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,15 +71,18 @@ class Navigation
    * given values. $selectedValues may be a single value or an array of
    * values.
    *
+   * @param int $initialIndent
+   *
    * @return string HTML fragment.
    */
-  public static function selectOptions(array $options, mixed $selectedValues = []):string
+  public static function selectOptions(array $options, mixed $selectedValues = [], int $initialIndent = 2):string
   {
     if (empty($selectedValues)) {
       $selectedValues = [];
     }
-    $result = '';
+    $initialIndent = str_repeat(' ', $initialIndent);
     $indent = '';
+    $result = '';
     if (!is_array($options) || count($options) == 0) {
       return $result;
     }
@@ -99,8 +102,8 @@ class Navigation
                  . ' data-group-id="'.$groupId.'"'
                  . (isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '');
       $result .= '<optgroup label="'.$oldGroup.'"'.$groupClass.$groupData.'>
-      ';
-      $indent = '  ';
+';
+      $indent = $initialIndent . '  ';
     }
     foreach ($options as $option) {
       $value = $option['value'];
@@ -133,8 +136,8 @@ class Navigation
         }
       }
       if ($group != $oldGroup) {
-        $result .= '</optgroup>
-        ';
+        $result .= $initialIndent . '</optgroup>
+';
         $oldGroup = $group;
         ++$groupId;
         $indent = '';
@@ -147,17 +150,25 @@ class Navigation
           $groupData = " data-group-info='".json_encode($groupInfoData, JSON_FORCE_OBJECT)."'"
                      . ' data-group-id="'.$groupId.'"'
                      . (isset($option['groupData']) ? " data-group='".json_encode($option['groupData'], JSON_FORCE_OBJECT)."'" : '');
-          $result .= '<optgroup label="'.$group.'"'.$groupClass.$groupData.'>
+          $result .= $initialIndent . '<optgroup label="'.$group.'"'.$groupClass.$groupData.'>
           ';
-          $indent = '  ';
+          $indent = $initialIndent . '  ';
         }
       }
-      $result .= $indent.'<option value="'.Util::htmlEscape((string)$value).'"'
+      $result .= $indent . '<option value="'.Util::htmlEscape((string)$value).'"'
         . $cssClass.$disabled.$selected.$label.$title.(isset($groupId) ? ' data-group-id="'.$groupId.'"' : '').$data
-        . '>'.
-              Util::htmlEscape($option['name']).
-              '</option>
-                 ';
+        . '>'
+        . Util::htmlEscape($option['name'])
+        . '</option>
+';
+      $indent = $initialIndent;
+      if ($group) {
+        $indent .= '  ';
+      }
+    }
+    if ($group) {
+      $result .= $initialIndent . '</optgroup>
+';
     }
     return $result;
   }
@@ -203,11 +214,12 @@ class Navigation
     } elseif (is_array($value)) {
       $result = '';
       foreach ($value as $subkey => $subval) {
-        $result .= self::persistentCGI($key.'['.$subkey.']', $subval)."\n";
+        $result .= self::persistentCGI($key . '[' . $subkey . ']', $subval) . "\n";
       }
       return $result;
     } else {
-      return '<input type="hidden" name="'.$key.'" value="'.Util::htmlEscape($value).'"/>'."\n";
+      return '<input type="hidden" name="' . $key . '" value="' . Util::htmlEscape($value) . '"/>
+';
     }
   }
 
