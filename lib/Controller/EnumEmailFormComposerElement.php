@@ -33,6 +33,6 @@ enum EnumEmailFormComposerElement: string
 
   case TO = 'to';
   case SUBJECT_TAG = 'subjectTag';
-  case FILE_ATTACHEMENTS = 'fileAttachments';
+  case FILE_ATTACHMENTS = 'fileAttachments';
   case EVENT_ATTACHMENTS = 'eventAttachments';
 }

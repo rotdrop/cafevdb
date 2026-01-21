@@ -29,7 +29,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerElement;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic;
-use OCA\CAFEVDB\Controller\EnumEmailFormStatus;
+use OCA\CAFEVDB\EmailForm\EnumFormStatus;
 
 /**
  * Response DTO of the email-form controller.
@@ -53,7 +53,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     /** @var ?array<EnumEmailFormComposerElement> */
     public readonly ?array $formElements = null,
     public readonly mixed $elementData = null,
-    public readonly ?string $message = null,
+    public readonly ?string $messageText = null,
     public readonly ?string $subject = null,
     public readonly ?string $composerForm = null,
     public readonly ?string $recipientsForm = null,
@@ -63,7 +63,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     public readonly ?bool $singleItem = null,
     public readonly ?bool $submitAll = null,
     public readonly mixed $progressToken = null,
-    public readonly ?EnumEmailFormStatus $formStatus = null,
+    public readonly ?EnumFormStatus $formStatus = null,
     public readonly ?string $fileAttachments = null,
     /** @var ?array<string> */
     public readonly ?array $attachedFiles = null,
@@ -101,10 +101,10 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
       elementData: $elementData ?? null,
       errorStatus: $errorStatus ?? false,
       formElements: $formElements ?? null,
-      formStatus: $formStatus === null ? null : EnumEmailFormStatus::get($formStatus),
+      formStatus: $formStatus === null ? null : EnumFormStatus::get($formStatus),
       header: $header ?? null,
-      message: $message ?? null,
-      messageDraftId: $messageDraftId ?: null,
+      messageText: $messageText ?? null,
+      messageDraftId: empty($messageDraftId) ? null : $messageDraftId,
       previewData: $previewData ?? null,
       progressToken: $progressToken ?? null,
       projectId: $projectId ?? null,

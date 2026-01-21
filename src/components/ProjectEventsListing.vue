@@ -955,7 +955,7 @@ const emailEditor = () => {
     projectId: project.value.id,
     projectName: project.value.name,
     post: {
-      eventSelect: Object.values(legacyEventSelection),
+      selectedEvents: Object.values(legacyEventSelection),
     },
   }
   return asyncEmit(EMAIL_POPUP, event)
@@ -971,7 +971,7 @@ const exportEvents = async () => {
   const post = {
     projectId: project.value.id,
     projectName: project.value.name,
-    eventSelect: Object.values(legacyEventSelection),
+    selectedEvents: Object.values(legacyEventSelection),
   }
   try {
     await axiosFileDownload('projects/events/download', post)

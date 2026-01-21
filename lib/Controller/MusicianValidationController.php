@@ -215,6 +215,7 @@ class MusicianValidationController extends Controller
         $result = [
           'message' => $messages ?? null,
           'email' => $email,
+          'details' => $emailArray,
         ];
 
         if (empty($messages)) {

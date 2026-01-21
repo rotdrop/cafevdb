@@ -26,8 +26,9 @@ namespace OCA\CAFEVDB\LegacyTemplates\EmailForm\Composer;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\EmailForm\Composer;
-use OCA\CAFEVDB\EmailForm\ComposerInputNames;
+use OCA\CAFEVDB\EmailForm\ComposerCgiKeys;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 $containerClass = $appName.'-'.'container';
 
@@ -66,7 +67,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                   class="template email-message-selector"
                   title="<?php echo $toolTips['emailform:storage:select:templates']; ?>"
                   data-placeholder="<?php echo $l->t("Templates"); ?>"
-                  name="<?= Composer::POST_TAG ?>[templateMessagesSelector]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR ?>]"
                   id="cafevdb-template-messages-selector"
           >
             <option></option>
@@ -76,7 +77,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                   class="draft email-message-selector"
                   title="<?php echo $toolTips['emailform:storage:select:drafts']; ?>"
                   data-placeholder="<?php echo $l->t("Drafts"); ?>"
-                  name="<?= Composer::POST_TAG ?>[draftMessagesSelector]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DRAFT_MESSAGES_SELECTOR ?>]"
                   id="cafevdb-draft-messages-selector"
           >
             <option></option>
@@ -86,7 +87,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                   size="<?php echo count($sentEmails); ?>"
                   title="<?php echo $toolTips['emailform:storage:select:sent']; ?>"
                   data-placeholder="<?php p($l->t('Reply To')); ?>"
-                  name="<?= Composer::POST_TAG ?>[sentMessagesSelector]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SENT_MESSAGES_SELECTOR ?>]"
                   id="cafevdb-sent-messages-selector"
           >
             <option></option>
@@ -95,21 +96,12 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         </span>
       </td>
       <td class="stored-messages-storage stored-messages">
-        <!-- <input size="20"
-               placeholder="<?php echo $l->t('New Template Name'); ?>"
-               value="<?php p($emailTemplateName); ?>"
-               title="<?php echo $toolTips['emailform:storage:messages:new-template']; ?>"
-               name="<?= Composer::POST_TAG ?>[emailTemplateName]"
-               type="text"
-               class="tooltip-bottom no-margin-right"
-               id="emailCurrentTemplate"
-             disabled> -->
         <span class="button-container flex-container flex-center">
           <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button save-as-template flex-container flex-center">
             <input type="checkbox"
                    id="check-save-as-template"
                    class="save-as-template tooltip-wide tooltip-bottom"
-                   name="<?= Composer::POST_TAG ?>[saveAsTemplate]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SAVE_AS_TEMPLATE ?>]"
             />
             <label for="check-save-as-template"
                    class="tip save-as-template"
@@ -120,16 +112,16 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
           <input title="<?php echo $toolTips['emailform:storage:messages:save-message']; ?>"
                  type="submit"
                  class="submit save-message tooltip-wide tooltip-bottom no-margin-right"
-                 name="<?= Composer::POST_TAG ?>[saveMessage]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SAVE_MESSAGE ?>]"
                  value="<?php echo $l->t('Save Message'); ?>"
           />
           <span class="inner vmiddle <?php p($containerClass); ?> checkbox-button draft-auto-save flex-container flex-center">
             <input type="checkbox"
                    id="check-draft-auto-save"
                    class="draft-auto-save tooltip-auto"
-                   data-auto-save-interval="<?php p((int)$emailDraftAutoSave); ?>"
-                   <?php !empty($emailDraftAutoSave) && p('checked'); ?>
-                   name="<?= Composer::POST_TAG ?>[draftAutoSave]"
+                   data-auto-save-interval="<?php e((int)$_[Composer::POST_TAG][ComposerCgiKeys::DRAFT_AUTO_SAVE]) ?>"
+                   <?php $_[Composer::POST_TAG][ComposerCgiKeys::DRAFT_AUTO_SAVE] && e('checked'); ?>
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DRAFT_AUTO_SAVE ?>]"
             />
             <label for="check-draft-auto-save"
                    class="draft-auto-save tooltip-auto"
@@ -140,7 +132,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
           <input title="<?php echo $toolTips['emailform:storage:messages:delete-saved-message']; ?>"
                  type="submit"
                  class="submit delete-message tooltip-bottom no-margin-right"
-                 name="<?= Composer::POST_TAG ?>[deleteMessage]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DELETE_MESSAGE ?>]"
                  value="<?php echo $l->t('Delete Message'); ?>"
           />
         </span>
@@ -156,9 +148,9 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
               <input id="email-from-orchestra"
                      class="radio"
                      type="radio"
-                     name="<?= Composer::POST_TAG ?>[fromTag]"
+                     name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FROM_TAG ?>]"
                      value="<?= Composer::FROM_ORCHESTRA ?>"
-                     <?php $fromTag === Composer::FROM_ORCHESTRA && e('checked') ?>
+                     <?php $_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG] === Composer::FROM_ORCHESTRA && e('checked') ?>
               />
               <label for="email-from-orchestra">
                 <?php p($_['fromName'][Composer::FROM_ORCHESTRA] . ' <' . $_['fromAddress'][Composer::FROM_ORCHESTRA] . '>') ?>
@@ -168,9 +160,9 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
               <input id="email-from-personal"
                      class="radio"
                      type="radio"
-                     name="<?= Composer::POST_TAG ?>[fromTag]"
+                     name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FROM_TAG ?>]"
                      value="<?= Composer::FROM_PERSONAL ?>"
-                     <?php $fromTag === Composer::FROM_PERSONAL && e('checked') ?>
+                     <?php $_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG] === Composer::FROM_PERSONAL && e('checked') ?>
               />
               <label for="email-from-personal">
                 <?php p($_['fromName'][Composer::FROM_PERSONAL] . ' <' . $_['fromAddress'][Composer::FROM_PERSONAL] . '>') ?>
@@ -179,7 +171,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
           </span>
           <input type="button"
                  class="button no-margin-right save-from-tag flex-shrink"
-                 name="<?= Composer::POST_TAG ?>[saveFromTag]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SAVE_FROM_TAG ?>]"
           >
         </span>
       </td>
@@ -199,11 +191,11 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                 title="<?php echo Util::htmlEscape($toolTips['emailform:composer:recipients:disclosed-recipients']); ?>"
           >
             <input type="checkbox"
-                   <?php ($disclosedRecipients??false) && p('checked'); ?>
+                   <?php $_[Composer::POST_TAG][ComposerCgiKeys::DISCLOSED_RECIPIENTS] && e('checked'); ?>
                    id="check-disclosed-recipients"
                    <?php ($projectId <= 0) && p('disabled'); ?>
                    class="disclosed-recipients tooltip-top"
-                   name="<?= Composer::POST_TAG ?>[disclosedRecipients]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DISCLOSED_RECIPIENTS ?>]"
             />
             <label for="check-disclosed-recipients"
                    <?php ($projectId <= 0) && p('disabled'); ?>
@@ -223,8 +215,8 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         <input size="40"
                title="<?php $toolTips['emailform:composer:recipients:freeform-CC']; ?>"
                class="email-address-holder tooltip-top"
-               value="<?php p($_['CC']); ?>"
-               name="<?= Composer::POST_TAG ?>[CC]"
+               value="<?php p($_[Composer::POST_TAG][ComposerCgiKeys::CC]); ?>"
+               name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::CC ?>]"
                type="text"
                id="carbon-copy"
         />
@@ -232,7 +224,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                type="submit"
                class="submit address-book-emails CC tooltip-bottom no-margin-right"
                data-for="#carbon-copy"
-               name="<?= Composer::POST_TAG ?>[addressBookCC]"
+               name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ADDRESS_BOOK_CC ?>]"
                value="<?php echo $l->t('Address Book'); ?>"
         />
       </td>
@@ -243,8 +235,8 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         <input size="40"
                title="<?php echo $toolTips['emailform:composer:recipients:freeform-BCC']; ?>"
                class="email-address-holder tooltip-top"
-               value="<?php p($_['BCC']); ?>"
-               name="<?= Composer::POST_TAG ?>[BCC]"
+               value="<?php p($_[Composer::POST_TAG][ComposerCgiKeys::BCC]); ?>"
+               name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::BCC ?>]"
                type="text"
                id="blind-carbon-copy"
         />
@@ -252,7 +244,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                type="submit"
                class="submit address-book-emails BCC tooltip-bottom no-margin-right"
                data-for="#blind-carbon-copy"
-               name="<?= Composer::POST_TAG ?>[addressBookBCC]"
+               name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ADDRESS_BOOK_BCC ?>]"
                value="<?php echo $l->t('Address Book'); ?>"
         />
       </td>
@@ -263,28 +255,28 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         <div class="subject <?php p($containerClass); ?> flex-container flex-justify-full flex-center">
           <span class="subject tag container display flex-container flex-center">
             <span class="prefix">
-            [<?php p($subjectTagPrefix) ?>-
+              [<?php p($_[Composer::POST_TAG][ConfigConstants::BULK_EMAIL_SUBJECT_TAG]) ?>-
             </span>
             <span class="content">
               <input class="editable"
                      type="text"
-                     name="<?= Composer::POST_TAG ?>[subjectTag]"
-                     value="<?php p($subjectTag); ?>"
+                     name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SUBJECT_TAG ?>]"
+                     value="<?php p($_[Composer::POST_TAG][ComposerCgiKeys::SUBJECT_TAG]); ?>"
               />
-              <span class="display"><?php p($subjectTag) ?></span>
+              <span class="display"><?php p($_[Composer::POST_TAG][ComposerCgiKeys::SUBJECT_TAG]) ?></span>
             </span>
             <span class="postfix">
               ]
             </span>
             <input type="button"
                    class="button edit-subject-tag display no-margin-right"
-                   name="<?= Composer::POST_TAG ?>[editSubjectTag]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::EDIT_SUBJECT_TAG ?>]"
             />
           </span>
           <span class="subject input">
-            <input value="<?php p($subject); ?>"
+            <input value="<?php p($_[Composer::POST_TAG][ComposerCgiKeys::SUBJECT]); ?>"
                    size="40"
-                   name="<?= Composer::POST_TAG ?>[subject]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SUBJECT ?>]"
                    type="text"
                    class="email-subject"
                    spellcheck="true"
@@ -298,12 +290,12 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
       <td class="body caption"><?php echo $l->t('Message-Body'); ?></td>
       <td colspan="2" class="messagetext">
         <textarea class="wysiwyg-editor external-documents"
-                  name="<?= Composer::POST_TAG ?>[messageText]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::MESSAGE_TEXT ?>]"
                   cols="60"
                   rows="20"
                   id="message-text"
         >
-          <?php echo htmlspecialchars($message); ?>
+          <?php echo htmlspecialchars($_[Composer::POST_TAG][ComposerCgiKeys::MESSAGE_TEXT]); ?>
         </textarea>
       </td>
     </tr>
@@ -363,7 +355,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         <span class="flex-container flex-begin flex-justify-full">
           <select multiple="multiple"
                   title="<?php echo $toolTips['emailform:composer:attachments:event-select']; ?>"
-                  name="<?= Composer::POST_TAG ?>[attachedEvents][]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ATTACHED_EVENTS ?>][]"
                   class="event-attachments email-attachments select"
                   id="event-attachments-selector">
             <?php echo PageNavigation::selectOptions($eventAttachmentOptions, initialIndent: 12); ?>
@@ -372,13 +364,13 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
             <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:event']); ?>"
                    type="button"
                    class="visibility-toggle tooltip-auto"
-                   name="<?= Composer::POST_TAG ?>[attachmentVisibilityToggle]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ATTACHMENT_VISIBILITY_TOGGLE ?>]"
                    value="<?php p($l->t('Toggle Visibility')); ?>"
             />
             <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-events']; ?>"
                    type="submit"
                    class="submit delete-all-attachments delete-all-event-attachments tooltip-top"
-                   name="<?= Composer::POST_TAG ?>[deleteAllAttachments]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DELETE_ALL_ATTACHMENTS ?>]"
                    value="<?php echo $l->t('Delete Event Attachments'); ?>"
             />
           </div>
@@ -393,22 +385,22 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         <span class="flex-container flex-begin flex-justify-full">
           <select multiple="multiple"
                   title="<?php echo $toolTips['emailform:composer::attachments:file-select']; ?>"
-                  name="<?= Composer::POST_TAG ?>[attachedFiles][]"
+                  name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ATTACHED_FILES ?>][]"
                   class="file-attachments email-attachments select"
                   id="file-attachments-selector">
-            <?php echo PageNavigation::selectOptions($fileAttachmentOptions, intialIndent: 12); ?>
+            <?php echo PageNavigation::selectOptions($fileAttachmentOptions, initialIndent: 12); ?>
           </select>
           <div class="attachment-controls flex-container flex-wrap flex-justify-end">
             <input title="<?php p($toolTips['emailform:composer:attachments:toggle-visibility:file']); ?>"
                    type="button"
                    class="visibility-toggle tooltip-auto"
-                   name="<?= Composer::POST_TAG ?>[attachmentVisibilityToggle]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::ATTACHMENT_VISIBILITY_TOGGLE ?>]"
                    value="<?php p($l->t('Toggle Visibility')); ?>"
             />
             <input title="<?php echo $toolTips['emailform:composer:attachments:delete-all-files']; ?>"
                    type="submit"
                    class="submit delete-all-attachments delete-all-file-attachments tooltip-top"
-                   name="<?= Composer::POST_TAG ?>[deleteAllAttachments]"
+                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::DELETE_ALL_ATTACHMENTS ?>]"
                    value="<?php echo $l->t('Delete All Attachments'); ?>"
             />
           </div>
@@ -422,13 +414,13 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
           <input title="<?php echo $toolTips['emailform:composer:send']; ?>"
                  class="email-composer submit send"
                  type="submit"
-                 name="<?= Composer::POST_TAG ?>[send]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::SEND ?>]"
                  value="<?php echo $l->t('Send Em@il'); ?>"
           />
           <input title="<?php echo $toolTips['emailform:composer:export']; ?>"
                  class="email-composer submit message-export"
                  type="submit"
-                 name="<?= Composer::POST_TAG ?>[messageExport]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::MESSAGE_EXPORT ?>]"
                  value="<?php echo $l->t('Message Preview'); ?>"
           />
         </div>
@@ -436,7 +428,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
           <input title="<?php echo $toolTips['emailform:composer:cancel']; ?>"
                  class="email-composer submit cancel tooltip-top"
                  type="submit"
-                 name="<?= Composer::POST_TAG ?>[cancel]"
+                 name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::CANCEL ?>]"
                  value="<?php echo $l->t('Cancel'); ?>"
           />
         </div>
@@ -446,8 +438,8 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
   <!-- various data fields ... -->
   <fieldset id="cafevdb-email-form-attachments" class="attachments">
     <input type="hidden"
-           name="<?= Composer::POST_TAG ?>[fileAttachments]"
-           value="<?php echo htmlspecialchars($fileAttachmentData); ?>"
+           name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FILE_ATTACHMENTS ?>]"
+           value="<?php echo htmlspecialchars($_[Composer::POST_TAG][ComposerCgiKeys::FILE_ATTACHMENTS]); ?>"
            id="file-attachments"
            class="file-attachments"
     />

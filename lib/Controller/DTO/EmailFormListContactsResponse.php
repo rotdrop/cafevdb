@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2021, 2023, 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB;
+namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+/**
+ * Response DTO of the email-form controller.
+ */
+class EmailFormListContactsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+{
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly string $contents,
+  ) {
+  }
 
-?>
-<select class="address-book-emails"
-        name="adressBookEmails[]"
-        data-placeholder="<?php echo $l->t('Select Em@il recipients, type to search!'); ?>"
-        multiple="multiple">
-  <?php echo PageNavigation::selectOptions($emailOptions); ?>
-</select>
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self(
+      contents: $contents,
+    );
+  }
+}

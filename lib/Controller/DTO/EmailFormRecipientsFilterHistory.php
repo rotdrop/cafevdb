@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller;
+namespace OCA\CAFEVDB\Controller\DTO;
 
 /**
- * Operation topics understood by EmailFormControlller::composer().
+ * Response DTO of the email-form controller.
  */
-enum EnumEmailFormStatus: string
+class EmailFormRecipientsFilterHistory extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly int $historyPosition,
+    public readonly int $historySize,
+  ) {
+  }
 
-  case SUBMITTED = 'submitted';
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self(
+      historyPosition: $historyPosition,
+      historySize: $historySize,
+    );
+  }
 }

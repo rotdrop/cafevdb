@@ -65,13 +65,30 @@ import type {
   // EmailFormComposerResponse,
   EmailFormComposerRequestData as ComposerRequest,
   EmailFormComposerResponse,
+  EmailFormRecipientsFilterReloadResponse,
+  EmailFormRecipientsFilterResponse,
+  EmailFormRecipientsFilterSnapshotResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { ComposerCgiKeys, EnumPostTag, RecipientsFilterCgiKeys } from '../../build/ts-types/php-modules/EmailForm.ts';
+
 require('cafevdb-selectize.scss');
 
 type AttachmentElementData = {
   options: string, // HTML fragment
   attachments: Record<string, unknown>,
 }
+
+type EmailFormRecipientsFilterResponseData = EmailFormRecipientsFilterReloadResponse
+  |EmailFormRecipientsFilterResponse
+  |EmailFormRecipientsFilterSnapshotResponse;
+
+const asKey = <T extends object, K extends keyof T = keyof T>(_arg: T, key: K): K => key;
+
+const isRecipientsFilterReloadResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterReloadResponse =>
+  (asKey(<EmailFormRecipientsFilterReloadResponse>arg, 'contents') in arg) && typeof arg.contents === 'string' && arg.contents.length > 0;
+
+const isRecipientsFilterResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterResponse =>
+  asKey(<EmailFormRecipientsFilterResponse>arg, 'recipientsOptions') in arg;
 
 const selectizeOpenOnFocus = true;
 
@@ -158,7 +175,18 @@ function emailTabResize($dialogWidget: JQuery, $panelHolder: JQuery) {
   // }
 }
 
-function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: string[]) {
+const findComposerRequestInput = <E extends HTMLElement, S extends keyof ComposerRequest, T extends string = 'name'>(
+  $e: JQuery<E>,
+  param: S,
+  attr: T = 'name' as T,
+) => $e.find(`input[${attr}="${EnumPostTag.COMPOSER}[${param}]"]`);
+const findComposerInput = <E extends HTMLElement, S extends string, T extends string = 'name'>(
+  $e: JQuery<E>,
+  param: S,
+  attr: T = 'name' as T,
+) => $e.find(`input[${attr}="${EnumPostTag.COMPOSER}[${param}]"]`);
+
+function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: EnumEmailFormComposerElement[]) {
   elements = elements ?? ['to'];
   if (!Array.isArray(elements)) {
     elements = [elements];
@@ -166,9 +194,10 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
   // we better serialize the entire form here
   let post = $emailForm.serialize();
   // place our update request
-  post += '&emailComposer[request]=update';
+  // post += '&emailComposer[request]=update';
+  const requestKey: keyof ComposerRequest = 'formElements' as const;
   for (const element of elements) {
-    post += '&' + 'emailComposer[formElement][]=' + element;
+    post += `&${EnumPostTag.COMPOSER}[${requestKey}][]=${element}`;
   }
   const url = generateComposerUrl('update', 'element');
   $.post(url, post)
@@ -299,17 +328,16 @@ const emailFormRecipientsHandlers = (
 
   emailFormRecipientsSelectControls($dialogHolder, $fieldset);
 
-  const recipientsSelect = $fieldset.find('select#recipients-select');
+  const $recipientsSelect = $fieldset.find('select#recipients-select');
   const $missingAddresses = $fieldset.find('.missing-email-addresses.names');
-  const missingLabel = $fieldset.find('.missing-email-addresses.label');
-  const noMissingLabel = $fieldset.find('.missing-email-addresses.label.empty');
+  const $missingLabel = $fieldset.find('.missing-email-addresses.label');
+  const $noMissingLabel = $fieldset.find('.missing-email-addresses.label.empty');
   const $instrumentsFilter = $fieldset.find('.instruments-filter.' + appPrefix('container'));
   const $instrumentsSelect = $instrumentsFilter.find('select') as JQuery<HTMLSelectElement>;
   const $participationStatusFilter = $fieldset.find('.participation-status-filter.' + appPrefix('container'));
-  const participationStatusSelect = $participationStatusFilter.find('select');
-  const filterHistoryInput = $fieldset.find('#recipients-filter-history');
+  const $participationStatusSelect = $participationStatusFilter.find('select');
   const $debugOutput = $form.find('#emailformdebug');
-  const busyIndicator = $fieldset.find('.busy-indicator');
+  const $busyIndicator = $fieldset.find('.busy-indicator');
 
   let filterUpdateActive = false;
 
@@ -341,12 +369,16 @@ const emailFormRecipientsHandlers = (
 
     const historySnapshot = parameters.historySnapshot;
     if (!historySnapshot) {
-      busyIndicator.show();
+      $busyIndicator.show();
     }
 
     let post = $fieldset.serialize();
     if (historySnapshot) {
-      post += '&' + $.param({ emailRecipients: { HistorySnapshot: 'snapshot' } });
+      post += '&' + $.param({
+        [EnumPostTag.RECIPIENTS_FILTER]: {
+          [RecipientsFilterCgiKeys.HISTORY_SNAPSHOT]: 'snapshot',
+        },
+      });
     } else {
       post += '&' + $form.find('fieldset.form-data').serialize();
       const $element = $(event.target);
@@ -363,100 +395,106 @@ const emailFormRecipientsHandlers = (
       .fail(function(xhr, textStatus, errorThrown) {
         ajaxHandleError(xhr, textStatus, errorThrown, function() {
           parameters.cleanup();
-          busyIndicator.hide();
+          $busyIndicator.hide();
           filterUpdateActive = false;
         });
       })
-      .done(function(data) {
-        const requiredResponse = historySnapshot
-          ? ['filterHistory']
-          : [
-            'contents',
-            'recipientsOptions',
-            'missingEmailAddresses',
-            'filterHistory',
-            'instrumentsFilter',
-            'participationStatusFilter',
-          ];
-        if (!ajaxValidateResponse(data, requiredResponse)) {
-          parameters.cleanup();
-          busyIndicator.hide();
-          filterUpdateActive = false;
-          return;
-        }
+      .done(function(data: EmailFormRecipientsFilterResponseData) {
+        let debugText = '';
         let resize = false;
-        if (historySnapshot) {
-          // Just update the history, but nothing else
-          filterHistoryInput.val(data.filterHistory);
-        } else if (data.contents !== undefined && data.contents.length > 0) {
+        if (isRecipientsFilterReloadResponse(data)) {
+          const requiredKeys = [
+            'contents',
+            'filterHistory',
+          ] as const;
+          if (!ajaxValidateResponse(data, requiredKeys)) {
+            parameters.cleanup();
+            $busyIndicator.hide();
+            filterUpdateActive = false;
+            return;
+          }
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
           $panelHolder.html(data.contents);
           $fieldset = $panelHolder.find('fieldset.email-recipients.page');
           emailFormRecipientsHandlers($fieldset, $form, $dialogHolder, $panelHolder);
           resize = true;
-        } else {
+        } else if (isRecipientsFilterResponse(data)) {
+
+          const requiredKeys = [
+            'recipientsOptions',
+            'missingEmailAddresses',
+            'filterHistory',
+            'instrumentsFilter',
+            'participationStatusFilter',
+          ] as const;
+          if (!ajaxValidateResponse(data, requiredKeys)) {
+            parameters.cleanup();
+            $busyIndicator.hide();
+            filterUpdateActive = false;
+            return;
+          }
+
           // partial update
           $.fn.cafevTooltip.hide();
 
           // list of recipients
-          recipientsSelect.html(data.recipientsOptions);
-          recipientsSelect.bootstrapDualListbox('refresh', true);
-          filterHistoryInput.val(data.filterHistory);
+          $recipientsSelect.html(data.recipientsOptions);
+          console.info('RECIPIENT OPTIONS', { options: data.recipientsOptions, $recipientsSelect });
+          $recipientsSelect.bootstrapDualListbox('refresh', true);
 
           // list of broken email addresses
           $missingAddresses.html(data.missingEmailAddresses);
           if (data.missingEmailAddresses.length > 0) {
-            missingLabel.removeClass('reallyhidden');
-            noMissingLabel.addClass('reallyhidden');
+            $missingLabel.removeClass('reallyhidden');
+            $noMissingLabel.addClass('reallyhidden');
           } else {
-            missingLabel.addClass('reallyhidden');
-            noMissingLabel.removeClass('reallyhidden');
+            $missingLabel.addClass('reallyhidden');
+            $noMissingLabel.removeClass('reallyhidden');
           }
 
           // update the instruments filter
           SelectUtils.replaceOptions($instrumentsSelect, data.instrumentsFilter);
 
           // update the participation-status filter
-          SelectUtils.replaceOptions(participationStatusSelect, data.participationStatusFilter);
+          SelectUtils.replaceOptions($participationStatusSelect, data.participationStatusFilter);
+
+          debugText = '<pre>'
+            + $('<div></div>').text(data.recipientsOptions).html()
+            + '</pre>'
+            + data.missingEmailAddresses
+            + '<br/>';
 
           resize = true;
         }
 
-        const filterHistory = data.filterHistory;
-        if (filterHistory.historyPosition >= 0
+        if ('filterHistory' in data) {
+          const filterHistory = data.filterHistory;
+          if (filterHistory.historyPosition >= 0
             && filterHistory.historyPosition < filterHistory.historySize - 1) {
-          // enable the undo button
-          $fieldset.find('#instruments-filter-undo').prop('disabled', false);
-        } else {
-          $fieldset.find('#instruments-filter-undo').prop('disabled', true);
-        }
-        if (filterHistory.historyPosition > 0) {
-          // enable the redo button as well
-          $fieldset.find('#instruments-filter-redo').prop('disabled', false);
-        } else {
-          $fieldset.find('#instruments-filter-redo').prop('disabled', true);
+            // enable the undo button
+            $fieldset.find('#instruments-filter-undo').prop('disabled', false);
+            console.info('ENABLE UNDO', filterHistory);
+          } else {
+            $fieldset.find('#instruments-filter-undo').prop('disabled', true);
+          }
+          if (filterHistory.historyPosition > 0) {
+            // enable the redo button as well
+            $fieldset.find('#instruments-filter-redo').prop('disabled', false);
+          } else {
+            $fieldset.find('#instruments-filter-redo').prop('disabled', true);
+          }
         }
 
-        if (!historySnapshot) {
-          let debugText = '';
-          if (data.debug !== undefined) {
-            debugText = data.debug;
-          }
-          $debugOutput.html('<pre>' + $('<div></div>').text(debugText).html() + '</pre>'
-                           + '<pre>'
-                           + $('<div></div>').text(data.recipientsOptions).html()
-                           + '</pre>'
-                           + data.missingEmailAddresses
-                           + '<br/>'
-                           + $('<div></div>').text(urlDecode(post)).html());
-        }
+        debugText += $('<div></div>').text(urlDecode(post)).html();
+        $debugOutput.html(debugText);
+
         parameters.cleanup();
         if (resize) {
           $panelHolder.trigger('resize', { position: 'bottom' });
         }
 
-        busyIndicator.hide();
+        $busyIndicator.hide();
 
         filterUpdateActive = false;
       });
@@ -474,7 +512,7 @@ const emailFormRecipientsHandlers = (
    * read-only attempt.
    */
   const readonlyFilterControls = (state: boolean, exceptions?: string[]) => {
-    console.trace('READONLY FILTERS');
+    // console.trace('READONLY FILTERS');
     $fieldset.toggleClass('filter-controls-disabled', state);
 
     exceptions = exceptions ?? [];
@@ -577,7 +615,7 @@ const emailFormRecipientsHandlers = (
 
   // Record history when the select box changes. Maybe too slow, but
   // we will see.
-  recipientsSelect
+  $recipientsSelect
     .off('change')
     .on('change', function(event: JQuery.EventBase) {
       applyRecipientsFilter.call(this, event, { historySnapshot: true });
@@ -657,10 +695,10 @@ const emailFormCompositionHandlers = (
   const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector') as JQuery<HTMLSelectElement>;
   const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector') as JQuery<HTMLSelectElement>;
   const $sentEmailsSelector = $fieldset.find('select.sent.email-message-selector') as JQuery<HTMLSelectElement>;
-  const saveAsTemplate = $fieldset.find('#check-save-as-template');
-  const draftAutoSave = $fieldset.find('#check-draft-auto-save');
-  const discloseRecipients = $fieldset.find('#check-disclosed-recipients');
-  const messageText = $fieldset.find('textarea');
+  const $saveAsTemplate = $fieldset.find('#check-save-as-template');
+  const $draftAutoSave = $fieldset.find('#check-draft-auto-save');
+  const $discloseRecipients = $fieldset.find('#check-disclosed-recipients');
+  const $messageText = $fieldset.find('textarea');
   const $eventAttachmentsRow = $fieldset.find('tr.event-attachments');
   const $eventAttachmentsSelector = $eventAttachmentsRow.find('select#event-attachments-selector') as JQuery<HTMLSelectElement>;
   const $fileAttachmentsRow = $fieldset.find('tr.file-attachments') as JQuery<HTMLTableRowElement>;
@@ -707,7 +745,7 @@ const emailFormCompositionHandlers = (
       this.$input.data('ignoreChange', value);
     },
     onInitialize() {
-      this.$wrapper.toggleClass('expanded', saveAsTemplate.is(':checked'));
+      this.$wrapper.toggleClass('expanded', $saveAsTemplate.is(':checked'));
     },
   });
   $draftEmailsSelector.selectize(messageSelectorSelectizeOptions);
@@ -784,7 +822,7 @@ const emailFormCompositionHandlers = (
     let post = '';
     if (request.singleItem) {
       // Only serialize the request, no need to post all data around.
-      post = $.param({ emailComposer: request });
+      post = $.param({ [EnumPostTag.COMPOSER]: request });
     } else {
       if (request.submitAll) {
         // Everything is greedily submitted ...
@@ -799,7 +837,7 @@ const emailFormCompositionHandlers = (
         post += '&' + $.param($this);
       }
       // add the request itself as data
-      post += '&' + $.param({ emailComposer: request });
+      post += '&' + $.param({ [EnumPostTag.COMPOSER]: request });
     }
 
     if (!noDebug) {
@@ -915,12 +953,12 @@ const emailFormCompositionHandlers = (
           case 'load':
             switch (topic) {
               case 'template': {
-                const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
+                const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
                 dataItem.val('');
-                $fieldset.find('input[name^="emailComposer[referencing]"]').remove();
-                $fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
+                findComposerInput($fieldset, ComposerCgiKeys.REFERENCING, 'name^').remove();
+                findComposerInput($fieldset, ComposerCgiKeys.IN_REPLY_TO, 'name^').val('');
                 // currentTemplate.val(requestData.emailTemplateName);
-                WysiwygEditor.updateEditor(messageText, requestData.message);
+                WysiwygEditor.updateEditor($messageText, requestData.messageText);
                 $fieldset.find('input.email-subject').val(requestData.subject!);
 
                 $templateEmailsSelector.next().removeClass('loading');
@@ -978,10 +1016,10 @@ const emailFormCompositionHandlers = (
                 const $rcptFieldSet = $form.find('fieldset.email-recipients.page') as JQuery<HTMLFieldSetElement>;
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
 
-                const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
+                const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
                 dataItem.val('');
-                saveAsTemplate.prop('checked', false).trigger('change');
-                // WysiwygEditor.updateEditor(messageText, requestData.message);
+                $saveAsTemplate.prop('checked', false).trigger('change');
+                // WysiwygEditor.updateEditor($messageText, requestData.message);
                 // $fieldset.find('input.email-subject').val(requestData.subject);
 
                 // Make the debug output less verbose
@@ -1003,7 +1041,7 @@ const emailFormCompositionHandlers = (
                 break;
               case 'draft': {
                 // perhaps rather use data stuff in the future ...
-                const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
+                const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
                 dataItem.val(requestData.messageDraftId!);
                 SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions!);
                 break;
@@ -1014,11 +1052,11 @@ const emailFormCompositionHandlers = (
             switch (topic) {
               case 'template':
                 // currentTemplate.val(requestData.emailTemplateName);
-                WysiwygEditor.updateEditor(messageText, requestData.message);
+                WysiwygEditor.updateEditor($messageText, requestData.messageText);
                 SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
                 break;
               case 'draft': {
-                const dataItem = $fieldset.find('input[name="emailComposer[messageDraftId]"]');
+                const dataItem = findComposerRequestInput($fieldset, 'messageDraftId');
                 dataItem.val('');
                 SelectUtils.replaceOptions($draftEmailsSelector, requestData.draftEmailOptions!);
                 break;
@@ -1186,6 +1224,30 @@ const emailFormCompositionHandlers = (
     .off('click')
     .on('click', function() {
 
+      // save a draft while entering the preview ...
+      if (Email.autoSaveTimer) {
+        clearTimeout(Email.autoSaveTimer);
+        Email.autoSaveTimer = null;
+      }
+      applyComposerControls.call(
+        $fieldset[0],
+        {
+          operation: 'save',
+          topic: 'draft',
+          submitAll: true,
+          projectId: projectId(),
+          projectName: projectName(),
+          autoSave: true,
+        },
+        true, // noDebug
+        function(lock) {
+          if (lock) {
+            return;
+          }
+          startDraftAutoSave($draftAutoSave);
+        },
+      );
+
       const post = $form.serialize();
 
       pageBusyIcon(true);
@@ -1263,7 +1325,7 @@ const emailFormCompositionHandlers = (
    * Template handling (save, delete, load)
    */
 
-  const autoSaveSeconds = draftAutoSave.data('auto-save-interval') || 300;
+  const autoSaveSeconds = $draftAutoSave.data('auto-save-interval') || 300;
   const autoSaveTimeout = autoSaveSeconds * 1000;
 
   const autoSaveHandler = () => {
@@ -1294,12 +1356,15 @@ const emailFormCompositionHandlers = (
   };
 
   const confirmAutoSaveDelete = function(doDelete: boolean = false) {
-    const draftId = parseInt('' + $fieldset.find('input[name="emailComposer[messageDraftId]"]').val());
+    const draftId = parseInt('' + findComposerRequestInput($fieldset, 'messageDraftId').val());
     if (draftId <= 0) {
+      console.info('DRAFT ID IS NOT THERE', { draftId });
       return;
     }
-    const autoGenerated = $draftEmailsSelector.find('option[value="__draft-' + draftId + '"]').data('autoGenerated') || false;
-    if (autoGenerated && (doDelete || draftAutoSave.prop('checked'))) {
+    const $draftOption = SelectUtils.options($draftEmailsSelector).filter(`option[value="__draft-${draftId}"]`);
+    const autoGenerated = +($draftOption.attr('data-auto-generated') ?? 0);
+    console.info('DRAFT AUTO', { autoGenerated, $draftOption });
+    if (autoGenerated && (doDelete || $draftAutoSave.prop('checked'))) {
       Dialogs.confirm(
         t(appName,
           'Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?'
@@ -1355,7 +1420,7 @@ const emailFormCompositionHandlers = (
     }
   };
 
-  draftAutoSave
+  $draftAutoSave
     .off('change')
     .on('change', function(_event: JQuery.EventBase) {
       const $this = $(this);
@@ -1382,12 +1447,12 @@ const emailFormCompositionHandlers = (
       return false;
     });
 
-  startDraftAutoSave(draftAutoSave);
+  startDraftAutoSave($draftAutoSave);
 
-  saveAsTemplate
+  $saveAsTemplate
     .off('change')
     .on('change', function() {
-      $templateEmailsSelector.next().toggleClass('expanded', saveAsTemplate.is(':checked'));
+      $templateEmailsSelector.next().toggleClass('expanded', $saveAsTemplate.is(':checked'));
       return false;
     });
 
@@ -1397,7 +1462,7 @@ const emailFormCompositionHandlers = (
     .on('click', function(_event) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
-      if (saveAsTemplate.is(':checked')) {
+      if ($saveAsTemplate.is(':checked')) {
         const request = { operation: 'save', topic: 'template', submitAll: true } as const;
         // We do a quick client-side validation and ask the user for ok
         // when a template with the same name is already present.
@@ -1440,7 +1505,7 @@ const emailFormCompositionHandlers = (
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
 
-      if (saveAsTemplate.is(':checked')) {
+      if ($saveAsTemplate.is(':checked')) {
         // We do a quick client-side validation and ask the user for ok.
         const current = SelectUtils.selected($templateEmailsSelector) as string;
         if ($templateEmailsSelector.find('option').filter(function() {
@@ -1469,7 +1534,7 @@ const emailFormCompositionHandlers = (
             t(appName, 'Unknown Template'));
         }
       } else {
-        const draftId = +($fieldset.find('input[name="emailComposer[messageDraftId]"]').val()! as string);
+        const draftId = +(findComposerRequestInput($fieldset, 'messageDraftId').val()! as string);
 
         if (draftId > 0) {
           // find the draft data in the select which we mis-use as data-storage here
@@ -1644,7 +1709,7 @@ const emailFormCompositionHandlers = (
   /**************************************************************************
    *
    */
-  discloseRecipients
+  $discloseRecipients
     .off('change')
     .on('change', function(_event: JQuery.EventBase) {
       const $this = $(this);
@@ -1770,14 +1835,14 @@ const emailFormCompositionHandlers = (
 
   const updateEventAttachments = (projectId: number, projectName: string, events: string[]) => {
     const requestData = {
-      operation: 'update',
-      topic: 'element',
-      formElement: 'eventAttachments',
+      operation: 'update' as const,
+      topic: 'element' as const,
+      formElements: ['eventAttachments' as const],
       singleItem: true,
       attachedEvents: events,
       projectId,
       projectName,
-    } as const;
+    };
     applyComposerControls.call($dialogHolder[0], requestData);
   };
 
@@ -2055,8 +2120,8 @@ const emailFormCompositionHandlers = (
               persist: true,
               // compare with pme.ts
               valueField: 'email',
-              labelField: 'email',
-              searchField: ['email'],
+              labelField: 'label',
+              searchField: ['email', 'label'],
               lockOptgroupOrder: true,
               create(input, setterCallback) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -2083,7 +2148,10 @@ const emailFormCompositionHandlers = (
                         disable: false,
                       });
                     }
+                    const email = data.email;
+                    data.label = data.details[email] ? `${data.details[email]} <${email}>` : email;
                     setterCallback(data);
+                    console.info('EMAIL OPTION DATA', { data, all: selectize.options });
                     selectize
                       .$input
                       .closest('.ui-dialog.address-book-emails')
@@ -2105,17 +2173,20 @@ const emailFormCompositionHandlers = (
                 click() {
                   const $dialogHolder = $(this);
                   const $selectElement = $dialogHolder.find('select');
-                  const selectize = SelectUtils.getSelectize<HTMLSelectElement, string, { email: string, optgroup: string }>($selectElement)!;
+                  const selectize = SelectUtils.getSelectize<HTMLSelectElement, string, { email: string, optgroup: string, label: string }>($selectElement)!;
+                  console.info('SELECTED EMAIL OPTIONS', SelectUtils.selectedOptions($selectElement));
                   const selectedValues = SelectUtils.selected($selectElement)!;
                   const selectedFreeForm = selectize.items
                     .map(email => selectize.options[email])
                     .filter(option => option.optgroup === freeFormLabel)
-                    .map(option => ({
-                      value: option.email,
-                      html: option.email,
-                      text: option.email,
-                    }),
-                    );
+                    .map(option => {
+                      console.info('EMAIL OPTION', option);
+                      return {
+                        value: option.email,
+                        html: option.label,
+                        text: option.label,
+                      };
+                    });
                   const innerPost = { addressBookCandidates: selectedFreeForm };
                   $.post(generateEmailFormUrl('contacts/save'), innerPost)
                     .fail(ajaxHandleError)
@@ -2126,7 +2197,7 @@ const emailFormCompositionHandlers = (
                           if (!ajaxValidateResponse(data, ['contents'])) {
                             return;
                           }
-                          const newOptions = $(data.contents).html();
+                          const newOptions = data.contents;
                           SelectUtils.replaceOptions($selectElement, newOptions);
                           SelectUtils.selected($selectElement, selectedValues);
                           selectize!
@@ -2200,7 +2271,7 @@ const emailFormCompositionHandlers = (
  *
  * - PME_sys_mrecs: array of ids of pre-selected musicians
  *
- * - eventSelect: array of ids of events to attach.
+ * - selectedEvents: array of ids of events to attach.
  *
  * @param modal TBD, default true.
  *

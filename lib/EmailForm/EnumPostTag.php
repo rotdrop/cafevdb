@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2021, 2023, 2025, 2026 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB;
+namespace OCA\CAFEVDB\EmailForm;
 
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-?>
-<select class="address-book-emails"
-        name="adressBookEmails[]"
-        data-placeholder="<?php echo $l->t('Select Em@il recipients, type to search!'); ?>"
-        multiple="multiple">
-  <?php echo PageNavigation::selectOptions($emailOptions); ?>
-</select>
+/** Some constants also used in the frontend code. */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+enum EnumPostTag: string
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case COMPOSER = 'emailComposer';
+  case RECIPIENTS_FILTER = 'emailRecipients';
+}

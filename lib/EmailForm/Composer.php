@@ -99,7 +99,7 @@ class Composer
   private const PROGRESS_CHUNK_SIZE = 4096;
   private const PROGRESS_THROTTLE_SECONDS = 2;
 
-  const POST_TAG = 'emailComposer';
+  const POST_TAG = EnumPostTag::COMPOSER->value;
 
   private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
   private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
@@ -5246,7 +5246,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   /** @return string The current catch-all email. */
   public function catchAllEmail():string
   {
-    return htmlspecialchars($this->catchAllName.' <'.$this->catchAllEmail.'>');
+    return htmlspecialchars($this->catchAllName . ' <' . $this->catchAllEmail . '>');
   }
 
   /**
@@ -5348,7 +5348,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @return string The current or requested From: name.
    */
-  public function fromName(?string $fromTag = null):string
+  public function fromName(?string $fromTag = null): string
   {
     switch (($fromTag ?? $this->fromTag())) {
       case self::FROM_ORCHESTRA:
@@ -5955,7 +5955,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
    */
   public function eventAttachments()
   {
-    $attachedEvents = $this->requestParameters['eventSelect'] ?? $this->cgiValue('attachedEvents', []);
+    $attachedEvents = $this->requestParameters['selectedEvents'] ?? $this->cgiValue('attachedEvents', []);
     $events = [];
     foreach ($attachedEvents as $event) {
       $event = json_decode($event, true);
