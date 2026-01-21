@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -193,13 +193,24 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
+   * Initialize the key field if it is not yet set. We assume that UUIDs are
+   * really unique, so just create one and be gone.
+   *
+   * @return void
+   */
+  private function ensureKeyNotNull(): void
+  {
+    $this->key = $this->key ?? Uuid::create();
+  }
+
+  /**
    * Set key.
    *
    * @param string|UuidInterface $key
    *
-   * @return ProjectParticipantFieldDataOption
+   * @return self
    */
-  public function setKey($key):ProjectParticipantFieldDataOption
+  public function setKey(string|UuidInterface $key): self
   {
     $key = Uuid::asUuid($key);
     if (empty($key)) {
@@ -215,8 +226,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return UuidInterface
    */
-  public function getKey()
+  public function getKey(): UuidInterface
   {
+    $this->ensureKeyNotNull();
     return $this->key;
   }
 
