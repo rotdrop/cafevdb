@@ -1178,8 +1178,6 @@ class ProjectParticipantFieldsService
         function() use ($field) {
           $defaultValue = $field->getDefaultValue();
           if ($defaultValue === null) {
-            // can happen, in particular for recurring receivables.
-            $this->logInfo('NO DEFAULT VALUE');
             return;
           }
           $needFlush = false;
