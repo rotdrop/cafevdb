@@ -2170,6 +2170,8 @@ class EventsService
    */
   public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $remove = false, bool $flush = false):void
   {
+    /** @var ProjectParticipantFieldsService $participantFieldsService */
+    $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
     if ($remove) {
       $absenceField = $projectEvent->getAbsenceField();
       if (!empty($absenceField)) {
@@ -2177,7 +2179,8 @@ class EventsService
           // cleanup, unused fields are simply removed
           $projectEvent->setAbsenceField(null);
           $absenceField->setProjectEvent(null);
-          $this->remove($absenceField, hard: true, flush: $flush);
+          // $this->remove($absenceField, hard: true, flush: $flush);
+          $participantFieldsService->deleteField($absenceField);
         } else {
           // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
           // soft delete it in case the operator tries to recover it later
@@ -2185,8 +2188,6 @@ class EventsService
         }
       }
     } else {
-      /** @var ProjectParticipantFieldsService $participantFieldsService */
-      $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
       $participantFieldsService->ensureAbsenceField($projectEvent, flush: $flush);
     }
   }
