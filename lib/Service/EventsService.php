@@ -880,7 +880,7 @@ class EventsService
    * @param array $calendarIds Array with calendar sorting order, giving
    * the ids of the wanted calendars in the wanted order.
    *
-   * @return array Associative array with calendarnames as keys.
+   * @return array Associative array with calendar-ids as keys.
    */
   public function eventMatrix(array $projectEvents, array $calendarIds):array
   {
