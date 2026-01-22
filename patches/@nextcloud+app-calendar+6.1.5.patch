@@ -43,7 +43,7 @@ index f3488a5..cab531b 100644
 +	},
  }
 diff --git a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
-index 6903d58..1130c30 100644
+index 6903d58..6dfc674 100644
 --- a/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 +++ b/node_modules/@nextcloud/app-calendar/src/store/calendarObjectInstance.js
 @@ -593,7 +593,10 @@ export default defineStore('calendarObjectInstance', {
@@ -58,3 +58,64 @@ index 6903d58..1130c30 100644
  		},
  
  		/**
+@@ -1291,7 +1294,7 @@ export default defineStore('calendarObjectInstance', {
+ 			closeToDate,
+ 		}) {
+ 			const calendarsStore = useCalendarsStore()
+-			const calendarObject = await calendarsStore.getEventByObjectId({ objectId })
++			const calendarObject = await calendarsStore.getEventByObjectId({ objectId, force })
+ 			const iterator = calendarObject.calendarComponent.getVObjectIterator()
+ 			const firstVObject = iterator.next().value
+ 
+@@ -1318,9 +1321,10 @@ export default defineStore('calendarObjectInstance', {
+ 		async getCalendarObjectInstanceByObjectIdAndRecurrenceId({
+ 			objectId,
+ 			recurrenceId,
++			reload
+ 		}) {
+ 			const calendarsStore = useCalendarsStore()
+-			if (this.existingEvent.objectId === objectId && this.existingEvent.recurrenceId === recurrenceId) {
++			if (!reload && this.existingEvent.objectId === objectId && this.existingEvent.recurrenceId === recurrenceId) {
+ 				return Promise.resolve({
+ 					calendarObject: this.calendarObject,
+ 					calendarObjectInstance: this.calendarObjectInstance,
+@@ -1328,7 +1332,7 @@ export default defineStore('calendarObjectInstance', {
+ 			}
+ 
+ 			const recurrenceIdDate = new Date(recurrenceId * 1000)
+-			const calendarObject = await calendarsStore.getEventByObjectId({ objectId })
++			const calendarObject = await calendarsStore.getEventByObjectId({ objectId, reload })
+ 			const eventComponent = getObjectAtRecurrenceId(calendarObject, recurrenceIdDate)
+ 			if (eventComponent === null) {
+ 				throw new Error('Not a valid recurrence-id')
+diff --git a/node_modules/@nextcloud/app-calendar/src/store/calendars.js b/node_modules/@nextcloud/app-calendar/src/store/calendars.js
+index 42ed651..28041cf 100644
+--- a/node_modules/@nextcloud/app-calendar/src/store/calendars.js
++++ b/node_modules/@nextcloud/app-calendar/src/store/calendars.js
+@@ -743,11 +743,11 @@ export default defineStore('calendars', {
+ 		 * @param {string} data.objectId Id of the object to fetch
+ 		 * @return {Promise<CalendarObject>}
+ 		 */
+-		async getEventByObjectId({ objectId }) {
++		async getEventByObjectId({ objectId, reload }) {
+ 			const calendarObjectsStore = useCalendarObjectsStore()
+ 			// TODO - we should still check if the calendar-object is up to date
+ 			//  - Just send head and compare etags
+-			if (calendarObjectsStore.getCalendarObjectById(objectId)) {
++			if (!reload && calendarObjectsStore.getCalendarObjectById(objectId)) {
+ 				return Promise.resolve(calendarObjectsStore.getCalendarObjectById(objectId))
+ 			}
+ 
+@@ -766,7 +766,11 @@ export default defineStore('calendars', {
+ 			const calendar = this.calendarsById[calendarId]
+ 			const vObject = await calendar.dav.find(objectFileName)
+ 			const calendarObject = mapCDavObjectToCalendarObject(vObject, calendar.id)
+-			calendarObjectsStore.appendCalendarObjectMutation({ calendarObject })
++			if (reload) {
++				calendarObjectsStore.appendOrUpdateCalendarObjectsMutation({ calendarObjects: [calendarObject] })
++			} else {
++				calendarObjectsStore.appendCalendarObjectMutation({ calendarObject })
++			}
+ 			this.addCalendarObjectToCalendarMutation({
+ 				calendar: {
+ 					id: calendarId,

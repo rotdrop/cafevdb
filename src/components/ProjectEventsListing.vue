@@ -118,7 +118,7 @@
                     :class="{ loading: showLoadingIndicator }"
                     :disabled="!project || isLoading"
                     :aria-label="t(appName, 'reload the project appointments')"
-                    @click="syncProjectData(project?.name || '')"
+                    @click="handleReload"
           >
             <template #icon>
               <IconReload />
@@ -805,6 +805,17 @@ const syncProjectData = async (projectName: string) => {
   })
 }
 
+const handleReload = () => {
+  syncProjectData(project.value?.name || '')
+  if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
+    calendarObjectInstanceStore.getCalendarObjectInstanceByObjectIdAndRecurrenceId({
+      objectId: currentRoute.params.object,
+      recurrenceId: +currentRoute.params.recurrenceId,
+      reload: true,
+    })
+  }
+}
+
 const toggleCalendarVisibility = (entry: EventMatrixRow) => {
   expandedState.value[entry.uri] = !expandedState.value[entry.uri]
 }
@@ -1009,6 +1020,7 @@ type CalendarObjectsStore = Store<
   'calendarObjects',
   {
     modificationCount: number,
+    updateCalendarObject: ({ calendarObject }) => Promise<unknown>,
   }
 >
 
@@ -1022,7 +1034,7 @@ type CalendarObjectInstanceStore = Store<
       objectId: string|null,
       recurrenceId: number|null,
     },
-    getCalendarObjectInstanceByObjectIdAndRecurrenceId: (arg: { objectId: string, recurrenceId: number })
+    getCalendarObjectInstanceByObjectIdAndRecurrenceId: (arg: { objectId: string, recurrenceId: number, reload?: boolean })
       => Promise<{
         calendarObject: CalendarObject,
         calendarObjectInstance: CalendarObjectInstance,
@@ -1095,6 +1107,8 @@ const mutateCategory = async (event: EventMatrixEvent, category: string, enable:
       calendarObject,
     })
   }
+  calendarObjectsStore.updateCalendarObject({ calendarObject })
+  calendarObjectInstance.eventComponent.markDirty()
   await calendarObjectInstanceStore.saveCalendarObjectInstance({
     thisAndAllFuture: false,
     calendarId: calendarObject.calendarId,
