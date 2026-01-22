@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,17 +56,13 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
-
-  #[ORM\Column(type: 'integer')]
-  #[ORM\Id]
-  #[ORM\GeneratedValue]
-  private int $id;
 
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFields', fetch: 'EXTRA_LAZY')]
@@ -167,7 +163,7 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
   private Collection $fieldData;
 
-  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField', orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField')]
   private ?ProjectEvent $projectEvent = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -190,6 +186,7 @@ class ProjectParticipantField implements \ArrayAccess
   /** {@inheritdoc} */
   public function __clone()
   {
+    $this->setId(null);
     $oldProject = $this->project;
     $oldAccess = $this->participantAccess;
     $oldDataOptions = $this->dataOptions;
@@ -211,30 +208,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function __wakeup()
   {
     $this->arrayCTOR();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id ?? null;
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return ProjectParticipantField
-   */
-  public function setId(int $id):ProjectParticipantField
-  {
-    $this->id = $id;
-
-    return $this;
   }
 
   /**
