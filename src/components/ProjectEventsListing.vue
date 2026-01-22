@@ -445,6 +445,7 @@ import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConst
 import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
 import appTranslate from '../services/app-l10n.ts'
 import type { EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts'
+// import { subscribe, unsubscribe, type NextcloudEvents } from '@nextcloud/event-bus'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -1327,11 +1328,39 @@ watch(syncEventListTrigger, async (value) => {
   syncEventListTrigger.value = false
 })
 
+// const logNotifications = (eventBusEvent: NextcloudEvents['notifications:notification:received']) => {
+//   const notification = eventBusEvent.notification
+//   if (notification.app !== 'dav' || notification.objectType !== 'activity_notification') {
+//     logger.info('NOT FOR US', { eventBusEvent, notification })
+//     return
+//   }
+//   const parameters = notification.subjectRichParameters
+//   const calendarId = notification.objectId
+//   if (Object.keys(projectEventMatrix.value ?? {}).find(id => id === calendarId) === undefined) {
+//     logger.info('NOT FOR US', { calendarId, keys: Object.keys(projectEventMatrix.value ?? {}) })
+//     return
+//   }
+//   const eventUid = parameters.event.id
+//   const projectEvents: EventMatrixEvent[]|undefined = projectEventMatrix.value?.[calendarId].events
+//   if (projectEvents === undefined || projectEvents.length === 0) {
+//     logger.info('No project events for this calendar', { calendarId })
+//   }
+//   const event = projectEvents.find((event: EventMatrixEvent) => eventUid === event.uid)
+//   if (!event) {
+//     logger.info('Event not in our matrix', { eventUid, matrix: Object.values(projectEventMatrix.value?.[calendarId] ?? {}) })
+//     return
+//   }
+//   logger.info('FOUND EVENT, SHOULD RELOAD', { event })
+//   handleReload()
+// }
+// subscribe('notifications:notification:received', logNotifications)
+
 onUnmounted(() => {
   asyncUnSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, legacyEventsSelectionHandler)
   if (stopModificationCountWatch) {
     stopModificationCountWatch()
   }
+  // unsubscribe('notifications:notification:received', logNotifications)
 })
 
 </script>
