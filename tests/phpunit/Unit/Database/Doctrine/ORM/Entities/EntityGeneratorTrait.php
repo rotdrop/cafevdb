@@ -26,10 +26,13 @@ namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities;
 
 use Closure;
 use DateTimeInterface;
+use ReflectionProperty;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
+
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
@@ -73,6 +76,8 @@ trait EntityGeneratorTrait
 
   private array $entities = [];
 
+  private IAppContainer $appContainer;
+
   /**
    * {@inheritdoc}
    *
@@ -81,7 +86,7 @@ trait EntityGeneratorTrait
   public function generateProjectParticipant(bool $persist = false, ?DateTimeInterface $now = null): void
   {
     /** @var MockProvider $mockProvider */
-    $this->mockProvider = $mockProvider = MockProvider::create($this);
+    $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     if ($persist) {
       $this->entityManager = $mockProvider->getEntityManager($this);
@@ -89,12 +94,12 @@ trait EntityGeneratorTrait
       $this->entityManager = $this->createStub(EntityManager::class);
     }
 
-    $appContainer = $mockProvider->getAppContainer();
+    $this->appContainer = $mockProvider->getAppContainer();
 
     /** @var InstrumentationService $this->instrumentationService */
     $this->instrumentationService = new InstrumentationService(
-      configService: $appContainer->get(ConfigService::class),
-      toolTipsService: $appContainer->get(ToolTipsService::class),
+      configService: $this->appContainer->get(ConfigService::class),
+      toolTipsService: $this->appContainer->get(ToolTipsService::class),
       entityManager: $this->entityManager,
     );
 
@@ -113,6 +118,70 @@ trait EntityGeneratorTrait
     );
     $this->project->getParticipants()->clear();
     $this->project->getParticipants()->set($this->musician->getId(), $this->participant);
+  }
+
+  /**
+   * Add one instrument to $this->musician, $this->project, $this->participant.
+   *
+   * @return void
+   */
+  protected function generateInstruments(): void
+  {
+    $l10n = $this->mockProvider->getL10N();
+    $families = [];
+    $idOffset = 0;
+    foreach (['string', 'strings'] as $familyName) {
+      $family = new Entities\InstrumentFamily()
+        ->setId(self::FAKED_ENTITY_ID + $idOffset++)
+        ->setFamily($l10n->t($familyName));
+      new ReflectionProperty($family, 'untranslatedFamily')->setValue($family, $familyName);
+      $families[] = $family;
+    }
+    $instruments = [];
+    $idOffset = 0;
+    foreach (['violin', 'doublebass'] as $instrumentName) {
+      $instrument = new Entities\Instrument()
+        ->setId(self::FAKED_ENTITY_ID + $idOffset++)
+        ->setName($l10n->t($instrumentName));
+      new ReflectionProperty($instrument, 'untranslatedName')->setValue($instrument, $instrumentName);
+      foreach ($families as $family) {
+        $instrument->addFamily($family);
+      }
+      $instruments[] = $instrument;
+    }
+    $musicianInstruments = [];
+    $idOffset = 0;
+    /** @var Entities\Instrument $instrument */
+    foreach ($instruments as $instrument) {
+      $musicianInstrument = new Entities\MusicianInstrument()
+        ->setInstrument($instrument)
+        ->setMusician($this->musician);
+      $this->assertEquals($instrument, $musicianInstrument->getInstrument());
+      $this->assertEquals($this->musician, $musicianInstrument->getMusician());
+      $musicianInstruments[] = $musicianInstrument;
+    }
+
+    /** @var Entities\MusicianInstrument $musicianInstrument */
+    $musicianInstrument = $musicianInstruments[0];
+    $projectInstrument = new Entities\ProjectInstrument()
+      ->setProjectParticipant($this->participant)
+      ->setMusicianInstrument($musicianInstrument);
+    $this->assertEquals($musicianInstrument->getInstrument(), $projectInstrument->getInstrument());
+
+    for ($voice = 0; $voice <= 2; ++$voice) {
+      $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
+        $this->project,
+        $projectInstrument->getInstrument(),
+        $voice,
+      )
+        ->setQuantity($voice);
+      $this->project->getInstrumentationNumbers()->add($instrumentationNumber);
+      if ($voice == 1) {
+        $projectInstrument->setInstrumentationNumber($instrumentationNumber);
+        $projectInstrument->getInstrument()->getProjectInstrumentationNumbers()->add($instrumentationNumber);
+        $instrumentationNumber->getProjectInstruments()->add($projectInstrument);
+      }
+    }
   }
 
   /** @return Entities\ProjectParticipantFieldDatum */

@@ -37,6 +37,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\AppFramework\Http;
 
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\EmailFormController as TestedController;
@@ -54,24 +55,33 @@ use OCA\CAFEVDB\Storage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
-#[Attributes\CoversClass(TestedController::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
+#[Attributes\CoversClass(Controller\DTO\EmailFormRecipientsFilterResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailWebFormResponse::class)]
 #[Attributes\CoversClass(EmailForm\Composer::class)]
 #[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
+#[Attributes\CoversClass(TestedController::class)]
 /** Test the ProjectsController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterReloadResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterSnapshotResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\ProjectEventsController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailTemplate::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianInstrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
@@ -100,9 +110,6 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterReloadResponse::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterSnapshotResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
@@ -147,6 +154,8 @@ class EmailFormControllerTest extends TestCase
   public function setup(): void
   {
     $this->generateEventsService();
+
+    $this->generateInstruments();
 
     $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
@@ -272,7 +281,7 @@ class EmailFormControllerTest extends TestCase
     $this->postData[$this->pme->cgiSysName('qf' . $idx . '_idx')] = [
       // Types\EnumParticipationStatus::REGULAR,
     ];
-    $this->postData = array_merge($this->postData, $furtherParameters);
+    $this->postData = Util::arrayMergeRecursive($this->postData, $furtherParameters);
   }
 
   /**
@@ -283,7 +292,7 @@ class EmailFormControllerTest extends TestCase
   private function generateProjectWebFormParameters(array $furtherParameters = []): void
   {
     $this->generateWebFormParameters(
-      array_merge([
+      Util::arrayMergeRecursive([
         'projectName' => $this->project->getName(),
         'projectId' => $this->project->getId(),
       ], $furtherParameters),
@@ -332,6 +341,15 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(1, $data->filterHistory->historySize);
   }
 
+  private const DEFAULT_PROJECT_USER_BASE = [
+    EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+      EmailForm\RecipientsFilterCgiKeys::BASIC_RECIPIENTS_SET => [
+        EmailForm\RecipientsFilterCgiKeys::FROM_PROJECT_PRELIMINARY,
+        EmailForm\RecipientsFilterCgiKeys::FROM_PROJECT_CONFIRMED,
+      ],
+    ],
+  ];
+
   /** @return void */
   #[Attributes\Depends('testGenerateFormWithProject')]
   public function testRecipientsFilterHistorySnapshot(): void
@@ -361,12 +379,16 @@ class EmailFormControllerTest extends TestCase
   #[Attributes\Depends('testGenerateFormWithProject')]
   public function testRecipientsFilterHistoryResetFilter(): void
   {
-    $this->generateProjectWebFormParameters([
-      EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
-        EmailForm\RecipientsFilterCgiKeys::RESET_INSTRUMENTS_FILTER => true,
-        EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
-      ],
-    ]);
+    $this->generateProjectWebFormParameters(
+      Util::arrayMergeRecursive(
+        self::DEFAULT_PROJECT_USER_BASE,
+        [
+          EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+            EmailForm\RecipientsFilterCgiKeys::RESET_INSTRUMENTS_FILTER => true,
+            EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+          ],
+        ],
+      ));
     $response = $this->testedController->recipientsFilter(
       projectName: $this->project->getName(),
       projectId: $this->project->getId(),
@@ -453,6 +475,37 @@ class EmailFormControllerTest extends TestCase
       $this->postData[EmailForm\EnumPostTag::RECIPIENTS_FILTER->value][EmailForm\RecipientsFilterCgiKeys::INSTRUMENTS_FILTER],
       $onlyInstruments,
     );
+  }
+
+  /** @return void */
+  public function testRecipientsFilterResponse(): void
+  {
+    $this->generateProjectWebFormParameters(
+      Util::arrayMergeRecursive(
+        self::DEFAULT_PROJECT_USER_BASE,
+        [
+          EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+            EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+          ],
+        ],
+      ),
+    );
+    $response = $this->testedController->recipientsFilter(
+      projectName: $this->project->getName(),
+      projectId: $this->project->getId(),
+      bulkTransactionId: null,
+    );
+    // print_r($response->getData());
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormRecipientsFilterResponse::class, $data);
+    /** @var DTO\EmailFormRecipientsFilterResponse $data */
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->instrumentsFilter, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($data->participationStatusFilter, LIBXML_PEDANTIC));
+    $this->assertNotEmpty($data->recipientsOptions);
+    $this->assertEquals(true, $domDoc->loadHTML($data->recipientsOptions, LIBXML_PEDANTIC));
   }
 
   private const FREE_FORM_RECIPIENTS = [

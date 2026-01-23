@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository as EntityRepository;
 
 /** Provide a mock for the instruments repository. */
@@ -43,10 +44,57 @@ trait MockMusiciansRepositoryTrait
       ->getMock();
     $repository->method('findBy')->willReturnCallback(
       function(array $criteria) {
-        $participationProject = end($criteria)['projectParticipation.project'] ?? null;
-        if ($participationProject !== null && $participationProject != $this->project->getId()) {
-          return [];
+        // print_r($criteria);
+        $projectId = null;
+        foreach ($criteria as $index => $criterium) {
+          $this->assertEquals(1, count($criterium));
+          $key = array_keys($criterium)[0];
+          $value = $criterium[$key];
+          if ($key == 'projectParticipation.project' || $key == '(&projectParticipation.project') {
+            if (($value === null && $this->musician->getProjectParticipation()->count() > 0)
+                ||
+                ($value !== null
+                 &&
+                 $this->musician->getProjectParticipation()->forAll(
+                   fn(int $id, Entities\ProjectParticipant $participant)
+                   =>
+                   $participant->getProject()->getId() != $value,
+                 ))) {
+              return [];
+            }
+            $projectId = $value;
+            unset($criteria[$index]);
+            break;
+          }
         }
+
+        if ($projectId > 0) {
+          foreach ($criteria as $criterium) {
+            $this->assertEquals(1, count($criterium));
+            $key = array_keys($criterium)[0];
+            $value = $criterium[$key];
+            if ($key == '!projectParticipation.participationStatus') {
+              if (is_array($value)
+                    && in_array($this->musician->getProjectParticipation()->get($projectId)->getParticipationStatus(), $value)) {
+                return [];
+              }
+              return [ $this->musician ];
+            }
+          }
+        }
+        foreach ($criteria as $criterium) {
+          $this->assertEquals(1, count($criterium));
+          $key = array_keys($criterium)[0];
+          $value = $criterium[$key];
+          if ($key == '!projectParticipation.participationStatus') {
+            if (is_array($value)
+                && in_array($this->musician->getDefaultParticipationStatus(), $value)) {
+              return [];
+            }
+            return [ $this->musician ];
+          }
+        }
+
         $ids = $criteria['id'] ?? [];
         if (in_array($this->musician->getId(), $ids)) {
           return [ $this->musician ];
@@ -56,6 +104,7 @@ trait MockMusiciansRepositoryTrait
         if (str_contains($this->musician->getPublicName(), $pattern)) {
           return [ $this->musician ];
         }
+        // do not care about deleted.
         return [];
       }
     );
