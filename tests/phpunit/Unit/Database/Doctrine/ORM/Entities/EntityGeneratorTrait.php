@@ -124,7 +124,7 @@ trait EntityGeneratorTrait
 
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
-      ->setId(0) // ? why ?
+      ->setId(self::FAKED_ENTITY_ID)
       ->setProject($this->project)
       ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES)
       ->setMultiplicity(

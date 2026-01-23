@@ -357,7 +357,7 @@ class EntityArrayAdapterTest extends TestCase
             "entityClassName": "ProjectParticipantFieldDatum",
             "entities": {
                 "2b826186-ef29-11f0-a81f-27218343fe72": {
-                    "flatIdentifier": "0:' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
                     "entityClassName": null
                 }
             }
@@ -593,13 +593,13 @@ class EntityArrayAdapterTest extends TestCase
                 "__DEPTH__": 0,
                 "created": null,
                 "dataOption": {
-                    "flatIdentifier": "0:2b826186-ef29-11f0-a81f-27218343fe72",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
                     "entityClassName": "ProjectParticipantFieldDataOption"
                 },
                 "deleted": null,
                 "deposit": null,
                 "field": {
-                    "flatIdentifier": "0",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "ProjectParticipantField"
                 },
                 "invoiceItems": [],
@@ -775,7 +775,7 @@ class EntityArrayAdapterTest extends TestCase
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
                         "2b826186-ef29-11f0-a81f-27218343fe72": {
-                            "flatIdentifier": "0:' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
                             "entityClassName": null
                         }
                     }
@@ -906,11 +906,11 @@ class EntityArrayAdapterTest extends TestCase
                         "entityClassName": "ProjectParticipant"
                     },
                     "receivable": {
-                        "flatIdentifier": "0:' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
                         "entityClassName": "ProjectParticipantFieldDatum"
                     },
                     "receivableOption": {
-                        "flatIdentifier": "0:2b826186-ef29-11f0-a81f-27218343fe72",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
                         "entityClassName": "ProjectParticipantFieldDataOption"
                     },
                     "subject": "Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
