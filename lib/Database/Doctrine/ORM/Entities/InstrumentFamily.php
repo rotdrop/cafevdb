@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use UnexpectedValueException;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -125,6 +126,31 @@ class InstrumentFamily implements \ArrayAccess
   }
 
   /**
+   * Add one instrument
+   *
+   * @param Instrument $instrument
+   *
+   * @return self
+   */
+  public function addInstrument(Instrument $instrument): self
+  {
+    if ($instrument->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument '{$instrument}' is null.");
+    }
+    if ($this->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument-family '{$this}' is null");
+    }
+    $key = $instrument->getId();
+    if ($this->instruments->get($key) === null) {
+      $this->instruments->set($key, $instrument);
+    }
+    if ($instrument->getFamilies()->get($this->id) === null) {
+      $instrument->addFamily($this);
+    }
+    return $this;
+  }
+
+  /**
    * Get the usage count, i.e. the number of instruments which belong
    * to this family.
    *
@@ -133,5 +159,15 @@ class InstrumentFamily implements \ArrayAccess
   public function usage():int
   {
     return $this->instruments->count();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $string = $this->family;
+    if ($this->untranslatedFamily ?? null) {
+      $string .= " ({$this->untranslatedFamily})";
+    }
+    return $string;
   }
 }

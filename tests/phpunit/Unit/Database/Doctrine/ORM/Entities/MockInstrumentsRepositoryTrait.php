@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
 
 /** Provide a mock for the instruments repository. */
@@ -184,10 +185,23 @@ trait MockInstrumentsRepositoryTrait
   /** @return InstrumentsRepository */
   public function getInstrumentsRepositoryMock(): InstrumentsRepository
   {
+    $describeAllResult = self::DESCRIBE_ALL_RESULT;
+    if ($this->musician instanceof Entities\Musician) {
+      // add missing Instruments
+      /** @var Entities\MusicianInstrument $musicianInstrument */
+      foreach ($this->musician->getInstruments() as $musicianInstrument) {
+        $instrument = $musicianInstrument->getInstrument();
+        if (!isset($describeAllResult['byId'][$instrument->getId()])) {
+          $families = implode(',', $instrument->getFamilies()->map(fn(Entities\InstrumentFamily $family) => $family->getFamily())->toArray());
+          $describeAllResult['byId'][$instrument->getId()] = $instrument->getName();
+          $describeAllResult['idGroups'][$instrument->getId()] = $families;
+        }
+      }
+    }
     $instrumentsRepository = $this->getMockBuilder(InstrumentsRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $instrumentsRepository->method('describeAll')->willReturn(self::DESCRIBE_ALL_RESULT);
+    $instrumentsRepository->method('describeAll')->willReturn($describeAllResult);
 
     return $instrumentsRepository;
   }

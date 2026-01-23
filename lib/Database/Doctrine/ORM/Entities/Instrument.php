@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use UnexpectedValueException;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -65,7 +66,7 @@ class Instrument implements \ArrayAccess
   private Collection $families;
 
   /** @var Collection<MusicianInstrument> */
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', indexBy: 'musician_id',  fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', indexBy: 'musician_id', fetch: 'EXTRA_LAZY')]
   private Collection $musicianInstruments;
 
   /** @var Collection<ProjectInstrument> */
@@ -121,7 +122,7 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set familie.
+   * Set families;
    *
    * @param Collection $families
    *
@@ -142,6 +143,31 @@ class Instrument implements \ArrayAccess
   public function getFamilies():Collection
   {
     return $this->families;
+  }
+
+  /**
+   * Add family.
+   *
+   * @param InstrumentFamily $family
+   *
+   * @return self
+   */
+  public function addFamily(InstrumentFamily $family): self
+  {
+    if ($this->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument '{$this}' is null.");
+    }
+    if ($family->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument-family '{$family}' is null");
+    }
+    $key = $family->getId();
+    if ($this->families->get($key) === null) {
+      $this->families->set($key, $family);
+    }
+    if ($family->getInstruments()->get($this->id) === null) {
+      $family->addInstrument($this);
+    }
+    return $this;
   }
 
   /**
