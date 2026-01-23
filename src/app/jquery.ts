@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,14 +27,20 @@ import localJQuery from 'jquery';
 
 const $ = localJQuery;
 
+declare global {
+  interface Window {
+    jQuery: JQueryStatic,
+  }
+}
+
 // jQuery still installs itself globally ...
 // eslint-disable-next-line @nextcloud/no-deprecations
 console.debug('JQUERY INSTANCES window / self', {
   // eslint-disable-next-line @nextcloud/no-deprecations
-  global: jQuery.fn.jquery,
+  global: window.jQuery?.fn.jquery,
   local: localJQuery.fn.jquery,
   // eslint-disable-next-line @nextcloud/no-deprecations
-  equal: jQuery === localJQuery,
+  equal: window.jQuery === localJQuery,
 });
 
 /**

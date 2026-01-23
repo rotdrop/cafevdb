@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ export function getSelectize<E extends HTMLElement, T extends string, U = { inpu
  * @param $select TBD.
  */
 const selectizeActive = <E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U> >) =>
-  !getSelectize($select);
+  !!getSelectize($select);
 
 export const isSelectizedJQuery = <E extends HTMLElement, T extends string, U = { input: string }>($arg: JQuery<MaybeSelectized<E, T, U> >): $arg is JQuery<Selectized<E, T, U> > =>
   $arg.length > 0 && !!$arg[0].selectize;
@@ -359,6 +359,8 @@ const getSelectFromWidget = function($widget: JQuery) {
   if ($widget.hasClass('selectize-control') || $widget.hasClass('chosen-container')) {
     const $element = $widget.prev();
     return $element.is('select') ? $element : $();
+  } else if ($widget.is('select')) {
+    return $widget;
   }
   return $();
 };

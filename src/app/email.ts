@@ -512,7 +512,7 @@ const emailFormRecipientsHandlers = (
    * read-only attempt.
    */
   const readonlyFilterControls = (state: boolean, exceptions?: string[]) => {
-    // console.trace('READONLY FILTERS');
+    console.trace('READONLY FILTERS', { state, exceptions });
     $fieldset.toggleClass('filter-controls-disabled', state);
 
     exceptions = exceptions ?? [];
