@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -30,6 +30,27 @@ import type {
   RouteConfig,
   RouteRecord,
 } from 'vue-router';
+
+export interface CalendarObjectEditLocation extends Location {
+  name: string,
+  params: {
+    object: string,
+    recurrenceId: string, // seconds
+    context: string,
+  },
+  query: Record<string, string>,
+}
+
+export interface CalendarObjectAddLocation extends Location {
+  name: string,
+  params: {
+    allDay: string, // === '1' is used inside the calendar app
+    dtstart: string, // seconds
+    dtend: string, // secons
+    context: string,
+  },
+  query: Record<string, string>,
+}
 
 const COMPONENT_NAME = 'CalendarRoutes';
 const logger = new Console(COMPONENT_NAME);

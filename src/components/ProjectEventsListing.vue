@@ -405,7 +405,6 @@ import {
   onBeforeRouteUpdate,
 } from 'vue-router/composables'
 import type {
-  Location,
   RouteRecord,
 } from 'vue-router'
 import capitalize from 'capitalize'
@@ -433,11 +432,12 @@ import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calenda
 import useCalendarObjects from '@nextcloud/app-calendar/src/store/calendarObjects.js'
 import useTooltipsStore from '../stores/tooltips.ts'
 import { storeToRefs } from 'pinia'
-import type { Store } from 'pinia'
 import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus'
 import {
   CALENDAR_APP_ROUTES,
   PROJECT_EVENTS_LISTING_NAME,
+  type CalendarObjectAddLocation,
+  type CalendarObjectEditLocation,
 } from '../router/calendar-routes.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
@@ -445,7 +445,8 @@ import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConst
 import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
 import appTranslate from '../services/app-l10n.ts'
 import type { EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts'
-// import { subscribe, unsubscribe, type NextcloudEvents } from '@nextcloud/event-bus'
+// eslint-disable-next-line n/no-missing-import
+import type { CalendarObjectsStore, CalendarObjectInstanceStore } from '@nextcloud/app-calendar'
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -602,27 +603,6 @@ const onUserManualPopup = async () => {
   isWikiLoading.value = false
 }
 
-interface CalendarEditLocation extends Location {
-  name: string,
-  params: {
-    object: string,
-    recurrenceId: string,
-    context: string,
-  },
-  query: Record<string, string>,
-}
-
-interface CalendarAddLocation {
-  name: string,
-  params: {
-    allDay: boolean,
-    dtstart: number, // seconds
-    dtend: number, // secons
-    context: string,
-  },
-  query: Record<string, string>,
-}
-
 const calendarIcons: { [Key in CalendarUris|'']?: VueConstructor } = {
   management: IconManagement,
   finance: IconFinance,
@@ -644,8 +624,8 @@ const yearsByEvent = reactive<Record<string, string> >({})
 const expandedState = ref<{ [Key in CalendarUris]?: boolean }>({})
 const hasAbsenceField = ref<Record<string, boolean> >({})
 const attachmentMark = ref<Record<string, boolean> >({})
-const routerEventEdit = ref<Record<string, CalendarEditLocation>>({})
-const routerEventAdd = ref<Record<string, { location: CalendarAddLocation, label: string }>>({})
+const routerEventEdit = ref<Record<string, CalendarObjectEditLocation>>({})
+const routerEventAdd = ref<Record<string, { location: CalendarObjectAddLocation, label: string }>>({})
 const calendarAppEventEdit = ref<Record<string, string> >({})
 const calendarAppEventEditSeries = ref<Record<string, string> >({})
 const calendarAppTarget = computed(() => md5(appName + ': event edit in calendar app sidebar'))
@@ -806,14 +786,27 @@ const syncProjectData = async (projectName: string) => {
   })
 }
 
-const handleReload = () => {
+const handleReload = async () => {
   syncProjectData(project.value?.name || '')
   if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
-    calendarObjectInstanceStore.getCalendarObjectInstanceByObjectIdAndRecurrenceId({
+    // careful: just shooting down the stores will trigger a watcher
+    // which then will access no longer defined objects.
+    const {
+      calendarObject,
+    } = await calendarObjectInstanceStore.getCalendarObjectInstanceByObjectIdAndRecurrenceId({
       objectId: currentRoute.params.object,
       recurrenceId: +currentRoute.params.recurrenceId,
       reload: true,
     })
+    for (const [id, objectInstance] of Object.entries(calendarObjectsStore.calendarObjects)) {
+      if (objectInstance !== calendarObject) {
+        delete calendarObjectsStore.calendarObjects[id]
+      }
+    }
+  } else {
+    // just shoot down the stores.
+    calendarObjectsStore.$reset()
+    calendarObjectInstanceStore.$reset()
   }
 }
 
@@ -997,55 +990,6 @@ const exportEvents = async () => {
     )
   }
 }
-
-interface CalendarObject {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any,
-  calendarId: string,
-}
-
-interface CalendarObjectInstance {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any,
-  startDate: Date,
-  endDate: Date,
-  description: null|string,
-  categories: string[],
-  isAllDay: boolean,
-  title: string,
-  location: null|string,
-
-}
-
-type CalendarObjectsStore = Store<
-  'calendarObjects',
-  {
-    modificationCount: number,
-    updateCalendarObject: ({ calendarObject }) => Promise<unknown>,
-  }
->
-
-type CalendarObjectInstanceStore = Store<
-  'calendarObjectInstance',
-  {
-    isNew: boolean|null,
-    calendarObject: CalendarObject|null,
-    calendarObjectInstance: CalendarObjectInstance|null,
-    existingEvent: {
-      objectId: string|null,
-      recurrenceId: number|null,
-    },
-    getCalendarObjectInstanceByObjectIdAndRecurrenceId: (arg: { objectId: string, recurrenceId: number, reload?: boolean })
-      => Promise<{
-        calendarObject: CalendarObject,
-        calendarObjectInstance: CalendarObjectInstance,
-      }>,
-    addCategory: (arg: { calendarObjectInstance: CalendarObjectInstance, category: string }) => void,
-    removeCategory: (arg: { calendarObjectInstance: CalendarObjectInstance, category: string }) => void,
-    saveCalendarObjectInstance: (arg: { thisAndAllFuture: boolean, calendarId: string }) => Promise<void>,
-    deleteCalendarObjectInstance: (arg: { thisAndAllFuture: boolean }) => Promise<void>,
-  }
->
 
 let calendarObjectsStore: CalendarObjectsStore
 let calendarObjectInstanceStore: CalendarObjectInstanceStore
@@ -1298,6 +1242,7 @@ watch(syncEventListTrigger, async (value) => {
   if (!value) {
     return
   }
+  handleReload()
   // if the start date has changed then we probably have to chance the route
   if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
     const instance = calendarObjectInstanceStore.calendarObjectInstance!
@@ -1310,7 +1255,8 @@ watch(syncEventListTrigger, async (value) => {
       }
       recurrenceId = '' + recurrenceId
       if (currentRoute.params.recurrenceId !== recurrenceId) {
-        const location: CalendarEditLocation = {
+        logger.info('TRY ROUTER REPLACE', { recurrenceId, params: { ...currentRoute.params } })
+        const location: CalendarObjectEditLocation = {
           name: currentRoute.name!,
           params: {
             ...currentRoute.params as { object: string, context: string },
@@ -1324,43 +1270,15 @@ watch(syncEventListTrigger, async (value) => {
       }
     }
   }
-  await syncProjectData(props.projectName)
+  // await syncProjectData(props.projectName)
   syncEventListTrigger.value = false
 })
-
-// const logNotifications = (eventBusEvent: NextcloudEvents['notifications:notification:received']) => {
-//   const notification = eventBusEvent.notification
-//   if (notification.app !== 'dav' || notification.objectType !== 'activity_notification') {
-//     logger.info('NOT FOR US', { eventBusEvent, notification })
-//     return
-//   }
-//   const parameters = notification.subjectRichParameters
-//   const calendarId = notification.objectId
-//   if (Object.keys(projectEventMatrix.value ?? {}).find(id => id === calendarId) === undefined) {
-//     logger.info('NOT FOR US', { calendarId, keys: Object.keys(projectEventMatrix.value ?? {}) })
-//     return
-//   }
-//   const eventUid = parameters.event.id
-//   const projectEvents: EventMatrixEvent[]|undefined = projectEventMatrix.value?.[calendarId].events
-//   if (projectEvents === undefined || projectEvents.length === 0) {
-//     logger.info('No project events for this calendar', { calendarId })
-//   }
-//   const event = projectEvents.find((event: EventMatrixEvent) => eventUid === event.uid)
-//   if (!event) {
-//     logger.info('Event not in our matrix', { eventUid, matrix: Object.values(projectEventMatrix.value?.[calendarId] ?? {}) })
-//     return
-//   }
-//   logger.info('FOUND EVENT, SHOULD RELOAD', { event })
-//   handleReload()
-// }
-// subscribe('notifications:notification:received', logNotifications)
 
 onUnmounted(() => {
   asyncUnSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, legacyEventsSelectionHandler)
   if (stopModificationCountWatch) {
     stopModificationCountWatch()
   }
-  // unsubscribe('notifications:notification:received', logNotifications)
 })
 
 </script>
