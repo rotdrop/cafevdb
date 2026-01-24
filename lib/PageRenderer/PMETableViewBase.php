@@ -256,6 +256,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     protected PageNavigation $pageNavigation,
     protected ToolTipsService $toolTipsService,
   ) {
+    parent::__construct($this->appName());
+
     $this->l = $this->l10n();
 
     $this->pmeBare = false;

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 /* Navigation snapper settings, stolen from core/css/mobile.css */
 
 @use '../../../core/css/variables.scss';
+@use './variables.scss' as *;
 
 /* We want to have that fancy snapjs thing also on large screens. */
 @media only screen and (min-width: #{variables.$breakpoint-mobile + 1px}) {
@@ -41,7 +42,7 @@
     }
   }
 
-  #app-navigation:not(.hidden) + #app-content {
+  #app-navigation:not(.#{$hiddenCssClass}) + #app-content {
     margin-left: 0;
   }
 

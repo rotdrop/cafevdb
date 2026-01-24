@@ -30,6 +30,17 @@ use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 /** Abstract page-renderer base class. */
 abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
 {
+  /** @param string $appName */
+  public function __construct(protected $appName)
+  {
+  }
+
+  /** @return string */
+  protected function appName(): string
+  {
+    return $this->appName;
+  }
+
   /*** {@inheritdoc} */
   public function navigation(bool $enable): void
   {

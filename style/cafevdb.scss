@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 
 @use './mixins/flex.scss' as *;
 @use './mixins/wysiwyg-editors.scss' as *;
+@use './variables.scss' as *;
 
 body {
   overflow:hidden;
@@ -73,12 +74,12 @@ body#body-settings {
   top:0px;
 }
 
-div.#{$appName}-page-header-text {
+div.#{$appName}-#{$pageTag}-header-text {
   max-width: 50em;
   font-weight: bold;
 }
 
-div.#{$appName}-page-header-box {
+div.#{$appName}-#{$pageTag}-header-box {
   position:absolute;
   top:0;
   z-index:25;
@@ -91,7 +92,7 @@ div.#{$appName}-page-header-box {
   /* border-bottom:1px solid #777;*/
 }
 
-div.#{$appName}-page-header {
+div.#{$appName}-#{$pageTag}-header {
   position:absolute;
   padding-left:1ex;
   /* height:44px; */
@@ -101,7 +102,7 @@ div.#{$appName}-page-header {
   font-weight:bold;
 }
 
-div.#{$appName}-page-container {
+div.#{$appName}-#{$pageTag}-container {
   position: relative;
   height:100%;
   box-sizing:border-box;
@@ -109,14 +110,14 @@ div.#{$appName}-page-container {
   /* padding-top:3ex;*/
 }
 
-div.#{$appName}-page-body {
+div.#{$appName}-#{$pageTag}-body {
   position:relative; /* otherwise height rel. outer border-box */
   height:100%;
   box-sizing:border-box;
   overflow-y:auto;
 }
 
-div.#{$appName}-page-body-inner {
+div.#{$appName}-#{$pageTag}-body-inner {
   padding-top:1ex;
   height:100%;
 }
@@ -258,7 +259,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
  *
  */
 
-##{$appName}-page-config-check-header {
+##{$appName}-#{$pageTag}-config-check-header {
   background-image:url('../img/logo-greyf-large.svg');
   background-repeat:no-repeat;
   background-origin:padding-box;
@@ -271,7 +272,7 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
   font-weight:bold;
 }
 
-##{$appName}-page-body-config-check {
+##{$appName}-#{$pageTag}-body-config-check {
   padding-left:1ex;
 
   li {
@@ -303,9 +304,9 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
     padding-left:3ex;
   }
 
-} /* ##{$appName}-page-body-config-check */
+} /* ##{$appName}-#{$pageTag}-body-config-check */
 
-li.#{$appName}-page-config-check {
+li.#{$appName}-#{$pageTag}-config-check {
   &.missing span.value {
     font-weight:bold;
     font-style:italic;
@@ -474,7 +475,7 @@ form.invisible#personalsettings * {
 }
 
 body.snapjs-left {
-  .#{$appName}-page-header {
+  .#{$appName}-#{$pageTag}-header {
     right:300px;
     padding-right:1ex;
   }
@@ -650,7 +651,7 @@ span.dropdown-container {
         margin:0!important;
         padding:0!important;
         float:none!important;
-        &.disabled, &[data-operation="none"] {
+        &.#{$disabledCssClass}, &[data-operation="none"] {
           opacity:50%;
           &, * {
             // pointer-events: none;
@@ -795,7 +796,7 @@ form.focusstealer input.focusstealer {
   height:0px !important;
 }
 
-##{$appName}-page-body input.pme-reload {
+##{$appName}-#{$pageTag}-body input.pme-reload {
   display:none !important;
   position:absolute !important;
   left:-10000px !important;
@@ -1194,8 +1195,7 @@ input[type=checkbox].#{$appName}-password-show {
   }
 }
 
-.really.hidden,
-.reallyhidden {
+.#{$reallyHiddenCssClass} {
   display:none !important;
 }
 
@@ -1204,7 +1204,7 @@ input[type=checkbox].#{$appName}-password-show {
     width:100%;
   }
 
-  .inline-block.hidden, .inline.hidden, .block.hidden {
+  .inline-block.#{$hiddenCssClass}, .inline.#{$hiddenCssClass}, .block.#{$hiddenCssClass} {
     display:none;
   }
 
@@ -1258,7 +1258,7 @@ input[type=checkbox].#{$appName}-password-show {
   }
 }
 
-a.disabled {
+a.#{$disabledCssClass} {
   pointer-events: none;
   opacity: 0.5;
 }

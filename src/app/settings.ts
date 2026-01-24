@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ import { translate as t } from '@nextcloud/l10n';
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import { hiddenCssClass } from 'variables.scss';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -604,9 +605,9 @@ const afterLoad = function(container?: JQuery) {
       const $folderView = $(`#${ConfigConstants.SHARED_FOLDER}-fieldset`).find(`a.${ConfigConstants.SHARED_FOLDER}-view`);
       $folderView.attr('href', data.folderLink || '');
       if (data.folderLink) {
-        $folderView.removeClass('hidden');
+        $folderView.removeClass(hiddenCssClass);
       } else {
-        $folderView.addClass('hidden');
+        $folderView.addClass(hiddenCssClass);
       }
       enableFieldSets();
     });
@@ -658,7 +659,7 @@ const afterLoad = function(container?: JQuery) {
         $cloudUserHints.closest('fieldset').hide();
         return;
       }
-      $cloudUserHints.closest('fieldset').toggleClass('hidden', !$importClubMembersAsCloudUsers.is(':checked'));
+      $cloudUserHints.closest('fieldset').toggleClass(hiddenCssClass, !$importClubMembersAsCloudUsers.is(':checked'));
       for (const hint of hints) {
         $cloudUserHints.append('<div class="cloud-user hint">' + hint + '</div>');
       }
@@ -673,9 +674,9 @@ const afterLoad = function(container?: JQuery) {
         $shownIfImport,
         $importClubMembersFieldSet,
       });
-      $cloudUserHints.closest('fieldset').toggleClass('hidden', !isChecked);
+      $cloudUserHints.closest('fieldset').toggleClass(hiddenCssClass, !isChecked);
       $enabledIfImport.prop('disabled', !isChecked).find('*').prop('disabled', !isChecked);
-      $shownIfImport.toggleClass('hidden', !isChecked);
+      $shownIfImport.toggleClass(hiddenCssClass, !isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-enabled', isChecked);
       $importClubMembersFieldSet.toggleClass('club-member-users-disabled', !isChecked);
     };
@@ -1566,7 +1567,7 @@ const afterLoad = function(container?: JQuery) {
 
   toolTipsInit(container);
 
-  container.removeClass('hidden'); // show(); // fadeIn()...
+  container.removeClass(hiddenCssClass); // show(); // fadeIn()...
 
   updateLocaleTimeStamps(tabsHolder);
 };

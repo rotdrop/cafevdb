@@ -220,7 +220,15 @@ module.exports = {
         use: [
           // 'style-loader',
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: {
+                mode: 'icss',
+              },
+            },
+          },
           {
             loader: 'sass-loader',
             options: {
@@ -230,9 +238,9 @@ module.exports = {
                 quietDeps: true, // this still does not work
               },
               additionalData: [
-                '$appName: ' + appName,
-                '$appNameTag: app-' + appName,
-                '$cssPrefix: ' + appName + '-',
+                // '$appName: ' + appName,
+                // '$appNameTag: app-' + appName,
+                // '$cssPrefix: ' + appName + '-',
                 '$dokuWikiAppName: dokuwiki',
               ].join('; ')
                 + ';',

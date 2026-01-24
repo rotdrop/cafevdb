@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
  */
 
 @use 'sass:color';
+@use './variables.scss' as *;
 
 .pme-form.donation-receipts {
 
@@ -48,7 +49,7 @@
   &.pme- {
     &list {
       tr.pme-row {
-        &.cafevdb-page-amount-check-failure {
+        &.#{$appName}-#{$pageTag}-amount-check-failure {
           background-color: color.change(#ffa500, $alpha: 0.4);
           > td {
             mix-blend-mode: multiply;

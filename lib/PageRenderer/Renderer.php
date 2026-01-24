@@ -24,9 +24,13 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
+
 /** Abstract base HTML renderer.*/
 abstract class Renderer implements IRenderer
 {
+  protected $appName;
+
   /** @var string */
   protected string $template;
 
@@ -46,7 +50,7 @@ abstract class Renderer implements IRenderer
   /** {@inheritdoc} */
   public function cssPrefix():string
   {
-    return 'cafevdb-page';
+    return $this->appName . ControllerCssClasses::CLASS_SEPARATOR . CssClasses::CSS_PREFIX_POSTFIX;
   }
 
   /** {@inheritdoc} */

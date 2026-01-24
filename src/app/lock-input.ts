@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,13 +30,14 @@ import $ from './jquery.ts';
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import generateId from './generate-id.ts';
+import { disabledCssClass } from 'variables.scss';
 
 const dataLockUnlockId = `${appName}LockUnlockId` as const;
 const lockUnlockVictim = `${appName}-lock-unlock-victim` as const;
 
 $('body').on('change', 'input[type="checkbox"].' + appName + '-lock-input-widget', function() {
   const $self = $(this);
-  if ($self.hasClass('disabled')) {
+  if ($self.hasClass(disabledCssClass)) {
     return false;
   }
   const $input = $($self.data('input'));
@@ -115,18 +116,18 @@ $.fn.lockUnlock = function(argument?: Commands|Partial<Options>, value?: null|un
       case 'disable': {
         const parameter = arguments.length === 1 ? true : !!value;
         if (parameter) {
-          $('#' + id).addClass('disabled');
+          $('#' + id).addClass(disabledCssClass);
         } else {
-          $('#' + id).removeClass('disabled');
+          $('#' + id).removeClass(disabledCssClass);
         }
         break;
       }
       case 'enable': {
         const parameter = arguments.length === 1 ? false : !!value;
         if (parameter) {
-          $('#' + id).addClass('disabled');
+          $('#' + id).addClass(disabledCssClass);
         } else {
-          $('#' + id).removeClass('disabled');
+          $('#' + id).removeClass(disabledCssClass);
         }
         break;
       }

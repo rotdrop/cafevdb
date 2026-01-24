@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 import globalState from './globalstate.ts';
 import $ from './jquery.ts';
-import { appName, appNameTag } from '../config.ts';
+import { appName } from '../config.ts';
 import { setPersonalUrl } from './settings-urls.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import * as Ajax from './ajax.ts';
@@ -41,6 +41,7 @@ import setPageRows from './settings/pagerows.ts';
 import setRestoreHistory from './settings/restore-history.ts';
 import setShowDisabled from './settings/show-disabled.ts';
 import setTooltipsMode from './settings/tooltips.ts';
+import { hiddenCssClass, appNameTag } from 'variables.scss';
 
 require('nav-area-settings.scss');
 
@@ -249,9 +250,9 @@ const updateCredits = function() {
   }
   $(`div.${appNameTag}.about div.product.credits.list ul li`).each(function(index) {
     if (items.includes(index)) {
-      $(this).removeClass('hidden');
+      $(this).removeClass(hiddenCssClass);
     } else {
-      $(this).addClass('hidden');
+      $(this).addClass(hiddenCssClass);
     }
   });
 };

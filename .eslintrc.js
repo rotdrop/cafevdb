@@ -21,6 +21,12 @@ module.exports = {
         returns: 'returns',
       },
     },
+    'import/resolver': {
+      node: {
+        paths: ['src', 'style'],
+        extensions: ['.js', '.vue', '.scss'],
+      },
+    },
   },
   // plugins: ['jsdoc'], already contained in @nextcloud/eslint-config
   rules: {
@@ -85,16 +91,24 @@ module.exports = {
     'no-console': 'off',
     semi: ['error', 'always'],
     'n/no-missing-import': [
-      'error',
+      'error', {
+        tsconfigPath: './tsconfig.json',
+        allowModules: [
+          'emailform.scss',
+          'tooltips.scss',
+          'variables.scss',
+        ],
+      },
     ],
     'n/no-missing-require': [
       'error', {
         resolvePaths: [
+          '',
           './src',
           './style',
           './3rdparty',
           './',
-          '../img',
+          './img',
         ],
       },
     ],

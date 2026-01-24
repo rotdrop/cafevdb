@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2023, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@use '../build/scss-variables/app-config.scss' as AppConfig;;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as PageRenderer;
+@use '../build/scss-variables/Controller/CssClasses.scss' as *;
 
 $pme-table-cell-padding: 3px;
 $pme-table-cell-border-width: 1px;
@@ -49,3 +53,23 @@ $pme-table-dialog-mobile: (
   vertical-padding: 0px,
   border-width: 0px,
 );
+
+$disabledCssClass: disabled;
+$expandedCssClass: expanded;
+$hiddenCssClass: hidden;
+$loadingCssClass: loading;
+$reallyHiddenCssClass: reallyhidden;
+$appName: AppConfig.$appName;
+$appNameTag: #{$appNameTagPrefixCssClass}#{$appName};
+$pageTag: PageRenderer.$cssPrefixPostfixCssClass;
+
+:export {
+  appName: $appName;
+  appNameTag: $appNameTag;
+  pageTag: $pageTag;
+  disabledCssClass: $disabledCssClass;
+  expandedCssClass: $expandedCssClass;
+  hiddenCssClass: $hiddenCssClass;
+  loadingCssClass: $loadingCssClass;
+  reallyHiddenCssClass: $reallyHiddenCssClass;
+}

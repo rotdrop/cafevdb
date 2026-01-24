@@ -137,7 +137,7 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
         <a name="<?= ConfigConstants::SHARED_FOLDER ?>-view"
            href="<?php p($sharedFolderLink); ?>"
            target="<?php p($appName . '-sharedfolder-view'); ?>"
-           class="<?= ConfigConstants::SHARED_FOLDER ?>-view button<?php empty($_[ConfigConstants::SHARED_FOLDER]) && p(' really hidden'); ?>"></a>
+           class="<?= ConfigConstants::SHARED_FOLDER ?>-view button<?php empty($_[ConfigConstants::SHARED_FOLDER]) && p(' reallyhidden'); ?>"></a>
       </fieldset>
       <fieldset id="<?= ConfigConstants::POSTBOX_FOLDER ?>-fieldset"
                 class="needs-<?= ConfigConstants::SHARED_FOLDER ?>"

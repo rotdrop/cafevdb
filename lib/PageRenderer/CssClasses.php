@@ -1,10 +1,11 @@
+<?php
 /**
- * Orchestra member, musicion and project management application.
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2013, 2020, 2021, 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +22,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use './variables.scss' as *;
+namespace OCA\CAFEVDB\PageRenderer;
 
-/*******************************************************************************
- *
- * Be noisy on configuration errors.
- *
- */
-@use './mixins/personal-settings.scss' as *;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-@include personalSettings($appNameTag);
+/** CSS classes shared between the legacy templates, scss and typescript. */
+#[TSAttributes\TypeScript]
+class CssClasses
+{
+  public const CSS_PREFIX_POSTFIX = 'page';
+}

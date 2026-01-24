@@ -93,6 +93,7 @@ import {
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
 import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { loadingCssClass } from 'variables.scss';
 
 require('cafevdb-selectize.scss');
 
@@ -475,9 +476,9 @@ const tableDialogLoadIndicator = <E extends HTMLElement>($container: JQuery<E>, 
     $reloadButton = $container.find(pmeNavigationSelector('reload'));
   }
   if (state) {
-    $reloadButton.addClass('loading');
+    $reloadButton.addClass(loadingCssClass);
   } else {
-    $reloadButton.removeClass('loading');
+    $reloadButton.removeClass(loadingCssClass);
   }
 };
 

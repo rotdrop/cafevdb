@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,11 @@
  *
  */
 
-import { appNameTag, appPrefix } from './config.ts';
+import { appPrefix } from './config.ts';
 import $ from './jquery.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import './jquery-cafevdb-tooltips.ts';
+import { appNameTag } from 'variables.scss';
 
 require('jquery-ui/ui/widgets/dialog');
 require('jquery-ui/ui/widgets/resizable');

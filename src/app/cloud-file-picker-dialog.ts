@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ import escapeHtml from 'escape-html';
 import { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
 import type { UploadFileData, UploadModeTest } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import { tooltipWideCssClass } from 'tooltips.scss';
 
 export interface CloudFilePickerParameters {
   setup?: () => void,
@@ -128,7 +129,7 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
                 const dir = escapeHtml(info.dir).replace(/\/+$/, '');
                 const base = escapeHtml(info.base).replace(/^\/+/, '');
                 return `
-<span class="file-node tooltip-auto tooltip-wide flex-container"
+                <span class="file-node tooltip-auto ${tooltipWideCssClass} flex-container"
       title="${dir + '/' + base}"
 >
   <span class="dirname">${dir}</span>

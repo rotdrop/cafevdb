@@ -718,6 +718,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 @use '../../style/mixins/flex.scss';
+@use '../../style/variables.scss' as *;
 @include flex.flexRules;
 ##{$appName}-legacy-wrapper {
   position: relative;

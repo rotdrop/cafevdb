@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ import {
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import { tooltipWideCssClass } from 'tooltips.scss';
 
 require('cafevdb.scss');
 
@@ -218,7 +219,7 @@ const toolTipSelectors: ToolTipSpec[] = [
     ].join(','),
     options: {
       placement: 'top',
-      cssclass: 'tooltip-wide',
+      cssclass: tooltipWideCssClass,
     },
   },
   // top
@@ -244,7 +245,7 @@ const toolTipSelectors: ToolTipSpec[] = [
     ].join(','),
     options: {
       placement: 'bottom',
-      cssclass: 'tooltip-wide',
+      cssclass: tooltipWideCssClass,
     },
   },
   // bottom

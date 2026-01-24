@@ -395,6 +395,7 @@ onBeforeMount(async () => {
 }
 </style>
 <style lang="scss" scoped>
+@use '../../style/variables.scss' as *;
 .#{$appName}-project-actions.project-name.app-navigation-caption {
   font-weight: bold;
   color: blue;

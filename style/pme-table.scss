@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -611,7 +611,7 @@ hr.pme-hr {
   margin-left:48px;
 }
 
-.pme-navigation input.pme-reload.loading {
+.pme-navigation input.pme-reload.#{$loadingCssClass} {
   /*background-image:url('../img/view-refresh-greyscale.png');*/
   background-image:url('../../../core/img/loading.gif');
 }
@@ -1069,7 +1069,7 @@ form.pme- {
   &change, &view, &delete, &copyadd {
     td.projects.pme- {
       &value, &cell {
-        &.expanded {
+        &.#{$expandedCssClass} {
           white-space:normal;
           overflow:unset;
           width:fit-content;
@@ -1225,7 +1225,7 @@ table.pme-main {
       text-overflow: ellipsis;
       cursor: pointer;
       &:hover, &:focus, &:active {
-        &:not(:disabled, .disabled) {
+        &:not(:disabled, .#{$disabledCssClass}) {
           border-color: var(--color-primary-element);
         }
       }
@@ -1238,7 +1238,7 @@ table.pme-main {
       border: 2px solid var(--color-border-maxcontrast);
       border-top: 0;
       &:hover, &:focus, &:active {
-        &:not(:disabled, .disabled) {
+        &:not(:disabled, .#{$disabledCssClass}) {
           border-color: var(--color-primary-element);
         }
       }

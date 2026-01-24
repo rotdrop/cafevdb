@@ -42,7 +42,7 @@ class Blog extends AbstractPageRenderer
   public const TEMPLATE = 'blog/blog';
 
   /**
-   * @param $appName
+   * @param string $appName
    *
    * @param IL10N $l
    *
@@ -51,11 +51,12 @@ class Blog extends AbstractPageRenderer
    * @param BlogMapper $blogMapper
    */
   public function __construct(
-    protected $appName,
+    string $appName,
     protected IL10N $l,
     private string $userId,
     private BlogMapper $blogMapper,
   ) {
+    parent::__construct($appName);
   }
 
   /** {@inheritdoc} */

@@ -57,6 +57,7 @@ import type { UploadFile } from './file-upload.ts';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import {
+  EnumPersonalSettingsKey,
   // type EnumEmailFormComposerOperation as ComposerOperation,
   type EnumEmailFormComposerTopic as ComposerTopic,
   type EnumEmailFormComposerElement,
@@ -69,7 +70,25 @@ import type {
   EmailFormRecipientsFilterResponse,
   EmailFormRecipientsFilterSnapshotResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { ComposerCgiKeys, EnumPostTag, RecipientsFilterCgiKeys } from '../../build/ts-types/php-modules/EmailForm.ts';
+import { ComposerCgiKeys, EnumPostTag, RecipientsFilterCgiKeys, type EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+// eslint-disable-next -line n/no-missing-import
+import {
+  disabledCssClass,
+  loadingCssClass,
+  expandedCssClass,
+  reallyHiddenCssClass,
+  hiddenCssClass,
+} from 'variables.scss';
+import {
+  displayCssClass,
+  dropdownOpenCssClass,
+  editCssClass,
+  emptySelectionCssClass,
+  noAttachmentsCssClass,
+  projectModeCssClass,
+  projectModeOffCssClass,
+  showSelectableCssClass,
+} from 'emailform.scss';
 
 require('cafevdb-selectize.scss');
 
@@ -416,7 +435,7 @@ const emailFormRecipientsHandlers = (
           // replace the entire tab.
           $.fn.cafevTooltip.remove();
           $panelHolder.html(data.contents);
-          $fieldset = $panelHolder.find('fieldset.email-recipients.page');
+          $fieldset = $panelHolder.find<HTMLFieldSetElement>('fieldset.email-recipients.page');
           emailFormRecipientsHandlers($fieldset, $form, $dialogHolder, $panelHolder);
           resize = true;
         } else if (isRecipientsFilterResponse(data)) {
@@ -446,11 +465,11 @@ const emailFormRecipientsHandlers = (
           // list of broken email addresses
           $missingAddresses.html(data.missingEmailAddresses);
           if (data.missingEmailAddresses.length > 0) {
-            $missingLabel.removeClass('reallyhidden');
-            $noMissingLabel.addClass('reallyhidden');
+            $missingLabel.removeClass(reallyHiddenCssClass);
+            $noMissingLabel.addClass(reallyHiddenCssClass);
           } else {
-            $missingLabel.addClass('reallyhidden');
-            $noMissingLabel.removeClass('reallyhidden');
+            $missingLabel.addClass(reallyHiddenCssClass);
+            $noMissingLabel.removeClass(reallyHiddenCssClass);
           }
 
           // update the instruments filter
@@ -512,8 +531,8 @@ const emailFormRecipientsHandlers = (
    * read-only attempt.
    */
   const readonlyFilterControls = (state: boolean, exceptions?: string[]) => {
-    console.trace('READONLY FILTERS', { state, exceptions });
-    $fieldset.toggleClass('filter-controls-disabled', state);
+    // console.trace('READONLY FILTERS', { state, exceptions });
+    // $fieldset.toggleClass('filter-controls-disabled', state);
 
     exceptions = exceptions ?? [];
     exceptions.push('.action-menu-toggle.basic-recipients-set');
@@ -524,7 +543,7 @@ const emailFormRecipientsHandlers = (
     // that list, further recipient choices are technically not possible.
     $otherInputs.readonly(state);
 
-    $missingAddresses.toggleClass('disabled', state);
+    $missingAddresses.toggleClass(disabledCssClass, state);
   };
 
   // Attach above function to almost every sensible control :)
@@ -711,16 +730,16 @@ const emailFormCompositionHandlers = (
 
   const messageSelectorSelectizeOptions: Selectize.IOptions = {
     onBeforeDropdownOpen(_$dropdown: JQuery) {
-      this.$wrapper.toggleClass('dropdown-open', true);
+      this.$wrapper.toggleClass(dropdownOpenCssClass, true);
     },
     onDropdownClose(_$dropdown: JQuery) {
-      this.$wrapper.toggleClass('dropdown-open', false);
+      this.$wrapper.toggleClass(dropdownOpenCssClass, false);
     },
     onChange(value) {
-      this.$wrapper.toggleClass('loading', !!value);
+      this.$wrapper.toggleClass(loadingCssClass, !!value);
     },
     onClear() {
-      this.$wrapper.toggleClass('loading', false);
+      this.$wrapper.toggleClass(loadingCssClass, false);
     },
     onOptionsRefresh($dropdown) {
       $dropdown.find('[class*="tooltip-"]').cafevTooltip();
@@ -745,7 +764,7 @@ const emailFormCompositionHandlers = (
       this.$input.data('ignoreChange', value);
     },
     onInitialize() {
-      this.$wrapper.toggleClass('expanded', $saveAsTemplate.is(':checked'));
+      this.$wrapper.toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
     },
   });
   $draftEmailsSelector.selectize(messageSelectorSelectizeOptions);
@@ -771,8 +790,8 @@ const emailFormCompositionHandlers = (
       $projectId.val(value);
       value = +value;
       $form
-        .toggleClass('project-mode', value > 0)
-        .toggleClass('project-mode-off', !(value > 0));
+        .toggleClass(projectModeCssClass, value > 0)
+        .toggleClass(projectModeOffCssClass, !(value > 0));
       return value;
     }
   };
@@ -846,6 +865,7 @@ const emailFormCompositionHandlers = (
     $.post(url, post)
       .fail(function(xhr, textStatus, errorThrown) {
         ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
+          console.info('EMAIL FORM COMPOSER ERROR CLEANUP');
           let debugText = '';
           if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -917,8 +937,8 @@ const emailFormCompositionHandlers = (
                       const fileAttachments = data.attachments;
                       const fileAttachmentsHolder = $fieldset.find('input.file-attachments');
                       fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
-                      $fileAttachmentsRow.toggleClass('empty-selection', ($fileAttachmentsSelector.val() as string).length === 0);
-                      $fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                      $fileAttachmentsRow.toggleClass(emptySelectionCssClass, ($fileAttachmentsSelector.val() as string).length === 0);
+                      $fileAttachmentsRow.toggleClass(noAttachmentsCssClass, options.length === 0);
                       SelectUtils.replaceOptions($fileAttachmentsSelector, options);
                       $panelHolder.trigger('resize', { position: 'bottom' });
                       break;
@@ -927,8 +947,8 @@ const emailFormCompositionHandlers = (
                       const data = elementData[formElement] as AttachmentElementData;
                       const options = data.options;
                       // const eventAttachments = requestData.elementData.attachments;
-                      $eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
-                      $eventAttachmentsRow.toggleClass('empty-selection', ($eventAttachmentsSelector.val() as string).length === 0);
+                      $eventAttachmentsRow.toggleClass(noAttachmentsCssClass, options.length === 0);
+                      $eventAttachmentsRow.toggleClass(emptySelectionCssClass, ($eventAttachmentsSelector.val() as string).length === 0);
                       SelectUtils.replaceOptions($eventAttachmentsSelector, options);
                       $panelHolder.trigger('resize');
                       break;
@@ -961,7 +981,7 @@ const emailFormCompositionHandlers = (
                 WysiwygEditor.updateEditor($messageText, requestData.messageText);
                 $fieldset.find('input.email-subject').val(requestData.subject!);
 
-                $templateEmailsSelector.next().removeClass('loading');
+                $templateEmailsSelector.next().removeClass(loadingCssClass);
                 break;
               }
               case 'draft': {
@@ -1267,7 +1287,7 @@ const emailFormCompositionHandlers = (
               debugText += data.requestData.previewData;
             }
             $debugOutput.html(debugText);
-            $debugOutput.find('.for-dialog').addClass('hidden');
+            $debugOutput.find('.for-dialog').addClass(hiddenCssClass);
 
             pageBusyIcon(false);
 
@@ -1361,7 +1381,7 @@ const emailFormCompositionHandlers = (
       console.info('DRAFT ID IS NOT THERE', { draftId });
       return;
     }
-    const $draftOption = SelectUtils.options($draftEmailsSelector).filter(`option[value="__draft-${draftId}"]`);
+    const $draftOption = SelectUtils.options($draftEmailsSelector).filter(`option[value="${draftId}"]`);
     const autoGenerated = +($draftOption.attr('data-auto-generated') ?? 0);
     console.info('DRAFT AUTO', { autoGenerated, $draftOption });
     if (autoGenerated && (doDelete || $draftAutoSave.prop('checked'))) {
@@ -1452,7 +1472,7 @@ const emailFormCompositionHandlers = (
   $saveAsTemplate
     .off('change')
     .on('change', function() {
-      $templateEmailsSelector.next().toggleClass('expanded', $saveAsTemplate.is(':checked'));
+      $templateEmailsSelector.next().toggleClass(expandedCssClass, $saveAsTemplate.is(':checked'));
       return false;
     });
 
@@ -1538,7 +1558,7 @@ const emailFormCompositionHandlers = (
 
         if (draftId > 0) {
           // find the draft data in the select which we mis-use as data-storage here
-          const $draftOption = SelectUtils.optionByValue($draftEmailsSelector, '__draft-' + draftId);
+          const $draftOption = SelectUtils.optionByValue($draftEmailsSelector, draftId);
           let draftMeta = '';
           if ($draftOption.length === 1) {
             const title = $draftOption.attr('title') || $draftOption.attr('data-original-title') || $draftOption.html();
@@ -1573,7 +1593,7 @@ const emailFormCompositionHandlers = (
     .on('change', function(_event: JQuery.EventBase) {
 
       const choice = $draftEmailsSelector.val()! as string;
-      if (choice.match(/__draft--1/)) {
+      if (choice.match(/-1/)) {
         Dialogs.alert(
           t(appName, 'There are currently no stored draft messages available.'),
           t(appName, 'No Drafts Available'),
@@ -1615,7 +1635,7 @@ const emailFormCompositionHandlers = (
           projectName: projectName(),
         });
       } else {
-        $templateEmailsSelector.next().removeClass('loading');
+        $templateEmailsSelector.next().removeClass(loadingCssClass);
         $this.removeData('ignoreChange');
       }
 
@@ -1668,10 +1688,10 @@ const emailFormCompositionHandlers = (
   $fieldset.find('input.save-from-tag')
     .off('click')
     .on('click', function() {
-      const $selectedFrom = $(this).closest('td.email-from').find('input[type=radio]:checked');
+      const $selectedFrom = $(this).closest('td.email-from').find<HTMLInputElement>('input[type=radio]:checked');
       const sender = $selectedFrom.next().text().trim();
-      const configKey = 'defaultEmailFromAddress';
-      const configValue = $selectedFrom.val();
+      const configKey = EnumPersonalSettingsKey.DEFAULT_EMAIL_FROM_ADDRESS;
+      const configValue = $selectedFrom.val() as EnumFromTag;
       const message = configValue === 'personal'
         ? t(appName, 'Click "Yes" to use the selected personal sender address "{sender}" as default sender for future email communications.', { sender })
         : t(appName, 'Click "Yes" to use the selected "global" sender address "{sender}" as default sender for future email communications.', { sender });
@@ -1695,7 +1715,6 @@ const emailFormCompositionHandlers = (
                 console.debug('RESPONSE', { response });
                 showSuccess(t(appName, 'Preference "{configKey}" set to "{senderTag}".', {
                   configKey,
-                  // @ts-expect-error 2769
                   senderTag: t(appName, configValue),
                 }));
               });
@@ -1787,14 +1806,14 @@ const emailFormCompositionHandlers = (
     .find('.button.edit-subject-tag')
     .off('click')
     .on('click', function() {
-      $subjectTagContainer.removeClass('display').addClass('edit');
+      $subjectTagContainer.removeClass(displayCssClass).addClass(editCssClass);
       return false;
     });
   $subjectTagContentEditable
     .off('blur')
     .on('blur', function() {
       $subjectTagContentDisplay.html($subjectTagContentEditable.val() as string);
-      $subjectTagContainer.addClass('display').removeClass('edit');
+      $subjectTagContainer.addClass(displayCssClass).removeClass(editCssClass);
       return false;
     });
 
@@ -1809,7 +1828,7 @@ const emailFormCompositionHandlers = (
     .on('click', function() {
       const wasVisible = $eventAttachmentsRow.is(':visible');
       const events = ($eventAttachmentsSelector.val() as undefined|string[]) ?? [];
-      $eventAttachmentsRow.addClass('show-selectable');
+      $eventAttachmentsRow.addClass(showSelectableCssClass);
 
       if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
         $panelHolder.trigger('resize', { position: 'bottom' });
@@ -1860,7 +1879,7 @@ const emailFormCompositionHandlers = (
     .on('click', function() {
       const $this = $(this);
       const $row = $this.closest('tr');
-      $row.removeClass('show-selectable').addClass('hidden');
+      $row.removeClass(showSelectableCssClass).addClass(hiddenCssClass);
       $panelHolder.trigger('resize', { position: 'bottom' });
     });
 
@@ -1870,9 +1889,9 @@ const emailFormCompositionHandlers = (
     .on('click', function() {
       const $attachmentRows = $('tr.attachments');
       if ($attachmentRows.filter(':visible').length > 0) {
-        $attachmentRows.removeClass('show-selectable').addClass('hidden');
+        $attachmentRows.removeClass(showSelectableCssClass).addClass(hiddenCssClass);
       } else {
-        $attachmentRows.addClass('show-selectable').removeClass('hidden');
+        $attachmentRows.addClass(showSelectableCssClass).removeClass(hiddenCssClass);
       }
       $panelHolder.trigger('resize', { position: 'bottom' });
     });
@@ -1887,10 +1906,10 @@ const emailFormCompositionHandlers = (
       const numOptions = $eventAttachmentsSelector.find('option').length;
 
       // must this be here?
-      $eventAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+      $eventAttachmentsRow.toggleClass(noAttachmentsCssClass, numOptions === 0);
 
       if (numSelected === 0) {
-        $eventAttachmentsRow.removeClass('show-selectable');
+        $eventAttachmentsRow.removeClass(showSelectableCssClass);
         if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
           $panelHolder.trigger('resize', { position: 'bottom' });
         }
@@ -1906,8 +1925,8 @@ const emailFormCompositionHandlers = (
             }
             // simply void the selection
             SelectUtils.deselectAll($eventAttachmentsSelector);
-            $eventAttachmentsRow.removeClass('show-selectable');
-            $eventAttachmentsRow.addClass('empty-selection');
+            $eventAttachmentsRow.removeClass(showSelectableCssClass);
+            $eventAttachmentsRow.addClass(emptySelectionCssClass);
 
             if (wasVisible !== $eventAttachmentsRow.is(':visible')) {
               $panelHolder.trigger('resize', { position: 'bottom' });
@@ -1927,8 +1946,8 @@ const emailFormCompositionHandlers = (
       const $this = $(this);
       const events = ($this.val() ?? []) as string[];
       $this.closest('tr')
-        .toggleClass('empty-selection', events.length === 0)
-        .toggleClass('no-attachments', $this.find('option').length === 0);
+        .toggleClass(emptySelectionCssClass, events.length === 0)
+        .toggleClass(noAttachmentsCssClass, $this.find('option').length === 0);
       asyncEmit(LEGACY_UPDATE_EVENTS_SELECTION, {
         origin: 'EmailForm',
         projectId: projectId(),
@@ -1946,8 +1965,8 @@ const emailFormCompositionHandlers = (
   $fileAttachmentsSelector.on('change', function(_event: JQuery.EventBase) {
     const $this = $(this);
     $this.closest('tr')
-      .toggleClass('empty-selection', $this.val()!.length === 0)
-      .toggleClass('no-attachments', $this.find('option').length === 0);
+      .toggleClass(emptySelectionCssClass, $this.val()!.length === 0)
+      .toggleClass(noAttachmentsCssClass, $this.find('option').length === 0);
     return false;
   });
 
@@ -2024,7 +2043,7 @@ const emailFormCompositionHandlers = (
     .off('click')
     .on('click', function() {
       const wasVisible = $fileAttachmentsRow.is(':visible');
-      $fileAttachmentsRow.addClass('show-selectable');
+      $fileAttachmentsRow.addClass(showSelectableCssClass);
       if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
         $panelHolder.trigger('resize', { position: 'bottom' });
       }
@@ -2040,10 +2059,10 @@ const emailFormCompositionHandlers = (
       const numSelected = $fileAttachmentsSelector.val()!.length;
       const numOptions = $fileAttachmentsSelector.find('option').length;
 
-      $fileAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+      $fileAttachmentsRow.toggleClass(noAttachmentsCssClass, numOptions === 0);
 
       if (numSelected === 0) {
-        $fileAttachmentsRow.removeClass('show-selectable');
+        $fileAttachmentsRow.removeClass(showSelectableCssClass);
         if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
           $panelHolder.trigger('resize', { position: 'bottom' });
         }
@@ -2059,8 +2078,8 @@ const emailFormCompositionHandlers = (
             }
             // simply void the selection
             SelectUtils.deselectAll($fileAttachmentsSelector);
-            $fileAttachmentsRow.removeClass('show-selectable');
-            $fileAttachmentsRow.addClass('empty-selection');
+            $fileAttachmentsRow.removeClass(showSelectableCssClass);
+            $fileAttachmentsRow.addClass(emptySelectionCssClass);
 
             if (wasVisible !== $fileAttachmentsRow.is(':visible')) {
               $panelHolder.trigger('resize', { position: 'bottom' });
@@ -2086,12 +2105,12 @@ const emailFormCompositionHandlers = (
       const self = $(this);
       const input = $fieldset.find(self.data('for'));
 
-      self.addClass('loading');
+      self.addClass(loadingCssClass);
       const cleanup = function() {
-        self.removeClass('loading');
+        self.removeClass(loadingCssClass);
       };
 
-      if (input.val().trim() !== '') {
+      if ((input.val() as string).trim() !== '') {
         // We trigger validation before we pop-up, but no need to do
         // so on empty input.
         input.trigger('blur');

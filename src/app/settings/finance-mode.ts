@@ -31,6 +31,7 @@ import * as PHPMyEdit from './../pme-selectors.ts';
 import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_FINANCE_MODE } from '../../event-bus-events.ts';
+import { hiddenCssClass } from 'variables.scss';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
@@ -48,7 +49,7 @@ subscribe(SET_FINANCE_MODE, (event) => {
  */
 const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
-  $('.finance-mode-container').toggleClass('hidden', !value);
+  $('.finance-mode-container').toggleClass(hiddenCssClass, !value);
   $('body').toggleClass(appPrefix('finance-mode'), value);
   $('.personal-settings input[type="checkbox"].finance-mode').prop('checked', value);
   $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');

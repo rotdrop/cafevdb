@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,16 @@
 @use "sass:meta";
 @use './mixins/flex.scss' as *;
 @use './mixins/error-dialogs.scss' as *;
+@use './variables.scss' as *;
+@use '../build/scss-variables/EmailForm/ComposerCssClasses.scss' as *;
+@use '../build/scss-variables/EmailForm/RecipientsFilterCssClasses.scss' as *;
 
 $editorHeight: 20em;
+
+$displayCssClass: display;
+$dropdownOpenCssClass: dropdown-open;
+$editCssClass: edit;
+$showSelectableCssClass: show-selectable;
 
 .ui-widget.ui-dialog.emailform.#{$appNameTag} {
   overflow:hidden;
@@ -101,7 +109,7 @@ $editorHeight: 20em;
 
       form##{$appName}-email-form {
 
-        &.project-mode-off {
+        &.#{projectModeOffCssClass} {
           fieldset##{$appName}-email-composition-fieldset {
             tr.event-attachments {
               display: none !important;
@@ -119,19 +127,19 @@ $editorHeight: 20em;
           /* padding-right:1.2em; */
         }
 
-        &:not(.project-mode) {
-          .only-project-mode {
+        &:not(.#{projectModeCssClass}) {
+          .#{$onlyProjectModeCssClass} {
             display:none !important;
           }
         }
-        &.project-mode {
-          .not-project-mode {
+        &.#{projectModeCssClass} {
+          .#{$notProjectModeCssClass} {
             display:none !important;
           }
         }
 
         // two-state checkbox with button-like display
-        span.checkbox-button.#{$cssPrefix}container {
+        span.checkbox-button.#{$appName}-container {
           position:relative;
           vertical-align:middle;
           width:var(--default-clickable-area);
@@ -224,11 +232,11 @@ $editorHeight: 20em;
           overflow-x: hidden;
           padding-bottom: 0px !important;
 
-          div.#{$cssPrefix}row {
+          div.#{$appName}-row {
             width:100%;
           }
 
-          div.#{$cssPrefix}row:not(.flex-container):after {
+          div.#{$appName}-row:not(.flex-container):after {
             content:"";
             display:block;
             height:0;
@@ -309,7 +317,7 @@ $editorHeight: 20em;
           }
 
           .missing-email-addresses {
-            &.names.disabled .personal-record {
+            &.names.#{$disabledCssClass} .personal-record {
               opacity:40%;
               pointer-events:none;
             }
@@ -338,7 +346,7 @@ $editorHeight: 20em;
             }
           }
 
-          span.basic-recipients-set.#{$cssPrefix}container.outer {
+          span.basic-recipients-set.#{$appName}-container.outer {
             max-width:100%;
             white-space:nowrap;
             overflow:hidden;
@@ -382,7 +390,7 @@ $editorHeight: 20em;
               }
             }
 
-            .basic-recipients-set.#{$cssPrefix}container.inner {
+            .basic-recipients-set.#{$appName}-container.inner {
               position:relative;
               width:100%;
 
@@ -416,7 +424,7 @@ $editorHeight: 20em;
             }
           }
 
-          .recipients-select.#{$cssPrefix}container {
+          .recipients-select.#{$appName}-container {
             /* width:80%; */
 
             .btn, .btn-outline-secondary {
@@ -426,7 +434,7 @@ $editorHeight: 20em;
             }
           }
 
-          .participation-status-filter.#{$cssPrefix}container {
+          .participation-status-filter.#{$appName}-container {
             flex-basis: auto;
             margin-right: 0.5ex;
 
@@ -440,7 +448,7 @@ $editorHeight: 20em;
             }
           }
 
-          .instruments-filter.#{$cssPrefix}container {
+          .instruments-filter.#{$appName}-container {
             text-align:right;
             flex-basis: auto;
             margin-left: 0.5ex;
@@ -709,17 +717,17 @@ $editorHeight: 20em;
 
             /* attachments selectors and controls */
             &.attachments {
-              &.no-attachments {
+              &.#{$noAttachmentsCssClass} {
                 display:none;
               }
-              &.empty-selection {
+              &.#{$emptySelectionCssClass} {
                 display:none;
-                &.show-selectable {
+                &.#{$showSelectableCssClass} {
                   display:table-row;
                 }
               }
 	      /* give show-selectable priority */
-	      &.hidden.show-selectable {
+	      &.#{$hiddenCssClass}.#{$showSelectableCssClass} {
                 display:table-row;
               }
               td.content {
@@ -826,7 +834,7 @@ $editorHeight: 20em;
               padding-top:5px;
             }
 
-            span.checkbox-button.#{$cssPrefix}container {
+            span.checkbox-button.#{$appName}-container {
 
               span.button.save-as-template {
                 background-image: url('../img/template.svg');
@@ -854,11 +862,11 @@ $editorHeight: 20em;
               max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
               min-width: var(--drop-down-min-width); /* in order to have something left ... */
               width:0!important;
-              &.chosen-with-drop, &.dropdown-open, &.loading, &.expanded {
+              &.chosen-with-drop, &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
                 flex-grow:10;
                 flex-shrink:0;
               }
-              &:not(.dropdown-open) {
+              &:not(.#{$dropdownOpenCssClass}) {
                 overflow: hidden;
               }
             }
@@ -885,7 +893,7 @@ $editorHeight: 20em;
               background-image:url('../img/contacts-dark.svg');
               /*  background-color:#000;*/
               float:right;
-              &.loading {
+              &.#{$loadingCssClass} {
                 background-image:url('../../../core/img/loading.gif');
               }
             }
@@ -913,7 +921,7 @@ $editorHeight: 20em;
               }
             }
 
-            &.display {
+            &.#{$displayCssClass} {
               overflow:hidden;
 
               span.email-address-holder {
@@ -958,19 +966,19 @@ $editorHeight: 20em;
 
           td.subject.input {
             span.subject.tag {
-              &.display {
+              &.#{$displayCssClass} {
                 .editable {
                   display: none;
                 }
-                .display {
+                .#{$displayCssClass} {
                   display: inline-block;
                 }
               }
-              &.edit {
+              &.#{$editCssClass} {
                 .editable {
                   display: inline-block;
                 }
-                .display {
+                .#{$displayCssClass} {
                   display: none;
                 }
               }
@@ -1020,15 +1028,15 @@ $editorHeight: 20em;
 
         } // #emailformcomposer
 
-        span.#{$cssPrefix}container {
+        span.#{$appName}-container {
           display:inline-block;
         }
 
-        .#{$cssPrefix}container.left {
+        .#{$appName}-container.left {
           float:left;
         }
 
-        .#{$cssPrefix}container.right {
+        .#{$appName}-container.right {
           float:right;
           text-align:right;
         }
@@ -1094,7 +1102,7 @@ $editorHeight: 20em;
           text-align:center;
         }
 
-        div.progress.#{$cssPrefix}row {
+        div.progress.#{$appName}-row {
           width:100%;
           height:2em;
           padding: 0.5em;
@@ -1180,4 +1188,17 @@ span.error.contents.item.substitutions {
  */
 div.emailform.statuspage {
   @include errorDialogs($appNameTag);
+}
+
+:export {
+  displayCssClass: $displayCssClass;
+  dropdownOpenCssClass: $dropdownOpenCssClass;
+  editCssClass: $editCssClass;
+  emptySelectionCssClass: $emptySelectionCssClass;
+  noAttachmentsCssClass: $noAttachmentsCssClass;
+  notProjectModeCssClass: $notProjectModeCssClass;
+  onlyProjectModeCssClass: $onlyProjectModeCssClass;
+  projectModeCssClass: $projectModeCssClass;
+  projectModeOffCssClass: $projectModeOffCssClass;
+  showSelectableCssClass: $showSelectableCssClass;
 }

@@ -127,7 +127,7 @@ const PHPMyEditDefault = {
   inputSelectChosenTitle: 'Select from the pull-down menu.',
   pmePrefix: 'pme',
   singleDeselectOffset: 18,
-  defaultSelector: '#' + appName + '-page-body', // for delegate handlers, survives pseudo-submit
+  defaultSelector: `#${appName}-page-body`, // for delegate handlers, survives pseudo-submit
 
   /* actual volatile state variables */
   tableLoadCallbacks: {},

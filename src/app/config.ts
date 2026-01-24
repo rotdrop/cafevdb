@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,8 @@
 import * as ncAuth from '@nextcloud/auth';
 import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
 import getInitialState from '../toolkit/util/initial-state.ts';
-import { appName, appPrefix, appNameTag } from '../config.ts';
+import { appName, appPrefix } from '../config.ts';
+import { appNameTag } from 'variables.scss';
 import type { CAFEVDBInitialState, PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 const initialState = {

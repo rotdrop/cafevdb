@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ import setAppBusyIndicators from './busy-indicators.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
 import { translate as t } from '@nextcloud/l10n';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import { disabledCssClass } from 'variables.scss';
 
 const defaultUploadUrls = {
   upload: 'projects/participants/files/upload',
@@ -98,14 +99,14 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
   const noFilesAppLink = () => $parentFolder.attr('href') === '';
 
   const unmaskInputs = () => {
-    $downloadLink.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
-    $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
-    $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
+    $downloadLink.prop('disabled', noDownloadFile()).toggleClass(disabledCssClass, noDownloadFile());
+    $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass(disabledCssClass, noDownloadFile());
+    $parentFolder.prop('disabled', noFilesAppLink()).toggleClass(disabledCssClass, noFilesAppLink());
   };
   const maskInputs = () => {
-    $downloadLink.prop('disabled', true).toggleClass('disabled', true);
-    $deleteUndelete.prop('disabled', true).toggleClass('disabled', true);
-    $parentFolder.prop('disabled', true).toggleClass('disabled', true);
+    $downloadLink.prop('disabled', true).toggleClass(disabledCssClass, true);
+    $deleteUndelete.prop('disabled', true).toggleClass(disabledCssClass, true);
+    $parentFolder.prop('disabled', true).toggleClass(disabledCssClass, true);
   };
 
   unmaskInputs();
@@ -299,8 +300,8 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
         const fileBase = $thisRow.data('fileBase');
         $thisRow.data('fileName', fileBase);
         $thisRow.attr('data-file-name', fileBase);
-        $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass('disabled', noDownloadFile());
-        $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
+        $deleteUndelete.prop('disabled', noDownloadFile()).toggleClass(disabledCssClass, noDownloadFile());
+        $parentFolder.prop('disabled', noFilesAppLink()).toggleClass(disabledCssClass, noFilesAppLink());
 
         // replace the upload data
         //

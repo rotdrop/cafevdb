@@ -259,6 +259,7 @@ onMounted(() => {
 
 </script>
 <style lang="scss" scoped>
+@use '../../style/variables.scss' as *;
 .container {
   display: flex;
   :deep(.button-vue__icon) svg {

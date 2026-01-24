@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ import $ from './jquery.ts';
 import { translate as t } from '@nextcloud/l10n';
 import type { UnsealedData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { tooltipWideCssClass } from 'tooltips.scss';
 
 const cryptoCache: Record<string, UnsealedData> = {};
 
@@ -185,7 +186,7 @@ const replaceElementEncryptionPlaceholder = function($element: JQuery, cryptoDat
     $queryInfo
       .cafevTooltip('dispose')
       .attr('title', popupText)
-      .cafevTooltip({ placement: 'auto', cssClass: 'tooltip-wide' });
+      .cafevTooltip({ placement: 'auto', cssClass: tooltipWideCssClass });
   }
 };
 

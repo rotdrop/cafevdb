@@ -51,6 +51,7 @@ import {
 import debounce from './debounce.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import type { DuplicateMusiciansResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { disabledCssClass } from 'variables.scss';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -364,7 +365,7 @@ const contactValidation = function(container?: string|JQuery) {
             const visible = $this.hasClass('status-' + status + '-visible');
             const disabled = !visible || ($this.hasClass('expert-mode-only') && !$('body').hasClass(appPrefix('expert-mode')));
             $this.prop('disabled', disabled);
-            $this.toggleClass('disabled', disabled);
+            $this.toggleClass(disabledCssClass, disabled);
           });
           cleanup();
         });

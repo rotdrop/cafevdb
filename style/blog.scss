@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2024, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+@use './variables.scss' as *;
 
 /*******************************************************************************
  *
@@ -50,21 +52,21 @@
  *
  */
 
-div.#{$appName}-page-header-box.blog-page {
+div.#{$appName}-#{$pageTag}-header-box.blog-page {
   height:20.5ex;
   padding-left:1ex;
 }
-div.#{$appName}-page-header.blog-page {
+div.#{$appName}-#{$pageTag}-header.blog-page {
   height:20ex;
   padding-left:0;
   transform:unset;
   top:0;
 }
-div.#{$appName}-page-container.blog-page {
+div.#{$appName}-#{$pageTag}-container.blog-page {
   margin-top:15ex;
 }
 
-##{$appName}-page-blog-header {
+##{$appName}-#{$pageTag}-blog-header {
   background-image:url('../img/logo-greyf-large.svg');
   background-repeat:no-repeat;
   background-origin:padding-box;
@@ -76,7 +78,7 @@ div.#{$appName}-page-container.blog-page {
   font-weight:bold;
   transform:unset;
   top:0;
-  &.collapsed ##{$appName}-page-blog-header {
+  &.collapsed ##{$appName}-#{$pageTag}-blog-header {
     height:3ex;
     padding-left:4ex;
     margin-top:0ex;

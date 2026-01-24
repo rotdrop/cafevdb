@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ import { translate as t } from '@nextcloud/l10n';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { subscribe, emit } from '../services/async-event-bus.ts';
 import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.ts';
+import { hiddenCssClass, loadingCssClass } from 'variables.scss';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 require('personal-settings-popup.scss');
@@ -63,7 +64,7 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
 
   await new Promise((resolve, reject) => {
     if ($popup.is(':visible')) {
-      $popup.addClass('hidden').html('');
+      $popup.addClass(hiddenCssClass).html('');
       callbacks.always?.apply($popup.get(0)!);
       console.info('RESOLVE SETTINGS PROMISE false');
       resolve(false);
@@ -81,12 +82,12 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
             $popup.find('>:first-child').prepend('<div class="popup-title"><h2>' + t('core', 'Settings') + '</h2><a class="close"></a></div>');
           }
           $popup.find('.close').on('click', function() {
-            $popup.addClass('hidden').html('');
+            $popup.addClass(hiddenCssClass).html('');
           });
           $popup.trigger(appName + ':content-update'); // trigger jq ui initialization etc.
           callbacks.done?.apply($popup.get(0)!);
-          $popup.find('>:first-child').removeClass('hidden');
-          $popup.removeClass('hidden');
+          $popup.find('>:first-child').removeClass(hiddenCssClass);
+          $popup.removeClass(hiddenCssClass);
           console.info('RESOLVE SETTINGS PROMISE true');
           resolve(true);
         })
@@ -116,12 +117,12 @@ const documentReady = function() {
 
   appNav.on('click', '#app-settings-further-settings', function() {
     const $self = $(this);
-    $self.addClass('loading');
+    $self.addClass(loadingCssClass);
     appSettingsPopup({
       done() {
       },
       always() {
-        $self.removeClass('loading');
+        $self.removeClass(loadingCssClass);
       },
     });
 

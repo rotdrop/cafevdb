@@ -31,6 +31,7 @@ import * as PHPMyEdit from './../pme-selectors.ts';
 import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
+import { hiddenCssClass } from 'variables.scss';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
@@ -48,7 +49,7 @@ subscribe(SET_EXPERT_MODE, (event) => {
  */
 const setter = (value: boolean, showMessage?: typeof Notification.messages, _$control?: JQuery) => {
   showMessage = showMessage || Notification.messages;
-  $('.expert-mode-container').toggleClass('hidden', !value);
+  $('.expert-mode-container').toggleClass(hiddenCssClass, !value);
   $('body').toggleClass(appPrefix('expert-mode'), value);
   $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', value);
   $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
