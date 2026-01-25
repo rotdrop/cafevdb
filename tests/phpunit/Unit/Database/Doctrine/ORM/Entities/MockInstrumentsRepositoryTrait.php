@@ -202,6 +202,7 @@ trait MockInstrumentsRepositoryTrait
       ->disableOriginalConstructor()
       ->getMock();
     $instrumentsRepository->method('describeAll')->willReturn($describeAllResult);
+    $instrumentsRepository->expects($this->never())->method('createQueryBuilder');
 
     return $instrumentsRepository;
   }

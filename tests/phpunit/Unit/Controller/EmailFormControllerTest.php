@@ -55,6 +55,8 @@ use OCA\CAFEVDB\Storage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 
+#[Attributes\CoversClass(Controller\DTO\EmailFormComposerRequestData::class)]
+#[Attributes\CoversClass(Controller\DTO\EmailFormComposerResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormRecipientsFilterResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailWebFormResponse::class)]
@@ -127,10 +129,11 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class EmailFormControllerTest extends TestCase
 {
+  use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockEmailTemplatesRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockInstrumentsRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
-  use TestRoutesAreDefinedTrait;
 
   private const EXPECTED_ROUTES = [
     'webform',
@@ -159,22 +162,17 @@ class EmailFormControllerTest extends TestCase
 
     $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
-    self::$entityRepositories[Entities\Instrument::class] = $this->getInstrumentsRepositoryMock();
-    self::$entityRepositories[Entities\Musician::class] = $this->getMusiciansRepositoryMock();
-
-    $repository = $this->getMockBuilder(Repositories\EmailTemplatesRepository::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $repository->method('list')->willReturn([]);
-    self::$entityRepositories[Entities\EmailTemplate::class] = $repository;
+    $this->entityRepositories[Entities\Instrument::class] = $this->getInstrumentsRepositoryMock();
+    $this->entityRepositories[Entities\Musician::class] = $this->getMusiciansRepositoryMock();
+    $this->entityRepositories[Entities\EmailTemplate::class] = $this->getEmailTemplatesRepositoryMock();
 
     $repository = $this->getMockBuilder(Repositories\EmailDraftsRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
     $repository->method('list')->willReturn([]);
-    self::$entityRepositories[Entities\EmailDraft::class] = $repository;
+    $this->entityRepositories[Entities\EmailDraft::class] = $repository;
 
-    foreach (self::$entityRepositories as $repository) {
+    foreach ($this->entityRepositories as $repository) {
       $repository->expects($this->never())?->method('createQueryBuilder');
     }
 
@@ -506,6 +504,36 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(true, $domDoc->loadHTML($data->participationStatusFilter, LIBXML_PEDANTIC));
     $this->assertNotEmpty($data->recipientsOptions);
     $this->assertEquals(true, $domDoc->loadHTML($data->recipientsOptions, LIBXML_PEDANTIC));
+  }
+
+  /** @return void */
+  public function testComposerLoadTemplate(): void
+  {
+    $this->generateProjectWebFormParameters([
+      EmailForm\EnumPostTag::COMPOSER->value => [
+        EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+        EmailForm\ComposerCgiKeys::SUBJECT_TAG => $this->project->getName(),
+        EmailForm\ComposerCgiKeys::FROM_TAG => EmailForm\EnumFromTag::ORCHESTRA,
+        // projectId is also fetched without namespace
+        // projectName is also fetched without namespace
+        EmailForm\ComposerCgiKeys::OPERATION => Controller\EnumEmailFormComposerOperation::LOAD,
+        EmailForm\ComposerCgiKeys::TOPIC => Controller\EnumEmailFormComposerTopic::TEMPLATE,
+        EmailForm\ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR => self::MAIL_MERGE_TAG,
+      ],
+    ]);
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::LOAD->value,
+      topic: Controller\EnumEmailFormComposerTopic::TEMPLATE->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse::class $data */
+    $this->assertEquals(self::$templates[self::MAIL_MERGE_TAG]->getContents(), $data->requestData->messageText);
+    $this->assertEquals(self::$templates[self::MAIL_MERGE_TAG]->getSubject(), $data->requestData->subject);
   }
 
   private const FREE_FORM_RECIPIENTS = [

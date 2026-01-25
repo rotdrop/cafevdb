@@ -55,7 +55,7 @@ trait EntityGeneratorTrait
    * \OCA\CAFEVDB\Service\Finance\FinanceService assumes that ids have no more
    * than 4 decimal digits ...
    */
-  public const FAKED_ENTITY_ID = 9999;
+  public const FAKED_ENTITY_ID = Constants::FAKED_ENTITY_ID;
 
   protected Entities\Musician $musician;
   protected Entities\Project $project;
