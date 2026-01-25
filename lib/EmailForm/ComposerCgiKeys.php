@@ -36,6 +36,7 @@ class ComposerCgiKeys
   public const ATTACHED_FILES = 'attachedFiles';
   public const ATTACHMENT_VISIBILITY_TOGGLE = 'attachmentVisibilityToggle';
   public const BCC = 'BCC';
+  public const BULK_TRANSACTION_ID = 'bulkTransactionId';
   public const CANCEL = 'cancel';
   public const CC = 'CC';
   public const DELETE_ALL_ATTACHMENTS = 'deleteAllAttachments';
@@ -52,6 +53,9 @@ class ComposerCgiKeys
   public const MESSAGE_DRAFT_ID = 'messageDraftId';
   public const MESSAGE_EXPORT = 'messageExport';
   public const MESSAGE_TEXT = 'messageText';
+  public const OPERATION = 'operation';
+  public const PROJECT_ID = 'projectId';
+  public const PROJECT_NAME = 'projectName';
   public const REFERENCING = 'referencing';
   public const SAVE_AS_TEMPLATE = 'saveAsTemplate';
   public const SAVE_FROM_TAG = 'saveFromTag';
@@ -61,4 +65,5 @@ class ComposerCgiKeys
   public const SUBJECT = 'subject';
   public const SUBJECT_TAG = 'subjectTag';
   public const TEMPLATE_MESSAGES_SELECTOR = 'templateMessagesSelector';
+  public const TOPIC = 'topic';
 }

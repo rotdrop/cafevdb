@@ -48,6 +48,7 @@ namespace OCA\CAFEVDB\LegacyTemplates\EmailForm\Recipients;
 
 use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\EmailForm\RecipientsFilterCgiKeys;
+use OCA\CAFEVDB\EmailForm\RecipientsFilterCssClasses;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 $noMissingClass = '';

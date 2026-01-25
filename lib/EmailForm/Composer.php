@@ -110,9 +110,6 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
-  public const FROM_ORCHESTRA = 'orchestra';
-  public const FROM_PERSONAL = 'personal';
-
   public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption';
   public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
@@ -573,15 +570,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     if (!empty($template)) {
-      $this->cgiData['templateMessagesSelector'] = $template;
+      $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $template;
     }
 
     $this->setSubjectTag();
 
-    $this->draftId = $this->cgiValue('messageDraftId', 0);
+    $this->draftId = $this->cgiValue(ComposerCgiKeys::MESSAGE_DRAFT_ID, 0);
 
-    $this->inReplyToId = $this->cgiValue('inReplyTo', '');
-    $this->referencing = array_unique($this->cgiValue('referencing', []));
+    $this->inReplyToId = $this->cgiValue(ComposerCgiKeys::IN_REPLY_TO, '');
+    $this->referencing = array_unique($this->cgiValue(ComposerCgiKeys::REFERENCING, []));
     sort($this->referencing);
 
     $this->progressToken = $this->cgiValue('progressToken');
@@ -615,7 +612,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         'Files' => [],
         'Events' => [],
       ],
-      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [],
+      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
+      ],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
       self::DIAGNOSTICS_TOTAL_COUNT => 0,
@@ -624,13 +622,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     // Maybe should also check something else. If submitted is true,
     // then we use the form data, otherwise the defaults.
-    $this->submitted = $this->cgiValue('formStatus', '') == 'submitted';
+    $this->submitted = $this->cgiValue(ComposerCgiKeys::FORM_STATUS, '') == EnumFormStatus::SUBMITTED->value;
 
     $this->setDefaultTemplate();
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('templateMessagesSelector');
+      $initialTemplate = $this->cgiValue(ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR);
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
         if (empty($template)) {
@@ -639,7 +637,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $loadedTag = $template->getTag();
         if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
           $initialTemplate = $template->getTag();
-          $this->cgiData['templateMessagesSelector'] = $initialTemplate;
+          $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $initialTemplate;
           $this->templateName = $initialTemplate;
         } else {
           $this->templateName = $initialTemplate;
@@ -4273,9 +4271,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       },
       self::t('SENDER') => function($key) {
         switch ($this->fromTag()) {
-          case self::FROM_ORCHESTRA:
+          case EnumFromTag::ORCHESTRA:
             return $this->l->t('your orchestra organizers (%s)', $this->fetchExecutiveBoard());
-          case self::FROM_PERSONAL:
+          case EnumFromTag::PERSONAL:
             $fullName = $this->fromName();
             return explode(' ', $fullName)[0];
         }
@@ -4514,7 +4512,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $this->cgiData['BCC'] = $sentEmail->getBcc();
     $this->cgiData['CC'] = $sentEmail->getCc();
-    $this->cgiData['inReplyTo'] = $this->inReplyToId = $messageId;
+    $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = $this->inReplyToId = $messageId;
 
 
     $this->referencing = [ $this->inReplyTo() ];
@@ -4528,7 +4526,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
     $this->referencing = array_unique($this->referencing);
     sort($this->referencing);
-    $this->cgiData['referencing'] = $this->referencing;
+    $this->cgiData[ComposerCgiKeys::REFERENCING] = $this->referencing;
 
     $this->draftId = 0; // avoid accidental overwriting
 
@@ -4649,8 +4647,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     $this->draftId = 0; // avoid accidental overwriting
 
     // clear references, as this is a new shot
-    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
-    $this->referencing = $this->cgiData['referencing'] = [];
+    $this->inReplyToId = $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = null;
+    $this->referencing = $this->cgiData[ComposerCgiKeys::REFERENCING] = [];
 
     return $this->executionStatus = true;
   }
@@ -4859,8 +4857,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     // clear references, as this is a new shot
-    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
-    $this->referencing = $this->cgiData['referencing'] = [];
+    $this->inReplyToId = $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = null;
+    $this->referencing = $this->cgiData[ComposerCgiKeys::REFERENCING] = [];
 
     /** @var Entities\EmailDraft $draft */
     $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
@@ -5236,10 +5234,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   public function formData():array
   {
     return [
-      'formStatus' => 'submitted',
-      'messageDraftId' => $this->draftId,
-      'inReplyTo' => $this->inReplyToId,
-      'referencing' => $this->referencing,
+      ComposerCgiKeys::FORM_STATUS => EnumFormStatus::SUBMITTED->value,
+      ComposerCgiKeys::MESSAGE_DRAFT_ID => $this->draftId,
+      ComposerCgiKeys::IN_REPLY_TO => $this->inReplyToId,
+      ComposerCgiKeys::REFERENCING => $this->referencing,
     ];
   }
 
@@ -5336,40 +5334,39 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     return $this->messageTag;
   }
 
-  /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
-  public function fromTag():string
+  /** @return EnumFromTag */
+  public function fromTag(): EnumFromTag
   {
-    return $this->cgiValue('fromTag', $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, self::FROM_ORCHESTRA));
+    return EnumFromTag::get($this->cgiValue(ComposerCgiKeys::FROM_TAG, $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, EnumFromTag::ORCHESTRA->value)));
   }
 
   /**
-   * @param null|string $fromTag Request the name of the given tag, either
-   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   * @param ?EnumFromTag $fromTag
    *
    * @return string The current or requested From: name.
    */
-  public function fromName(?string $fromTag = null): string
+  public function fromName(?EnumFromTag $fromTag = null): string
   {
     switch (($fromTag ?? $this->fromTag())) {
-      case self::FROM_ORCHESTRA:
+      case EnumFromTag::ORCHESTRA:
         return $this->cgiValue('fromName', $this->catchAllName);
-      case self::FROM_PERSONAL:
+      case EnumFromTag::PERSONAL:
         return $this->user()?->getDisplayName() ?? '';
     }
   }
 
   /**
-   * @param null|string $fromTag Request the name of the given tag, either
-   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   * @param ?EnumFromTag $fromTag Request the name of the given tag, either
+   * EnumFromTag::ORCHESTRA or EnumFromTag::PERSONAL.
    *
    * @return string The current or requested From: addres.
    */
-  public function fromAddress(?string $fromTag = null):string
+  public function fromAddress(?EnumFromTag $fromTag = null): string
   {
     switch (($fromTag ?? $this->fromTag())) {
-      case self::FROM_ORCHESTRA:
+      case EnumFromTag::ORCHESTRA:
         return htmlspecialchars($this->catchAllEmail);
-      case self::FROM_PERSONAL:
+      case EnumFromTag::PERSONAL:
         $domain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
         $user = $this->userId();
         return $user . '@' . $domain;
@@ -5523,13 +5520,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
           if (($level > 0 || $share->getId() != $downloadsShare->getId()) && $node->getId() == $downloadsFolder->getId()) {
             if ($level > 0) {
-              $explanation = $this->l->t(
+              $explanations = $this->l->t(
                 'The link refers to a file or folder "%1$s" inside the music sheets download folder "%2$s".', [
                   $path,
                   $downloadsPath,
                 ]);
             } else {
-              $explanation = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
+              $explanations = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
             }
             $explanations .= ' ' . $this->l->t(
               'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
@@ -5595,10 +5592,10 @@ to your user name and will be invalidated in the unfortunate case that you leave
     $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
     $badLinks =  array_filter($linkStatus, fn($info) => !$info['status']);
     $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = [
-      'Status' => !$hasErrors,
-      'All' => $linkStatus,
-      'Good' => $goodLinks,
-      'Bad' =>  $badLinks,
+      'status' => !$hasErrors,
+      'all' => $linkStatus,
+      'good' => $goodLinks,
+      'bad' =>  $badLinks,
     ];
 
     if ($hasErrors) {
@@ -6044,12 +6041,5 @@ to your user name and will be invalidated in the unfortunate case that you leave
       $throwable->getLine(),
       $throwable->getMessage(),
     ]);
-  }
-
-  /** @return void */
-  protected static function l10nInjection():void
-  {
-    self::t(self::FROM_ORCHESTRA);
-    self::t(self::FROM_PERSONAL);
   }
 }

@@ -44,10 +44,11 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentO
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\EmailForm\ComposerCgiKeys;
+use OCA\CAFEVDB\EmailForm\EnumFromTag;
 use OCA\CAFEVDB\EmailForm\RecipientsFilter;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\EmailAddressService;
@@ -62,8 +63,6 @@ class EmailFormController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const UPLOAD_KEY = 'files';
-
-  public const TOPIC_UNSPECIFIC = 'general';
 
   public const EMAIL_TEMPLATE_NAME = 'emailTemplateName';
   public const TEMPLATE_EMAILS = 'templateEmails';
@@ -155,7 +154,7 @@ class EmailFormController extends Controller
 
     $templateParameters = [
       'appName' => $this->appName(),
-      'appNameTag' => 'app-' . $this->appName,
+      'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
       'urlGenerator' => $this->urlGenerator,
       'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
       'dateTimeZone' => $this->getDateTimeZone(),
@@ -202,12 +201,12 @@ class EmailFormController extends Controller
       'sender' => $composer->fromName(),
       'catchAllEmail' => $composer->fromAddress(),
       'fromName' => [
-        Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
-        Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+        EnumFromTag::PERSONAL->value => $composer->fromName(EnumFromTag::PERSONAL),
+        EnumFromTag::ORCHESTRA->value => $composer->fromName(EnumFromTag::ORCHESTRA),
       ],
       'fromAddress' => [
-        Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
-        Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+        EnumFromTag::PERSONAL->value => $composer->fromAddress(EnumFromTag::PERSONAL),
+        EnumFromTag::ORCHESTRA->value => $composer->fromAddress(EnumFromTag::ORCHESTRA),
       ],
       'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
       'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -345,11 +344,11 @@ class EmailFormController extends Controller
     $debugText = ''; ///< Diagnostic output, only enabled on request.
 
     $defaultData = [
-      'operation' => EnumEmailFormComposerOperation::UPDATE,
-      'topic' => EnumEmailFormComposerTopic::UNSPECIFIC,
-      'projectId' => $projectId,
-      'projectName' => $projectName,
-      'bulkTransactionId' => -1,
+      ComposerCgiKeys::OPERATION => EnumEmailFormComposerOperation::UPDATE,
+      ComposerCgiKeys::TOPIC => EnumEmailFormComposerTopic::UNSPECIFIC,
+      ComposerCgiKeys::PROJECT_ID => $projectId,
+      ComposerCgiKeys::PROJECT_NAME => $projectName,
+      ComposerCgiKeys::BULK_TRANSACTION_ID => -1,
     ];
     $requestData = DTO\EmailFormComposerRequestData::fromArray(
       array_merge($defaultData, $this->request->getParam(Composer::POST_TAG, [])),
@@ -411,7 +410,7 @@ class EmailFormController extends Controller
             $previewMessages = $composer->previewMessages();
             $templateParameters = [
               'appName' => $this->appName,
-              'appNameTag' => 'app-' . $this->appName,
+              'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'messages' => $previewMessages,
@@ -476,12 +475,12 @@ class EmailFormController extends Controller
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
               'fromName' => [
-                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+                EnumFromTag::PERSONAL->value => $composer->fromName(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromName(EnumFromTag::ORCHESTRA)
               ],
               'fromAddress' => [
-                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+                EnumFromTag::PERSONAL->value => $composer->fromAddress(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromAddress(EnumFromTag::ORCHESTRA),
               ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -562,7 +561,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
-              'appNameTag' => 'app-' . $this->appName,
+              'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -589,12 +588,12 @@ class EmailFormController extends Controller
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
               'fromName' => [
-                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+                EnumFromTag::PERSONAL->value => $composer->fromName(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromName(EnumFromTag::ORCHESTRA)
               ],
               'fromAddress' => [
-                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+                EnumFromTag::PERSONAL->value => $composer->fromAddress(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromAddress(EnumFromTag::ORCHESTRA),
               ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -613,7 +612,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
-              'appNameTag' => 'app-' . $this->appName,
+              'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -650,20 +649,16 @@ class EmailFormController extends Controller
             $requestData[ComposerCgiKeys::SUBJECT] = $composer->subject();
             break;
           case EnumEmailFormComposerTopic::DRAFT:
-            $value = $requestData[ComposerCgiKeys::DRAFT_MESSAGES_SELECTOR];
-            if (!preg_match('/__draft-(-?[0-9]+)/', $value, $matches)) {
-              return self::grumble($this->l->t('Invalid draft name "%s".', $value));
-            }
-
-            $draftId = $matches[1];
+            $draftId = $requestData[ComposerCgiKeys::DRAFT_MESSAGES_SELECTOR];
+            $this->logInfo('DRAFT IF ' . $draftId);
             $draftParameters = $composer->loadDraft($draftId);
             if ($composer->errorStatus()) {
               $requestData['errorStatus'] = $composer->errorStatus();
               $requestData['diagnostics'] = $composer->statusDiagnostics();
               break;
             }
-            $draftParameters[Composer::POST_TAG]['messageDraftId'] =
-              $requestData['messageDraftId'] = $draftId;
+            $draftParameters[Composer::POST_TAG][ComposerCgiKeys::MESSAGE_DRAFT_ID] =
+              $requestData[ComposerCgiKeys::MESSAGE_DRAFT_ID] = $draftId;
 
             $requestParameters = $this->request->getParams();
 
@@ -704,7 +699,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
-              'appNameTag' => 'app-' . $this->appName,
+              'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -732,12 +727,12 @@ class EmailFormController extends Controller
               'sender' => $composer->fromName(),
               'catchAllEmail' => $composer->fromAddress(),
               'fromName' => [
-                Composer::FROM_PERSONAL => $composer->fromName(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromName(Composer::FROM_ORCHESTRA)
+                EnumFromTag::PERSONAL->value => $composer->fromName(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromName(EnumFromTag::ORCHESTRA)
               ],
               'fromAddress' => [
-                Composer::FROM_PERSONAL => $composer->fromAddress(Composer::FROM_PERSONAL),
-                Composer::FROM_ORCHESTRA => $composer->fromAddress(Composer::FROM_ORCHESTRA),
+                EnumFromTag::PERSONAL->value => $composer->fromAddress(EnumFromTag::PERSONAL),
+                EnumFromTag::ORCHESTRA->value => $composer->fromAddress(EnumFromTag::ORCHESTRA),
               ],
               'fileAttachmentOptions' => $composer->fileAttachmentOptions(),
               'eventAttachmentOptions' => $composer->eventAttachmentOptions($projectId, $eventAttachments),
@@ -759,7 +754,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
-              'appNameTag' => 'app-' . $this->appName,
+              'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -785,7 +780,7 @@ class EmailFormController extends Controller
             $requestData['recipientsForm'] = $rcptData;
 
             if (!$composer->errorStatus()) {
-              $debugText .= $this->l->t("Loaded draft message with id %d", $requestData['messageDraftId']);
+              $debugText .= $this->l->t("Loaded draft message with id %d", $requestData[ComposerCgiKeys::MESSAGE_DRAFT_ID]);
             }
             break;
           default:
@@ -797,7 +792,7 @@ class EmailFormController extends Controller
         switch ($topic) {
           case EnumEmailFormComposerTopic::TEMPLATE:
             $selected =
-              $emailTemplateName = Util::normalizeSpaces($requestData['templateMessagesSelector']);
+              $emailTemplateName = Util::normalizeSpaces($requestData[ComposerCgiKey::TEMPLATE_MESSAGES_SELECTOR]);
             if (empty($emailTemplateName)) {
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t('Email template name must not be empty'),
@@ -812,7 +807,7 @@ class EmailFormController extends Controller
             break;
           case EnumEmailFormComposerTopic::DRAFT:
             if ($composer->storeDraft()) {
-              $requestData['messageDraftId'] = $composer->messageDraftId();
+              $requestData[ComposerCgiKeys::MESSAGE_DRAFT_ID] = $composer->messageDraftId();
             } else {
               $requestData['errorStatus'] = $composer->errorStatus();
               $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -832,7 +827,7 @@ class EmailFormController extends Controller
       case EnumEmailFormComposerOperation::DELETE:
         switch ($topic) {
           case EnumEmailFormComposerTopic::TEMPLATE:
-            $composer->deleteTemplate($requestData['templateMessagesSelector']);
+            $composer->deleteTemplate($requestData[ComposerCgiKey::TEMPLATE_MESSAGES_SELECTOR]);
             $composer->setDefaultTemplate();
             $requestData[self::EMAIL_TEMPLATE_NAME] = $composer->currentEmailTemplate();
             $requestData[ComposerCgiKeys::MESSAGE_TEXT] = $composer->messageText();
@@ -840,8 +835,8 @@ class EmailFormController extends Controller
             break;
           case EnumEmailFormComposerTopic::DRAFT:
             if ($composer->deleteDraft()) {
-              $debugText .= $this->l->t("Deleted draft message with id %d", $requestData['messageDraftId']);
-              $requestData['messageDraftId'] = 0;
+              $debugText .= $this->l->t("Deleted draft message with id %d", $requestData[ComposerCgiKeys::MESSAGE_DRAFT_ID]);
+              $requestData[ComposerCgiKeys::MESSAGE_DRAFT_ID] = 0;
             } else {
               $requestData['errorStatus'] = $composer->errorStatus();
               $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -901,7 +896,7 @@ class EmailFormController extends Controller
         operation: $operation,
         topic: $topic,
         projectName: $projectName,
-        projectId: $projectId,
+        projectId: (int)$projectId,
         caption: $caption,
         messages: [$messageText],
         requestData: $requestData,
@@ -944,7 +939,7 @@ class EmailFormController extends Controller
 
       $templateParameters = [
         'appName' => $this->appName(),
-        'appNameTag' => 'app-' . $this->appName,
+        'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
         'projectName' => $projectName,
         'projectId' => $projectId,
         'bulkTransactionId' => $bulkTransactionId,

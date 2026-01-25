@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\LegacyTemplates\EmailForm\Composer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\EmailForm\ComposerCgiKeys;
+use OCA\CAFEVDB\EmailForm\ComposerCssClasses;
+use OCA\CAFEVDB\EmailForm\EnumFromTag;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
@@ -149,11 +151,11 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                      class="radio"
                      type="radio"
                      name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FROM_TAG ?>]"
-                     value="<?= Composer::FROM_ORCHESTRA ?>"
-                     <?php $_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG] === Composer::FROM_ORCHESTRA && e('checked') ?>
+                     value="<?= EnumFromTag::ORCHESTRA->value ?>"
+                     <?php EnumFromTag::get($_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG]) === EnumFromTag::ORCHESTRA && e('checked') ?>
               />
               <label for="email-from-orchestra">
-                <?php p($_['fromName'][Composer::FROM_ORCHESTRA] . ' <' . $_['fromAddress'][Composer::FROM_ORCHESTRA] . '>') ?>
+                <?php p($_['fromName'][EnumFromTag::ORCHESTRA->value] . ' <' . $_['fromAddress'][EnumFromTag::ORCHESTRA->value] . '>') ?>
               </label>
             </span>
             <span>
@@ -161,11 +163,11 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
                      class="radio"
                      type="radio"
                      name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::FROM_TAG ?>]"
-                     value="<?= Composer::FROM_PERSONAL ?>"
-                     <?php $_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG] === Composer::FROM_PERSONAL && e('checked') ?>
+                     value="<?= EnumFromTag::PERSONAL->value ?>"
+                     <?php EnumFromTag::get($_[Composer::POST_TAG][ComposerCgiKeys::FROM_TAG]) === EnumFromTag::PERSONAL && e('checked') ?>
               />
               <label for="email-from-personal">
-                <?php p($_['fromName'][Composer::FROM_PERSONAL] . ' <' . $_['fromAddress'][Composer::FROM_PERSONAL] . '>') ?>
+                <?php p($_['fromName'][EnumFromTag::PERSONAL->value] . ' <' . $_['fromAddress'][EnumFromTag::PERSONAL->value] . '>') ?>
               </label>
             </span>
           </span>
@@ -347,7 +349,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         </div>
       </td>
     </tr>
-    <tr class="attachments event-attachments<?php empty($eventAttachmentOptions) && p(' no-attachments'); ?><?php $selectedEventAttachments == 0 && p(' empty-selection'); ?>">
+    <tr class="attachments event-attachments<?php empty($eventAttachmentOptions) && p(' ' . ComposerCssClasses::NO_ATTACHMENTS); ?><?php $selectedEventAttachments == 0 && p(' ' . ComposerCssClasses::EMPTY_SELECTION); ?>">
       <td class="event-attachments caption">
         <?php echo $l->t('Attached Events'); ?>
       </td>
@@ -377,7 +379,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
         </span>
       </td>
     </tr>
-    <tr class="attachments file-attachments<?php (count($fileAttachmentOptions) == 0) && p(' no-attachments'); ?><?php $selectedFileAttachments == 0 && p(' empty-selection'); ?>">
+    <tr class="attachments file-attachments<?php (count($fileAttachmentOptions) == 0) && p(' ' . ComposerCssClasses::NO_ATTACHMENTS); ?><?php $selectedFileAttachments == 0 && p(' ' . ComposerCssClasses::EMPTY_SELECTION); ?>">
       <td class="file-attachments caption">
         <?php echo $l->t('Attached Files'); ?>
       </td>

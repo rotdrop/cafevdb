@@ -996,47 +996,47 @@ class RecipientsFilter
     $descriptions = [
       [
         'text' => $l->t('project mailing list'),
-        'conditions' => [ 'only-project-mode', self::PROJECT_MAILING_LIST_KEY ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::PROJECT_MAILING_LIST ],
       ],
       [
         'text' => $l->t('announcements mailing list'),
-        'conditions' => [ self::ANNOUNCEMENTS_MAILING_LIST_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ANNOUNCEMENTS_MAILING_LIST, ],
       ],
       [
         'text' => $l->t('musician database'),
-        'conditions' => [ 'not-project-mode', ],
+        'conditions' => [ RecipientsFilterCssClasses::NOT_PROJECT_MODE, ],
       ],
       [
         'text' => $l->t('all known musicians'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_CONFIRMED, RecipientsFilterCssClasses::FROM_PROJECT_PRELIMINARY, RecipientsFilterCssClasses::EXCEPT_PROJECT, ],
       ],
       [
         'text' => $l->t('all musicians NOT participating'),
-        'conditions' => [ 'only-project-mode', self::EXCEPT_PROJECT_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::EXCEPT_PROJECT, ],
       ],
       [
         'text' => $l->t('participants (confirmed)'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_CONFIRMED, ],
       ],
       [
         'text' => $l->t('participants (preliminary)'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_PRELIMINARY, ],
       ],
       [
         'text' => $l->t('participants (preliminary and confirmed)'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::FROM_PROJECT_CONFIRMED_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_PRELIMINARY, RecipientsFilterCssClasses::FROM_PROJECT_CONFIRMED, ],
       ],
       [
         'text' => $l->t('all musicians except confirmed participants'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_PRELIMINARY_KEY, self::EXCEPT_PROJECT_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_PRELIMINARY, RecipientsFilterCssClasses::EXCEPT_PROJECT, ],
       ],
       [
         'text' => $l->t('all musicians except preliminary participants'),
-        'conditions' => [ 'only-project-mode', self::FROM_PROJECT_CONFIRMED_KEY, self::EXCEPT_PROJECT_KEY, ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, RecipientsFilterCssClasses::FROM_PROJECT_CONFIRMED, RecipientsFilterCssClasses::EXCEPT_PROJECT, ],
       ],
       [
         'text' => $l->t('no one'),
-        'conditions' => [ 'only-project-mode', ],
+        'conditions' => [ RecipientsFilterCssClasses::ONLY_PROJECT_MODE, ],
       ],
     ];
     return $descriptions;
