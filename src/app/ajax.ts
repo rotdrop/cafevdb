@@ -53,6 +53,7 @@ const stringifyTrace = (trace: NextcloudExceptionLogEntry['exception']['Trace'])
 export interface AjaxFailData extends Partial<NextcloudExceptionLogEntry> {
   error: string,
   status: string,
+  caption?: string,
   messages: string[],
   xhr: JQuery.jqXHR,
   info?: string,
@@ -154,9 +155,13 @@ const ajaxHandleError = async (
         if (!html && message.startsWith('<')) {
           html = message;
           message = '';
-          const $caption = $(html).find('.caption');
-          if ($caption.length > 0) {
-            message = $caption.text();
+          if (failData.caption) {
+            message = failData.caption;
+          } else {
+            const $caption = $(html).find('.caption');
+            if ($caption.length > 0) {
+              message = $caption.text();
+            }
           }
         }
         const eventData = {
