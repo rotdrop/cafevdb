@@ -34,3 +34,9 @@ export interface AxiosErrorResponse<T = unknown, D = any> extends Omit<AxiosErro
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isAxiosErrorResponse = <T = unknown, D = any>(error: unknown): error is AxiosErrorResponse<T, D> =>
   isAxiosError<T, D>(error) && !!error.response;
+
+type Messages = { messages: string[] };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isAxiosMessagesErrorResponse = <T extends Messages, D = any>(error: unknown): error is AxiosErrorResponse<T, D> =>
+  isAxiosErrorResponse<T, D>(error) && ('messages' in error.response.data);
