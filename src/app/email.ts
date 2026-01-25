@@ -65,6 +65,7 @@ import {
 import type {
   // EmailFormComposerResponse,
   EmailFormComposerRequestData as ComposerRequest,
+  EmailFormComposerPreviewResponse,
   EmailFormComposerResponse,
   EmailFormRecipientsFilterReloadResponse,
   EmailFormRecipientsFilterResponse,
@@ -1297,7 +1298,7 @@ const emailFormCompositionHandlers = (
             $.fn.cafevTooltip.remove();
           });
         })
-        .done(function(data) {
+        .done(function(data: EmailFormComposerPreviewResponse) {
           if (!ajaxValidateResponse(
             data, ['contents'], function() {
               pageBusyIcon(false);

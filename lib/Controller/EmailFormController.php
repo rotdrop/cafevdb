@@ -426,10 +426,10 @@ class EmailFormController extends Controller
               $requestData['diagnostics'] = $composer->statusDiagnostics();
               $requestData['previewData'] = $html;
             } else {
-              return self::dataResponse([
-                'messages' => [$this->l->t('Preview generation successful.')],
-                'contents' => $html,
-              ]);
+              return new DTO\EmailFormComposerPreviewResponse(
+                messages: [$this->l->t('Preview generation successful.')],
+                contents: $html,
+              )->response();
             }
         }
         break;
