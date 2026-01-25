@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -97,6 +97,7 @@ class InstrumentationService
       }
       $dummy->setSurName($this->l->t('Doe'))
         ->setFirstName($this->l->t('John'))
+        ->setUserIdSlug($this->l->t('john.doe'))
         ->setAddressSupplement('Igloo 13')
         ->setStreet($this->l->t('Undiscoverable'))
         ->setStreetNumber(42)
