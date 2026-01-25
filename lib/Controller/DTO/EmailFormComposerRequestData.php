@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Controller\EnumEmailFormComposerElement;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation;
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic;
 use OCA\CAFEVDB\EmailForm\EnumFormStatus;
+use OCA\CAFEVDB\EmailForm\EnumFromTag;
 
 /**
  * Response DTO of the email-form controller.
@@ -68,6 +69,10 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     /** @var ?array<string> */
     public readonly ?array $attachedFiles = null,
     public readonly ?bool $autoSave = null,
+    public readonly ?EnumFromTag $fromTag = null,
+    public readonly ?string $templateMessagesSelector = null,
+    public readonly ?string $draftMessagesSelector = null,
+    public readonly ?string $sentMessagesSelector = null,
   ) {
   }
 
@@ -107,7 +112,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
       messageDraftId: empty($messageDraftId) ? null : $messageDraftId,
       previewData: $previewData ?? null,
       progressToken: $progressToken ?? null,
-      projectId: $projectId ?? null,
+      projectId: ($projectId ?? null) == null ? null : $projectId,
       projectName: $projectName ?? null,
       recipients: $recipients ?? null,
       recipientsForm: $recipientsForm ?? null,
@@ -116,6 +121,10 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
       subject: $subject ?? null,
       submitAll: $submitAll ?? null,
       templateEmailOptions: $templateEmailOptions ?? null,
+      fromTag: $fromTag === null ? null : EnumFromTag::get($fromTag),
+      templateMessagesSelector: $templateMessagesSelector ?? null,
+      draftMessagesSelector: $draftMessagesSelector ?? null,
+      sentMessagesSelector: $sentMessagesSelector ?? null,
     );
   }
 }
