@@ -46,6 +46,7 @@
           />
           <HtmlErrorModal v-if="htmlString"
                           :open.sync="detailsModalOpen"
+                          :caption="envelopeErrorMessage"
                           :html-string="htmlString"
                           @problem-report:show="showProblemReport = true"
           />
@@ -111,11 +112,11 @@
                   :name="t(appName, 'FRONTEND ERROR')"
                   :subname="errorMessage"
       />
-      <NcListItem v-else-if="originalError && isJqJsonXHR"
+      <NcListItem v-else-if="/* originalError && */isJqJsonXHR"
                   :name="t(appName, 'jQuery AJAX ERROR WITH RESPONSE DATA')"
                   :subname="errorMessage"
       />
-      <NcListItem v-else-if="originalError && isJqXHR"
+      <NcListItem v-else-if="/* originalError && */isJqXHR"
                   :name="t(appName, 'jQuery AJAX ERROR WITHOUT RESPONSE DATA')"
                   :subname="errorMessage"
       />
@@ -208,6 +209,7 @@ import { isNextcloudExceptionResponse } from '../types/ajax/php-exception-respon
 import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
 import type { AxiosError } from 'axios'
 import {
+  isAxiosMessagesErrorResponse,
   isAxiosErrorResponse as isAxiosErrorResponseGuard,
   isAxiosError as isAxiosErrorGuard,
 } from '../toolkit/types/axios-type-guards.ts'
@@ -369,10 +371,10 @@ const serializedError = removeStack(serializeError(props.error, { useToJSON: fal
 logger.debug('SERIALIZED ERROR', { serializedError, origError: props.error })
 const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
 
-const stackTrace = ref<null|Array<StackFrame> >(null)
+const stackTrace = ref<null|StackFrame[]>(null)
 watch(stackTrace, (value) => {
   if (Array.isArray(value)) {
-    serializedError.stack = value
+    serializedError.stack = value.map(arg => arg.toString())
     systemErrorString.value = JSON.stringify(serializedError, undefined, 2)
   }
 })
@@ -461,7 +463,7 @@ const reportError = async () => {
     const messages = [
       t(appName, 'Could not submit the problem report: "{errorString}".', { errorString }),
     ]
-    if (isAxiosErrorResponseGuard(reportError) && Array.isArray(reportError.response.data.messages)) {
+    if (isAxiosMessagesErrorResponse(reportError)) {
       messages.splice(0, 1, ...reportError.response.data.messages)
     }
     showError(messages.join(' '), { timeout: TOAST_PERMANENT_TIMEOUT })
@@ -479,11 +481,11 @@ const parseStackTrace = async () => {
 
 onBeforeMount(parseStackTrace)
 
-const envelopeErrorItem = ref(null)
+const envelopeErrorItem = ref<typeof NcListItem|null>(null)
 
 watch(detailsModalOpen, () => {
   if (!detailsModalOpen.value && !showProblemReport.value && envelopeErrorItem.value) {
-    envelopeErrorItem.value.$refs.actions.openMenu()
+    envelopeErrorItem.value.$refs!.actions.openMenu()
   }
 })
 
