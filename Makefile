@@ -344,6 +344,7 @@ WEBPACK_DEPS =\
  $(JS_FILES)\
  $(L10N_FILES)\
  $(TS_APP_CONFIG)\
+ $(SCSS_APP_CONFIG)\
  ts-type-files\
  scss-variables\
  $(DW_APP_CONFIG)
