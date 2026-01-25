@@ -30,14 +30,17 @@ use PHP_IBAN;
 use Throwable;
 use stdClass;
 
+use GuzzleHttp\RequestOptions as ClientRequestOptions;
 use Malkusch\Lock\Mutex;
 
 use OCP\AppFramework\Http;
-use OCP\IDateTimeFormatter;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\Http\Client\IClient as HttpClient;
+use OCP\Http\Client\IClientService as HttpClientFactory;
+use OCP\IDateTimeFormatter;
 
-use function OCA\CAFEVDB\Common\Functions\sprintf;
+use function OCA\CAFEVDB\Common\Functions\sprintf; // accept backed enums
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -45,8 +48,8 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
@@ -470,6 +473,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Bound request parameters.
    */
   private ?array $requestParameters = null;
+
+  private HttpClient $httpClient;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -1258,10 +1263,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                   break;
               }
               $keyVariants = array_map(
-                fn($key) => '['.$key.']',
+                fn($key) => '[' . $key . ']',
                 $this->translationVariants($key)
               );
-              $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+              $footer = str_ireplace($keyVariants, $totalSum[$key] ?? '', $footer);
             }
             $cssClass = implode(' ', [
               self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
@@ -3756,28 +3761,40 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /**
-   * Generate a stream-context for use in link validation.
+   * Try to fetch the headers for the given URL, used in validating the
+   * accessibility of URLs in message texts.
    *
-   * @param bool $sslVerify If \null use the global config-value for the
-   * default.
+   * @param string $url
    *
-   * @return mixed
+   * @param ?bool $sslVerify
+   *
+   * @return int The Http status code.
    */
-  private function linkValidationContext(?bool $sslVerify = null):mixed
+  private function getHeaders(string $url, ?bool $sslVerify = null): ?int
   {
+    if (!($this->httpClient ?? null)) {
+      $this->httpClient = $this->di(HttpClientFactory::class)->newClient();
+    }
     if ($sslVerify === null) {
       $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
     }
-    return stream_context_create([
-      'http' => [
-        'method' => 'HEAD',
-        'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    $options = [
+      'headers' => [
+        'User-Agent' => 'Orgacloud/1.0',
+        'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       ],
-      'ssl' => [
-        'verify_peer' => $sslVerify,
-        'verify_peer_name' => $sslVerify,
-      ],
-    ]);
+      'http_errors' => false,
+    ];
+    if ($sslVerify === false) {
+      $options[ClientRequestOptions::VERIFY] = false;
+    }
+    try {
+      $response = $this->httpClient->head($url, $options);
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return null;
+    }
+    return $response->getStatusCode();
   }
 
   /**
@@ -3855,18 +3872,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $projectService = $this->di(ProjectService::class);
       list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
 
-      try {
-        $headers = get_headers($share, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
-      }
-      if ($headers && count($headers) > 0) {
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code < 200 && $code >= 400) {
-          $shareStatus = false;
-        }
-      } else {
-        $code = -1;
+      $httpStatusCode = $this->getHeaders($share) ?? -1;
+      if ($httpStatusCode < 200 || $httpStatusCode >= 400) {
+        $shareStatus = false;
       }
 
       $filesCount = $this->userStorage->folderWalk($folder);
@@ -3877,7 +3885,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $code,
+        'httpCode' => $httpStatusCode,
         'folder' => $folder,
         'appLink' => $this->userStorage->getFilesAppLink($folder, subDir: true),
         'share' => $share,
@@ -3906,18 +3914,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $projectGroupService = $this->di(ProjectGroupService::class);
       ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-      try {
-        $headers = get_headers($url, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
-      }
-      if ($headers && count($headers) > 0) {
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code < 200 && $code >= 400) {
-          $shareStatus = false;
-        }
-      } else {
-        $code = -1;
+      $httpStatusCode = $this->getHeaders($url) ?? -1;
+      if ($httpStatusCode < 200 || $httpStatusCode >= 400) {
+        $shareStatus = false;
       }
 
       $folder = $share?->getNode();
@@ -3929,7 +3928,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $code,
+        'httpCode' => $httpStatusCode,
         'folder' => $folder,
         'appLink' => $appLink,
         'share' => $share,
@@ -4434,8 +4433,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /** @return string The formatted bank account of the orchestra. */
-  private function bankAccount():string
+  private function bankAccount(): string
   {
+    $ibanValue = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN);
+    if (empty($ibanValue)) {
+      return '';
+    }
     $iban = new PHP_IBAN\IBAN($this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN));
     $financeService = $this->di(FinanceService::class);
     $info = $financeService->getIbanInfo($iban->MachineFormat());
@@ -5546,39 +5549,18 @@ to your user name and will be invalidated in the unfortunate case that you leave
         }
       }
       $explanations = null;
-      $originalUserAgent = ini_get('user_agent');
-      // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
-      ini_set('user_agent', 'Orgacloud/1.0');
-      try {
-        $headers = get_headers($href, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
+      $httpStatusCode = $this->getHeaders($href) ?? -1;
+      if (($httpStatusCode < 200 || $httpStatusCode >= 400) && $sslVerify) {
+        $httpStatusCode = $this->getHeaders($href, sslVerify: false);
+        if ($httpStatusCode >= 200 && $httpStatusCode < 400) {
+          $explanations = $this->l->t('SSL validation failed. The external site is misconfigured.');
+        }
+        $httpStatusCode = -1;
       }
-      if ($headers === null && $sslVerify) {
-        // retry without SSL for diagnostics
-        try {
-          $headers = get_headers($href, context: $this->linkValidationContext(sslVerify: false));
-        } catch (Throwable $t) {
-          $headers = null;
-        }
-        if (!empty($headers)) {
-          $this->logInfo('NO-SSL STATUS HEADER ' . $headers[0]);
-          $code = (int)substr($headers[0], 9, 3);
-          if ($code >= 200 && $code < 400) {
-            $explanations = $this->l->t('SSL validation failed. The external site is misconfigured.');
-          }
-        }
-        $headers = null;
-      }
-      ini_set('user_agent', $originalUserAgent);
-      if (!empty($headers)) {
-        $this->logInfo('STATUS HEADER ' . $headers[0]);
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code >= 200 && $code < 400) {
-          $thisLinkGood = true;
-        } else {
-          $this->logError('LINK BAD ' . $href . ' ' . print_r($headers, true));
-        }
+      if ($httpStatusCode >= 200 && $httpStatusCode < 400) {
+        $thisLinkGood = true;
+      } else {
+        $this->logError('LINK BAD "' . $href . '"');
       }
       $linkStatus[] = [
         'url' => $href,
