@@ -231,7 +231,7 @@ class CloudUserConnectorServiceTest extends TestCase
   public function testProjectGroupId(): void
   {
     $number = 47;
-    $groupId = $this->cloudUserConnectorService->projectGroupId($number);
+    $groupId = CloudUserConnectorService::getProjectGroupId($number);
     $this->assertEquals($this->appName . '_' .  $number, $groupId);
   }
 

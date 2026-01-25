@@ -108,9 +108,19 @@ trait MockMusiciansRepositoryTrait
         return [];
       }
     );
-    $repository->method('find')->willReturnCallback(
-      fn(array $identifier) => $this->musician->getId() == ($identifier['id'] ?? null) ? $this->musician : null,
-    );
+    $repository->method('find')->willReturnCallback(function(mixed $id) {
+      if (is_array($id)) {
+        $id = $id['id'];
+      }
+      $id = (int)$id;
+      if ($this->musician->getId() == $id) {
+        return $this->musician;
+      }
+      if (isset($this->entities[Entities\Musician::class])) {
+        return $this->entities[Entities\Musician::class]->get($id);
+      }
+      return null;
+    });
     $repository->expects($this->never())->method('createQueryBuilder');
 
     return $repository;

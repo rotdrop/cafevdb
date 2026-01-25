@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use ReflectionClass;
+use ReflectionMethod;
 use UnexpectedValueException;
 
 use PHPUnit\Framework\Attributes;
@@ -53,6 +55,7 @@ use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Mock around s.t. the EventsService class can be instantiated and used.
@@ -76,6 +79,8 @@ trait SetupEventsServiceTrait
   private MockProvider $mockProvider;
 
   private array $entityRepositories = [];
+
+  private array $entities = [];
 
   /**
    * {@inheritdoc}
@@ -108,15 +113,49 @@ trait SetupEventsServiceTrait
     $this->entityManager->method('getWrappedObject')->willReturn($this->entityManager);
     $this->entityManager->method('getRepository')->willReturnCallback(
       function(string $className) {
-        $repository = $this->entityRepositories[$className] ?? $this->getMockBuilder(EntityRepository::class)
+        $repository = $this->entityRepositories[$className] ?? null;
+        if ($repository == null) {
+          $repository = $this->getMockBuilder(EntityRepository::class)
           ->disableOriginalConstructor()
-          ->getMock();
-
+            ->getMock();
+          $this->entityRepositories[$className] = $repository;
+        }
         $repository->method('getEntityManager')->willReturn($this->entityManager);
-        $expects = $repository->expects($this->never())?->method('createQueryBuilder');
+        $repository->expects($this->never())?->method('createQueryBuilder');
         return $repository;
       },
     );
+    $this->entityManager->method('persist')->willReturnCallback(
+      function(mixed $entity) {
+        if (!method_exists($entity, 'getId')) {
+          // give up for now
+          return;
+        }
+        $class = get_class($entity);
+        if (!isset($this->entities[$class])) {
+          $this->entities[$class] = new ArrayCollection;
+        }
+        $givenId = $entity->getId();
+        if ($givenId !== null) {
+          $oldEntity = $this->entities[$class]->get($givenId);
+          if ($oldEntity) {
+            $this->assertEquals($entity, $oldEntity);
+            return;
+          }
+          $this->entities[$class]->set($givenId, $entity);
+          return;
+        }
+        $newId = \max(0, 0, ...$this->entities[$class]->getKeys()) + 1;
+        $this->entities[$class]->set($newId, $entity);
+      },
+    );
+    $this->entityManager->method('flush')->willReturnCallback(function() {
+      foreach ($this->entities as $entities) {
+        foreach ($entities as $id => $entity) {
+          $entity->setId($id);
+        }
+      }
+    });
     $this->mockProvider->registerClassInstance(EntityManager::class, $this->entityManager, global: true);
 
     // Entities\ProjectEvent
@@ -140,11 +179,78 @@ trait SetupEventsServiceTrait
     $this->entityRepositories[Entities\ProjectEvent::class] = $repository;
 
     // Entities\Project
+    $allMethods = array_map(
+      fn(ReflectionMethod $method) => $method->getName(),
+      new ReflectionClass(Repositories\ProjectsRepository::class)->getMethods(),
+    );
+    $wantedMethods = array_diff($allMethods, [
+      'findByIdOrName',
+      'findById',
+      'ensureProject',
+      'findOneBy',
+      'findAll',
+    ]);
     $repository = $this->getMockBuilder(Repositories\ProjectsRepository::class)
       ->disableOriginalConstructor()
+      ->onlyMethods($wantedMethods)
       ->getMock();
-    $repository->method('find')->willReturnCallback(
-      fn(int $projectId) => $this->project->getId() == $projectId ? $this->project : null,
+    $repository->method('find')->willReturnCallback(function(mixed $id) {
+      if (is_array($id)) {
+        $id = $id['id'];
+      }
+      $projectId = (int)$id;
+      if ($this->project->getId() == $projectId) {
+        return $this->project;
+      }
+      if (isset($this->entities[Entities\Project::class])) {
+        return $this->entities[Entities\Project::class]->get($projectId);
+      }
+      return null;
+    });
+    $repository->method('findBy')->willReturnCallback(
+      function(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null) {
+        foreach ($criteria as $criterium) {
+          $this->assertTrue(is_array($criterium));
+          $this->assertEquals(1, count($criterium));
+          $this->assertTrue(ctype_alpha(array_keys($criterium)[0]));
+          $field = array_keys($criterium)[0];
+          $method = 'get' . ucfirst($field);
+          $this->assertTrue(method_exists(Entities\Project::class, $method));
+        }
+        $allEntities = ($this->entities[Entities\Project::class] ?? null)?->toArray() ?? [];
+        $allEntities[$this->project->getId()] = $this->project;
+        $entities = array_filter(
+          $allEntities,
+          function(Entities\Project $entity) use ($criteria) {
+            foreach ($criteria as $criterium) {
+              $field = array_keys($criterium)[0];
+              $value = array_values($criterium)[0];
+              $method = 'get' . ucfirst($field);
+              if ($entity->$method() != $value) {
+                return false;
+              }
+            }
+            return true;
+          },
+        );
+        if (!empty($orderBy)) {
+          usort(entities, function(Entities\Project $a, Entities\Project $b) use ($orderBy) {
+            $result = 0;
+            foreach ($orderBy as $field => $direction) {
+              $method = 'get' . ucfirst($field);
+              $result = $a->$method() <=> $b->$method();
+              if ($direction == 'DESC') {
+                $result = -$result;
+              }
+              if ($result) {
+                break;
+              }
+            }
+            return $result;
+          });
+        }
+        return array_slice($entities, $offset ?? 0, $limit);
+      },
     );
     $repository->method('getEntityManager')->willReturn($this->entityManager);
     $repository->expects($this->never())->method('createQueryBuilder');

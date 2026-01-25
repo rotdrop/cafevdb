@@ -393,7 +393,7 @@ class EntityArrayAdapterTest extends TestCase
         "streetNumber": "42",
         "surName": "Musterperson",
         "updated": "2024-01-01T00:00:00.000000Z",
-        "userIdSlug": null,
+        "userIdSlug": "lieschen.mueller",
         "userPassphrase": null,
         "uuid": "00000000-0000-0000-0000-000000000000"
     },
@@ -698,7 +698,7 @@ class EntityArrayAdapterTest extends TestCase
         "streetNumber": "42",
         "surName": "Musterperson",
         "updated": "2024-01-01T00:00:00.000000Z",
-        "userIdSlug": null,
+        "userIdSlug": "lieschen.mueller",
         "userPassphrase": null,
         "uuid": "00000000-0000-0000-0000-000000000000"
     },
@@ -811,7 +811,7 @@ class EntityArrayAdapterTest extends TestCase
                 "streetNumber": "42",
                 "surName": "Musterperson",
                 "updated": "2024-01-01T00:00:00.000000Z",
-                "userIdSlug": null,
+                "userIdSlug": "lieschen.mueller",
                 "userPassphrase": null,
                 "uuid": "00000000-0000-0000-0000-000000000000"
             },

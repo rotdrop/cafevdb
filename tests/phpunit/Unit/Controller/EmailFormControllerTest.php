@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
 use DOMDocument;
+use DateTimeImmutable;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -33,9 +34,16 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\AppFramework\Http;
+use OCP\Files\File;
+use OCP\Files\Folder;
+use OCP\Files\Node;
+use OCP\Http\Client\IClient as HttpClient;
+use OCP\Http\Client\IClientService as HttpClientFactory;
+use OCP\Http\Client\IResponse as HttpClientResponse;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http;
+use OCP\Security\ISecureRandom;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller;
@@ -54,7 +62,10 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
+use OCA\CAFEVDB\Toolkit;
+use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
+#[Attributes\CoversClass(Controller\DTO\EmailFormComposerPreviewResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormComposerResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
@@ -65,7 +76,9 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\CoversClass(TestedController::class)]
 /** Test the ProjectsController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Html2Text::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
@@ -86,6 +99,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
@@ -104,8 +118,11 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MailingListsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\OrganizationalRolesService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
@@ -121,6 +138,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
@@ -149,9 +167,19 @@ class EmailFormControllerTest extends TestCase
 
   private PHPMyEdit $pme;
 
+  private IURLGenerator $urlGenerator;
+
+  private Service\ProjectService $projectService;
+
+  private Storage\UserStorage $userStorage;
+
   private array $postData = [];
 
   private array $emailContacts = [];
+
+  private array $fileNodes = [];
+
+  private array $linkShares = [];
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -172,6 +200,12 @@ class EmailFormControllerTest extends TestCase
     $repository->method('list')->willReturn([]);
     $this->entityRepositories[Entities\EmailDraft::class] = $repository;
 
+    $repository = $this->getMockBuilder(Repositories\ProjectParticipantsRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $repository->method('fetchParticipantNames')->willReturn([['nickName' => 'John'], ['nickName' => 'Jane']]);
+    $this->entityRepositories[Entities\ProjectParticipant::class] = $repository;
+
     foreach ($this->entityRepositories as $repository) {
       $repository->expects($this->never())?->method('createQueryBuilder');
     }
@@ -189,7 +223,9 @@ class EmailFormControllerTest extends TestCase
       },
     );
     $this->request->method('getParams')->willReturnCallback(fn() => $this->postData);
-    $mockProvider->registerClassInstance(IRequest::class, $this->request);
+    $this->request->method('getServerProtocol')->willReturn('https');
+    $this->request->method('getServerHost')->willReturn('cloud.tld');
+    $mockProvider->registerClassInstance(IRequest::class, $this->request, global: true);
 
     /** @var PHPMyEdit $pme */
     $this->pme = $this->createStub(PHPMyEdit::class);
@@ -209,19 +245,110 @@ class EmailFormControllerTest extends TestCase
     /** @var MusicianService $musiciansService */
     $musiciansService = $this->createStub(Service\MusicianService::class);
 
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->createStub(Storage\UserStorage::class);
+    $this->configService->setConfigValue(ConfigConstants::SHARED_FOLDER, 'orchestra');
+    $this->configService->setConfigValue(ConfigConstants::PROJECTS_FOLDER, 'projects',);
+    $this->configService->setConfigValue(ConfigConstants::FINANCE_FOLDER, 'finance');
+    $this->configService->setConfigValue(ConfigConstants::PROJECT_PARTICIPANTS_FOLDER, 'participants');
+    $this->configService->setConfigValue(ConfigConstants::PROJECT_POSTERS_FOLDER, 'posters');
+    $this->configService->setConfigValue(ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER, 'downloads');
+    $this->configService->setConfigValue(ConfigConstants::BALANCES_FOLDER, 'balances');
+
+    /** @var UserStorage $this->userStorage */
+    $this->userStorage = $this->createStub(Storage\UserStorage::class);
+    $mockProvider->registerClassInstance(Storage\UserStorage::class, $this->userStorage, global: true);
+
+    $this->userStorage->method('ensureFolderChain')->willReturn($this->createStub(Folder::class));
+    $this->userStorage->method('copyTree')->willReturn($this->createStub(Folder::class));
+    $this->userStorage->method('get')->willReturnCallback(function(string $path) {
+      if ($this->fileNodes[$path] ?? null) {
+        return $this->fileNodes[$path];
+      }
+      $node = $this->createStub(Folder::class);
+      $node->method('getPath')->willReturn($path);
+      $node->method('getName')->willReturn(basename($path));
+
+      $this->fileNodes[$path] = $node;
+
+      return $node;
+    });
+    $this->userStorage->method('putContent')->willReturnCallback(
+      function(string $path, string $content): File {
+        $file = $this->createStub(File::class);
+        $file->method('getPath')->willReturn($path);
+        $file->method('getName')->willReturn(basename($path));
+        $file->method('getContent')->willReturn($content);
+
+        $this->fileNodes[$path] = $file;
+
+        return $file;
+      }
+    );
+    $this->userStorage->method('folderWalk')->willReturnCallback(
+      function(mixed $folder) {
+        $path = is_string($folder) ? $folder : $folder->getPath();
+        $entries = array_filter(array_keys($this->fileNodes), fn(string $nodePath) => str_starts_with($nodePath, $path));
+        return count($entries);
+      }
+    );
+    $this->userStorage->method('getFilesAppLink')->willReturnCallback(function(string|Node $pathOrNode) {
+      if (is_string($pathOrNode)) {
+        $nodePath = $pathOrNode;
+      } else {
+        $nodePath = $pathOrNode->getPath();
+      }
+      return $this->urlGenerator->linkToRoute('files.view.index', [ 'dir' => $nodePath ]);
+    });
+
+    $this->urlGenerator = $this->appContainer->get(IURLGenerator::class);
+
+    /** @var Toolkit\Service\SimpleSharingService $simpleSharingService */
+    $simpleSharingService = $this->createStub(Toolkit\Service\SimpleSharingService::class);
+    $mockProvider->registerClassInstance(Toolkit\Service\SimpleSharingService::class, $simpleSharingService, global: true);
+
+    $simpleSharingService->method('linkShare')->willReturnCallback(function(Folder $folder) {
+      $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
+      $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+      $share = $this->createStub(\OCP\Share\IShare::class);
+      $share->method('getNode')->willReturn($folder);
+      $this->linkShares[$filesSharing] = [
+        'token' => $token,
+        'node' => $folder,
+        'files_sharing' => $filesSharing,
+        'share' => $share,
+      ];
+      return ['files_sharing' => $filesSharing, 'share' => $share];
+    });
+    $simpleSharingService->method('getLinkExpirationDate')->willReturn(DateTimeImmutable::createFromFormat('Y-m-d', '2099-01-01'));
+    $simpleSharingService->method('getShareFromUrl')->willReturnCallback(function(string $url) {
+      return $this->linkShares[$url]['share'] ?? null;
+    });
+
+    $projectGroupService = $this->createStub(ProjectGroupService::class);
+    $mockProvider->registerClassInstance(ProjectGroupService::class, $projectGroupService, global: true);
+    $projectGroupService->method('getProjectFolderLinkShare')->willReturnCallback(
+      function(int $projectId) use ($simpleSharingService) {
+        $project = $this->entityManager->getRepository(Entities\Project::class)->find(['id' => $projectId]);
+        if (!$project) {
+          return null;
+        }
+        $path = '/orchestra-members/projects/' . $project->getYear() . '/' . $project->getName();
+        $node = $this->userStorage->get($path);
+        $result = $simpleSharingService->linkShare($node);
+        $result['mount_point'] = $path;
+        return $result;
+      }
+    );
 
     // Needed by e.g. OCA\CAFEVDB\EmailForm\Composer via app-container
-    $projectService = new Service\ProjectService(
+    $this->projectService = new Service\ProjectService(
       configService: $this->configService,
       entityManager: $this->entityManager,
-      userStorage: $userStorage,
+      userStorage: $this->userStorage,
       participantFieldsService: $projectParticipantFieldsService,
       musicianService: $musiciansService,
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
     );
-    $mockProvider->registerClassInstance(Service\ProjectService::class, $projectService);
+    $mockProvider->registerClassInstance(Service\ProjectService::class, $this->projectService);
 
     $contactsService = $this->createStub(Service\ContactsService::class);
     $contactsService->method('emailContacts')->willReturn($this->emailContacts);
@@ -244,7 +371,7 @@ class EmailFormControllerTest extends TestCase
       request: $this->request,
       contactsService: $contactsService,
       emailAddressService: $this->appContainer->get(Service\EmailAddressService::class),
-      urlGenerator: $this->appContainer->get(IURLGenerator::class),
+      urlGenerator: $this->urlGenerator,
       pme: $this->pme,
       pageNavigation: $this->appContainer->get(PageNavigation::class),
       configService: $this->configService,
@@ -254,6 +381,52 @@ class EmailFormControllerTest extends TestCase
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+  }
+
+  /**
+   * Stub or mock the HttpClient.
+   *
+   * @param array $badRequests By default all requests are server with status
+   * Http::HTTP_OK, this array may specify URLs as keys and status codes as
+   * values to map specific URLs to specific HTTP status codes.
+   *
+   * @return void
+   */
+  private function mockHttpClient(array $badRequests = []): void
+  {
+    $factory = $this->createStub(HttpClientFactory::class);
+    $this->mockProvider->registerClassInstance(HttpClientFactory::class, $factory, global: true);
+    if (empty($badRequests)) {
+      $factory->method('newClient')->willReturnCallback(
+        function() {
+          $mockedClient = $this->getMockBuilder(HttpClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+          $mockedClient->expects($this->never())->method('patch');
+          $mockedClient->method('head')->willReturnCallback(
+            function(string $url) {
+              $mockedResponse = $this->getMockBuilder(HttpClientResponse::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+              $mockedResponse->expects($this->atLeastOnce())->method('getStatusCode')->willReturn(Http::STATUS_OK);
+              return $mockedResponse;
+            }
+          );
+          return $mockedClient;
+        },
+      );
+    } else {
+      $factory->method('newClient')->willReturn(
+        $this->createStub(HttpClient::class)->method('head')->willReturnFunction(
+          function(string $url) use ($badRequests) {
+            $status = $badRequests[$url] ?? Http::STATUS_OK;
+            $this->createStub(HttpClientResponse::class)->method('getStatusCode')->willReturn(
+              $status,
+            );
+          },
+        ),
+      );
+    }
   }
 
   /** @return void */
@@ -534,6 +707,50 @@ class EmailFormControllerTest extends TestCase
     /** @var DTO\EmailFormComposerResponse::class $data */
     $this->assertEquals(self::$templates[self::MAIL_MERGE_TAG]->getContents(), $data->requestData->messageText);
     $this->assertEquals(self::$templates[self::MAIL_MERGE_TAG]->getSubject(), $data->requestData->subject);
+  }
+
+  /**
+   * Generate the preview for the all-substitutions template. This should just
+   * work, setup the environment s.t. this can work. Following test will establish tests for error handling.
+   *
+   * @return void
+   */
+  public function testComposerPreview(): void
+  {
+    $this->mockHttpClient();
+    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
+    $this->userStorage->putContent($publicDownloads . '/entry.md', '# Hello World!');
+    /** @var Entities\EmailTemplate */
+    $mailMergeTemplate = $this->generateMailMergeTemplate();
+    $this->generateProjectWebFormParameters([
+      EmailForm\EnumPostTag::COMPOSER->value => [
+        EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+        EmailForm\ComposerCgiKeys::SUBJECT_TAG => $this->project->getName(),
+        EmailForm\ComposerCgiKeys::FROM_TAG => EmailForm\EnumFromTag::ORCHESTRA,
+        // projectId is also fetched without namespace
+        // projectName is also fetched without namespace
+        EmailForm\ComposerCgiKeys::OPERATION => Controller\EnumEmailFormComposerOperation::PREVIEW,
+        EmailForm\ComposerCgiKeys::TOPIC => Controller\EnumEmailFormComposerTopic::UNSPECIFIC,
+        ///
+        EmailForm\ComposerCgiKeys::SUBJECT => $mailMergeTemplate->getSubject(),
+        EmailForm\ComposerCgiKeys::MESSAGE_TEXT => $mailMergeTemplate->getContents(),
+      ],
+    ]);
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
+      topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    // print_r($response);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerPreviewResponse::class, $data);
+    /** @var DTO\EmailFormComposerPreviewResponse $data */
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
   }
 
   private const FREE_FORM_RECIPIENTS = [

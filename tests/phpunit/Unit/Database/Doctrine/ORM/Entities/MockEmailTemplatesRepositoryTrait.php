@@ -71,12 +71,37 @@ trait MockEmailTemplatesRepositoryTrait
     $repository->method('findOneBy')->willReturnCallback(function(array $criteria) {
       $this->assertEquals(1, count($criteria));
       $key = array_keys($criteria)[0];
+      $search = $criteria[$key];
       $this->assertStringStartsWith('tag', $key);
       if ($key == 'tag') {
-        return $criteria[$key] == self::MAIL_MERGE_TAG ? $this->generateMailMergeTemplate() : null;
+        if ($search == self::MAIL_MERGE_TAG) {
+          return $this->generateMailMergeTemplate();
+        }
+        if (self::$templates[$search] ?? null) {
+          return self::$templates[$search];
+        }
+        if (isset($this->entities[Entities\EmailTemplate::class])) {
+          return $this->entities[Entities\EmailTemplate::class]->findFirst(
+            fn(int $key, Entities\EmailTemplate $entity) => $entity->getTag() == $search,
+          );
+        }
+        return null;
       }
-      if (str_starts_with($criteria[$key], 'tag#REGEXP')) {
-        return str_contains($criteria[$key], self::MAIL_MERGE_BASE) ? $this->generateMailMergeTemplate() : null;
+      if (str_starts_with($key, 'tag#REGEXP')) {
+        if (str_contains($search, self::MAIL_MERGE_BASE)) {
+          return $this->generateMailMergeTemplate();
+        }
+        foreach (self::$templates as $tag => $entity) {
+          if (str_contains($search, $tag)) {
+            return $entity;
+          }
+        }
+        if (isset($this->entities[Entities\EmailTemplate::class])) {
+          return $this->entities[Entities\EmailTemplate::class]->findFirst(
+            fn(int $key, Entities\EmailTemplate $entity) => str_contains($search, $entity->getTag()),
+          );
+        }
+        return null;
       }
       return null;
     });
