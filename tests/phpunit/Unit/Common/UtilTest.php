@@ -55,4 +55,45 @@ class UtilTest extends TestCase
       $this->assertEquals(lcfirst($expected), Util::dashesToCamelCase($string, capitalizeFirstCharacter: false));
     }
   }
+
+  private const STRFTIME_DATA = [
+    '25.01.26 13:00:33' => [
+      'format' => '%x %X',
+      'timestamp' => 1769342433,
+      'tz' => 'Europe/Berlin',
+      'locale' => 'de_DE.UTF-8',
+    ],
+    '2026/02/08' => [
+      'format' => '%Y/%m/%d',
+      'timestamp' => 1770508800,
+      'tz' => 'Europe/Berlin',
+      'locale' => 'de_DE.UTF-8',
+    ],
+    '2026/02/01' => [
+      'format' => '%Y/%m/%d',
+      'timestamp' => 1769904000,
+      'tz' => 'Europe/Berlin',
+      'locale' => 'de_DE',
+    ],
+    '25.01.2026' => [
+      'format' => '%d.%m.%Y',
+      'timestamp' => 1769299200,
+      'tz' => 'Europe/Berlin',
+      'locale' => 'de_DE',
+    ],
+  ];
+
+  /**
+   * @return void
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+   */
+  public function testStringFromTime(): void
+  {
+    foreach (self::STRFTIME_DATA as $expected => $arguments) {
+      extract($arguments);
+      $this->assertEquals($expected, Util::strftime($format, $timestamp, $tz, $locale));
+    }
+  }
 }

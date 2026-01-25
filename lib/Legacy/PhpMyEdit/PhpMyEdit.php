@@ -40,6 +40,8 @@ namespace OCA\CAFEVDB\Legacy\PhpMyEdit;
 
 use BackedEnum;
 
+use function PHP81_BC\strftime;
+
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)
  * @SuppressWarnings(PHPMD.Superglobals)

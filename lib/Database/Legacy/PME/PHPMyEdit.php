@@ -720,7 +720,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
         } elseif (!empty($this->fdd[$k]['datemask'])) {
           return date($this->fdd[$k]['datemask'], $timeStamp);
         } elseif (!empty($this->fdd[$k]['strftimemask'])) {
-          return strftime($this->fdd[$k]['strftimemask'], $timeStamp);
+          return Util::strftime($this->fdd[$k]['strftimemask'], $timeStamp);
         }
     }
     return $value;

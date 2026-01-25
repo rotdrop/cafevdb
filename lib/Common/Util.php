@@ -24,10 +24,12 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use NumberFormatter;
 use InvalidArgumentException;
+use Locale;
+use NumberFormatter;
 
 use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
+use function PHP81_BC\strftime;
 
 use OCP\IL10N;
 
@@ -531,14 +533,11 @@ class Util
       date_default_timezone_set($tz);
     }
 
-    $oldlocale = setlocale(LC_TIME, '0');
-    if ($locale) {
-      setlocale(LC_TIME, $locale);
-    }
-    $result = strftime($format, $timestamp);
+    $result = strftime($format, $timestamp, $locale);
 
-    setlocale(LC_TIME, $oldlocale);
-    date_default_timezone_set($oldtz);
+    if ($tz) {
+      date_default_timezone_set($oldtz);
+    }
 
     return $result;
   }
