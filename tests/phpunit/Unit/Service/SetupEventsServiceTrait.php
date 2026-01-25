@@ -75,7 +75,7 @@ trait SetupEventsServiceTrait
 
   private MockProvider $mockProvider;
 
-  private static array $entityRepositories = [];
+  private array $entityRepositories = [];
 
   /**
    * {@inheritdoc}
@@ -108,11 +108,12 @@ trait SetupEventsServiceTrait
     $this->entityManager->method('getWrappedObject')->willReturn($this->entityManager);
     $this->entityManager->method('getRepository')->willReturnCallback(
       function(string $className) {
-        $repository = self::$entityRepositories[$className] ?? $this->getMockBuilder(EntityRepository::class)
+        $repository = $this->entityRepositories[$className] ?? $this->getMockBuilder(EntityRepository::class)
           ->disableOriginalConstructor()
           ->getMock();
+
         $repository->method('getEntityManager')->willReturn($this->entityManager);
-        $repository->expects($this->never())?->method('createQueryBuilder');
+        $expects = $repository->expects($this->never())?->method('createQueryBuilder');
         return $repository;
       },
     );
@@ -136,7 +137,7 @@ trait SetupEventsServiceTrait
     );
     $repository->method('getEntityManager')->willReturn($this->entityManager);
     $repository->expects($this->never())->method('createQueryBuilder');
-    self::$entityRepositories[Entities\ProjectEvent::class] = $repository;
+    $this->entityRepositories[Entities\ProjectEvent::class] = $repository;
 
     // Entities\Project
     $repository = $this->getMockBuilder(Repositories\ProjectsRepository::class)
@@ -147,12 +148,12 @@ trait SetupEventsServiceTrait
     );
     $repository->method('getEntityManager')->willReturn($this->entityManager);
     $repository->expects($this->never())->method('createQueryBuilder');
-    self::$entityRepositories[Entities\Project::class] = $repository;
+    $this->entityRepositories[Entities\Project::class] = $repository;
 
     // Entities\Invoice
     $repository = $this->createStub(EntityRepository::class);
     $repository->method('findLike')->willReturn([]);
-    self::$entityRepositories[Entities\Invoice::class] = $repository;
+    $this->entityRepositories[Entities\Invoice::class] = $repository;
 
     /** @var ProjectService $projectService */
     $projectService = $this->createStub(ProjectService::class);
