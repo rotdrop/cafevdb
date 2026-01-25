@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -53,8 +53,15 @@
       </NcActionButton>
     </template>
     <template #default>
-      <!-- eslint-disable-next-line vue/no-v-html  -->
-      <div class="error-html-container" v-html="htmlString" />
+      <div>
+        <div class="error-html-container">
+          <h5 v-if="!!caption" class="error-html-caption">
+            {{ caption }}
+          </h5>
+          <!-- eslint-disable-next-line vue/no-v-html  -->
+          <div v-html="htmlString" />
+        </div>
+      </div>
     </template>
   </NcModal>
 </template>
@@ -76,6 +83,7 @@ import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vu
 
 const props = defineProps<{
   open: boolean,
+  caption: string,
   htmlString: string,
 }>()
 
@@ -89,7 +97,7 @@ const handleReportError = () => {
   emit('problem-report:show', true)
 }
 
-const modal = ref(null)
+const modal = ref<Vue|null>(null)
 
 const openMenu = () => {
   for (const child of (modal.value?.$children || [])) {
@@ -122,6 +130,13 @@ onMounted(() => {
   // heading
   // > h1 {
   // }
+  h5.error-html-caption {
+    margin: auto;
+    color: inherit;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: hidden;
+  }
   .guest-box {
     ul:nth-of-type(2):not(:nth-of-type(3)) {
       // type, code, message, file, line
