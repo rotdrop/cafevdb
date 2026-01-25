@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,6 +53,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\CssClasses;
 
 $numTotal = $diagnostics[Composer::DIAGNOSTICS_TOTAL_COUNT];
 $numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
@@ -60,7 +61,7 @@ $numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
 $output = false; // set to true if anything has been printed
 
 ?>
-<div class="emailform statuspage">
+<div class="<?= $appName ?> emailform statuspage">
   <?php
 
   /*-***************************************************************************
@@ -69,9 +70,9 @@ $output = false; // set to true if anything has been printed
    *
    */
 
-  $stage = $diagnostics[Composer::DIAGNOSTICS_STAGE];
+  $stage = $diagnostics[Composer::DIAGNOSTICS_STAGE] ?? null;
   ?>
-  <div class="emailform error group messagecount">
+  <div class="emailform error group messagecount<?php $stage === null && p(' ' . CssClasses::HIDE_ONLY_CHILD) ?>">
     <span class="error caption messagecount">
       <?php
       if ($numTotal > 0 && $numFailed == 0) {
@@ -92,6 +93,7 @@ $output = false; // set to true if anything has been printed
             $numTotal,
           ));
         }
+        p(' ');
       } elseif ($numFailed > 0) {
         $output = true;
         p($l->t('The email software encountered errors.'));
@@ -127,19 +129,19 @@ $output = false; // set to true if anything has been printed
             p($l->t('A preview for the message could not be generated.'));
           }
         }
+        p(' ');
       }
-      p(' ');
       p($l->t('The following lines may contain further diagnostic messages.'));
       ?>
     </span>
   </div>
 <?php
 
-  /*-****************************************************************************
-   *
-   * Failed template substitutions
-   *
-   */
+/*-****************************************************************************
+ *
+ * Failed template substitutions
+ *
+ */
 
 $templateDiag = $diagnostics[Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
 if (!empty($templateDiag)) {
@@ -330,9 +332,9 @@ of musicians without email address at the bottom of the "Em@il Recipients" panel
  * External links which could not be followed
  *
  */
-if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
-  $goodUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Good'];
-  $badUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Bad'];
+if ($diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['status'] === false) {
+  $goodUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['good'];
+  $badUrls = $diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['bad'];
 
   // no recipients
   $output = true;
@@ -351,7 +353,7 @@ You can edit the link-target in the message editor by using the context menu (ri
     ) . '
     </div>
     <ul>';
-  foreach ($diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Bad'] as $info) {
+  foreach ($diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['bad'] as $info) {
     $url = $info['url'];
     $text = $info['text'];
     $hint = $info['explanations'] ?? $l->t('unknown error');
@@ -413,7 +415,7 @@ foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $validatio
  * Obsolete privacy notice.
  *
  */
-if (!$diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['status']) {
+if (($diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['status'] ?? null) === false) {
   $forbidden = $diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['forbiddenAddress'];
   ?>
   <div class="emailform error group broken-privacy-notice">

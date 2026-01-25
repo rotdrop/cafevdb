@@ -23,7 +23,7 @@
 
 @use '../build/scss-variables/app-config.scss' as AppConfig;;
 @use '../build/scss-variables/PageRenderer/CssClasses.scss' as PageRenderer;
-@use '../build/scss-variables/Controller/CssClasses.scss' as *;
+@use '../build/scss-variables/Controller/CssClasses.scss' as Controller;
 
 $pme-table-cell-padding: 3px;
 $pme-table-cell-border-width: 1px;
@@ -60,13 +60,16 @@ $hiddenCssClass: hidden;
 $loadingCssClass: loading;
 $reallyHiddenCssClass: reallyhidden;
 $appName: AppConfig.$appName;
-$appNameTag: #{$appNameTagPrefixCssClass}#{$appName};
+$appNameTag: #{Controller.$appNameTagPrefixCssClass}#{$appName};
 $pageTag: PageRenderer.$cssPrefixPostfixCssClass;
+$hideOnlyChildCssClass: Controller.$hideOnlyChildCssClass;
 
 :export {
   appName: $appName;
   appNameTag: $appNameTag;
   pageTag: $pageTag;
+  //
+  hideOnlyChildCssClass: $hideOnlyChildCssClass;
   disabledCssClass: $disabledCssClass;
   expandedCssClass: $expandedCssClass;
   hiddenCssClass: $hiddenCssClass;

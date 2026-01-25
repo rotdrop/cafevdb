@@ -74,52 +74,54 @@ body#body-settings {
   top:0px;
 }
 
-div.#{$appName}-#{$pageTag}-header-text {
-  max-width: 50em;
-  font-weight: bold;
-}
+div.#{$appName}-#{$pageTag} {
+  &-header-text {
+    max-width: 50em;
+    font-weight: bold;
+  }
 
-div.#{$appName}-#{$pageTag}-header-box {
-  position:absolute;
-  top:0;
-  z-index:25;
-  background-color:inherit;
-  opacity:1.0;
-  width:100%;
-  height:44px;
-  padding-left:44px;
-  overflow:hidden;
-  /* border-bottom:1px solid #777;*/
-}
+  &-header-box {
+    position:absolute;
+    top:0;
+    z-index:25;
+    background-color:inherit;
+    opacity:1.0;
+    width:100%;
+    height:44px;
+    padding-left:44px;
+    overflow:hidden;
+    /* border-bottom:1px solid #777;*/
+  }
 
-div.#{$appName}-#{$pageTag}-header {
-  position:absolute;
-  padding-left:1ex;
-  /* height:44px; */
-  top:50%;
-  transform:translateY(-50%);
-  overflow:hidden;
-  font-weight:bold;
-}
+  &-header {
+    position:absolute;
+    padding-left:1ex;
+    /* height:44px; */
+    top:50%;
+    transform:translateY(-50%);
+    overflow:hidden;
+    font-weight:bold;
+  }
 
-div.#{$appName}-#{$pageTag}-container {
-  position: relative;
-  height:100%;
-  box-sizing:border-box;
-  border-top:1px solid #777;
-  /* padding-top:3ex;*/
-}
+  &-container {
+    position: relative;
+    height:100%;
+    box-sizing:border-box;
+    border-top:1px solid #777;
+    /* padding-top:3ex;*/
+  }
 
-div.#{$appName}-#{$pageTag}-body {
-  position:relative; /* otherwise height rel. outer border-box */
-  height:100%;
-  box-sizing:border-box;
-  overflow-y:auto;
-}
+  &-body {
+    position:relative; /* otherwise height rel. outer border-box */
+    height:100%;
+    box-sizing:border-box;
+    overflow-y:auto;
+  }
 
-div.#{$appName}-#{$pageTag}-body-inner {
-  padding-top:1ex;
-  height:100%;
+  &-body-inner {
+    padding-top:1ex;
+    height:100%;
+  }
 }
 
 #app-inner-content {
@@ -259,52 +261,54 @@ input[type=checkbox],input[type=submit],input[type=radio],input[type=button] {
  *
  */
 
-##{$appName}-#{$pageTag}-config-check-header {
-  background-image:url('../img/logo-greyf-large.svg');
-  background-repeat:no-repeat;
-  background-origin:padding-box;
-  background-size:contain;
-  max-width:57em;
-  height:13ex;
-  padding-left:15ex;
-  margin-top:2ex;
-  color:red;
-  font-weight:bold;
+##{$appName}-#{$pageTag} {
+  &-config-check-header {
+    background-image:url('../img/logo-greyf-large.svg');
+    background-repeat:no-repeat;
+    background-origin:padding-box;
+    background-size:contain;
+    max-width:57em;
+    height:13ex;
+    padding-left:15ex;
+    margin-top:2ex;
+    color:red;
+    font-weight:bold;
+  }
+
+  &-body-config-check {
+    padding-left:1ex;
+
+    li {
+      padding: 0.5ex 0.5ex 0.5ex 3ex ;
+      max-width:56em;
+      margin:0.5ex;
+      moz-border-radius:.5em;
+      webkit-border-radius:.5em;
+      border-radius:.5em;
+      background-color:#add8e6;
+    }
+
+    li.set {
+      background-image:url('../../../core/img/actions/info.svg');
+      background-repeat:no-repeat;
+      background-position:0ex 1ex;
+    }
+
+    li.missing {
+      background-image:url('../../../core/img/actions/delete.svg');
+      background-repeat:no-repeat;
+      background-position:0ex 1ex;
+    }
+
+    .comment {
+      background-image:url('../../../core/img/actions/rename.svg');
+      background-repeat:no-repeat;
+      background-position:0ex 0.5ex;
+      padding-left:3ex;
+    }
+
+  } /* ##{$appName}-#{$pageTag}-body-config-check */
 }
-
-##{$appName}-#{$pageTag}-body-config-check {
-  padding-left:1ex;
-
-  li {
-    padding: 0.5ex 0.5ex 0.5ex 3ex ;
-    max-width:56em;
-    margin:0.5ex;
-    moz-border-radius:.5em;
-    webkit-border-radius:.5em;
-    border-radius:.5em;
-    background-color:#add8e6;
-  }
-
-  li.set {
-    background-image:url('../../../core/img/actions/info.svg');
-    background-repeat:no-repeat;
-    background-position:0ex 1ex;
-  }
-
-  li.missing {
-    background-image:url('../../../core/img/actions/delete.svg');
-    background-repeat:no-repeat;
-    background-position:0ex 1ex;
-  }
-
-  .comment {
-    background-image:url('../../../core/img/actions/rename.svg');
-    background-repeat:no-repeat;
-    background-position:0ex 0.5ex;
-    padding-left:3ex;
-  }
-
-} /* ##{$appName}-#{$pageTag}-body-config-check */
 
 li.#{$appName}-#{$pageTag}-config-check {
   &.missing span.value {
@@ -436,12 +440,11 @@ div[class|='#{$appName}-nav'] {
   background-image:url('../img/logo-greyf128x128.png');
   background-repeat:repeat-x;
   background-position:center;
-}
-
-div[class|='#{$appName}-nav']>div {
-  border:1px solid;
-  background:#FFFFFF;
-  opacity:0.98;
+  &>div {
+    border:1px solid;
+    background:#FFFFFF;
+    opacity:0.98;
+  }
 }
 
 /************ old controls stuff *****/
@@ -1263,8 +1266,11 @@ a.#{$disabledCssClass} {
   opacity: 0.5;
 }
 
-/*
- * Local Variables: ***
- * css-indent-offset: 2 ***
- * End: ***
- */
+.#{$appName} {
+  &.#{$hideOnlyChildCssClass}, .#{$hideOnlyChildCssClass} {
+    &:only-child {
+      visibility: hidden;
+      display: none;
+    }
+  }
+}
