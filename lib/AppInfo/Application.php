@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2025 Claus-Justus Heine
+ * @copyright 2014-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,6 +90,15 @@ use OCP\Files\Config\IMountProviderCollection;
 
 use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
+/*
+ *
+ **********************************************************
+ *
+ * Link to the members app
+ *
+ */
+use OCA\CAFeVDBMembers;
+
 // phpcs:disable PSR1.Files.SideEffects
 if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
   include_once __DIR__ . '/../Toolkit/Traits/AppNameTrait.php';
@@ -102,17 +111,40 @@ class Application extends App implements IBootstrap
 
   public const APP_ROOT_FOLDER = 'appRootFolder';
 
+  public const MEMBERS_APP_NAME = 'membersAppName';
+
   /** @var IAppContainer */
   protected static $appContainer;
 
-  /** @var string */
-  protected $appName;
+  protected static string $appName;
+
+  protected static string $membersAppName;
 
   /** {@inheritdoc} */
   public function __construct(array $urlParams = [])
   {
-    $this->appName = $this->getAppInfoAppName(__DIR__);
-    parent::__construct($this->appName, $urlParams);
+    self::getAppName();
+    parent::__construct(self::$appName, $urlParams);
+  }
+
+  /**
+   * Reads off the app-name from the info.xml file.
+   *
+   * @return string
+   */
+  public static function getAppName(): string
+  {
+    return self::$appName ?? (self::$appName = self::getAppInfoAppName(__DIR__));
+  }
+
+  /**
+   * Reads off the app-name from the info.xml file.
+   *
+   * @return string
+   */
+  public static function getMembersAppName(): string
+  {
+    return self::$membersAppName ?? (self::$membersAppName = CAFeVDBMembers\AppInfo\Application::getAppName());
   }
 
   /** {@inheritdoc} */
@@ -191,6 +223,8 @@ class Application extends App implements IBootstrap
       // ok, we are two levels below the top ...
       return dirname(dirname(__DIR__));
     });
+
+    $context->registerService(self::MEMBERS_APP_NAME, fn($c) => self::getMembersAppName());
 
     /* Doctrine DBAL needs a factory to be constructed. */
     $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {

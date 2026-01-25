@@ -58,6 +58,7 @@ use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
 
+use OCA\CAFEVDB\AppInfo\Application;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -2728,9 +2729,10 @@ class EventsService
     $registrationDeadline = $this->projectService->getProjectRegistrationDeadline($project);
 
     // The members app needs to be manually loaded for the routes to be loaded
-    \OC_App::loadApp('cafevdbmembers');
+    $membersAppName = $this->appContainer()->get(Application::MEMBERS_APP_NAME);
+    \OC_App::loadApp($membersAppName);
     $registrationUrl  = $this->urlGenerator()->linkToRouteAbsolute(
-      'cafevdbmembers.ProjectRegistration.showShare', [
+      $membersAppName . '.ProjectRegistration.showShare', [
         'token' => $projectName,
       ]);
     $registrationEventData = [

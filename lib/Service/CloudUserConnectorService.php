@@ -35,6 +35,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\AppInfo\Application;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Connection;
@@ -69,7 +70,7 @@ class CloudUserConnectorService
 
   const GROUP_ID_SEPARATOR = '_'; // more or less the only unsuspicies character ...
 
-  const GROUP_ID_PREFIX = '%2$s' . self::GROUP_ID_SEPARATOR;
+  public const GROUP_ID_PREFIX = '%2$s' . self::GROUP_ID_SEPARATOR;
 
   private const CREATE_FUNCTION_PREFIX = 'CREATE OR REPLACE FUNCTION';
 
@@ -322,16 +323,16 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   }
 
   /**
-   * Return the group-id for the given numeric project-id. Note that the
-   * display-name is just the project-name.
+   * Export the group-id prefix in order to aid the members app.
    *
    * @param int $projectId
    *
-   * @return string
+   * @return string.
    */
-  public function projectGroupId(int $projectId):string
+  public static function getProjectGroupId(int $projectId): string
   {
-    return sprintf(self::GROUP_ID_PREFIX . '%1$s', $projectId, $this->appName);
+    $appName = Application::getAppName();
+    return sprintf(self::GROUP_ID_PREFIX . '%1$d', $projectId, $appName);
   }
 
   /**
