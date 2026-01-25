@@ -224,7 +224,7 @@ class LegacyPageController extends Controller
 
       //'l' => $this->l,
       'appName' => $this->appName,
-      'appNameTag' => 'app-' . $this->appName,
+      'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
 
       'configcheck' => $this->configCheck,
       ConfigConstants::ORCHESTRA_NAME_KEY => $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY),
