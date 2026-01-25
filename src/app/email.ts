@@ -865,7 +865,6 @@ const emailFormCompositionHandlers = (
     $.post(url, post)
       .fail(function(xhr, textStatus, errorThrown) {
         ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
-          console.info('EMAIL FORM COMPOSER ERROR CLEANUP');
           let debugText = '';
           if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -1613,6 +1612,7 @@ const emailFormCompositionHandlers = (
             if (lock) {
               $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
             } else {
+              SelectUtils.deselectAll($draftEmailsSelector);
               $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               $dialogHolder.tabs('option', 'disabled', []);
             }
