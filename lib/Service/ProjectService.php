@@ -975,6 +975,7 @@ class ProjectService
         noCreate: $noCreate,
       );
       if (!empty($url)) {
+        $e = null;
         try {
           $expires = $sharingService->getLinkExpirationDate($url);
           if ($expires === null) {
