@@ -796,6 +796,12 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
     $data = $response->getData();
     $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $this->assertNotEmpty($data->requestData->previewData);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($data->requestData->previewData, LIBXML_PEDANTIC));
+    print_r($data);
   }
 
   private const FREE_FORM_RECIPIENTS = [
