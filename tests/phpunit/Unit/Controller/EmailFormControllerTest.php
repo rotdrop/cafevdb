@@ -171,6 +171,8 @@ class EmailFormControllerTest extends TestCase
 
   private Service\ProjectService $projectService;
 
+  private Toolkit\Service\SimpleSharingService $simpleSharingService;
+
   private Storage\UserStorage $userStorage;
 
   private array $postData = [];
@@ -266,7 +268,12 @@ class EmailFormControllerTest extends TestCase
       $node = $this->createStub(Folder::class);
       $node->method('getPath')->willReturn($path);
       $node->method('getName')->willReturn(basename($path));
-
+      $parent = dirname($path);
+      if ($parent != $path) {
+        // echo 'PARENT ' . $parent . PHP_EOL;
+        $parent = $this->userStorage->get($parent);
+        $node->method('getParent')->willReturn($parent);
+      }
       $this->fileNodes[$path] = $node;
 
       return $node;
@@ -302,10 +309,10 @@ class EmailFormControllerTest extends TestCase
     $this->urlGenerator = $this->appContainer->get(IURLGenerator::class);
 
     /** @var Toolkit\Service\SimpleSharingService $simpleSharingService */
-    $simpleSharingService = $this->createStub(Toolkit\Service\SimpleSharingService::class);
-    $mockProvider->registerClassInstance(Toolkit\Service\SimpleSharingService::class, $simpleSharingService, global: true);
+    $this->simpleSharingService = $this->createStub(Toolkit\Service\SimpleSharingService::class);
+    $mockProvider->registerClassInstance(Toolkit\Service\SimpleSharingService::class, $this->simpleSharingService, global: true);
 
-    $simpleSharingService->method('linkShare')->willReturnCallback(function(Folder $folder) {
+    $this->simpleSharingService->method('linkShare')->willReturnCallback(function(Folder $folder) {
       $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
       $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
       $share = $this->createStub(\OCP\Share\IShare::class);
@@ -318,22 +325,22 @@ class EmailFormControllerTest extends TestCase
       ];
       return ['files_sharing' => $filesSharing, 'share' => $share];
     });
-    $simpleSharingService->method('getLinkExpirationDate')->willReturn(DateTimeImmutable::createFromFormat('Y-m-d', '2099-01-01'));
-    $simpleSharingService->method('getShareFromUrl')->willReturnCallback(function(string $url) {
+    $this->simpleSharingService->method('getLinkExpirationDate')->willReturn(DateTimeImmutable::createFromFormat('Y-m-d', '2099-01-01'));
+    $this->simpleSharingService->method('getShareFromUrl')->willReturnCallback(function(string $url) {
       return $this->linkShares[$url]['share'] ?? null;
     });
 
     $projectGroupService = $this->createStub(ProjectGroupService::class);
     $mockProvider->registerClassInstance(ProjectGroupService::class, $projectGroupService, global: true);
     $projectGroupService->method('getProjectFolderLinkShare')->willReturnCallback(
-      function(int $projectId) use ($simpleSharingService) {
+      function(int $projectId) {
         $project = $this->entityManager->getRepository(Entities\Project::class)->find(['id' => $projectId]);
         if (!$project) {
           return null;
         }
         $path = '/orchestra-members/projects/' . $project->getYear() . '/' . $project->getName();
         $node = $this->userStorage->get($path);
-        $result = $simpleSharingService->linkShare($node);
+        $result = $this->simpleSharingService->linkShare($node);
         $result['mount_point'] = $path;
         return $result;
       }
@@ -709,13 +716,8 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(self::$templates[self::MAIL_MERGE_TAG]->getSubject(), $data->requestData->subject);
   }
 
-  /**
-   * Generate the preview for the all-substitutions template. This should just
-   * work, setup the environment s.t. this can work. Following test will establish tests for error handling.
-   *
-   * @return void
-   */
-  public function testComposerPreview(): void
+  /** @return void */
+  private function composerPreviewSetup(): void
   {
     $this->mockHttpClient();
     $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
@@ -736,6 +738,17 @@ class EmailFormControllerTest extends TestCase
         EmailForm\ComposerCgiKeys::MESSAGE_TEXT => $mailMergeTemplate->getContents(),
       ],
     ]);
+  }
+
+  /**
+   * Generate the preview for the all-substitutions template. This should just
+   * work, setup the environment s.t. this can work. Following test will establish tests for error handling.
+   *
+   * @return void
+   */
+  public function testComposerPreview(): void
+  {
+    $this->composerPreviewSetup();
     $response = $this->testedController->composer(
       operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
       topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
@@ -751,6 +764,38 @@ class EmailFormControllerTest extends TestCase
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
     $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+  }
+
+  /**
+   * Catch erroneous sub-shares of the public downloads share. Goal: just
+   * silently replace. For now just test the current error reponse.
+   *
+   * @return void
+   */
+  public function testComposerPreviewCatchDownloadsShareSubNodes(): void
+  {
+    $this->composerPreviewSetup();
+    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
+    $illegal = $this->userStorage->get($publicDownloads . '/illegal');
+    [ 'files_sharing' => $illegalUri ] = $this->simpleSharingService->linkShare($illegal);
+    $this->postData[
+      EmailForm\EnumPostTag::COMPOSER->value
+    ][
+      EmailForm\ComposerCgiKeys::MESSAGE_TEXT
+    ] = '<a href="' . $illegalUri . '">' . $illegalUri . '</a>';
+    // echo 'ILLEGAL ' . $illegalUri . PHP_EOL;
+    // EmailForm\ComposerCgiKeys::MESSAGE_TEXT => $mailMergeTemplate->getContents(),
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
+      topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    // print_r($response);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
   }
 
   private const FREE_FORM_RECIPIENTS = [
