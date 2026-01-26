@@ -776,14 +776,14 @@ class EmailFormControllerTest extends TestCase
   {
     $this->composerPreviewSetup();
     $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
-    $illegal = $this->userStorage->get($publicDownloads . '/illegal');
-    [ 'files_sharing' => $illegalUri ] = $this->simpleSharingService->linkShare($illegal);
+    $subFolder = $this->userStorage->get($publicDownloads . '/subFolder');
+    [ 'files_sharing' => $subFolderUri ] = $this->simpleSharingService->linkShare($subFolder);
     $this->postData[
       EmailForm\EnumPostTag::COMPOSER->value
     ][
       EmailForm\ComposerCgiKeys::MESSAGE_TEXT
-    ] = '<a href="' . $illegalUri . '">' . $illegalUri . '</a>';
-    // echo 'ILLEGAL ' . $illegalUri . PHP_EOL;
+    ] = '<a href="' . $subFolderUri . '">' . $subFolderUri . '</a>';
+    // echo 'SUBFOLDER ' . $subFolderUri . PHP_EOL;
     // EmailForm\ComposerCgiKeys::MESSAGE_TEXT => $mailMergeTemplate->getContents(),
     $response = $this->testedController->composer(
       operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
