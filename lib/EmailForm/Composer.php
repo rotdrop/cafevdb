@@ -5508,7 +5508,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         continue;
       }
       $this->logInfo('CHECK HREF ' . $href);
-      if (!empty($downloadsShare) && str_starts_with($href, $baseUrl . '/s/')) {
+      if (!empty($downloadsShare) && (preg_match('|' . $baseUrl .  '(/index.php)?/s/|', $href))) {
         $share = $this->simpleSharingService->getShareFromUrl($href);
         if ($share !== null) {
           $node = $share->getNode();
