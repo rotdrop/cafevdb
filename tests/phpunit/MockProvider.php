@@ -175,6 +175,8 @@ class MockProvider
       $propertyAccessor->setValue($snapshot, $property);
     }
     $snapshot->offsetUnset(\OC\DateTimeZone::class);
+    $snapshot->offsetUnset(\OC\URLGenerator::class);
+    // print_r($snapshot->keys());
     return $snapshot;
   }
 
