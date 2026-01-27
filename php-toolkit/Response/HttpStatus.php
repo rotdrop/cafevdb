@@ -22,6 +22,8 @@
 
 namespace OCA\RotDrop\Toolkit\Response;
 
+use InvalidArgumentException;
+
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -38,7 +40,11 @@ class HttpStatus
    */
   public static function getPhrase(int $httpStatusCode): ?string
   {
-    $phrase = new Response()->withStatus($httpStatusCode)->getReasonPhrase();
+    try {
+      $phrase = new Response()->withStatus($httpStatusCode)->getReasonPhrase();
+    } catch (InvalidArgumentException) {
+      return null;
+    }
     if ($phrase === (string)$httpStatusCode) {
       return null;
     }
