@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,10 +38,10 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDT
   /** {@inheritdoc} */
   public function __construct(
     /** @var string[] */
-    public readonly array $messages,
-    public readonly ?string $share,
-    public readonly ?string $folder,
+    public readonly ?string $url,
+    public readonly ?string $path,
     ?DateTimeInterface $expires,
+    public readonly array $messages = [],
   ) {
     $this->expires = CarbonImmutable::instance($expires);
   }
@@ -60,11 +60,14 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDT
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    if (isset($data['message'])) {
+      $messages = [$data['message'], ...($messages ?? [])];
+    }
     return new self(
-      $messages ?? [],
-      $share ?? null,
-      $folder ?? null,
-      $expires ?? null,
+      messages: $messages ?? [],
+      url: $url ?? null,
+      path: $path ?? null,
+      expires: $expires ?? null,
     );
   }
 }

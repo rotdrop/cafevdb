@@ -525,9 +525,9 @@ class ProjectsController extends Controller
             $data['message'] = $this->l->t(
               'Participant download share for project "%1$s" created as "%2$s"', [
                 $project->getName(),
-                $data['share'],
+                $data['url'],
               ]);
-            return self::dataResponse($data);
+            return DTO\DownloadsShareResponse::fromArray($data)->response();
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }
@@ -572,21 +572,22 @@ class ProjectsController extends Controller
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
             $data = $projectService->ensureDownloadsShare($project, noCreate: true);
-            $share = $data['share'];
-            if (empty($share)) {
+            $url = $data['url'];
+            if (empty($url)) {
               return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
             }
             /** @var SimpleSharingService $shareService */
             $shareService = $this->di(SimpleSharingService::class);
-            $shareService->deleteLinkShare($share);
-            $data['share'] = null;
+            $shareService->deleteLinkShare($url);
+            $data['url'] = null;
+            $data['patth'] = null;
             $data['expires'] = null;
             $data['message'] = $this->l->t(
               'Participant download share "%1$s" for project "%2$s" has been deleted.', [
-                $share,
+                $url,
                 $project->getName(),
               ]);
-            return self::dataResponse($data);
+            return DTO\DownloadsShareResponse::fromArray($data)->response();
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }
@@ -631,8 +632,8 @@ class ProjectsController extends Controller
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
             $data = $projectService->ensureDownloadsShare($project, noCreate: true);
-            $share = $data['share'];
-            if (empty($share)) {
+            $url = $data['url'];
+            if (empty($url)) {
               return self::grumble($this->l->t('Project "%s" does not have a participants download share.', $project->getName()));
             }
             if (isset($this->request['expirationDate'])) {
@@ -640,16 +641,16 @@ class ProjectsController extends Controller
               $expirationDate = self::convertToDateTime($expirationDate);
               /** @var SimpleSharingService $shareService */
               $shareService = $this->di(SimpleSharingService::class);
-              $shareService->expireLinkShare($share, $expirationDate);
+              $shareService->expireLinkShare($url, $expirationDate);
               $data['expires'] = $expirationDate;
               $data['message'] = $this->l->t(
                 'Expiration date of the participant download share "%1$s" for project "%2$s" has been set to %3$s.', [
-                  $share,
+                  $url,
                   $project->getName(),
                   $this->formatDate($expirationDate, 'medium'),
                 ]);
             }
-            return self::dataResponse($data);
+            return DTO\DownloadsShareResponse::fromArray($data)->response();
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
         }

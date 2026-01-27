@@ -854,11 +854,11 @@ class Projects extends PMETableViewBase
       'select' => 'T',
       'display' => [ 'popup' => 'tooltip', ],
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        list(
-          'folder' => $folder,
-          'share' => $share,
+        [
+          'path' => $folder,
+          'url' => $share,
           'expires' => $expires
-        ) = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
+        ] = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
         $filesAppLink = empty($folder)
           ? null
           : $this->userStorage->getFilesAppLink($folder, subDir: true);

@@ -951,8 +951,9 @@ class ProjectService
         $node = $this->userStorage->get($path);
         if (empty($node)) {
           return [
+            'url' => null,
             'share' => null,
-            'folder' => null,
+            'path' => null,
             'expires' => null,
           ];
         }
@@ -967,7 +968,7 @@ class ProjectService
       $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
       // try to create or use the folder and share it by a public link
-      ['files_sharing' => $url,] = $sharingService->linkShare(
+      ['files_sharing' => $url, 'dav' => $dav, 'share' => $share] = $sharingService->linkShare(
         $node,
         shareOwner: $shareOwnerUid,
         sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
@@ -1008,8 +1009,10 @@ class ProjectService
       );
     }
     return [
-      'share' => $url,
-      'folder' => $path,
+      'share' => $share,
+      'url' => $url,
+      'path' => $path,
+      'dav' => $dav,
       'expires' => $expires ?? null,
     ];
   }
