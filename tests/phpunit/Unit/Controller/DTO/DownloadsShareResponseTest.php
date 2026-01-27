@@ -46,8 +46,8 @@ class DownloadsShareResponseTest extends TestCase
   {
     $this->dto = new DTO\DownloadsShareResponse(
       messages: ['MESSAGE'],
-      share: 'SHARE',
-      folder: 'FOLDER',
+      url: 'SHARE',
+      path: 'FOLDER',
       expires: DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
     );
   }
@@ -65,18 +65,18 @@ class DownloadsShareResponseTest extends TestCase
     /* $dto = */DTO\DownloadsShareResponse::fromArray([
       'messages' => ['MESSAGE'],
       'expires' => DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
-      'share' => 'SHARE',
-      'folder' => 'FOLDER',
+      'url' => 'SHARE',
+      'path' => 'FOLDER',
     ]);
   }
 
   const JSON_DATA = '{
     "expires": "2025-11-04T01:02:03.000000Z",
+    "url": "SHARE",
+    "path": "FOLDER",
     "messages": [
         "MESSAGE"
-    ],
-    "share": "SHARE",
-    "folder": "FOLDER"
+    ]
 }';
 
   /** @return void */

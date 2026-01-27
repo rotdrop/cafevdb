@@ -51,9 +51,10 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\CssClasses;
+use OCA\CAFEVDB\EmailForm\Composer;
+use OCA\CAFEVDB\EmailForm\EnumGlobalSubstitutionKeys;
 
 $numTotal = $diagnostics[Composer::DIAGNOSTICS_TOTAL_COUNT];
 $numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
@@ -89,7 +90,7 @@ $output = false; // set to true if anything has been printed
         } else {
           p($l->n(
             'The preview message was generated successfully.',
-            '%n preview messages successfully generated.',
+            '%n preview messages were successfully generated.',
             $numTotal,
           ));
         }
@@ -116,7 +117,7 @@ $output = false; // set to true if anything has been printed
         } else {
           if ($numTotal > 1) {
             if ($numFailed == $numTotal) {
-              p($l->t('Generating the previerw for all %d messages has failed.', $numTotal));
+              p($l->t('Generating the preview for all %d messages has failed.', $numTotal));
             } elseif ($numFailed == 1) {
               p($l->t('The preview for one (out of %d) message could not be generated.', $numTotal));
             } else {
@@ -377,17 +378,21 @@ You can edit the link-target in the message editor by using the context menu (ri
  * Public downloads folder which is somehow broken
  *
  */
-foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $validationContext) {
+foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $globalKey => $validationContext) {
   if (!$validationContext['status']) {
     $output = true;
     $folder = $validationContext['folder'];
     $appLink = $validationContext['appLink'];
-    $httpCode = $validationContext['httpCode'];
+    $httpStatusCode = $validationContext['httpStatusCode'];
+    $httpStatusPhrase = $validationContext['httpStatusPhrase'];
+    $caption = $globalKey == EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+      ? $l->t('There is something wrong with the pariticipants downloads folder.')
+      : $l->t('There is something wrong with the post-project media folder.');
   ?>
   <div class="emailform error group broken-public-download">
     <div class="error contents broken-public-download">
       <div class="error caption broken-public-download">
-        <?php p($l->t('There is something wrong with the pariticipants downloads folder.')); ?>
+        <?= $caption; ?>
       </div>
       <dl>
         <?php if ($validationContext['filesCount'] == 0) { ?>
@@ -400,8 +405,8 @@ foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $validatio
             </a>
           </dd>
         <?php } ?>
-        <?php if ($httpCode < 200 || $httpCode >= 400) { ?>
-          <dt></dt><dd></dd>
+        <?php if ($httpStatusCode < 200 || $httpStatusCode >= 400) { ?>
+          <dt><?php p($l->t('The server responded with an error code')) ?></dt><dd><?php p("{$httpStatusCode} ({$httpStatusPhrase})") ?></dd>
         <?php } ?>
       </dl>
     </div>

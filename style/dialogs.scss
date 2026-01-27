@@ -63,7 +63,7 @@ $full-screen-zindex: 9000;
 .ui-widget.#{$appNameTag} {
   &, * {
     font-family: inherit;
-    font-size: inherit;
+    // font-size: inherit;
   }
   input, textarea, select, button, div[contenteditable="true"], div[contenteditable="false"] {
     font-family: var(--font-face);

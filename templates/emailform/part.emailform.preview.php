@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,11 +28,21 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 
 ?>
 
-<div id="<?php p($appName.'-'.'email-preview'); ?>" class="email-preview">
-  <div class="preview-heading">
-    <?php p($l->t('Email preview for project %s', $projectName)); ?>
+<div id="<?php p($appName.'-'.'email-preview'); ?>" class="emailform email-preview">
+  <h2 class="preview-heading caption"><?php p($l->t('Email preview for project %s', $projectName)); ?></h3>
+  <?php if (!empty($explanations)) { ?>
+  <div class="explanations">
+    <h3 class="explanations caption"><?= $l->t('Explanations') ?></h3>
+    <ul class="reset-css">
+      <?php foreach ($explanations as $explanation) { ?>
+      <li class="explanation"><p><?= $explanation ?></p></li>
+      <?php } ?>
+    </ul>
   </div>
+  <h3 class="explanations caption"><?= $l->t('Messages') ?></h3>
+  <?php } ?>
   <?php foreach ($messages as $message) { ?>
+  <div class="message">
     <div class="email-header"><pre><?php p($message['headers']); ?></pre></div>
     <div class="email-body reset-css">
       <?php echo $message['body']; ?>
@@ -67,5 +77,6 @@ use OCA\CAFEVDB\Controller\DownloadsController;
       </ul>
     </div>
     <hr class="email-preview-separator"/>
+  </div>
   <?php } ?>
 </div>

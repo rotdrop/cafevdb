@@ -33,6 +33,7 @@ use stdClass;
 use GuzzleHttp\RequestOptions as ClientRequestOptions;
 use Malkusch\Lock\Mutex;
 
+use OCP\Share\IShare;
 use OCP\AppFramework\Http;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
@@ -78,6 +79,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Response\HttpStatus;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
@@ -3562,7 +3564,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       ];
     }
 
-    /* $status = */ $this->preComposeValidation($previewRecipients);
+    /* $status = */ $this->preComposeValidation($previewRecipients, repair: true);
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
@@ -3760,6 +3762,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     return $messages;
   }
 
+  public const REGEX_LOCALHOST = '/^(127\.0\.0\.1|localhost|\[::1\])$/';
+
   /**
    * Try to fetch the headers for the given URL, used in validating the
    * accessibility of URLs in message texts.
@@ -3776,14 +3780,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->httpClient = $this->di(HttpClientFactory::class)->newClient();
     }
     if ($sslVerify === null) {
-      $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+      $urlParts = parse_url($url);
+      if (preg_match(self::REGEX_LOCALHOST, $urlParts['host'])) {
+        $sslVerify = false;
+      } else {
+        $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+      }
     }
     $options = [
-      'headers' => [
+      ClientRequestOptions::HEADERS => [
         'User-Agent' => 'Orgacloud/1.0',
         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       ],
-      'http_errors' => false,
+      ClientRequestOptions::HTTP_ERRORS => false,
+      ClientRequestOptions::ALLOW_REDIRECTS => [
+        'max' => 10,
+        'track_redirects' => true,
+      ],
     ];
     if ($sslVerify === false) {
       $options[ClientRequestOptions::VERIFY] = false;
@@ -3793,6 +3806,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     } catch (Throwable $t) {
       $this->logException($t);
       return null;
+    }
+    if ($response->getStatusCode() != Http::STATUS_OK) {
+      $this->logInfo('REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
     }
     return $response->getStatusCode();
   }
@@ -3813,9 +3829,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * - events, must exist
    * .
    *
+   * @param bool $repair Repair issues if possible. Defaults to \false.
+   *
    * @return bool The result of the validation.
    */
-  private function preComposeValidation(array $recipients):bool
+  private function preComposeValidation(array $recipients, bool $repair = false): bool
   {
     // Basic boolean stuff
     if ($this->subject() == '') {
@@ -3858,34 +3876,40 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
+    // Validate message contents, e.g. reachability of links
+    $this->validateMessageHtml($this->messageContents, repair: $repair);
+
     // Template validation (i.e. variable substituions)
     $this->validateTemplate($this->messageContents);
 
-    // Validate message contents, e.g. reachability of links
-    $this->validateMessageHtml($this->messageContents);
-
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_SHARE') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t(EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value)) !== false
     ) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
-      list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
+      ['url' => $share, 'path' => $folder] = $projectService->ensureDownloadsShare($this->project, noCreate: false);
 
       $httpStatusCode = $this->getHeaders($share) ?? -1;
       if ($httpStatusCode < 200 || $httpStatusCode >= 400) {
         $shareStatus = false;
       }
 
+
       $filesCount = $this->userStorage->folderWalk($folder);
       $this->logInfo('FILES COUNT DOWNLOAD FOLDER ' . $filesCount);
       if ($filesCount == 0) {
         $shareStatus = false;
       }
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+      ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $httpStatusCode,
+        'httpStatusCode' => $httpStatusCode,
+        'httpStatusPhrase' => HttpStatus::getPhrase($httpStatusCode),
         'folder' => $folder,
         'appLink' => $this->userStorage->getFilesAppLink($folder, subDir: true),
         'share' => $share,
@@ -3893,18 +3917,23 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+      ] = [
         'status' => true,
         'filesCount' => 0,
-        'httpCode' => 200,
+        'httpStatusCode' => Http::STATUS_OK,
+        'httpStatusPhrase' => HttpStatus::getPhrase(Http::STATUS_OK),
         'folder' => null,
         'appLink' => null,
         'share' => null,
       ];
     }
 
-    if (strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_SHARE') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_SHARE')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t(EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value)) !== false
         || strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_FOLDER') !== false
         || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_FOLDER')) !== false
     ) {
@@ -3925,10 +3954,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       $filesCount = -1; // do not care
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value
+      ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $httpStatusCode,
+        'httpStatusCode' => $httpStatusCode,
+        'httpStatusPhrase' => HttpStatus::getPhrase($httpStatusCode),
         'folder' => $folder,
         'appLink' => $appLink,
         'share' => $share,
@@ -3936,10 +3970,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value
+      ] = [
         'status' => true,
         'filesCount' => 0,
-        'httpCode' => 200,
+        'httpStatusCode' => Http::STATUS_OK,
+        'httpStatusPhrase' => HttpStatus::getPhrase(Http::STATUS_OK),
         'folder' => null,
         'appLink' => null,
         'share' => null,
@@ -4295,14 +4334,31 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_SHARE') => function(array $key) {
+      self::t(EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value) => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
-        list('share' => $share,) =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
-        return $share;
+        ['url' => $shareUrl, 'share' => $downloadsShare] =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
+
+        if (!($key[1] ?? null) || $downloadsShare == null) {
+          return $shareUrl;
+        }
+        $subPath = $key[1];
+
+        /** @var IShare $downloadsShare */
+        $resultingNode = $downloadsShare->getNode()->get($subPath);
+
+        if ($resultingNode?->getType() === Node::TYPE_FILE) {
+          $fileId = $resultingNode->getId();
+          $dir = Constants::PATH_SEP . trim(dirname($subPath), Constants::PATH_SEP);
+          $basename = basename($subPath);
+          // file= is ignored (as also path= etc.), but let the user see what is behind the file-id.
+          return "{$shareUrl}?dir={$dir}&file={$basename}&openfile=true&editing=false&fileid={$fileId}";
+        } else {
+          return "{$shareUrl}?dir={$subPath}";
+        }
       },
 
       self::t('PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION') => function(array $key) {
@@ -4311,7 +4367,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
-        list('expires' => $expires,) =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
+        ['expires' => $expires,] =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
         if (empty($expires)) {
           return '';
         }
@@ -4340,16 +4396,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       },
 
-      self::t('POST_PROJECT_MEDIA_SHARE') => function(array $key) {
+      self::t(EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value) => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectGroupService $projectGroupService */
         $projectGroupService = $this->di(ProjectGroupService::class);
 
-        ['files_sharing' => $url,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+        ['files_sharing' => $url, 'dav' => $dav] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-        return $url;
+        return ($key[1] ?? null) == 'dav' ? $dav : $url;
       },
 
       self::t('POST_PROJECT_MEDIA_FOLDER') => function(array $key) {
@@ -5453,27 +5509,60 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Validate external links in the message. This is done by fetching the
    * headers of the destination web page.
    *
-   * @param null|string $message The HTML message.
+   * @param string $message The HTML message.
+   *
+   * @param bool $repair Actually replace undesirable links by the suggested
+   * alternatives, default to \false.
    *
    * @return bool The validation status
    */
-  private function validateMessageHtml(?string $message = null):bool
+  private function validateMessageHtml(string &$message, bool $repair = false): bool
   {
-    $message = $message ?? $this->messageContents;
     $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
     $enforceHttps = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, true);
 
+    $projectLinkShares = [];
     $linkStatus = [];
     $hasErrors = false;
 
     $baseUrl = $this->urlGenerator()->getBaseUrl();
     if ($this->project) {
       $projectService = $this->di(ProjectService::class);
-      list('share' => $downloadsShare, 'folder' => $downloadsPath) = $projectService->ensureDownloadsShare($this->project, noCreate: true);
+      [
+        'path' => $downloadsPath,
+        'share' => $downloadsShare,
+      ] = $projectService->ensureDownloadsShare($this->project, noCreate: true);
       if ($downloadsShare !== null) {
-        $downloadsShare = $this->simpleSharingService->getShareFromUrl($downloadsShare);
         $downloadsFolder = $downloadsShare->getNode();
         $downloadsPath .= Constants::PATH_SEP;
+        $projectLinkShares[EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value] = [
+          'share' => $downloadsShare,
+          'folder' => $downloadsFolder,
+          'path' => $downloadsPath,
+          'explanations' => [
+            self::t('The link "%1$s" refers to a file or folder "%2$s" inside the music sheets download folder "%3$s".'),
+            self::t('The link "%1$s" is a manually generated reference to the music sheets download folder "%2$s".'),
+          ],
+        ];
+      }
+      /** @var ProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(ProjectGroupService::class);
+      [
+        'share' => $postProjectMediaShare,
+        'mount_point' => $postProjectMediaPath,
+      ] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+      if ($postProjectMediaShare !== null) {
+        $postProjectMediaFolder = $postProjectMediaShare->getNode();
+        $postProjectMediaPath .= Constants::PATH_SEP;
+        $projectLinkShares[EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value] = [
+          'share' => $postProjectMediaShare,
+          'folder' => $postProjectMediaFolder,
+          'path' => $postProjectMediaPath,
+          'explanations' => [
+            self::t('The link "%1$s" refers to a file or folder "%2$s" inside the post-project media folder "%3$s".'),
+            self::t('The link "%1$s" is a manually generated reference to the post-project media folder "%2$s".'),
+          ],
+        ];
       }
     }
 
@@ -5494,57 +5583,77 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if (!str_starts_with($href, 'http')) {
         $href = $this->urlGenerator()->getAbsoluteUrl($href);
       } elseif ($enforceHttps && !str_starts_with($href, 'https')) {
+        $replacement = 'https:' . substr($href, strlen('http:'));
         $explanations = $this->l->t(
-          'Web-references in emails are required to use "https", i.e. only SSL-encrypted web-sites may be referred to. Suggestion: replace "%1$s" by "%2$s".',
-          [ $href, 'https:' . substr($href, strlen('http:')) ],
+          'Web-references in emails are required to use "https", i.e. only SSL-encrypted web-sites may be referred to.'
         );
+        $explanations .= ' '
+          . ($repair
+             ? $this->l->t('The link "%1$s" has been replaced by "%2$s".', [ $href, $replacement ])
+             : $this->l->t('Suggestion: replace "%1$s" by "%2$s".', [ $href, $replacement ]));
         $linkStatus[] = [
           'url' => $href,
           'text' => $text,
           'status' => false,
           'explanations' => $explanations,
+          'replacements' => [
+            $href => $replacement,
+          ],
         ];
         $hasErrors = true;
         continue;
       }
-      $this->logInfo('CHECK HREF ' . $href);
-      if (!empty($downloadsShare) && (preg_match('|' . $baseUrl .  '(/index.php)?/s/|', $href))) {
+      // $this->logInfo('CHECK HREF ' . $href);
+      if (preg_match('|' . $baseUrl .  '(/index.php)?/s/|', $href)) {
         $share = $this->simpleSharingService->getShareFromUrl($href);
-        if ($share !== null) {
-          $node = $share->getNode();
-          $level = 0;
-          $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
-          do {
-            $path =  Constants::PATH_SEP . $node->getName() . $path;
-            $node = $node->getParent();
-            ++$level;
-          } while ($node->getId() != $downloadsFolder->getId() && !($node instanceof IRootFolder));
-          $path = ltrim($path, Constants::PATH_SEP);
-          $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
-          if (($level > 0 || $share->getId() != $downloadsShare->getId()) && $node->getId() == $downloadsFolder->getId()) {
-            if ($level > 0) {
-              $explanations = $this->l->t(
-                'The link refers to a file or folder "%1$s" inside the music sheets download folder "%2$s".', [
-                  $path,
-                  $downloadsPath,
-                ]);
-            } else {
-              $explanations = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
-            }
-            $explanations .= ' ' . $this->l->t(
-              'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
-to your user name and will be invalidated in the unfortunate case that you leave the executive board.', [
-                '${GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE') . '}' . ($level > 0 ? '?dir=' . $path : ''),
-              ],
+        if ($share != null) {
+          foreach ($projectLinkShares as $substitution => $shareInfo) {
+            $projectsFolder = $shareInfo['folder'];
+            $projectsShare = $shareInfo['share'];
+            $projectsPath = $shareInfo['path'];
+
+            for (
+              $level = 0, $node = $share->getNode(), $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
+              $node->getId() != $projectsFolder->getId() && !($node instanceof IRootFolder);
+              $path = Constants::PATH_SEP . $node->getName() . $path, $node = $node->getParent(), ++$level
             );
-            $linkStatus[] = [
-              'url' => $href,
-              'text' => $text,
-              'status' => false,
-              'explanations' => $explanations,
-            ];
-            $hasErrors = true;
-            continue;
+            $path = ltrim($path, Constants::PATH_SEP);
+            $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
+            if (($level > 0 || $share->getId() != $projectsShare->getId()) && $node->getId() == $projectsFolder->getId()) {
+              $replacement = '${GLOBAL::' . $this->l->t($substitution) . '}';
+              if ($level > 0) {
+                if ($share->getNode()->getType() == Node::TYPE_FOLDER) {
+                  $replacement .= '?dir=' . Constants::PATH_SEP . rtrim($path, Constants::PATH_SEP);
+                } else {
+                  // https://localhost/nextcloud-git-32/public.php/dav/files/aNJXKMqKgJ6R7KR/Unterordner/Anleitung.md
+                  $replacement = substr($replacement, 0, -1) . ':' . Constants::PATH_SEP . $path . '}';
+                }
+                $explanations = $this->l->t($shareInfo['explanations'][0], [ $href, $path, $projectsPath ]);
+              } else {
+                $explanations = $this->l->t($shareInfo['explanations'][1], [ $href, $projectsPath ]);
+              }
+              $explanations .= ' '
+                . ($repair
+                   ? $this->l->t('The link has been replaced by "%1$s"'
+                                 . ' in order to guarantee proper link expiration'
+                                 . ' and to avoid link invalidation'
+                                 . ' for the unfortunate case you should leave the executive board.', [ $replacement ])
+                   : $this->l->t('Please use the substitution "%1$s" instead.'
+                                 . ' Otherwise proper link expiration cannot be guarenteed'
+                                 . ' and the link is tied to your user name and will be invalidated'
+                                 . ' in the unfortunate case that you leave the executive board.', [ $replacement ]));
+              $linkStatus[] = [
+                'url' => $href,
+                'text' => $text,
+                'status' => false,
+                'explanations' => $explanations,
+                'replacements' => [
+                  $href => $replacement,
+                ],
+              ];
+              $hasErrors = true;
+              continue 2;
+            }
           }
         }
       }
@@ -5573,16 +5682,35 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
     $badLinks =  array_filter($linkStatus, fn($info) => !$info['status']);
-    $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = [
-      'status' => !$hasErrors,
-      'all' => $linkStatus,
-      'good' => $goodLinks,
-      'bad' =>  $badLinks,
-    ];
 
     if ($hasErrors) {
-      $this->executionStatus = false;
+      if ($repair) {
+        $search = [];
+        $replace = [];
+        $badCount = count($badLinks);
+        foreach ($badLinks as $status) {
+          if (empty($status['replacements'])) {
+            continue;
+          }
+          --$badCount;
+          foreach ($status['replacements'] as $key => $value) {
+            $search[] = $key;
+            $replace[] = $value;
+          }
+        }
+        $message = str_replace($search, $replace, $message);
+        $hasErrors = $badCount > 0;
+        $this->executionStatus = !$hasErrors;
+      }
     }
+
+    $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = Util::arrayMergeRecursive(
+      $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] ?? [], [
+        'status' => !$hasErrors,
+        'all' => $linkStatus,
+        'good' => $goodLinks,
+        'bad' =>  $badLinks,
+      ]);
 
     return !$hasErrors;
   }

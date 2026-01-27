@@ -53,6 +53,7 @@ class ComposerCgiKeys
   public const MESSAGE_DRAFT_ID = 'messageDraftId';
   public const MESSAGE_EXPORT = 'messageExport';
   public const MESSAGE_TEXT = 'messageText';
+  public const MESSAGE_TEXT_REPLACEMENTS = 'messageTextReplacements';
   public const OPERATION = 'operation';
   public const PROJECT_ID = 'projectId';
   public const PROJECT_NAME = 'projectName';

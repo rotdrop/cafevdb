@@ -64,8 +64,7 @@ import {
 } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   // EmailFormComposerResponse,
-  EmailFormComposerRequestData as ComposerRequest,
-  EmailFormComposerPreviewResponse,
+  EmailFormComposerRequestData as ComposerRequestData,
   EmailFormComposerResponse,
   EmailFormRecipientsFilterReloadResponse,
   EmailFormRecipientsFilterResponse,
@@ -140,7 +139,7 @@ asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
 const generateEmailFormUrl: typeof generateAppUrl = (url, urlParams, urlOptions) =>
   generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
 
-const generateComposerUrl = (operation: string|ComposerRequest, topic?: ComposerTopic) => {
+const generateComposerUrl = (operation: string|ComposerRequestData, topic?: ComposerTopic) => {
   if (typeof operation !== 'string') {
     topic = operation.topic;
     operation = operation.operation;
@@ -195,7 +194,7 @@ function emailTabResize($dialogWidget: JQuery, $panelHolder: JQuery) {
   // }
 }
 
-const findComposerRequestInput = <E extends HTMLElement, S extends keyof ComposerRequest, T extends string = 'name'>(
+const findComposerRequestInput = <E extends HTMLElement, S extends keyof ComposerRequestData, T extends string = 'name'>(
   $e: JQuery<E>,
   param: S,
   attr: T = 'name' as T,
@@ -215,7 +214,7 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
   let post = $emailForm.serialize();
   // place our update request
   // post += '&emailComposer[request]=update';
-  const requestKey: keyof ComposerRequest = 'formElements' as const;
+  const requestKey: keyof ComposerRequestData = 'formElements' as const;
   for (const element of elements) {
     post += `&${EnumPostTag.COMPOSER}[${requestKey}][]=${element}`;
   }
@@ -818,7 +817,7 @@ const emailFormCompositionHandlers = (
   // Event dispatcher, so to say
   const applyComposerControls = function<E extends HTMLElement>(
     this: E,
-    request: ComposerRequest,
+    request: ComposerRequestData,
     noDebug: boolean = false,
     validateLockCB: (lock: boolean) => void = () => {},
   ) {
@@ -978,7 +977,7 @@ const emailFormCompositionHandlers = (
                 findComposerInput($fieldset, ComposerCgiKeys.REFERENCING, 'name^').remove();
                 findComposerInput($fieldset, ComposerCgiKeys.IN_REPLY_TO, 'name^').val('');
                 // currentTemplate.val(requestData.emailTemplateName);
-                WysiwygEditor.updateEditor($messageText, requestData.messageText);
+                WysiwygEditor.updateEditor($messageText, requestData.messageText!);
                 $fieldset.find('input.email-subject').val(requestData.subject!);
 
                 $templateEmailsSelector.next().removeClass(loadingCssClass);
@@ -1072,7 +1071,7 @@ const emailFormCompositionHandlers = (
             switch (topic) {
               case 'template':
                 // currentTemplate.val(requestData.emailTemplateName);
-                WysiwygEditor.updateEditor($messageText, requestData.messageText);
+                WysiwygEditor.updateEditor($messageText, requestData.messageText!);
                 SelectUtils.replaceOptions($templateEmailsSelector, requestData.templateEmailOptions!);
                 break;
               case 'draft': {
@@ -1245,6 +1244,7 @@ const emailFormCompositionHandlers = (
     .on('click', function() {
 
       // save a draft while entering the preview ...
+      let busyCount = 1;
       if (Email.autoSaveTimer) {
         clearTimeout(Email.autoSaveTimer);
         Email.autoSaveTimer = null;
@@ -1265,54 +1265,84 @@ const emailFormCompositionHandlers = (
             return;
           }
           startDraftAutoSave($draftAutoSave);
+          --busyCount;
+          if (busyCount) {
+            pageBusyIcon(true);
+          }
         },
       );
 
       const post = $form.serialize();
 
+      ++busyCount;
       pageBusyIcon(true);
 
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
           ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
-            let debugText = '';
+            let previewText = '';
             if (data.caption !== undefined) {
-              debugText += '<div class="error caption">' + data.caption + '</div>';
+              previewText += '<div class="error caption">' + data.caption + '</div>';
             }
             if (Array.isArray(data.messages)) {
-              debugText += data.messages.join(' ');
+              previewText += data.messages.join(' ');
             }
-            const hasPreviewMessages = data.requestData && data.requestData.previewData;
-            if (hasPreviewMessages) {
-              debugText += data.requestData.previewData;
+            const requestData: undefined|ComposerRequestData = data.requestData;
+            const previewData: undefined|string = requestData?.previewData;
+            if (previewData) {
+              previewText += previewData;
             }
-            $debugOutput.html(debugText);
+            $debugOutput.html(previewText);
             $debugOutput.find('.for-dialog').addClass(hiddenCssClass);
 
-            pageBusyIcon(false);
-
-            if (hasPreviewMessages) {
+            if (previewData) {
               $dialogHolder.tabs('option', 'active', 2);
             }
 
             $.fn.cafevTooltip.remove();
+
+            if (requestData?.messageTextReplacements) {
+              WysiwygEditor.updateEditor($messageText, requestData.messageText!);
+            }
+
+            --busyCount;
+            pageBusyIcon(false);
           });
         })
-        .done(function(data: EmailFormComposerPreviewResponse) {
+        .done(function(data: EmailFormComposerResponse) {
           if (!ajaxValidateResponse(
-            data, ['contents'], function() {
+            data, ['requestData'], function() {
+              --busyCount;
               pageBusyIcon(false);
             })) {
-            return false;
+            return;
+          }
+          const requestData = data.requestData!;
+          if (!ajaxValidateResponse(
+            data.requestData, ['previewData'], function() {
+              --busyCount;
+              pageBusyIcon(false);
+            })) {
+            return;
           }
 
-          $debugOutput.html(data.contents);
-
-          pageBusyIcon(false);
+          let previewText = '';
+          if (Array.isArray(data.messages)) {
+            previewText += `<div class="error hints">${data.messages.join('</div><div class="error hints">')}</div>`;
+          }
+          previewText += requestData.previewData;
+          $debugOutput.html(previewText);
 
           $dialogHolder.tabs('option', 'active', 2);
 
           $.fn.cafevTooltip.remove();
+
+          if (requestData?.messageTextReplacements) {
+            WysiwygEditor.updateEditor($messageText, requestData.messageText!);
+          }
+
+          --busyCount;
+          pageBusyIcon(false);
         });
       return false;
     });
@@ -1975,7 +2005,7 @@ const emailFormCompositionHandlers = (
     const fileAttachments = $fieldset.find('input.file-attachments').val() as string ?? '';
     const selectedAttachments = $fileAttachmentsSelector.val() as string[];
 
-    const requestData: ComposerRequest = {
+    const requestData: ComposerRequestData = {
       operation: 'update',
       topic: 'element',
       singleItem: true,

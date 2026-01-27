@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -340,7 +342,7 @@ class EmailFormController extends Controller
     ?string $projectName
   ): DataResponse|JSONResponse {
     $caption = ''; ///< Optional status message caption.
-    $messageText = ''; ///< Optional status message.
+    $statusMessageText = ''; ///< Optional status message.
     $debugText = ''; ///< Diagnostic output, only enabled on request.
 
     $defaultData = [
@@ -396,7 +398,7 @@ class EmailFormController extends Controller
               'urlGenerator' => $this->urlGenerator,
             ],
           );
-          $messageText = $tmpl->render();
+          $statusMessageText = $tmpl->render();
 
           // Update list of drafts after sending the message (draft has
           // been deleted)
@@ -408,12 +410,29 @@ class EmailFormController extends Controller
         switch ($topic) {
           case EnumEmailFormComposerTopic::UNSPECIFIC:
             $previewMessages = $composer->previewMessages();
+            $diagnostics = $composer->statusDiagnostics();
+            $replacements = [];
+            $explanations = [];
+            $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($diagnostics), mode: RecursiveIteratorIterator::SELF_FIRST);
+            foreach ($iterator as $key => $value) {
+              if ($key === 'explanations' && is_string($value) && $value != '') {
+                $explanations[] = $value;
+              }
+              if ($key === 'replacements') {
+                $replacements = [...$replacements, ...$value];
+              }
+            }
+            $explanations = array_values(array_unique($explanations));
+            if (count($replacements) > 0) {
+              $explanations[] = $this->l->t('Please note that the email preview displays the messages with all substitions already applied. Please revisit the message composition window to actually review the changes. You can use the "undo"-functionality of the editor to revert the substitutions.');
+            }
             $templateParameters = [
               'appName' => $this->appName,
               'appNameTag' => CssClasses::APP_NAME_TAG_PREFIX . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'messages' => $previewMessages,
+              'explanations' => $explanations,
               'urlGenerator' => $this->urlGenerator,
               'requesttoken' => \OCP\Util::callRegister(),
             ];
@@ -421,15 +440,13 @@ class EmailFormController extends Controller
               'emailform/part.emailform.preview',
               $templateParameters,
             )->render();
-            if ($composer->errorStatus()) {
-              $requestData['errorStatus'] = $composer->errorStatus();
-              $requestData['diagnostics'] = $composer->statusDiagnostics();
-              $requestData['previewData'] = $html;
-            } else {
-              return new DTO\EmailFormComposerPreviewResponse(
-                messages: [$this->l->t('Preview generation successful.')],
-                contents: $html,
-              )->response();
+            $requestData['errorStatus'] = $composer->errorStatus();
+            $requestData['diagnostics'] = $diagnostics;
+            $requestData['previewData'] = $html;
+            if (!empty($replacements)) {
+              $requestData[ComposerCgiKeys::MESSAGE_TEXT_REPLACEMENTS] = $replacements;
+              $requestData[ComposerCgiKeys::MESSAGE_TEXT] = $composer->messageText();
+              $requestData[ComposerCgiKeys::SUBJECT] = $composer->subject();
             }
         }
         break;
@@ -869,7 +886,7 @@ class EmailFormController extends Controller
       $caption = $requestData->diagnostics['caption'];
 
       $roles = $this->appContainer->get(OrganizationalRolesService::class);
-      $messageText = $this->templateResponse(
+      $statusMessageText = $this->templateResponse(
         'emailform/part.emailform.statuspage',
         [
           'projectName' => $projectName,
@@ -887,7 +904,7 @@ class EmailFormController extends Controller
         projectName: $projectName,
         projectId: $projectId,
         caption: $caption,
-        messages: [$messageText],
+        messages: [$statusMessageText],
         requestData: $requestData,
         debug: htmlspecialchars($debugText),
       )->response(Http::STATUS_BAD_REQUEST);
@@ -898,7 +915,7 @@ class EmailFormController extends Controller
         projectName: $projectName,
         projectId: (int)$projectId,
         caption: $caption,
-        messages: [$messageText],
+        messages: is_array($statusMessageText) ? $statusMessageText : [$statusMessageText],
         requestData: $requestData,
         debug: htmlspecialchars($debugText),
       )->response();

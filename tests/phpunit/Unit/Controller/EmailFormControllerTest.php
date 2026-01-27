@@ -37,10 +37,12 @@ use PHPUnit\Framework\TestCase;
 use OCP\AppFramework\Http;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Http\Client\IClient as HttpClient;
 use OCP\Http\Client\IClientService as HttpClientFactory;
 use OCP\Http\Client\IResponse as HttpClientResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
@@ -65,7 +67,6 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
-#[Attributes\CoversClass(Controller\DTO\EmailFormComposerPreviewResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormComposerResponse::class)]
 #[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
@@ -130,6 +131,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\HttpStatus::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -169,11 +171,15 @@ class EmailFormControllerTest extends TestCase
 
   private IURLGenerator $urlGenerator;
 
+  private IL10N $l10n;
+
   private Service\ProjectService $projectService;
 
   private Toolkit\Service\SimpleSharingService $simpleSharingService;
 
   private Storage\UserStorage $userStorage;
+
+  private ProjectGroupService $projectGroupService;
 
   private array $postData = [];
 
@@ -182,6 +188,12 @@ class EmailFormControllerTest extends TestCase
   private array $fileNodes = [];
 
   private array $linkShares = [];
+
+  private array $linkSharesByPath = [];
+
+  private int $shareId = 1;
+
+  private int $nodeId = 1;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -265,7 +277,13 @@ class EmailFormControllerTest extends TestCase
       if ($this->fileNodes[$path] ?? null) {
         return $this->fileNodes[$path];
       }
-      $node = $this->createStub(Folder::class);
+      if ($path == '/' || $path == '') {
+        $node = $this->createStub(IRootFolder::class);
+        $this->assertInstanceOf(IRootFolder::class, $node);
+      } else {
+        $node = $this->createStub(Folder::class);
+      }
+      $node->method('getType')->willReturn(Node::TYPE_FOLDER);
       $node->method('getPath')->willReturn($path);
       $node->method('getName')->willReturn(basename($path));
       $parent = dirname($path);
@@ -275,15 +293,21 @@ class EmailFormControllerTest extends TestCase
         $node->method('getParent')->willReturn($parent);
       }
       $this->fileNodes[$path] = $node;
+      $node->method('getId')->willReturn($this->nodeId++);
 
       return $node;
     });
     $this->userStorage->method('putContent')->willReturnCallback(
       function(string $path, string $content): File {
+        $node = $this->userStorage->get($path);
+        $parent = $node->getParent();
         $file = $this->createStub(File::class);
+        $file->method('getParent')->willReturn($parent);
         $file->method('getPath')->willReturn($path);
         $file->method('getName')->willReturn(basename($path));
         $file->method('getContent')->willReturn($content);
+        $file->method('getType')->willReturn(Node::TYPE_FILE);
+        $file->method('getId')->willReturn($node->getId());
 
         $this->fileNodes[$path] = $file;
 
@@ -307,32 +331,56 @@ class EmailFormControllerTest extends TestCase
     });
 
     $this->urlGenerator = $this->appContainer->get(IURLGenerator::class);
+    $this->l10n = $this->appContainer->get(IL10N::class);
 
     /** @var Toolkit\Service\SimpleSharingService $simpleSharingService */
     $this->simpleSharingService = $this->createStub(Toolkit\Service\SimpleSharingService::class);
     $mockProvider->registerClassInstance(Toolkit\Service\SimpleSharingService::class, $this->simpleSharingService, global: true);
 
-    $this->simpleSharingService->method('linkShare')->willReturnCallback(function(Folder $folder) {
-      $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
-      $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
-      $share = $this->createStub(\OCP\Share\IShare::class);
-      $share->method('getNode')->willReturn($folder);
-      $this->linkShares[$filesSharing] = [
-        'token' => $token,
-        'node' => $folder,
-        'files_sharing' => $filesSharing,
-        'share' => $share,
-      ];
-      return ['files_sharing' => $filesSharing, 'share' => $share];
-    });
+    $this->simpleSharingService->method('linkShare')->willReturnCallback(
+      function(
+        Node $folder,
+        ?string $shareOwner = null,
+        int $sharePerms = \OCP\Constants::PERMISSION_CREATE,
+        mixed $expirationDate = null,
+        ?string $password = null,
+        bool $noCreate = false,
+        ?string $newShareOwner = null,
+      ) {
+        $filesSharing = $this->linkSharesByPath[$folder->getPath()] ?? null;
+        if ($filesSharing) {
+          $share = $this->linkShares[$filesSharing]['share'];
+          $dav = $this->linkShares[$filesSharing]['dav'];
+        } else {
+          $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
+          $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
+          $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
+          $share = $this->createStub(\OCP\Share\IShare::class);
+          $share->method('getNode')->willReturn($folder);
+          $share->method('getId')->willReturn($this->shareId++);
+          $share->method('getPassword')->willReturn($password);
+          $share->method('getExpirationDate')->willReturn($expirationDate);
+          $this->linkSharesByPath[$folder->getPath()] = $filesSharing;
+          $this->linkShares[$filesSharing] = [
+            'token' => $token,
+            'node' => $folder,
+            'files_sharing' => $filesSharing,
+            'share' => $share,
+            'dav' => $dav,
+            'password' => $password,
+          ];
+        }
+        return ['files_sharing' => $filesSharing, 'share' => $share, 'dav' => $dav];
+      },
+    );
     $this->simpleSharingService->method('getLinkExpirationDate')->willReturn(DateTimeImmutable::createFromFormat('Y-m-d', '2099-01-01'));
     $this->simpleSharingService->method('getShareFromUrl')->willReturnCallback(function(string $url) {
       return $this->linkShares[$url]['share'] ?? null;
     });
 
-    $projectGroupService = $this->createStub(ProjectGroupService::class);
-    $mockProvider->registerClassInstance(ProjectGroupService::class, $projectGroupService, global: true);
-    $projectGroupService->method('getProjectFolderLinkShare')->willReturnCallback(
+    $this->projectGroupService = $this->createStub(ProjectGroupService::class);
+    $mockProvider->registerClassInstance(ProjectGroupService::class, $this->projectGroupService, global: true);
+    $this->projectGroupService->method('getProjectFolderLinkShare')->willReturnCallback(
       function(int $projectId) {
         $project = $this->entityManager->getRepository(Entities\Project::class)->find(['id' => $projectId]);
         if (!$project) {
@@ -340,7 +388,7 @@ class EmailFormControllerTest extends TestCase
         }
         $path = '/orchestra-members/projects/' . $project->getYear() . '/' . $project->getName();
         $node = $this->userStorage->get($path);
-        $result = $this->simpleSharingService->linkShare($node);
+        $result = $this->simpleSharingService->linkShare($node, password: $project->getName());
         $result['mount_point'] = $path;
         return $result;
       }
@@ -415,7 +463,14 @@ class EmailFormControllerTest extends TestCase
               $mockedResponse = $this->getMockBuilder(HttpClientResponse::class)
                 ->disableOriginalConstructor()
                 ->getMock();
-              $mockedResponse->expects($this->atLeastOnce())->method('getStatusCode')->willReturn(Http::STATUS_OK);
+              $mockedResponse->expects($this->atLeastOnce())->method('getStatusCode')->willReturnCallback(
+                function() use ($url) {
+                  if (!empty($this->linkShares[$url]['password'])) {
+                    return HTTP::STATUS_MOVED_PERMANENTLY;
+                  }
+                  return Http::STATUS_OK;
+                }
+              );
               return $mockedResponse;
             }
           );
@@ -759,11 +814,14 @@ class EmailFormControllerTest extends TestCase
     $this->assertInstanceOf(Http\JSONResponse::class, $response);
     $this->assertEquals(Http::STATUS_OK, $response->getStatus());
     $data = $response->getData();
-    $this->assertInstanceOf(DTO\EmailFormComposerPreviewResponse::class, $data);
-    /** @var DTO\EmailFormComposerPreviewResponse $data */
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $requestData = $data->requestData;
+    $this->assertNotEmpty($requestData->previewData);
+    /** @var DTO\EmailFormComposerResponse $data */
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $this->assertEquals(true, $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($requestData->previewData, LIBXML_PEDANTIC));
   }
 
   /**
@@ -772,17 +830,54 @@ class EmailFormControllerTest extends TestCase
    *
    * @return void
    */
-  public function testComposerPreviewCatchDownloadsShareSubNodes(): void
+  public function testComposerPreviewCatchIllegalDownloadShares(): void
   {
     $this->composerPreviewSetup();
     $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
-    $subFolder = $this->userStorage->get($publicDownloads . '/subFolder');
-    [ 'files_sharing' => $subFolderUri ] = $this->simpleSharingService->linkShare($subFolder);
+    [ 'mount_point' => $postProjectMedia ] = $this->projectGroupService->getProjectFolderLinkShare($this->project->getId());
+    $subFolderTests = [
+      'PROJECT_MUSIC_SHEETS_SHARE' => $publicDownloads,
+      'POST_PROJECT_MEDIA_SHARE' => $postProjectMedia,
+    ];
+    $expectations = [];
+    $messageText = '';
+    foreach ($subFolderTests as $replacementKey => $path) {
+      $subFolder = $this->userStorage->get($path . '/subFolder');
+      [ 'files_sharing' => $subFolderUri ] = $this->simpleSharingService->linkShare($subFolder);
+      $this->assertStringStartsWith(
+        $this->request->getServerProtocol() . '://' . $this->request->getServerHost(),
+        $subFolderUri,
+      );
+      $subFolderText = 'links to ' . $subFolderUri;
+      $messageText .= '<a href="' . $subFolderUri . '">' . $subFolderText . '</a>
+';
+      $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . '}?dir=/subFolder'] = $subFolderUri;
+
+      $file = $this->userStorage->putContent($subFolder->getPath() . '/Anleitung.md', '# Hello World!');
+      [ 'files_sharing' => $fileUri ] = $this->simpleSharingService->linkShare($file);
+      $fileText = 'links to ' . $fileUri;
+      $messageText .= '<a href="' . $fileUri . '">' . $fileText . '</a>
+';
+      $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . ':/subFolder/Anleitung.md}'] = $fileUri;
+
+      $oldUri = $this->linkSharesByPath[$path] ?? null;
+      unset($this->linkSharesByPath[$path]);
+      $folder = $this->userStorage->get($path);
+      [ 'files_sharing' => $folderUri ] = $this->simpleSharingService->linkShare($folder);
+      $expectations['${GLOBAL::' . $this->l10n->t($replacementKey) . '}'] = $folderUri;
+      unset($this->linkSharesByPath[$path]);
+      if ($oldUri) {
+        $this->linkSharesByPath[$path] = $oldUri;
+      }
+      $folderText = 'links to ' . $folderUri;
+      $messageText .= '<a href="' . $folderUri . '">' . $folderText . '</a>
+';
+    }
     $this->postData[
       EmailForm\EnumPostTag::COMPOSER->value
     ][
       EmailForm\ComposerCgiKeys::MESSAGE_TEXT
-    ] = '<a href="' . $subFolderUri . '">' . $subFolderUri . '</a>';
+    ] = $messageText;
     // echo 'SUBFOLDER ' . $subFolderUri . PHP_EOL;
     // EmailForm\ComposerCgiKeys::MESSAGE_TEXT => $mailMergeTemplate->getContents(),
     $response = $this->testedController->composer(
@@ -793,15 +888,37 @@ class EmailFormControllerTest extends TestCase
     );
     // print_r($response);
     $this->assertInstanceOf(Http\JSONResponse::class, $response);
-    $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
     $data = $response->getData();
     $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
     /** @var DTO\EmailFormComposerResponse $data */
-    $this->assertNotEmpty($data->requestData->previewData);
+    $requestData = $data->requestData;
+    $previewData = $requestData->previewData;
+    $messageText = $requestData->messageText;
+    $this->assertNotEmpty($previewData);
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $this->assertEquals(true, $domDoc->loadHTML($data->requestData->previewData, LIBXML_PEDANTIC));
-    print_r($data);
+    $this->assertEquals(true, $domDoc->loadHTML($previewData, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($messageText, LIBXML_PEDANTIC));
+    $diagnostics = $requestData->diagnostics;
+    $validationData = $diagnostics['ExternalLinkValidation'] ?? null;
+    // print_r($validationData);
+    $this->assertNotEmpty($validationData);
+    $this->assertTrue($validationData['status']);
+    $this->assertEquals(6, count($validationData['good']));
+    $this->assertEquals(6, count($validationData['bad']));
+    $this->assertEquals(12, count($validationData['all']));
+    // print_r($data);
+    $index = 0;
+    foreach ($expectations as $replacement => $uri) {
+      $this->assertEquals($uri, $validationData['bad'][$index]['url']);
+      $this->assertEquals('links to ' . $uri, $validationData['bad'][$index]['text']);
+      $this->assertNotEmpty($validationData['bad'][$index]['explanations']);
+      $this->assertEquals($replacement, $validationData['bad'][$index]['replacements'][$uri]);
+      // $this->assertStringNotContainsString($uri, $previewData);
+      $this->assertStringNotContainsString($uri, $messageText);
+      ++$index;
+    }
   }
 
   private const FREE_FORM_RECIPIENTS = [
@@ -846,6 +963,25 @@ class EmailFormControllerTest extends TestCase
     foreach (self::FREE_FORM_RECIPIENTS as $recipient) {
       $saved = array_filter($this->emailContacts, fn(array $contact) => $contact['email'] ?? null === $recipient['value']);
       $this->assertTrue(count($saved) > 0);
+    }
+  }
+
+  /** @return void */
+  public function testEnumGlobalSubstitutionKeysConsistency(): void
+  {
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    new ReflectionMethod($composer, 'generateGlobalSubstitutionHandlers')->invoke($composer);
+    $substitutions = new ReflectionProperty($composer, 'substitutions')->getValue($composer);
+    $globalSubstitutionKeys = array_keys($substitutions['GLOBAL']);
+    $enumSubstutionNames = EmailForm\EnumGlobalSubstitutionKeys::names();
+    $enumSubstutionValues = EmailForm\EnumGlobalSubstitutionKeys::values();
+    $enumL10NValues = EmailForm\EnumGlobalSubstitutionKeys::getL10NValues($this->l10n);
+    $this->assertEqualsCanonicalizing($enumSubstutionNames, $globalSubstitutionKeys);
+    $this->assertEqualsCanonicalizing($enumSubstutionValues, $globalSubstitutionKeys);
+    $globalL10NSubstitutionKeys = array_map(fn(string $key) => $this->l10n->t($key), $globalSubstitutionKeys);
+    $this->assertEqualsCanonicalizing($enumL10NValues, $globalL10NSubstitutionKeys);
+    foreach ($enumL10NValues as $untranslated => $translated) {
+      $this->assertNotEquals($untranslated, $translated);
     }
   }
 }

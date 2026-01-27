@@ -55,6 +55,8 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     public readonly ?array $formElements = null,
     public readonly mixed $elementData = null,
     public readonly ?string $messageText = null,
+    /** @var ?array<string, string> */
+    public readonly ?array $messageTextReplacements = null,
     public readonly ?string $subject = null,
     public readonly ?string $composerForm = null,
     public readonly ?string $recipientsForm = null,
@@ -109,6 +111,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
       formStatus: $formStatus === null ? null : EnumFormStatus::get($formStatus),
       header: $header ?? null,
       messageText: $messageText ?? null,
+      messageTextReplacements: $messageTextReplacements ?? null,
       messageDraftId: empty($messageDraftId) ? null : $messageDraftId,
       previewData: $previewData ?? null,
       progressToken: $progressToken ?? null,
