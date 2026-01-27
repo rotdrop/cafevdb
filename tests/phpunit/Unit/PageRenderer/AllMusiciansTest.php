@@ -167,16 +167,16 @@ class AllMusiciansTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
-
-    $appContainer = $this->mockProvider->getAppContainer();
-
     $this->request = $this->mockProvider->getRequest();
     $this->request->method('getParam')->willReturnCallback(
       function(string $key, mixed $default = null) {
         return $this->postData[$key] ?? $default;
       }
     );
+
+    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
+
+    $appContainer = $this->mockProvider->getAppContainer();
 
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
