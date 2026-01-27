@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,7 @@
 
 import $, { jq } from './jquery.ts';
 import { globalState } from './cafevdb.ts';
-
-/* global JQuery */
+import type { RawEditorOptions } from 'tinymce';
 
 /**
  * Add a WYSIWYG editor to the element specified by @a selector.
@@ -54,7 +53,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
           $.when
             .apply(
               $,
-              $editorElements.map(function(_index, editorElement) {
+              $editorElements.map(async function(_index, editorElement) {
                 const $editorElement = $(editorElement);
                 return ClassicEditor
                   .create(editorElement)
@@ -101,7 +100,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
               $,
               $editorElements.map(function(_index, editorElement) {
                 const $editorElement = $(editorElement);
-                let mceDeferred = $editorElement.data('mceDeferred');
+                let mceDeferred: undefined|ReturnType<typeof $.Deferred> = $editorElement.data('mceDeferred');
                 if (mceDeferred) {
                   console.error('RACE CONDITION ADDING TINYMCE TOO FAST TOO OFTEN', {
                     $editorElements,
@@ -111,7 +110,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                 }
                 mceDeferred = $.Deferred();
                 $editorElement.data('mceDeferred', mceDeferred);
-                const elementConfig =
+                const elementConfig: RawEditorOptions =
                   $editorElement.hasClass('external-documents')
                   // eslint-disable-next-line camelcase
                     ? { relative_urls: false, convert_urls: false }
@@ -133,7 +132,8 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                     console.debug('MCE deferred resolved for id ' + id);
                     return id;
                   },
-                  function(error) {
+                  // @ts-expect-error 2769
+                  function(error: string) {
                     switch (error) {
                       case 'timeout':
                         console.error('There was a problem initializing the editor:', error);
@@ -149,7 +149,6 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                         clearTimeout(mceDeferredTimer);
                         break;
                     }
-                    return $.Deferred().resolveWith(this);
                   });
               }).get(),
             )
@@ -169,10 +168,10 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
 /**
  * Remove a WYSIWYG editor from the element specified by @a selector.
  *
- * @param {string} selector TBD.
+ * @param selector TBD.
  */
-const removeEditor = function(selector) {
-  const $editorElements = $(selector);
+const removeEditor = function(selector: string|JQuery) {
+  const $editorElements = jq(selector);
   if (!$editorElements.length) {
     return;
   }
@@ -205,25 +204,16 @@ const removeEditor = function(selector) {
 /**
  * Replace the contents of the given editor by contents.
  *
- * @param {string} selector TBD.
+ * @param selector TBD.
  *
- * @param {string} contents TBD.
+ * @param contents TBD.
  */
-const updateEditor = function(selector, contents) {
-  const $editorElements = $(selector);
-  let editor;
+const updateEditor = function(selector: string|JQuery, contents: string) {
+  const $editorElements = jq(selector);
   if (!$editorElements.length) {
     return;
   }
   switch (globalState.wysiwygEditor) {
-    case 'ckeditor':
-      $editorElements.each(function() {
-        const ckeditor = $(this).data('ckeditorInstance');
-        if (ckeditor) {
-          ckeditor.setData(contents);
-        }
-      });
-      break;
     case 'tinymce':
       $editorElements.each(function() {
         const tinymce = $(this).tinymce();
@@ -231,13 +221,14 @@ const updateEditor = function(selector, contents) {
         tinymce.undoManager.add();
       });
       break;
+    case 'ckeditor':
     default:
-      if ($editorElements.ckeditor) {
-        editor = $editorElements.ckeditor().ckeditorGet();
-        editor.setData(contents);
-        // ckeditor snapshots itself on update.
-        // editor.undoManager.save(true);
-      }
+      $editorElements.each(function() {
+        const ckeditor = $(this).data('ckeditorInstance');
+        if (ckeditor) {
+          ckeditor.setData(contents);
+        }
+      });
       break;
   }
 };
@@ -248,32 +239,26 @@ const updateEditor = function(selector, contents) {
  *
  * @param {string} selector TBD.
  */
-const snapshotEditor = function(selector) {
-  const $editorElements = $(selector);
-  let editor;
+const snapshotEditor = function(selector: string|JQuery) {
+  const $editorElements = jq(selector);
   if (!$editorElements.length) {
     return;
   }
   switch (globalState.wysiwygEditor) {
-    case 'ckeditor':
-      $editorElements.each(function() {
-        const ckeditor = $(this).data('ckeditorInstance');
-        if (ckeditor) {
-          ckeditor.undoManager.save(true);
-        }
-      });
-      break;
     case 'tinymce':
       $editorElements.each(function() {
         const tinymce = $(this).tinymce();
         tinymce.undoManager.add();
       });
       break;
+    case 'ckeditor':
     default:
-      if ($editorElements.ckeditor) {
-        editor = $editorElements.ckeditor().ckeditorGet();
-        editor.undoManager.save(true);
-      }
+      $editorElements.each(function() {
+        const ckeditor = $(this).data('ckeditorInstance');
+        if (ckeditor) {
+          ckeditor.undoManager.save(true);
+        }
+      });
       break;
   }
 };

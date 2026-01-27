@@ -21,6 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// import type { RawEditorOptions as MCEEditorOptions, Editor as MCEEditor } from 'tinymce';
+// import { type RawEditorOptions, type Editor } from 'tinymce';
+
 type TooltipOptions = Tooltip.Options & {
   cssclass: string[],
   timestamp?: number,
@@ -73,6 +76,8 @@ interface JQuery<TElement = HTMLElement> {
   octemplate<T extends Record<string, unknown> >(options: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>,
   avatar(user: string, size: number): void,
   bootstrapDualListbox(arg: Record<string, unknown>|'refresh', value?: boolean): void;
+  tinymce(): undefined|Editor;
+  tinymce(options: RawEditorOptions): Promise<Editor[]>;
 }
 
 interface JQueryStatic {
