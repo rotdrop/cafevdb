@@ -611,9 +611,15 @@ class ProjectParticipantFieldsService
       case FieldDataType::INTEGER:
         return intval($value);
       case FieldDataType::CLOUD_FILE:
+        if (empty($value)) {
+          return null;
+        }
         $folderPath = $this->getFieldFolderPath($datum, dry: false);
         $filePath = $folderPath . UserStorage::PATH_SEP . $value;
         $file = $this->di(UserStorage::class)->getFile($filePath);
+        if (empty($file)) {
+          $this->logError('NO FILE FOUND FOR PATH "' . $folderPath . '" FIELD ' . $field->getName() . ' ' . $field->getId());
+        }
         return $file;
       case FieldDataType::CLOUD_FOLDER:
         $folderPath = $this->getFieldFolderPath($datum, dry: false);

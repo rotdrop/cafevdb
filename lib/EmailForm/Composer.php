@@ -2304,12 +2304,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                 ];
               };
             }
-          } else {
+          } elseif ($fieldData->count() > 1) {
             // attach zip-archive
             $items = [];
             foreach ($fieldData as $fieldDatum) {
-              /** @var Entities\File $file */
-              $items[] = $fieldDatum->getSupportingDocument();
+              $document = $fieldDatum->getSupportingDocument();
+              if ($document) {
+                $items[] = $fieldDatum->getSupportingDocument();
+              }
+            }
+            if (empty($items)) {
+              break;
             }
             $folderName = $fieldName . '-' . $camelCaseSlug;
 
@@ -2329,6 +2334,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $fieldDatum = $fieldData->first();
             /** @var \OCP\Files\File $file */
             $file = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+            if ($file === null) {
+              // field data can be empty.
+              break;
+            }
 
             $fileName = str_replace(
               $userIdSlug, $camelCaseSlug,
@@ -2349,6 +2358,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           } else {
             $folderPath = $this->participantFieldsService->getFieldFolderPath($fieldData->first());
             $folder = $this->userStorage->getFolder($folderPath);
+            if (empty($folder->getDirectoryListing())) {
+              break;
+            }
 
             // _claus_files_camerata_projects_1997_Vereinsmitglieder_participants_claus-justus.heine_MultiCloudFile.zip
             $fileName = str_replace(
@@ -2416,7 +2428,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                 'mimeType' => $file->getMimeType(),
               ];
             };
-          } else {
+          } elseif (count($items) > 1) {
             $folderName = $fieldName . '-' . $camelCaseSlug;
             $personalAttachments[] = function() use ($folderName, $items) {
 
