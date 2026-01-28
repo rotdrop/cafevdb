@@ -75,4 +75,31 @@ trait TranslatableEnumTrait
     $classBaseName = strtoupper(self::camelCaseToDashes($classBaseName, separator: '_'));
     return self::L10N_TAG . '_' . $classBaseName . ': ';
   }
+
+  /**
+   * @param string $name Mehthod name. Must be equal to an existing case.
+   *
+   * @param array<string> $arguments Method arguments. Must either be empty or
+   * contain an IL10N object.
+   *
+   * @return string
+   *
+   * @throws BadMethodCallException
+   */
+  public static function __callstatic(string $name, array $arguments)
+  {
+    $array = self::toArray();
+    if (empty($array[$name])) {
+      throw new BadMethodCallException('The given method "' . $name . '" does not exist.');
+    }
+    if (count($arguments) > 1) {
+      throw new BadMethodCallException('The given method "' . $name . '" takes at most one argument.');
+    }
+    $l = $arguments[0] ?? null;
+    if ($l && !($l instanceof IL10N)) {
+      throw new InvalidArgumentException('The single argument of the given method "' . $name . '" must be an instance of "' . IL10N::class . '".');
+    }
+    $value = $array[$name];
+    return $l ? $l->t($value) : $value;
+  }
 }

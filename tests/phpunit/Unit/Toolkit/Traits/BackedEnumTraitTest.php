@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Traits;
 
+use BadMethodCallException;
 use Error;
 use InvalidArgumentException;
 use Throwable;
@@ -136,6 +137,37 @@ class BackedEnumTraitTest extends TestCase
       StringEnumExample::get(IntEnumExample::ONE);
     } catch (Throwable $t) {
       $this->assertInstanceOf(TypeError::class, $t);
+    }
+  }
+
+  /** @return void */
+  public function testToStringByStaticCallMagicMethod(): void
+  {
+    foreach (StringEnumExample::toArray() as $case => $value) {
+      $this->assertEquals($value, StringEnumExample::{$case}());
+    }
+    try {
+      StringEnumExample::BLAH();
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
+    }
+    try {
+      StringEnumExample::ONE('never');
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
+    }
+    foreach (IntEnumExample::toArray() as $case => $value) {
+      $this->assertEquals($value, IntEnumExample::{$case}());
+    }
+    try {
+      IntEnumExample::BLAH();
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
+    }
+    try {
+      IntEnumExample::ONE('never');
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
     }
   }
 }

@@ -26,6 +26,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Traits;
 
+use BadMethodCallException;
 use Error;
 use InvalidArgumentException;
 use Throwable;
@@ -87,18 +88,16 @@ class TranslatableEnumTraitTest extends TestCase
    */
   public function setup(): void
   {
-    $mockProvider = MockProvider::create($this);
-
     $this->l10n = $this->getMockBuilder(IL10N::class)
       ->getMock();
-    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
-      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
-    );
   }
 
   /** @return void */
   public function testGetL10NValues(): void
   {
+    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
     $enumValues = TranslatableEnumExample::values();
     $expected = array_combine(
       $enumValues,
@@ -114,6 +113,9 @@ class TranslatableEnumTraitTest extends TestCase
   /** @return void */
   public function testGetL10NTags(): void
   {
+    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
     $this->assertEquals(
       TranslatableEnumExample::L10N_TAG . '_MY_OWN_ADDITION: ',
       TranslatableEnumExampleL10NOverride::l10nTag(),
@@ -121,6 +123,30 @@ class TranslatableEnumTraitTest extends TestCase
     $this->l10n
       ->expects($this->atLeastOnce(TranslatableEnumExample::L10N_TAG . '_MY_OWN_ADDITION: ' . 'one'))
       ->method('t');
-    $values = TranslatableEnumExampleL10NOverride::getL10NValues($this->l10n);
+    TranslatableEnumExampleL10NOverride::getL10NValues($this->l10n);
+  }
+
+  /** @return void */
+  public function testToStringByStaticCallMagicMethod(): void
+  {
+    $this->l10n->expects($this->exactly(2))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
+    foreach (TranslatableEnumExample::toArray() as $case => $value) {
+      $this->assertEquals($value, TranslatableEnumExample::{$case}());
+    }
+    try {
+      TranslatableEnumExample::BLAH();
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
+    }
+    try {
+      TranslatableEnumExample::ONE('never');
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(InvalidArgumentException::class, $t);
+    }
+    foreach (TranslatableEnumExample::toArray() as $case => $value) {
+      $this->assertEquals(self::TRANSLATIONS[$value], TranslatableEnumExample::{$case}($this->l10n));
+    }
   }
 }
