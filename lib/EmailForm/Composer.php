@@ -1752,7 +1752,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $result = $mutex->synchronized(function() {
         $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
 
-        if (!$this->preComposeValidation($this->recipients)) {
+        if (!$this->preComposeValidation($this->recipients, repair: false)) {
           return false;
         }
 
@@ -5712,9 +5712,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
         $message = str_replace($search, $replace, $message);
         $hasErrors = $badCount > 0;
-        $this->executionStatus = !$hasErrors;
       }
     }
+
+    $this->executionStatus = !$hasErrors;
 
     $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = Util::arrayMergeRecursive(
       $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] ?? [], [
