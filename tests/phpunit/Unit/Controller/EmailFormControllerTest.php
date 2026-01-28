@@ -75,6 +75,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\CoversClass(Controller\DTO\EmailWebFormResponse::class)]
 #[Attributes\CoversClass(EmailForm\Composer::class)]
 #[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
+#[Attributes\CoversClass(EmailForm\EnumSubstitutionNamespace::class)]
 #[Attributes\CoversClass(TestedController::class)]
 /** Test the ProjectsController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
@@ -131,8 +132,8 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\HttpStatus::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -143,6 +144,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
@@ -857,7 +859,7 @@ class EmailFormControllerTest extends TestCase
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
     $this->assertEquals(true, $domDoc->loadHTML($requestData->previewData, LIBXML_PEDANTIC));
-    $diagnostics = $requestData->diagnostics[EmailForm\Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION][EmailForm\EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value];
+    $diagnostics = $requestData->diagnostics[EmailForm\Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION][EmailForm\EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value];
     $this->assertEquals(false, $diagnostics['status']);
     $this->assertEquals(0, $diagnostics['filesCount']);
     $this->assertEquals(Http::STATUS_OK, $diagnostics['httpStatusCode']);
@@ -1008,21 +1010,68 @@ class EmailFormControllerTest extends TestCase
   }
 
   /** @return void */
-  public function testEnumGlobalSubstitutionKeysConsistency(): void
+  public function testEnumGlobalSubstitutionKeyConsistency(): void
   {
     $composer = $this->appContainer->get(EmailForm\Composer::class);
     new ReflectionMethod($composer, 'generateGlobalSubstitutionHandlers')->invoke($composer);
     $substitutions = new ReflectionProperty($composer, 'substitutions')->getValue($composer);
-    $globalSubstitutionKeys = array_keys($substitutions['GLOBAL']);
-    $enumSubstutionNames = EmailForm\EnumGlobalSubstitutionKeys::names();
-    $enumSubstutionValues = EmailForm\EnumGlobalSubstitutionKeys::values();
-    $enumL10NValues = EmailForm\EnumGlobalSubstitutionKeys::getL10NValues($this->l10n);
+    $globalSubstitutionKeys = array_keys($substitutions[EmailForm\EnumSUbstitutionNamespace::GLOBAL()]);
+    $enumSubstutionNames = EmailForm\EnumGlobalSubstitutionKey::names();
+    $enumSubstutionValues = EmailForm\EnumGlobalSubstitutionKey::values();
+    $enumL10NValues = EmailForm\EnumGlobalSubstitutionKey::getL10NValues($this->l10n);
     $this->assertEqualsCanonicalizing($enumSubstutionNames, $globalSubstitutionKeys);
     $this->assertEqualsCanonicalizing($enumSubstutionValues, $globalSubstitutionKeys);
-    $globalL10NSubstitutionKeys = array_map(fn(string $key) => $this->l10n->t($key), $globalSubstitutionKeys);
+    $l10nPrefix = EmailForm\EnumGlobalSubstitutionKey::l10nTag();
+    $globalL10NSubstitutionKeys = array_map(
+      function(string $key) use ($l10nPrefix) {
+        $translation = $this->l10n->t($l10nPrefix . $key);
+        $this->assertNotEquals($l10nPrefix . $key, $translation);
+        return $translation == $key ? $this->l10n->t($key) : $translation;
+      },
+      $globalSubstitutionKeys,
+    );
     $this->assertEqualsCanonicalizing($enumL10NValues, $globalL10NSubstitutionKeys);
     foreach ($enumL10NValues as $untranslated => $translated) {
       $this->assertNotEquals($untranslated, $translated);
+    }
+  }
+
+  private const L10N_EXCEPTIONS = [
+    'EMAIL',
+  ];
+
+  /** @return void */
+  public function testEnumMemberSubstitutionKeyConsistency(): void
+  {
+    $composer = $this->appContainer->get(EmailForm\Composer::class);
+    new ReflectionMethod($composer, 'generateSubstitutionHandlers')->invoke($composer);
+    $substitutions = new ReflectionProperty($composer, 'substitutions')->getValue($composer);
+    $memberSubstitutionKeys = array_keys($substitutions[EmailForm\EnumSubstitutionNamespace::MEMBER()]);
+    $this->assertEquals(2 * count(EmailForm\EnumMemberSubstitutionKey::cases()), count($memberSubstitutionKeys) + count(self::L10N_EXCEPTIONS));
+    $enumSubstutionNames = EmailForm\EnumMemberSubstitutionKey::names();
+    $enumSubstutionValues = EmailForm\EnumMemberSubstitutionKey::values();
+    $this->assertEqualsCanonicalizing($enumSubstutionNames, $enumSubstutionValues);
+    $enumL10NValues = EmailForm\EnumMemberSubstitutionKey::getL10NValues($this->l10n);
+    $translatedKeys = array_diff($memberSubstitutionKeys, $enumSubstutionNames);
+    $this->assertEquals(count(EmailForm\EnumMemberSubstitutionKey::cases()), count($translatedKeys) + count(self::L10N_EXCEPTIONS));
+    $untranslatedKeys = array_intersect($memberSubstitutionKeys, $enumSubstutionNames);
+    $this->assertEquals(count(EmailForm\EnumMemberSubstitutionKey::cases()), count($untranslatedKeys));
+    $this->assertEqualsCanonicalizing($enumSubstutionNames, $untranslatedKeys);
+    $this->assertEqualsCanonicalizing($enumSubstutionValues, $untranslatedKeys);
+    $l10nPrefix = EmailForm\EnumMemberSubstitutionKey::l10nTag();
+    $memberL10NSubstitutionKeys = array_map(
+      function(string $key) use ($l10nPrefix) {
+        $translation = $this->l10n->t($l10nPrefix . $key);
+        $this->assertNotEquals($l10nPrefix . $key, $translation);
+        return $translation == $key ? $this->l10n->t($key) : $translation;
+      },
+      $untranslatedKeys,
+    );
+    $this->assertEqualsCanonicalizing($enumL10NValues, $memberL10NSubstitutionKeys);
+    foreach ($enumL10NValues as $untranslated => $translated) {
+      if (!in_array($untranslated, self::L10N_EXCEPTIONS)) {
+        $this->assertNotEquals($untranslated, $translated);
+      }
     }
   }
 }
