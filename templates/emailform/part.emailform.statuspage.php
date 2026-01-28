@@ -54,7 +54,7 @@ namespace OCA\CAFEVDB;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\CssClasses;
 use OCA\CAFEVDB\EmailForm\Composer;
-use OCA\CAFEVDB\EmailForm\EnumGlobalSubstitutionKeys;
+use OCA\CAFEVDB\EmailForm\EnumGlobalSubstitutionKey;
 
 $numTotal = $diagnostics[Composer::DIAGNOSTICS_TOTAL_COUNT];
 $numFailed = $diagnostics[Composer::DIAGNOSTICS_FAILED_COUNT];
@@ -387,7 +387,7 @@ foreach ($diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION] as $globalKey
     $appLink = $validationContext['appLink'];
     $httpStatusCode = $validationContext['httpStatusCode'];
     $httpStatusPhrase = $validationContext['httpStatusPhrase'];
-    $caption = $globalKey == EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+    $caption = $globalKey == EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value
       ? $l->t('There is something wrong with the pariticipants downloads folder.')
       : $l->t('There is something wrong with the post-project media folder.');
   ?>

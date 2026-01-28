@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\EmailForm;
 
 /** Valid keys for ${GLOBAL::KEY} substitutions. */
-enum EnumGlobalSubstitutionKeys: string
+enum EnumGlobalSubstitutionKey: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
@@ -49,4 +49,10 @@ enum EnumGlobalSubstitutionKeys: string
   case SENDER = 'SENDER';
   case TIME = 'TIME';
   case TREASURER = 'TREASURER';
+
+  /** @return EnumSubstitutionNamespace */
+  public static function namespace(): EnumSubstitutionNamespace
+  {
+    return EnumSubstitutionNamespace::GLOBAL;
+  }
 }
