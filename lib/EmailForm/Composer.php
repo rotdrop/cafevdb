@@ -163,40 +163,6 @@ Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 ';
-  // phpcs:enable
-  const GLOBAL_NAMESPACE = 'GLOBAL';
-  const MEMBER_NAMESPACE = 'MEMBER';
-  const MEMBER_VARIABLES = [
-    'FIRST_NAME',
-    'SUR_NAME',
-    'NICK_NAME',
-    'DISPLAY_NAME',
-    'EMAIL',
-    'MOBILE_PHONE',
-    'FIXED_LINE_PHONE',
-    'STREET',
-    'STREET_NUMBER',
-    'STREET_AND_NUMBER',
-    'POSTAL_CODE',
-    'CITY',
-    'COUNTRY',
-    'LANGUAGE',
-    'BIRTHDAY',
-    'TOTAL_FEES',
-    'AMOUNT_PAID',
-    'MISSING_AMOUNT',
-    'PROJECT_DATA',
-    'SEPA_MANDATE_REFERENCE',
-    'SEPA_MANDATE_DATE',
-    'BANK_ACCOUNT_IBAN',
-    'BANK_ACCOUNT_BIC',
-    'BANK_ACCOUNT_BANK',
-    'BANK_ACCOUNT_OWNER',
-    'BANK_TRANSACTION_AMOUNT',
-    'BANK_TRANSACTION_PURPOSE',
-    'BANK_TRANSACTION_PARTS',
-    'DATE',
-  ];
   /**
    * @var string
    * @todo Make this configurable
@@ -740,8 +706,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   {
     $this->generateGlobalSubstitutionHandlers();
 
-    foreach (self::MEMBER_VARIABLES as $key) {
-      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    foreach (EnumMemberSubstitutionKey::values() as $key) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
         $field = Util::dashesToCamelCase(strtolower($key), false, '_');
         if (empty($musician) || !isset($musician[$field])) {
           return $keyArg[0];
@@ -750,7 +716,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
     }
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('STREET_AND_NUMBER')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::STREET_AND_NUMBER->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
@@ -758,28 +724,28 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $musician->getStreet() . ' ' . $musician->getStreetNumber();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('EMAIL')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::EMAIL->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
       return $musician->getEmail();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('NICK_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::NICK_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getNickName()?:$musician->getFirstName();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DISPLAY_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DISPLAY_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('COUNTRY')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::COUNTRY->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -793,7 +759,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     };
 
     $languageNames = $this->localeLanguageNames();
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('LANGUAGE')] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::LANGUAGE->value] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -804,7 +770,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $languageNames[$language] ?? $language;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('BIRTHDAY')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BIRTHDAY->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -817,16 +783,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $result;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DATE')] =  function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DATE->value] =  function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $this->dateSubstitution($keyArg, self::MEMBER_NAMESPACE, $musician);
+      return $this->dateSubstitution($keyArg, EnumSubstitutionNamespace::MEMBER->value, $musician);
     };
 
     if (!empty($this->project)) {
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('TOTAL_FEES')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::TOTAL_FEES->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -834,7 +800,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['sum']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('AMOUNT_PAID')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::AMOUNT_PAID->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -842,7 +808,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['received']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('MISSING_AMOUNT')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::MISSING_AMOUNT->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -851,7 +817,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
 
       // per-participant project-data
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('PROJECT_DATA')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::PROJECT_DATA->value] =  function(array $keyArg, ?Entities\Musician $musician) {
 
         if (empty($musician) || count($keyArg) > 2) {
           return implode(':', $keyArg);
@@ -1290,7 +1256,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
 
       if (!empty($this->donationReceipt)) {
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('DONATION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1303,7 +1269,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVED_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::WAIVED_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1316,7 +1282,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVING_OF_REIMBURSEMENT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::WAIVING_OF_REIMBURSEMENT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1333,7 +1299,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         // maybe add more, however, the proper receipt will be send out as attachjment.
       }
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1346,7 +1312,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PURPOSE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_PURPOSE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1359,7 +1325,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_REFERENCE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SEPA_MANDATE_REFERENCE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1376,7 +1342,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SEPA_MANDATE_DATE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1393,7 +1359,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_IBAN')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_IBAN->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1410,7 +1376,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BIC')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_BIC->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1427,7 +1393,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BANK')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_BANK->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1455,7 +1421,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_OWNER')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_OWNER->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1472,7 +1438,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PARTS')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_PARTS->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1586,8 +1552,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
+      $nameSpaceCase = EnumSubstitutionNamespace::get($nameSpace);
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) {
+        $keyCase = $nameSpaceCase->substitutionCase($key);
+        $this->substitutions[$nameSpace][$keyCase->t($this->l)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) {
           $keyArg[0] = $key;
           return $handler($keyArg, $musician);
         };
@@ -1828,13 +1796,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value);
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -1871,7 +1839,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -3619,13 +3587,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     $messageTemplate = implode("\n", array_map(function($style) {
       return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
     }, self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value);
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('LINK VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -3676,7 +3644,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -3894,8 +3862,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // Template validation (i.e. variable substituions)
     $this->validateTemplate($this->messageContents);
 
-    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value) !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t(EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value)) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->t($this->l)) !== false
     ) {
       $shareStatus = true;
 
@@ -3916,7 +3884,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[
         self::DIAGNOSTICS_SHARE_LINK_VALIDATION
       ][
-        EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+        EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value
       ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
@@ -3932,7 +3900,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[
         self::DIAGNOSTICS_SHARE_LINK_VALIDATION
       ][
-        EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value
+        EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value
       ] = [
         'status' => true,
         'filesCount' => 0,
@@ -3944,10 +3912,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       ];
     }
 
-    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value) !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t(EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value)) !== false
-        || strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_FOLDER') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_FOLDER')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value->t($this->l)) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value->t($this->l)) !== false
     ) {
       $shareStatus = true;
 
@@ -3969,7 +3937,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[
         self::DIAGNOSTICS_SHARE_LINK_VALIDATION
       ][
-        EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value
+        EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value
       ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
@@ -3985,7 +3953,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->diagnostics[
         self::DIAGNOSTICS_SHARE_LINK_VALIDATION
       ][
-        EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value
+        EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value
       ] = [
         'status' => true,
         'filesCount' => 0,
@@ -4142,9 +4110,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $dummy = $template;
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $dummy)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $dummy)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(self::MEMBER_NAMESPACE, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'member';
         foreach ($failures as $failure) {
@@ -4158,9 +4126,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
-    if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(self::GLOBAL_NAMESPACE, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'global';
         foreach ($failures as $failure) {
@@ -4315,11 +4283,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $contact[$subField];
     };
 
-    $this->substitutions[self::GLOBAL_NAMESPACE] = [
-      self::t('ORGANIZER') => function($key) {
+    $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value] = [
+      EnumGlobalSubstitutionKey::ORGANIZER->value => function($key) {
         return $this->fetchExecutiveBoard();
       },
-      self::t('SENDER') => function($key) {
+      EnumGlobalSubstitutionKey::SENDER->value => function($key) {
         switch ($this->fromTag()) {
           case EnumFromTag::ORCHESTRA:
             return $this->l->t('your orchestra organizers (%s)', $this->fetchExecutiveBoard());
@@ -4329,24 +4297,24 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
         return $this->l->t('UNKNOWN');
       },
-      self::t('PRESIDENT') => $organizationalRoleContact,
-      self::t('TREASURER') => $organizationalRoleContact,
-      self::t('SECRETARY') => $organizationalRoleContact,
-      self::t('CREDITOR_IDENTIFIER') => function($key) {
+      EnumGlobalSubstitutionKey::PRESIDENT->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::TREASURER->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::SECRETARY->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::CREDITOR_IDENTIFIER->value => function($key) {
         return $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER);
       },
-      self::t('ADDRESS') => function($key) {
+      EnumGlobalSubstitutionKey::ADDRESS->value => function($key) {
         return $this->streetAddress();
       },
-      self::t('BANK_ACCOUNT') => function($key) {
+      EnumGlobalSubstitutionKey::BANK_ACCOUNT->value => function($key) {
         return $this->bankAccount();
       },
 
-      self::t('PROJECT') => function($key) {
+      EnumGlobalSubstitutionKey::PROJECT->value => function($key) {
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t(EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value) => function(array $key) {
+      EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4373,7 +4341,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION') => function(array $key) {
+      EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4399,7 +4367,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $key[2] = $key[1] ?? null;
         $key[1] = $expires->getTimestamp();
 
-        $date = $this->dateSubstitution($key, self::GLOBAL_NAMESPACE, null);
+        $date = $this->dateSubstitution($key, EnumSubstitutionNamespace::GLOBAL->value, null);
 
         if ($phrase) {
           return ' ' . $this->l->t('(expires at %s)', $date);
@@ -4408,7 +4376,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       },
 
-      self::t(EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value) => function(array $key) {
+      self::t(EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value) => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
@@ -4420,22 +4388,22 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return ($key[1] ?? null) == 'dav' ? $dav : $url;
       },
 
-      self::t('POST_PROJECT_MEDIA_FOLDER') => function(array $key) {
+      EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectGroupService $projectGroupService */
         $projectGroupService = $this->di(ProjectGroupService::class);
 
-        ['share' => $share, 'mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+        ['mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
         return $this->urlGenerator()->getAbsoluteUrl($this->userStorage->getFilesAppLink($mountPoint, subDir: true));
       },
 
-      self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
-      self::t('BANK_TRANSACTION_DUE_DAYS') => fn($key) => '',
-      self::t('BANK_TRANSACTION_SUBMIT_DATE') => fn($key) => '',
-      self::t('BANK_TRANSACTION_SUBMIT_DAYS') => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DATE->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DAYS->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DATE->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DAYS->value => fn($key) => '',
 
       /**
        * Support date substitutions. Format is
@@ -4443,10 +4411,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
        * default to d.m.Y (see strftime) and datestring can be
        * everything understood by strtotime.
        */
-      self::t('DATE') => function(array $arg) {
-        return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
+      EnumGlobalSubstitutionKey::DATE->value => function(array $arg) {
+        return $this->dateSubstitution($arg, EnumSubstitutionNamespace::GLOBAL->value);
       },
-      self::t('TIME') => function(array $arg) use ($formatter) {
+      EnumGlobalSubstitutionKey::TIME->value => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4456,7 +4424,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
-      self::t('DATETIME') => function(array $arg) {
+      EnumGlobalSubstitutionKey::DATETIME->value => function(array $arg) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4470,18 +4438,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     if (!empty($this->bulkTransaction)) {
 
-      $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
-        $this->substitutions[self::GLOBAL_NAMESPACE], [
-          self::t('BANK_TRANSACTION_DUE_DAYS') => function($key) {
+      $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value] = array_merge(
+        $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value], [
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DAYS->value => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
           },
-          self::t('BANK_TRANSACTION_SUBMIT_DAYS') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DAYS->value => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
           },
-          self::t('BANK_TRANSACTION_DUE_DATE') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DATE->value => function($key) {
             return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
           },
-          self::t('BANK_TRANSACTION_SUBMIT_DATE') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DATE->value => function($key) {
             return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
           },
         ]);
@@ -5498,7 +5466,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value, urldecode($href))
           || str_starts_with($href, 'mailto:')
           || isset(parse_url($href)['host'])) {
         $this->logDebug('KEEP HREF AS ' . $href);
@@ -5547,7 +5515,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if ($downloadsShare !== null) {
         $downloadsFolder = $downloadsShare->getNode();
         $downloadsPath .= Constants::PATH_SEP;
-        $projectLinkShares[EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value] = [
+        $projectLinkShares[EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value] = [
           'share' => $downloadsShare,
           'folder' => $downloadsFolder,
           'path' => $downloadsPath,
@@ -5566,7 +5534,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if ($postProjectMediaShare !== null) {
         $postProjectMediaFolder = $postProjectMediaShare->getNode();
         $postProjectMediaPath .= Constants::PATH_SEP;
-        $projectLinkShares[EnumGlobalSubstitutionKeys::POST_PROJECT_MEDIA_SHARE->value] = [
+        $projectLinkShares[EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value] = [
           'share' => $postProjectMediaShare,
           'folder' => $postProjectMediaFolder,
           'path' => $postProjectMediaPath,
@@ -5586,7 +5554,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
       $text = $item->nodeValue;
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value, urldecode($href))
           || str_starts_with($href, 'mailto:')
       ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
@@ -5624,11 +5592,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $projectsShare = $shareInfo['share'];
             $projectsPath = $shareInfo['path'];
 
+            // phpcs:disable PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+            // phpcs:disable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterFirst
+            // phpcs:disable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterSecond
             for (
               $level = 0, $node = $share->getNode(), $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
               $node->getId() != $projectsFolder->getId() && !($node instanceof IRootFolder);
               $path = Constants::PATH_SEP . $node->getName() . $path, $node = $node->getParent(), ++$level
             );
+            // phpcs:enable PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+            // phpcs:enable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterFirst
+            // phpcs:enable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterSecond
             $path = ltrim($path, Constants::PATH_SEP);
             $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
             if (($level > 0 || $share->getId() != $projectsShare->getId()) && $node->getId() == $projectsFolder->getId()) {
