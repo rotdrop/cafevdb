@@ -117,15 +117,17 @@ $output = false; // set to true if anything has been printed
         } else {
           if ($numTotal > 1) {
             if ($numFailed == $numTotal) {
-              p($l->t('Generating the preview for all %d messages has failed.', $numTotal));
+              p($l->t('Generating the preview for all %d messages revealed problems.', $numTotal));
             } elseif ($numFailed == 1) {
-              p($l->t('The preview for one (out of %d) message could not be generated.', $numTotal));
+              p($l->t('The preview for one (out of %d) message revealed problems.', $numTotal));
             } else {
               p($l->t(
-                'The preview for %d (out of %d) messages could not be generated.',
+                'The preview for %d (out of %d) messages revealed problems.',
                 [ $numFailed, $numTotal, ]
               ));
             }
+	    p(' ');
+	    p($l->t('The preview is probably nevertheless available.'));
           } else {
             p($l->t('A preview for the message could not be generated.'));
           }
