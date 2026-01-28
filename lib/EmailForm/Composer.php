@@ -5715,7 +5715,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
-    $this->executionStatus = !$hasErrors;
+    $this->executionStatus = $this->executionStatus && !$hasErrors;
 
     $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = Util::arrayMergeRecursive(
       $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] ?? [], [

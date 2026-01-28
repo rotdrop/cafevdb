@@ -48,6 +48,7 @@ use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\EmailFormController as TestedController;
@@ -317,6 +318,7 @@ class EmailFormControllerTest extends TestCase
     $this->userStorage->method('folderWalk')->willReturnCallback(
       function(mixed $folder) {
         $path = is_string($folder) ? $folder : $folder->getPath();
+        $path .= Constants::PATH_SEP;
         $entries = array_filter(array_keys($this->fileNodes), fn(string $nodePath) => str_starts_with($nodePath, $path));
         return count($entries);
       }
@@ -772,11 +774,14 @@ class EmailFormControllerTest extends TestCase
   }
 
   /** @return void */
-  private function composerPreviewSetup(): void
+  private function composerPreviewSetup(bool $fillDownloads = true): void
   {
     $this->mockHttpClient();
     $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
-    $this->userStorage->putContent($publicDownloads . '/entry.md', '# Hello World!');
+    if ($fillDownloads) {
+      $this->userStorage->putContent($publicDownloads . '/entry.md', '# Hello World!');
+    }
+    $this->assertEquals((int)$fillDownloads, $this->userStorage->folderWalk($publicDownloads));
     /** @var Entities\EmailTemplate */
     $mailMergeTemplate = $this->generateMailMergeTemplate();
     $this->generateProjectWebFormParameters([
@@ -822,6 +827,42 @@ class EmailFormControllerTest extends TestCase
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
     $this->assertEquals(true, $domDoc->loadHTML($requestData->previewData, LIBXML_PEDANTIC));
+  }
+
+
+  /**
+   * Generate the preview for the all-substitutions template. This should just
+   * work, setup the environment s.t. this can work. Following test will establish tests for error handling.
+   *
+   * @return void
+   */
+  public function testComposerPreviewCatchEmptyDownloads(): void
+  {
+    $this->composerPreviewSetup(fillDownloads: false);
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
+      topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    // print_r($response);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $requestData = $data->requestData;
+    $this->assertNotEmpty($requestData->previewData);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($requestData->previewData, LIBXML_PEDANTIC));
+    $diagnostics = $requestData->diagnostics[EmailForm\Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION][EmailForm\EnumGlobalSubstitutionKeys::PROJECT_MUSIC_SHEETS_SHARE->value];
+    $this->assertEquals(false, $diagnostics['status']);
+    $this->assertEquals(0, $diagnostics['filesCount']);
+    $this->assertEquals(Http::STATUS_OK, $diagnostics['httpStatusCode']);
+    $publicDownloads = $this->projectService->ensureDownloadsFolder($this->project->getId(), dry: true);
+    $this->assertEquals($publicDownloads, $diagnostics['folder']);
   }
 
   /**
