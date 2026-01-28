@@ -108,13 +108,14 @@ trait BackedEnumTrait
    */
   public static function __callstatic(string $name, array $arguments)
   {
-    $array = self::toArray();
-    if (empty($array[$name])) {
-      throw new BadMethodCallException('The given method "' . $name . '" does not exist.');
+    try {
+      $instance = self::{$name};
+    } catch (Throwable $t) {
+      throw new BadMethodCallException('The given method "' . $name . '" does not exist.', previous: $t);
     }
     if (count($arguments) > 0) {
       throw new BadMethodCallException('The given method "' . $name . '" takes no arguments.');
     }
-    return $array[$name];
+    return $instance->value;
   }
 }

@@ -38,7 +38,6 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
 /** Example enum for testing. */
@@ -127,10 +126,56 @@ class TranslatableEnumTraitTest extends TestCase
   }
 
   /** @return void */
-  public function testToStringByStaticCallMagicMethod(): void
+  public function testTranslationByMethodT(): void
+  {
+    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
+    foreach (TranslatableEnumExample::cases() as $case) {
+      $this->assertEquals(self::TRANSLATIONS[$case->value], $case->t($this->l10n));
+    }
+  }
+
+  /** @return void */
+  public function testTaggedTranslationByMethodT(): void
   {
     $this->l10n->expects($this->exactly(2))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[substr($arg, strlen(TranslatableEnumExample::l10nTag()))] ?? $arg,
+    );
+    foreach (TranslatableEnumExample::cases() as $case) {
+      $this->assertEquals(self::TRANSLATIONS[$case->value], $case->t($this->l10n));
+    }
+  }
+
+  /** @return void */
+  public function testTranslationToStringByStaticCallMagicMethod(): void
+  {
+    $this->l10n->expects($this->exactly(4))->method('t')->willReturnCallback(
       fn(string $arg) => self::TRANSLATIONS[$arg] ?? $arg,
+    );
+    foreach (TranslatableEnumExample::toArray() as $case => $value) {
+      $this->assertEquals($value, TranslatableEnumExample::{$case}());
+    }
+    try {
+      TranslatableEnumExample::BLAH();
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(BadMethodCallException::class, $t);
+    }
+    try {
+      TranslatableEnumExample::ONE('never');
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(InvalidArgumentException::class, $t);
+    }
+    foreach (TranslatableEnumExample::toArray() as $case => $value) {
+      $this->assertEquals(self::TRANSLATIONS[$value], TranslatableEnumExample::{$case}($this->l10n));
+    }
+  }
+
+  /** @return void */
+  public function testTaggedTranslationToStringByStaticCallMagicMethod(): void
+  {
+    $this->l10n->expects($this->exactly(2))->method('t')->willReturnCallback(
+      fn(string $arg) => self::TRANSLATIONS[substr($arg, strlen(TranslatableEnumExample::l10nTag()))] ?? $arg,
     );
     foreach (TranslatableEnumExample::toArray() as $case => $value) {
       $this->assertEquals($value, TranslatableEnumExample::{$case}());

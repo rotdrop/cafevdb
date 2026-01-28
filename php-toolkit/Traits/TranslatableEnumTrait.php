@@ -22,6 +22,7 @@
 
 namespace OCA\RotDrop\Toolkit\Traits;
 
+use BadMethodCallException;
 use InvalidArgumentException;
 use Throwable;
 use ValueError;
@@ -52,17 +53,22 @@ trait TranslatableEnumTrait
   public static function getL10NValues(IL10N $l): array
   {
     $values = self::values();
-    return array_combine(
-      $values,
-      array_map(
-        function(string $value) use ($l) {
-          $prefix = self::l10nTag();
-          $l10nValue = $l->t($prefix . $value);
-          return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
-        },
-        $values,
-      ),
-    );
+    return array_combine($values, array_map(fn(self $case) => $case->t($l), self::cases()));
+  }
+
+  /**
+   * @param IL10N $l
+   *
+   * @return string The translated value.
+   *
+   * @SuppressWarnings(PHPMD.ShortMethodName)
+   */
+  public function t(IL10N $l): string
+  {
+    $prefix = self::l10nTag();
+    $value = $this->value;
+    $l10nValue = $l->t($prefix . $value);
+    return ($l10nValue === $value || $l10nValue === $prefix . $value) ? $l->t($value) : $l10nValue;
   }
 
   /** @return string */
@@ -88,9 +94,10 @@ trait TranslatableEnumTrait
    */
   public static function __callstatic(string $name, array $arguments)
   {
-    $array = self::toArray();
-    if (empty($array[$name])) {
-      throw new BadMethodCallException('The given method "' . $name . '" does not exist.');
+    try {
+      $instance = self::{$name};
+    } catch (Throwable $t) {
+      throw new BadMethodCallException('The given method "' . $name . '" does not exist.', previous: $t);
     }
     if (count($arguments) > 1) {
       throw new BadMethodCallException('The given method "' . $name . '" takes at most one argument.');
@@ -99,7 +106,6 @@ trait TranslatableEnumTrait
     if ($l && !($l instanceof IL10N)) {
       throw new InvalidArgumentException('The single argument of the given method "' . $name . '" must be an instance of "' . IL10N::class . '".');
     }
-    $value = $array[$name];
-    return $l ? $l->t($value) : $value;
+    return $l ? $instance->t($l) : $instance->value;
   }
 }
