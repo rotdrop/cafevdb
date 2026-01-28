@@ -819,19 +819,17 @@ const emailFormCompositionHandlers = (
     this: E,
     request: ComposerRequestData,
     noDebug: boolean = false,
-    validateLockCB: (lock: boolean) => void = () => {},
+    validateLockCB: (lock: boolean) => void = (lock: boolean) => { pageBusyIcon(lock); },
   ) {
 
     $.fn.cafevTooltip.hide();
 
     const validateLock = function() {
-      pageBusyIcon(true);
       validateLockCB(true);
     };
 
     const validateUnlock = function() {
       validateLockCB(false);
-      pageBusyIcon(false);
     };
 
     // until end of validation
@@ -1216,6 +1214,7 @@ const emailFormCompositionHandlers = (
                 false, // noDebug
                 function(lock: boolean) {
                   if (lock) {
+                    pageBusyIcon(true);
                     $(window).on('beforeunload', function() {
                       return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
                     });
@@ -1226,6 +1225,7 @@ const emailFormCompositionHandlers = (
                       progressWrapper.dialog('close');
                     }
                     $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
+                    pageBusyIcon(false);
                   }
                 });
             });
@@ -1244,7 +1244,9 @@ const emailFormCompositionHandlers = (
     .on('click', function() {
 
       // save a draft while entering the preview ...
-      let busyCount = 1;
+      let busyCount = 2;
+      pageBusyIcon(true);
+
       if (Email.autoSaveTimer) {
         clearTimeout(Email.autoSaveTimer);
         Email.autoSaveTimer = null;
@@ -1265,17 +1267,13 @@ const emailFormCompositionHandlers = (
             return;
           }
           startDraftAutoSave($draftAutoSave);
-          --busyCount;
-          if (busyCount) {
-            pageBusyIcon(true);
+          if (--busyCount <= 0) {
+            pageBusyIcon(false);
           }
         },
       );
 
       const post = $form.serialize();
-
-      ++busyCount;
-      pageBusyIcon(true);
 
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
@@ -1305,24 +1303,29 @@ const emailFormCompositionHandlers = (
               WysiwygEditor.updateEditor($messageText, requestData.messageText!);
             }
 
-            --busyCount;
-            pageBusyIcon(false);
+            if (--busyCount <= 0) {
+              pageBusyIcon(false);
+            }
           });
         })
         .done(function(data: EmailFormComposerResponse) {
           if (!ajaxValidateResponse(
             data, ['requestData'], function() {
-              --busyCount;
-              pageBusyIcon(false);
-            })) {
+              if (--busyCount <= 0) {
+                pageBusyIcon(false);
+              }
+            })
+          ) {
             return;
           }
           const requestData = data.requestData!;
           if (!ajaxValidateResponse(
             data.requestData, ['previewData'], function() {
-              --busyCount;
-              pageBusyIcon(false);
-            })) {
+              if (--busyCount <= 0) {
+                pageBusyIcon(false);
+              }
+            })
+          ) {
             return;
           }
 
@@ -1341,8 +1344,9 @@ const emailFormCompositionHandlers = (
             WysiwygEditor.updateEditor($messageText, requestData.messageText!);
           }
 
-          --busyCount;
-          pageBusyIcon(false);
+          if (--busyCount <= 0) {
+            pageBusyIcon(false);
+          }
         });
       return false;
     });
@@ -1395,6 +1399,7 @@ const emailFormCompositionHandlers = (
       },
       true,
       function(lock) {
+        pageBusyIcon(lock);
         if (!lock) {
           // restart timer when ready
           if (Email.autoSaveTimer) {
@@ -1641,11 +1646,13 @@ const emailFormCompositionHandlers = (
           false, // noDebug
           function(lock: boolean) {
             if (lock) {
+              pageBusyIcon(true);
               $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
             } else {
               SelectUtils.deselectAll($draftEmailsSelector);
               $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               $dialogHolder.tabs('option', 'disabled', []);
+              pageBusyIcon(false);
             }
           });
       }
@@ -1687,11 +1694,13 @@ const emailFormCompositionHandlers = (
         false, // noDebug
         function(lock: boolean) {
           if (lock) {
+            pageBusyIcon(true);
             $dialogWidget.addClass(pmeToken('table-dialog-blocked'));
           } else {
             SelectUtils.deselectAll($sentEmailsSelector);
             $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
             $dialogHolder.tabs('option', 'disabled', []);
+            pageBusyIcon(false);
           }
         },
       );
@@ -1804,6 +1813,7 @@ const emailFormCompositionHandlers = (
       request,
       false, // noDebug
       function(lock: boolean) {
+        pageBusyIcon(lock);
         $sendButton.prop('disabled', lock);
         $self.prop('disabled', lock);
         // if (lock) {
