@@ -14,3 +14,4 @@ lib/Toolkit/
 php-toolkit/Traits/UtilTrait.php
 php-toolkit/Service/ArchiveService.php
 php-toolkit/Service/GroupFoldersService.php
+tests/
