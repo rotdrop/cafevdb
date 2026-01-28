@@ -809,7 +809,7 @@ class EmailFormController extends Controller
         switch ($topic) {
           case EnumEmailFormComposerTopic::TEMPLATE:
             $selected =
-              $emailTemplateName = Util::normalizeSpaces($requestData[ComposerCgiKey::TEMPLATE_MESSAGES_SELECTOR]);
+              $emailTemplateName = Util::normalizeSpaces($requestData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR]);
             if (empty($emailTemplateName)) {
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t('Email template name must not be empty'),
@@ -844,7 +844,7 @@ class EmailFormController extends Controller
       case EnumEmailFormComposerOperation::DELETE:
         switch ($topic) {
           case EnumEmailFormComposerTopic::TEMPLATE:
-            $composer->deleteTemplate($requestData[ComposerCgiKey::TEMPLATE_MESSAGES_SELECTOR]);
+            $composer->deleteTemplate($requestData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR]);
             $composer->setDefaultTemplate();
             $requestData[self::EMAIL_TEMPLATE_NAME] = $composer->currentEmailTemplate();
             $requestData[ComposerCgiKeys::MESSAGE_TEXT] = $composer->messageText();
