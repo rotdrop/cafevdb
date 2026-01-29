@@ -32,6 +32,7 @@ import type { IDialogButton } from '@nextcloud/dialogs';
 import { type Node, FileType } from '@nextcloud/files';
 import { translate as t } from '@nextcloud/l10n';
 import { basename } from 'path';
+import { hasProperty } from '../types/type-traits.ts';
 import { appNameTag } from 'variables.scss';
 
 require('dialogs.scss');
@@ -290,8 +291,8 @@ const confirm = (content: string, title: string, options?: LegacyCallback|Legacy
  * @param callback TBD.
  *
  */
-const debugPopup = function(data: Record<string, unknown>, callback?: () => void) {
-  if (typeof data.debug !== 'undefined' && data.debug !== '') {
+const debugPopup = function(data: unknown, callback?: () => void) {
+  if (hasProperty('debug', data)) {
     if (typeof callback !== 'function') {
       callback = () => {};
     }
