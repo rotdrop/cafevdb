@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -42,12 +42,14 @@
                              :current-entry="logEntry"
                              :translations-loaded="translationsLoaded"
                              :name="t(appName, 'Error Details')"
+                             :close-details-label="closeDetailsLabel"
                              @problem-report:show="showProblemReport = true"
           />
           <HtmlErrorModal v-if="htmlString"
                           :open.sync="detailsModalOpen"
                           :caption="envelopeErrorMessage"
                           :html-string="htmlString"
+                          :close-details-label="closeDetailsLabel"
                           @problem-report:show="showProblemReport = true"
           />
           <div v-if="false">
@@ -267,9 +269,15 @@ const logger = new Console(COMPONENT_NAME)
 const props = withDefaults(defineProps <{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
   initialView?: 'summary'|'details'|'report',
+  noSummary: boolean,
+  closeDetailsLabel?: string,
 }>(), {
   initialView: 'summary',
+  noSummary: false,
+  closeDetailsLabel: t(appName, 'close details view'),
 })
+
+const emit = defineEmits(['close'])
 
 const tooltipKeys = [
   'error-page:problem-report:cancel',
@@ -331,8 +339,9 @@ const envelopeErrorMessage = computed(() =>
     ? makeErrorMessage(envelopeError.value)
     : '')
 
-const detailsModalOpen = ref(props.initialView === 'details')
-const showProblemReport = ref(props.initialView === 'report')
+const initialView = ref(props.noSummary && props.initialView === 'summary' ? 'details' : props.initialView)
+const detailsModalOpen = ref(initialView.value === 'details')
+const showProblemReport = ref(initialView.value === 'report')
 const submitted = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
@@ -484,8 +493,12 @@ onBeforeMount(parseStackTrace)
 const envelopeErrorItem = ref<typeof NcListItem|null>(null)
 
 watch(detailsModalOpen, () => {
-  if (!detailsModalOpen.value && !showProblemReport.value && envelopeErrorItem.value) {
-    envelopeErrorItem.value.$refs!.actions.openMenu()
+  if (!detailsModalOpen.value && !showProblemReport.value) {
+    if (props.noSummary) {
+      emit('close')
+    } else if (envelopeErrorItem.value) {
+      envelopeErrorItem.value.$refs!.actions.openMenu()
+    }
   }
 })
 

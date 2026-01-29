@@ -117,6 +117,8 @@
       <ErrorPageModal :show="showLegacyAjaxError"
                       :error="legacyAjaxError"
                       initial-view="details"
+                      :close-details-label="errorPageCloseDetailsLabel"
+                      :no-summary="errorPageNoSummary"
                       @update:show="handleLegacyAjaxErrorClose"
       />
     </div>
@@ -674,6 +676,8 @@ const legacyPostMetaDataHandler = asyncSubscribe(LEGACY_SANITIZE_POST_DATA, (eve
 
 const legacyAjaxError = ref<JQueryAjaxError | undefined>()
 const showLegacyAjaxError = ref(false)
+const errorPageCloseDetailsLabel = ref<undefined|string>(undefined)
+const errorPageNoSummary = computed(() => !!errorPageCloseDetailsLabel.value)
 let legacyAjaxErrorResolve: (_value: boolean) => void
 const legacyAjaxErrorHandler = asyncSubscribe(
   LEGACY_AJAX_ERROR,
@@ -684,11 +688,13 @@ const legacyAjaxErrorHandler = asyncSubscribe(
       eventData.xhr,
       eventData.html,
     )
+    errorPageCloseDetailsLabel.value = eventData.closeDetailsLabel
     showLegacyAjaxError.value = true
     const { promise: closePromise, resolve } = Promise.withResolvers<boolean>()
     legacyAjaxErrorResolve = resolve
     await closePromise
     legacyAjaxError.value = undefined
+    errorPageCloseDetailsLabel.value = undefined
   },
 )
 const handleLegacyAjaxErrorClose = () => {

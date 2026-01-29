@@ -24,7 +24,10 @@
 import { appName, appPrefix } from './globals.ts';
 import $ from './jquery.ts';
 import { toolTipsInit, globalState } from './cafevdb.ts';
-import { handleError as ajaxHandleError, validateResponse as ajaxValidateResponse } from './ajax.ts';
+import {
+  handleError as ajaxHandleError,
+  validateResponse as ajaxValidateResponse,
+} from './ajax.ts';
 import pageBusyIcon from './busy-icon.ts';
 import * as Dialogs from './dialogs.ts';
 import { personalRecordDialog as participantRecordDialog } from './project-participants.js';
@@ -53,12 +56,13 @@ import {
 } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe, emit as asyncEmit } from '../services/async-event-bus.ts';
 import type { UploadFile } from './file-upload.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import {
   EnumPersonalSettingsKey,
-  // type EnumEmailFormComposerOperation as ComposerOperation,
+  type EnumEmailFormComposerOperation as ComposerOperation,
   type EnumEmailFormComposerTopic as ComposerTopic,
   type EnumEmailFormComposerElement,
 } from '../../build/ts-types/php-modules/Controller.ts';
@@ -66,9 +70,12 @@ import type {
   // EmailFormComposerResponse,
   EmailFormComposerRequestData as ComposerRequestData,
   EmailFormComposerResponse,
+  EmailFormListContactsResponse,
   EmailFormRecipientsFilterReloadResponse,
   EmailFormRecipientsFilterResponse,
   EmailFormRecipientsFilterSnapshotResponse,
+  EmailWebFormResponse,
+  ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { ComposerCgiKeys, EnumPostTag, RecipientsFilterCgiKeys, type EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
 // eslint-disable-next -line n/no-missing-import
@@ -89,6 +96,7 @@ import {
   projectModeOffCssClass,
   showSelectableCssClass,
 } from 'emailform.scss';
+import { asKey } from '../types/type-traits.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -100,8 +108,6 @@ type AttachmentElementData = {
 type EmailFormRecipientsFilterResponseData = EmailFormRecipientsFilterReloadResponse
   |EmailFormRecipientsFilterResponse
   |EmailFormRecipientsFilterSnapshotResponse;
-
-const asKey = <T extends object, K extends keyof T = keyof T>(_arg: T, key: K): K => key;
 
 const isRecipientsFilterReloadResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterReloadResponse =>
   (asKey(<EmailFormRecipientsFilterReloadResponse>arg, 'contents') in arg) && typeof arg.contents === 'string' && arg.contents.length > 0;
@@ -139,12 +145,18 @@ asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
 const generateEmailFormUrl: typeof generateAppUrl = (url, urlParams, urlOptions) =>
   generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
 
-const generateComposerUrl = (operation: string|ComposerRequestData, topic?: ComposerTopic) => {
-  if (typeof operation !== 'string') {
-    topic = operation.topic;
-    operation = operation.operation;
+const generateComposerUrl = <Operation extends ComposerOperation, Topic extends ComposerTopic>(
+  operationArg: Operation|ComposerRequestData<Operation, Topic>,
+  topicArg?: Topic,
+) => {
+  let topic: ComposerTopic = topicArg ?? 'general';
+  let operation: ComposerOperation;
+  if (typeof operationArg !== 'string') {
+    topic = operationArg.topic ?? 'general';
+    operation = operationArg.operation;
+  } else {
+    operation = operationArg;
   }
-  topic = topic ?? 'general';
   return generateEmailFormUrl('composer/{operation}/{topic}', { operation, topic });
 };
 
@@ -221,7 +233,7 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
   const url = generateComposerUrl('update', 'element');
   $.post(url, post)
     .fail(ajaxHandleError)
-    .done(function(data) {
+    .done((data: ResponseData<EmailFormComposerResponse<'update', 'element'> >) => {
       if (!ajaxValidateResponse(data, [
         'projectId', 'projectName', 'operation', 'requestData',
       ])) {
@@ -229,25 +241,25 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
       }
 
       for (const element of data.requestData.formElements!) {
-        switch (element.toLowerCase()) {
+        switch (element) {
           case 'to': {
             const toSpan = $emailForm.find('span.email-recipients');
-            let rcpts = data.requestData.elementData[element];
+            const rcpts = data.requestData.elementData![element]!;
             const numRcpts = rcpts.length;
 
-            rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
+            const rcptsValue = numRcpts === 0 ? toSpan.data('placeholder') as string : rcpts.join(', ');
             const title = toSpan.data('titleIntro') + '<br>' + rcpts;
 
             toSpan.cafevTooltip('dispose');
-            toSpan.html(rcpts);
+            toSpan.html(rcptsValue);
             toSpan.attr('title', title);
             toSpan.cafevTooltip();
 
             $emailForm.find('#check-disclosed-recipients').prop('disabled', numRcpts <= 1);
             break;
           }
-          case 'subjecttag': {
-            const subjectTag = data.requestData.elementData[element];
+          case 'subjectTag': {
+            const subjectTag = data.requestData.elementData![element]!;
             $emailForm.find('.subject.tag.container .content .editable').val(subjectTag);
             $emailForm.find('.subject.tag.container .content .display').html(subjectTag);
             break;
@@ -815,9 +827,12 @@ const emailFormCompositionHandlers = (
   };
 
   // Event dispatcher, so to say
-  const applyComposerControls = function<E extends HTMLElement>(
+  const applyComposerControls = function<
+    E extends HTMLElement, Operation extends ComposerOperation = ComposerOperation,
+    Topic extends ComposerTopic = 'general'
+  >(
     this: E,
-    request: ComposerRequestData,
+    request: ComposerRequestData<Operation, Topic>,
     noDebug: boolean = false,
     validateLockCB: (lock: boolean) => void = (lock: boolean) => { pageBusyIcon(lock); },
   ) {
@@ -872,7 +887,7 @@ const emailFormCompositionHandlers = (
           validateUnlock();
         });
       })
-      .done(function(data: EmailFormComposerResponse) {
+      .done(function(data: ResponseData<EmailFormComposerResponse>) {
         let postponeEnable = false;
         $.fn.cafevTooltip.remove();
         if (!ajaxValidateResponse(
@@ -884,7 +899,7 @@ const emailFormCompositionHandlers = (
         projectId(data.projectId);
 
         const operation = data.operation;
-        const topic = data.topic;
+        const topic = data.topic ?? 'general';
         const requestData = data.requestData;
         let message = Array.isArray(data.messages) ? data.messages.join(' ') : undefined;
         switch (operation) {
@@ -1170,7 +1185,7 @@ const emailFormCompositionHandlers = (
           // submit the progress status id with the send request to the server.
           ProgressStatus.create(0, 0, { proto: 'undefined', active: 0, total: -1 })
             .fail(ajaxHandleError)
-            .done(function(data) {
+            .done(function(data: ResponseData<ProgressResponse>) {
               if (!ajaxValidateResponse(data, ['id'])) {
                 return;
               }
@@ -1277,36 +1292,52 @@ const emailFormCompositionHandlers = (
 
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
-          ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
-            let previewText = '';
-            if (data.caption !== undefined) {
-              previewText += '<div class="error caption">' + data.caption + '</div>';
-            }
-            if (Array.isArray(data.messages)) {
-              previewText += data.messages.join(' ');
-            }
-            const requestData: undefined|ComposerRequestData = data.requestData;
-            const previewData: undefined|string = requestData?.previewData;
-            if (previewData) {
-              previewText += previewData;
-            }
-            $debugOutput.html(previewText);
-            $debugOutput.find('.for-dialog').addClass(hiddenCssClass);
+          ajaxHandleError<EmailFormComposerResponse>(
+            xhr,
+            textStatus,
+            errorThrown, {
+              preProcess: (data) => {
+                const requestData = data.requestData;
+                const previewData: undefined|string = requestData?.previewData;
+                if (previewData) {
+                  // avoid showing the error summary as this add
+                  // another modal which has to be closed by the user.
+                  // We still show the details page, then on closing
+                  // it the preview tab will open.
+                  data.closeDetailsLabel = t(appName, 'Proceed to the email preview');
+                }
+              },
+              cleanup: (data) => {
+                let previewText = '';
+                if (data.caption !== undefined) {
+                  previewText += '<div class="error caption">' + data.caption + '</div>';
+                }
+                if (Array.isArray(data.messages)) {
+                  previewText += data.messages.join(' ');
+                }
+                const requestData = data.requestData;
+                const previewData: undefined|string = requestData?.previewData;
+                if (previewData) {
+                  previewText += previewData;
+                }
+                $debugOutput.html(previewText);
+                $debugOutput.find('.for-dialog').addClass(hiddenCssClass);
 
-            if (previewData) {
-              $dialogHolder.tabs('option', 'active', 2);
-            }
+                if (previewData) {
+                  $dialogHolder.tabs('option', 'active', 2);
+                }
 
-            $.fn.cafevTooltip.remove();
+                $.fn.cafevTooltip.remove();
 
-            if (requestData?.messageTextReplacements) {
-              WysiwygEditor.updateEditor($messageText, requestData.messageText!);
-            }
+                if (requestData?.messageTextReplacements) {
+                  WysiwygEditor.updateEditor($messageText, requestData.messageText!);
+                }
 
-            if (--busyCount <= 0) {
-              pageBusyIcon(false);
-            }
-          });
+                if (--busyCount <= 0) {
+                  pageBusyIcon(false);
+                }
+              },
+            });
         })
         .done(function(data: EmailFormComposerResponse) {
           if (!ajaxValidateResponse(
@@ -1484,7 +1515,7 @@ const emailFormCompositionHandlers = (
         value: $this.prop('checked') ? autoSaveSeconds : 0,
       })
         .fail(function(xhr, status, errorThrown) {
-          ajaxHandleError(xhr, status, errorThrown, function() {
+          ajaxHandleError(xhr, status, errorThrown, () => {
             $this.prop('checked', !$this.prop('checked'));
           });
         })
@@ -2143,26 +2174,26 @@ const emailFormCompositionHandlers = (
     .off('click')
     .on('click', function() {
 
-      const self = $(this);
-      const input = $fieldset.find(self.data('for'));
+      const $self = $(this);
+      const $input = $fieldset.find($self.data('for'));
 
-      self.addClass(loadingCssClass);
-      const cleanup = function() {
-        self.removeClass(loadingCssClass);
+      $self.addClass(loadingCssClass);
+      const cleanup = () => {
+        $self.removeClass(loadingCssClass);
       };
 
-      if ((input.val() as string).trim() !== '') {
+      if (($input.val() as string).trim() !== '') {
         // We trigger validation before we pop-up, but no need to do
         // so on empty input.
-        input.trigger('blur');
+        $input.trigger('blur');
       }
 
-      const post = { freeFormRecipients: input.val() };
+      const post = { freeFormRecipients: $input.val() };
       $.post(generateEmailFormUrl('contacts/list'), post)
         .fail(function(xhr, status, errorThrown) {
           ajaxHandleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
+        .done(function(data: ResponseData<EmailFormListContactsResponse>) {
           if (!ajaxValidateResponse(data, ['contents'])) {
             cleanup();
             return;
@@ -2253,7 +2284,7 @@ const emailFormCompositionHandlers = (
                     .done(function(_data) {
                       $.post(generateEmailFormUrl('contacts/list'), post)
                         .fail(ajaxHandleError)
-                        .done(function(data) {
+                        .done(function(data: ResponseData<EmailFormListContactsResponse>) {
                           if (!ajaxValidateResponse(data, ['contents'])) {
                             return;
                           }
@@ -2273,7 +2304,7 @@ const emailFormCompositionHandlers = (
             position: {
               my: 'right top',
               at: 'right bottom',
-              of: self,
+              of: $self,
             },
             openCallback($selectElement) {
               cleanup();
@@ -2291,8 +2322,8 @@ const emailFormCompositionHandlers = (
                   recipients += ', ' + selectedOptions[idx].text;
                 }
               }
-              input.val(recipients);
-              input.trigger('blur');
+              $input.val(recipients);
+              $input.trigger('blur');
               $(this).dialog('close');
             },
             // ,closeCallback: function(selectElement) {}
@@ -2379,11 +2410,11 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         promiseCallback(new Error('Error opening email dialog.'));
       });
     })
-    .done(function(data) {
+    .done(function(data: ResponseData<EmailWebFormResponse>) {
       const containerId = 'emailformdialog';
 
       if (!ajaxValidateResponse(
-        data, ['contents'], function() {
+        data, ['contents'], () => {
           Email.active = false;
           console.debug('EMAIL ACTIVE FALSE', Email);
           promiseCallback(new Error('Missing HTML content for email form.'));
@@ -2400,8 +2431,8 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
       const $composerPanel = $dialogHolder.find('div#emailformcomposer');
 
       let dlgTitle = '';
-      if (data.projectId > 0) {
-        dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName });
+      if ((data.projectId ?? 0) > 0) {
+        dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName! });
       } else {
         dlgTitle = t(appName, 'Em@il Form');
       }

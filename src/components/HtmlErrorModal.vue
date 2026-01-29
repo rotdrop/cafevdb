@@ -43,7 +43,7 @@
           <IconReportError :size="20" />
         </template>
       </NcActionButton>
-      <NcActionButton :name="t(appName, 'close details view')"
+      <NcActionButton :name="closeDetailsLabel"
                       close-after-click
                       @click="emit('update:open', false)"
       >
@@ -85,6 +85,7 @@ const props = defineProps<{
   open: boolean,
   caption: string,
   htmlString: string,
+  closeDetailsLabel: string,
 }>()
 
 const emit = defineEmits([

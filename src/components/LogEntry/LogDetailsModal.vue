@@ -1,5 +1,5 @@
 <!--
-        SPDX-FileCopyrightText: 2023, 2025 Nextcloud Gmbh and Nextcloud contributors
+        SPDX-FileCopyrightText: 2023, 2025, 2026 Nextcloud Gmbh and Nextcloud contributors
         SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
@@ -22,7 +22,7 @@
           <IconReportError :size="20" />
         </template>
       </NcActionButton>
-      <NcActionButton :name="t(appName, 'close details view')"
+      <NcActionButton :name="closeDetailsLabel"
                       close-after-click
                       @click="emit('update:open', false)"
       >
@@ -107,7 +107,8 @@ hljs.registerLanguage('json', json)
 const props = withDefaults(defineProps<{
   open: boolean,
   currentEntry: ILogEntry,
-  name?: string
+  name?: string,
+  closeDetailsLabel: string,
 }>(), {
   name: undefined,
 })
