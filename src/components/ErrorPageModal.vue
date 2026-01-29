@@ -39,6 +39,7 @@
       <ErrorPage :error="error"
                  :initial-view="initialView"
                  :no-summary="noSummary"
+                 :close-details-label="closeDetailsLabel"
                  @close="modal && modal.close()"
       />
     </template>
@@ -66,7 +67,7 @@ withDefaults(defineProps<{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
   heading?: string,
   initialView?: 'summary'|'details'|'report',
-  noSummary?: bool,
+  noSummary?: boolean,
   closeDetailsLabel?: string,
 }>(), {
   heading: t(appName, 'Sorry, an Error Occurred'),
@@ -76,7 +77,7 @@ withDefaults(defineProps<{
 })
 
 const errorPageHeadingId = ref<string>(uuidv4())
-const modal = ref(null)
+const modal = ref<null|typeof NcModal>(null)
 
 </script>
 <style scoped lang="scss">
