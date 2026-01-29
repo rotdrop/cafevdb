@@ -36,6 +36,7 @@ import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 import { type NextcloudExceptionLogEntry, isNextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
 import type Keyable from '../types/keyable.d.ts';
 import type { IException } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
+import { hasProperty } from '../types/type-traits.ts';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
@@ -50,30 +51,29 @@ const stringifyTrace = (trace: NextcloudExceptionLogEntry['exception']['Trace'])
   return traceAsString.join('\n');
 };
 
-export interface AjaxFailData extends Partial<NextcloudExceptionLogEntry> {
-  error: string,
-  status: string,
-  caption?: string,
-  messages: string[],
-  xhr: JQuery.jqXHR,
-  info?: string,
-  html?: string,
-  parsed: boolean,
+export type AjaxFailData<T = unknown> = Partial<T> & Partial<NextcloudExceptionLogEntry> & {
+  error: string;
+  status: string;
+  caption?: string;
+  messages: string[];
+  xhr: JQuery.jqXHR;
+  info?: string;
+  html?: string;
+  parsed: boolean;
   confirmation?: {
     question: string,
     override: string,
     title?: string,
-  },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any,
-}
+  };
+  closeDetailsLabel?: string;
+};
 
-const isAjaxFailData = (arg: unknown): arg is AjaxFailData =>
+const isAjaxFailData = <T>(arg: unknown): arg is AjaxFailData<T> =>
   !!arg && typeof arg === 'object' && (arg as Keyable).parsed !== undefined && (arg as Keyable).error !== undefined && (arg as Keyable).status !== undefined && (arg as Keyable).messages !== undefined;
 
-type Callbacks = {
-  cleanup(data: AjaxFailData): void;
-  preProcess(data: AjaxFailData): void;
+type Callbacks<T = unknown> = {
+  cleanup(data: AjaxFailData<T>): void;
+  preProcess(data: AjaxFailData<T>): void;
 };
 
 /**
@@ -99,22 +99,22 @@ type Callbacks = {
  * defaults to "do nothing". The argument is the data possibly
  * submitted by the server, as computed by ajaFailData().
  */
-const ajaxHandleError = async (
+const ajaxHandleError = async <T = unknown>(
   xhr: JQuery.jqXHR,
   textStatus: string,
   errorThrown: string,
-  userCallbacks?: Callbacks['cleanup']|Partial<Callbacks>,
+  userCallbacks?: Callbacks<T>['cleanup']|Partial<Callbacks<T> >,
 ) => {
-  const defaultCallbacks: Callbacks = {
+  const defaultCallbacks: Callbacks<T> = {
     cleanup(_data) {},
-    preProcess(_data) {},
+    preProcess: (_data): _data is AjaxFailData & T => false,
   };
   if (userCallbacks instanceof Function) {
     userCallbacks = {
       cleanup: userCallbacks,
     };
   }
-  const callbacks: Callbacks = { ...defaultCallbacks, ...userCallbacks };
+  const callbacks = { ...defaultCallbacks, ...userCallbacks };
 
   const failData = ajaxFailData(xhr, textStatus, errorThrown);
   callbacks.preProcess(failData);
@@ -286,17 +286,21 @@ done automatically when cloud click "ok" or close this dialog window.
  * application development. This is intended to be called from the
  * done() callback after a successful AJAX call.
  *
+ * This also acts as a type guard, it is the responsibility of the
+ * consuming code to make sure that the "has property" test is
+ * sufficient.
+ *
  * @param data The data passed to the callback to $.post()
  *
  * @param required List of required fields in data.data.
  *
  * @param [errorCB] TBD.
  */
-const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
-  data: T,
-  required: readonly (keyof T)[],
-  errorCB: (arg: T) => void = () => {},
-) => {
+const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
+  data: string|Partial<T>,
+  required: R,
+  errorCB: (arg: string|Partial<T>) => void = () => {},
+): data is T => {
   const dialogCallback = () => {
     errorCB(data);
   };
@@ -310,7 +314,7 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
   }
   let missing = '';
   for (const key of required) {
-    if (typeof data[key] === 'undefined') {
+    if (typeof data === 'object' && data && typeof data[key] === 'undefined') {
       const keyString = typeof key === 'symbol' ? key.toString() : '' + (key as string|number);
       missing += t(
         appName, 'Field {RequiredField} not present in AJAX response.',
@@ -319,7 +323,7 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
   }
   if (missing.length > 0) {
     let info = '';
-    if (typeof data !== 'string' && Array.isArray(data.messages)) {
+    if (hasProperty('messages', data) && Array.isArray(data.messages)) {
       info += data.messages.join(' ') + ' ';
     }
     info += t(appName, 'Missing data');
@@ -350,7 +354,7 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
       }
     } else {
       // Display additional debug info if any
-      Dialogs.debugPopup(data as Record<string, unknown>);
+      Dialogs.debugPopup(data);
     }
 
     Dialogs.alert(info, caption, dialogCallback, true, true);
@@ -368,8 +372,8 @@ const ajaxValidateResponse = <T extends string|Record<string, unknown> >(
  *
  * @param errorThrown see fail() method of jQuery ajax.
  */
-const ajaxFailData = (
-  xhr: JQuery.jqXHR|AjaxFailData,
+const ajaxFailData = <T = object>(
+  xhr: JQuery.jqXHR|AjaxFailData<T>,
   textStatus: string,
   errorThrown: string,
 ) => {
@@ -378,11 +382,11 @@ const ajaxFailData = (
     textStatus,
     errorThrown,
   });
-  if (isAjaxFailData(xhr)) {
+  if (isAjaxFailData<T>(xhr)) {
     return xhr;
   }
   if (textStatus === 'error' && xhr.status !== undefined) {
-    textStatus = httpStatusText(xhr.status);
+    textStatus = httpStatusText(+xhr.status);
     // @ts-expect-error 2345
     xhr.statusText = textStatus;
   }
