@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,9 +54,6 @@ declare global {
      fromEntries<T>(obj: T): FromEntriesWithReadOnly<T>
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isOne = (x: any): x is 1 => x === 1;
 
 /**
  * Helper to check if a type is undefined
