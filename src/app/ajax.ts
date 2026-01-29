@@ -168,6 +168,7 @@ const ajaxHandleError = async <T = unknown>(
           xhr,
           message,
           html,
+          closeDetailsLabel: failData.closeDetailsLabel,
         };
         await asyncEmit(LEGACY_AJAX_ERROR, eventData);
         console.info('RUNNING CLEANUP HOOKS', callbacks);
