@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,12 +34,17 @@ class SepaBankAccount extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly int $projectId,
     public readonly int $musicianId,
     public readonly int $bankAccountSequence,
     public readonly bool $bankAccountDeleted,
     /** @var string[] */
-    public readonly ?array $messages,
+    public readonly ?array $messages = null,
+    /**
+     * Need not be present, if we have a submitted project-id from the
+     * context, then it will be echoed back.
+     */
+    public readonly int $projectId = 0,
+    public readonly ?EnumSepaDebitMandateRevocationStatus $state = null,
   ) {
   }
 
@@ -56,18 +61,19 @@ class SepaBankAccount extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     static::initKeys();
     extract($data);
     try {
-      if ($state !== null) {
+      if ($state ?? null) {
         $state = EnumSepaDebitMandateRevocationStatus::get($state);
       }
     } catch (InvalidArgumentException $e) {
       throw $e;
     }
     return new self(
-      projectId: $projectId,
+      projectId: $projectId ?? 0,
       musicianId: $musicianId,
       bankAccountSequence: $bankAccountSequence,
       bankAccountDeleted: $bankAccountDeleted,
       messages: $messages ?? null,
+      state: $state ?? null,
     );
   }
 }

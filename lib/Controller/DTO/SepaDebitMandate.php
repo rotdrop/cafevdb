@@ -39,12 +39,12 @@ class SepaDebitMandate extends SepaBankAccount
     int $bankAccountSequence,
     bool $bankAccountDeleted,
     /** @var string[] */
-    ?array $messages,
     public readonly int $mandateSequence,
     public readonly bool $mandateDeleted,
     public readonly ?string $mandateReference,
-    public readonly ?EnumSepaDebitMandateRevocationStatus $state,
-    public readonly ?string $contents,
+    public readonly ?string $contents = null,
+    ?array $messages = null,
+    ?EnumSepaDebitMandateRevocationStatus $state = null,
   ) {
     parent::__construct(
       projectId: $projectId,
@@ -52,6 +52,7 @@ class SepaDebitMandate extends SepaBankAccount
       bankAccountSequence: $bankAccountSequence,
       bankAccountDeleted: $bankAccountDeleted,
       messages: $messages,
+      state: $state,
     );
   }
 
@@ -68,7 +69,7 @@ class SepaDebitMandate extends SepaBankAccount
     static::initKeys();
     extract($data);
     try {
-      if (($state ?? null) !== null) {
+      if ($state ?? null) {
         $state = EnumSepaDebitMandateRevocationStatus::get($state);
       }
     } catch (InvalidArgumentException $e) {

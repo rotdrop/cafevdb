@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateTimeImmutable;
 use InvalidArgumentException;
 use PHP_IBAN\IBAN;
@@ -56,6 +58,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /** AJAX endpoints for debit mandates */
+#[TSAttributes\TypeScript]
 class SepaDebitMandatesController extends Controller
 {
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
@@ -64,6 +67,41 @@ class SepaDebitMandatesController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const BASE_PATH = 'finance/sepa';
+
+  public const END_POINT_BANK_ACCOUNTS = 'bank-account';
+  public const END_POINT_DEBIT_MANDATES = 'debit-mandates';
+  public const END_POINTS = [
+    self::END_POINT_BANK_ACCOUNTS,
+    self::END_POINT_DEBIT_MANDATES,
+  ];
+
+  public const ACTION_DELETE = EnumSepaDebitMandateRevocationAction::DELETE->value;
+  public const ACTION_DIALOG = 'dialog';
+  public const ACTION_DISABLE = EnumSepaDebitMandateRevocationAction::DISABLE->value;
+  public const ACTION_HARDCOPY = 'hardcopy';
+  public const ACTION_PRE_FILLED = 'pre-filled';
+  public const ACTION_REACTIVATE = EnumSepaDebitMandateRevocationAction::REACTIVATE->value;
+  public const ACTION_STORE = 'store';
+  public const ACTION_VALIDATE = 'validate';
+
+  public const DEBIT_MANDATE_ACTIONS = [
+    self::ACTION_DELETE,
+    self::ACTION_DIALOG,
+    self::ACTION_DISABLE,
+    self::ACTION_HARDCOPY,
+    self::ACTION_PRE_FILLED,
+    self::ACTION_REACTIVATE,
+    self::ACTION_STORE,
+    self::ACTION_VALIDATE,
+  ];
+
+  public const BANK_ACCOUNT_ACTIONS = [
+    self::ACTION_DELETE,
+    self::ACTION_DISABLE,
+    self::ACTION_REACTIVATE,
+  ];
 
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
@@ -111,7 +149,7 @@ class SepaDebitMandatesController extends Controller
    * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/validate')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_VALIDATE)]
   public function mandateValidate(string $changed): Response
   {
     $missing = [];
@@ -559,7 +597,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/dialog')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DIALOG)]
   public function mandateForm(
     int $projectId,
     int $musicianId,
@@ -771,7 +809,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/store')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_STORE)]
   public function mandateStore(
     $projectId,
     // SEPA "id"
@@ -1081,7 +1119,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/pre-filled')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_PRE_FILLED)]
   public function preFilledMandateForm(
     ?int $projectId,
     int $musicianId,
@@ -1123,7 +1161,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/delete')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DELETE)]
   public function mandateDelete(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
@@ -1137,7 +1175,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/disable')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DISABLE)]
   public function mandateDisable(int $musicianId, int $mandateSequence):Response
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
@@ -1151,7 +1189,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/reactivate')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_REACTIVATE)]
   public function mandateReactivate(int $musicianId, int $mandateSequence):Reponse
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
@@ -1169,7 +1207,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/debit-mandates/hardcopy/{operation}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_HARDCOPY . '/{operation}')]
   public function mandateHardcopy(string $operation, int $musicianId, ?int $mandateSequence, bool $force = false):Response
   {
     switch ($operation) {
@@ -1574,7 +1612,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       ]);
     }
 
-    return self::dataResponse($responseData);
+    return DTO\SepaDebitMandate::fromArray($responseData)->response();
   }
 
   /**
@@ -1585,7 +1623,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/delete')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_DELETE)]
   public function accountDelete(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
@@ -1599,7 +1637,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/disable')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_DISABLE)]
   public function accountDisable(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
@@ -1613,7 +1651,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/finance/sepa/bank-accounts/reactivate')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_REACTIVATE)]
   public function accountReactivate(int $musicianId, int $bankAccountSequence):Response
   {
     return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');
@@ -1634,7 +1672,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     int $musicianId,
     int $bankAccountSequence,
     string $action,
-  ):Response {
+  ): Response {
     $requiredKeys = [ 'musicianId', 'bankAccountSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -1648,7 +1686,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
       }
     }
 
-    $action = EnumSepaDebitMandateRevocationAction::from($action);
+    $action = EnumSepaDebitMandateRevocationAction::get($action);
 
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
@@ -1730,10 +1768,6 @@ Therefore you have to enable the validation checkbox again before you are allowe
           $account->setDeleted(null);
           $this->flush();
           break;
-        default:
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('Unknown revocation action: "%s".', $action),
-          );
       }
 
       $this->entityManager->commit();
@@ -1755,14 +1789,23 @@ Therefore you have to enable the validation checkbox again before you are allowe
     if ($this->entityManager->contains($account)) {
       if (!empty($account->getDeleted())) {
         $messages[] = $this->l->t('Bank account with IBAN "%s" has been invalidated.', $iban);
+        $state = EnumSepaDebitMandateRevocationStatus::INVALIDATED;
       } else {
         $messages[] = $this->l->t('Bank account with IBAN "%s" has been reactivated.', $iban);
         $messages[] = $this->l->t('Please note that associated debit-mandates need to be reactivated separately, they are still disabled.');
+        $state = EnumSepaDebitMandateRevocationStatus::REACTIVATED;
       }
     } else {
       $messages[] = $this->l->t('Bank account with IBAN "%s" has been deleted.', $iban);
+      $state = EnumSepaDebitMandateRevocationStatus::DELETED;
     }
 
-    return self::response($messages);
+    return new DTO\SepaBankAccount(
+      musicianId: $account->getMusician()->getId(),
+      bankAccountSequence: $account->getSequence(),
+      bankAccountDeleted: $account->isDeleted(),
+      messages: $messages,
+      state: $state,
+    )->response();
   }
 }
