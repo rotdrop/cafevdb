@@ -65,15 +65,28 @@ import {
   reject as rejectDecryptionPromise,
   promise as decryptionPromise,
 } from './lazy-decryption.ts';
-
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
-import type { ReceivablesStatistics, SepaBulkTransactionResponse, SepaDebitMandate, SepaBankAccount, SepaDebitMandateValidation } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type {
+  ReceivablesStatistics,
+  SepaBulkTransactionResponse,
+  SepaDebitMandate,
+  SepaBankAccount,
+  SepaDebitMandateValidation,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { EnumFileUploadMode, type EnumSepaDebitMandateRevocationAction, type EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
+import {
+  ACTION_PRE_FILLED,
+  BASE_PATH,
+  END_POINT_BANK_ACCOUNTS,
+  END_POINT_DEBIT_MANDATES,
+  type END_POINTS,
+} from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -87,6 +100,12 @@ require('lock-input.scss');
 require('./jquery-datetimepicker.ts');
 
 require('./jquery-readonly.ts');
+
+// import { hasProperty } from '../types/type-traits.ts';
+// const isSepaBankAccount = (arg: Record<string, unknown>): arg is SepaBankAccount =>
+//   hasProperty('bankAccountSequence', arg);
+// const isSepaDebitMandate = (arg: Record<string, unknown>): arg is SepaDebitMandate =>
+//   hasProperty('debitMandateSequence', arg);
 
 const makeSepaId = (data: SepaBankAccount & Partial<SepaDebitMandate>) => {
   return {
@@ -216,7 +235,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       sepaId.projectId = 0;
     }
     fileDownload(
-      'finance/sepa/debit-mandates/pre-filled',
+      `${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_PRE_FILLED}`,
       sepaId,
       t(appName, 'Unable to download pre-filled mandate form.'),
     );
@@ -676,7 +695,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
         title: t(appName, 'Delete this bank-account from the data-base. Normally, this should only be done in case of desinformation or misunderstanding. Use with care.'),
         click() {
           const $dlg = $(this);
-          mandateDelete($dlg.data('sepaId'), (data: SepaDebitMandate) => {
+          mandateDelete($dlg.data('sepaId'), (data: SepaBankAccount|SepaDebitMandate) => {
             const sepaId = makeSepaId(data);
             $dlg.data('sepaId', sepaId);
             dialogReload($dlg, onChangeCallback);
@@ -853,18 +872,18 @@ const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omi
 };
 
 // Delete a mandate
-const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate) => void, action: EnumSepaDebitMandateRevocationAction) => {
+const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate|SepaBankAccount) => void, action: EnumSepaDebitMandateRevocationAction) => {
 
   // "submit" the entire form
   // const post = $('#sepa-debit-mandate-form').serialize();
 
-  let endPoint = 'debit-mandates';
+  let endPoint: (typeof END_POINTS)[number] = END_POINT_DEBIT_MANDATES;
   let confirmationText = '';
   switch (action) {
     case 'disable':
       // disable account if the mandate is already disabled
       if (!sepaId.mandateSequence || sepaId.mandateDeleted) {
-        endPoint = 'bank-accounts';
+        endPoint = END_POINT_BANK_ACCOUNTS;
         confirmationText = t(appName, 'Do you really want to disable the current bank-account?');
       } else {
         confirmationText = t(appName, 'Do you really want to disable the current debit-mandate?');
@@ -873,7 +892,7 @@ const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate) => v
     case 'reactivate':
       // first reactivate the account, then the mandate
       if (sepaId.bankAccountDeleted) {
-        endPoint = 'bank-accounts';
+        endPoint = END_POINT_BANK_ACCOUNTS;
         confirmationText = t(appName, 'Do you really want to reactivate the current bank-account?');
       } else {
         confirmationText = t(appName, 'Do you really want to reactiveate the current debit-mandate?');
@@ -884,7 +903,7 @@ const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate) => v
       action = 'delete';
       // always only try delete the mandate if we have one
       if (!sepaId.mandateSequence) {
-        endPoint = 'bank-accounts';
+        endPoint = END_POINT_BANK_ACCOUNTS;
         confirmationText = t(appName, 'Do you really want to delete the current bank-account?');
       } else {
         confirmationText = t(appName, 'Do you really want to delete the current debit-mandate?');
@@ -901,15 +920,15 @@ const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate) => v
         Notification.show(t(appName, 'Unconfirmed, doing nothing'));
         return;
       }
-      $.post(generateAppUrl('finance/sepa/' + endPoint + '/' + action), sepaId)
+      $.post(generateAppUrl(`${BASE_PATH}/${endPoint}/${action}`), sepaId)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {});
         })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['message'])) {
+        .done(function(data: ResponseData<SepaDebitMandate|SepaBankAccount>) {
+          if (!Ajax.validateResponse(data, ['messages'])) {
             return false;
           }
-          Notification.messages(data.message);
+          Notification.messages(data.messages);
           if (callbackOk !== undefined) {
             callbackOk(data);
           }
@@ -918,7 +937,7 @@ const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate) => v
     true);
 };
 
-const makeSuggestions = (data: SepaDebitMandateValidation) => {
+const makeSuggestions = (data: Partial<SepaDebitMandateValidation>) => {
   if (data.suggestions) {
     return t(appName, 'Suggested alternatives based on common human mis-transcriptions:')
       + ' '
@@ -943,8 +962,8 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
     validateLockCB(true);
   };
 
-  const validateUnlock = function(data?: SepaDebitMandateValidation) {
-    if (data) {
+  const validateUnlock = function(data?: ResponseData<SepaDebitMandateValidation>) {
+    if (data && typeof data !== 'string') {
       const hints = makeSuggestions(data);
       if (hints) {
         $(dialogId + ' .suggestions').html(hints).show();
@@ -982,20 +1001,24 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
         },
       });
     })
-    .done(function(data: SepaDebitMandateValidation) {
+    .done(function(data: ResponseData<SepaDebitMandateValidation>) {
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'messages'],
         validateUnlock)) {
-        // One special case: if the user has submitted an IBAN
-        // and the BLZ appeared to be valid after all checks,
-        // then inject it into the form. Seems to be a common
-        // case, more or less.
-        if (data.blz) {
-          $('input.bankAccountBLZ').val(data.blz);
+        if (typeof data !== 'string') {
+          // One special case: if the user has submitted an IBAN and
+          // the BLZ appeared to be valid after all checks, then
+          // inject it into the form. Seems to be a common case, more
+          // or less.
+          if (data.blz) {
+            $('input.bankAccountBLZ').val(data.blz);
+          }
+          if (data.messages) {
+            $(dialogId + ' #msg').html(data.messages.join(' '));
+            $(dialogId + ' #msg').show();
+          }
         }
-        $(dialogId + ' #msg').html(data.messages.join(' '));
-        $(dialogId + ' #msg').show();
         return false;
       }
       if (changed === 'orchestraMember') {
@@ -1083,9 +1106,9 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
     validateLockCB(false, true);
   };
 
-  const validateErrorUnlock = function(responseData: SepaDebitMandateValidation) {
-    if (responseData) {
-      const msg = responseData.messages.join(' ')
+  const validateErrorUnlock = function(responseData: ResponseData<SepaDebitMandateValidation>) {
+    if (responseData && typeof responseData !== 'string') {
+      const msg = (responseData.messages ?? []).join(' ')
             + ' '
             + (makeSuggestions(responseData) || '');
       if (msg !== ' ') {
@@ -1166,12 +1189,12 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
         },
       });
     })
-    .done(function(data: SepaDebitMandateValidation) {
+    .done(function(data: ResponseData<SepaDebitMandateValidation>) {
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'messages'],
         validateErrorUnlock)) {
-        if (data.blz) {
+        if (typeof data !== 'string' && data.blz) {
           $('input.bankAccountBLZ').val(data.blz);
         }
         return false;
