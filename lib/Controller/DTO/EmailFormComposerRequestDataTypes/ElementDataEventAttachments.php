@@ -22,34 +22,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
-
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
-use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation as Operation;
-use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic as Topic;
+namespace OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes;
 
 /**
  * Response DTO of the email-form controller.
  */
-#[TSAttributes\TemplateParameters([
-  'Operation extends ' . Operation::class . ' = ' . Operation::class,
-  'Topic extends ' . Topic::class . ' = ' . Topic::class,
-])]
-class EmailFormComposerResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
+class ElementDataEventAttachments extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly Operation $operation,
-    public readonly Topic $topic,
-    public readonly ?string $projectName,
-    public readonly ?int $projectId,
-    public readonly ?string $caption,
-    /** @var array<string> */
-    public readonly array $messages,
-    #[TSAttributes\LiteralTypeScriptType(EmailFormComposerRequestData::class . '<Operation, Topic>')]
-    public readonly EmailFormComposerRequestData $requestData,
-    public readonly string $debug,
+    public readonly string $options,
+    /** @var array<string, object> */
+    public readonly array $attachments,
   ) {
   }
 
@@ -67,18 +51,9 @@ class EmailFormComposerResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractRespons
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-    if (!($requestData instanceof EmailFormComposerRequestData)) {
-      $requestData = EmailFormComposerRequestData::fromArray($requestData);
-    }
     return new self(
-      operation: $operation,
-      topic: $topic,
-      projectName: $projectName,
-      projectId: $projectId,
-      caption: $caption,
-      messages: $messages,
-      requestData: $requestData,
-      debug: $debug,
+      options: $options,
+      attachments: $attachments,
     );
   }
 }

@@ -43,7 +43,18 @@ trait MockMusiciansRepositoryTrait
       ->disableOriginalConstructor()
       ->getMock();
     $repository->method('findBy')->willReturnCallback(
-      function(array $criteria) {
+      function(array $criteria, ?array $orderBy = null) {
+        $indexById = false;
+        foreach (($orderBy ?? []) as $field => $direction) {
+          switch ($direction) {
+            case 'INDEX':
+              $indexById = $field == 'id';
+              break;
+            default:
+              // ignore for now
+              break;
+          }
+        }
         // print_r($criteria);
         $projectId = null;
         foreach ($criteria as $index => $criterium) {
@@ -78,7 +89,7 @@ trait MockMusiciansRepositoryTrait
                     && in_array($this->musician->getProjectParticipation()->get($projectId)->getParticipationStatus(), $value)) {
                 return [];
               }
-              return [ $this->musician ];
+              return $indexById ? [ $this->musician->getId() => $this->musician ] : [ $this->musician ];
             }
           }
         }
@@ -91,7 +102,7 @@ trait MockMusiciansRepositoryTrait
                 && in_array($this->musician->getDefaultParticipationStatus(), $value)) {
               return [];
             }
-            return [ $this->musician ];
+            return $indexById ? [ $this->musician->getId() => $this->musician ] : [ $this->musician ];
           }
         }
 
@@ -102,7 +113,7 @@ trait MockMusiciansRepositoryTrait
         $pattern = $criteria['displayName'] ?? 'this will not match';
         $pattern = trim($pattern, '%');
         if (str_contains($this->musician->getPublicName(), $pattern)) {
-          return [ $this->musician ];
+          return $indexById ? [ $this->musician->getId() => $this->musician ] : [ $this->musician ];
         }
         // do not care about deleted.
         return [];

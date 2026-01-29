@@ -27,20 +27,27 @@ namespace OCA\CAFEVDB\Controller\DTO;
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCA\CAFEVDB\Controller\EnumEmailFormComposerElement;
-use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation;
-use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic;
+use OCA\CAFEVDB\Controller\EnumEmailFormComposerOperation as Operation;
+use OCA\CAFEVDB\Controller\EnumEmailFormComposerTopic as Topic;
 use OCA\CAFEVDB\EmailForm\EnumFormStatus;
 use OCA\CAFEVDB\EmailForm\EnumFromTag;
+use OCA\CAFEVDB\Controller\DTO\EmailFormComposerRequestDataTypes\ElementData;
 
 /**
  * Response DTO of the email-form controller.
  */
+#[TSAttributes\TemplateParameters([
+  'Operation extends ' . Operation::class . ' = ' . Operation::class,
+  'Topic extends ' . Topic::class . " = " . Topic::class,
+])]
 class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly EnumEmailFormComposerOperation $operation,
-    public readonly ?EnumEmailFormComposerTopic $topic,
+    #[TSAttributes\LiteralTypeScriptType('Operation')]
+    public readonly Operation $operation,
+    #[TSAttributes\LiteralTypeScriptType('Topic')]
+    public readonly ?Topic $topic = Topic::UNSPECIFIC,
     public readonly ?string $projectName = null,
     public readonly ?int $projectId = null,
     public readonly ?int $bulkTransactionId = -1,
@@ -53,7 +60,10 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     public readonly ?string $previewData = null,
     /** @var ?array<EnumEmailFormComposerElement> */
     public readonly ?array $formElements = null,
-    public readonly mixed $elementData = null,
+    #[TSAttributes\LiteralTypeScriptType(
+      "Operation extends '" . Operation::UPDATE->value . "' ? (Topic extends '" . Topic::UNSPECIFIC->value . "' ? string : (Topic extends '" . Topic::ELEMENT->value . "' ? " . ElementData::class . " : undefined)) : undefined",
+    )]
+    public readonly null|string|ElementData $elementData = null,
     public readonly ?string $messageText = null,
     /** @var ?array<string, string> */
     public readonly ?array $messageTextReplacements = null,
@@ -95,9 +105,12 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
     if ($formElements ?? null) {
       $formElements = array_map(fn($arg) => EnumEmailFormComposerElement::get($arg), $formElements);
     }
+    if (($elementData ?? null) && is_array($elementData)) {
+      $elementData = ElementData::fromArray($elementData);
+    }
     return new self(
-      operation: EnumEmailFormComposerOperation::get($operation),
-      topic: $topic === null ? null : EnumEmailFormComposerTopic::get($topic),
+      operation: Operation::get($operation),
+      topic: $topic === null ? Topic::UNSPECIFIC : Topic::get($topic),
       //
       autoSave: $autoSave ?? null,
       fileAttachments: $arachedFiles ?? null,

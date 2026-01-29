@@ -223,8 +223,7 @@ class EmailFormController extends Controller
       'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
       'frozenRecipients' => $recipientsFilter->frozenRecipients(),
       RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::ANNOUNCEMENTS_MAILING_LIST_KEY),
-      RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY)
-,
+      RecipientsFilter::PROJECT_MAILING_LIST_KEY => $recipientsFilter->getMailingListInfo(RecipientsFilter::PROJECT_MAILING_LIST_KEY),
       'toolTips' => $this->toolTipsService(),
     ];
 
@@ -424,7 +423,10 @@ class EmailFormController extends Controller
             }
             $explanations = array_values(array_unique($explanations));
             if (count($replacements) > 0) {
-              $explanations[] = $this->l->t('Please note that the email preview displays the messages with all substitions already applied. Please revisit the message composition window to actually review the changes. You can use the "undo"-functionality of the editor to revert the substitutions.');
+              $explanations[] = $this->l->t(
+                'Please note that the email preview displays the messages with all substitions already applied.'
+                . ' Please revisit the message composition window to actually review the changes.'
+                . ' You can use the "undo"-functionality of the editor to revert the substitutions.');
             }
             $templateParameters = [
               'appName' => $this->appName,
@@ -514,7 +516,7 @@ class EmailFormController extends Controller
             )->render();
             break;
           case EnumEmailFormComposerTopic::ELEMENT:
-            $formElements = $requestData['formElements'];
+            $formElements = $requestData[ComposerCgiKeys::FORM_ELEMENTS];
             $this->logInfo('#FORM ELEMENTS ' . count($formElements));
             foreach ($formElements as $formElement) {
               switch ($formElement) {
@@ -551,8 +553,8 @@ class EmailFormController extends Controller
           default:
             return self::grumble($this->l->t('Unknown request: "%s / %s".', [ $operation, $topic ]));
         }
-        $requestData['formElements'] = $formElements ?? null;
-        $requestData['elementData'] = $elementData;
+        $requestData[ComposerCgiKeys::FORM_ELEMENTS] = $formElements ?? null;
+        $requestData[ComposerCgiKeys::ELEMENT_DATA] = $elementData;
         break;
       case EnumEmailFormComposerOperation::LOAD:
         switch ($topic) {

@@ -68,14 +68,17 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
-#[Attributes\CoversClass(Controller\DTO\EmailFormComposerRequestData::class)]
-#[Attributes\CoversClass(Controller\DTO\EmailFormComposerResponse::class)]
-#[Attributes\CoversClass(Controller\DTO\EmailFormListContactsResponse::class)]
-#[Attributes\CoversClass(Controller\DTO\EmailFormRecipientsFilterResponse::class)]
-#[Attributes\CoversClass(Controller\DTO\EmailWebFormResponse::class)]
+#[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
+#[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
+#[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementDataEventAttachments::class)]
+#[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementDataFileAttachments::class)]
+#[Attributes\CoversClass(DTO\EmailFormComposerResponse::class)]
+#[Attributes\CoversClass(DTO\EmailFormListContactsResponse::class)]
+#[Attributes\CoversClass(DTO\EmailFormRecipientsFilterResponse::class)]
+#[Attributes\CoversClass(DTO\EmailWebFormResponse::class)]
 #[Attributes\CoversClass(EmailForm\Composer::class)]
-#[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
 #[Attributes\CoversClass(EmailForm\EnumSubstitutionNamespace::class)]
+#[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
 #[Attributes\CoversClass(TestedController::class)]
 /** Test the ProjectsController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
@@ -743,6 +746,7 @@ class EmailFormControllerTest extends TestCase
     $this->assertEquals(true, $domDoc->loadHTML($data->participationStatusFilter, LIBXML_PEDANTIC));
     $this->assertNotEmpty($data->recipientsOptions);
     $this->assertEquals(true, $domDoc->loadHTML($data->recipientsOptions, LIBXML_PEDANTIC));
+    // print_r($data->recipientsOptions);
   }
 
   /** @return void */
@@ -962,6 +966,75 @@ class EmailFormControllerTest extends TestCase
       $this->assertStringNotContainsString($uri, $messageText);
       ++$index;
     }
+  }
+
+  /** @return void */
+  private function composerUpdateElementSetup(): void
+  {
+    /** @var Entities\EmailTemplate */
+    $this->generateProjectWebFormParameters(
+      Util::arrayMergeRecursive(
+        self::DEFAULT_PROJECT_USER_BASE,
+        [
+          EmailForm\EnumPostTag::COMPOSER->value => [
+            EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+            EmailForm\ComposerCgiKeys::SUBJECT_TAG => $this->project->getName(),
+            EmailForm\ComposerCgiKeys::FROM_TAG => EmailForm\EnumFromTag::ORCHESTRA,
+            // projectId is also fetched without namespace
+            // projectName is also fetched without namespace
+            EmailForm\ComposerCgiKeys::OPERATION => Controller\EnumEmailFormComposerOperation::UPDATE,
+            EmailForm\ComposerCgiKeys::TOPIC => Controller\EnumEmailFormComposerTopic::ELEMENT,
+            //
+            EmailForm\ComposerCgiKeys::SUBJECT => 'Subject',
+            EmailForm\ComposerCgiKeys::MESSAGE_TEXT => 'Message Text',
+            //
+            EmailForm\ComposerCgiKeys::FORM_ELEMENTS => Controller\EnumEmailFormComposerElement::cases(),
+          ],
+          EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+            EmailForm\RecipientsFilterCgiKeys::SELECTED_RECIPIENTS => [$this->musician->getId()],
+            EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+          ],
+        ],
+      ),
+    );
+  }
+
+  /** @return void */
+  public function testComposerUpdateElement(): void
+  {
+    $this->composerUpdateElementSetup();
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::UPDATE->value,
+      topic: Controller\EnumEmailFormComposerTopic::ELEMENT->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $requestData = $data->requestData;
+    $this->assertEqualsCanonicalizing(
+      Controller\EnumEmailFormCOmposerElement::cases(),
+      $requestData->formElements,
+    );
+    $this->assertInstanceOf(DTO\EmailFormComposerRequestDataTypes\ElementData::class, $requestData->elementData);
+    /** @var DTO\EmailFormComposerRequestDataTypes\ElementData $elementData */
+    $elementData = $requestData->elementData;
+    $this->assertEquals(1, count($elementData->to));
+    $this->assertStringContainsString($this->musician->getEmail(), $elementData->to[0]);
+    $this->assertEquals($this->project->getName(), $elementData->subjectTag);
+    $this->assertEquals(0, count($elementData->fileAttachments->attachments));
+    $this->assertNotEmpty($elementData->fileAttachments->options);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($elementData->fileAttachments->options, LIBXML_PEDANTIC));
+    $this->assertEquals(0, count($elementData->eventAttachments->attachments));
+    $this->assertNotEmpty($elementData->eventAttachments->options);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($elementData->eventAttachments->options, LIBXML_PEDANTIC));
   }
 
   private const FREE_FORM_RECIPIENTS = [

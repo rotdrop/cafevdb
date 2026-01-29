@@ -45,8 +45,10 @@ class ComposerCgiKeys
   public const DRAFT_AUTO_SAVE = 'draftAutoSave';
   public const DRAFT_MESSAGES_SELECTOR = 'draftMessagesSelector';
   public const EDIT_SUBJECT_TAG = 'editSubjectTag';
+  public const ELEMENT_DATA = 'elementData';
   public const EMAIL_TEMPLATE_NAME = 'emailTemplateName';
   public const FILE_ATTACHMENTS = 'fileAttachments';
+  public const FORM_ELEMENTS = 'formElements';
   public const FORM_STATUS = 'formStatus';
   public const FROM_TAG = 'fromTag';
   public const IN_REPLY_TO = 'inReplyTo';
