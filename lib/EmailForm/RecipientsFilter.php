@@ -167,7 +167,7 @@ class RecipientsFilter
   private $brokenEMails;     // List of people without email
   private $eMails;      // List of people with email
   private $eMailsDpy;   // Display list with namee an email
-  private $frozen;      // Only allow the preselected recipients (i.e. for debit notes)
+  private bool $frozen = false; // Only allow the preselected recipients (i.e. for debit notes)
 
   // Form elements
   private $participationStatusNames;

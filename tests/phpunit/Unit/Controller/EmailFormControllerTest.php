@@ -590,6 +590,14 @@ class EmailFormControllerTest extends TestCase
     ],
   ];
 
+  private const MAILING_LIST_USER_BASE = [
+    EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+      EmailForm\RecipientsFilterCgiKeys::BASIC_RECIPIENTS_SET => [
+        EmailForm\RecipientsFilterCgiKeys::ANNOUNCEMENTS_MAILING_LIST,
+      ],
+    ],
+  ];
+
   /** @return void */
   #[Attributes\Depends('testGenerateFormWithProject')]
   public function testRecipientsFilterHistorySnapshot(): void
@@ -837,8 +845,8 @@ class EmailFormControllerTest extends TestCase
 
 
   /**
-   * Generate the preview for the all-substitutions template. This should just
-   * work, setup the environment s.t. this can work. Following test will establish tests for error handling.
+   * Test whether an empty downloads folder ist properly reported if the
+   * template contains the substitution key for the downloads share.
    *
    * @return void
    */
@@ -872,8 +880,8 @@ class EmailFormControllerTest extends TestCase
   }
 
   /**
-   * Catch erroneous sub-shares of the public downloads share. Goal: just
-   * silently replace. For now just test the current error reponse.
+   * Generate a message template with faulty external links and test whether
+   * these are found and properly reported.
    *
    * @return void
    */
@@ -966,6 +974,122 @@ class EmailFormControllerTest extends TestCase
       $this->assertStringNotContainsString($uri, $messageText);
       ++$index;
     }
+  }
+
+  /**
+   * Test some more substitution errors which should just be reported in
+   * preview mode.
+   *
+   * @return void
+   */
+  public function testComposerPreviewCatchSubstitutionError(): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData = Util::arrayMergeRecursive(
+      $this->postData,
+      self::DEFAULT_PROJECT_USER_BASE,
+      [
+        EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+          EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+        ],
+      ],
+    );
+    $messageText = '${FAULTYNAMESPACE::SOMETHING}
+';
+    $messageText .= '${' . EmailForm\EnumSubstitutionNamespace::GLOBAL->value . '::SOMETHING_NOT_EXISTING}
+';
+    $messageText .= '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::SOMETHING_NOT_EXISTING}
+';
+    $this->postData[
+      EmailForm\EnumPostTag::COMPOSER->value
+    ][
+      EmailForm\ComposerCgiKeys::MESSAGE_TEXT
+    ] = $messageText;
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
+      topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    // print_r($response);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $requestData = $data->requestData;
+    $previewData = $requestData->previewData;
+    $messageText = $requestData->messageText;
+    $this->assertNotEmpty($previewData);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($previewData, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($messageText, LIBXML_PEDANTIC));
+    $diagnostics = $requestData->diagnostics;
+    // print_r($diagnostics);
+    $this->assertIsArray($diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION]);
+    $templateValidation = $diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
+    foreach (EmailForm\Composer::TEMPLATE_VALIDATION_ERRORS as $key) {
+      if ($key == EmailForm\Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS) {
+        $this->assertArrayNotHasKey($key, $templateValidation);
+      } else {
+        $this->assertArrayHasKey($key, $templateValidation);
+      }
+    }
+  }
+
+  /**
+   * Test that templates with personal substitution keys are not sent to the
+   * mailing lists.
+   *
+   * @return void
+   */
+  public function testComposerPreviewCatchSubstitutionPreconditionError(): void
+  {
+    $this->composerPreviewSetup();
+    $this->postData = Util::arrayMergeRecursive(
+      $this->postData,
+      self::MAILING_LIST_USER_BASE,
+      [
+        EmailForm\EnumPostTag::RECIPIENTS_FILTER->value => [
+          EmailForm\RecipientsFilterCgiKeys::FORM_STATUS => EmailForm\EnumFormStatus::SUBMITTED->value,
+        ],
+      ],
+    );
+    $messageText = '${' . EmailForm\EnumSubstitutionNamespace::MEMBER->value . '::SOMETHING}
+';
+    $this->postData[
+      EmailForm\EnumPostTag::COMPOSER->value
+    ][
+      EmailForm\ComposerCgiKeys::MESSAGE_TEXT
+    ] = $messageText;
+    $response = $this->testedController->composer(
+      operation: Controller\EnumEmailFormComposerOperation::PREVIEW->value,
+      topic: Controller\EnumEmailFormComposerTopic::UNSPECIFIC->value,
+      projectId: $this->project->getId(),
+      projectName: $this->project->getName(),
+    );
+    // print_r($response);
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    $this->assertEquals(Http::STATUS_BAD_REQUEST, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\EmailFormComposerResponse::class, $data);
+    /** @var DTO\EmailFormComposerResponse $data */
+    $this->assertNotEmpty($data->messages);
+    $requestData = $data->requestData;
+    $previewData = $requestData->previewData;
+    $messageText = $requestData->messageText;
+    $this->assertNotEmpty($previewData);
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $this->assertEquals(true, $domDoc->loadHTML($previewData, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML($messageText, LIBXML_PEDANTIC));
+    $this->assertEquals(true, $domDoc->loadHTML(implode($data->messages), LIBXML_PEDANTIC));
+    $diagnostics = $requestData->diagnostics;
+    // print_r($diagnostics);
+    $this->assertIsArray($diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION]);
+    $templateValidation = $diagnostics[EmailForm\Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
+    $this->assertArrayHasKey(EmailForm\Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS, $templateValidation);
   }
 
   /** @return void */
@@ -1119,7 +1243,7 @@ class EmailFormControllerTest extends TestCase
     $composer = $this->appContainer->get(EmailForm\Composer::class);
     new ReflectionMethod($composer, 'generateSubstitutionHandlers')->invoke($composer);
     $substitutions = new ReflectionProperty($composer, 'substitutions')->getValue($composer);
-    $memberSubstitutionKeys = array_keys($substitutions[EmailForm\EnumSubstitutionNamespace::MEMBER()]);
+    $memberSubstitutionKeys = array_keys($substitutions[EmailForm\EnumSubstitutionNamespace::MEMBER->value]);
     $this->assertEquals(2 * count(EmailForm\EnumMemberSubstitutionKey::cases()), count($memberSubstitutionKeys) + count(self::L10N_EXCEPTIONS));
     $enumSubstutionNames = EmailForm\EnumMemberSubstitutionKey::names();
     $enumSubstutionValues = EmailForm\EnumMemberSubstitutionKey::values();

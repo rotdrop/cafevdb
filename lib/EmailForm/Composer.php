@@ -115,27 +115,40 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
-  public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption';
-  public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
-  public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
+  public const DIAGNOSTICS_COPY_TO_SENT = 'CopyToSent';
+  public const DIAGNOSTICS_DUPLICATES = 'Duplicates';
   public const DIAGNOSTICS_FAILED_COUNT = 'FailedCount';
   public const DIAGNOSTICS_FAILED_RECIPIENTS = 'FailedRecipients';
   public const DIAGNOSTICS_MAILER_EXCEPTIONS = 'MailerExceptions';
-  public const DIAGNOSTICS_DUPLICATES = 'Duplicates';
-  public const DIAGNOSTICS_COPY_TO_SENT = 'CopyToSent';
-  public const DIAGNOSTICS_TEMPLATE_VALIDATION = 'TemplateValidation';
-  public const DIAGNOSTICS_ADDRESS_VALIDATION = 'AddressValidation';
-  public const DIAGNOSTICS_SUBJECT_VALIDATION = 'SubjectValidation';
-  public const DIAGNOSTICS_FROM_VALIDATION = 'FromValidation';
-  public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_MESSAGE = 'Message';
+  public const DIAGNOSTICS_STAGE = 'stage';
+  public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
+  public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
+
+  public const DIAGNOSTICS_ADDRESS_VALIDATION = 'AddressValidation';
+  public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
-  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+  public const DIAGNOSTICS_FROM_VALIDATION = 'FromValidation';
   public const DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION = 'PrivacyNoticeValidation';
+  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+  public const DIAGNOSTICS_SUBJECT_VALIDATION = 'SubjectValidation';
+  public const DIAGNOSTICS_TEMPLATE_VALIDATION = 'TemplateValidation';
 
   public const DIAGNOSTICS_STAGE_PREVIEW = 'preview';
   public const DIAGNOSTICS_STAGE_SEND = 'send';
+
+  public const TEMPLATE_VALIDATION_GLOBAL_ERRORS = 'GlobalErrors';
+  public const TEMPLATE_VALIDATION_MEMBER_ERRORS = 'MemberErrors';
+  public const TEMPLATE_VALIDATION_PRECONDITION_ERRORS = 'PreconditionErrors';
+  public const TEMPLATE_VALIDATION_SPURIOUS_ERRORS = 'SpuriousErrors';
+
+  public const TEMPLATE_VALIDATION_ERRORS = [
+    self::TEMPLATE_VALIDATION_GLOBAL_ERRORS,
+    self::TEMPLATE_VALIDATION_MEMBER_ERRORS,
+    self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS,
+    self::TEMPLATE_VALIDATION_SPURIOUS_ERRORS,
+  ];
 
   /**
    * @var string
@@ -1571,26 +1584,29 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * ```
    * For example ${MEMBER::FIRST_NAME}.
    *
-   * @param string $nameSpace The name space of the variable.
+   * @param EnumSubstitutionNamespace $nameSpace The name space of the variable.
    *
    * @param null|string $message The composed email message body.
    *
    * @return bool|int
    */
-  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null)
+  private function hasSubstitutionNamespace(EnumSubstitutionNamespace $nameSpace, ?string $message = null)
   {
     if (empty($message)) {
       $message = $this->messageContents;
     }
 
-    return preg_match('/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\)}/u', $message);
+    return preg_match(
+      '/([^$]|^)[$]{(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\)}/u',
+      $message,
+    );
   }
 
   /**
    * Replace all variables of the given namespace in
    * $this->messageContents.
    *
-   * @param string $nameSpace The variable prefix, e.g. MEMBER or one
+   * @param EnumSubstitutionNamespace $nameSpace The variable prefix, e.g. MEMBER or one
    * of its translations.
    *
    * @param mixed $data Context dependent data, likely Entities\Musician.
@@ -1603,7 +1619,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * @return string Substituted message
    * @throw Exceptions\SubstitutionException
    */
-  private function replaceFormVariables(string $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
+  private function replaceFormVariables(EnumSubstitutionNamespace $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1613,7 +1629,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->generateSubstitutionHandlers();
     }
 
-    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
+    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
     return preg_replace_callback(
       $regexp,
       function($matches) use ($data, &$failures) {
@@ -1626,7 +1642,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $handler = $this->substitutions[$nameSpace][$variable[0]]??null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
-            throw new Exceptions\SubstitutionException($this->l->t('No substitution handler found for "%s%s%s".', [ $nameSpace, $separator.$separator, $variable[0] ]));
+            throw new Exceptions\SubstitutionException(
+              $this->l->t('No substitution handler found for "%s%s%s".', [
+                $nameSpace,
+                $separator . $separator,
+                $variable[0],
+              ]),
+            );
           } else {
             $failures[] = [
               'namespace' => $nameSpace,
@@ -1637,7 +1659,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return '';
         }
         try {
-          return $prefix.call_user_func($handler, $variable, $data);
+          return $prefix . $handler($variable, $data);
         } catch (Throwable $t) {
           if (!is_array($failures)) {
             throw $t;
@@ -1659,7 +1681,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Cleanup edge-cases. ATM this only replaces left-over '$$'
    * occurences with a single $.
    *
-   * @param null|string $message Email mesasge body.
+   * @param null|string $message Email message body.
    *
    * @return string
    */
@@ -1796,13 +1818,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value);
+      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL);
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -1839,7 +1861,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -3565,13 +3587,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * or to have hardcopies from debit note notifications and other
    * important emails.
    *
-   * @param null|array $recipients The recipients of the message.
+   * @param ?array $recipients The recipients of the message.
    *
-   * @return null|array The exported messages.
+   * @return array The exported messages.
    *
-   * @todo This really should be folded in to sendMessages()
+   * @todo This really should be folded into sendMessages()
    */
-  private function exportMessages(?array $recipients = null):?array
+  private function exportMessages(?array $recipients = null): array
   {
     // @todo yield needs more care concerning error management, but would be
     // preferrable as there can be many messages and each message is costly to
@@ -3584,16 +3606,21 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
 
-    $messageTemplate = implode("\n", array_map(function($style) {
-      return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
-    }, self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value);
+    $failures = [];
+    $messageTemplate =
+      implode("\n", array_map(function($style) {
+        return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
+      }, self::DEFAULT_HTML_STYLES))
+    . $this->replaceFormVariables(
+      EnumSubstitutionNamespace::GLOBAL,
+      failures: $failures,
+    );
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('LINK VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -3617,16 +3644,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       if ($this->recipientsFilter->announcementsMailingList()) {
         $this->executionStatus = false;
-        $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'] = [
+        $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS] = [
           $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.'),
         ];
         if ($hasPersonalSubstitutions) {
-          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS][] = $this->l->t('The email text contains personalized substitutions.');
         }
         if ($hasPersonalAttachments) {
-          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS][] = $this->l->t('The email contains personalized attachments.');
         }
-        return null;
+        return [];
       }
 
       $this->logInfo(
@@ -3644,7 +3671,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(
+          EnumSubstitutionNamespace::MEMBER,
+          $musician,
+          $messageTemplate,
+          failures: $failures,
+        );
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -3913,9 +3945,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value) !== false
-        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value->t($this->l)) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->t($this->l)) !== false
         || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value) !== false
-        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value->t($this->l)) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->t($this->l)) !== false
     ) {
       $shareStatus = true;
 
@@ -4110,33 +4142,33 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $dummy = $template;
 
-    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER->value, $dummy)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $dummy)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER->value, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'member';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] =
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_MEMBER_ERRORS][] =
               $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'] = $failures;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_MEMBER_ERRORS] = $failures;
           }
         }
       }
     }
 
-    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL->value, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'global';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] =
-              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'] . '::' . implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $failure;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
           }
         }
       }
@@ -4145,7 +4177,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // No substitutions should remain. Check for that.
     if (preg_match('!([^$]|^)([$]|%24)({|%7B)[^}]+(}|%7D)?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
-      $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['SpuriousErrors'] = $leftOver;
+      $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_SPURIOUS_ERRORS] = $leftOver;
     }
 
     if (empty($templateError)) {
@@ -5466,7 +5498,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, urldecode($href))
           || str_starts_with($href, 'mailto:')
           || isset(parse_url($href)['host'])) {
         $this->logDebug('KEEP HREF AS ' . $href);
@@ -5554,7 +5586,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
       $text = $item->nodeValue;
-      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL->value, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, urldecode($href))
           || str_starts_with($href, 'mailto:')
       ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);

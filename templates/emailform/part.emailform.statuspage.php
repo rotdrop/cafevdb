@@ -150,10 +150,10 @@ $templateDiag = $diagnostics[Composer::DIAGNOSTICS_TEMPLATE_VALIDATION];
 if (!empty($templateDiag)) {
   $output = true;
   $leadIns = [
-    'MemberErrors' => $l->t('Failed individual substitutions'),
-    'GlobalErrors' => $l->t('Failed global substitutions'),
-    'SpuriousErrors' => $l->t('Other failed substitutions'),
-    'PreconditionError' => $l->t('Precondition failed'),
+    Composer::TEMPLATE_VALIDATION_MEMBER_ERRORS => $l->t('Failed individual substitutions'),
+    Composer::TEMPLATE_VALIDATION_GLOBAL_ERRORS => $l->t('Failed global substitutions'),
+    Composer::TEMPLATE_VALIDATION_SPURIOUS_ERRORS => $l->t('Other failed substitutions'),
+    Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS => $l->t('Precondition failed'),
   ];
   echo '
 <div class="emailform error group substitutions">
@@ -165,7 +165,7 @@ Not all variable substitutions could be resolved:',
   </span>';
   $needExplanations = false;
   foreach ($templateDiag as $key => $failed) {
-    $needExplanations = $needExplanations || ($key != 'PreconditionError');
+    $needExplanations = $needExplanations || ($key != Composer::TEMPLATE_VALIDATION_PRECONDITION_ERRORS);
     $cssTag = Util::camelCaseToDashes($key);
     echo '
   <div class="error contents substitutions ' . $cssTag . '">
