@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ import type {
   EntityReferenceCollection,
 } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
 import * as EntityRepository from './entity-repository.ts';
-import type { DecToZero, NonNegInt, NullableIf, NumberTuple, Zero } from '../types/type-traits.d.ts';
+import type { DecToZero, NonNegInt, NullableIf, NumberTuple, Zero } from '../types/type-traits.ts';
 
 export type FrontEndEntity<N extends EntityNames, D extends NumberTuple = NonNegInt<0> > = {
   [K in EntityFieldNames<N>]: EntityFieldMapping<N, K> extends 'owned'

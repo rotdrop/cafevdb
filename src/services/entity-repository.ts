@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ import { EnumOrderByOptions } from '../../build/ts-types/php-modules/Database/Do
 import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS } from '../../build/ts-types/php-modules/Database/Constants.ts';
 import entityFactory, { type FrontEndEntity } from '../services/entity-factory.ts';
 import { AppError } from '../types/errors.ts';
-import type { NonNegInt, NumberTuple, ObjectEntries } from '../types/type-traits.d.ts';
+import type { NonNegInt, NumberTuple, ObjectEntries } from '../types/type-traits.ts';
 
 type EntityRepository<E extends keyof EntityMap> = {
   [Identifier: string]: FrontEndEntity<E>;
