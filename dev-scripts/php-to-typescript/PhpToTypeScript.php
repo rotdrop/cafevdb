@@ -347,6 +347,8 @@ class PhpToTypeScript extends Command
    *
    * @param string $outputFile
    *
+   * @param ConsoleOutputInterface $output
+   *
    * @return void
    */
   private function fixupTypeScriptTransformer(
@@ -355,20 +357,8 @@ class PhpToTypeScript extends Command
     ConsoleOutputInterface $output,
   ): void {
     // strip the top-level namespace as requested and record "root" data types.
-    $tsData = null;
-    $tsData = str_replace(
-      [
-        self::NS_DECLARATION . ' ' . $tsNameSpacePrefix,
-        ': ' . $tsNameSpacePrefix,
-        '<' . $tsNameSpacePrefix,
-      ],
-      [
-        self::NS_DECLARATION . ' ',
-        ': ',
-        '<',
-      ],
-      file_get_contents($outputFile),
-    );
+    $tsData = str_replace($tsNameSpacePrefix, '', file_get_contents($outputFile));
+
     // fixup [key: EnumType]
     //
     // TS error 1337 "... consider using a mapped type instead"
@@ -518,16 +508,21 @@ EOF;
           $headerData = [];
         } else {
           [,$typeSpec] = explode(':', $line);
-          foreach ($topLevelTypes as $type => $definition) {
+          foreach (array_keys($topLevelTypes) as $type) {
             if (preg_match('/[[:^alnum:]]' . $type . '[[:^alnum:]]/', $typeSpec)) {
               $line = str_replace($type, self::ROOT_NS . '.' . $type, $line);
             }
           }
           $line = str_replace($currentFullNS . '.', '', $line);
-          [,$typeSpec] = explode(':', $line, 2);
+
           foreach ($allNameSpaces as $existingNameSpace) {
             // if (preg_match('/[[:^alnum:]]' . preg_quote($existingNameSpace . '.') . '/', $typeSpec)) {
-            if (preg_match('/(([^:]+):|export type)(.*)([[:^alnum:]])(' . preg_quote($existingNameSpace . '.') . ')/', $line)) {
+            if (str_starts_with($existingNameSpace, $currentFullNS) && $existingNameSpace != $currentFullNS) {
+              $namespaceForMatch = substr($existingNameSpace, strlen($currentFullNS) + 1);
+            } else {
+              $namespaceForMatch = $existingNameSpace;
+            }
+            if (preg_match('/(([^:]+):|export type)(.*)([[:^alnum:]])(' . preg_quote($namespaceForMatch . '.') . ')/', $line)) {
               $selfNS = explode('.', $currentFullNS);
               $refNS = explode('.', $existingNameSpace);
               $textSection->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace, options: OutputInterface::VERBOSITY_NORMAL);
@@ -565,8 +560,8 @@ EOF;
               } else {
                 $erasePrefix = implode('.', $prefix) . '.';
               }
-              $up = str_repeat('../', count($selfNS));
-              $importPath = "./{$up}{$importNameSpace}";
+              $upFolders = str_repeat('../', count($selfNS));
+              $importPath = "./{$upFolders}{$importNameSpace}";
               while (!empty($refNS)) {
                 $erasePrefix .= $importNameSpace . '.';
                 $importNameSpace = array_shift($refNS);
