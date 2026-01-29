@@ -2469,7 +2469,22 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           });
           DialogUtils.customCloseButton($dialogHolder, function(event, _container) {
             event.stopImmediatePropagation();
-            $dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
+            // with special greetings to Uschi ...
+            const activeTab = $dialogHolder.tabs('option', 'active');
+            if (activeTab >= 2) {
+              Dialogs.info({
+                dialogType: Dialogs.DIALOG_TYPE_NOTICE,
+                title: t(appName, 'You will be transferred back to the "edit-message" view'),
+                content: t(appName, 'You have clicked on the "close"-button while visiting the "preview" tab which normally just would close the email widget. It has been reported that this is an unexpected behaviour of the user interface, therefore you are just "transferred" back to the email-composition tab. Just click on "OK" or close this diablog.'),
+                callback: () => {
+                  $dialogHolder.tabs('option', 'active', 1);
+                },
+                allowHtml: true,
+                dialogClasses: ['maximize-width'],
+              });
+            } else {
+              $dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
+            }
             // $dialogHolder.dialog('close');
             return false;
           });
