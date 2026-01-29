@@ -185,7 +185,6 @@ const handleReportError = () => {
 const modal = ref(null)
 
 const openMenu = () => {
-  console.info('OPEN MENU', { modal: modal.value })
   for (const child of (modal.value?.$children || [])) {
     if (child?.actionsMenuSemanticType === 'menu') {
       child.openMenu()

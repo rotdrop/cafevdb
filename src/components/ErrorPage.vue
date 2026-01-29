@@ -269,7 +269,7 @@ const logger = new Console(COMPONENT_NAME)
 const props = withDefaults(defineProps <{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
   initialView?: 'summary'|'details'|'report',
-  noSummary: boolean,
+  noSummary?: boolean,
   closeDetailsLabel?: string,
 }>(), {
   initialView: 'summary',
@@ -294,7 +294,7 @@ const hints = tooltipsProvider.tooltipsData
 const envelopeError = computed(() =>
   (props.error instanceof AppError || props.error instanceof JQueryAjaxError) && (props.error.cause instanceof Error || isJqXHRGuard(props.error.cause))
     ? props.error
-    : new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Erorr'), { cause: props.error }),
+    : new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Error'), { cause: props.error }),
 )
 const originalError = computed(() =>
   envelopeError.value && (envelopeError.value.cause instanceof Error || isJqXHRGuard(envelopeError.value.cause))

@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@
       </h2>
       <ErrorPage :error="error"
                  :initial-view="initialView"
+                 :no-summary="noSummary"
                  @close="modal && modal.close()"
       />
     </template>
@@ -65,9 +66,13 @@ withDefaults(defineProps<{
   error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
   heading?: string,
   initialView?: 'summary'|'details'|'report',
+  noSummary?: bool,
+  closeDetailsLabel?: string,
 }>(), {
   heading: t(appName, 'Sorry, an Error Occurred'),
   initialView: 'summary',
+  noSummary: false,
+  closeDetailsLabel: t(appName, 'close details view'),
 })
 
 const errorPageHeadingId = ref<string>(uuidv4())

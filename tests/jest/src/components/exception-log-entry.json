@@ -1,0 +1,206 @@
+{
+  "reqId": "abcdefghijklmnopqrstuvpxyz",
+  "level": 1,
+  "time": "2026-01-26T12:27:59+01:00",
+  "remoteAddr": "192.168.0.122",
+  "user": "john.doe",
+  "app": "cafevdb",
+  "method": "POST",
+  "url": "https://cloud.tld/app/app_name/some/route",
+  "scriptName": "",
+  "message": "DRAFTS LIST EMPTY",
+  "userAgent": "UserAgent",
+  "version": "32.0.5.0",
+  "occ_command": [
+    "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/bin/phpunit",
+    "-c"
+  ],
+  "exception": {
+    "Exception": "Exception",
+    "Message": "blah /var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/part.draft-email-options.php:32",
+    "Code": 0,
+    "Trace": [
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Base.php",
+        "line": 140,
+        "function": "include"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Template.php",
+        "line": 157,
+        "function": "load",
+        "class": "OC\\Template\\Base",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/part.emailform.composer.php",
+        "line": 86,
+        "function": "inc",
+        "class": "OC\\Template\\Template",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Base.php",
+        "line": 140,
+        "args": [
+          "/var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/part.emailform.composer.php"
+        ],
+        "function": "include"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Template.php",
+        "line": 157,
+        "function": "load",
+        "class": "OC\\Template\\Base",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/form.php",
+        "line": 78,
+        "function": "inc",
+        "class": "OC\\Template\\Template",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Base.php",
+        "line": 140,
+        "args": [
+          "/var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/form.php"
+        ],
+        "function": "include"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Base.php",
+        "line": 113,
+        "function": "load",
+        "class": "OC\\Template\\Base",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/private/Template/Template.php",
+        "line": 112,
+        "function": "fetchPage",
+        "class": "OC\\Template\\Base",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/lib/public/AppFramework/Http/TemplateResponse.php",
+        "line": 195,
+        "function": "fetchPage",
+        "class": "OC\\Template\\Template",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/lib/Toolkit/Response/PreRenderedTemplateResponse.php",
+        "line": 57,
+        "function": "render",
+        "class": "OCP\\AppFramework\\Http\\TemplateResponse",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/lib/Toolkit/Response/PreRenderedTemplateResponse.php",
+        "line": 65,
+        "function": "preRender",
+        "class": "OCA\\CAFEVDB\\Toolkit\\Response\\PreRenderedTemplateResponse",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/lib/Controller/EmailFormController.php",
+        "line": 232,
+        "function": "render",
+        "class": "OCA\\CAFEVDB\\Toolkit\\Response\\PreRenderedTemplateResponse",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/tests/phpunit/Unit/Controller/EmailFormControllerTest.php",
+        "line": 490,
+        "function": "webForm",
+        "class": "OCA\\CAFEVDB\\Controller\\EmailFormController",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestCase.php",
+        "line": 1332,
+        "function": "testGenerateFormWithoutProject",
+        "class": "OCA\\CAFEVDB\\Tests\\Unit\\Controller\\EmailFormControllerTest",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestCase.php",
+        "line": 519,
+        "function": "runTest",
+        "class": "PHPUnit\\Framework\\TestCase",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php",
+        "line": 99,
+        "function": "runBare",
+        "class": "PHPUnit\\Framework\\TestCase",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestCase.php",
+        "line": 359,
+        "function": "run",
+        "class": "PHPUnit\\Framework\\TestRunner",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestSuite.php",
+        "line": 374,
+        "function": "run",
+        "class": "PHPUnit\\Framework\\TestCase",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestSuite.php",
+        "line": 374,
+        "function": "run",
+        "class": "PHPUnit\\Framework\\TestSuite",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/Framework/TestSuite.php",
+        "line": 374,
+        "function": "run",
+        "class": "PHPUnit\\Framework\\TestSuite",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/TextUI/TestRunner.php",
+        "line": 64,
+        "function": "run",
+        "class": "PHPUnit\\Framework\\TestSuite",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/src/TextUI/Application.php",
+        "line": 229,
+        "function": "run",
+        "class": "PHPUnit\\TextUI\\TestRunner",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/phpunit",
+        "line": 104,
+        "function": "run",
+        "class": "PHPUnit\\TextUI\\Application",
+        "type": "->"
+      },
+      {
+        "file": "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/bin/phpunit",
+        "line": 122,
+        "args": [
+          "/var/www/html/nextcloud-git-32/apps/cafevdb/vendor-bin/phpunit/vendor/phpunit/phpunit/phpunit"
+        ],
+        "function": "include"
+      }
+    ],
+    "File": "/var/www/html/nextcloud-git-32/apps/cafevdb/templates/emailform/part.draft-email-options.php",
+    "Line": 32,
+    "message": "DRAFTS LIST EMPTY",
+    "exception": {},
+    "CustomMessage": "DRAFTS LIST EMPTY"
+  }
+}
