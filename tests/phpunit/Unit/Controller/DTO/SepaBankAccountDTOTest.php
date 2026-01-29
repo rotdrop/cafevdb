@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Controller\DTO\SepaBankAccount as TestedDTO;
 
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversClass(TestedDTO::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class SepaBankAccountDTOTest extends TestCase
 {
   use TestResponseDTOTrait;

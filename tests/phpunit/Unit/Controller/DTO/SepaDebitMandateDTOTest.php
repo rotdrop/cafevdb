@@ -35,8 +35,9 @@ use OCP\Constants as CoreConstants;
 use OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus;
 use OCA\CAFEVDB\Controller\DTO\SepaDebitMandate as TestedDTO;
 
-/** Test consistency of the enum with constants from ConfigConstants */
+/** Test consistency of the enum with constants from ConfigConstants. */
 #[Attributes\CoversClass(TestedDTO::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class SepaDebitMandateDTOTest extends TestCase
 {
   use TestResponseDTOTrait;
