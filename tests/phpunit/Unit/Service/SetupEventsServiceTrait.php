@@ -72,6 +72,8 @@ trait SetupEventsServiceTrait
 
   private EventsService $eventsService;
 
+  private ProjectService $projectService;
+
   private IAppContainer $appContainer;
 
   private EntityManager $entityManager;
@@ -104,6 +106,7 @@ trait SetupEventsServiceTrait
     $calendarData = array_values(CalendarObjects::getData($this->project->getName(), $this->defaultCalendars, $l));
     foreach ($calendarData as $row) {
       self::$calendarObjects[$row['calendarid'] . '-' . $row['uri']] = $row;
+      self::$calendarObjectId = max(self::$calendarObjectId, $row['id']);
     }
     self::addProjectEvents($this->project, $this->defaultCalendars);
 
@@ -149,13 +152,18 @@ trait SetupEventsServiceTrait
         $this->entities[$class]->set($newId, $entity);
       },
     );
-    $this->entityManager->method('flush')->willReturnCallback(function() {
-      foreach ($this->entities as $entities) {
-        foreach ($entities as $id => $entity) {
-          $entity->setId($id);
+    $this->entityManager->method('flush')->willReturnCallback(
+      function() {
+        foreach ($this->entities as $entities) {
+          foreach ($entities as $id => $entity) {
+            $entity->setId($id);
+          }
         }
-      }
-    });
+      },
+    );
+    $this->entityManager->method('contains')->willReturnCallback(
+      fn(mixed $entity) => !!($this->entities[get_class($entity)] ?? null)?->contains($entity),
+    );
     $this->mockProvider->registerClassInstance(EntityManager::class, $this->entityManager, global: true);
 
     // Entities\ProjectEvent
@@ -179,6 +187,10 @@ trait SetupEventsServiceTrait
     $this->entityRepositories[Entities\ProjectEvent::class] = $repository;
 
     // Entities\Project
+    $this->entities[Entities\Project::class] = new ArrayCollection;
+    $this->entities[Entities\Project::class]->set($this->project->getId(), $this->project);
+
+
     $allMethods = array_map(
       fn(ReflectionMethod $method) => $method->getName(),
       new ReflectionClass(Repositories\ProjectsRepository::class)->getMethods(),
@@ -234,7 +246,7 @@ trait SetupEventsServiceTrait
           },
         );
         if (!empty($orderBy)) {
-          usort(entities, function(Entities\Project $a, Entities\Project $b) use ($orderBy) {
+          usort($entities, function(Entities\Project $a, Entities\Project $b) use ($orderBy) {
             $result = 0;
             foreach ($orderBy as $field => $direction) {
               $method = 'get' . ucfirst($field);
@@ -262,14 +274,17 @@ trait SetupEventsServiceTrait
     $this->entityRepositories[Entities\Invoice::class] = $repository;
 
     /** @var ProjectService $projectService */
-    $projectService = $this->createStub(ProjectService::class);
-    $this->mockProvider->registerClassInstance(ProjectService::class, $projectService, global: true);
+    $this->projectService = $this->getMockBuilder(ProjectService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->mockProvider->registerClassInstance(ProjectService::class, $this->projectService, global: true);
+    $this->projectService->expects($this->never())->method(ProjectService::UNUSED_METHOD_NOT_TO_BE_CALLED_NAME);
 
     $this->eventsService = new EventsService(
       userSession: $mockProvider->getUserSession(),
       configService: $this->configService,
       entityManager: $this->entityManager,
-      projectService: $projectService,
+      projectService: $this->projectService,
       calDavService: $this->calDavService,
       vCalendarService: $this->vCalendarService,
       dateTimeFormatter: \OCP\Server::get(IDateTimeFormatter::class),

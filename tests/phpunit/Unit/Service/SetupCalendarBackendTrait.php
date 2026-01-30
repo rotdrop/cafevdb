@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
 use ReflectionMethod;
+use ReflectionClass;
 use UnexpectedValueException;
 
 use PHPUnit\Framework\Attributes;
@@ -33,11 +34,16 @@ use PHPUnit\Framework\TestCase;
 
 use Sabre\CalDAV\Xml\Property\ScheduleCalendarTransp;
 use Sabre\CalDAV\Xml\Property\SupportedCalendarComponentSet;
+use Sabre\VObject;
 
 use OCP\Calendar\Events\CalendarObjectCreatedEvent;
+use OCP\Calendar\Events\CalendarObjectDeletedEvent;
+use OCP\Calendar\Events\CalendarObjectMovedEvent;
 use OCP\Calendar\Events\CalendarObjectUpdatedEvent;
 use OCP\Calendar\ICalendar;
-use OCP\Calendar\IManager as CalendarManager;
+use OCP\Calendar\ICalendarQuery;
+use OCP\Calendar\IManager as ICalendarManager;
+use OC\Calendar\Manager as CalendarManager;
 use OCP\IDateTimeFormatter;
 use OCP\IDateTimeZone;
 use OCP\IL10N;
@@ -77,9 +83,11 @@ trait SetupCalendarBackendTrait
 
   private CalDavService $calDavService;
 
-  private CalendarManager $calendarManager;
+  private ICalendarManager $calendarManager;
 
   private array $sharedCalendarRows = [];
+
+  private static int $calendarObjectId = 0;
 
   /**
    * Setup the OCA\DAV\CalDAV\CalDavBackend, the CalendarManager and our
@@ -99,7 +107,7 @@ trait SetupCalendarBackendTrait
     $this->configService = $mockProvider->getConfigService();
     $calendarId = 1;
     foreach (array_keys(ConfigConstants::CALENDARS) as $uri) {
-      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $l->t('uri'));
+      $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_KEY_POSTFIX, $l->t($uri));
       $this->configService->setConfigValue($uri . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, $calendarId);
       $this->defaultCalendars[$uri] = $calendarId;
       ++$calendarId;
@@ -139,6 +147,57 @@ trait SetupCalendarBackendTrait
         }
         return array_values($calendars);
       },
+      'deleteCalendarObject' => function(
+        $calendarId,
+        $objectUri,
+        $calendarType = self::CALENDAR_TYPE_CALENDAR,
+        bool $forceDeletePermanently = false,
+      ): void {
+        $rowData = self::$calendarObjects["{$calendarId}-{$objectUri}"];
+        unset(self::$calendarObjects["{$calendarId}-{$objectUri}"]);
+        $event = new CalendarObjectDeletedEvent(
+          $calendarId,
+          $this->calDavBackend->getCalendarById($calendarId),
+          [],
+          $rowData,
+        );
+        \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
+      },
+      'moveCalendarObject' => function(
+        string $sourcePrincipalUri,
+        int $sourceObjectId,
+        string $targetPrincipalUri,
+        int $targetCalendarId,
+        string $targetObjectUri,
+        int $calendarType = self::CALENDAR_TYPE_CALENDAR
+      ): bool {
+        $sourceObjects = array_filter(self::$calendarObjects, fn(array $rowData) => $rowData['id'] == $sourceObjectId);
+        $this->assertEquals(1, count($sourceObjects));
+        $rowData = array_pop($sourceObjects);
+        $calendarId = $rowData['calendarid'];
+        $oldKey = "{$calendarId}-{$rowData['uri']}";
+        $this->assertArrayHasKey($oldKey, self::$calendarObjects);
+        $targetKey = "{$targetCalendarId}-{$targetObjectUri}";
+        $targetRowData = array_merge(
+          $rowData,
+          [
+            'calendarid' => $targetCalendarId,
+            'uri' => $targetObjectUri,
+          ],
+        );
+        unset(self::$calendarObjects[$oldKey]);
+        self::$calendarObjects[$targetKey] = $targetRowData;
+        $event = new CalendarObjectMovedEvent(
+          $calendarId,
+          $this->calDavBackend->getCalendarById($calendarId),
+          $targetCalendarId,
+          $this->calDavBackend->getCalendarById($targetCalendarId),
+          [],
+          [],
+          $targetRowData,
+        );
+        return true;
+      },
       'createCalendarObject' => function(
         $calendarId,
         $objectUri,
@@ -147,6 +206,7 @@ trait SetupCalendarBackendTrait
       ): ?string {
         $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
         $rowData = [
+          'id' => ++self::$calendarObjectId,
           'calendarid' => $calendarId,
           'uri' => $objectUri,
           'calendardata' => $calendarData,
@@ -219,21 +279,26 @@ trait SetupCalendarBackendTrait
         $calendarData,
         $calendarType = self::CALENDAR_TYPE_CALENDAR,
       ) {
+        $rowData = self::$calendarObjects["{$calendarId}-{$objectUri}"] ?? null;
+        $this->assertNotNull($rowData);
         $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
-        $rowData = [
-          'calendarid' => $calendarId,
-          'uri' => $objectUri,
-          'calendardata' => $calendarData,
-          'lastmodified' => time(),
-          'etag' => $extraData['etag'],
-          'size' => $extraData['size'],
-          'componenttype' => $extraData['componentType'],
-          'firstoccurence' => $extraData['firstOccurence'],
-          'lastoccurence' => $extraData['lastOccurence'],
-          'classification' => $extraData['classification'],
-          'uid' => $extraData['uid'],
-          'calendartype' => $calendarType,
-        ];
+        $rowData = array_merge(
+          $rowData, // preserve the id
+          [
+            'calendarid' => $calendarId,
+            'uri' => $objectUri,
+            'calendardata' => $calendarData,
+            'lastmodified' => time(),
+            'etag' => $extraData['etag'],
+            'size' => $extraData['size'],
+            'componenttype' => $extraData['componentType'],
+            'firstoccurence' => $extraData['firstOccurence'],
+            'lastoccurence' => $extraData['lastOccurence'],
+            'classification' => $extraData['classification'],
+            'uid' => $extraData['uid'],
+            'calendartype' => $calendarType,
+          ],
+        );
         self::$calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
         $etag = null;
         $event = new CalendarObjectUpdatedEvent(
@@ -262,9 +327,19 @@ trait SetupCalendarBackendTrait
     $this->calDavBackend->expects($this->never())->method('unshare');
     $this->mockProvider->registerClassInstance(CalDavBackend::class, $this->calDavBackend, global: true);
 
+    // Entities\Project
+    $allMethods = array_map(
+      fn(ReflectionMethod $method) => $method->getName(),
+      new ReflectionClass(CalendarManager::class)->getMethods(),
+    );
+    $wantedMethods = array_diff($allMethods, [
+      'newQuery',
+    ]);
+
     /** @var CalendarManager $calendarManager */
     $this->calendarManager = $this->getMockBuilder(CalendarManager::class)
       ->disableOriginalConstructor()
+      ->onlyMethods($wantedMethods)
       ->getMock();
     $this->calendarManager->method('getCalendars')
       ->willReturnCallback(
@@ -282,10 +357,63 @@ trait SetupCalendarBackendTrait
           return $calendars;
         },
       );
-    // $this->calendarManager->method('searchForPrincipal')
+    $this->calendarManager->method('searchForPrincipal')
+      ->willReturnCallback(
+        function(ICalendarQuery $query) {
+          $searchProperties = $query->getSearchProperties();
+          $calendarUris = $query->getCalendarUris();
+          $searchPattern = $query->getSearchPattern();
+          $this->assertEquals(1, count($searchProperties));
+          $this->assertEquals(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES, $searchProperties[0]);
+          $calendarIds = [];
+          foreach ($calendarUris as $uri) {
+            $id = $this->defaultCalendars[$uri] ?? null;
+            if ($id !== null) {
+              $calendarIds[$uri] = $id;
+            }
+          }
+          $calendarUris = array_flip($calendarIds);
+          // print_r(compact('searchProperties', 'calendarUris', 'searchPattern', 'calendarIds'));
+          $transformSearchDataMethod = new ReflectionMethod($this->calDavBackend, 'transformSearchData');
+          $transformSearchData = fn($arg) => $transformSearchDataMethod->invoke($this->calDavBackend, $arg);
+          $result = [];
+          foreach (self::$calendarObjects as $calendarObject) {
+            if (in_array($calendarObject['calendarid'], $calendarIds)) {
+              $calendarData = VObject\Reader::read($calendarObject['calendardata']);
+
+              $components = $calendarData->getComponents();
+              $objects = [];
+              $timezones = [];
+              foreach ($components as $component) {
+                if ($comp instanceof VObject\Component\VTimeZone) {
+                  $timezones[] = $component;
+                } else {
+                  $categories = VCalendarService::getCategories($component);
+                  if (in_array($searchPattern, $categories)) {
+                    $objects[] = $component;
+                  }
+                }
+              }
+              if (!empty($objects)) {
+                $result[] = [
+                  'id' => $calendarObject['id'],
+                  'type' => $calendarObject['componenttype'],
+                  'uid' => $calendarObject['uid'],
+                  'uri' => $calendarObject['uri'],
+                  'calendar-uri' => $calendarUris[$calendarObject['calendarid']],
+                  'calendar-key' => $calendarObject['calendarid'],
+                  'objects' => array_map(fn($c) => $transformSearchData($c), $objects),
+                  'timezones' => array_map(fn($c) => $transformSearchData($c), $timezones),
+                ];
+              }
+            }
+          }
+          return $result;
+        }
+      );
 
     $this->calendarManager->expects($this->never())->method('clear');
-    $this->mockProvider->registerClassInstance(CalendarManager::class, $this->calendarManager);
+    $this->mockProvider->registerClassInstance(ICalendarManager::class, $this->calendarManager, global: true);
 
     $this->calDavService = new CalDavService(
       configService: $this->configService,
