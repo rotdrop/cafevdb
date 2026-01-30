@@ -92,6 +92,12 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'date_immutable', nullable: true)]
   private ?DateTimeImmutable $registrationDeadline = null;
 
+  /**
+   * Optional link to the project registration event.
+   */
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, cascade: ['all'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+  private ?ProjectEvent $registrationCalendarEvent = null;
+
   /** @var Collection<ProjectInstrumentationNumber> */
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private Collection $instrumentationNumbers;
@@ -535,6 +541,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set registrationCalendarEvents.
+   *
+   * @param ?ProjectEvent $registrationCalendarEvent
+   *
+   * @return Project
+   */
+  public function setRegistrationCalendarEvent(?ProjectEvent $registrationCalendarEvent): self
+  {
+    $this->registrationCalendarEvent = $registrationCalendarEvent;
+
+    return $this;
+  }
+
+  /**
+   * Get registrationCalendarEvents.
+   *
+   * @return ?ProjectEvent
+   */
+  public function getRegistrationCalendarEvent(): ?ProjectEvent
+  {
+    return $this->registrationCalendarEvent;
+  }
+
+  /**
    * Set instrumentationNumbers.
    *
    * @param Collection $instrumentationNumbers
@@ -553,7 +583,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getInstrumentationNumbers()
+  public function getInstrumentationNumbers(): Collection
   {
     return $this->instrumentationNumbers;
   }
