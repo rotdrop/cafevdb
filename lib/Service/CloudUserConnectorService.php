@@ -327,7 +327,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
    *
    * @param int $projectId
    *
-   * @return string.
+   * @return string
    */
   public static function getProjectGroupId(int $projectId): string
   {
