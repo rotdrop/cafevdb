@@ -471,6 +471,7 @@ class EntityArrayAdapterTest extends TestCase
             }
         },
         "payments": [],
+        "registrationCalendarEvent": null,
         "registrationDeadline": null,
         "registrationStartDate": null,
         "sentEmail": [],
@@ -843,6 +844,7 @@ class EntityArrayAdapterTest extends TestCase
                     }
                 },
                 "payments": [],
+                "registrationCalendarEvent": null,
                 "registrationDeadline": null,
                 "registrationStartDate": null,
                 "sentEmail": [],
@@ -1015,6 +1017,7 @@ class EntityArrayAdapterTest extends TestCase
             }
         },
         "payments": [],
+        "registrationCalendarEvent": null,
         "registrationDeadline": null,
         "registrationStartDate": null,
         "sentEmail": [],
