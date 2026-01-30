@@ -24,11 +24,15 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use Throwable;
 use UnexpectedValueException;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+
+use ReflectionProperty;
+use Sabre\VObject;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Calendar\ICalendar;
@@ -41,6 +45,7 @@ use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -55,6 +60,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 /** Test the EventsService class. */
 #[Attributes\CoversClass(CalDavService::class)]
 #[Attributes\CoversClass(EventsService::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventTimes::class)]
@@ -70,6 +77,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\TranslationNotFoundListener::class)]
@@ -78,6 +86,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
@@ -98,6 +107,9 @@ class EventsServiceTest extends TestCase
   public function setup(): void
   {
     $this->generateEventsService();
+
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
 
     // $this->entityManager->expects($this->never())->method('getRepository');
   }
@@ -377,5 +389,126 @@ class EventsServiceTest extends TestCase
     $this->assertEquals($recordAbsence, $appL10N->t(EventsService::RECORD_ABSENCE_CATEGORY));
     $registrationCategory = $this->eventsService->getProjectRegistrationCategory(translate: true);
     $this->assertEquals($registrationCategory, $appL10N->t(EventsService::PROJECT_REGISTRATION_CATEGORY));
+  }
+
+  /** @return void */
+  public function testEnsureProjectRegistrationEvent(): void
+  {
+    $this->entityManager->expects($this->atLeastOnce())->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->exactly(2))->method('getCalendarObject');
+    $this->calDavBackend->expects($this->exactly(1))->method('createCalendarObject');
+    $this->calDavBackend->expects($this->exactly(1))->method('deleteCalendarObject');
+
+    $this->project->setRegistrationStartDate(null);
+    $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
+    $this->assertFalse($result);
+
+    $this->project->setRegistrationStartDate('2099-01-01');
+    try {
+      $this->eventsService->ensureProjectRegistrationEvent($this->project);
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(UnexpectedValueException::class, $t);
+    }
+    $this->project->setRegistrationDeadline('2099-12-31');
+    $this->projectService->expects($this->atLeastOnce())
+      ->method('getProjectRegistrationDeadline')
+      ->willReturn($this->project->getRegistrationDeadline());
+    $this->projectService->expects($this->atLeastOnce())
+      ->method('fetchAll')
+      ->willReturn($this->entityManager->getRepository(Entities\Project::class)->findAll());
+
+    $projectEventsCount = $this->project->getCalendarEvents()->count();
+    $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
+    $this->assertTrue($result);
+    $this->assertEquals($projectEventsCount + 1, $this->project->getCalendarEvents()->count());
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testEnsureProjectRegistrationEvent')]
+  public function testFindProjectRegistrationEvent(): void
+  {
+    $this->entityManager->expects($this->exactly(0))->method('getRepository');
+    $this->calendarManager->expects($this->never())->method('getCalendars');
+    $this->calDavBackend->expects($this->exactly(2))->method('getCalendarObject');
+    $this->calDavBackend->expects($this->exactly(0))->method('createCalendarObject');
+    $this->calDavBackend->expects($this->exactly(0))->method('deleteCalendarObject');
+    $this->projectService->expects($this->exactly(0))->method('getProjectRegistrationDeadline');
+
+    $this->project->setRegistrationStartDate('2099-01-01');
+
+    try {
+      $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(Exceptions\CalendarException::class, $t);
+    }
+
+    $this->assertArrayHasKey('3-5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics', self::$calendarObjects);
+    unset(self::$calendarObjects['3-5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics']);
+
+    $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+    $this->assertNotEmpty($registrationEvent);
+    $this->assertArrayHasKey('calendardata', $registrationEvent);
+    $this->assertInstanceOf(VObject\Component\VCalendar::class, $registrationEvent['calendardata']);
+    $registrationVEvent = VCalendarService::getVObject($registrationEvent['calendardata']);
+    $this->assertInstanceOf(VObject\Component\VEvent::class, $registrationVEvent);
+    $this->assertStringContainsString($this->project->getName(), $registrationVEvent->DESCRIPTION);
+
+    $this->calDavService->clearCalendarObjectCache();
+    // Should not recurse to the calDavService
+    $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testFindProjectRegistrationEvent')]
+  public function testSanitizeProjectRegistrationEvent(): void
+  {
+    $this->entityManager->expects($this->exactly(2))->method('getRepository');
+    $this->calDavBackend->expects($this->exactly(3))->method('getCalendarObject');
+    $this->calDavBackend->expects($this->exactly(1))->method('updateCalendarObject');
+
+    $this->assertArrayHasKey('3-5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics', self::$calendarObjects);
+    unset(self::$calendarObjects['3-5E61858A-32E0-11EE-8B79-F745B3CCF2A6.ics']);
+    $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+    $this->assertNotEmpty($registrationEvent);
+
+    $storedEvent = self::$calendarObjects["{$registrationEvent['calendarid']}-{$registrationEvent['uri']}"];
+    $this->assertNotNull($storedEvent);
+    $storedVObject = VCalendarService::getVCalendar($storedEvent);
+    $storedVEvent = VCalendarService::getVObject($storedVObject);
+    $oldDescription = (string)$storedVEvent->DESCRIPTION;
+    $storedVEvent->DESCRIPTION = str_replace($this->project->getName(), 'SomeOtherName2099', $oldDescription);
+    $storedEvent['calendardata'] = $storedVObject->serialize();
+    self::$calendarObjects["{$registrationEvent['calendarid']}-{$registrationEvent['uri']}"] = $storedEvent;
+
+    new ReflectionProperty($this->eventsService, 'projectRegistrationEvents')->setValue($this->eventsService, []);
+    $this->calDavService->clearCalendarObjectCache();
+
+    $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+    $this->assertNotEmpty($registrationEvent);
+    $this->assertArrayHasKey('calendardata', $registrationEvent);
+    $this->assertInstanceOf(VObject\Component\VCalendar::class, $registrationEvent['calendardata']);
+    $registrationVEvent = VCalendarService::getVObject($registrationEvent['calendardata']);
+    $this->assertInstanceOf(VObject\Component\VEvent::class, $registrationVEvent);
+    $this->assertStringNotContainsString($this->project->getName(), $registrationVEvent->DESCRIPTION);
+
+    $this->project->setRegistrationStartDate('2099-01-01');
+    $this->project->setRegistrationDeadline('2099-12-31');
+    $this->projectService->expects($this->atLeastOnce())
+      ->method('getProjectRegistrationDeadline')
+      ->willReturn($this->project->getRegistrationDeadline());
+    $this->projectService->expects($this->exactly(1))
+      ->method('fetchAll')
+      ->willReturn($this->entityManager->getRepository(Entities\Project::class)->findAll());
+
+    $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
+    $this->assertTrue($result);
+
+    new ReflectionProperty($this->eventsService, 'projectRegistrationEvents')->setValue($this->eventsService, []);
+    $this->calDavService->clearCalendarObjectCache();
+
+    $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
+    $registrationVEvent = VCalendarService::getVObject($registrationEvent['calendardata']);
+    $this->assertEquals($oldDescription, (string)$registrationVEvent->DESCRIPTION);
   }
 }

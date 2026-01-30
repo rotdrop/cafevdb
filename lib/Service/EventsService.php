@@ -31,6 +31,7 @@ use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use InvalidArgumentException;
+use UnexpectedValueException;
 use Throwable;
 
 use Sabre\VObject;
@@ -143,7 +144,7 @@ class EventsService
    */
   public function onCalendarObjectCreated(
     CalendarObjectCreatedEvent|CalendarObjectRestoredEvent $event,
-  ):void {
+  ): void {
     $objectData = $event->getObjectData();
     $calendarData = $event->getCalendarData();
     $calendarIds = $this->defaultCalendars();
@@ -164,7 +165,7 @@ class EventsService
    *
    * @return void
    */
-  public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event):void
+  public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event): void
   {
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
@@ -1317,7 +1318,7 @@ class EventsService
     array $objectData,
     ?array $sourceCalendar = null,
     bool $unregister = true,
-  ):?array {
+  ): ?array {
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
@@ -1837,7 +1838,6 @@ class EventsService
     bool $isRecurring,
     bool $flush,
   ) {
-
     // $this->logInfo('REGISTER ' . $eventUID);
 
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
@@ -2626,12 +2626,11 @@ class EventsService
    * Find the project registration event if it exists and generate the same
    * array structure as returned by findCalendarEntry().
    *
-   * @param string|Entities\Project $project Either the project name or the project
-   * entity.
+   * @param Entities\Project $project The project database entity.
    *
    * @return null|array
    */
-  public function findProjectRegistrationEvent(string|Entities\Project $project):?array
+  public function findProjectRegistrationEvent(Entities\Project $project):?array
   {
     $projectName = is_string($project) ? $project : $project->getName();
     if (!empty($this->projectRegistrationEvents[$projectName])) {
@@ -2653,7 +2652,8 @@ class EventsService
       ],
     );
     if (count($registrationEvents) > 1) {
-      throw new Exceptions\CalendarException($this->l->t('Found more than one project registration calendar event.'));
+      throw new Exceptions\CalendarException(
+        $this->l->t('Found more than one (%d) project registration calendar events.', [count($registrationEvents)]));
     } elseif (empty($registrationEvents)) {
       return null;
     }
@@ -2701,7 +2701,7 @@ class EventsService
   /**
    * Ensure that the "other" calendar contains a project registration event if
    * and only if the registration start date is set in the project
-   * entity. Existing events will be modified to reflect to current settings
+   * entity. Existing events will be modified to reflect the current settings
    * and moved to the "other" calendar if necessary.
    *
    * @param Entities\Project $project
@@ -2712,8 +2712,11 @@ class EventsService
   public function ensureProjectRegistrationEvent(Entities\Project $project):bool
   {
     $projectName = $project->getName();
-    $registrationEvent = $this->findProjectRegistrationEvent($projectName);
-    $registrationStartDate = $project->getRegistrationStartDate();
+    $registrationEvent = $this->findProjectRegistrationEvent($project);
+    // This hook is also called for already deleted entities, so take case of this case
+    $registrationStartDate = $this->entityManager->contains($project)
+      ? $project->getRegistrationStartDate()
+      : null;
     if (empty($registrationStartDate)) {
       if (!empty($registrationEvent)) {
         try {
@@ -2727,6 +2730,15 @@ class EventsService
     }
     $l = $this->appL10n();
     $registrationDeadline = $this->projectService->getProjectRegistrationDeadline($project);
+    if (empty($registrationDeadline)) {
+      $registrationStartDate = $registrationStartDate->locale($this->getLocale());
+      throw new UnexpectedValueException(
+        $this->l->t('The project "%1$s" has a registration start date %2$s, but no registration deadline.', [
+          $project->getName(),
+          $registrationStartDate->isoFormat('L'),
+        ]),
+      );
+    }
 
     // The members app needs to be manually loaded for the routes to be loaded
     $membersAppName = $this->appContainer()->get(Application::MEMBERS_APP_NAME);
@@ -2763,11 +2775,18 @@ class EventsService
         $needsUpdate = true;
       }
       $description = trim($vObject->DESCRIPTION);
-      if (strpos($vObject->DESCRIPTION, $registrationUrl) === false) {
+      // see if just the project name has changed ...
+      $modifiedDescription = ProjectService::replaceProjectNames($projectName, $description);
+      if ($modifiedDescription == $registrationEventData['description']) {
+        $vObject->DESCRIPTION = $modifiedDescription;
+        $needsUpdate = true;
+      } elseif (strpos($vObject->DESCRIPTION, $registrationUrl) === false) {
+        // add the standard description to the top but keep the old text.
+        $modifiedDescription = $registrationEventData['description'];
         if (!empty($description)) {
-          $description .= "\n\n";
+          $modifiedDescription = "\n\n{$description}";
         }
-        $vObject->DESCRIPTION = $description . $registrationEventData['description'];
+        $vObject->DESCRIPTION = $modifiedDescription;
         $needsUpdate = true;
       }
       $dtStart = $vObject->DTSTART;
