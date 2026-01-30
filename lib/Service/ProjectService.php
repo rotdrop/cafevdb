@@ -74,6 +74,7 @@ class ProjectService
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\UnusedMethodTrait;
 
   const DBTABLE = 'Projects';
 
@@ -488,7 +489,9 @@ class ProjectService
     );
 
     if (empty($events)) {
-      return null;
+      $deadline = $project->getRegistrationStartDate()?->modify('+4 weeks');
+
+      return $deadline;
     }
 
     $startDates = array_map(fn(array $event) => $event['start'], $events);
@@ -3179,23 +3182,45 @@ Whatever.',
       ))
       ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
+          $oldProjectName = $oldProject['name'];
+          $newProjectName = $newProject['name'];
+          /** @var ISystemTagManager $systemTagManager */
           $systemTagManager = $this->systemTagManager();
           try {
             /** @var ISystemTag $tag */
             $tag = $systemTagManager->getTag(
-              tagName: $oldProject['name'],
+              tagName: $oldProjectName,
               userVisible: true,
               userAssignable: true,
             );
             $systemTagManager->updateTag(
               tagId: $tag->getId(),
-              newName: $newProject['name'],
+              newName: $newProjectName,
               userVisible: true,
               userAssignable: true,
               color: $tag->getColor(),
             );
           } catch (TagNotFoundException $e) {
             $tag = $systemTagManager->createTag($newProject['name'], userVisible: true, userAssignable: true);
+          } catch (TagAlreadyExistsException) {
+            // The system-tag interface is a little bit inconvenient here,
+            // maybe on purpose: we get a "AlreadyExists" just because the
+            // names match but no chance to get the conflicting tag safe
+            // fetching all tags and filtering ...
+            $allTags = $systemTagManager->getAllTags();
+            /** @var ISystemTag $tag */
+            foreach ($allTags as $tag) {
+              if ($tag->getName() === $newProjectName) {
+                $systemTagManager->updateTag(
+                  tagId: $tag->getId(),
+                  newName: $newProjectName,
+                  userVisible: true,
+                  userAssignable: true,
+                  color: $tag->getColor(),
+                );
+                break;
+              }
+            }
           }
           return $tag;
         },
@@ -3342,6 +3367,21 @@ Whatever.',
       $projectName .= $projectYear;
     }
     return $projectName;
+  }
+
+  /**
+   * Replace occurrences of strings which look like a project-name by the
+   * given new name. This only works for project-names with a year at the end.
+   *
+   * @param string $projectName
+   *
+   * @param string $data
+   *
+   * @return string
+   */
+  public static function replaceProjectNames(string $projectName, string $data): string
+  {
+    return preg_replace('/(\W)[A-Z][a-zA-Z]+\d{4}(\W)/u', '$1' . $projectName . '$2', $data);
   }
 
   /**
