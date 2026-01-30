@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ class AppMTimeService
   public const PARTS = [
     self::ASSETS_MTIME_KEY => [ 'js', 'css' ],
     self::L10N_MTIME_KEY => [ 'l10n', ],
-    self::PHP_LIB_MTIME_KEY => [ 'lib', '3rdparty/phpMyEdit', 'appinfo', ],
+    self::PHP_LIB_MTIME_KEY => [ 'lib', 'appinfo', ],
     self::TEMPLATES_MTIME_KEY => [ 'templates', ],
   ];
 

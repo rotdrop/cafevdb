@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity">BlameableEntity</abbr>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait">TranslatableTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait">TranslatableTrait</abbr></a>,                             <abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Blameable\Traits\BlameableEntity">BlameableEntity</abbr>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -204,16 +204,19 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_contents">$contents</a>
     <span>
                         &nbsp;: string|null            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -293,9 +296,9 @@ brake the tree-walker as it has to start with the default set of fields.</dd>
 <dd>Get contents.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
-                                &nbsp;: int    </span>
+                                &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
 
@@ -370,6 +373,13 @@ brake the tree-walker as it has to start with the default set of fields.</dd>
 <dd>Set contents.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_setLocale">setLocale()</a>
     <span>
                                 &nbsp;: self    </span>
@@ -433,6 +443,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -446,9 +539,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
     
@@ -482,74 +575,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: true
     </dd>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">47</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
     </dl>
                     </section>
         
@@ -678,9 +703,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
     
@@ -736,9 +761,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
     
@@ -862,9 +887,9 @@ around by remembering any old value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
     
@@ -1032,9 +1057,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">151</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get contents.</p>
@@ -1066,22 +1091,22 @@ brake the tree-walker as it has to start with the default set of fields.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1094,7 +1119,7 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
             </section>
 
 </article>
@@ -1152,9 +1177,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">127</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get subject.</p>
@@ -1192,9 +1217,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get tag.</p>
@@ -1282,9 +1307,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get untranslatedTag.</p>
@@ -1517,9 +1542,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">139</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set contents.</p>
@@ -1550,6 +1575,56 @@ brake the tree-walker as it has to start with the default set of fields.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EmailTemplate">EmailTemplate</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setId">
+        setId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$id</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1617,9 +1692,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">115</span>
+    <span class="phpdocumentor-element-found-in__line">101</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set subject.</p>
@@ -1667,9 +1742,9 @@ brake the tree-walker as it has to start with the default set of fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/EmailTemplate.php"><a href="files/database-doctrine-orm-entities-emailtemplate.html"><abbr title="Database/Doctrine/ORM/Entities/EmailTemplate.php">EmailTemplate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/EmailTemplate.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set tag.</p>
@@ -2010,8 +2085,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_contents">$contents</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#property_locale">$locale</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#property_subject">$subject</a></li>
@@ -2028,7 +2103,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_filterTranslatableFields">filterTranslatableFields()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getContents">getContents()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_getLocale">getLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getSubject">getSubject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_getTag">getTag()</a></li>
@@ -2039,6 +2114,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_setContents">setContents()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_setLocale">setLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_setSubject">setSubject()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EmailTemplate.html#method_setTag">setTag()</a></li>

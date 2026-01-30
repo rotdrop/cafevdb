@@ -60,8 +60,8 @@ trait MusicianInstrumentsRankingTrait
     ?array &$changed,
     ?array &$newValues
   ):bool {
-    $keyField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $rankingField = $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
+    $keyField = self::joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
+    $rankingField = self::joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
 
     $this->debug('FIELDS: ' . $keyField . ' / ' . $rankingField);
     $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);

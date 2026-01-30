@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,8 @@ use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\DTO\FilesInitialState;
+use OCA\CAFEVDB\Controller\EnumInitialStateKey;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -60,12 +62,12 @@ class FilesHooksListener implements IEventListener
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const EVENT = [
+  public const EVENT = [
     LoadAdditionalScriptsEvent::class,
     LoadSidebar::class,
   ];
 
-  const ASSET_BASENAME = [
+  private const ASSET_BASENAME = [
     LoadAdditionalScriptsEvent::class => [
       Constants::JS => 'files-hooks',
       Constants::CSS => null,
@@ -166,12 +168,22 @@ class FilesHooksListener implements IEventListener
       /** @var EntityManager $entityManager */
       $entityManager = $this->appContainer->get(EntityManager::class);
       try {
-        $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
-        // $this->logInfo('MUS ID ' . print_r($musicianId, true));
-      } catch (\Throwable $t) {
+        $musician = $entityManager->getRepository(Entities\Musician::class)->findByUserId($userId);
+      } catch (Throwable $t) {
         // ignore
         $this->logException($t);
+        $musician = null;
+      }
+      if ($musician === null) {
+        $this->logInfo('No Musician for uid ' . $userId);
         $musicianId = 0;
+        $musicianPublicName = null;
+        $musicianPersonalPublicName = null;
+      } else {
+        /** @var Entities\Musician $musician */
+        $musicianId = $musician->getId();
+        $musicianPublicName = $musician->getPublicName(firstNameFirst: false);
+        $musicianPersonalPublicName = $musician->getPublicName(firstNameFirst: true);
       }
 
       /** @var IContactsManager $contactsManager */
@@ -186,7 +198,7 @@ class FilesHooksListener implements IEventListener
       $invoicesFolder = $financeFolder . '/' . $appL10n->t('invoices');
       $donationReceiptsFolder = $financeFolder . '/' . $appL10n->t('donation-receipts');
 
-      $initialState->provideInitialState('files', [
+      $initialState->provideInitialState(EnumInitialStateKey::FILES->value, FilesInitialState::fromArray([
         'sharing' => [
           'files' => [
             'folders' => [
@@ -210,20 +222,18 @@ class FilesHooksListener implements IEventListener
         'personal' => [
           'userId' => $userId,
           'musicianId' => $musicianId,
+          'musicianPublicName' => $musicianPublicName,
+          'musicianPersonalPublicName' => $musicianPersonalPublicName,
         ],
         'contacts' => [
           'addressBooks' => self::flattenAddressBooks($contactsManager->getUserAddressBooks()),
         ],
         EnumPersonalSettingsKey::DEBUG_MODE->value => $debugMode,
-      ]);
+      ]));
 
       // just admin contact and stuff to make the ajax error handlers work.
       // @todo Replace by more lightweight stuff
       $this->groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
-      $initialState->provideInitialState('CAFEVDB', [
-        'adminContact' => $this->getCloudAdminContacts(implode: true),
-        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
-      ]);
     }
 
     /** @var AssetService $assetService */

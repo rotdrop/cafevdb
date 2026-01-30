@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Util;
 
-use UnexpectedValueException;
+use JsonSerializable;
+use Stringable;
 use Throwable;
+use UnexpectedValueException;
 
 use Psr\Log\LoggerInterface;
 
@@ -34,7 +36,9 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\PersisterHelper;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
@@ -57,6 +61,8 @@ class EntitySerializer
 
   private array $repositories = [];
 
+  private ?string $commonPrefix = null;
+
   /** {@inheritdoc} */
   public function __construct(
     protected EntityManager $entityManager,
@@ -67,6 +73,40 @@ class EntitySerializer
       $this->entityManager->getUnitOfWork(),
       $this->entityManager->getMetadataFactory(),
     );
+  }
+
+  /**
+   * @param ?string $commonPrefix
+   *
+   * @return self
+   */
+  public function setCommonPrefix(?string $commonPrefix): self
+  {
+    $this->commonPrefix = $commonPrefix;
+    if (!str_ends_with($this->commonPrefix, '\\')) {
+      $this->commonPrefix .= '\\';
+    }
+
+    return $this;
+  }
+
+  /** @return ?string */
+  public function getCommonPrefix(): ?string
+  {
+    return $this->commonPrefix;
+  }
+
+  /**
+   * Clear the data built up by previous calls to self::addEntity().
+   *
+   * @return void
+   */
+  public function reset(): void
+  {
+    $this->entityDepths = [];
+    $this->entities = [];
+    $this->repositories = [];
+    $this->commonPrefix = null;
   }
 
   /**
@@ -100,6 +140,21 @@ class EntitySerializer
   }
 
   /**
+   * @param string $entityName
+   *
+   * @return string
+   */
+  private function stripCommonPrefix(string $entityName): string
+  {
+    if ($this->commonPrefix === null) {
+      return $entityName;
+    }
+    if (str_starts_with($entityName, $this->commonPrefix)) {
+      return substr($entityName, strlen($this->commonPrefix));
+    }
+  }
+
+  /**
    * Add one Doctrine ORM entity to the serialization structure.
    *
    * @param mixed $entity An entity instance known to the entity manager.
@@ -117,14 +172,16 @@ class EntitySerializer
    */
   public function addEntity(mixed $entity, int $depth = 1, bool $principal = true): void
   {
+    // disable the filter here in order to have all entities available
+    $softDeleteableState = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, false);
     try {
       $metaData = $this->entityManager->getClassMetadata(get_class($entity));
-      $entityClassName = $metaData->getName();
+      $entityClassName = $this->stripCommonPrefix($metaData->getName());
       $id = $metaData->getIdentifierValues($entity);
       if (empty($id)) {
-        throw Exceptions\DatabaseMissingIdentifierException(
+        throw new Exceptions\DatabaseMissingIdentifierException(
           $this->l->t('Unable to determine the identifier values for an instance of "%s".', get_class($entity)),
-          get_class($entity),
+          entityClassName: get_class($entity),
         );
       }
       $flatIdentifier = $this->flattenIdentifier($metaData, $id);
@@ -136,11 +193,14 @@ class EntitySerializer
             $this->entities[$entityClassName][] = $flatIdentifier;
           }
         }
-        if ($this->entityDepths[$entityClassName][$flatIdentifier] == $depth) {
+        if (($this->entityDepths[$entityClassName][$flatIdentifier] ?? -1) >= $depth) {
           return;
         }
         $existing = true;
       }
+
+      // must be set before recursing
+      $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
 
       $flatEntity = [];
 
@@ -158,13 +218,13 @@ class EntitySerializer
               $flatEntity[$field] = null;
               break;
             }
-            $targetClassName = $associationMapping->targetEntity;
             $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+            $targetClassName = $this->stripCommonPrefix($targetMetaData->getName());
             $targetId = $targetMetaData->getIdentifierValues($targetEntity);
             if (empty($targetId)) {
-              throw Exceptions\DatabaseMissingIdentifierException(
+              throw new Exceptions\DatabaseMissingIdentifierException(
                 $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
-                $targetClassName,
+                entityClassName: $targetClassName,
               );
             }
             $flatTargetIdentifier = $this->flattenIdentifier($targetMetaData, $targetId);
@@ -172,7 +232,9 @@ class EntitySerializer
               flatIdentifier: $flatTargetIdentifier,
               entityClassName: $targetClassName,
             );
-            if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+            if ($depth > 0
+                && (empty($this->repositories[$targetClassName][$flatTargetIdentifier])
+                    || ($this->entityDepths[$targetClassName][$flatTargetIdentifier] ?? -1) < ($depth - 1))) {
               $this->addEntity($targetEntity, $depth - 1, false);
             }
             break;
@@ -183,19 +245,37 @@ class EntitySerializer
                 $field, $entityClassName,
               ]));
             }
-            $targetClassName = $associationMapping->targetEntity;
+            $targetClassName = $this->stripCommonPrefix($associationMapping->targetEntity);
             $flatCollection = [];
+            $keyConvert = fn(mixed $value, mixed $metaData) => $value;
+            if ($associationMapping->isIndexed()) {
+              $targetMetaData = $this->entityManager->getClassMetadata($associationMapping->targetEntity);
+              $indexField = $associationMapping->indexBy();
+              $keyConvert = function(mixed $value, mixed $metaData) use ($indexField, $targetMetaData, $field, $entityClassName) {
+                $fieldType = PersisterHelper::getTypeOfColumn(
+                  $indexField,
+                  $targetMetaData->getWrappedObject(),
+                  $this->entityManager->getWrappedObject(),
+                );
+                $phpValue = $this->entityManager->getConnection()->convertToPHPValue($value, $fieldType);
+                if (!is_string($phpValue) && !is_integer($phpValue)) {
+                  $phpValue = (string)$phpValue;
+                }
+                return $phpValue;
+              };
+            }
             foreach ($targetCollection as $key => $targetEntity) {
               /** @var Mapping\ClassMetadata $targetMetaData */
               $targetMetaData = $this->entityManager->getClassMetadata(get_class($targetEntity));
+              $key = $keyConvert($key, $targetMetaData);
               $targetId = $targetMetaData->getIdentifierValues($targetEntity);
               if (empty($targetId)) {
-                throw Exceptions\DatabaseMissingIdentifierException(
+                throw new Exceptions\DatabaseMissingIdentifierException(
                   $this->l->t('Unable to determine the identifier values for an instance of "%s".', $targetClassName),
-                  $targetClassName,
+                  entityClassName: $targetClassName,
                 );
               }
-              $entityName = $targetMetaData->getName();
+              $entityName = $this->stripCommonPrefix($targetMetaData->getName());
               if ($entityName == $targetClassName) {
                 $entityName = null;
               }
@@ -204,7 +284,9 @@ class EntitySerializer
                 flatIdentifier: $flatTargetIdentifier,
                 entityClassName: $entityName,
               );
-              if ($depth > 0 && empty($this->repositories[$targetClassName][$flatTargetIdentifier])) {
+              if ($depth > 0
+                  && (empty($this->repositories[$targetClassName][$flatTargetIdentifier])
+                      || ($this->entityDepths[$targetClassName][$flatTargetIdentifier] ?? -1) < $depth - 1)) {
                 $this->addEntity($targetEntity, $depth - 1, false);
               }
             }
@@ -215,19 +297,36 @@ class EntitySerializer
             break;
         }
       }
+      if ($entity instanceof JsonSerializable) {
+        // add further properties if advertised by the entity. This is now
+        // somewhat inefficient, but perhaps we will find a better way some
+        // day ....
+        $jsonData = $entity->jsonSerialize();
+        $missingProperties = array_diff(array_keys($jsonData), array_keys($flatEntity));
+        foreach ($missingProperties as $property) {
+          $flatEntity[$property] = $jsonData[$property];
+        }
+        foreach ($jsonData as $key => $value) {
+          if (is_scalar($value) && $value !== $flatEntity[$key]) {
+            $flatEntity[$key] = $value;
+          }
+        }
+      }
+      ksort($flatEntity);
       $this->repositories[$entityClassName][$flatIdentifier] = $flatEntity;
       if ($principal) {
         if (!$existing) {
           $this->entities[$entityClassName][] = $flatIdentifier;
         }
-        $this->entityDepths[$entityClassName][$flatIdentifier] = $depth;
       }
     } catch (Throwable $t) {
+      $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       throw new Exceptions\EntitySerializationException(
         $this->l->t('Unable to compute a serialization for an instance of "%s".', get_class($entity)),
         $entity,
         previous: $t,
       );
     }
+    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
   }
 }

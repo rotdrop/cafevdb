@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020 - 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020 - 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -393,6 +393,16 @@ class CalDavService
   }
 
   /**
+   * Clear the calendar object cache.
+   *
+   * @return void
+   */
+  public function clearCalendarObjectCache(): void
+  {
+    $this->calendarObjectCache->clear();
+  }
+
+  /**
    * Clear the data for the given object ids.
    *
    * @param array|int $calendarId
@@ -674,8 +684,8 @@ class CalDavService
     }
     $calendarObjects = $this->calendarManager->searchForPrincipal($query);
     $result = [];
-    foreach ($calendarObjects as $objectInfo) {
-      if (!empty($categories)) {
+    if (!empty($categories)) {
+      foreach ($calendarObjects as $objectInfo) {
         $match = false;
         foreach ($objectInfo['objects'] as $calendarObject) {
           if (isset($calendarObject['CATEGORIES'])) {
@@ -692,8 +702,12 @@ class CalDavService
         if (!$match) {
           continue;
         }
+        $result[] = $this->getCalendarObject($objectInfo['calendar-key'], $objectInfo['uri']);
       }
-      $result[] = $this->getCalendarObject($objectInfo['calendar-key'], $objectInfo['uri']);
+    } else {
+      foreach ($calendarObjects as $objectInfo) {
+        $result[] = $this->getCalendarObject($objectInfo['calendar-key'], $objectInfo['uri']);
+      }
     }
     return $result;
   }

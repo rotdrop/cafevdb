@@ -24,35 +24,31 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
+use Throwable;
+
 /** Thrown if an identifier is missing trying to fetch an entity. */
-class DatabaseMissingIdentifierException extends DatabaseException
+class DatabaseMissingIdentifierException extends DatabaseEntityException
 {
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /**
+   * @param string $message
+   *
+   * @param int $code
+   *
+   * @param ?Throwable $previous
+   *
+   * @param ?string $entityClassName
+   *
+   * @param mixed $incompleteIdentifier
+   *
+   * {@inheritdoc}
+   */
   public function __construct(
     string $message,
     int $code = 0,
-    $previous = null,
-    protected ?string $entityClassName = null,
-    protected mixed $incompleteIdentifier = null,
+    ?Throwable $previous = null,
+    ?string $entityClassName = null,
+    public readonly mixed $incompleteIdentifier = null,
   ) {
-  }
-  // phpcs:enable
-
-  /**
-   * @return null|string The entity class name if any has been given to the
-   * constructor.
-   */
-  public function getEntityClassName(): ?string
-  {
-    return $this->entityClassName;
-  }
-
-  /**
-   * @return mixed The bogus identifier if any has bee given to the
-   * constructor.
-   */
-  public function getIncompleteIdentifier(): mixed
-  {
-    return $this->incompleteIdentifier;
+    parent::__construct($message, $code, $previous, $entityClassName);
   }
 }

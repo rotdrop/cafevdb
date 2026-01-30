@@ -30,13 +30,16 @@ use RuntimeException;
 
 use OCP\Files\NotFoundException;
 
-use OCA\CAFEVDB\Common\Functions;
+// use function OCA\CAFEVDB\Common\Functions\dump;
+use function OCA\CAFEVDB\Common\Functions\strCmpEmptyLast;
+use function OCA\CAFEVDB\Common\Functions\strcat as cat;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -121,8 +124,8 @@ trait ParticipantFieldsTrait
    * given field-description-data with columns for all participant fields. The
    * $subTotals array is filled with SQL-fragments which collect the
    * service-fee amounts of the respective monetary fields with data-type
-   * field-type FieldType::RECEIVABLES,
-   * FieldType::LIABILITIES, it is indexed by field-name. Steps to perform:
+   * field-type FieldDataType::RECEIVABLES,
+   * FieldDataType::LIABILITIES, it is indexed by field-name. Steps to perform:
    *
    * - merge the returned join-structure into $this->joinStructure
    * - call PMETableViewBase::defineJoinStructure()
@@ -184,16 +187,16 @@ trait ParticipantFieldsTrait
       foreach ($participantFields as $field) {
         $fieldName = $field->getName();
         $fieldId   = $field->getId();
-        $multiplicity = $field->getMultiplicity();
-        $dataType = (string)$field->getDataType();
+        $fieldMultiplicity = $field->getMultiplicity();
+        $fieldDataType = $field->getDataType();
         $deleted = !empty($field->getDeleted());
-        $subTotalsSign = $dataType == FieldType::LIABILITIES ? '-1 * ' : '';
+        $subTotalsSign = $fieldDataType == FieldDataType::LIABILITIES ? '-1 * ' : '';
 
-        if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
+        if (!$this->participantFieldsService->isSupportedType($fieldMultiplicity, $fieldDataType)) {
           throw new Exception(
             $this->l->t(
               'Unsupported multiplicity / data-type combination: %s / %s',
-              [ $multiplicity, $dataType ]));
+              [ $fieldMultiplicity, $fieldDataType ]));
         }
 
         // set tab unless overridden by field definition
@@ -288,11 +291,11 @@ trait ParticipantFieldsTrait
         }
 
         foreach ([ &$keyFdd, &$valueFdd ] as &$fdd) {
-          switch ($dataType) {
-            case FieldType::TEXT:
+          switch ($fieldDataType) {
+            case FieldDataType::TEXT:
               // default config
               break;
-            case FieldType::HTML:
+            case FieldDataType::HTML:
               $fdd['textarea'] = [
                 'css' => 'wysiwyg-editor',
                 'rows' => 5,
@@ -303,38 +306,38 @@ trait ParticipantFieldsTrait
               $fdd['display|LF'] = [ 'popup' => 'data' ];
               $fdd['escape'] = false;
               break;
-            case FieldType::BOOLEAN:
+            case FieldDataType::BOOLEAN:
               // handled below
               $fdd['align'] = 'right';
               break;
-            case FieldType::INTEGER:
+            case FieldDataType::INTEGER:
               $fdd['select'] = 'N';
               $fdd['mask'] = '%d';
               $fdd['align'] = 'right';
               break;
-            case FieldType::FLOAT:
+            case FieldDataType::FLOAT:
               $fdd['select'] = 'N';
               $fdd['mask'] = '%g';
               $fdd['align'] = 'right';
               break;
-              // case FieldType::DATE:
-              // case FieldType::DATETIME:
-            case FieldType::RECEIVABLES:
-            case FieldType::LIABILITIES:
-              $style = $this->defaultFDD[$dataType];
+              // case FieldDataType::DATE:
+              // case FieldDataType::DATETIME:
+            case FieldDataType::RECEIVABLES:
+            case FieldDataType::LIABILITIES:
+              $style = $this->defaultFDD[$fieldDataType->value];
               if (empty($style)) {
-                throw new Exception($this->l->t('Not default style for "%s" available.', $dataType));
+                throw new Exception($this->l->t('Not default style for "%s" available.', $fieldDataType));
               }
               unset($style['name']);
               unset($style['display|ACP']['postfix']);
               $fdd = array_merge($fdd, $style);
               $fdd['css']['postfix'] = array_merge($fdd['css']['postfix'], $css);
               break;
-            case FieldType::DATE:
-            case FieldType::DATETIME:
-            case FieldType::CLOUD_FILE:
-            case FieldType::CLOUD_FOLDER:
-            case FieldType::DB_FILE:
+            case FieldDataType::DATE:
+            case FieldDataType::DATETIME:
+            case FieldDataType::CLOUD_FILE:
+            case FieldDataType::CLOUD_FOLDER:
+            case FieldDataType::DB_FILE:
               break;
           }
         }
@@ -347,7 +350,7 @@ trait ParticipantFieldsTrait
        data-field-id="' . $fieldId . '"
        data-field-property="[FIELD_PROPERTY]"
 />';
-        switch ($multiplicity) {
+        switch ($fieldMultiplicity) {
           case FieldMultiplicity::SIMPLE:
             /*-********************************************************************
              *
@@ -357,17 +360,17 @@ trait ParticipantFieldsTrait
             $valueFdd['input'] = $keyFdd['input'];
             $keyFdd['input'] = 'SRH';
             $valueFdd['css']['postfix'][] = 'simple-valued';
-            $valueFdd['css']['postfix'][] = $dataType;
-            $valueFdd['css']['postfix'][] = 'data-type-' . $dataType;
+            $valueFdd['css']['postfix'][] = $fieldDataType->value;
+            $valueFdd['css']['postfix'][] = cat('data-type-', $fieldDataType);
 
             $valueFdd['sql'] = 'GROUP_CONCAT(DISTINCT IF($join_table.field_id = '.$fieldId.$deletedSqlFilter.', $join_col_fqn, NULL))';
 
             $keyFdd['default'] =
               $valueFdd['default'] = $defaultValue?->getData();
 
-            switch ($dataType) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+            switch ($fieldDataType) {
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
@@ -501,7 +504,7 @@ trait ParticipantFieldsTrait
                     'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                     'documentsFolders' => $this->getDocumentsFolderName(),
                     'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
-                    'receivablesFolder' => $this->getReceivablesFolderName(),
+                    'liabilitiesReceivablesFolder' => $fieldDataType == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
                   ];
                   $participantFolder = $pathChain['participantFolder'];
 
@@ -565,8 +568,8 @@ trait ParticipantFieldsTrait
 
                 // We need one additional input field for the
                 // service-fee-deposit. This is only needed for
-                // FieldMultiplicity::SIMPLE and FieldType::RECEIVABLES or
-                // FieldType::LIABILITIES and IFF the deposit-due-date field
+                // FieldMultiplicity::SIMPLE and FieldDataType::RECEIVABLES or
+                // FieldDataType::LIABILITIES and IFF the deposit-due-date field
                 // in the option is non-zero.
                 //
                 // In all other cases the deposit is either not needed or fixed by the field options.
@@ -593,7 +596,7 @@ trait ParticipantFieldsTrait
                 $depositFdd['php|VDLF'] = $viewCallback;
                 break;
 
-              case FieldType::DB_FILE:
+              case FieldDataType::DB_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $valueFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataOptions) {
                   $fieldId = $field->getId();
@@ -624,7 +627,7 @@ trait ParticipantFieldsTrait
    href="'.$downloadLink.'">' . $fileName . '</a>';
                 };
                 break;
-              case FieldType::CLOUD_FILE:
+              case FieldDataType::CLOUD_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $valueFdd['php|ACP'] = function(
                   $value,
@@ -711,7 +714,7 @@ trait ParticipantFieldsTrait
                   return $phpViewFunction($value, 'list', $k, $row, $recordId, $pme);
                 };
                 break;
-              case FieldType::CLOUD_FOLDER:
+              case FieldDataType::CLOUD_FOLDER:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_SINGLE_VALUED;
                 if (empty($this->userStorage)) {
                   $this->userStorage = $this->di(UserStorage::class);
@@ -803,11 +806,11 @@ trait ParticipantFieldsTrait
                   return $phpViewFunction($value, 'list', $k, $row, $recordId, $pme);
                 };
                 break;
-              case FieldType::DATE:
-              case FieldType::DATETIME:
-                $style = $this->defaultFDD[$dataType];
+              case FieldDataType::DATE:
+              case FieldDataType::DATETIME:
+                $style = $this->defaultFDD[$fieldDataType->value];
                 if (empty($style)) {
-                  throw new Exception($this->l->t('Not default style for "%s" available.', $dataType));
+                  throw new Exception($this->l->t('Not default style for "%s" available.', $fieldDataType));
                 }
                 unset($style['name']);
                 $fdd = array_merge($fdd, $style);
@@ -843,18 +846,18 @@ trait ParticipantFieldsTrait
             $keyFdd['default'] = $field->getDefaultValue() === null ? false : $key;
             $keyFdd['css']['postfix'][] = 'boolean';
             $keyFdd['css']['postfix'][] = 'single-valued';
-            $keyFdd['css']['postfix'][] = $dataType;
+            $keyFdd['css']['postfix'][] = $fieldDataType->value;
             $keyFdd['values|FL'] = array_merge(
               $keyFdd['values'], [
                 'filters' => ('$table.field_id = '.$fieldId
                               .' AND $table.project_id = '.$this->projectId),
               ]);
             $dataValue = reset($valueData);
-            switch ($dataType) {
-              case FieldType::BOOLEAN:
+            switch ($fieldDataType) {
+              case FieldDataType::BOOLEAN:
                 break;
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 $money = $this->moneyValue($dataValue);
                 $noMoney = $this->moneyValue(0);
                 // just use the amount to pay as label
@@ -900,12 +903,12 @@ trait ParticipantFieldsTrait
                   );
 
                 break;
-              case FieldType::DATE:
-              case FieldType::DATETIME:
+              case FieldDataType::DATE:
+              case FieldDataType::DATETIME:
                 if (!empty($dataValue)) {
                   try {
                     $date = DateTime::parse($dataValue, $this->getDateTimeZone());
-                    $dataValue = ($dataType == FieldType::DATE)
+                    $dataValue = ($fieldDataType == FieldDataType::DATE)
                       ? $this->dateTimeFormatter()->formatDate($date, 'medium')
                       : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
                   } catch (Throwable $t) {
@@ -933,8 +936,8 @@ trait ParticipantFieldsTrait
              * Multiple or single choices from a set of predefined choices.
              *
              */
-            switch ($dataType) {
-              case FieldType::CLOUD_FILE:
+            switch ($fieldDataType) {
+              case FieldDataType::CLOUD_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $keyFdd['php|ACP'] = function(
                   $value,
@@ -1054,10 +1057,10 @@ trait ParticipantFieldsTrait
                 $keyFdd['valueTitles'] = $valueTitles;
                 $keyFdd['valueData'] = $valueData;
                 $keyFdd['select'] = 'M';
-                $keyFdd['css']['postfix'][] = $dataType;
-                $keyFdd['css']['postfix'][] = 'data-type-' . $dataType;
+                $keyFdd['css']['postfix'][] = cat($fieldDataType->value);
+                $keyFdd['css']['postfix'][] = cat('data-type-', $fieldDataType);
                 break;
-              case FieldType::DB_FILE:
+              case FieldDataType::DB_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
                   $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
@@ -1106,26 +1109,26 @@ trait ParticipantFieldsTrait
                 $keyFdd['valueTitles'] = $valueTitles;
                 $keyFdd['valueData'] = $valueData;
                 $keyFdd['select'] = 'M';
-                $keyFdd['css']['postfix'][] = $dataType;
-                $keyFdd['css']['postfix'][] = 'data-type-' . $dataType;
+                $keyFdd['css']['postfix'][] = cat($fieldDataType);
+                $keyFdd['css']['postfix'][] = cat('data-type-', $fieldDataType);
                 break;
-              case FieldType::DATE:
-              case FieldType::DATETIME:
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::DATE:
+              case FieldDataType::DATETIME:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 foreach ($dataOptions as $dataOption) {
                   $key = (string)$dataOption['key'];
                   $label = $dataOption['label'];
                   $data  = $dataOption['data'];
-                  $values2[$key] = $this->allowedOptionLabel($label, $data, $dataType);
+                  $values2[$key] = $this->allowedOptionLabel($label, $data, $fieldDataType);
                 }
                 unset($keyFdd['mask']);
                 $keyFdd['escape'] = false;
 
-                if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+                if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
 
                   // yet another field to support summing up totals
-                  if ($multiplicity == FieldMultiplicity::MULTIPLE) {
+                  if ($fieldMultiplicity == FieldMultiplicity::MULTIPLE) {
                     $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '
   AND $join_table.deleted IS NULL
@@ -1191,14 +1194,14 @@ trait ParticipantFieldsTrait
                   'prefix' => '<div class="allowed-option-wrapper"><span>',
                   'postfix' => '</spans></div>',
                 ];
-                if ($multiplicity == FieldMultiplicity::PARALLEL) {
+                if ($fieldMultiplicity == FieldMultiplicity::PARALLEL) {
                   $keyFdd['css']['postfix'][] = 'set hide-subsequent-lines';
                   $keyFdd['select'] = 'M';
                 } else {
                   $keyFdd['css']['postfix'][] = 'enum allow-empty';
                   $keyFdd['select'] = 'D';
                 }
-                $keyFdd['css']['postfix'][] = $dataType;
+                $keyFdd['css']['postfix'][] = cat($fieldDataType);
 
                 // TODO: try selectize with sort options for a better user
                 // experience
@@ -1229,11 +1232,11 @@ trait ParticipantFieldsTrait
             $generatorSlug = $generatorClass::slug();
 
             foreach ([&$keyFdd, &$valueFdd] as &$fdd) {
-              $fdd['css']['postfix'][] = $multiplicity;
+              $fdd['css']['postfix'][] = $fieldMultiplicity->value;
               $fdd['css']['postfix'][] = 'generated';
-              $fdd['css']['postfix'][] = $dataType;
-              $fdd['css']['postfix'][] = 'data-type-' . $dataType;
-              $fdd['css']['postfix'][] = 'multiplicity-' . $multiplicity;
+              $fdd['css']['postfix'][] = $fieldDataType->value;
+              $fdd['css']['postfix'][] = cat('data-type-', $fieldDataType);
+              $fdd['css']['postfix'][] = cat('multiplicity-', $fieldMultiplicity);
               $fdd['css']['postfix'][] = 'recurring-generator-' . $generatorSlug;
               $fdd['css']['postfix'][] = 'restrict-height';
               unset($fdd['mask']);
@@ -1258,7 +1261,7 @@ trait ParticipantFieldsTrait
                 ]);
             }
 
-            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+            if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
 
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
@@ -1270,7 +1273,7 @@ trait ParticipantFieldsTrait
   CAST($join_table.option_value AS ' . self::MONETARY_TYPE . '),
   NULL
 )';
-              // in contrast to Multiplicity::PARALLEL and ::MULTIPLE the
+              // in contrast to FieldMultiplicity::PARALLEL and ::MULTIPLE the
               // value varies from participant to participant and ist stored
               // in the data table.
               $optionKeySql = 'IF(
@@ -1312,7 +1315,7 @@ trait ParticipantFieldsTrait
                 'filters' => ('$table.field_id = '.$fieldId
                               .' AND $table.project_id = '.$this->projectId),
               ]);
-            if ($dataType != FieldType::DB_FILE) {
+            if ($fieldDataType != FieldDataType::DB_FILE) {
               $keyFdd['display|LF'] = [ 'popup' => 'data' ];
             }
 
@@ -1441,7 +1444,7 @@ trait ParticipantFieldsTrait
             ) use (
               $tableName,
               $field,
-              $dataType,
+              $fieldDataType,
             ) {
               // LF are actually both the same. $value will always just
               // come from the filter's $value2 array. The actual values
@@ -1453,8 +1456,8 @@ trait ParticipantFieldsTrait
               $invoices = Util::explodeIndexed($row[$this->joinQueryField($tableName, 'supporting_document_id')]);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
-              switch ($dataType) {
-                case FieldType::DB_FILE:
+              switch ($fieldDataType) {
+                case FieldDataType::DB_FILE:
                   // just model this like the FieldMultiplicity::PARALLEL stuff
                   if (!empty($values)) {
                     $fileBase = $this->participantFieldsService->getFileSystemFieldName($field);
@@ -1479,7 +1482,7 @@ trait ParticipantFieldsTrait
                     }
                     $optionValue = $values[$optionKey];
                     $label = $fieldOption->getLabel()??'';
-                    $rowHtml = $this->allowedOptionLabel($label, $optionValue, $dataType);
+                    $rowHtml = $this->allowedOptionLabel($label, $optionValue, $fieldDataType);
 
                     if (!empty($invoices[$optionKey])) {
                       $hasSupportingDocuments = true;
@@ -1520,7 +1523,7 @@ trait ParticipantFieldsTrait
 
             // $keyFdd has probably to be voided here as otherwise hidden
             // input fields are emitted which conflict with the $valueFdd
-            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $dataType) {
+            $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field, $fieldDataType) {
               return '';
             };
             $keyFdd['input|ACP'] = 'HR';
@@ -1534,14 +1537,14 @@ trait ParticipantFieldsTrait
             ) use (
               $tableName,
               $field,
-              $dataType,
+              $fieldDataType,
             ) {
               // $this->logInfo('VALUE '.$k.': '.$value);
               // $this->logInfo('ROW '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k]);
               // $this->logInfo('ROW IDX '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k . PHPMyEdit::QUERY_FIELD_IDX]);
 
               $fieldId = $field->getId();
-              $multiplicity = FieldMultiplicity::RECURRING;
+              $fieldMultiplicity = FieldMultiplicity::RECURRING;
 
               $value = $row[$this->queryField($k)];
               $values = Util::explodeIndexed($value);
@@ -1570,8 +1573,8 @@ trait ParticipantFieldsTrait
               /** @var Entities\ProjectParticipantFieldDataOption $option */
               foreach ($options as $optionKey => $option) {
                 $hasEmptyLabelledValues = $hasEmptyLabelledValues || (!empty($option->getLabel()) && empty($values[$optionKey]));
-                switch ($dataType) {
-                  case FieldType::DB_FILE:
+                switch ($fieldDataType) {
+                  case FieldDataType::DB_FILE:
                     $rowHtml .= $this->dbFileUploadRowHtml($values[$optionKey], $fieldId, $optionKey, $subDir, fileBase: null, musician: $musician);
                     break;
                   default:
@@ -1584,19 +1587,19 @@ trait ParticipantFieldsTrait
 
               $valueLabel = $this->l->t('Value');
               $invoiceLabel = $this->l->t('Documents');
-              switch ($dataType) {
-                case FieldType::RECEIVABLES:
-                case FieldType::LIABILITIES:
+              switch ($fieldDataType) {
+                case FieldDataType::RECEIVABLES:
+                case FieldDataType::LIABILITIES:
                   $valueLabel = $this->l->t('Value [%s]', $this->currencySymbol());
                   $invoiceLabel = $this->l->t('Invoice');
                   break;
-                case FieldType::DATE:
+                case FieldDataType::DATE:
                   $valueLabel = $this->l->t('Date');
                   break;
-                case FieldType::DATETIME:
+                case FieldDataType::DATETIME:
                   $valueLabel = $this->l->t('Date/Time');
                   break;
-                case FieldType::DB_FILE:
+                case FieldDataType::DB_FILE:
                   // @todo: insert file-controls below instead of manual data input
                   $valueLabel = $this->l->t('File');
                   break;
@@ -1604,8 +1607,8 @@ trait ParticipantFieldsTrait
 
               $cssClass = [
                 'row-count-' .count($values),
-                'multiplicity-' . $multiplicity,
-                'data-type-' . $dataType,
+                cat('multiplicity-', $fieldMultiplicity),
+                cat('data-type-', $fieldDataType),
                 'recurring-generator-' . $generatorSlug,
                 'recurring-option-recompute-button-' . ($noRecomputeButton ? 'dis' : 'en') . 'able',
               ];
@@ -1639,7 +1642,7 @@ trait ParticipantFieldsTrait
               // generate the footer
               $recomputeAllLabel = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE_ALL);
               if (is_callable($recomputeAllLabel)) {
-                $recomputeAllLabel = $recomputeAllLabel($dataType);
+                $recomputeAllLabel = $recomputeAllLabel($fieldDataType);
               }
               $recomputeAllLabel = $this->l->t($recomputeAllLabel);
 
@@ -1685,7 +1688,7 @@ trait ParticipantFieldsTrait
               $fieldDescData, $tableName, 'musician_id', $keyFdd);
 
             // hide value field and tweak for view displays.
-            $css[] = FieldMultiplicity::GROUPOFPEOPLE;
+            $css[] = FieldMultiplicity::GROUPOFPEOPLE->value;
             $css[] = 'single-valued';
             $keyFdd = Util::arrayMergeRecursive(
               $keyFdd, [
@@ -1790,9 +1793,9 @@ WHERE pp.project_id = $this->projectId",
 
             $groupMemberFdd['css']['postfix'] = array_merge($groupMemberFdd['css']['postfix'], $css);
 
-            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+            if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
               $groupMemberFdd['css']['postfix'][] = 'money';
-              $groupMemberFdd['css']['postfix'][] = $dataType;
+              $groupMemberFdd['css']['postfix'][] = cat($fieldDataType);
               $fieldData = $generatorOption['data'];
               $money = $this->moneyValue($fieldData);
               $groupMemberFdd['display|LFVD'] = array_merge(
@@ -1810,10 +1813,10 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<label class="'.implode(' ', $css).'">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $tableName) {
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $fieldDataType, $tableName) {
                     $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
-                    return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
+                    return $this->allowedOptionLabel('', $fieldData, $fieldDataType, $active)
                       .'</label>';
                   },
                 ]);
@@ -1884,7 +1887,7 @@ WHERE pp.project_id = $this->projectId",
             foreach ($dataOptions as $dataOption) {
               $valueGroups[--$idx] = $dataOption['label'];
               $data = $dataOption['data'];
-              if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+              if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
                 $data = $this->moneyValue($data);
               }
               if (!empty($data)) {
@@ -1897,13 +1900,13 @@ WHERE pp.project_id = $this->projectId",
             // make the field a select box for the predefined groups, like
             // for the "multiple" stuff.
 
-            $css[] = FieldMultiplicity::GROUPOFPEOPLE;
+            $css[] = FieldMultiplicity::GROUPOFPEOPLE->value;
             $css[] = 'predefined';
-            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
-              $css[] = ' money '.$dataType;
+            if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
+              $css[] = ' money '.$fieldDataType;
               foreach ($groupValues2 as $key => $value) {
                 $groupValues2[$key] = $this->allowedOptionLabel(
-                  $value, $groupValueData[$key], $dataType, 'group');
+                  $value, $groupValueData[$key], $fieldDataType, 'group');
               }
             }
 
@@ -2009,14 +2012,14 @@ WHERE pp.project_id = $this->projectId",
                   'prefix' => function($op, $pos, $k, $row, $pme) use ($css) {
                     return '<label class="'.implode(' ', $css).'">';
                   },
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $tableName) {
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $fieldDataType, $tableName) {
                     $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $html = '';
                     foreach ($dataOptions as $dataOption) {
                       $key = $dataOption['key'];
                       $active = $selectedKey == $key ? 'selected' : null;
                       $html .= $this->allowedOptionLabel(
-                        $dataOption['label'], $dataOption['data'], $dataType, $active, [ 'key' => $dataOption['key'], ]);
+                        $dataOption['label'], $dataOption['data'], $fieldDataType, $active, [ 'key' => $dataOption['key'], ]);
                     }
                     $html .= '</label>';
                     return $html;
@@ -2072,7 +2075,7 @@ GROUP BY " . $fdAlias . ".option_key",
                 ],
               ]);
 
-            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+            if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '
@@ -2103,7 +2106,7 @@ GROUP BY " . $fdAlias . ".option_key",
             break;
         }
 
-        if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
+        if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
           $sql = $fieldDescData[$subTotalsName]['sql'];
           $sql = $this->substituteSQLFragment($fieldDescData, $subTotalsName, $sql, $subTotalsIndex);
           $subTotals[$subTotalsName] = $sql;
@@ -2123,7 +2126,7 @@ GROUP BY " . $fdAlias . ".option_key",
    *
    * @param mixed $value Value of the per-participant data.
    *
-   * @param string $dataType String-value of the FieldType.
+   * @param FieldDataType $fieldDataType String-value of the FieldDataType.
    *
    * @param null|string $css Optional css-class.
    *
@@ -2131,11 +2134,16 @@ GROUP BY " . $fdAlias . ".option_key",
    *
    * @return string The html-string for rendering the option value.
    */
-  protected function allowedOptionLabel(string $label, mixed $value, string $dataType, ?string $css = null, array $data = []):string
-  {
+  protected function allowedOptionLabel(
+    string $label,
+    mixed $value,
+    FieldDataType $fieldDataType,
+    ?string $css = null,
+    array $data = [],
+  ):string {
     $label = Util::htmlEscape($label);
-    $css = $dataType . (empty($css) ? '' : ' ' . $css);
-    $innerCss = $dataType;
+    $innerCss = $fieldDataType->value;
+    $css = $innerCss . (empty($css) ? '' : ' ' . $css);
     $htmlData = [];
     foreach ($data as $key => $dataValue) {
       $htmlData[] = "data-".$key."='".$dataValue."'";
@@ -2144,19 +2152,19 @@ GROUP BY " . $fdAlias . ".option_key",
     if (!empty($htmlData)) {
       $htmlData = ' '.$htmlData;
     }
-    switch ($dataType) {
-      case FieldType::RECEIVABLES:
-      case FieldType::LIABILITIES:
+    switch ($fieldDataType) {
+      case FieldDataType::RECEIVABLES:
+      case FieldDataType::LIABILITIES:
         $value = $this->moneyValue($value);
         $innerCss .= ' money';
         $css .= ' money';
         break;
-      case FieldType::DATE:
-      case FieldType::DATETIME:
+      case FieldDataType::DATE:
+      case FieldDataType::DATETIME:
         if (!empty($value)) {
           try {
             $date = DateTime::parse($value, $this->getDateTimeZone());
-            $value = ($dataType == FieldType::DATE)
+            $value = ($fieldDataType == FieldDataType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
           } catch (Throwable $t) {
@@ -2175,7 +2183,7 @@ GROUP BY " . $fdAlias . ".option_key",
   }
 
   /**
-   * Generate one row for Multiplicity::RECURRING in Change/Add/Paste mode.
+   * Generate one row for FieldMultiplicity::RECURRING in Change/Add/Paste mode.
    *
    * @param string $optionValue Value of the option.
    *
@@ -2203,7 +2211,7 @@ GROUP BY " . $fdAlias . ".option_key",
     int $uiFlags,
   ):string {
     $fieldId = $field->getId();
-    $dataType = $field->getDataType();
+    $fieldDataType = $field->getDataType();
     $optionKey = (string)$fieldOption->getKey();
 
     $lockCssClass = [
@@ -2215,24 +2223,24 @@ GROUP BY " . $fdAlias . ".option_key",
     $lockCssClass = implode(' ', $lockCssClass);
 
     $lockRightCssClass = $lockCssClass . ' position-right';
-    if ($dataType != FieldType::RECEIVABLES && $dataType != FieldType::LIABILITIES) {
+    if ($fieldDataType != FieldDataType::RECEIVABLES && $fieldDataType != FieldDataType::LIABILITIES) {
       $lockCssClass = $lockRightCssClass;
     }
 
     if (!empty($optionValue)) {
-      switch ($dataType) {
-        case FieldType::DATE:
-        case FieldType::DATETIME:
+      switch ($fieldDataType) {
+        case FieldDataType::DATE:
+        case FieldDataType::DATETIME:
           try {
             $date = DateTime::parse($optionValue, $this->getDateTimeZone());
-            $optionValue = ($dataType == FieldType::DATE)
+            $optionValue = ($fieldDataType == FieldDataType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
           } catch (Throwable $t) {
             // ignore for now
           }
           break;
-        case FieldType::DB_FILE:
+        case FieldDataType::DB_FILE:
           break;
       }
     }
@@ -2263,7 +2271,7 @@ GROUP BY " . $fdAlias . ".option_key",
       'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
       'documentsFolders' => $this->getDocumentsFolderName(),
       'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
-      'receivablesFolder' => $this->getReceivablesFolderName(),
+      'liabilitiesReceivablesFolder' => $fieldDataType == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
       'fieldFolder' => $this->participantFieldsService->getFileSystemFieldName($field),
     ];
     $participantFolder = $pathChain['participantFolder'];
@@ -2330,25 +2338,25 @@ GROUP BY " . $fdAlias . ".option_key",
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project['participantFields'] as $participantField) {
       $fieldId = $participantField['id'];
-      $multiplicity = $participantField['multiplicity'];
-      $dataType = $participantField['dataType'];
+      $fieldMultiplicity = $participantField['multiplicity'];
+      $fieldDataType = $participantField['dataType'];
 
       $tableName = self::participantFieldTableName($fieldId);
 
-      $keyName = $this->joinTableFieldName($tableName, 'option_key');
-      $valueName = $this->joinTableFieldName($tableName, 'option_value');
-      $depositName = $this->joinTableFieldName($tableName, 'deposit');
-      $groupFieldName = $this->joinTableFieldName($tableName, 'musician_id');
+      $keyName = self::joinTableFieldName($tableName, 'option_key');
+      $valueName = self::joinTableFieldName($tableName, 'option_value');
+      $depositName = self::joinTableFieldName($tableName, 'deposit');
+      $groupFieldName = self::joinTableFieldName($tableName, 'musician_id');
 
       $optionTableName = self::participantFieldOptionsTableName($fieldId);
-      $optionLabelName = $this->joinTableFieldName($optionTableName, 'label');
-      $optionBalancingAccountName = $this->joinTableFieldName($optionTableName, 'balancing_account');
+      $optionLabelName = self::joinTableFieldName($optionTableName, 'label');
+      $optionBalancingAccountName = self::joinTableFieldName($optionTableName, 'balancing_account');
       $optionKeyName = self::joinTableFieldName($optionTableName, 'key');
 
-      $supportingDocumentName = $this->joinTableFieldName($tableName, 'supporting_document_id');
+      $supportingDocumentName = self::joinTableFieldName($tableName, 'supporting_document_id');
 
       // label and balancing account may only be tweaked for recurring multiplicity
-      if ($multiplicity != FieldMultiplicity::RECURRING) {
+      if ($fieldMultiplicity != FieldMultiplicity::RECURRING) {
         foreach ([$optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
           unset($newValues[$key]);
           unset($oldValues[$key]);
@@ -2362,9 +2370,9 @@ GROUP BY " . $fdAlias . ".option_key",
       unset($oldValues[$key]);
       Util::unsetValue($changed, $key);
 
-      $this->debug('FIELDNAMES '.$keyName." / ".$groupFieldName);
-      $this->debug("MULTIPLICITY / DATATYPE ".$multiplicity.' / '.$dataType);
-      switch ($multiplicity) {
+      $this->debug('FIELDNAMES ' . $keyName . ' / ' . $groupFieldName);
+      $this->debug('MULTIPLICITY / DATATYPE ' . $fieldMultiplicity->value . ' / ' . $fieldDataType->value);
+      switch ($fieldMultiplicity) {
         case FieldMultiplicity::SIMPLE:
           // We fake a multi-selection field and set the user input as
           // additional field value.
@@ -2385,8 +2393,8 @@ GROUP BY " . $fdAlias . ".option_key",
                 $newValues[$keyName],
               ]));
           }
-          switch ($dataType) {
-            case FieldType::CLOUD_FOLDER:
+          switch ($fieldDataType) {
+            case FieldDataType::CLOUD_FOLDER:
               // collect the data into a JSON array, input is a comma
               // separated list of directory entry names
               $newValues[$valueName] = json_encode(Util::explode(self::VALUES_SEP, $newValues[$valueName]));
@@ -2395,13 +2403,13 @@ GROUP BY " . $fdAlias . ".option_key",
                 continue 3;
               }
               break;
-            case FieldType::DATE:
+            case FieldDataType::DATE:
               if (!empty($newValues[$valueName])) {
                 $date = DateTime::parseFromLocale($newValues[$valueName], $this->getLocale(), 'UTC');
                 $newValues[$valueName] = $date->format('Y-m-d');
               }
               break;
-            case FieldType::DATETIME:
+            case FieldDataType::DATETIME:
               if (!empty($newValues[$valueName])) {
                 $date = DateTime::parseFromLocale($newValues[$valueName], $this->getLocale(), $this->getDateTimeZone());
                 $newValues[$valueName] = $date->setTimezone('UTC')->toIso8601String();
@@ -2427,7 +2435,7 @@ GROUP BY " . $fdAlias . ".option_key",
             continue 2;
           }
 
-          if ($dataType == FieldType::DB_FILE) {
+          if ($fieldDataType == FieldDataType::DB_FILE) {
             // these are handled immediately during upload and have to be
             // removed from the change-sets.
             foreach ([$keyName, $valueName, $optionLabelName, $optionBalancingAccountName, $optionKeyName] as $key) {
@@ -2452,12 +2460,12 @@ GROUP BY " . $fdAlias . ".option_key",
             }
 
             foreach (array_combine($keys, $values) as $key => $value) {
-              switch ($dataType) {
-                case FieldType::DATE:
+              switch ($fieldDataType) {
+                case FieldDataType::DATE:
                   $date = DateTime::parseFromLocale($value, $this->getLocale(), 'UTC');
                   $value = $date->format('Y-m-d');
                   break;
-                case FieldType::DATETIME:
+                case FieldDataType::DATETIME:
                   $date = DateTime::parseFromLocale($value, $this->getLocale(), $this->getDateTimeZone());
                   $value = $date->setTimezone('UTC')->toIso8601String();
                   break;
@@ -2512,7 +2520,7 @@ GROUP BY " . $fdAlias . ".option_key",
 
           $max = PHP_INT_MAX;
           $label = $this->l->t('unknown');
-          if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
+          if ($fieldMultiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
             /** @var Entities\ProjectParticipantFieldDataOption $generatorOption */
             $generatorOption = $participantField->getManagementOption();
             $max = $generatorOption['limit'];
@@ -2521,7 +2529,7 @@ GROUP BY " . $fdAlias . ".option_key",
             $newDataOption = $participantField->getDataOption($newGroupId);
             $max = $newDataOption['limit'];
             $label = $newDataOption['label'];
-            // $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
+            // $this->logInfo('OPTION: ' . $newGroupId . ' ' . dump($newDataOption));
           }
 
           // $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
@@ -2534,7 +2542,7 @@ GROUP BY " . $fdAlias . ".option_key",
                 [ count($newMembers), $label, $max ]));
           }
 
-          if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE && !empty($newMembers)) {
+          if ($fieldMultiplicity == FieldMultiplicity::GROUPOFPEOPLE && !empty($newMembers)) {
             // make sure that a group-option exists, clean up afterwards
             if (empty($newGroupId) || $newGroupId == Uuid::NIL) {
               $newGroupId = Uuid::create();
@@ -2612,7 +2620,7 @@ GROUP BY " . $fdAlias . ".option_key",
   {
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project['participantFields'] as $participantField) {
-      if ($participantField->getMultiplicity() != FieldMultiplicity::GROUPOFPEOPLE()) {
+      if ($participantField->getMultiplicity() != FieldMultiplicity::GROUPOFPEOPLE) {
         continue;
       }
       /** @var Entities\ProjEctParticipantFieldDataOption $dataOption */
@@ -2658,12 +2666,12 @@ GROUP BY " . $fdAlias . ".option_key",
     uasort($options, function($a, $b) use ($values) {
       /** @var Entities\ProjectParticipantFieldDataOption $a */
       /** @var Entities\ProjectParticipantFieldDataOption $b */
-      $cmp = Functions\strCmpEmptyLast($a->getLabel(), $b->getLabel());
+      $cmp = strCmpEmptyLast($a->getLabel(), $b->getLabel());
       if ($cmp === 0) {
-        $cmp = Functions\strCmpEmptyLast($a->getData(), $b->getData());
+        $cmp = strCmpEmptyLast($a->getData(), $b->getData());
       }
       if ($cmp === 0) {
-        $cmp = Functions\strCmpEmptyLast($values[(string)$a->getKey()], $values[(string)$b->getKey()]);
+        $cmp = strCmpEmptyLast($values[(string)$a->getKey()], $values[(string)$b->getKey()]);
       }
       return $cmp;
     });

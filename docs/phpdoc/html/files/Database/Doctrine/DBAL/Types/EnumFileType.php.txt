@@ -25,15 +25,13 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
- * Enum for data transformations.
- *
- * @method static EnumFileType GENERIC()
- * @method static EnumFileType IMAGE()
- * @method static EnumFileType ENCRYPTED()
+ * Enum for file types, used as discriminator column.
  */
-class EnumFileType extends AbstractEnumType
+enum EnumFileType: string
 {
-  public const GENERIC = 'generic';
-  public const IMAGE = 'image';
-  public const ENCRYPTED = 'encrypted';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case GENERIC = 'generic';
+  case IMAGE = 'image';
+  case ENCRYPTED = 'encrypted';
 }

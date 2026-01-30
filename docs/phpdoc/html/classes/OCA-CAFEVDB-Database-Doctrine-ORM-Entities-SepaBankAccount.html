@@ -330,21 +330,21 @@ i.e. the list of identities which can read and write this entry.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getBankAccountOwner">getBankAccountOwner()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: string|null    </span>
 </dt>
 <dd>Get bankAccountOwner.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getBic">getBic()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: string|null    </span>
 </dt>
 <dd>Get bic.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getBlz">getBlz()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: string|null    </span>
 </dt>
 <dd>Get blz.</dd>
 
@@ -359,14 +359,14 @@ the entity has not been soft deleted.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getIban">getIban()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: string|null    </span>
 </dt>
 <dd>Get iban.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#method_getMusician">getMusician()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null|int    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null    </span>
 </dt>
 <dd>Get musician.</dd>
 
@@ -1522,7 +1522,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getBankAccountOwner</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getBankAccountOwner</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1535,7 +1535,7 @@ i.e. the list of identities which can read and write this entry.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
             </section>
 
 </article>
@@ -1562,7 +1562,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getBic</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getBic</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1575,7 +1575,7 @@ i.e. the list of identities which can read and write this entry.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
             </section>
 
 </article>
@@ -1602,7 +1602,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getBlz</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getBlz</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1615,7 +1615,7 @@ i.e. the list of identities which can read and write this entry.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
             </section>
 
 </article>
@@ -1683,7 +1683,7 @@ the entity has not been soft deleted.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getIban</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getIban</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1696,7 +1696,7 @@ the entity has not been soft deleted.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
             </section>
 
 </article>
@@ -1714,16 +1714,16 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">241</span>
+    <span class="phpdocumentor-element-found-in__line">244</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.241" class="phpdocumentor-element-found-in__source" data-line="241" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get musician.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getMusician</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null|int</span></code>
+                    <span class="phpdocumentor-signature__name">getMusician</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1736,7 +1736,7 @@ the entity has not been soft deleted.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null|int</span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null</span>
             </section>
 
 </article>
@@ -1754,9 +1754,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">289</span>
+    <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -1794,9 +1794,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">313</span>
+    <span class="phpdocumentor-element-found-in__line">316</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandates.</p>
@@ -1834,9 +1834,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">265</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sequence.</p>
@@ -1874,9 +1874,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">334</span>
+    <span class="phpdocumentor-element-found-in__line">337</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.337" class="phpdocumentor-element-found-in__source" data-line="337" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2312,7 +2312,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setBankAccountOwner</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountOwner</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setBankAccountOwner</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountOwner</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2322,7 +2322,7 @@ i.e. the list of identities which can read and write this entry.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$bankAccountOwner</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2362,7 +2362,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setBic</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bic</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setBic</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bic</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2372,7 +2372,7 @@ i.e. the list of identities which can read and write this entry.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$bic</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2412,7 +2412,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setBlz</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$blz</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setBlz</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$blz</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2422,7 +2422,7 @@ i.e. the list of identities which can read and write this entry.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$blz</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2512,7 +2512,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setIban</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$iban</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setIban</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$iban</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2522,7 +2522,7 @@ i.e. the list of identities which can read and write this entry.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$iban</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2562,7 +2562,7 @@ i.e. the list of identities which can read and write this entry.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setMusician</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setMusician</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2572,8 +2572,8 @@ i.e. the list of identities which can read and write this entry.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$musician</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>|null</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
+                            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -2603,9 +2603,9 @@ i.e. the list of identities which can read and write this entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">277</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.277" class="phpdocumentor-element-found-in__source" data-line="277" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -2653,9 +2653,9 @@ i.e. the list of identities which can read and write this entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">301</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.301" class="phpdocumentor-element-found-in__source" data-line="301" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandates.</p>
@@ -2703,16 +2703,16 @@ i.e. the list of identities which can read and write this entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">253</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.253" class="phpdocumentor-element-found-in__source" data-line="253" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sequence.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setSequence</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sequence</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setSequence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sequence</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount">SepaBankAccount</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2723,7 +2723,7 @@ i.e. the list of identities which can read and write this entry.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$sequence</span>
                 : <span class="phpdocumentor-argument-list__argument__type">int</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+                            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -2832,9 +2832,9 @@ i.e. the list of identities which can read and write this entry.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/SepaBankAccount.php"><a href="files/database-doctrine-orm-entities-sepabankaccount.html"><abbr title="Database/Doctrine/ORM/Entities/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">326</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SepaBankAccount.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/SepaBankAccount.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the usage count. The bank-account is used and thus
@@ -2932,7 +2932,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">sanitizeEncryptionContext</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\Musician">Musician</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">sanitizeEncryptionContext</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musician</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2942,7 +2942,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$musician</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\Musician">Musician</abbr></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Musician.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician">Musician</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

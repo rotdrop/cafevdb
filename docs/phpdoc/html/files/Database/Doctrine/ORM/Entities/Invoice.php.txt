@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultExpression\CurrentDate;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -51,10 +52,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class Invoice implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   public const INVOICE_NUMBER_SEPARATOR = '/';
@@ -64,11 +66,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * The fields which are using in order to autogenerate the slug field.
    */
   public const INVOICE_NUMBER_FIELDS = [ 'project', 'balanceDocumentsFolder' ];
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 255, nullable: false)]
   #[Gedmo\Slug(
@@ -109,7 +106,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * This should be set to the date of the actual sending out of the invoice.
    */
-  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => 'CURRENT_DATE'])]
+  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['default' => new CurrentDate()])]
   private DateTimeImmutable $invoiceDate;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]
@@ -197,16 +194,6 @@ class Invoice implements \ArrayAccess, \JsonSerializable
     $this->arrayCTOR();
     $this->invoiceItems = new ArrayCollection;
     $this->setAmount(0);
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**

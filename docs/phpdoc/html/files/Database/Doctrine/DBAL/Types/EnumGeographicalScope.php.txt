@@ -27,33 +27,15 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 /**
  * Geographical scope for insurances.
  *
- * @method static EnumGeographicalScope DOMESTIC()
- * @method static EnumGeographicalScope CONTINENT()
- * @method static EnumGeographicalScope GERMANY()
- * @method static EnumGeographicalScope EUROPE()
- * @method static EnumGeographicalScope WORLD()
- *
  * @todo Perhaps should be renamed to "COUNTRY/CONTINENT/WORLD"
  */
-class EnumGeographicalScope extends AbstractEnumType
+enum EnumGeographicalScope: string
 {
-  public const DOMESTIC = 'Domestic';
-  public const CONTINENT = 'Continent';
-  public const GERMANY = 'Germany';
-  public const EUROPE = 'Europe';
-  public const WORLD = 'World';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
-  {
-    self::t(self::DOMESTIC);
-    self::t(self::CONTINENT);
-    self::t(self::GERMANY);
-    self::t(self::EUROPE);
-    self::t(self::WORLD);
-  }
+  case DOMESTIC = 'Domestic';
+  case CONTINENT = 'Continent';
+  case GERMANY = 'Germany';
+  case EUROPE = 'Europe';
+  case WORLD = 'World';
 }

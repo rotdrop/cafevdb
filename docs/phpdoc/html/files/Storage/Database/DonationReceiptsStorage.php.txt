@@ -29,6 +29,7 @@ use DateTimeInterface;
 use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt as Entity;
@@ -110,7 +111,7 @@ class DonationReceiptsStorage extends Storage
    *
    * @param bool $flush Whether to flush the changes to the db.
    *
-   * @param string $conflict
+   * @param EnumAddDocumentConflictAction $conflict
    *
    * @return Entities\DatabaseStorageFile
    */
@@ -118,7 +119,7 @@ class DonationReceiptsStorage extends Storage
     Entity $entity,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    string $conflict = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL,
+    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -184,7 +185,7 @@ class DonationReceiptsStorage extends Storage
     Entities\EncryptedFile $file,
     bool $flush = true,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDocument($entity, $file, $flush, conflict: DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE);
+    return $this->addDocument($entity, $file, $flush, conflict: EnumAddDocumentConflictAction::REPLACE);
   }
 
   /**

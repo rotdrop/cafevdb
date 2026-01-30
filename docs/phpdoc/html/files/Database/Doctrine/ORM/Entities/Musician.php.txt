@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,22 +29,23 @@ use Exception;
 
 use GenderDetector;
 
+use OCA\CAFEVDB\AppInfo\Application;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 
 /**
- * Musician
- *
- *
- * @SuppressWarnings(PHPMD.UnusedPrivateField)
+ * Musician database entity, representing actually just any natural person,
+ * also used for non-musician busyness contacts.
  */
 #[ORM\Table(name: 'Musicians')]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
@@ -52,22 +53,20 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\MusicianEntityListener::class])]
+#[LiteralTypeScriptProperty(propertyName: 'personalPublicName', typeScript: 'string', optional: false)]
+#[LiteralTypeScriptProperty(propertyName: 'publicName', typeScript: 'string', optional: false)]
+#[LiteralTypeScriptProperty(propertyName: 'streetAndNumber', typeScript: 'string', optional: false)]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\UuidTrait;
-  use CAFEVDB\Traits\UpdatedAt;
-  use CAFEVDB\Traits\CreatedAtEntity;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
-  use CAFEVDB\Traits\UnusedTrait;
-  use CAFEVDB\Traits\GetByUuidTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\GetByUuidTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\UuidTrait;
 
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $surName;
@@ -84,7 +83,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private ?string $displayName = null;
 
-  #[ORM\Column(type: 'EnumGender', nullable: true)]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: true)]
   private ?Types\EnumGender $gender = null;
 
   /**
@@ -120,7 +119,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private ?string $userPassphrase = null;
 
   #[ORM\OneToOne(targetEntity: MusicianRowAccessToken::class, mappedBy: 'musician', cascade: ['all'], orphanRemoval: true)]
-  private ?MusicianRowAccessToken $rowAccessToken;
+  private ?MusicianRowAccessToken $rowAccessToken = null;
 
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $city = null;
@@ -145,7 +144,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private ?string $addressSupplement = null;
 
   /**
-   * po-box component for the sake of supporting business contacts.
+   * PO-Box component for the sake of supporting business contacts.
    */
   #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private ?string $poBox = null;
@@ -177,7 +176,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', cascade: ['remove', 'persist'], orphanRemoval: true, indexBy: 'address')]
   private Collection $emailAddresses;
 
-  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumParticipationStatus::REGULAR])]
   private Types\EnumParticipationStatus $defaultParticipationStatus;
 
   #[ORM\Column(type: 'string', length: 1024, nullable: true)]
@@ -264,9 +263,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'originator', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private Collection $originatedInvoices;
 
-  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeImmutable $updated = null;
-
   /**
    * If non null then this is the URI of an address-book which is the primary source
    * of the contact data.
@@ -306,7 +302,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->invoices = new ArrayCollection();
     $this->originatedInvoices = new ArrayCollection();
 
-    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR;
 
     $this->setUpdated(new DateTimeImmutable());
     $this->setCreated(new DateTimeImmutable());
@@ -317,30 +313,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->keys[] = 'publicName';
-  }
-
-  /**
-   * Set id.
-   *
-   * @param null|int $id
-   *
-   * @return Musician
-   */
-  public function setId($id):Musician
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**
@@ -825,11 +797,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setDefaultParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):Musician
   {
-    if ($this->defaultParticipationStatus != $participationStatus) {
-      $this->defaultParticipationStatus = is_string($participationStatus)
-        ? new Types\EnumParticipationStatus($participationStatus)
-        : $participationStatus;
-    }
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::get($participationStatus);
 
     return $this;
   }
@@ -854,9 +822,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function setGender(null|string|Types\EnumGender $gender):Musician
   {
     if ($gender === null) {
-      $this->gender = $gender;
+      $this->gender = null;
     } else {
-      $this->gender = new Types\EnumGender($gender);
+      $this->gender = Types\EnumGender::get($gender);
     }
 
     return $this;
@@ -1662,17 +1630,47 @@ class Musician implements \ArrayAccess, \JsonSerializable
       + $this->originatedInvoices->count();
   }
 
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Most of the extra fields are just needed for the sake of
+   * mail-merge. So better move the code into a service class for just that
+   * purpose.
+   */
   public function jsonSerialize():array
   {
+    $gender = $this->getGender();
+    $genderAssumed = false;
+    if ($gender === null) {
+      $guessedGenders = $this->guessGender();
+      if (count($guessedGenders) == 1) {
+        $gender = array_values($guessedGenders)[0];
+        $genderAssumed = true;
+      }
+    }
+    $labelledPOBox = '';
+    if (!empty($this->getPoBox())) {
+      $l = Application::get(\OCP\IL10N::class);
+      $labelledPOBox = $l->t('P.O. Box') . ' ' . $this->getPoBox();
+    }
+    $personalPublicName = $this->getPublicName(firstNameFirst: true);
     return array_merge($this->toArray(), [
-      'publicName' => $this->getPublicName(true),
+      'name' => $personalPublicName,
+      'publicName' => $this->getPublicName(firstNameFirst: false),
+      'personalPublicName' => $personalPublicName,
+      'displayName' => $this->displayName ?? $this->getPublicName(firstNameFirst: false),
+      'streetAndNumber' => $this->street . ' ' . $this->streetNumber,
+      'numberAndStreet' => $this->streetNumber . ' ' . $this->street,
+      'gender' => $gender,
+      'genderAssumed' => $genderAssumed,
+      'labelledPOBox' => $labelledPOBox,
+      'phone' => $this->getFixedLinePhone(),
+      'mobile' => $this->getMobilePhone(),
     ]);
   }
 
   /**
    * {@inheritdoc}
-   *
    *
    * @todo This should no longer be necessary.
    */

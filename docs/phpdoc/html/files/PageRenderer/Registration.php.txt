@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,14 @@ use OCA\CAFEVDB\Constants;
 /** Register template-names as dependency injection tags. */
 class Registration
 {
-  public const TEMPLATE_PREFIX = 'template:';
-
-  private const LEGACY_TEMPLATES = [
+  /**
+   * @var array<string, string>
+   *
+   * Template name - classname map. self::register() establishes service
+   * aliases from (DataConstants::RENDERER_PREFIX_TAG . TEMPLATE) to the class
+   * instantiation service.
+   */
+  public const LEGACY_TEMPLATES = [
     AddMusicians::TEMPLATE => AddMusicians::class,
     AllMusicians::TEMPLATE => AllMusicians::class,
     Blog::TEMPLATE => Blog::class,
@@ -71,50 +76,50 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
-    $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/debug', function($c) {
+    $context->registerService(DataConstants::RENDERER_PREFIX_TAG . 'maintenance/debug', function($c) {
       return new class extends Renderer {}; // do nothing
     });
 
     foreach (self::LEGACY_TEMPLATES as $template => $class) {
-      $context->registerServiceAlias(self::TEMPLATE_PREFIX . $template, $class);
+      $context->registerServiceAlias(DataConstants::RENDERER_PREFIX_TAG . $template, $class);
       // There are subtle difficulties with special characters in url
       // parameteres. Sometime double encoding is neccessary, sometimes
       // not. Not clear, what causes the problem. As our templates at most
       // contain / path separators simply work around by replacing the path
       // separator by something "normal".
       if (str_contains($template, Constants::PATH_SEP)) {
-        $context->registerServiceAlias(self::TEMPLATE_PREFIX . str_replace(Constants::PATH_SEP, ':', $template), $class);
+        $context->registerServiceAlias(DataConstants::RENDERER_PREFIX_TAG . str_replace(Constants::PATH_SEP, ':', $template), $class);
       }
     }
 
     // @todo find a cleaner way for the following
 
-    $context->registerService('export:' . AllMusicians::TEMPLATE, function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX . AllMusicians::TEMPLATE);
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . AllMusicians::TEMPLATE, function($c) {
+      $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . AllMusicians::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerService('export:' . ProjectParticipants::TEMPLATE, function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE);
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . ProjectParticipants::TEMPLATE, function($c) {
+      $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . ProjectParticipants::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
-    $context->registerService('export:' . ProjectAssociates::TEMPLATE, function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX . ProjectAssociates::TEMPLATE);
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . ProjectAssociates::TEMPLATE, function($c) {
+      $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . ProjectAssociates::TEMPLATE);
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
-    $context->registerService('export:' . SepaBankAccounts::TEMPLATE, function($c) {
-      $renderer = $c->query(self::TEMPLATE_PREFIX . SepaBankAccounts::TEMPLATE);
+    $context->registerService(DataConstants::EXPORTER_PREFIX_TAG . SepaBankAccounts::TEMPLATE, function($c) {
+      $renderer = $c->query(DataConstants::RENDERER_PREFIX_TAG . SepaBankAccounts::TEMPLATE);
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
-    $context->registerServiceAlias('export:' . InstrumentInsurances::TEMPLATE, Export\InsuranceSpreadsheetExporter::class);
+    $context->registerServiceAlias(DataConstants::EXPORTER_PREFIX_TAG . InstrumentInsurances::TEMPLATE, Export\InsuranceSpreadsheetExporter::class);
   }
 }

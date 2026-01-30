@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,10 +32,11 @@ use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
+// use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
+use OCA\CAFEVDB\Wrapped\Firehed\DbalLogger\QueryLogger;
 
 /** DBAL logger implementation which logs to the cloud log. */
-class CloudLogger implements SQLLogger
+class CloudLogger implements QueryLogger
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
@@ -75,7 +76,7 @@ class CloudLogger implements SQLLogger
   private function setup(): void
   {
     $debugMode = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
-    $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]);
+    $debugMode = (int)filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
     $this->enabled = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
     $this->sqlFilter = $this->encryptionService->getUserValue(EnumPersonalSettingsKey::DEBUG_QUERY_SQL_FILTER, null);
   }
@@ -162,7 +163,8 @@ class CloudLogger implements SQLLogger
 
     $this->currentQuery['executionMS'] = microtime(true) - $this->start;
 
-    $this->logInfo(print_r($this->currentQuery, true), [], 10, true);
+    $msg = print_r($this->currentQuery, true);
+    $this->logInfo($msg, [ 'exception' => new \Exception($msg) ], 0, true);
 
     $this->currentQuery = null;
     $this->start = null;

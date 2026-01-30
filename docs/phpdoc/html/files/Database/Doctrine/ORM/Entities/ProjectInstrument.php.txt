@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022-2025 Claus-Justus Heine
+ * @copyright 2020, 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -79,7 +79,7 @@ class ProjectInstrument implements \ArrayAccess
   private int $voice = self::UNVOICED;
 
   #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
-  private bool $sectionLeader = false;
+  private bool $sectionLeader       = false;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', onDelete: 'cascade')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', onDelete: 'cascade')]
@@ -171,7 +171,6 @@ class ProjectInstrument implements \ArrayAccess
   public function setInstrument(int|Instrument $instrument):ProjectInstrument
   {
     $this->instrument = $instrument;
-
     return $this;
   }
 
@@ -311,6 +310,9 @@ class ProjectInstrument implements \ArrayAccess
     }
     if (!$this->musician->getProjectInstruments()->contains($this)) {
       $this->musician->getProjectInstruments()->add($this);
+    }
+    if (!$musicianInstrument->getProjectInstruments()->contains($this)) {
+      $musicianInstrument->getProjectInstruments()->add($this);
     }
 
     return $this;

@@ -265,30 +265,10 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
-    <span>
-                                &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
-    <span>
-                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
-</dt>
-<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#method_delete">delete()</a>
     <span>
                                 &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
 </dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
-    <span>
-                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
-</dt>
-<dd>Ensure a valid date.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#method_get">get()</a>
@@ -394,6 +374,19 @@ entity class.</dd>
 <dd>Forward to EntityManager::contains().</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_count">count()</a>
     <span>
                                 &nbsp;: int    </span>
@@ -457,9 +450,16 @@ not throw an exception if the filter is not enabled.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr>    </span>
+                                &nbsp;: bool    </span>
 </dt>
 <dd>Enable the given filter.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
+</dt>
+<dd>Ensure a valid date.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_expr">expr()</a>
@@ -1242,128 +1242,6 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
         class="phpdocumentor-element
             -method
             -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
-        convertToDateTime()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">51</span>
-
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
-        convertToTimezoneDate()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">89</span>
-
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$date</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
-</section>
-
-                                    </dd>
-                                            </dl>
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_delete">
@@ -1417,56 +1295,6 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
-        ensureDate()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">41</span>
-
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Ensure a valid date.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
             </section>
 
 </article>
@@ -2286,9 +2114,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">513</span>
+    <span class="phpdocumentor-element-found-in__line">509</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -2379,9 +2207,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">496</span>
+    <span class="phpdocumentor-element-found-in__line">492</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -2435,9 +2263,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">370</span>
+    <span class="phpdocumentor-element-found-in__line">372</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.370" class="phpdocumentor-element-found-in__source" data-line="370" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -2475,6 +2303,128 @@ entity class.</p>
         class="phpdocumentor-element
             -method
             -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
+        convertToDateTime()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
+        convertToTimezoneDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">89</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$date</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">todo</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_count">
@@ -2485,9 +2435,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">484</span>
+    <span class="phpdocumentor-element-found-in__line">480</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -2650,9 +2600,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">442</span>
+    <span class="phpdocumentor-element-found-in__line">438</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.442" class="phpdocumentor-element-found-in__source" data-line="442" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.438" class="phpdocumentor-element-found-in__source" data-line="438" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -2690,9 +2640,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">452</span>
+    <span class="phpdocumentor-element-found-in__line">448</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -2730,9 +2680,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">464</span>
+    <span class="phpdocumentor-element-found-in__line">460</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -2976,16 +2926,16 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">398</span>
+    <span class="phpdocumentor-element-found-in__line">400</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.400" class="phpdocumentor-element-found-in__source" data-line="400" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3015,11 +2965,61 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span>
+        <span class="phpdocumentor-signature__response_type">bool</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The enabled filter.</p>
+                <section class="phpdocumentor-description"><p>The old state of the filter.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
+        ensureDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Ensure a valid date.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
             </section>
 
 </article>
@@ -3037,9 +3037,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">470</span>
+    <span class="phpdocumentor-element-found-in__line">466</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.466" class="phpdocumentor-element-found-in__source" data-line="466" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -3072,9 +3072,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -3148,9 +3148,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -3202,9 +3202,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">345</span>
+    <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -3277,9 +3277,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">327</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -3360,9 +3360,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -3421,9 +3421,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">261</span>
+    <span class="phpdocumentor-element-found-in__line">263</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
@@ -3562,9 +3562,9 @@ database entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
@@ -3836,9 +3836,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">428</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -3894,9 +3894,9 @@ return a new collection containing these elements.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
@@ -3970,9 +3970,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">529</span>
+    <span class="phpdocumentor-element-found-in__line">525</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -4074,9 +4074,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">383</span>
+    <span class="phpdocumentor-element-found-in__line">385</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.383" class="phpdocumentor-element-found-in__source" data-line="383" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -4823,10 +4823,7 @@ parameters (post-data), otherwise omit theem.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#method___construct">__construct()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#method_delete">delete()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Controller-WebBrowserHistoryController.html#method_get">get()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a></li>
@@ -4842,6 +4839,8 @@ parameters (post-data), otherwise omit theem.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_clearDatabaseRepository">clearDatabaseRepository()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_columnNames">columnNames()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_containsEntity">containsEntity()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_count">count()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createNamedQuery">createNamedQuery()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createQuery">createQuery()</a></li>
@@ -4852,6 +4851,7 @@ parameters (post-data), otherwise omit theem.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter">disableFilter()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_expr">expr()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_find">find()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findAll">findAll()</a></li>

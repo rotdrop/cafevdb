@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use InvalidArgumentException;
 use ReflectionClass;
 use Stringable;
+use Throwable;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
@@ -305,7 +306,11 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
           $indexBy = $targetAssociation['indexBy'] ?? null;
           // $orderBy = $targetAssociation['orderBy']; complicated
           if (!empty($indexBy)) {
-            $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
+            // $indexByValue = (string)$this->metaData->getFieldValue($entity, $indexBy);
+            $indexByValue = (string)$this->getColumnValue($entity, $indexBy);
+            if ($inversedByValue->contains($entity)) {
+              $inversedByValue->removeElement($entity);
+            }
             $inversedByValue->set($indexByValue, $entity);
           } elseif (!$inversedByValue->contains($entity)) {
             $inversedByValue->add($entity);
@@ -350,6 +355,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
         $targetField = $targetMeta->fieldNames[$targetColumn];
         if ($value instanceof $targetEntity) {
           $columnValues[$columnName] = $targetMeta->getFieldValue($value, $targetField);
+          // try to maintain connectivity if it does not cause additional direct database access
+          $this->updateInverseSide($entity, $association, $value, $targetMeta);
         } else {
           // avoid references with empty identifiers
           if (empty($value)) {
@@ -367,7 +374,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
           $columnValues[$columnName] = $value;
         }
       } else {
-        $columnName = $this->metaData->fieldMappings[$field]['columnName'];
+        $columnName = $this->metaData->fieldMappings[$field]->columnName;
         $columnValues[$columnName] = $value;
       }
     }
@@ -405,10 +412,15 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
     foreach ($this->metaData->identifier as $field) {
       $dbalType = null;
       if (isset($this->metaData->associationMappings[$field])) {
-        if (count($this->metaData->associationMappings[$field]['joinColumns']) != 1) {
+        $association = $this->metaData->associationMappings[$field];
+        if (count($association->joinColumns) != 1) {
           throw new Exceptions\DatabaseException($this->l->t('Foreign keys as principle keys cannot be composite'));
         }
-        $columnName = $this->metaData->associationMappings[$field]['joinColumns'][0]->name;
+        $columnName = $association->joinColumns[0]->name;
+        $value = $this->entityManager->getReference(
+          $association->targetEntity,
+          [ $association->joinColumns[0]->referencedColumnName => $columnValues[$columnName] ],
+        );
       } else {
         $columnName = $this->metaData->fieldMappings[$field]->columnName;
         if (!isset($columnValues[$columnName])) {
@@ -420,8 +432,8 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
             $this->l->t('Missing value and no generator for identifier field: %s::%s', [ $this->getName(), $field ]));
         }
         $dbalType = Type::getType($this->metaData->fieldMappings[$field]->type);
+        $value = $columnValues[$columnName];
       }
-      $value = $columnValues[$columnName];
       if (!empty($dbalType) && is_string($value)) {
         $value = $dbalType->convertToPHPValue($value, $this->entityManager->getPlatform());
       }
@@ -635,7 +647,7 @@ class ClassMetadataDecorator implements ClassMetadataInterface, Stringable
         }
         $columnName = $meta->associationMappings[$field]['joinColumns'][0]->name;
       } else {
-        $columnName = $meta->fieldMappings[$field]['columnName'];
+        $columnName = $meta->fieldMappings[$field]->columnName;
       }
       $entityId[$field] = $columnName;
     }

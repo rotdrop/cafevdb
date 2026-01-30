@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,9 +49,9 @@ abstract class Synchronized extends Db\QBMapper
   public function __construct(
     IDBConnection $db,
     string $appName,
-    int $id = null,
-    string $entityClass = null,
-    string $tableName = null,
+    ?int $id = null,
+    ?string $entityClass = null,
+    ?string $tableName = null,
   ) {
     if ($entityClass === null) {
       $entityClass = $this->makeEntityClass();

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Traits;
+
+use OCP\IConfig;
 
 use OCA\CAFEVDB\Settings\OldSettingsKeys;
 
@@ -51,6 +53,14 @@ trait AppConfigTrait
     return $oldConfigKey;
   }
 
+  /** @return IConfig */
+  private function __appConfigTraitGetCloudConfig(): IConfig
+  {
+    return method_exists($this, 'getCloudConfig')
+      ? $this->getCloudConfig()
+      : $this->cloudConfig;
+  }
+
   /**
    * A short-cut, redirecting to the stock functions for the app.
    *
@@ -62,10 +72,17 @@ trait AppConfigTrait
    */
   public function getAppValue(string $key, mixed $default = null): mixed
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
-      $default = $cloudConfig->getAppValue($this->appName, $oldConfigKey, $default);
+      $oldKeyValue = $cloudConfig->getAppValue($this->appName, $oldConfigKey, null);
+      // install using the new key
+      if ($oldKeyValue !== null) {
+        $this->setAppValue($key, $oldKeyValue);
+        if ($cloudConfig->getAppValue($this->appName, $key, null) === $oldKeyValue) {
+          $cloudConfig->deleteAppValue($this->appName, $oldConfigKey);
+        }
+      }
     }
     return $cloudConfig->getAppValue($this->appName, $key, $default);
   }
@@ -81,7 +98,7 @@ trait AppConfigTrait
    */
   public function setAppValue(string $key, mixed $value)
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $cloudConfig->setAppValue($this->appName, $key, $value);
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {
@@ -98,7 +115,7 @@ trait AppConfigTrait
    */
   public function deleteAppValue(string $key):void
   {
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $cloudConfig = $this->__appConfigTraitGetCloudConfig();
     $cloudConfig->deleteAppValue($this->appName, $key);
     $oldConfigKey = self::oldConfigKey($key);
     if ($oldConfigKey !== null) {

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
@@ -45,7 +47,15 @@ class EncryptedFileData extends FileData
    */
   protected File $file;
 
+  /**
+   * @var resource
+   *
+   * Although this is a resource the type-hint helps the type-script
+   * transformer to generate a useful type. In principle this finally should
+   * yield an ArrayBuffer, probably.
+   */
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
+  #[TSAttributes\LiteralTypeScriptType('ArrayBuffer')]
   protected /* resource */ $data;
 
   /**

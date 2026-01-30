@@ -37,7 +37,7 @@ class UndoableRunQueueException extends RuntimeException
 {
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected UndoableRunQueue $queue,
+    protected UndoableRunQueue $runQueue,
     string $message,
     int $code = 0,
     $previous = null,
@@ -49,16 +49,18 @@ class UndoableRunQueueException extends RuntimeException
   /** @return UndoableRunQueue */
   public function getRunQueue():UndoableRunQueue
   {
-    return $this->queue;
+    return $this->runQueue;
   }
 
   /**
-   * @param UndoableRunQueue $queue
+   * @param UndoableRunQueue $runQUeue
    *
-   * @return void
+   * @return self
    */
-  public function setRunQueue(UndoableRunQueue $queue)
+  public function setRunQueue(UndoableRunQueue $runQueue): self
   {
-    $this->runQueue = $queue;
+    $this->runQueue = $runQueue;
+
+    return $this;
   }
 }

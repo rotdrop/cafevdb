@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">A table for recording possible tax excemption reasons and their legal
@@ -241,6 +241,15 @@ justification (link to the corresponding law, given country).</p>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_country">$country</a>
     <span>
@@ -254,12 +263,6 @@ justification (link to the corresponding law, given country).</p>
                         &nbsp;: string|null            </span>
 </dt>
 <dd>A hint, e.g. &quot;Kleinunternehmerregelung&quot;.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
-</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_invoices">$invoices</a>
@@ -345,7 +348,7 @@ the entity has not been soft deleted.</dd>
 <dd>Get hint.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
@@ -463,6 +466,13 @@ next call to delete.</dd>
 <dd>Set hint.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setInvoices">setInvoices()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>    </span>
@@ -555,9 +565,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -586,9 +596,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -675,6 +685,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -688,9 +781,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Country where this is legally valid.</p>
@@ -750,9 +843,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">88</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A hint, e.g. &quot;Kleinunternehmerregelung&quot;.</p>
@@ -799,74 +892,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">57</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
     <h4 class="phpdocumentor-element__name" id="property_invoices">
         $invoices
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_invoices" class="headerlink"><i class="fas fa-link"></i></a>
@@ -877,9 +902,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">96</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -981,9 +1006,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The abbreviated law justifying the taxation, &quot;§15, Abs. 3 UStG&quot; or something like this.</p>
@@ -1040,9 +1065,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tax rate. If 0 then this item refers to a tax exemption, a taxation
@@ -1101,9 +1126,9 @@ exception. This assumes that governments never issue fractional tax rates
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -1156,9 +1181,9 @@ exception. This assumes that governments never issue fractional tax rates
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -1167,7 +1192,7 @@ exception. This assumes that governments never issue fractional tax rates
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType">EnumTaxType</abbr></a></span>
     <span class="phpdocumentor-signature__name">$taxType</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::CORPORATE_INCOME</span></code>
 
     
     
@@ -1184,13 +1209,13 @@ exception. This assumes that governments never issue fractional tax rates
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;EnumTaxType&#039;
+        $type: \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types::ENUM
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: false
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $options: [&#039;default&#039; =&gt; &#039;corporate income tax&#039;]
+        $options: [&#039;default&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::CORPORATE_INCOME]
     </dd>
     </dl>
                     </section>
@@ -1219,9 +1244,9 @@ exception. This assumes that governments never issue fractional tax rates
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -1290,9 +1315,9 @@ exception. This assumes that governments never issue fractional tax rates
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get country.</p>
@@ -1371,9 +1396,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">236</span>
+    <span class="phpdocumentor-element-found-in__line">221</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get hint.</p>
@@ -1405,15 +1430,15 @@ the entity has not been soft deleted.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">114</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -1451,9 +1476,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -1490,9 +1515,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">212</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get law.</p>
@@ -1530,9 +1555,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get rate.</p>
@@ -1570,9 +1595,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">242</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.242" class="phpdocumentor-element-found-in__source" data-line="242" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -1609,9 +1634,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">140</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get taxType.</p>
@@ -1770,9 +1795,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">271</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2005,9 +2030,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set country of validity two-letter code.</p>
@@ -2105,9 +2130,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">224</span>
+    <span class="phpdocumentor-element-found-in__line">209</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.209" class="phpdocumentor-element-found-in__source" data-line="209" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set hint.</p>
@@ -2147,6 +2172,56 @@ next call to delete.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setId">
+        setId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$id</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setInvoices">
         setInvoices()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setInvoices" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2155,9 +2230,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">255</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -2204,9 +2279,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">200</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set law as abbreviated text.</p>
@@ -2254,9 +2329,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set rate.</p>
@@ -2304,9 +2379,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">252</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -2353,9 +2428,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">126</span>
+    <span class="phpdocumentor-element-found-in__line">113</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set taxType as a fraction between 0 and 1 (not the percentage)</p>
@@ -2482,9 +2557,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php"><a href="files/database-doctrine-orm-entities-taxationstatutorysource.html"><abbr title="Database/Doctrine/ORM/Entities/TaxationStatutorySource.php">TaxationStatutorySource.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">280</span>
+    <span class="phpdocumentor-element-found-in__line">265</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxationStatutorySource.php.txt"></a>
     </aside>
 
     
@@ -2784,9 +2859,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_country">$country</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_hint">$hint</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_invoices">$invoices</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#property_law">$law</a></li>
@@ -2804,7 +2879,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getCountry">getCountry()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getHint">getHint()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getInvoices">getInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getLaw">getLaw()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_getRate">getRate()</a></li>
@@ -2821,6 +2896,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setCountry">setCountry()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setHint">setHint()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setInvoices">setInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setLaw">setLaw()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxationStatutorySource.html#method_setRate">setRate()</a></li>

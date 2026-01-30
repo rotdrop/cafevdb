@@ -33,7 +33,7 @@ class AdminSettingsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   public readonly ?PermanentTransientMessages $messages;
 
-    /** {@inheritdoc} */
+  /** {@inheritdoc} */
   public function __construct(
     /** @var string|int|float|array<int|float|string|object>|array<string, int|float|string|object> */
     #[TSAttributes\Optional]
@@ -51,6 +51,9 @@ class AdminSettingsResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

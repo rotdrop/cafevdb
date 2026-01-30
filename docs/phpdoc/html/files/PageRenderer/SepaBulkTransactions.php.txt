@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ class SepaBulkTransactions extends PMETableViewBase
   protected $cssClass = self::TEMPLATE;
 
   /** @var array */
-  private $bulkTransactionExpanded = [];
+  private $entityRowsExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -171,15 +171,14 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     private SepaBulkTransactionService $bulkTransactionService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
-    $this->bulkTransactionExpanded = $this->request['bulkTransactionExpanded'];
+    $this->entityRowsExpanded = $this->request->getParam(PersistentCGIKeys::ENTITY_ROWS_EXPANDED);
 
     $this->findProject(enforce: false);
 
@@ -187,7 +186,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
   }
@@ -195,7 +194,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
 
@@ -218,10 +216,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
-      'bulkTransactionExpanded' => $this->bulkTransactionExpanded,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::BULK_TRANSACTION_EXPANDED => $this->entityRowsExpanded,
     ];
 
     // Name of field which is the unique key
@@ -232,7 +230,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       '-submission_dead_line',
       '-created',
       'id',
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
     ];
     $opts['groupby_fields'] = [ 'id' ];
     $opts['groupby_where'] = true;
@@ -293,7 +291,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $lastBulkTransactionId = $bulkTransactionId;
         $oddCompositePayment = true;
         $cssClasses[] = 'first';
-        if (empty($this->bulkTransactionExpanded[$bulkTransactionId])) {
+        if (empty($this->entityRowsExpanded[$bulkTransactionId])) {
           $cssClasses[] = 'following-hidden';
         }
         $cssClasses[] = $evenOdd[(int)$oddBulkTransaction];
@@ -345,7 +343,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
         if ($this->isBulkTransactionRow($row, $pme)) {
-          $html = '<input type="hidden" class="expanded-marker" name="bulkTransactionExpanded['.$recordId['id'].']" value="'.(int)($this->bulkTransactionExpanded[$recordId['id']]??0).'"/>';
+          $html = '<input type="hidden" class="expanded-marker" name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']" value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
           }
@@ -763,7 +761,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       );
     }
 
-    $rowTagKey = $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
+    $rowTagKey = self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
 
     $paymentId = null;
 
@@ -776,9 +774,13 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $payment = $bulkTransaction->getPayments()->first();
         if ($payment->getId() != $paymentId) {
           throw new Exceptions\DatabaseInconsistentValueException(
-            $this->l->t('Data inconsistency in bulk-transaction payments: %d / %d', [
+            $this->l->t('Data inconsistency in bulk-transaction payments: %1$d / %2$d', [
               $payment->getId(), $paymentId
-            ])
+            ]),
+            entityClassName: Entities\CompositePayment::class,
+            field: 'id',
+            expected: $paymentId,
+            actual: $payment->getId(),
           );
         }
         $paymentId = null;

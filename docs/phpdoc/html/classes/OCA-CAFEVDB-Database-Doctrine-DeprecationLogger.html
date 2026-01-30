@@ -103,7 +103,7 @@
     DeprecationLogger
 
         <span class="phpdocumentor-element__extends">
-        extends <a href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\CloudLoggerWrapper">CloudLoggerWrapper</abbr></a>
+        extends <a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html"><abbr title="\OCA\CAFEVDB\Common\ConsoleLogger">ConsoleLogger</abbr></a>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -124,9 +124,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">35</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Doctrine\Deprecations\Deprecation always logs with level &#039;notice&#039;. We wrap
@@ -159,9 +159,27 @@ therefore another Psr-logger to just map all levels to the wanted one.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html#property_logger">$logger</a>
+    <span>
+                        &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_logLevel">$logLevel</a>
     <span>
-                        &nbsp;: null|int            </span>
+                        &nbsp;: mixed            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_actualLogger">$actualLogger</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html"><abbr title="\OCA\CAFEVDB\Common\ConsoleLogger">ConsoleLogger</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_isCLI">$isCLI</a>
+    <span>
+                        &nbsp;: bool            </span>
 </dt>
 
     </dl>
@@ -173,19 +191,20 @@ therefore another Psr-logger to just map all levels to the wanted one.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method___construct">__construct()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method___construct">__construct()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_getLogLevel">getLogLevel()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_getLogLevel">getLogLevel()</a>
-    <span>
-                                &nbsp;: null|int    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method_log">log()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_log">log()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -194,16 +213,8 @@ therefore another Psr-logger to just map all levels to the wanted one.</p>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_setLogLevel">setLogLevel()</a>
     <span>
-                                &nbsp;: void    </span>
+                                &nbsp;: self    </span>
 </dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_mapLogLevels">mapLogLevels()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
-understands those.</dd>
 
     </dl>
 
@@ -225,6 +236,44 @@ understands those.</dd>
             -protected
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_logger">
+        $logger
+        <a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Common/ConsoleLogger.php"><a href="files/common-consolelogger.html"><abbr title="Common/ConsoleLogger.php">ConsoleLogger.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">41</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Common/ConsoleLogger.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
+    <span class="phpdocumentor-signature__name">$logger</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_logLevel">
         $logLevel
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_logLevel" class="headerlink"><i class="fas fa-link"></i></a>
@@ -235,18 +284,94 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type">null|int</span>
+            <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">$logLevel</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_actualLogger">
+        $actualLogger
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_actualLogger" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html"><abbr title="\OCA\CAFEVDB\Common\ConsoleLogger">ConsoleLogger</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$actualLogger</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_isCLI">
+        $isCLI
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_isCLI" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">bool</span>
+    <span class="phpdocumentor-signature__name">$isCLI</span>
+    </code>
 
     
     
@@ -272,21 +397,22 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/CloudLoggerWrapper.php"><a href="files/database-doctrine-cloudloggerwrapper.html"><abbr title="Database/Doctrine/CloudLoggerWrapper.php">CloudLoggerWrapper.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Database/Doctrine/CloudLoggerWrapper.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudLogger</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html"><abbr title="\OCA\CAFEVDB\Common\ConsoleLogger">ConsoleLogger</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$actualLogger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$isCLI</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -295,8 +421,15 @@ understands those.</dd>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$cloudLogger</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
+                <span class="phpdocumentor-argument-list__argument__name">$actualLogger</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html"><abbr title="\OCA\CAFEVDB\Common\ConsoleLogger">ConsoleLogger</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$isCLI</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -323,15 +456,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getLogLevel</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
+                    <span class="phpdocumentor-signature__name">getLogLevel</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -342,11 +475,7 @@ understands those.</dd>
 
         
     
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|int</span>
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -356,15 +485,15 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="method_log">
         log()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method_log" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_log" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/CloudLoggerWrapper.php"><a href="files/database-doctrine-cloudloggerwrapper.html"><abbr title="Database/Doctrine/CloudLoggerWrapper.php">CloudLoggerWrapper.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Database/Doctrine/CloudLoggerWrapper.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -422,62 +551,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setLogLevel</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$level</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-    
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_mapLogLevels">
-        mapLogLevels()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_mapLogLevels" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/DeprecationLogger.php"><a href="files/database-doctrine-deprecationlogger.html"><abbr title="Database/Doctrine/DeprecationLogger.php">DeprecationLogger.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">64</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/DeprecationLogger.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
-understands those.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">mapLogLevels</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">setLogLevel</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$level</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -498,7 +580,11 @@ understands those.</p>
 
         
     
-    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
             </section>
 
@@ -615,18 +701,20 @@ understands those.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Common-ConsoleLogger.html#property_logger">$logger</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_logLevel">$logLevel</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_actualLogger">$actualLogger</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#property_isCLI">$isCLI</a></li>
                                             </ul>
                 </li>
             
                         <li class="phpdocumentor-on-this-page-section__title">Methods</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_getLogLevel">getLogLevel()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-CloudLoggerWrapper.html#method_log">log()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_log">log()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_setLogLevel">setLogLevel()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-DeprecationLogger.html#method_mapLogLevels">mapLogLevels()</a></li>
                                     </ul>
             </li>
                     </ul>

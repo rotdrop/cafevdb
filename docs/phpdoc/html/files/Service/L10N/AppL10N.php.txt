@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service\L10N;
 
+use BackedEnum;
+
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
@@ -55,7 +57,7 @@ class AppL10N implements IL10N
   }
 
   /** {@inheritdoc} */
-  public function t(string $text, $parameters = []): string
+  public function t(string|BackedEnum $text, $parameters = []): string
   {
     return static::__call(__FUNCTION__, func_get_args());
   }

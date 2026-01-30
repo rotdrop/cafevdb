@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,12 +30,18 @@ use PHP_IBAN;
 use Throwable;
 use stdClass;
 
+use GuzzleHttp\RequestOptions as ClientRequestOptions;
 use Malkusch\Lock\Mutex;
 
+use OCP\Share\IShare;
 use OCP\AppFramework\Http;
-use OCP\IDateTimeFormatter;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\Http\Client\IClient as HttpClient;
+use OCP\Http\Client\IClientService as HttpClientFactory;
+use OCP\IDateTimeFormatter;
+
+use function OCA\CAFEVDB\Common\Functions\sprintf; // accept backed enums
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
@@ -43,9 +49,10 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -72,6 +79,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Response\HttpStatus;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
@@ -96,7 +104,7 @@ class Composer
   private const PROGRESS_CHUNK_SIZE = 4096;
   private const PROGRESS_THROTTLE_SECONDS = 2;
 
-  const POST_TAG = 'emailComposer';
+  const POST_TAG = EnumPostTag::COMPOSER->value;
 
   private const PERSONAL_ATTACHMENT_PARENTS_STRIP = 5;
   private const ATTACHMENT_PREVIEW_CACHE_TTL = 4 * 60 * 60;
@@ -107,30 +115,40 @@ class Composer
   private const HEADER_MARKER_SENT = [ self::HEADER_TAG . '-' . 'DESTINATION' => 'Self', ];
   private const DO_NOT_REPLY_SENDER = 'do-not-reply';
 
-  public const FROM_ORCHESTRA = 'orchestra';
-  public const FROM_PERSONAL = 'personal';
-
-  public const DIAGNOSTICS_STAGE = 'stage';
   public const DIAGNOSTICS_CAPTION = 'caption';
-  public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
-  public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
+  public const DIAGNOSTICS_COPY_TO_SENT = 'CopyToSent';
+  public const DIAGNOSTICS_DUPLICATES = 'Duplicates';
   public const DIAGNOSTICS_FAILED_COUNT = 'FailedCount';
   public const DIAGNOSTICS_FAILED_RECIPIENTS = 'FailedRecipients';
   public const DIAGNOSTICS_MAILER_EXCEPTIONS = 'MailerExceptions';
-  public const DIAGNOSTICS_DUPLICATES = 'Duplicates';
-  public const DIAGNOSTICS_COPY_TO_SENT = 'CopyToSent';
-  public const DIAGNOSTICS_TEMPLATE_VALIDATION = 'TemplateValidation';
-  public const DIAGNOSTICS_ADDRESS_VALIDATION = 'AddressValidation';
-  public const DIAGNOSTICS_SUBJECT_VALIDATION = 'SubjectValidation';
-  public const DIAGNOSTICS_FROM_VALIDATION = 'FromValidation';
-  public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_MESSAGE = 'Message';
+  public const DIAGNOSTICS_STAGE = 'stage';
+  public const DIAGNOSTICS_TOTAL_COUNT = 'TotalCount';
+  public const DIAGNOSTICS_TOTAL_PAYLOAD = 'TotalPayload';
+
+  public const DIAGNOSTICS_ADDRESS_VALIDATION = 'AddressValidation';
+  public const DIAGNOSTICS_ATTACHMENT_VALIDATION = 'AttachmentValidation';
   public const DIAGNOSTICS_EXTERNAL_LINK_VALIDATION = 'ExternalLinkValidation';
-  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+  public const DIAGNOSTICS_FROM_VALIDATION = 'FromValidation';
   public const DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION = 'PrivacyNoticeValidation';
+  public const DIAGNOSTICS_SHARE_LINK_VALIDATION = 'ShareLinkValidation';
+  public const DIAGNOSTICS_SUBJECT_VALIDATION = 'SubjectValidation';
+  public const DIAGNOSTICS_TEMPLATE_VALIDATION = 'TemplateValidation';
 
   public const DIAGNOSTICS_STAGE_PREVIEW = 'preview';
   public const DIAGNOSTICS_STAGE_SEND = 'send';
+
+  public const TEMPLATE_VALIDATION_GLOBAL_ERRORS = 'GlobalErrors';
+  public const TEMPLATE_VALIDATION_MEMBER_ERRORS = 'MemberErrors';
+  public const TEMPLATE_VALIDATION_PRECONDITION_ERRORS = 'PreconditionErrors';
+  public const TEMPLATE_VALIDATION_SPURIOUS_ERRORS = 'SpuriousErrors';
+
+  public const TEMPLATE_VALIDATION_ERRORS = [
+    self::TEMPLATE_VALIDATION_GLOBAL_ERRORS,
+    self::TEMPLATE_VALIDATION_MEMBER_ERRORS,
+    self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS,
+    self::TEMPLATE_VALIDATION_SPURIOUS_ERRORS,
+  ];
 
   /**
    * @var string
@@ -158,40 +176,6 @@ Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 ';
-  // phpcs:enable
-  const GLOBAL_NAMESPACE = 'GLOBAL';
-  const MEMBER_NAMESPACE = 'MEMBER';
-  const MEMBER_VARIABLES = [
-    'FIRST_NAME',
-    'SUR_NAME',
-    'NICK_NAME',
-    'DISPLAY_NAME',
-    'EMAIL',
-    'MOBILE_PHONE',
-    'FIXED_LINE_PHONE',
-    'STREET',
-    'STREET_NUMBER',
-    'STREET_AND_NUMBER',
-    'POSTAL_CODE',
-    'CITY',
-    'COUNTRY',
-    'LANGUAGE',
-    'BIRTHDAY',
-    'TOTAL_FEES',
-    'AMOUNT_PAID',
-    'MISSING_AMOUNT',
-    'PROJECT_DATA',
-    'SEPA_MANDATE_REFERENCE',
-    'SEPA_MANDATE_DATE',
-    'BANK_ACCOUNT_IBAN',
-    'BANK_ACCOUNT_BIC',
-    'BANK_ACCOUNT_BANK',
-    'BANK_ACCOUNT_OWNER',
-    'BANK_TRANSACTION_AMOUNT',
-    'BANK_TRANSACTION_PURPOSE',
-    'BANK_TRANSACTION_PARTS',
-    'DATE',
-  ];
   /**
    * @var string
    * @todo Make this configurable
@@ -471,6 +455,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    */
   private ?array $requestParameters = null;
 
+  private HttpClient $httpClient;
+
   /** {@inheritdoc} */
   public function __construct(
     private AppStorage $appStorage,
@@ -548,6 +534,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           $template = $bulkTransactionService->getBulkTransactionSlug($this->bulkTransaction);
           $template = $template . '-' . $this->l->t('announcement');
           list($template,) = $this->normalizeTemplateName($template);
+        } else {
+          $this->logInfo('TEMPLATE IS ALREADY SET: "' . $template . '".');
         }
         $this->paymentSign = ($this->bulkTransaction instanceof Entities\SepaDebitNote)
           ? 1
@@ -568,15 +556,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     if (!empty($template)) {
-      $this->cgiData['templateMessagesSelector'] = $template;
+      $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $template;
     }
 
     $this->setSubjectTag();
 
-    $this->draftId = $this->cgiValue('messageDraftId', 0);
+    $this->draftId = $this->cgiValue(ComposerCgiKeys::MESSAGE_DRAFT_ID, 0);
 
-    $this->inReplyToId = $this->cgiValue('inReplyTo', '');
-    $this->referencing = array_unique($this->cgiValue('referencing', []));
+    $this->inReplyToId = $this->cgiValue(ComposerCgiKeys::IN_REPLY_TO, '');
+    $this->referencing = array_unique($this->cgiValue(ComposerCgiKeys::REFERENCING, []));
     sort($this->referencing);
 
     $this->progressToken = $this->cgiValue('progressToken');
@@ -610,7 +598,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         'Files' => [],
         'Events' => [],
       ],
-      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [],
+      self::DIAGNOSTICS_SHARE_LINK_VALIDATION => [
+      ],
       // start of sent-messages for log window
       self::DIAGNOSTICS_TOTAL_PAYLOAD => 0,
       self::DIAGNOSTICS_TOTAL_COUNT => 0,
@@ -619,13 +608,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     // Maybe should also check something else. If submitted is true,
     // then we use the form data, otherwise the defaults.
-    $this->submitted = $this->cgiValue('formStatus', '') == 'submitted';
+    $this->submitted = $this->cgiValue(ComposerCgiKeys::FORM_STATUS, '') == EnumFormStatus::SUBMITTED->value;
 
     $this->setDefaultTemplate();
     if (!$this->submitted) {
       // Leave everything at default state, except for an optional
       // initial template and subject
-      $initialTemplate = $this->cgiValue('templateMessagesSelector');
+      $initialTemplate = $this->cgiValue(ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR);
       if (!empty($initialTemplate)) {
         $template = $this->fetchTemplate($initialTemplate, exact: false);
         if (empty($template)) {
@@ -634,7 +623,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $loadedTag = $template->getTag();
         if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
           $initialTemplate = $template->getTag();
-          $this->cgiData['templateMessagesSelector'] = $initialTemplate;
+          $this->cgiData[ComposerCgiKeys::TEMPLATE_MESSAGES_SELECTOR] = $initialTemplate;
           $this->templateName = $initialTemplate;
         } else {
           $this->templateName = $initialTemplate;
@@ -730,8 +719,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   {
     $this->generateGlobalSubstitutionHandlers();
 
-    foreach (self::MEMBER_VARIABLES as $key) {
-      $this->substitutions[self::MEMBER_NAMESPACE][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
+    foreach (EnumMemberSubstitutionKey::values() as $key) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][$key] = function(array $keyArg, ?Entities\Musician $musician) use ($key) {
         $field = Util::dashesToCamelCase(strtolower($key), false, '_');
         if (empty($musician) || !isset($musician[$field])) {
           return $keyArg[0];
@@ -740,7 +729,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
     }
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('STREET_AND_NUMBER')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::STREET_AND_NUMBER->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
@@ -748,28 +737,28 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $musician->getStreet() . ' ' . $musician->getStreetNumber();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('EMAIL')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::EMAIL->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
           return $keyArg[0];
       }
       return $musician->getEmail();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('NICK_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::NICK_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getNickName()?:$musician->getFirstName();
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DISPLAY_NAME')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DISPLAY_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
       return $musician->getPublicName(true); // rather firstName lastName than last, first
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('COUNTRY')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::COUNTRY->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -783,7 +772,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     };
 
     $languageNames = $this->localeLanguageNames();
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('LANGUAGE')] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::LANGUAGE->value] = function(array $keyArg, ?Entities\Musician $musician) use ($languageNames) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -794,7 +783,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $languageNames[$language] ?? $language;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('BIRTHDAY')] = function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BIRTHDAY->value] = function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
@@ -807,16 +796,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $result;
     };
 
-    $this->substitutions[self::MEMBER_NAMESPACE][self::t('DATE')] =  function(array $keyArg, ?Entities\Musician $musician) {
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DATE->value] =  function(array $keyArg, ?Entities\Musician $musician) {
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $this->dateSubstitution($keyArg, self::MEMBER_NAMESPACE, $musician);
+      return $this->dateSubstitution($keyArg, EnumSubstitutionNamespace::MEMBER->value, $musician);
     };
 
     if (!empty($this->project)) {
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('TOTAL_FEES')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::TOTAL_FEES->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -824,7 +813,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['sum']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('AMOUNT_PAID')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::AMOUNT_PAID->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -832,7 +821,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $this->moneyValue($obligations['received']);
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('MISSING_AMOUNT')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::MISSING_AMOUNT->value] =  function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -841,7 +830,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       };
 
       // per-participant project-data
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('PROJECT_DATA')] =  function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::PROJECT_DATA->value] =  function(array $keyArg, ?Entities\Musician $musician) {
 
         if (empty($musician) || count($keyArg) > 2) {
           return implode(':', $keyArg);
@@ -855,8 +844,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           'monetary' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 return true;
               default:
                 return false;
@@ -868,8 +857,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
               return false;
             }
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 return true;
               default:
                 return false;
@@ -877,17 +866,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           }),
           'files' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return ($field->getDataType() == FieldType::CLOUD_FILE
-                    || $field->getDataType() == FieldType::DB_FILE
-                    || $field->getDataType() == FieldType::CLOUD_FOLDER);
+            return ($field->getDataType() == FieldDataType::CLOUD_FILE
+                    || $field->getDataType() == FieldDataType::DB_FILE
+                    || $field->getDataType() == FieldDataType::CLOUD_FOLDER);
           }),
           'other' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return ($field->getDataType() != FieldType::RECEIVABLES
-                    && $field->getDataType() != FieldType::LIABILITIES
-                    && $field->getDataType() != FieldType::CLOUD_FILE
-                    && $field->getDataType() != FieldType::DB_FILE
-                    && $field->getDataType() != FieldType::CLOUD_FOLDER);
+            return ($field->getDataType() != FieldDataType::RECEIVABLES
+                    && $field->getDataType() != FieldDataType::LIABILITIES
+                    && $field->getDataType() != FieldDataType::CLOUD_FILE
+                    && $field->getDataType() != FieldDataType::DB_FILE
+                    && $field->getDataType() != FieldDataType::CLOUD_FOLDER);
           }),
         ];
 
@@ -906,15 +895,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $doSpecificField = true;
             $found = true;
             switch ($specificField->first()->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 $fieldsByType = ['monetary' => $specificField ];
                 if (!empty($specificField->first()->getDepositDueDate())) {
                   $fieldsByType['deposit'] = $specificField;
                 }
                 break;
-              case FieldType::CLOUD_FILE:
-              case FieldType::DB_FILE:
+              case FieldDataType::CLOUD_FILE:
+              case FieldDataType::DB_FILE:
                 $fieldsByType = [ 'file' => $specificField ];
                 break;
               default:
@@ -943,11 +932,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           // add implicit file attachments
           foreach ($fields as $field) {
             switch ($field->getDataType()) {
-              case FieldType::RECEIVABLES:
-              case FieldType::LIABILITIES:
-              case FieldType::CLOUD_FILE:
-              case FieldType::DB_FILE:
-              case FieldType::CLOUD_FOLDER:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
+              case FieldDataType::CLOUD_FILE:
+              case FieldDataType::DB_FILE:
+              case FieldDataType::CLOUD_FOLDER:
                 $this->implicitFileAttachments[] = 'participant-field' . ':' . $field->getId();
                 break;
             }
@@ -1255,10 +1244,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                   break;
               }
               $keyVariants = array_map(
-                fn($key) => '['.$key.']',
+                fn($key) => '[' . $key . ']',
                 $this->translationVariants($key)
               );
-              $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+              $footer = str_ireplace($keyVariants, $totalSum[$key] ?? '', $footer);
             }
             $cssClass = implode(' ', [
               self::PARTICIPANT_MONETARY_FIELDS_CSS_CLASS['footer'],
@@ -1280,7 +1269,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
 
       if (!empty($this->donationReceipt)) {
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('DONATION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DONATION_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1293,7 +1282,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVED_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::WAIVED_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1306,7 +1295,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return $keyArg[0];
         };
 
-        $this->substitutions[self::MEMBER_NAMESPACE][self::t('WAIVING_OF_REIMBURSEMENT')] = function(array $keyArg, ?Entities\Musician $musician) {
+        $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::WAIVING_OF_REIMBURSEMENT->value] = function(array $keyArg, ?Entities\Musician $musician) {
           if (empty($musician)) {
             return $keyArg[0];
           }
@@ -1323,7 +1312,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         // maybe add more, however, the proper receipt will be send out as attachjment.
       }
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_AMOUNT')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_AMOUNT->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1336,7 +1325,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PURPOSE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_PURPOSE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1349,7 +1338,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_REFERENCE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SEPA_MANDATE_REFERENCE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1366,7 +1355,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('SEPA_MANDATE_DATE')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SEPA_MANDATE_DATE->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1383,7 +1372,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_IBAN')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_IBAN->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1400,7 +1389,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BIC')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_BIC->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1417,7 +1406,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_BANK')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_BANK->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1445,7 +1434,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_ACCOUNT_OWNER')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_ACCOUNT_OWNER->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1462,7 +1451,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         return $keyArg[0];
       };
 
-      $this->substitutions[self::MEMBER_NAMESPACE][self::t('BANK_TRANSACTION_PARTS')] = function(array $keyArg, ?Entities\Musician $musician) {
+      $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::BANK_TRANSACTION_PARTS->value] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
@@ -1576,8 +1565,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     // Generate localized variable names
     foreach ($this->substitutions as $nameSpace => $replacements) {
+      $nameSpaceCase = EnumSubstitutionNamespace::get($nameSpace);
       foreach ($replacements as $key => $handler) {
-        $this->substitutions[$nameSpace][$this->l->t($key)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) {
+        $keyCase = $nameSpaceCase->substitutionCase($key);
+        $this->substitutions[$nameSpace][$keyCase->t($this->l)] = function(array $keyArg, ?Entities\Musician $musician) use ($handler, $key) {
           $keyArg[0] = $key;
           return $handler($keyArg, $musician);
         };
@@ -1593,26 +1584,29 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * ```
    * For example ${MEMBER::FIRST_NAME}.
    *
-   * @param string $nameSpace The name space of the variable.
+   * @param EnumSubstitutionNamespace $nameSpace The name space of the variable.
    *
    * @param null|string $message The composed email message body.
    *
    * @return bool|int
    */
-  private function hasSubstitutionNamespace(string $nameSpace, ?string $message = null)
+  private function hasSubstitutionNamespace(EnumSubstitutionNamespace $nameSpace, ?string $message = null)
   {
     if (empty($message)) {
       $message = $this->messageContents;
     }
 
-    return preg_match('/([^$]|^)[$]{('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\)}/u', $message);
+    return preg_match(
+      '/([^$]|^)[$]{(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\)}/u',
+      $message,
+    );
   }
 
   /**
    * Replace all variables of the given namespace in
    * $this->messageContents.
    *
-   * @param string $nameSpace The variable prefix, e.g. MEMBER or one
+   * @param EnumSubstitutionNamespace $nameSpace The variable prefix, e.g. MEMBER or one
    * of its translations.
    *
    * @param mixed $data Context dependent data, likely Entities\Musician.
@@ -1625,7 +1619,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * @return string Substituted message
    * @throw Exceptions\SubstitutionException
    */
-  private function replaceFormVariables(string $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
+  private function replaceFormVariables(EnumSubstitutionNamespace $nameSpace, mixed $data = null, ?string $message = null, ?array &$failures = null):string
   {
     if (empty($message)) {
       $message = $this->messageContents;
@@ -1635,7 +1629,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $this->generateSubstitutionHandlers();
     }
 
-    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)('.$nameSpace.'|'.$this->l->t($nameSpace).')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
+    $regexp = '/([^$]|^)(?:[$]|%24)(?:{|%7B)(' . $nameSpace->value . '|' . $nameSpace->t($this->l) . ')(.)\3(.*?)(?<!\\\\)(?:}|%7D)/u';
     return preg_replace_callback(
       $regexp,
       function($matches) use ($data, &$failures) {
@@ -1648,7 +1642,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $handler = $this->substitutions[$nameSpace][$variable[0]]??null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
-            throw new Exceptions\SubstitutionException($this->l->t('No substitution handler found for "%s%s%s".', [ $nameSpace, $separator.$separator, $variable[0] ]));
+            throw new Exceptions\SubstitutionException(
+              $this->l->t('No substitution handler found for "%s%s%s".', [
+                $nameSpace,
+                $separator . $separator,
+                $variable[0],
+              ]),
+            );
           } else {
             $failures[] = [
               'namespace' => $nameSpace,
@@ -1659,7 +1659,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           return '';
         }
         try {
-          return $prefix.call_user_func($handler, $variable, $data);
+          return $prefix . $handler($variable, $data);
         } catch (Throwable $t) {
           if (!is_array($failures)) {
             throw $t;
@@ -1681,7 +1681,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Cleanup edge-cases. ATM this only replaces left-over '$$'
    * occurences with a single $.
    *
-   * @param null|string $message Email mesasge body.
+   * @param null|string $message Email message body.
    *
    * @return string
    */
@@ -1742,7 +1742,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $result = $mutex->synchronized(function() {
         $this->diagnostics[self::DIAGNOSTICS_STAGE] = self::DIAGNOSTICS_STAGE_SEND;
 
-        if (!$this->preComposeValidation($this->recipients)) {
+        if (!$this->preComposeValidation($this->recipients, repair: false)) {
           return false;
         }
 
@@ -1818,13 +1818,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function doSendMessages():bool
   {
     $messageTemplate = implode("\n", array_map([ $this, 'emitHtmlBodyStyle' ], self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+      . $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL);
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -1861,7 +1861,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, $musician, $messageTemplate);
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -2229,18 +2229,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       $fieldName = $field->getName();
-      $fieldType = $field->getDataType();
+      $fieldDataType = $field->getDataType();
       $fieldMultiplicity = $field->getMultiplicity();
 
-      switch ($fieldType) {
-        case FieldType::CLOUD_FILE:
-        case FieldType::CLOUD_FOLDER:
-        case FieldType::DB_FILE:
-        case FieldType::RECEIVABLES:
-        case FieldType::LIABILITIES:
+      switch ($fieldDataType) {
+        case FieldDataType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FOLDER:
+        case FieldDataType::DB_FILE:
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           break;
         default:
-          $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
+          $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldDataType));
           $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
           continue 2;
       }
@@ -2255,14 +2255,14 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       if ($fieldData->count() > 1 && $fieldMultiplicity == FieldMultiplicity::SIMPLE) {
-        $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldType, $fieldMultiplicity));
+        $this->logError(sprintf('More than one data-item for field "%s" of type "%s" with multiplicity "%s".', $fieldName, $fieldDataType, $fieldMultiplicity));
         $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Personal'][$musician->getId()]['Fields'][] = $attachment;
         continue;
       }
 
-      switch ($fieldType) {
-        case FieldType::RECEIVABLES:
-        case FieldType::LIABILITIES:
+      switch ($fieldDataType) {
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           // ATM we support sub-selection item only for FieldMultiplicity::RECURRING
           if ($attachment['status'] != 'selected') {
             $selectedKeys = [];
@@ -2294,12 +2294,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                 ];
               };
             }
-          } else {
+          } elseif ($fieldData->count() > 1) {
             // attach zip-archive
             $items = [];
             foreach ($fieldData as $fieldDatum) {
-              /** @var Entities\File $file */
-              $items[] = $fieldDatum->getSupportingDocument();
+              $document = $fieldDatum->getSupportingDocument();
+              if ($document) {
+                $items[] = $fieldDatum->getSupportingDocument();
+              }
+            }
+            if (empty($items)) {
+              break;
             }
             $folderName = $fieldName . '-' . $camelCaseSlug;
 
@@ -2313,12 +2318,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::CLOUD_FILE:
+        case FieldDataType::CLOUD_FILE:
           // can be a single file or multiple files with FieldMultiplicity::PARALLEL
           if ($fieldData->count() == 1) {
             $fieldDatum = $fieldData->first();
             /** @var \OCP\Files\File $file */
             $file = $this->participantFieldsService->getEffectiveFieldDatum($fieldDatum);
+            if ($file === null) {
+              // field data can be empty.
+              break;
+            }
 
             $fileName = str_replace(
               $userIdSlug, $camelCaseSlug,
@@ -2339,6 +2348,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           } else {
             $folderPath = $this->participantFieldsService->getFieldFolderPath($fieldData->first());
             $folder = $this->userStorage->getFolder($folderPath);
+            if (empty($folder->getDirectoryListing())) {
+              break;
+            }
 
             // _claus_files_camerata_projects_1997_Vereinsmitglieder_participants_claus-justus.heine_MultiCloudFile.zip
             $fileName = str_replace(
@@ -2361,7 +2373,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::CLOUD_FOLDER:
+        case FieldDataType::CLOUD_FOLDER:
           // simply add the folder as a zip-archive
           $fieldDatum = $fieldData->first();
           /** @var OCP\Files\Folder $folder */
@@ -2387,7 +2399,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             };
           }
           break;
-        case FieldType::DB_FILE:
+        case FieldDataType::DB_FILE:
           // can be a single file or multiple files with FieldMultiplicity::PARALLEL or FieldMultiplicity::RECURRING
           $items = [];
           foreach ($fieldData as $fieldDatum) {
@@ -2406,7 +2418,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                 'mimeType' => $file->getMimeType(),
               ];
             };
-          } else {
+          } elseif (count($items) > 1) {
             $folderName = $fieldName . '-' . $camelCaseSlug;
             $personalAttachments[] = function() use ($folderName, $items) {
 
@@ -3554,7 +3566,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       ];
     }
 
-    /* $status = */ $this->preComposeValidation($previewRecipients);
+    /* $status = */ $this->preComposeValidation($previewRecipients, repair: true);
 
     // Preliminary checks passed, let's see what happens. The mailer may throw
     // any kind of "nasty" exceptions.
@@ -3575,13 +3587,13 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * or to have hardcopies from debit note notifications and other
    * important emails.
    *
-   * @param null|array $recipients The recipients of the message.
+   * @param ?array $recipients The recipients of the message.
    *
-   * @return null|array The exported messages.
+   * @return array The exported messages.
    *
-   * @todo This really should be folded in to sendMessages()
+   * @todo This really should be folded into sendMessages()
    */
-  private function exportMessages(?array $recipients = null):?array
+  private function exportMessages(?array $recipients = null): array
   {
     // @todo yield needs more care concerning error management, but would be
     // preferrable as there can be many messages and each message is costly to
@@ -3594,16 +3606,21 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // The following cannot fail, in principle. $message is then
     // the current template without any left-over globals.
 
-    $messageTemplate = implode("\n", array_map(function($style) {
-      return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
-    }, self::DEFAULT_HTML_STYLES))
-      . $this->replaceFormVariables(self::GLOBAL_NAMESPACE);
+    $failures = [];
+    $messageTemplate =
+      implode("\n", array_map(function($style) {
+        return self::emitHtmlBodyStyle($style, self::EMAIL_PREVIEW_SELECTOR);
+      }, self::DEFAULT_HTML_STYLES))
+    . $this->replaceFormVariables(
+      EnumSubstitutionNamespace::GLOBAL,
+      failures: $failures,
+    );
 
     if (!$this->validateMessageHtml($messageTemplate)) {
       $this->logInfo('LINK VALIDATION FAILED');
     }
 
-    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $messageTemplate);
+    $hasPersonalSubstitutions = $this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $messageTemplate);
     $hasPersonalAttachments = $this->activePersonalAttachments() > 0;
 
     $references = [];
@@ -3627,16 +3644,16 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       if ($this->recipientsFilter->announcementsMailingList()) {
         $this->executionStatus = false;
-        $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'] = [
+        $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS] = [
           $this->l->t('Cannot substitute personal information in mailing list post. Personalized emails have to be send individually.'),
         ];
         if ($hasPersonalSubstitutions) {
-          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email text contains personalized substitutions.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS][] = $this->l->t('The email text contains personalized substitutions.');
         }
         if ($hasPersonalAttachments) {
-          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['PreconditionError'][] = $this->l->t('The email contains personalized attachments.');
+          $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_PRECONDITION_ERRORS][] = $this->l->t('The email contains personalized attachments.');
         }
-        return null;
+        return [];
       }
 
       $this->logInfo(
@@ -3654,7 +3671,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $musician = $recipient['dbdata'];
 
         $this->implicitFileAttachments = [];
-        $strMessage = $this->replaceFormVariables(self::MEMBER_NAMESPACE, $musician, $messageTemplate);
+        $strMessage = $this->replaceFormVariables(
+          EnumSubstitutionNamespace::MEMBER,
+          $musician,
+          $messageTemplate,
+          failures: $failures,
+        );
         $strMessage = $this->finalizeSubstitutions($strMessage);
 
         $this->implicitFileAttachments = array_values(array_unique($this->implicitFileAttachments));
@@ -3752,29 +3774,55 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     return $messages;
   }
 
+  public const REGEX_LOCALHOST = '/^(127\.0\.0\.1|localhost|\[::1\])$/';
+
   /**
-   * Generate a stream-context for use in link validation.
+   * Try to fetch the headers for the given URL, used in validating the
+   * accessibility of URLs in message texts.
    *
-   * @param bool $sslVerify If \null use the global config-value for the
-   * default.
+   * @param string $url
    *
-   * @return mixed
+   * @param ?bool $sslVerify
+   *
+   * @return int The Http status code.
    */
-  private function linkValidationContext(?bool $sslVerify = null):mixed
+  private function getHeaders(string $url, ?bool $sslVerify = null): ?int
   {
-    if ($sslVerify === null) {
-      $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+    if (!($this->httpClient ?? null)) {
+      $this->httpClient = $this->di(HttpClientFactory::class)->newClient();
     }
-    return stream_context_create([
-      'http' => [
-        'method' => 'HEAD',
-        'header' => 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    if ($sslVerify === null) {
+      $urlParts = parse_url($url);
+      if (preg_match(self::REGEX_LOCALHOST, $urlParts['host'])) {
+        $sslVerify = false;
+      } else {
+        $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
+      }
+    }
+    $options = [
+      ClientRequestOptions::HEADERS => [
+        'User-Agent' => 'Orgacloud/1.0',
+        'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       ],
-      'ssl' => [
-        'verify_peer' => $sslVerify,
-        'verify_peer_name' => $sslVerify,
+      ClientRequestOptions::HTTP_ERRORS => false,
+      ClientRequestOptions::ALLOW_REDIRECTS => [
+        'max' => 10,
+        'track_redirects' => true,
       ],
-    ]);
+    ];
+    if ($sslVerify === false) {
+      $options[ClientRequestOptions::VERIFY] = false;
+    }
+    try {
+      $response = $this->httpClient->head($url, $options);
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return null;
+    }
+    if ($response->getStatusCode() != Http::STATUS_OK) {
+      $this->logInfo('REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
+    }
+    return $response->getStatusCode();
   }
 
   /**
@@ -3793,9 +3841,11 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * - events, must exist
    * .
    *
+   * @param bool $repair Repair issues if possible. Defaults to \false.
+   *
    * @return bool The result of the validation.
    */
-  private function preComposeValidation(array $recipients):bool
+  private function preComposeValidation(array $recipients, bool $repair = false): bool
   {
     // Basic boolean stuff
     if ($this->subject() == '') {
@@ -3838,43 +3888,40 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
     }
 
+    // Validate message contents, e.g. reachability of links
+    $this->validateMessageHtml($this->messageContents, repair: $repair);
+
     // Template validation (i.e. variable substituions)
     $this->validateTemplate($this->messageContents);
 
-    // Validate message contents, e.g. reachability of links
-    $this->validateMessageHtml($this->messageContents);
-
-    if (strpos($this->messageContents, 'GLOBAL::PROJECT_MUSIC_SHEETS_SHARE') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->t($this->l)) !== false
     ) {
       $shareStatus = true;
 
       $projectService = $this->di(ProjectService::class);
-      list('share' => $share, 'folder' => $folder) = $projectService->ensureDownloadsShare($this->project, noCreate: false);
+      ['url' => $share, 'path' => $folder] = $projectService->ensureDownloadsShare($this->project, noCreate: false);
 
-      try {
-        $headers = get_headers($share, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
+      $httpStatusCode = $this->getHeaders($share) ?? -1;
+      if ($httpStatusCode < 200 || $httpStatusCode >= 400) {
+        $shareStatus = false;
       }
-      if ($headers && count($headers) > 0) {
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code < 200 && $code >= 400) {
-          $shareStatus = false;
-        }
-      } else {
-        $code = -1;
-      }
+
 
       $filesCount = $this->userStorage->folderWalk($folder);
       $this->logInfo('FILES COUNT DOWNLOAD FOLDER ' . $filesCount);
       if ($filesCount == 0) {
         $shareStatus = false;
       }
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value
+      ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $code,
+        'httpStatusCode' => $httpStatusCode,
+        'httpStatusPhrase' => HttpStatus::getPhrase($httpStatusCode),
         'folder' => $folder,
         'appLink' => $this->userStorage->getFilesAppLink($folder, subDir: true),
         'share' => $share,
@@ -3882,20 +3929,25 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value
+      ] = [
         'status' => true,
         'filesCount' => 0,
-        'httpCode' => 200,
+        'httpStatusCode' => Http::STATUS_OK,
+        'httpStatusPhrase' => HttpStatus::getPhrase(Http::STATUS_OK),
         'folder' => null,
         'appLink' => null,
         'share' => null,
       ];
     }
 
-    if (strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_SHARE') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_SHARE')) !== false
-        || strpos($this->messageContents, 'GLOBAL::POST_PROJECT_MEDIA_FOLDER') !== false
-        || strpos($this->messageContents, 'GLOBAL::' . $this->l->t('POST_PROJECT_MEDIA_FOLDER')) !== false
+    if (strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->t($this->l)) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value) !== false
+        || strpos($this->messageContents, 'GLOBAL::' . EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->t($this->l)) !== false
     ) {
       $shareStatus = true;
 
@@ -3903,18 +3955,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $projectGroupService = $this->di(ProjectGroupService::class);
       ['files_sharing' => $url, 'share' => $share] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-      try {
-        $headers = get_headers($url, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
-      }
-      if ($headers && count($headers) > 0) {
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code < 200 && $code >= 400) {
-          $shareStatus = false;
-        }
-      } else {
-        $code = -1;
+      $httpStatusCode = $this->getHeaders($url) ?? -1;
+      if ($httpStatusCode < 200 || $httpStatusCode >= 400) {
+        $shareStatus = false;
       }
 
       $folder = $share?->getNode();
@@ -3923,10 +3966,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       }
 
       $filesCount = -1; // do not care
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value
+      ] = [
         'status' => $shareStatus,
         'filesCount' => $filesCount,
-        'httpCode' => $code,
+        'httpStatusCode' => $httpStatusCode,
+        'httpStatusPhrase' => HttpStatus::getPhrase($httpStatusCode),
         'folder' => $folder,
         'appLink' => $appLink,
         'share' => $share,
@@ -3934,10 +3982,15 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $this->executionStatus = $this->executionStatus && $shareStatus;
     } else {
-      $this->diagnostics[self::DIAGNOSTICS_SHARE_LINK_VALIDATION][] = [
+      $this->diagnostics[
+        self::DIAGNOSTICS_SHARE_LINK_VALIDATION
+      ][
+        EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value
+      ] = [
         'status' => true,
         'filesCount' => 0,
-        'httpCode' => 200,
+        'httpStatusCode' => Http::STATUS_OK,
+        'httpStatusPhrase' => HttpStatus::getPhrase(Http::STATUS_OK),
         'folder' => null,
         'appLink' => null,
         'share' => null,
@@ -4089,33 +4142,33 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $dummy = $template;
 
-    if ($this->hasSubstitutionNamespace(self::MEMBER_NAMESPACE, $dummy)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::MEMBER, $dummy)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(self::MEMBER_NAMESPACE, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::MEMBER, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'member';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'][] =
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_MEMBER_ERRORS][] =
               $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['MemberErrors'] = $failures;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_MEMBER_ERRORS] = $failures;
           }
         }
       }
     }
 
-    if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE)) {
+    if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL)) {
       $failures = [];
-      $dummy = $this->replaceFormVariables(self::GLOBAL_NAMESPACE, null, $dummy, $failures);
+      $dummy = $this->replaceFormVariables(EnumSubstitutionNamespace::GLOBAL, null, $dummy, $failures);
       if (!empty($failures)) {
         $templateError[] = 'global';
         foreach ($failures as $failure) {
           if ($failure['error'] == 'unknown') {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] =
-              $this->l->t('Unknown substitution "%s".', $failure['namespace'].'::'.implode(':', $failure['variable']));
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_GLOBAL_ERRORS][] =
+              $this->l->t('Unknown substitution "%s".', $failure['namespace'] . '::' . implode(':', $failure['variable']));
           } else {
-            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['GlobalErrors'][] = $failure;
+            $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][TEMPLATE_VALIDATION_GLOBAL_ERRORS][] = $failure;
           }
         }
       }
@@ -4124,7 +4177,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     // No substitutions should remain. Check for that.
     if (preg_match('!([^$]|^)([$]|%24)({|%7B)[^}]+(}|%7D)?!', $dummy, $leftOver)) {
       $templateError[] = 'spurious';
-      $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION]['SpuriousErrors'] = $leftOver;
+      $this->diagnostics[self::DIAGNOSTICS_TEMPLATE_VALIDATION][self::TEMPLATE_VALIDATION_SPURIOUS_ERRORS] = $leftOver;
     }
 
     if (empty($templateError)) {
@@ -4262,54 +4315,71 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return $contact[$subField];
     };
 
-    $this->substitutions[self::GLOBAL_NAMESPACE] = [
-      self::t('ORGANIZER') => function($key) {
+    $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value] = [
+      EnumGlobalSubstitutionKey::ORGANIZER->value => function($key) {
         return $this->fetchExecutiveBoard();
       },
-      self::t('SENDER') => function($key) {
+      EnumGlobalSubstitutionKey::SENDER->value => function($key) {
         switch ($this->fromTag()) {
-          case self::FROM_ORCHESTRA:
+          case EnumFromTag::ORCHESTRA:
             return $this->l->t('your orchestra organizers (%s)', $this->fetchExecutiveBoard());
-          case self::FROM_PERSONAL:
+          case EnumFromTag::PERSONAL:
             $fullName = $this->fromName();
             return explode(' ', $fullName)[0];
         }
         return $this->l->t('UNKNOWN');
       },
-      self::t('PRESIDENT') => $organizationalRoleContact,
-      self::t('TREASURER') => $organizationalRoleContact,
-      self::t('SECRETARY') => $organizationalRoleContact,
-      self::t('CREDITOR_IDENTIFIER') => function($key) {
+      EnumGlobalSubstitutionKey::PRESIDENT->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::TREASURER->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::SECRETARY->value => $organizationalRoleContact,
+      EnumGlobalSubstitutionKey::CREDITOR_IDENTIFIER->value => function($key) {
         return $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_CREDITOR_IDENTIFIER);
       },
-      self::t('ADDRESS') => function($key) {
+      EnumGlobalSubstitutionKey::ADDRESS->value => function($key) {
         return $this->streetAddress();
       },
-      self::t('BANK_ACCOUNT') => function($key) {
+      EnumGlobalSubstitutionKey::BANK_ACCOUNT->value => function($key) {
         return $this->bankAccount();
       },
 
-      self::t('PROJECT') => function($key) {
+      EnumGlobalSubstitutionKey::PROJECT->value => function($key) {
         return $this->projectName != '' ? $this->projectName : $this->l->t('no project involved');
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_SHARE') => function(array $key) {
+      EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
-        list('share' => $share,) =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
-        return $share;
+        ['url' => $shareUrl, 'share' => $downloadsShare] =  $projectService->ensureDownloadsShare($this->project, noCreate: false);
+
+        if (!($key[1] ?? null) || $downloadsShare == null) {
+          return $shareUrl;
+        }
+        $subPath = $key[1];
+
+        /** @var IShare $downloadsShare */
+        $resultingNode = $downloadsShare->getNode()->get($subPath);
+
+        if ($resultingNode?->getType() === Node::TYPE_FILE) {
+          $fileId = $resultingNode->getId();
+          $dir = Constants::PATH_SEP . trim(dirname($subPath), Constants::PATH_SEP);
+          $basename = basename($subPath);
+          // file= is ignored (as also path= etc.), but let the user see what is behind the file-id.
+          return "{$shareUrl}?dir={$dir}&file={$basename}&openfile=true&editing=false&fileid={$fileId}";
+        } else {
+          return "{$shareUrl}?dir={$subPath}";
+        }
       },
 
-      self::t('PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION') => function(array $key) {
+      EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE_EXPIRATION->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectService $projectService */
         $projectService = $this->di(ProjectService::class);
-        list('expires' => $expires,) =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
+        ['expires' => $expires,] =  $projectService->ensureDownloadsShare($this->project, noCreate: true);
         if (empty($expires)) {
           return '';
         }
@@ -4329,7 +4399,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $key[2] = $key[1] ?? null;
         $key[1] = $expires->getTimestamp();
 
-        $date = $this->dateSubstitution($key, self::GLOBAL_NAMESPACE, null);
+        $date = $this->dateSubstitution($key, EnumSubstitutionNamespace::GLOBAL->value, null);
 
         if ($phrase) {
           return ' ' . $this->l->t('(expires at %s)', $date);
@@ -4338,34 +4408,34 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         }
       },
 
-      self::t('POST_PROJECT_MEDIA_SHARE') => function(array $key) {
+      self::t(EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value) => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectGroupService $projectGroupService */
         $projectGroupService = $this->di(ProjectGroupService::class);
 
-        ['files_sharing' => $url,] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+        ['files_sharing' => $url, 'dav' => $dav] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
-        return $url;
+        return ($key[1] ?? null) == 'dav' ? $dav : $url;
       },
 
-      self::t('POST_PROJECT_MEDIA_FOLDER') => function(array $key) {
+      EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_FOLDER->value => function(array $key) {
         if (empty($this->project)) {
           return $key[0];
         }
         /** @var ProjectGroupService $projectGroupService */
         $projectGroupService = $this->di(ProjectGroupService::class);
 
-        ['share' => $share, 'mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+        ['mount_point' => $mountPoint] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
 
         return $this->urlGenerator()->getAbsoluteUrl($this->userStorage->getFilesAppLink($mountPoint, subDir: true));
       },
 
-      self::t('BANK_TRANSACTION_DUE_DATE') => fn($key) => '',
-      self::t('BANK_TRANSACTION_DUE_DAYS') => fn($key) => '',
-      self::t('BANK_TRANSACTION_SUBMIT_DATE') => fn($key) => '',
-      self::t('BANK_TRANSACTION_SUBMIT_DAYS') => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DATE->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DAYS->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DATE->value => fn($key) => '',
+      EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DAYS->value => fn($key) => '',
 
       /**
        * Support date substitutions. Format is
@@ -4373,10 +4443,10 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
        * default to d.m.Y (see strftime) and datestring can be
        * everything understood by strtotime.
        */
-      self::t('DATE') => function(array $arg) {
-        return $this->dateSubstitution($arg, self::GLOBAL_NAMESPACE);
+      EnumGlobalSubstitutionKey::DATE->value => function(array $arg) {
+        return $this->dateSubstitution($arg, EnumSubstitutionNamespace::GLOBAL->value);
       },
-      self::t('TIME') => function(array $arg) use ($formatter) {
+      EnumGlobalSubstitutionKey::TIME->value => function(array $arg) use ($formatter) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4386,7 +4456,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           throw new Exceptions\SubstitutionException($this->l->t('Date-time substitution of "%s" / "%s" failed.', [ $dateString, $dateFormat ]), $t->getCode(), $t);
         }
       },
-      self::t('DATETIME') => function(array $arg) {
+      EnumGlobalSubstitutionKey::DATETIME->value => function(array $arg) {
         try {
           $dateString = $arg[1];
           $dateFormat = $arg[2]?:'long';
@@ -4400,18 +4470,18 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     if (!empty($this->bulkTransaction)) {
 
-      $this->substitutions[self::GLOBAL_NAMESPACE] = array_merge(
-        $this->substitutions[self::GLOBAL_NAMESPACE], [
-          self::t('BANK_TRANSACTION_DUE_DAYS') => function($key) {
+      $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value] = array_merge(
+        $this->substitutions[EnumSubstitutionNamespace::GLOBAL->value], [
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DAYS->value => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getDueDate())->format('%r%a');
           },
-          self::t('BANK_TRANSACTION_SUBMIT_DAYS') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DAYS->value => function($key) {
             return (new DateTimeImmutable())->diff($this->bulkTransaction->getSubmissionDeadline())->format('%r%a');
           },
-          self::t('BANK_TRANSACTION_DUE_DATE') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_DUE_DATE->value => function($key) {
             return $this->formatDate($this->bulkTransaction->getDueDate(), 'medium');
           },
-          self::t('BANK_TRANSACTION_SUBMIT_DATE') => function($key) {
+          EnumGlobalSubstitutionKey::BANK_TRANSACTION_SUBMIT_DATE->value => function($key) {
             return $this->formatDate($this->bulkTransaction->getSubmissionDeadline(), 'medium');
           },
         ]);
@@ -4431,8 +4501,12 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   }
 
   /** @return string The formatted bank account of the orchestra. */
-  private function bankAccount():string
+  private function bankAccount(): string
   {
+    $ibanValue = $this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN);
+    if (empty($ibanValue)) {
+      return '';
+    }
     $iban = new PHP_IBAN\IBAN($this->getConfigValue(ConfigConstants::BANK_ACCOUNT_IBAN));
     $financeService = $this->di(FinanceService::class);
     $info = $financeService->getIbanInfo($iban->MachineFormat());
@@ -4509,7 +4583,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
     $this->cgiData['BCC'] = $sentEmail->getBcc();
     $this->cgiData['CC'] = $sentEmail->getCc();
-    $this->cgiData['inReplyTo'] = $this->inReplyToId = $messageId;
+    $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = $this->inReplyToId = $messageId;
 
 
     $this->referencing = [ $this->inReplyTo() ];
@@ -4523,7 +4597,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
     $this->referencing = array_unique($this->referencing);
     sort($this->referencing);
-    $this->cgiData['referencing'] = $this->referencing;
+    $this->cgiData[ComposerCgiKeys::REFERENCING] = $this->referencing;
 
     $this->draftId = 0; // avoid accidental overwriting
 
@@ -4644,8 +4718,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     $this->draftId = 0; // avoid accidental overwriting
 
     // clear references, as this is a new shot
-    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
-    $this->referencing = $this->cgiData['referencing'] = [];
+    $this->inReplyToId = $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = null;
+    $this->referencing = $this->cgiData[ComposerCgiKeys::REFERENCING] = [];
 
     return $this->executionStatus = true;
   }
@@ -4711,7 +4785,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   private function fetchTemplate($templateIdentifier, bool $exact = true):?Entities\EmailTemplate
   {
     if (!($templateIdentifier instanceof Entities\EmailTemplate)) {
-      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]) !== false) {
+      if (filter_var($templateIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) !== false) {
         $template = $this
           ->getDatabaseRepository(Entities\EmailTemplate::class)
           ->find($templateIdentifier);
@@ -4854,8 +4928,8 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
 
     // clear references, as this is a new shot
-    $this->inReplyToId = $this->cgiData['inReplyTo'] = null;
-    $this->referencing = $this->cgiData['referencing'] = [];
+    $this->inReplyToId = $this->cgiData[ComposerCgiKeys::IN_REPLY_TO] = null;
+    $this->referencing = $this->cgiData[ComposerCgiKeys::REFERENCING] = [];
 
     /** @var Entities\EmailDraft $draft */
     $draft = $this->getDatabaseRepository(Entities\EmailDraft::class)
@@ -5056,9 +5130,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    *
    * @return bool The execution status.
    */
-  private function rememberTemporaryFile(string $tmpFile, mixed $origin):bool
+  private function rememberTemporaryFile(string $tmpFile, string|AttachmentOrigin $origin):bool
   {
-    if ($origin == AttachmentOrigin::PARTICIPANT_FIELD) {
+    if (AttachmentOrigin::get($origin) == AttachmentOrigin::PARTICIPANT_FIELD) {
       // no need to save, we just need the field-id which is stored anyway
       return true;
     }
@@ -5130,7 +5204,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 
       $tmpFilePath = AppStorage::PATH_SEP .AppStorage::DRAFTS_FOLDER .AppStorage::PATH_SEP . $tmpFile->getName();
 
-      $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD() : AttachmentOrigin::CLOUD();
+      $origin = empty($fileRecord['node']) ? AttachmentOrigin::UPLOAD : AttachmentOrigin::CLOUD;
 
       // Remember the file in the data-base for cleaning up later
       $this->rememberTemporaryFile($tmpFilePath, $origin);
@@ -5231,17 +5305,17 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
   public function formData():array
   {
     return [
-      'formStatus' => 'submitted',
-      'messageDraftId' => $this->draftId,
-      'inReplyTo' => $this->inReplyToId,
-      'referencing' => $this->referencing,
+      ComposerCgiKeys::FORM_STATUS => EnumFormStatus::SUBMITTED->value,
+      ComposerCgiKeys::MESSAGE_DRAFT_ID => $this->draftId,
+      ComposerCgiKeys::IN_REPLY_TO => $this->inReplyToId,
+      ComposerCgiKeys::REFERENCING => $this->referencing,
     ];
   }
 
   /** @return string The current catch-all email. */
   public function catchAllEmail():string
   {
-    return htmlspecialchars($this->catchAllName.' <'.$this->catchAllEmail.'>');
+    return htmlspecialchars($this->catchAllName . ' <' . $this->catchAllEmail . '>');
   }
 
   /**
@@ -5331,40 +5405,39 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     return $this->messageTag;
   }
 
-  /** @return string One of self::FROM_ORCHESTRA or self::FROM_PERSONAL. */
-  public function fromTag():string
+  /** @return EnumFromTag */
+  public function fromTag(): EnumFromTag
   {
-    return $this->cgiValue('fromTag', $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, self::FROM_ORCHESTRA));
+    return EnumFromTag::get($this->cgiValue(ComposerCgiKeys::FROM_TAG, $this->getUserValue(EnumPersonalSettingsKey::DEFAULT_EMAIL_FROM_ADDRESS, EnumFromTag::ORCHESTRA->value)));
   }
 
   /**
-   * @param null|string $fromTag Request the name of the given tag, either
-   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   * @param ?EnumFromTag $fromTag
    *
    * @return string The current or requested From: name.
    */
-  public function fromName(?string $fromTag = null):string
+  public function fromName(?EnumFromTag $fromTag = null): string
   {
     switch (($fromTag ?? $this->fromTag())) {
-      case self::FROM_ORCHESTRA:
+      case EnumFromTag::ORCHESTRA:
         return $this->cgiValue('fromName', $this->catchAllName);
-      case self::FROM_PERSONAL:
+      case EnumFromTag::PERSONAL:
         return $this->user()?->getDisplayName() ?? '';
     }
   }
 
   /**
-   * @param null|string $fromTag Request the name of the given tag, either
-   * self::FROM_ORCHESTRA or self::FROM_PERSONAL.
+   * @param ?EnumFromTag $fromTag Request the name of the given tag, either
+   * EnumFromTag::ORCHESTRA or EnumFromTag::PERSONAL.
    *
    * @return string The current or requested From: addres.
    */
-  public function fromAddress(?string $fromTag = null):string
+  public function fromAddress(?EnumFromTag $fromTag = null): string
   {
     switch (($fromTag ?? $this->fromTag())) {
-      case self::FROM_ORCHESTRA:
+      case EnumFromTag::ORCHESTRA:
         return htmlspecialchars($this->catchAllEmail);
-      case self::FROM_PERSONAL:
+      case EnumFromTag::PERSONAL:
         $domain = $this->getConfigValue(ConfigConstants::EMAIL_FROM_DOMAIN_KEY);
         $user = $this->userId();
         return $user . '@' . $domain;
@@ -5425,7 +5498,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       //
       // ../../../index.php/s/tPTQRskrHCoqeJY -> BASE_URL/index.php/s/tPTQRskrHCoqeJY
       $href = $item->getAttribute('href');
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, urldecode($href))
           || str_starts_with($href, 'mailto:')
           || isset(parse_url($href)['host'])) {
         $this->logDebug('KEEP HREF AS ' . $href);
@@ -5448,27 +5521,60 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
    * Validate external links in the message. This is done by fetching the
    * headers of the destination web page.
    *
-   * @param null|string $message The HTML message.
+   * @param string $message The HTML message.
+   *
+   * @param bool $repair Actually replace undesirable links by the suggested
+   * alternatives, default to \false.
    *
    * @return bool The validation status
    */
-  private function validateMessageHtml(?string $message = null):bool
+  private function validateMessageHtml(string &$message, bool $repair = false): bool
   {
-    $message = $message ?? $this->messageContents;
     $sslVerify = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_SSL_VERIFY, true);
     $enforceHttps = $this->getConfigValue(ConfigConstants::PRE_SEND_VALIDATION_EXTERNAL_LINKS_ENFORCE_HTTPS, true);
 
+    $projectLinkShares = [];
     $linkStatus = [];
     $hasErrors = false;
 
     $baseUrl = $this->urlGenerator()->getBaseUrl();
     if ($this->project) {
       $projectService = $this->di(ProjectService::class);
-      list('share' => $downloadsShare, 'folder' => $downloadsPath) = $projectService->ensureDownloadsShare($this->project, noCreate: true);
+      [
+        'path' => $downloadsPath,
+        'share' => $downloadsShare,
+      ] = $projectService->ensureDownloadsShare($this->project, noCreate: true);
       if ($downloadsShare !== null) {
-        $downloadsShare = $this->simpleSharingService->getShareFromUrl($downloadsShare);
         $downloadsFolder = $downloadsShare->getNode();
         $downloadsPath .= Constants::PATH_SEP;
+        $projectLinkShares[EnumGlobalSubstitutionKey::PROJECT_MUSIC_SHEETS_SHARE->value] = [
+          'share' => $downloadsShare,
+          'folder' => $downloadsFolder,
+          'path' => $downloadsPath,
+          'explanations' => [
+            self::t('The link "%1$s" refers to a file or folder "%2$s" inside the music sheets download folder "%3$s".'),
+            self::t('The link "%1$s" is a manually generated reference to the music sheets download folder "%2$s".'),
+          ],
+        ];
+      }
+      /** @var ProjectGroupService $projectGroupService */
+      $projectGroupService = $this->di(ProjectGroupService::class);
+      [
+        'share' => $postProjectMediaShare,
+        'mount_point' => $postProjectMediaPath,
+      ] = $projectGroupService->getProjectFolderLinkShare($this->projectId);
+      if ($postProjectMediaShare !== null) {
+        $postProjectMediaFolder = $postProjectMediaShare->getNode();
+        $postProjectMediaPath .= Constants::PATH_SEP;
+        $projectLinkShares[EnumGlobalSubstitutionKey::POST_PROJECT_MEDIA_SHARE->value] = [
+          'share' => $postProjectMediaShare,
+          'folder' => $postProjectMediaFolder,
+          'path' => $postProjectMediaPath,
+          'explanations' => [
+            self::t('The link "%1$s" refers to a file or folder "%2$s" inside the post-project media folder "%3$s".'),
+            self::t('The link "%1$s" is a manually generated reference to the post-project media folder "%2$s".'),
+          ],
+        ];
       }
     }
 
@@ -5480,7 +5586,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
       $text = $item->nodeValue;
-      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+      if ($this->hasSubstitutionNamespace(EnumSubstitutionNamespace::GLOBAL, urldecode($href))
           || str_starts_with($href, 'mailto:')
       ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
@@ -5489,94 +5595,99 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if (!str_starts_with($href, 'http')) {
         $href = $this->urlGenerator()->getAbsoluteUrl($href);
       } elseif ($enforceHttps && !str_starts_with($href, 'https')) {
+        $replacement = 'https:' . substr($href, strlen('http:'));
         $explanations = $this->l->t(
-          'Web-references in emails are required to use "https", i.e. only SSL-encrypted web-sites may be referred to. Suggestion: replace "%1$s" by "%2$s".',
-          [ $href, 'https:' . substr($href, strlen('http:')) ],
+          'Web-references in emails are required to use "https", i.e. only SSL-encrypted web-sites may be referred to.'
         );
+        $explanations .= ' '
+          . ($repair
+             ? $this->l->t('The link "%1$s" has been replaced by "%2$s".', [ $href, $replacement ])
+             : $this->l->t('Suggestion: replace "%1$s" by "%2$s".', [ $href, $replacement ]));
         $linkStatus[] = [
           'url' => $href,
           'text' => $text,
           'status' => false,
           'explanations' => $explanations,
+          'replacements' => [
+            $href => $replacement,
+          ],
         ];
         $hasErrors = true;
         continue;
       }
-      $this->logInfo('CHECK HREF ' . $href);
-      if (!empty($downloadsShare) && str_starts_with($href, $baseUrl . '/s/')) {
+      // $this->logInfo('CHECK HREF ' . $href);
+      if (preg_match('|' . $baseUrl .  '(/index.php)?/s/|', $href)) {
         $share = $this->simpleSharingService->getShareFromUrl($href);
-        if ($share !== null) {
-          $node = $share->getNode();
-          $level = 0;
-          $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
-          do {
-            $path =  Constants::PATH_SEP . $node->getName() . $path;
-            $node = $node->getParent();
-            ++$level;
-          } while ($node->getId() != $downloadsFolder->getId() && !($node instanceof IRootFolder));
-          $path = ltrim($path, Constants::PATH_SEP);
-          $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
-          if (($level > 0 || $share->getId() != $downloadsShare->getId()) && $node->getId() == $downloadsFolder->getId()) {
-            if ($level > 0) {
-              $explanation = $this->l->t(
-                'The link refers to a file or folder "%1$s" inside the music sheets download folder "%2$s".', [
-                  $path,
-                  $downloadsPath,
-                ]);
-            } else {
-              $explanation = $this->l->t('The link is a manually generated referenc to the music sheets download folder "%1$s".', $downloadsFolder);
-            }
-            $explanations .= ' ' . $this->l->t(
-              'Please use the substitution "%1$s" instead. Otherwise proper link expiration cannot be guarenteed and the link is tied
-to your user name and will be invalidated in the unfortunate case that you leave the executive board.', [
-                '${GLOBAL::' . $this->l->t('PROJECT_MUSIC_SHEETS_SHARE') . '}' . ($level > 0 ? '?dir=' . $path : ''),
-              ],
+        if ($share != null) {
+          foreach ($projectLinkShares as $substitution => $shareInfo) {
+            $projectsFolder = $shareInfo['folder'];
+            $projectsShare = $shareInfo['share'];
+            $projectsPath = $shareInfo['path'];
+
+            // phpcs:disable PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+            // phpcs:disable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterFirst
+            // phpcs:disable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterSecond
+            for (
+              $level = 0, $node = $share->getNode(), $path = $node->getType() === Node::TYPE_FOLDER ? Constants::PATH_SEP : '';
+              $node->getId() != $projectsFolder->getId() && !($node instanceof IRootFolder);
+              $path = Constants::PATH_SEP . $node->getName() . $path, $node = $node->getParent(), ++$level
             );
-            $linkStatus[] = [
-              'url' => $href,
-              'text' => $text,
-              'status' => false,
-              'explanations' => $explanations,
-            ];
-            $hasErrors = true;
-            continue;
+            // phpcs:enable PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+            // phpcs:enable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterFirst
+            // phpcs:enable Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterSecond
+            $path = ltrim($path, Constants::PATH_SEP);
+            $this->logInfo('FOUND SHARE OF "' . $share->getNode()->getPath() . '" LEVEL ' . $level);
+            if (($level > 0 || $share->getId() != $projectsShare->getId()) && $node->getId() == $projectsFolder->getId()) {
+              $replacement = '${GLOBAL::' . $this->l->t($substitution) . '}';
+              if ($level > 0) {
+                if ($share->getNode()->getType() == Node::TYPE_FOLDER) {
+                  $replacement .= '?dir=' . Constants::PATH_SEP . rtrim($path, Constants::PATH_SEP);
+                } else {
+                  // https://localhost/nextcloud-git-32/public.php/dav/files/aNJXKMqKgJ6R7KR/Unterordner/Anleitung.md
+                  $replacement = substr($replacement, 0, -1) . ':' . Constants::PATH_SEP . $path . '}';
+                }
+                $explanations = $this->l->t($shareInfo['explanations'][0], [ $href, $path, $projectsPath ]);
+              } else {
+                $explanations = $this->l->t($shareInfo['explanations'][1], [ $href, $projectsPath ]);
+              }
+              $explanations .= ' '
+                . ($repair
+                   ? $this->l->t('The link has been replaced by "%1$s"'
+                                 . ' in order to guarantee proper link expiration'
+                                 . ' and to avoid link invalidation'
+                                 . ' for the unfortunate case you should leave the executive board.', [ $replacement ])
+                   : $this->l->t('Please use the substitution "%1$s" instead.'
+                                 . ' Otherwise proper link expiration cannot be guarenteed'
+                                 . ' and the link is tied to your user name and will be invalidated'
+                                 . ' in the unfortunate case that you leave the executive board.', [ $replacement ]));
+              $linkStatus[] = [
+                'url' => $href,
+                'text' => $text,
+                'status' => false,
+                'explanations' => $explanations,
+                'replacements' => [
+                  $href => $replacement,
+                ],
+              ];
+              $hasErrors = true;
+              continue 2;
+            }
           }
         }
       }
       $explanations = null;
-      $originalUserAgent = ini_get('user_agent');
-      // ini_set('user_agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1'); // 'Orgacloud/1.0');
-      ini_set('user_agent', 'Orgacloud/1.0');
-      try {
-        $headers = get_headers($href, context: $this->linkValidationContext());
-      } catch (Throwable $t) {
-        $headers = null;
+      $httpStatusCode = $this->getHeaders($href) ?? -1;
+      if (($httpStatusCode < 200 || $httpStatusCode >= 400) && $sslVerify) {
+        $httpStatusCode = $this->getHeaders($href, sslVerify: false);
+        if ($httpStatusCode >= 200 && $httpStatusCode < 400) {
+          $explanations = $this->l->t('SSL validation failed. The external site is misconfigured.');
+        }
+        $httpStatusCode = -1;
       }
-      if ($headers === null && $sslVerify) {
-        // retry without SSL for diagnostics
-        try {
-          $headers = get_headers($href, context: $this->linkValidationContext(sslVerify: false));
-        } catch (Throwable $t) {
-          $headers = null;
-        }
-        if (!empty($headers)) {
-          $this->logInfo('NO-SSL STATUS HEADER ' . $headers[0]);
-          $code = (int)substr($headers[0], 9, 3);
-          if ($code >= 200 && $code < 400) {
-            $explanations = $this->l->t('SSL validation failed. The external site is misconfigured.');
-          }
-        }
-        $headers = null;
-      }
-      ini_set('user_agent', $originalUserAgent);
-      if (!empty($headers)) {
-        $this->logInfo('STATUS HEADER ' . $headers[0]);
-        $code = (int)substr($headers[0], 9, 3);
-        if ($code >= 200 && $code < 400) {
-          $thisLinkGood = true;
-        } else {
-          $this->logError('LINK BAD ' . $href . ' ' . print_r($headers, true));
-        }
+      if ($httpStatusCode >= 200 && $httpStatusCode < 400) {
+        $thisLinkGood = true;
+      } else {
+        $this->logError('LINK BAD "' . $href . '"');
       }
       $linkStatus[] = [
         'url' => $href,
@@ -5589,16 +5700,36 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $goodLinks = array_filter($linkStatus, fn($info) => $info['status']);
     $badLinks =  array_filter($linkStatus, fn($info) => !$info['status']);
-    $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = [
-      'Status' => !$hasErrors,
-      'All' => $linkStatus,
-      'Good' => $goodLinks,
-      'Bad' =>  $badLinks,
-    ];
 
     if ($hasErrors) {
-      $this->executionStatus = false;
+      if ($repair) {
+        $search = [];
+        $replace = [];
+        $badCount = count($badLinks);
+        foreach ($badLinks as $status) {
+          if (empty($status['replacements'])) {
+            continue;
+          }
+          --$badCount;
+          foreach ($status['replacements'] as $key => $value) {
+            $search[] = $key;
+            $replace[] = $value;
+          }
+        }
+        $message = str_replace($search, $replace, $message);
+        $hasErrors = $badCount > 0;
+      }
     }
+
+    $this->executionStatus = $this->executionStatus && !$hasErrors;
+
+    $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] = Util::arrayMergeRecursive(
+      $this->diagnostics[self::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION] ?? [], [
+        'status' => !$hasErrors,
+        'all' => $linkStatus,
+        'good' => $goodLinks,
+        'bad' =>  $badLinks,
+      ]);
 
     return !$hasErrors;
   }
@@ -5623,7 +5754,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $this->templateFileAttachments = [];
 
-    $origin = AttachmentOrigin::TEMPLATE;
+    $origin = AttachmentOrigin::TEMPLATE->value;
 
     $templateAttachments = [];
     foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateId => $documentTemplate) {
@@ -5648,8 +5779,8 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     $comparator = function($a, $b) {
       return strcmp(
-        $a['origin'].$a['name'],
-        $b['origin'].$b['name']
+        $a['origin'] . $a['name'],
+        $b['origin'] . $b['name']
       );
     };
     usort($templateAttachments, $comparator);
@@ -5689,7 +5820,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
     // add participant fields data if present
     $this->personalFileAttachments = [];
 
-    $origin = AttachmentOrigin::PARTICIPANT_FIELD;
+    $origin = AttachmentOrigin::PARTICIPANT_FIELD->value;
 
     $generalAttachments = [];
     $serviceFeeAttachments = [];
@@ -5697,12 +5828,12 @@ to your user name and will be invalidated in the unfortunate case that you leave
 
     /** @var Entities\ProjectParticipantField $participantField */
     foreach ($this->project->getParticipantFields() as $participantField) {
-      $fieldType = $participantField->getDataType();
-      if ($fieldType != FieldType::CLOUD_FILE
-          && $fieldType != FieldType::CLOUD_FOLDER
-          && $fieldType != FieldType::DB_FILE
-          && $fieldType != FieldType::RECEIVABLES
-          && $fieldType != FieldType::LIABILITIES
+      $fieldDataType = $participantField->getDataType();
+      if ($fieldDataType != FieldDataType::CLOUD_FILE
+          && $fieldDataType != FieldDataType::CLOUD_FOLDER
+          && $fieldDataType != FieldDataType::DB_FILE
+          && $fieldDataType != FieldDataType::RECEIVABLES
+          && $fieldDataType != FieldDataType::LIABILITIES
       ) {
         continue;
       }
@@ -5721,7 +5852,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       } else {
         $attachment['status'] = 'inactive';
       }
-      if ($fieldType == FieldType::RECEIVABLES || $fieldType == FieldType::LIABILITIES) {
+      if ($fieldDataType == FieldDataType::RECEIVABLES || $fieldDataType == FieldDataType::LIABILITIES) {
         $attachment['sub_topic'] = 'bills and receipts';
         // split only the recurring receivables as there may be so many of them ...
         if ($participantField->getMultiplicity() == FieldMultiplicity::RECURRING) {
@@ -5860,7 +5991,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       }
       // Keep only the basename part as the folder is programmatically fixed.
       $attachment['name'] = basename($attachment['name']);
-      if ($attachment['origin'] == AttachmentOrigin::CLOUD) {
+      if (AttachmentOrigin::get($attachment['origin']) === AttachmentOrigin::CLOUD) {
         $cloudFileAttach[] = $attachment;
       } else {
         $localFileAttach[] = $attachment;
@@ -5894,7 +6025,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
         $size = \OCP\Util::humanFileSize($attachment['size']);
         $name .= ' (' . $size . ')';
       }
-      $origin = $attachment['origin'];
+      $origin = AttachmentOrigin::get($attachment['origin']);
       switch ($origin) {
         case AttachmentOrigin::TEMPLATE:
           $group = $this->l->t('Blank Template');
@@ -5917,7 +6048,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
       }
       $selected = $attachment['status'] == 'selected';
       $selectOption = [
-        'value' => $origin . ':' . $value,
+        'value' => $origin->value . ':' . $value,
         'name' => $name,
         'group' => $group,
         'groupData' => $groupData,
@@ -5950,7 +6081,7 @@ to your user name and will be invalidated in the unfortunate case that you leave
    */
   public function eventAttachments()
   {
-    $attachedEvents = $this->requestParameters['eventSelect'] ?? $this->cgiValue('attachedEvents', []);
+    $attachedEvents = $this->requestParameters['selectedEvents'] ?? $this->cgiValue('attachedEvents', []);
     $events = [];
     foreach ($attachedEvents as $event) {
       $event = json_decode($event, true);
@@ -5989,10 +6120,10 @@ to your user name and will be invalidated in the unfortunate case that you leave
     // build the select option control array
     $selectOptions = [];
     foreach ($eventMatrix as $eventGroup) {
-      $group = $this->l->t($eventGroup['name']);
-      foreach ($eventGroup['events'] as $event) {
+      $group = $this->l->t($eventGroup->name);
+      foreach ($eventGroup->events as $event) {
         $datestring = $this->eventsService->briefEventDate($event);
-        $name = stripslashes($event['summary']).', '.$datestring;
+        $name = stripslashes($event->summary).', '.$datestring;
         $eventData = ProjectEventsController::makeInputValue($event);
         $flatIdentifier = EventsService::makeFlatIdentifier($event);
         $selectOptions[] = [
@@ -6039,12 +6170,5 @@ to your user name and will be invalidated in the unfortunate case that you leave
       $throwable->getLine(),
       $throwable->getMessage(),
     ]);
-  }
-
-  /** @return void */
-  protected static function l10nInjection():void
-  {
-    self::t(self::FROM_ORCHESTRA);
-    self::t(self::FROM_PERSONAL);
   }
 }

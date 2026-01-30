@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use UnexpectedValueException;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -42,15 +43,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class InstrumentFamily implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\UnusedTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedFamily')]
   #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
@@ -59,7 +56,7 @@ class InstrumentFamily implements \ArrayAccess
   private ?string $untranslatedFamily;
 
   /** @var Collection<Instrument> */
-  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', indexBy: 'name', orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Collection $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -69,16 +66,6 @@ class InstrumentFamily implements \ArrayAccess
     $this->instruments = new ArrayCollection();
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set family.
@@ -139,6 +126,31 @@ class InstrumentFamily implements \ArrayAccess
   }
 
   /**
+   * Add one instrument
+   *
+   * @param Instrument $instrument
+   *
+   * @return self
+   */
+  public function addInstrument(Instrument $instrument): self
+  {
+    if ($instrument->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument '{$instrument}' is null.");
+    }
+    if ($this->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument-family '{$this}' is null");
+    }
+    $key = $instrument->getId();
+    if ($this->instruments->get($key) === null) {
+      $this->instruments->set($key, $instrument);
+    }
+    if ($instrument->getFamilies()->get($this->id) === null) {
+      $instrument->addFamily($this);
+    }
+    return $this;
+  }
+
+  /**
    * Get the usage count, i.e. the number of instruments which belong
    * to this family.
    *
@@ -147,5 +159,15 @@ class InstrumentFamily implements \ArrayAccess
   public function usage():int
   {
     return $this->instruments->count();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $string = $this->family;
+    if ($this->untranslatedFamily ?? null) {
+      $string .= " ({$this->untranslatedFamily})";
+    }
+    return $string;
   }
 }

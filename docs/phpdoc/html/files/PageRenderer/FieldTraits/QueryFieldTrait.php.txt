@@ -54,7 +54,7 @@ trait QueryFieldTrait
    */
   protected function joinQueryFieldIndex($tableInfo, string $column):?int
   {
-    return $this->pme->fdn[$this->joinTableFieldName($tableInfo, $column)] ?? null;
+    return $this->pme->fdn[self::joinTableFieldName($tableInfo, $column)] ?? null;
   }
 
   /**
@@ -95,7 +95,7 @@ trait QueryFieldTrait
    */
   protected function joinQueryField($tableInfo, string $column)
   {
-    return $this->queryField($this->joinTableFieldName($tableInfo, $column));
+    return $this->queryField(self::joinTableFieldName($tableInfo, $column));
   }
 
   /**
@@ -112,6 +112,6 @@ trait QueryFieldTrait
    */
   protected function joinQueryIndexField($tableInfo, string $column)
   {
-    return $this->queryIndexField($this->joinTableFieldName($tableInfo, $column));
+    return $this->queryIndexField(self::joinTableFieldName($tableInfo, $column));
   }
 }

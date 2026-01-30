@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@ class ConfigCheckService
     private CardDavService $cardDavService,
     private EventsService $eventsService,
     private AddressBookProvider $addressBookProvider,
-    private MigrationsService $migrationsService,
+    private MigrationsServiceInterface $migrationsService,
     private SimpleSharingService $sharingService,
   ) {
     $this->l = $this->l10n();
@@ -1261,9 +1261,9 @@ class ConfigCheckService
   /** @return bool */
   public function noUnappliedMigrations():bool
   {
-    if ($this->migrationsService->needsMigration()) {
-      $migrations = $this->migrationsService->getUnapplied();
-      throw new RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $migrations)));
+    $unappliedMigrations = $this->migrationsService->getUnapplied();
+    if (count($unappliedMigrations) > 0)  {
+      throw new RuntimeException($this->l->t('Unapplied migrations: %s.', implode(', ', $unappliedMigrations)));
     }
     return true;
   }

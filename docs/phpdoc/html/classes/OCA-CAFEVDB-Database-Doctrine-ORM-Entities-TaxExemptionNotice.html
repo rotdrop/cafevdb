@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -214,6 +214,15 @@ taxes).</p>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_assessmentPeriodEnd">$assessmentPeriodEnd</a>
     <span>
@@ -247,12 +256,6 @@ notice.</dd>
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_donationReceipts">$donationReceipts</a>
     <span>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string|int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt">DonationReceipt</abbr></a>&gt;            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -362,7 +365,7 @@ the entity has not been soft deleted.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
@@ -492,11 +495,11 @@ next call to delete.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setId">setId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice">TaxExemptionNotice</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
-<dd>Set id.</dd>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setMembershipFeesAreDonations">setMembershipFeesAreDonations()</a>
@@ -626,6 +629,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -639,9 +725,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Last year of assessment period.</p>
@@ -695,9 +781,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">First year of assessment period.</p>
@@ -751,9 +837,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The purpose which led to the notice of exemption as noted on that very
@@ -811,9 +897,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The date at of the notice of exemption</p>
@@ -867,9 +953,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -902,74 +988,6 @@ notice.</p>
         <dd class="phpdocumentor-argument-list__entry">
         $mappedBy: &#039;taxExemptionNotice&#039;
     </dd>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">56</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
     </dl>
                     </section>
         
@@ -1041,9 +1059,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">101</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Whether the orchester is allowed to treat membership fees as donations.</p>
@@ -1100,9 +1118,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1123,14 +1141,6 @@ notice.</p>
                 Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_taxationStatutorySources#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumn">JoinColumn</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinTable">JoinTable</abbr>]
@@ -1174,9 +1184,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The tax identification number used by $taxOffice.</p>
@@ -1233,9 +1243,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1291,9 +1301,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">110</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Virtul &quot;hard copy&quot; of the letter the tax offic</p>
@@ -1355,9 +1365,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1391,9 +1401,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">376</span>
+    <span class="phpdocumentor-element-found-in__line">349</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.376" class="phpdocumentor-element-found-in__source" data-line="376" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1467,9 +1477,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">177</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1506,9 +1516,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1545,9 +1555,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">284</span>
+    <span class="phpdocumentor-element-found-in__line">257</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.257" class="phpdocumentor-element-found-in__source" data-line="257" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1584,9 +1594,9 @@ notice.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">264</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1664,9 +1674,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">344</span>
+    <span class="phpdocumentor-element-found-in__line">317</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.317" class="phpdocumentor-element-found-in__source" data-line="317" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1697,15 +1707,15 @@ the entity has not been soft deleted.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -1743,9 +1753,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">277</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.277" class="phpdocumentor-element-found-in__source" data-line="277" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1782,9 +1792,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1821,9 +1831,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">217</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1860,9 +1870,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">224</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1899,9 +1909,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -1938,9 +1948,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">324</span>
+    <span class="phpdocumentor-element-found-in__line">297</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.324" class="phpdocumentor-element-found-in__source" data-line="324" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.297" class="phpdocumentor-element-found-in__source" data-line="297" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2058,9 +2068,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">362</span>
+    <span class="phpdocumentor-element-found-in__line">335</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.362" class="phpdocumentor-element-found-in__source" data-line="362" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2293,9 +2303,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2342,9 +2352,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">194</span>
+    <span class="phpdocumentor-element-found-in__line">167</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2391,9 +2401,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">294</span>
+    <span class="phpdocumentor-element-found-in__line">267</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2440,9 +2450,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">274</span>
+    <span class="phpdocumentor-element-found-in__line">247</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.247" class="phpdocumentor-element-found-in__source" data-line="247" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2539,9 +2549,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">354</span>
+    <span class="phpdocumentor-element-found-in__line">327</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.354" class="phpdocumentor-element-found-in__source" data-line="354" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2582,22 +2592,22 @@ next call to delete.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Set id.</p>
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice">TaxExemptionNotice</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2607,7 +2617,7 @@ next call to delete.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2620,7 +2630,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice">TaxExemptionNotice</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -2638,9 +2648,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">314</span>
+    <span class="phpdocumentor-element-found-in__line">287</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.287" class="phpdocumentor-element-found-in__source" data-line="287" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2687,9 +2697,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">174</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2736,9 +2746,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">254</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2785,9 +2795,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">234</span>
+    <span class="phpdocumentor-element-found-in__line">207</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -2834,9 +2844,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php"><a href="files/database-doctrine-orm-entities-taxexemptionnotice.html"><abbr title="Database/Doctrine/ORM/Entities/TaxExemptionNotice.php">TaxExemptionNotice.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">334</span>
+    <span class="phpdocumentor-element-found-in__line">307</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#source-view.307" class="phpdocumentor-element-found-in__source" data-line="307" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/TaxExemptionNotice.php.txt"></a>
     </aside>
 
     
@@ -3177,12 +3187,12 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_assessmentPeriodEnd">$assessmentPeriodEnd</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_assessmentPeriodStart">$assessmentPeriodStart</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_beneficiaryPurpose">$beneficiaryPurpose</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_dateIssued">$dateIssued</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_donationReceipts">$donationReceipts</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_membershipFeesAreDonations">$membershipFeesAreDonations</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#property_taxationStatutorySources">$taxationStatutorySources</a></li>
@@ -3204,7 +3214,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getDateIssued">getDateIssued()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getDonationReceipts">getDonationReceipts()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getMembershipFeesAreDonations">getMembershipFeesAreDonations()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getTaxationStatutorySources">getTaxationStatutorySources()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_getTaxNumber">getTaxNumber()</a></li>
@@ -3224,7 +3234,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setDateIssued">setDateIssued()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setDonationReceipts">setDonationReceipts()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setMembershipFeesAreDonations">setMembershipFeesAreDonations()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setTaxationStatutorySources">setTaxationStatutorySources()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html#method_setTaxNumber">setTaxNumber()</a></li>

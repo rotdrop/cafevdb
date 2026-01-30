@@ -39,12 +39,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class InvoiceItem implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   /**
    * The amount invoice corresponding to this itme. Typically equal to the
@@ -111,31 +107,6 @@ class InvoiceItem implements \ArrayAccess, \JsonSerializable
   {
     $this->arrayCTOR();
     $this->setAmount(0);
-  }
-
-  /**
-   * Set id.
-   *
-   * @param null|int $id
-   *
-   * @return InvoiceItem
-   */
-  public function setId(?int $id):InvoiceItem
-  {
-    if (empty($id)) {
-      $this->id = null; // flag auto-increment on insert
-    }
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**

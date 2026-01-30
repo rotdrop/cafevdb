@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,22 +76,6 @@ class CryptoController extends Controller
    * Unseal the given data provided the currently logged in user is part of
    * the seal context.
    *
-   * @param string $sealedData
-   *
-   * @param null|string $metaData
-   *
-   * @return Http\DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function unseal(string $sealedData, ?string $metaData):Http\DataResponse
-  {
-    return self::dataResponse($this->getUnsealedData($sealedData, $metaData));
-  }
-
-  /**
-   * Unseal the given data provided the currently logged in user is part of
-   * the seal context.
-   *
    * @param array $sealedData
    *
    * @param null|string $metaData
@@ -99,6 +83,7 @@ class CryptoController extends Controller
    * @return Http\DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/crypto/decryption/unseal/batch')]
   public function batchUnseal(array $sealedData, ?string $metaData):Http\DataResponse
   {
     $start = hrtime(true);

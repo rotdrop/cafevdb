@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,8 +61,6 @@ abstract class Musicians extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
-  protected const ALL_TEMPLATE = 'all-musicians';
-  protected const ADD_TEMPLATE = 'add-musicians';
   const CSS_CLASS = 'musicians';
   const TABLE = self::MUSICIANS_TABLE;
   const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
@@ -108,12 +106,10 @@ abstract class Musicians extends PMETableViewBase
 
   /** {@inheritdoc} */
   public function __construct(
-    string $template,
-    //
     ConfigService $configService,
     EntityManager $entityManager,
     IRequest $request,
-    PHPMyEdit $phpMyEdit,
+    PHPMyEdit $pme,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     //
@@ -125,14 +121,12 @@ abstract class Musicians extends PMETableViewBase
     private PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      $template,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $pme,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if (empty($this->musicianId)) {
@@ -156,7 +150,7 @@ abstract class Musicians extends PMETableViewBase
    *
    * @return null|string Common short title or null.
    */
-  protected function commonShortTitle():?string
+  protected function commonShortTitle(): ?string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove all data of the displayed person?');
@@ -173,9 +167,9 @@ abstract class Musicians extends PMETableViewBase
   }
 
   /*** {@inheritdoc} */
-  public function headerText()
+  public function headerText(): string
   {
-    $title = $this->toolTipsService['page-renderer:' . $this->template . ':header-text'];
+    $title = $this->toolTipsService['page-renderer:' . static::TEMPLATE . ':header-text'];
     return '<div class="' . $this->cssPrefix() . '-header-text"'
       . ($title ? ' title="' . $title . '"' : '')
       . '>'
@@ -191,7 +185,6 @@ abstract class Musicians extends PMETableViewBase
    */
   protected function generatePMEOptions():array
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -207,15 +200,13 @@ abstract class Musicians extends PMETableViewBase
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
 
-    // Install values for after form-submit, e.g. $this->template ATM
-    // is just the request parameter, while Template below will define
-    // the value of $this->template after form submit.
+    // Data injected via invisible input fields into the from submit.
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       // overwrite to catch copy/insert
-      'musicianId' => $this->musicianId,
+      PersistentCGIKeys::MUSICIAN_ID => $this->musicianId,
     ];
 
     // Name of field which is the unique key
@@ -226,7 +217,7 @@ abstract class Musicians extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'display_name',
       'sur_name',
       'first_name',
@@ -302,7 +293,7 @@ abstract class Musicians extends PMETableViewBase
       'options'  => 'AVCPD',
       'maxlen'   => 5,
       'align'    => 'right',
-      'default'  => '0',  // auto increment
+      'default'  => null,
       'sort'     => true,
     ];
 
@@ -635,7 +626,7 @@ GROUP BY t.id';
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'orchestra' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -1081,8 +1072,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     return [ 'opts' => $opts, 'joinTables' => $joinTables ];
   }
@@ -1118,8 +1109,3 @@ GROUP BY t.id';
     return true; // but run further triggers if appropriate
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

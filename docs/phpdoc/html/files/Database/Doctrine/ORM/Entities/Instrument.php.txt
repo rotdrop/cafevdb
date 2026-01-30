@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use UnexpectedValueException;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -46,14 +47,10 @@ class Instrument implements \ArrayAccess
   use CAFEVDB\Traits\TranslatableTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
+  use CAFEVDB\Traits\AutoIncrementTrait;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedName')]
-  #[ORM\Column(type: 'string', length: 128, nullable: false)]
+  #[ORM\Column(type: 'string', length: 128, nullable: false, unique: true)]
   private string $name;
 
   private ?string $untranslatedName;
@@ -65,11 +62,11 @@ class Instrument implements \ArrayAccess
   #[ORM\JoinTable]
   #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
-  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
   private Collection $families;
 
   /** @var Collection<MusicianInstrument> */
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', indexBy: 'musician_id', fetch: 'EXTRA_LAZY')]
   private Collection $musicianInstruments;
 
   /** @var Collection<ProjectInstrument> */
@@ -88,30 +85,6 @@ class Instrument implements \ArrayAccess
     $this->musicianInstruments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectInstrumentationNumbers = new ArrayCollection();
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return Instrument
-   */
-  public function setId(int $id):Instrument
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
   }
 
   /**
@@ -149,7 +122,7 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set familie.
+   * Set families;
    *
    * @param Collection $families
    *
@@ -170,6 +143,31 @@ class Instrument implements \ArrayAccess
   public function getFamilies():Collection
   {
     return $this->families;
+  }
+
+  /**
+   * Add family.
+   *
+   * @param InstrumentFamily $family
+   *
+   * @return self
+   */
+  public function addFamily(InstrumentFamily $family): self
+  {
+    if ($this->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument '{$this}' is null.");
+    }
+    if ($family->getId() === null) {
+      throw new UnexpectedValueException("Id of given instrument-family '{$family}' is null");
+    }
+    $key = $family->getId();
+    if ($this->families->get($key) === null) {
+      $this->families->set($key, $family);
+    }
+    if ($family->getInstruments()->get($this->id) === null) {
+      $family->addInstrument($this);
+    }
+    return $this;
   }
 
   /**

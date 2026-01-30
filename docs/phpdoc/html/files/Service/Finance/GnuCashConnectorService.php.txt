@@ -189,7 +189,7 @@ FROM %2$s';
         ],
       );
       $this->logInfo('SQL ' . $sql);
-      $this->connection->prepare($sql)->execute();
+      $this->connection->prepare($sql)->executeQuery();
 
       $gncSchemaManager->renameTable($gncTable, $gncTable . '_old');
 
@@ -201,7 +201,7 @@ FROM %2$s';
           ],
         );
         $this->logInfo('SQL ' . $sql);
-        $gncConnection->prepare($sql)->execute();
+        $gncConnection->prepare($sql)->executeQuery();
       } catch (Throwable $t) {
         $this->logException($t);
         $gncSchemaManager->renameTable($gncTable . '_old', $gncTable);
@@ -301,7 +301,7 @@ FROM %2$s';
     /** @var AppStorage $appStorage */
     $appStorage = $this->appContainer->get(AppStorage::class);
     $accountsAutocompleteFile = $appStorage->getFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE, throw: false);
-    if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsExportFile->getMTime()) {
+    if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsAutocompleteFile->getMTime()) {
       return json_decode($accountsAutocompleteFile->getContent(), true);
     }
 

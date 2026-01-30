@@ -115,7 +115,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -183,6 +183,15 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_col">$col</a>
     <span>
@@ -196,12 +205,6 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
     <span>
                         &nbsp;: mixed            </span>
@@ -210,13 +213,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_newval">$newval</a>
     <span>
-                        &nbsp;: mixed            </span>
+                        &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_oldval">$oldval</a>
     <span>
-                        &nbsp;: mixed            </span>
+                        &nbsp;: string            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -291,9 +294,9 @@
 <dd>Get host.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
-                                &nbsp;: int    </span>
+                                &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
 
@@ -387,6 +390,13 @@
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Changelog">Changelog</abbr>    </span>
 </dt>
 <dd>Set host.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setNewval">setNewval()</a>
@@ -486,6 +496,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -499,9 +592,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -557,9 +650,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -593,74 +686,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: true
     </dd>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">45</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
     </dl>
                     </section>
         
@@ -732,21 +757,23 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">mixed</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$newval</span>
     </code>
 
     
-    
+        <section class="phpdocumentor-description"><p>This is actually serialized PHP data so in principle 'blob' is not necessary.</p>
+</section>
+
     
 
         
@@ -790,21 +817,23 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">mixed</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$oldval</span>
     </code>
 
     
-    
+        <section class="phpdocumentor-description"><p>This is actually serialized PHP data so in principle 'blob' is not necessary.</p>
+</section>
+
     
 
         
@@ -848,9 +877,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -906,9 +935,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -964,9 +993,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -1022,9 +1051,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -1074,9 +1103,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -1137,9 +1166,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -1247,9 +1276,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get col.</p>
@@ -1287,9 +1316,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get host.</p>
@@ -1321,22 +1350,22 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1349,7 +1378,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
             </section>
 
 </article>
@@ -1367,9 +1396,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get newval.</p>
@@ -1407,9 +1436,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">284</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get oldval.</p>
@@ -1447,9 +1476,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get operation.</p>
@@ -1487,9 +1516,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">236</span>
+    <span class="phpdocumentor-element-found-in__line">232</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get rowkey.</p>
@@ -1527,9 +1556,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">212</span>
+    <span class="phpdocumentor-element-found-in__line">208</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get tab.</p>
@@ -1567,9 +1596,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get updated.</p>
@@ -1607,9 +1636,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">140</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get user.</p>
@@ -1842,9 +1871,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">248</span>
+    <span class="phpdocumentor-element-found-in__line">244</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.248" class="phpdocumentor-element-found-in__source" data-line="248" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set col.</p>
@@ -1892,9 +1921,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set host.</p>
@@ -1934,6 +1963,56 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setId">
+        setId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$id</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setNewval">
         setNewval()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setNewval" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1942,9 +2021,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">296</span>
+    <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.296" class="phpdocumentor-element-found-in__source" data-line="296" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set newval.</p>
@@ -1992,9 +2071,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">272</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.272" class="phpdocumentor-element-found-in__source" data-line="272" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set oldval.</p>
@@ -2042,9 +2121,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set operation.</p>
@@ -2092,9 +2171,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">224</span>
+    <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set rowkey.</p>
@@ -2142,9 +2221,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">200</span>
+    <span class="phpdocumentor-element-found-in__line">196</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set tab.</p>
@@ -2192,9 +2271,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set updated.</p>
@@ -2242,9 +2321,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">128</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set user.</p>
@@ -2484,9 +2563,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ChangeLog.php"><a href="files/database-doctrine-orm-entities-changelog.html"><abbr title="Database/Doctrine/ORM/Entities/ChangeLog.php">ChangeLog.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">318</span>
+    <span class="phpdocumentor-element-found-in__line">314</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ChangeLog.php.txt"></a>
     </aside>
 
     
@@ -2634,9 +2713,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_col">$col</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_host">$host</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_newval">$newval</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#property_oldval">$oldval</a></li>
@@ -2656,7 +2735,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getCol">getCol()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getHost">getHost()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getNewval">getNewval()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getOldval">getOldval()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_getOperation">getOperation()</a></li>
@@ -2670,6 +2749,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setCol">setCol()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setHost">setHost()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setNewval">setNewval()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setOldval">setOldval()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ChangeLog.html#method_setOperation">setOperation()</a></li>

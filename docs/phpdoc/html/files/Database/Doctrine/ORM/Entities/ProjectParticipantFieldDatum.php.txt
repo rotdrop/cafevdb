@@ -29,8 +29,8 @@ use Throwable;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
@@ -256,7 +256,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function setOptionValue(null|string|RationalNumber $optionValue):ProjectParticipantFieldDatum
   {
     if ($optionValue instanceof RationalNumber) {
-      $scale = ($this->field->getDataType() == DataType::LIABILITIES || $this->field->getDataType() == DataType::RECEIVABLES)
+      $scale = ($this->field->getDataType() == FieldDataType::LIABILITIES || $this->field->getDataType() == FieldDataType::RECEIVABLES)
         ? 2
         : -1;
       $this->optionValue = $optionValue->toDecimal($scale);
@@ -436,7 +436,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       ->setProjectParticipant($participant)
       ->setDataOption($defaultValue);
     switch ($field->getMultiplicity()) {
-      case Multiplicity::SIMPLE:
+      case FieldMultiplicity::SIMPLE:
         // value is stored in the the data item
         $datum->setOptionValue($defaultValue->getData());
         $datum->setDeposit($defaultValue->getDeposit());
@@ -455,19 +455,19 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if
    * ProjectParticipantFieldDatum::getField()::getDataType() equals
-   * DataType::RECEIVABLES, DataType::LIABILITIES.
+   * FieldDataType::RECEIVABLES, FieldDataType::LIABILITIES.
    *
-   * For DataType::LIABILITIES the amount is negated.
+   * For FieldDataType::LIABILITIES the amount is negated.
    *
    * @return RationalNumber
    */
   public function amountPayable():RationalNumber
   {
     switch ($this->field->getMultiplicity()) {
-      case Multiplicity::SINGLE():
-      case Multiplicity::MULTIPLE():
-      case Multiplicity::PARALLEL():
-      case Multiplicity::GROUPSOFPEOPLE():
+      case FieldMultiplicity::SINGLE:
+      case FieldMultiplicity::MULTIPLE:
+      case FieldMultiplicity::PARALLEL:
+      case FieldMultiplicity::GROUPSOFPEOPLE:
         $storedValue = $this->dataOption->getData();
         try {
           $value = RationalNumber::fromDecimal($storedValue);
@@ -475,7 +475,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
         break;
-      case Multiplicity::GROUPOFPEOPLE():
+      case FieldMultiplicity::GROUPOFPEOPLE:
         // value in management option of $field
         $managementOption = $this->field->getManagementOption();
         if (empty($managementOption)) {
@@ -488,8 +488,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
         break;
-      case Multiplicity::SIMPLE():
-      case Multiplicity::RECURRING():
+      case FieldMultiplicity::SIMPLE:
+      case FieldMultiplicity::RECURRING:
         if (empty($this->optionValue)) {
           $value = RationalNumber::zero();
         } else {
@@ -504,7 +504,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       default:
         throw new RuntimeException('Unhandled multiplicity tag: "' . (string)$this->field->getMultiplicity() . '".');
     }
-    if ($this->field->getDataType() == DataType::LIABILITIES) {
+    if ($this->field->getDataType() == FieldDataType::LIABILITIES) {
       $value = $value->neg();
     }
     return $value;
@@ -515,9 +515,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if
    * ProjectParticipantFieldDatum::getField()::getDataType() equals
-   * DataType::RECEIVABLES, DataType::LIABILITIES.
+   * FieldDataType::RECEIVABLES, FieldDataType::LIABILITIES.
    *
-   * For DataType::LIABILITIES the amount is negated.
+   * For FieldDataType::LIABILITIES the amount is negated.
    *
    * @return null|RationalNumber
    */
@@ -525,13 +525,13 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   {
     $value = null;
     switch ($this->field->getMultiplicity()) {
-      case Multiplicity::SINGLE():
-      case Multiplicity::MULTIPLE():
-      case Multiplicity::PARALLEL():
-      case Multiplicity::GROUPSOFPEOPLE():
+      case FieldMultiplicity::SINGLE:
+      case FieldMultiplicity::MULTIPLE:
+      case FieldMultiplicity::PARALLEL:
+      case FieldMultiplicity::GROUPSOFPEOPLE:
         $value = $this->dataOption->getDeposit();
         break;
-      case Multiplicity::GROUPOFPEOPLE():
+      case FieldMultiplicity::GROUPOFPEOPLE:
         // value in management option of $field
         $managementOption = $this->field->getManagementOption();
         if (empty($managementOption)) {
@@ -539,15 +539,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         }
         $value = $managementOption->getDeposit();
         break;
-      case Multiplicity::SIMPLE():
+      case FieldMultiplicity::SIMPLE:
         $value = $this->getDeposit();
         break;
-      case Multiplicity::RECURRING():
+      case FieldMultiplicity::RECURRING:
         break;
       default:
         throw new RuntimeException('Unhandled multiplicity tag: "' . (string)$this->field->getMultiplicity() . '".');
     }
-    if ($value !== null && $this->field->getDataType() == DataType::LIABILITIES) {
+    if ($value !== null && $this->field->getDataType() == FieldDataType::LIABILITIES) {
       $value->negEq();
     }
     return $value;
@@ -642,19 +642,19 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function getEffectiveValue()
   {
     switch ($this->field->getMultiplicity()) {
-      case Multiplicity::SIMPLE():
-      case Multiplicity::RECURRING():
+      case FieldMultiplicity::SIMPLE:
+      case FieldMultiplicity::RECURRING:
         return $this->optionValue;
         break;
-      case Multiplicity::GROUPOFPEOPLE():
-      case Multiplicity::GROUPSOFPEOPLE():
-      case Multiplicity::MULTIPLE():
-      case Multiplicity::SINGLE():
+      case FieldMultiplicity::GROUPOFPEOPLE:
+      case FieldMultiplicity::GROUPSOFPEOPLE:
+      case FieldMultiplicity::MULTIPLE:
+      case FieldMultiplicity::SINGLE:
         return $this->dataOption->getData();
         break;
-      case Multiplicity::PARALLEL():
-        if ($this->field->getDataType() == DataType::CLOUD_FILE
-            || $this->field->getDataType() == DataType::DB_FILE) {
+      case FieldMultiplicity::PARALLEL:
+        if ($this->field->getDataType() == FieldDataType::CLOUD_FILE
+            || $this->field->getDataType() == FieldDataType::DB_FILE) {
           return $this->optionValue;
         } else {
           return $this->dataOption->getData();

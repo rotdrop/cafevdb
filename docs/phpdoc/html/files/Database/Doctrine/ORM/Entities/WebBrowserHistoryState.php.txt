@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,23 +44,18 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class WebBrowserHistoryState implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\UpdatedAtEntity;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\CreatedAt;
-
-  /**
-   * @var int
-   *
-   * We could use $userId and $created as ids, but that would make the
-   * chaining between the entries and the state much more complicated.
-   */
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  protected $id;
+  use CAFEVDB\Traits\UpdatedAtEntity;
 
   #[ORM\Column(type: 'string', length: 256, nullable: false)]
   protected string $userId;
 
+  /**
+   * Created time stamp. This is not automatically inserted by Gedmo or the
+   * database server but explicitly set by the controller class in order to
+   * have better control.
+   */
   #[ORM\Column(type: 'datetime_immutable', nullable: false)]
   protected ?DateTimeImmutable $created = null;
 
@@ -81,24 +76,6 @@ class WebBrowserHistoryState implements \ArrayAccess
     $this->setUserId($userId);
 
     $this->stack = new ArrayCollection;
-  }
-
-  /** @return null|int */
-  public function getId():int
-  {
-    return $this->id;
-  }
-
-  /**
-   * @param null|int $id
-   *
-   * @return WebBrowserHistoryState
-   */
-  public function setId(int $id):WebBrowserHistoryState
-  {
-    $this->id = $id;
-
-    return $this;
   }
 
   /** @return string */

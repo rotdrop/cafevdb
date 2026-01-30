@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use DateInterval;
 use DateTimeImmutable;
@@ -65,12 +67,14 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
  * General support service, kind of inconsequent glue between
  * Doctrine\ORM and CAFEVDB\PageRenderer.
  */
+#[TSAttributes\TypeScript]
 class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\UnusedMethodTrait;
 
   const DBTABLE = 'Projects';
 
@@ -132,7 +136,7 @@ class ProjectService
     } catch (Throwable $t) {
       $this->logError('HELLO');
       /** @var \OCP\IRequest $request */
-      $request = \OC::$server->query(\OCP\IRequest::class);
+      $request = $this->configService->getAppContainer()->get(\OCP\IRequest::class);
       $this->logError('HELLO2');
       $userId = $this->userId();
       if ($request) {
@@ -485,7 +489,9 @@ class ProjectService
     );
 
     if (empty($events)) {
-      return null;
+      $deadline = $project->getRegistrationStartDate()?->modify('+4 weeks');
+
+      return $deadline;
     }
 
     $startDates = array_map(fn(array $event) => $event['start'], $events);
@@ -948,8 +954,9 @@ class ProjectService
         $node = $this->userStorage->get($path);
         if (empty($node)) {
           return [
+            'url' => null,
             'share' => null,
-            'folder' => null,
+            'path' => null,
             'expires' => null,
           ];
         }
@@ -964,7 +971,7 @@ class ProjectService
       $shareOwnerUid = $this->getConfigValue(ConfigConstants::SHARE_OWNER_KEY);
 
       // try to create or use the folder and share it by a public link
-      ['files_sharing' => $url,] = $sharingService->linkShare(
+      ['files_sharing' => $url, 'dav' => $dav, 'share' => $share] = $sharingService->linkShare(
         $node,
         shareOwner: $shareOwnerUid,
         sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
@@ -972,6 +979,7 @@ class ProjectService
         noCreate: $noCreate,
       );
       if (!empty($url)) {
+        $e = null;
         try {
           $expires = $sharingService->getLinkExpirationDate($url);
           if ($expires === null) {
@@ -1004,8 +1012,10 @@ class ProjectService
       );
     }
     return [
-      'share' => $url,
-      'folder' => $path,
+      'share' => $share,
+      'url' => $url,
+      'path' => $path,
+      'dav' => $dav,
       'expires' => $expires ?? null,
     ];
   }
@@ -1118,12 +1128,14 @@ class ProjectService
     }
 
     switch ($field->getDataType()) {
-      case FieldDataType::RECEIVABLES:
       case FieldDataType::LIABILITIES:
+        $dataTypeSubdir = $this->getLiabilitiesFolderName();
+      case FieldDataType::RECEIVABLES:
+        $dataTypeSubdir = $dataTypeSubdir ?? $this->getReceivablesFolderName();
         $subDirPrefix =
           $this->getSupportingDocumentsFolderName()
           . Constants::PATH_SEP
-          . $this->getReceivablesFolderName();
+          . $dataTypeSubdir;
         $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . Constants::PATH_SEP . $dirName;
         break;
     }
@@ -1396,23 +1408,24 @@ class ProjectService
   */
     $orchestra = $this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY);
     $orchestra = $this->getConfigValue(ConfigConstants::STREET_ADDRESS_NAME_01, $orchestra);
+    $l10nProjectTypes = ProjectType::getL10NValues($this->l);
 
     $projects = [];
-    foreach (ProjectType::toArray() as $projectType) {
-      $projects[$projectType] = $this->repository->findBy(
+    foreach (ProjectType::cases() as $projectType) {
+      $projects[$projectType->value] = $this->repository->findBy(
         [
           [ '!id' => $exclude ],
           [ 'type' => $projectType ],
         ],
         [ 'year' => 'DESC', 'name' => 'ASC' ]);
-      if ($projects[$projectType] === null) {
+      if ($projects[$projectType->value] === null) {
         $this->logInfo('NULL PROJECTS? ' . $projectType);
       }
     }
     $projects = array_merge(
-      $projects[ProjectType::PERMANENT],
-      $projects[ProjectType::TEMPORARY],
-      $projects[ProjectType::TEMPLATE],
+      $projects[ProjectType::PERMANENT->value],
+      $projects[ProjectType::TEMPORARY->value],
+      $projects[ProjectType::TEMPLATE->value],
     );
 
     $page = "====== ".($this->l->t('Projects of %s', [$orchestra]))."======\n\n";
@@ -1422,7 +1435,7 @@ class ProjectService
     foreach ($projects as $project) {
       $currentProjectGroup = $project->getType() == ProjectType::TEMPORARY
         ? $project->getYear()
-        : $this->l->t($project->getType());
+        : $l10nProjectTypes[$project->getType()->value];
       if ($currentProjectGroup != $projectGroup) {
         $projectGroup = $currentProjectGroup;
         $page .= "\n==== " . $projectGroup . "====\n";
@@ -1667,14 +1680,14 @@ Whatever.',
       $articleIds[$article['articleId']] = $idx;
     }
 
-    $categories = [ [ 'id' => $this->getConfigValue('redaxoPreview'),
-                      'name' => $this->l->t('Preview') ],
-                    [ 'id' => $this->getConfigValue('redaxoRehearsals'),
-                      'name' => $this->l->t('Rehearsals') ],
-                    [ 'id' => $this->getConfigValue('redaxoArchive'),
-                      'name' => $this->l->t('Archive') ],
-                    [ 'id' => $this->getConfigValue('redaxoTrashbin'),
-                      'name' => $this->l->t('Trashbin')] ];
+    $categories = [];
+    foreach (ConfigConstants::CMS_CATEGORIES as $categorySlug) {
+      $ucfSlug = ucfirst($categorySlug);
+      $categories[] = [
+        'id' => $this->getConfigValue(ConfigConstants::CMS_PREFIX . $ucfSlug),
+        'name' => $this->l->t($ucfSlug),
+      ];
+    }
     $projectPages = [];
     $otherPages = [];
     foreach ($categories as $category) {
@@ -1685,12 +1698,12 @@ Whatever.',
         foreach ($pages as $idx => $article) {
           $article['categoryName'] = $category['name'];
           $article = PageRenderer\DTO\ProjectWebPage::fromArray($article);
-          if (isset($articleIds[$article['articleId']])) {
+          if (isset($articleIds[$article->articleId])) {
             $projectPages[] = $article;
           } else {
             $otherPages[] = $article;
           }
-          $this->logDebug("Projects: ".print_r($article, true));
+          $this->logDebug("Projects: " . print_r($article, true));
         }
       }
     }
@@ -2026,7 +2039,7 @@ Whatever.',
    *
    * @param int|Entities\Project $projectOrId The project-id for the destination project.
    *
-   * @param string|ParticipationContext $participationContext Either project-participants or project-associates.
+   * @param ParticipationContext $participationContext Either project-participants or project-associates.
    *
    * @return array
    * ```
@@ -2047,7 +2060,7 @@ Whatever.',
   public function addMusicians(
     array $musicianIds,
     int|Entities\Project $projectOrId,
-    string|ParticipationContext $participationContext,
+    ParticipationContext $participationContext,
   ):array {
     if (!($projectOrId instanceof Entities\Project)) {
       $project = $this->repository->find($projectOrId);
@@ -2082,7 +2095,7 @@ Whatever.',
    *
    * @param Entities\Project $project Database entity.
    *
-   * @param string|ParticipationContext $participationContext Either
+   * @param ParticipationContext $participationContext Either
    * ParticipationContext::PARTICIPANTS or ParticipationContext::ASSOCIATES.
    *
    * @param array $status Status array by reference.
@@ -2094,7 +2107,7 @@ Whatever.',
   private function addOneMusician(
     mixed $id,
     Entities\Project $project,
-    string|ParticipationContext $participationContext,
+    ParticipationContext $participationContext,
     ?array &$status,
   ):bool {
     $status = [];
@@ -2481,8 +2494,19 @@ Whatever.',
       }
       throw new Exception($this->l->t('Unable to create mailing list "%s".', $listId), 0, $t);
     }
-    $project->setMailingListId($listId);
-    $this->flush();
+    $this->entityManager->beginTransaction();
+    try {
+      $project->setMailingListId($listId);
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
+      }
+    }
 
     return $listInfo;
   }
@@ -2510,8 +2534,19 @@ Whatever.',
     }
 
     $listsService->deleteList($listId);
-    $project->setMailingListId(null);
-    $this->flush();
+    $this->entityManager->beginTransaction();
+    try {
+      $project->setMailingListId(null);
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      } else {
+        $this->logException($t);
+      }
+    }
   }
 
   /**
@@ -3147,23 +3182,45 @@ Whatever.',
       ))
       ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject) {
+          $oldProjectName = $oldProject['name'];
+          $newProjectName = $newProject['name'];
+          /** @var ISystemTagManager $systemTagManager */
           $systemTagManager = $this->systemTagManager();
           try {
             /** @var ISystemTag $tag */
             $tag = $systemTagManager->getTag(
-              tagName: $oldProject['name'],
+              tagName: $oldProjectName,
               userVisible: true,
               userAssignable: true,
             );
             $systemTagManager->updateTag(
               tagId: $tag->getId(),
-              newName: $newProject['name'],
+              newName: $newProjectName,
               userVisible: true,
               userAssignable: true,
               color: $tag->getColor(),
             );
           } catch (TagNotFoundException $e) {
             $tag = $systemTagManager->createTag($newProject['name'], userVisible: true, userAssignable: true);
+          } catch (TagAlreadyExistsException) {
+            // The system-tag interface is a little bit inconvenient here,
+            // maybe on purpose: we get a "AlreadyExists" just because the
+            // names match but no chance to get the conflicting tag safe
+            // fetching all tags and filtering ...
+            $allTags = $systemTagManager->getAllTags();
+            /** @var ISystemTag $tag */
+            foreach ($allTags as $tag) {
+              if ($tag->getName() === $newProjectName) {
+                $systemTagManager->updateTag(
+                  tagId: $tag->getId(),
+                  newName: $newProjectName,
+                  userVisible: true,
+                  userAssignable: true,
+                  color: $tag->getColor(),
+                );
+                break;
+              }
+            }
           }
           return $tag;
         },
@@ -3313,6 +3370,21 @@ Whatever.',
   }
 
   /**
+   * Replace occurrences of strings which look like a project-name by the
+   * given new name. This only works for project-names with a year at the end.
+   *
+   * @param string $projectName
+   *
+   * @param string $data
+   *
+   * @return string
+   */
+  public static function replaceProjectNames(string $projectName, string $data): string
+  {
+    return preg_replace('/(\W)[A-Z][a-zA-Z]+\d{4}(\W)/u', '$1' . $projectName . '$2', $data);
+  }
+
+  /**
    * Sanitize the given project, i.e. make sure its infrastructure is
    * up-to-date.
    *
@@ -3376,7 +3448,7 @@ Whatever.',
    *
    * @param Entities\ProjectParticipant $participant The victim.
    *
-   * @param string|ParticipationContext $participationContext If \null just
+   * @param ParticipationContext $participationContext If unrestricted just
    * delete the participant. If refered from
    * PageRenderer\ProjectParticipants::TEMPLATE then remove non-virtual
    * instruments and delete the participant if no instruments/roles from the
@@ -3391,7 +3463,7 @@ Whatever.',
    */
   public function deleteProjectParticipant(
     Entities\ProjectParticipant $participant,
-    string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
+    ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):void {
     $publicName = $participant->getPublicName();
     $thisParticipantsContext = $participant->getParticipationContext();

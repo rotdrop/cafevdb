@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2025 Claus-Justus Heine
+ * @copyright 2014-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@
  */
 
 namespace OCA\CAFEVDB\Service;
-
 
 use Psr\Log\LoggerInterface as ILogger;
 

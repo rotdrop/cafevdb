@@ -62,6 +62,37 @@ class DatabaseStorageFileEntityListener
   // phpcs:enable
 
   /**
+   * For now just force extensions to be lower case.
+   *
+   * @param Entities\DatabaseStorageFile $dirEntry
+   *
+   * @return void
+   */
+  private static function sanitizeFileName(Entities\DatabaseStorageFile $dirEntry): void
+  {
+    $pathInfo = pathinfo($dirEntry->getName());
+    $dirEntry->setName($pathInfo['filename'] . '.' . strtolower($pathInfo['extension']));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prePersist(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PrePersistEventArgs $eventArgs)
+  {
+    self::sanitizeFileName($dirEntry);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PreUpdateEventArgs $eventArgs)
+  {
+    if ($eventArgs->hasChangedField('name')) {
+      self::sanitizeFileName($dirEntry);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function postUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\PostUpdateEventArgs $eventArgs)

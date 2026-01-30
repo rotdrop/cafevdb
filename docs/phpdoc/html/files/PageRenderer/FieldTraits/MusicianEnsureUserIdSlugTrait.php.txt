@@ -59,7 +59,7 @@ trait MusicianEnsureUserIdSlugTrait
     $this->debugPrintValues($oldValues, $changed, $newValues, [ 'tag' ], 'before');
 
     if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
-      $tag = $this->joinTableFieldName(static::MUSICIANS_TABLE, $tag);
+      $tag = self::joinTableFieldName(static::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
       // force regeneration by setting the slug to a "magic" value.

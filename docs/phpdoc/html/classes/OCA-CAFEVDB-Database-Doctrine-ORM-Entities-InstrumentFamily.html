@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait">TranslatableTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait">TranslatableTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Instrumente</p>
@@ -221,16 +221,19 @@
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_family">$family</a>
     <span>
                         &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -281,11 +284,25 @@ around by remembering any old value.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method___toString">__toString()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>{@inheritdoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_addInstrument">addInstrument()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Add one instrument</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a>
@@ -318,9 +335,9 @@ the entity has not been soft deleted.</dd>
 <dd>Get family.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
-                                &nbsp;: int    </span>
+                                &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
 
@@ -415,6 +432,13 @@ next call to delete.</dd>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily">InstrumentFamily</abbr></a>    </span>
 </dt>
 <dd>Set family.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_setInstruments">setInstruments()</a>
@@ -543,6 +567,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -556,9 +663,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
     
@@ -615,74 +722,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">50</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
     <h4 class="phpdocumentor-element__name" id="property_instruments">
         $instruments
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_instruments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -693,9 +732,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
     
@@ -727,7 +766,13 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         $mappedBy: &#039;families&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
+        $indexBy: &#039;name&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
         $orphanRemoval: true
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $cascade: [&#039;persist&#039;]
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $fetch: &#039;EXTRA_LAZY&#039;
@@ -917,9 +962,9 @@ around by remembering any old value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
     
@@ -960,9 +1005,9 @@ around by remembering any old value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">66</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
     
@@ -980,6 +1025,46 @@ around by remembering any old value.</p>
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___toString">
+        __toString()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method___toString" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">165</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">__toString</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1016,6 +1101,56 @@ around by remembering any old value.</p>
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_addInstrument">
+        addInstrument()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_addInstrument" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">135</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Add one instrument</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">addInstrument</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument">Instrument</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$instrument</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$instrument</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Instrument.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument">Instrument</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1163,9 +1298,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get family.</p>
@@ -1197,22 +1332,22 @@ the entity has not been soft deleted.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1225,7 +1360,7 @@ the entity has not been soft deleted.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
             </section>
 
 </article>
@@ -1243,9 +1378,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instruments.</p>
@@ -1373,9 +1508,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">112</span>
+    <span class="phpdocumentor-element-found-in__line">99</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the untranslated family name.</p>
@@ -1779,9 +1914,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set family.</p>
@@ -1821,6 +1956,56 @@ next call to delete.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setId">
+        setId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$id</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setInstruments">
         setInstruments()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_setInstruments" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1829,9 +2014,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">111</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instruments.</p>
@@ -2008,9 +2193,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentFamily.php"><a href="files/database-doctrine-orm-entities-instrumentfamily.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentFamily.php">InstrumentFamily.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">159</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentFamily.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the usage count, i.e. the number of instruments which belong
@@ -2304,8 +2489,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_family">$family</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#property_instruments">$instruments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#property_locale">$locale</a></li>
@@ -2318,12 +2503,14 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method___toString">__toString()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_addInstrument">addInstrument()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_filterTranslatableFields">filterTranslatableFields()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_getFamily">getFamily()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_getInstruments">getInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_getLocale">getLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_getTranslationChangeSet">getTranslationChangeSet()</a></li>
@@ -2337,6 +2524,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_setFamily">setFamily()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentFamily.html#method_setInstruments">setInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TranslatableTrait.html#method_setLocale">setLocale()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>

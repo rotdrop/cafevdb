@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -235,18 +235,21 @@ to take care of. This is maintained here.</p>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_donation">$donation</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>            </span>
 </dt>
 <dd>The associated payment.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
-</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
@@ -335,7 +338,7 @@ the entity has not been soft deleted.</dd>
 <dd>Get donation.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
@@ -462,11 +465,11 @@ next call to delete.</dd>
 <dd>Set donation.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setId">setId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt">DonationReceipt</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
-<dd>Set id.</dd>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setMailingDate">setMailingDate()</a>
@@ -558,9 +561,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
     
@@ -652,6 +655,89 @@ forthcoming snail-mail letter.</p>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -665,9 +751,9 @@ forthcoming snail-mail letter.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The associated payment.</p>
@@ -713,74 +799,6 @@ forthcoming snail-mail letter.</p>
         <dd class="phpdocumentor-argument-list__entry">
         $inversedBy: &#039;donationReceipt&#039;
     </dd>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">62</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
     </dl>
                     </section>
         
@@ -852,9 +870,9 @@ forthcoming snail-mail letter.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Date when this donation receipt has been sent out to the donator. If non
@@ -909,9 +927,9 @@ null the donation receipt must not be deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
     
@@ -982,9 +1000,9 @@ about the sending out of the donation receipt.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">An electronic copy of the probably hand-signed original.</p>
@@ -1044,9 +1062,9 @@ about the sending out of the donation receipt.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The associated notice of tax exemption with legalizes this donation
@@ -1106,9 +1124,9 @@ receipt.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1142,9 +1160,9 @@ receipt.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">316</span>
+    <span class="phpdocumentor-element-found-in__line">288</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.288" class="phpdocumentor-element-found-in__source" data-line="288" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1218,9 +1236,9 @@ receipt.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">265</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get dateOfReceipt.</p>
@@ -1299,9 +1317,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">154</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get donation.</p>
@@ -1333,15 +1351,15 @@ the entity has not been soft deleted.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -1379,9 +1397,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">198</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mailingDate.</p>
@@ -1419,9 +1437,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">263</span>
+    <span class="phpdocumentor-element-found-in__line">235</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.235" class="phpdocumentor-element-found-in__source" data-line="235" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get musician.</p>
@@ -1459,9 +1477,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">253</span>
+    <span class="phpdocumentor-element-found-in__line">225</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.253" class="phpdocumentor-element-found-in__source" data-line="253" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.225" class="phpdocumentor-element-found-in__source" data-line="225" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get notificationMessage.</p>
@@ -1499,9 +1517,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.273" class="phpdocumentor-element-found-in__source" data-line="273" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get project.</p>
@@ -1539,9 +1557,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">283</span>
+    <span class="phpdocumentor-element-found-in__line">255</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.283" class="phpdocumentor-element-found-in__source" data-line="283" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get projectParticipant.</p>
@@ -1579,9 +1597,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">202</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.202" class="phpdocumentor-element-found-in__source" data-line="202" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get supportingDocument.</p>
@@ -1619,9 +1637,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">178</span>
+    <span class="phpdocumentor-element-found-in__line">150</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get taxExemptionNotice.</p>
@@ -1780,9 +1798,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">310</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2065,9 +2083,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">142</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set donation.</p>
@@ -2109,22 +2127,22 @@ next call to delete.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Set id.</p>
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt">DonationReceipt</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2134,7 +2152,7 @@ next call to delete.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2147,7 +2165,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt">DonationReceipt</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -2165,9 +2183,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mailingDate.</p>
@@ -2215,9 +2233,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">210</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.210" class="phpdocumentor-element-found-in__source" data-line="210" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set notificationMessage.</p>
@@ -2265,9 +2283,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set supportingDocument.</p>
@@ -2315,9 +2333,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">166</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set taxExemptionNotice.</p>
@@ -2444,9 +2462,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DonationReceipt.php"><a href="files/database-doctrine-orm-entities-donationreceipt.html"><abbr title="Database/Doctrine/ORM/Entities/DonationReceipt.php">DonationReceipt.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">276</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#source-view.276" class="phpdocumentor-element-found-in__source" data-line="276" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DonationReceipt.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flag this entity as in use and thus undeleteable returning a positive
@@ -2747,8 +2765,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_donation">$donation</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_mailingDate">$mailingDate</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#property_notificationMessage">$notificationMessage</a></li>
@@ -2766,7 +2784,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getDateOfReceipt">getDateOfReceipt()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getDonation">getDonation()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getMailingDate">getMailingDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getMusician">getMusician()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_getNotificationMessage">getNotificationMessage()</a></li>
@@ -2784,7 +2802,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setDonation">setDonation()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setMailingDate">setMailingDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setNotificationMessage">setNotificationMessage()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html#method_setSupportingDocument">setSupportingDocument()</a></li>

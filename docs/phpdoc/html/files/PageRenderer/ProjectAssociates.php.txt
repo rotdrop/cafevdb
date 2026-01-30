@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,11 +26,12 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
+use function OCA\CAFEVDB\Common\Functions\strcat as cat;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -183,7 +184,7 @@ class ProjectAssociates extends ProjectParticipants
   ];
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove the person from %s?', [ $this->projectName ]);
@@ -198,7 +199,6 @@ class ProjectAssociates extends ProjectParticipants
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
     $instrumentsFilter = array_keys($this->getNonInstruments());
@@ -220,10 +220,10 @@ class ProjectAssociates extends ProjectParticipants
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.self::TEMPLATE,
-      'dataPrefix' => [
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::DATA_PREFIX => [
         'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
       ],
     ];
@@ -234,11 +234,11 @@ class ProjectAssociates extends ProjectParticipants
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'organization'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'organization'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users
@@ -261,8 +261,8 @@ class ProjectAssociates extends ProjectParticipants
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += (int)($field['dataType'] == FieldType::RECEIVABLES);
-      $extraFinancial += (int)($field['dataType'] == FieldType::LIABILITIES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::RECEIVABLES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::LIABILITIES);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;
@@ -1195,8 +1195,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     $opts[PHPMyEdit::OPT_FILTERS]['AND'] = [
       '$table.project_id = ' . $this->projectId,
@@ -1207,7 +1207,7 @@ GROUP BY t.id';
 
     $projectInstrumentsJoin =  $this->joinTables[self::PROJECT_INSTRUMENTS_TABLE];
     $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = '('
-      . '$table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"'
+      . '$table.participation_status = "' . cat(ParticipationStatus::ASSOCIATED) . '"'
       . ' OR '
       . $projectInstrumentsJoin . '.instrument_id IN ("' . implode('","', $instrumentsFilter) . '")'
       . ')';

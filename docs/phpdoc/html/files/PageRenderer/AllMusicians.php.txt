@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /**Table generator for Musicians table. */
 class AllMusicians extends Musicians
 {
-  const TEMPLATE = parent::ALL_TEMPLATE;
+  const TEMPLATE = 'all-musicians';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -60,32 +60,30 @@ class AllMusicians extends Musicians
     PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
-      //
-      $contactsService,
-      $geoCodingService,
-      $insuranceService,
-      $listsService,
-      $musicianService,
-      $phoneNumberService,
+      contactsService: $contactsService,
+      geoCodingService: $geoCodingService,
+      insuranceService: $insuranceService,
+      listsService: $listsService,
+      musicianService: $musicianService,
+      phoneNumberService: $phoneNumberService,
     );
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return parent::commonShortTitle() ?? $this->l->t('Overview over all registered musicians');
   }
 
   /** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     return [
       AllMusicians::navigationItem(),

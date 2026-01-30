@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\AuthorizationService\EnumAppPermissions;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 
 /**
  * Provide a navigationItem() method for page-renderers which need a current
@@ -35,18 +36,22 @@ trait FinanceModeNavigationItemTrait
   use ProjectModeNavigationItemTrait;
 
   /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem
   {
-    return array_merge(
-      parent::navigationItem($projectId, $projectName), [
-        'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
-        'permissions' => static::requiredPermissions(),
-      ]);
+    return SidebarNavigationItem::fromArray(
+      array_merge(
+        parent::navigationItem($projectId, $projectName)->toArray(),
+        [
+          'templateParameters' => [ 'projectId' => $projectId, 'projectName' =>  $projectName ],
+          'permissions' => static::requiredPermissions(),
+        ],
+      ),
+    );
   }
 
   /*** {@inheritdoc} */
   public static function requiredPermissions():int
   {
-    return AuthorizationService::PERMISSION_FRONTEND|AuthorizationService::PERMISSION_FINANCE;
+    return EnumAppPermissions::FRONTEND->value|EnumAppPermissions::FINANCE->value;
   }
 }

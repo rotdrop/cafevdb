@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -107,11 +107,14 @@ class ProjectParticipantsController extends Controller
    * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/add-musicians')]
   public function addMusicians(
     int $projectId,
     string|ParticipationContext $participationContext,
     ?int $musicianId = null,
-  ):Response {
+  ): Response {
+
+    $participationContext = ParticipationContext::get($participationContext);
     // Multi-mode:
     // projectId: ID
     // projectName: NAME
@@ -230,6 +233,7 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'post', url: '/projects/participants/validate/instruments/{context}')]
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
     null|string|array $recordId = [],
@@ -452,6 +456,7 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/files/{operation}')]
   public function files(
     string $operation,
     int $musicianId,
@@ -491,8 +496,8 @@ class ProjectParticipantsController extends Controller
         $subDirPrefix = empty($subDir) ? '' : UserStorage::PATH_SEP . $subDir;
         $fieldFolderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
 
-        $dataType = $field->getDataType();
-        switch ($dataType) {
+        $fieldDataType = $field->getDataType();
+        switch ($fieldDataType) {
           case FieldDataType::DB_FILE:
             /** @var Entities\DatabaseStorageFile $dbDocument */
             $dbDocument = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)
@@ -529,13 +534,13 @@ class ProjectParticipantsController extends Controller
             break;
 
           default:
-            return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
+            return self::grumble($this->l->t('Unsupported field type "%s".', $fieldDataType));
         }
 
         $doDeleteFieldDatum = true;
         $this->entityManager->beginTransaction();
         try {
-          switch ($dataType) {
+          switch ($fieldDataType) {
             case FieldDataType::CLOUD_FOLDER:
               $this->entityManager->registerPreCommitAction(
                 Common\UndoableFileRemove($filePath, gracefully: true)
@@ -596,12 +601,12 @@ class ProjectParticipantsController extends Controller
         $filesAppPath = $uploadData['filesAppPath']??null;
 
         $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-        $dataType = $field->getDataType();
+        $fieldDataType = $field->getDataType();
         $multiplicity = $field->getMultiplicity();
 
         $folderPath = $filePath = '';
 
-        switch ($dataType) {
+        switch ($fieldDataType) {
           case FieldDataType::CLOUD_FOLDER:
           case FieldDataType::CLOUD_FILE:
             $pathChain = [ $this->projectService->ensureParticipantFolder($project, $musician, dry: true), ];
@@ -611,7 +616,7 @@ class ProjectParticipantsController extends Controller
             }
             $userStorage->ensureFolderChain($pathChain);
             $folderPath = implode(UserStorage::PATH_SEP, $pathChain);
-            if ($dataType === FieldDataType::CLOUD_FILE) {
+            if ($fieldDataType === FieldDataType::CLOUD_FILE) {
               $pathChain[] = $this->projectService->participantFilename($uploadData['fileBase'], $musician);
             } elseif (!empty($fileName)) {
               $pathChain[] = pathinfo($fileName, PATHINFO_FILENAME);
@@ -632,7 +637,7 @@ class ProjectParticipantsController extends Controller
 
             break;
           default:
-            return self::grumble($this->l->t('Unsupported field type "%s".', $dataType));
+            return self::grumble($this->l->t('Unsupported field type "%s".', $fieldDataType));
         }
 
         /*
@@ -644,7 +649,7 @@ class ProjectParticipantsController extends Controller
          *
          */
 
-        $files = $this->prepareUploadInfo($files, $optionKey, multiple: $dataType == FieldDataType::CLOUD_FOLDER);
+        $files = $this->prepareUploadInfo($files, $optionKey, multiple: $fieldDataType == FieldDataType::CLOUD_FOLDER);
 
         if ($files instanceof Http\Response) {
           // error generated
@@ -667,7 +672,7 @@ class ProjectParticipantsController extends Controller
             continue;
           }
 
-          switch ($dataType) {
+          switch ($fieldDataType) {
             case FieldDataType::CLOUD_FOLDER:
               if (empty($fileName)) {
                 // use original name as storage name in the cloud
@@ -687,10 +692,10 @@ class ProjectParticipantsController extends Controller
 
           $originalFilePath = $file['original_name'] ?? null;
 
-          $uploadMode = $file['upload_mode'] ?? UploadsController::UPLOAD_MODE_COPY;
+          $uploadMode = EnumFileUploadMode::get($file['upload_mode'] ?? EnumFileUploadMode::COPY);
 
           switch ($uploadMode) {
-            case UploadsController::UPLOAD_MODE_MOVE:
+            case EnumFileUploadMode::MOVE:
               if (empty($originalFilePath)) {
                 return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
               }
@@ -699,10 +704,10 @@ class ProjectParticipantsController extends Controller
                 return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
               }
               break;
-            case UploadsController::UPLOAD_MODE_LINK:
-              if ($dataType != FieldDataType::DB_FILE
-                  && $dataType != FieldDataType::RECEIVABLES
-                  && $dataType != FieldDataType::LIABILITIES
+            case EnumFileUploadMode::LINK:
+              if ($fieldDataType != FieldDataType::DB_FILE
+                  && $fieldDataType != FieldDataType::RECEIVABLES
+                  && $fieldDataType != FieldDataType::LIABILITIES
               ) {
                 return self::grumble($this->l->t('Link operation requested, but the link target does not reside in the database storage.'));
               }
@@ -716,7 +721,7 @@ class ProjectParticipantsController extends Controller
               }
               $originalFilePath = $originalFile->getFileName();
               break;
-            case UploadsController::UPLOAD_MODE_COPY:
+            case EnumFileUploadMode::COPY:
               // this is the default, nothing special
               break;
           }
@@ -762,7 +767,7 @@ class ProjectParticipantsController extends Controller
             $optionValue = $fieldData->getOptionValue();
             $dbDocument = null;
             $dbFile = null;
-            switch ($dataType) {
+            switch ($fieldDataType) {
               case FieldDataType::CLOUD_FILE:
                 if (empty($optionValue)) {
                   break;
@@ -774,7 +779,7 @@ class ProjectParticipantsController extends Controller
                   $oldPath .= $pathChain[1] . UserStorage::PATH_SEP;
                 }
                 $oldPath .= $fieldData->getOptionValue();
-                $conflict = 'replaced';
+                $conflict = EnumAddDocumentConflictAction::REPLACE;
                 break;
               case FieldDataType::DB_FILE:
                 if (empty($optionValue)) {
@@ -789,13 +794,13 @@ class ProjectParticipantsController extends Controller
                   ));
                 }
                 $dbFile = $dbDocument->getFile();
-                $conflict = 'replaced';
+                $conflict = EnumAddDocumentConflictAction::REPLACE;
                 break;
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
                 $dbDocument = $fieldData->getSupportingDocument();
                 if (!empty($dbDocument)) {
-                  $conflict = 'replaced';
+                  $conflict = EnumAddDocumentConflictAction::REPLACE;
                   $dbFile = $dbDocument->getFile();
                 }
                 break;
@@ -808,19 +813,19 @@ class ProjectParticipantsController extends Controller
                   $optionValue = [];
                 }
                 if (array_search($pathInfo['basename'], $optionValue) !== false) {
-                  $conflict = 'replaced';
+                  $conflict = EnumAddDocumentConflictAction::REPLACE;
                 }
                 break;
             }
 
             switch ($uploadMode) {
-              case UploadsController::UPLOAD_MODE_MOVE:
+              case EnumFileUploadMode::MOVE:
                 $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
                 // no break
-              case UploadsController::UPLOAD_MODE_COPY:
+              case EnumFileUploadMode::COPY:
                 $fileData = $this->getUploadContent($file);
                 break;
-              case UploadsController::UPLOAD_MODE_LINK:
+              case EnumFileUploadMode::LINK:
                 $fileData = null;
                 /** @var Entities\EncryptedFile $originalFile */
                 if (!empty($dbFile) && $dbFile->getId() == $originalFileId) {
@@ -831,13 +836,13 @@ class ProjectParticipantsController extends Controller
                 break;
             }
 
-            switch ($dataType) {
+            switch ($fieldDataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
                 $storageBackend = EnumFileStorageBackend::CLOUD;
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
-                if ($dataType == FieldDataType::CLOUD_FOLDER) {
+                if ($fieldDataType == FieldDataType::CLOUD_FOLDER) {
                   $oldValue = json_decode($fieldData->getOptionValue(), true);
                   if (!is_array($oldValue)) {
                     $oldValue = [];
@@ -851,7 +856,7 @@ class ProjectParticipantsController extends Controller
                 $this->entityManager->registerPreCommitAction(
                   new Common\UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
                 );
-                if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
+                if ($fieldDataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
                   $readMe = Util::htmlToMarkDown($field->getTooltip());
                   // also place the tooltip as README.md
                   // @todo There is also a listener which also installes the
@@ -879,8 +884,8 @@ class ProjectParticipantsController extends Controller
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
                 switch ($uploadMode) {
-                  case UploadsController::UPLOAD_MODE_COPY:
-                  case UploadsController::UPLOAD_MODE_MOVE:
+                  case EnumFileUploadMode::COPY:
+                  case EnumFileUploadMode::MOVE:
                     // replace the data or generate a new document
 
                     /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -913,7 +918,7 @@ class ProjectParticipantsController extends Controller
                     }
                     $dbFile->setFileName($originalFileName ?? null);
                     break;
-                  case UploadsController::UPLOAD_MODE_LINK:
+                  case EnumFileUploadMode::LINK:
                     $dbFile = $originalFile;
                     break;
                 }
@@ -925,7 +930,7 @@ class ProjectParticipantsController extends Controller
                 }
                 $this->flush();
 
-                if ($dataType == FieldDataType::DB_FILE) {
+                if ($fieldDataType == FieldDataType::DB_FILE) {
                   $fieldData->setOptionValue($dbDocument->getId());
                 } else {
                   $fieldData->setSupportingDocument($dbDocument);
@@ -952,20 +957,20 @@ class ProjectParticipantsController extends Controller
               $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
             }
 
-            if ($uploadMode != UploadsController::UPLOAD_MODE_LINK) {
+            if ($uploadMode != EnumFileUploadMode::LINK) {
               $fileCopied = true;
               $this->removeStashedFile($file);
             }
 
             unset($file['tmp_name']);
             switch ($uploadMode) {
-              case UploadsController::UPLOAD_MODE_COPY:
+              case EnumFileUploadMode::COPY:
                 $messages[] = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $filePath ]);
                 break;
-              case UploadsController::UPLOAD_MODE_MOVE:
+              case EnumFileUploadMode::MOVE:
                 $messages[] = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $filePath ]);
                 break;
-              case UploadsController::UPLOAD_MODE_LINK:
+              case EnumFileUploadMode::LINK:
                 $messages[] = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $filePath ]);
                 break;
             }
@@ -990,9 +995,12 @@ class ProjectParticipantsController extends Controller
 
             $this->entityManager->commit();
           } catch (Throwable $t) {
-            $this->entityManager->rollback();
+            if ($this->entityManager->isTransactionActive()) {
+              $this->entityManager->pushTransactionException($t);
+              $this->entityManager->rollback();
+            }
             if ($fileCopied) {
-              switch ($dataType) {
+              switch ($fieldDataType) {
                 case FieldDataType::CLOUD_FILE:
                   // should have been handled by the undoable pre-commit actions
                   // $userStorage->delete($filePath);
@@ -1027,6 +1035,7 @@ class ProjectParticipantsController extends Controller
    * @return OCP\AppFramework\Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/projects/participants/mailing-list/{operation}')]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,
@@ -1186,7 +1195,7 @@ class ProjectParticipantsController extends Controller
    * ];
    * ```
    */
-  public static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email):array
+  private static function mailingListDeliveryStatus(MailingListsService $listsService, string $listId, string $email):array
   {
     $status = $listsService->getSubscriptionStatus($listId, $email);
     $displayStatus = $status;

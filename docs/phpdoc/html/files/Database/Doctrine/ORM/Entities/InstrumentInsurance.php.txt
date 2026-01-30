@@ -40,15 +40,11 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 class InstrumentInsurance implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
-  use CAFEVDB\Traits\DateTimeTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\JoinColumn(nullable: false)]
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
@@ -98,30 +94,6 @@ class InstrumentInsurance implements \ArrayAccess
     $this->arrayCTOR();
   }
   // phpcs:enable
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return InstrumentInsurance
-   */
-  public function setId(?int $id):InstrumentInsurance
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return null|int
-   */
-  public function getId():?int
-  {
-    return $this->id;
-  }
 
   /**
    * Set instrumentHolder.

@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">The goal is to serialize entities (... to JSON ...)  such that the JS
@@ -188,6 +188,12 @@ then be safely fed into json_serialize.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_commonPrefix">$commonPrefix</a>
+    <span>
+                        &nbsp;: string|null            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_entities">$entities</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;            </span>
@@ -239,6 +245,12 @@ then be safely fed into json_serialize.</p>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse">EntityResponse</abbr></a>    </span>
 </dt>
 <dd>Export the collected entities as DTO.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_getCommonPrefix">getCommonPrefix()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
@@ -295,6 +307,19 @@ then be safely fed into json_serialize.</p>
 </dt>
 <dd>Log a warning message.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_reset">reset()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Clear the data built up by previous calls to self::addEntity().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_setCommonPrefix">setCommonPrefix()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
@@ -312,6 +337,12 @@ understands those.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_flattenIdentifier">flattenIdentifier()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_stripCommonPrefix">stripCommonPrefix()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
@@ -384,9 +415,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -422,9 +453,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -460,9 +491,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -472,6 +503,44 @@ understands those.</dd>
             <span class="phpdocumentor-signature__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$logger</span>
     </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_commonPrefix">
+        $commonPrefix
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_commonPrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">64</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">string|null</span>
+    <span class="phpdocumentor-signature__name">$commonPrefix</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -498,9 +567,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -536,9 +605,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -574,9 +643,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -612,9 +681,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -655,9 +724,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -715,9 +784,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add one Doctrine ORM entity to the serialization structure.</p>
@@ -799,9 +868,9 @@ entities, or just include it as part of a repository.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Export the collected entities as DTO.</p>
@@ -822,6 +891,45 @@ entities, or just include it as part of a repository.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse">EntityResponse</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getCommonPrefix">
+        getCommonPrefix()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_getCommonPrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">94</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getCommonPrefix</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
             </section>
 
 </article>
@@ -1427,6 +1535,91 @@ entities, or just include it as part of a repository.</p>
                     <article
         class="phpdocumentor-element
             -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_reset">
+        reset()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_reset" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">104</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Clear the data built up by previous calls to self::addEntity().</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">reset</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setCommonPrefix">
+        setCommonPrefix()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_setCommonPrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">83</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setCommonPrefix</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$commonPrefix</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$commonPrefix</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -protected
                                                         "
 >
@@ -1525,9 +1718,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">132</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
     </aside>
 
     
@@ -1551,6 +1744,55 @@ understands those.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
                 : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_stripCommonPrefix">
+        stripCommonPrefix()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_stripCommonPrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntitySerializer.php"><a href="files/database-doctrine-orm-util-entityserializer.html"><abbr title="Database/Doctrine/ORM/Util/EntitySerializer.php">EntitySerializer.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">147</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntitySerializer.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">stripCommonPrefix</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$entityName</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1686,6 +1928,7 @@ understands those.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_entityManager">$entityManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_l">$l</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_logger">$logger</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_commonPrefix">$commonPrefix</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_entities">$entities</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_entityDepths">$entityDepths</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#property_identifierFlattener">$identifierFlattener</a></li>
@@ -1699,6 +1942,7 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_addEntity">addEntity()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_export">export()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_getCommonPrefix">getCommonPrefix()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logError">logError()</a></li>
@@ -1707,9 +1951,12 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logger">logger()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_reset">reset()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_setCommonPrefix">setCommonPrefix()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_flattenIdentifier">flattenIdentifier()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntitySerializer.html#method_stripCommonPrefix">stripCommonPrefix()</a></li>
                                     </ul>
             </li>
                     </ul>

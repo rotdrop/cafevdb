@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\MigrationsService;
+use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX end-points for database migrations. */
@@ -53,7 +53,7 @@ class MigrationsController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    private MigrationsService $migrationsService,
+    private MigrationsServiceInterface $migrationsService,
     protected ConfigService $configService,
     protected IL10N $l,
   ) {
@@ -62,36 +62,13 @@ class MigrationsController extends Controller
   // phpcs:enable
 
   /**
-   * @param string $what
-   *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  public function get(string $what):DataResponse
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/maintenance/migrations')]
+  public function get():DataResponse
   {
-    switch ($what) {
-      case self::ALL_MIGRATIONS:
-        return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getAll(), ]);
-      case self::UNAPPLIED_MIGRATIONS:
-        return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getUnapplied(), ]);
-      case self::LATEST_MIGRATION:
-        return self::dataResponse([ 'latest' => $this->migrationsService->getLatest(), ]);
-    }
-    return self::grumble($this->l->t('Unknown Request "%s".', $what));
-  }
-
-  /**
-   * @param string $migrationVersion
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function getDescription(string $migrationVersion):DataResponse
-  {
-    return self::dataResponse([
-      'version' => $migrationVersion,
-      'description' => $this->migrationsService->description($migrationVersion),
-    ]);
+    return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getUnapplied(), ]);
   }
 
   /**
@@ -102,84 +79,47 @@ class MigrationsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  public function serviceSwitch(string $topic, string $subTopic):DataResponse
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/maintenance/migrations/apply')]
+  public function post():DataResponse
   {
-    switch ($topic) {
-      case 'apply':
-        switch ($subTopic) {
-          case 'all':
-            $unapplied = $this->migrationsService->getUnapplied();
-            $applied = [];
-            foreach (array_keys($unapplied) as $version) {
-              try {
-                $this->migrationsService->apply($version);
-                $applied[] = $version;
-              } catch (Throwable $t) {
-                $context = [
-                  ConfigConstants::MIGRATIONS_KEY => [
-                    'payload' => $unapplied,
-                    'handled' => $applied,
-                    'failing' => $version,
-                  ],
-                ];
-                $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
-                  $version, $unapplied[$version],
-                ]);
-                if (count($applied) > 0) {
-                  $message .= ' ' . $this->l->n(
-                    'The following migration has successfully been applied: "%1$s".',
-                    'The following migrations have successfully been applied: "%1$s".',
-                    count($applied),
-                    join(', ', $applied),
-                  );
-                }
-                $remaining = array_diff(array_keys($unapplied), [ $version, ...$applied ]);
-                if (count($remaining) > 0) {
-                  $message .= ' ' . $this->l->t('Also still pending: "%1$s".', join('", "', $remaining));
-                }
-                throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
-              }
-            }
-            return self::dataResponse([
-              ConfigConstants::MIGRATIONS_KEY => [
-                'payload' => $unapplied,
-                'handled' => $applied,
-                'failing' => [],
-              ],
-            ]);
-          default:
-            $version = $subTopic;
-            try {
-              $this->migrationsService->apply($version);
-            } catch (\Throwable $t) {
-              $description = $this->migrationsService->getDescription($version);
-              $context = [
-                ConfigConstants::MIGRATIONS_KEY => [
-                  'payload' => [ $version => $description, ],
-                  'handled' => [],
-                  'failing' => $version,
-                ],
-              ];
-              if ($description) {
-                $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
-                  $version, $description,
-                ]);
-              } else {
-                $message = $this->l->t('Migration step "%1$s" failed.', [
-                  $version,
-                ]);
-              }
-              throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
-            }
-            return self::dataResponse([
-              ConfigConstants::MIGRATIONS_KEY => [
-                'payload' => [ $version, ],
-                'handled' => [ $version, ],
-                'failing' => [],
-              ],
-            ]);
+    $unapplied = $this->migrationsService->getUnapplied();
+    $applied = [];
+    foreach (array_keys($unapplied) as $version) {
+      try {
+        $this->migrationsService->apply($version);
+        $applied[] = $version;
+      } catch (Throwable $t) {
+        $context = [
+          ConfigConstants::MIGRATIONS_KEY => [
+            'payload' => $unapplied,
+            'handled' => $applied,
+            'failing' => $version,
+          ],
+        ];
+        $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
+          $version, $unapplied[$version],
+        ]);
+        if (count($applied) > 0) {
+          $message .= ' ' . $this->l->n(
+            'The following migration has successfully been applied: "%1$s".',
+            'The following migrations have successfully been applied: "%1$s".',
+            count($applied),
+            join(', ', $applied),
+          );
         }
+        $remaining = array_diff(array_keys($unapplied), [ $version, ...$applied ]);
+        if (count($remaining) > 0) {
+          $message .= ' ' . $this->l->t('Also still pending: "%1$s".', join('", "', $remaining));
+        }
+        throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
+      }
     }
-    return self::grumble($this->l->t('Unknown Request "%s".', $topic));
+    return self::dataResponse([
+      ConfigConstants::MIGRATIONS_KEY => [
+        'payload' => $unapplied,
+        'handled' => $applied,
+        'failing' => [],
+      ],
+    ]);
   }
 }

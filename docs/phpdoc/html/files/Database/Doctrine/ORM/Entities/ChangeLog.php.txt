@@ -40,12 +40,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class ChangeLog
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'datetime_immutable')]
   private DateTimeImmutable $updated;
@@ -68,9 +64,19 @@ class ChangeLog
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private ?string $col;
 
+  /**
+   * @var string
+   *
+   * This is actually serialized PHP data so in principle 'blob' is not necessary.
+   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private /* resource */ $oldval;
 
+  /**
+   * @var string
+   *
+   * This is actually serialized PHP data so in principle 'blob' is not necessary.
+   */
   #[ORM\Column(type: 'blob', length: 65535, nullable: true)]
   private /* resource */ $newval;
 
@@ -80,16 +86,6 @@ class ChangeLog
     $this->arrayCTOR();
   }
   // phpcs:enable
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set updated.

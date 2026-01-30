@@ -101,13 +101,13 @@ trait MusicianFromRowTrait
         case 'projects':
           $categories = array_merge($categories, explode(PMETableViewBase::VALUES_SEP, Util::removeSpaces($value)));
           break;
-        case $this->joinTableFieldName(PMETableViewBase::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
+        case self::joinTableFieldName(PMETableViewBase::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
           $instrumentInfo = $this->getInstrumentInfo();
           foreach (explode(PMETableViewBase::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
             $categories[] = $instrumentInfo['byId'][$instrumentId] ?? null;
           }
           break;
-        case $this->joinTableFieldName(PMETableViewBase::MUSICIAN_EMAILS_TABLE, 'address'):
+        case self::joinTableFieldName(PMETableViewBase::MUSICIAN_EMAILS_TABLE, 'address'):
           $musician->setEmail(new Entities\MusicianEmailAddress($value, $musician));
           break;
         default:

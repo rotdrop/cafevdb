@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,10 +34,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 /** Base class for all of our repositories. */
-class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository
+class EntityRepository extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
-
   /** {@inheritdoc} */
   public function __construct(
     protected EntityManagerDecorator $entityManagerDecorator,
@@ -48,7 +46,7 @@ class EntityRepository extends \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepositor
       throw new UnexpectedValueException('Class-meta-data should be an instance of "' . ClassMetadataDecorator::class . '", but is an instance of "' . get_class($classMetaData) . '".');
     }
     $classMetaData = $classMetaData->getWrappedObject();
-     parent::__construct($entityManagerDecorator, $classMetaData);
+    parent::__construct($entityManagerDecorator, $classMetaData);
   }
 
   /**

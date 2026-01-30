@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,13 +62,12 @@ class InsuranceBrokers extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->projectId = $this->getClubMembersProjectId();
@@ -82,13 +81,13 @@ class InsuranceBrokers extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return $this->l->t('Instrument Insurance Brokers');
   }
 
   /** {@inheritdoc} */
-  public function headerText()
+  public function headerText(): string
   {
     $header = $this->shortTitle();
 
@@ -98,7 +97,6 @@ class InsuranceBrokers extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -118,9 +116,9 @@ class InsuranceBrokers extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key

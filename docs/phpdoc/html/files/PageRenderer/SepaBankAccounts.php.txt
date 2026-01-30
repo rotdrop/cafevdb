@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -195,14 +195,12 @@ class SepaBankAccounts extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->findProject(enforce: false);
@@ -212,7 +210,7 @@ class SepaBankAccounts extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove this Bank-Account?');
@@ -235,7 +233,6 @@ class SepaBankAccounts extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
 
@@ -261,9 +258,9 @@ class SepaBankAccounts extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key
@@ -271,10 +268,10 @@ class SepaBankAccounts extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'id'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'id'),
       'sequence',
-      $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
+      self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
     ];
 
     // Group by for to-many joins
@@ -314,7 +311,7 @@ class SepaBankAccounts extends PMETableViewBase
       $monetaryFields = $this->participantFieldsService->monetaryFields($this->project);
       /** @var Entities\ProjectParticipantField $field */
       $haveGenerators = $monetaryFields->exists(function($key, $field) {
-        return $field->getMultiplicity() == FieldMultiplicity::RECURRING();
+        return $field->getMultiplicity() == FieldMultiplicity::RECURRING;
       });
 
       // Control to select what we want to debit
@@ -791,7 +788,7 @@ class SepaBankAccounts extends PMETableViewBase
           }
           // In order not to trigger erroneous update of unchanged value we
           // emit the sequence value as hidden input. It is further protected
-          // by an udpate "trigger" which just forces it to remain unchanged.
+          // by an update "trigger" which just forces it to remain unchanged.
           $html = $pme->htmlHiddenData($pme->fds[$k], $value);
           $html .= '<span class="cell-wrapper">' . (string)$value . '</span>';
           return $html;
@@ -1151,7 +1148,7 @@ received so far'),
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $accountSequence = 'sequence';
-    $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $readOnlyKeys = [ $accountSequence, $debitMandateSequenceKey ];
     $unsafeChanged = array_intersect($changed, $readOnlyKeys);
     if (!empty($unsafeChanged)) {
@@ -1163,7 +1160,7 @@ received so far'),
     }
     $debitMandateSequence = $newValues[$debitMandateSequenceKey];
 
-    $mandateNonRecurring = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
+    $mandateNonRecurring = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
     $newValues[$mandateNonRecurring] = (int)$newValues[$mandateNonRecurring];
     $oldValues[$mandateNonRecurring] = (int)$oldValues[$mandateNonRecurring];
     if ($oldValues[$mandateNonRecurring] == $newValues[$mandateNonRecurring]) {
@@ -1174,7 +1171,7 @@ received so far'),
     }
 
     // Remove "written-mandate-id" because it is handled separately
-    $writtenMandateIdKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
+    $writtenMandateIdKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
     unset($newValues[$writtenMandateIdKey]);
     unset($oldValues[$writtenMandateIdKey]);
     Util::unsetValue($changed, $writtenMandateIdKey);
@@ -1243,11 +1240,12 @@ received so far'),
       // re-used. Unfortunately findBy() does not work with encrypted fields,
       // so fetch all and filter in PHP.
       $iban = $newValues['iban'];
-      $bankAccountCandidates = $bankAccountsRepository->findBy([
+      $criteria = [
         'musician' => $musician,
         //'iban' => $iban,
         'deleted' => null,
-      ]);
+      ];
+      $bankAccountCandidates = $bankAccountsRepository->findBy($criteria);
       $bankAccountCandidates = array_values(
         array_filter(
           $bankAccountCandidates, fn(Entities\SepaBankAccount $account) => $account->getIban() == $iban
@@ -1262,7 +1260,9 @@ received so far'),
           $this->l->t(
             'More than one (%1$d) active bank account found for musician "%2$s" and IBAN "%3$s".',
             [ count($bankAccountCandidates), $musician->getPublicName(true), $newValues['iban'] ]
-          )
+          ),
+          entityClassName: Entities\SepaBankAccount::class,
+          criteria: $criteria,
         );
       }
       $bankAccount = $bankAccountCandidates[0];
@@ -1270,14 +1270,14 @@ received so far'),
 
     $maxSequence = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->sequenceMax($musician);
     $debitMandateSequence = $maxSequence + 1;
-    $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $newValues[$debitMandateSequenceKey] = $debitMandateSequence;
 
     // add some missing values
-    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
+    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
       $newValues['sequence'];
-    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
-      $newValues[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')];
+    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
+      $newValues[self::joinTableFieldName(self::PROJECTS_TABLE, 'id')];
 
     // convert to the KEY:VALUE format understood by beforeInsert...
     foreach ($newValues as $key => $value) {

@@ -26,8 +26,9 @@ namespace OCA\CAFEVDB\Database;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Configuration;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DBALConnection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 
 /**
  * DBAL wrapper. In principle no longer neccessary, but we keep it in order to
@@ -76,6 +77,10 @@ class Connection extends DBALConnection
     }
     if ($host !== null) {
       $params['host'] = $host;
+    }
+
+    if ($this->getConfiguration()->getSchemaManagerFactory() === null) {
+      $this->getConfiguration()->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
     }
 
     $connection = new Connection(

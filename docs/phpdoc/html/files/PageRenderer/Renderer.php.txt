@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,13 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
+
 /** Abstract base HTML renderer.*/
 abstract class Renderer implements IRenderer
 {
+  protected $appName;
+
   /** @var string */
   protected string $template;
 
@@ -46,12 +50,12 @@ abstract class Renderer implements IRenderer
   /** {@inheritdoc} */
   public function cssPrefix():string
   {
-    return 'cafevdb-page';
+    return $this->appName . ControllerCssClasses::CLASS_SEPARATOR . CssClasses::CSS_PREFIX_POSTFIX;
   }
 
   /** {@inheritdoc} */
   public function cssClass():string
   {
-    return $this->template;
+    return static::TEMPLATE;
   }
 }

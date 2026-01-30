@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2020, 2022, 2025 Claus-Justus Heine
+ * @copyright 2011-2020, 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,41 +25,53 @@
 namespace OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 
 /** Abstract page-renderer base class. */
 abstract class AbstractPageRenderer extends Renderer implements IPageRenderer
 {
+  /** @param string $appName */
+  public function __construct(protected $appName)
+  {
+  }
+
+  /** @return string */
+  protected function appName(): string
+  {
+    return $this->appName;
+  }
+
   /*** {@inheritdoc} */
-  public function navigation(bool $enable):void
+  public function navigation(bool $enable): void
   {
   }
 
   /*** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     return [];
   }
 
   /*** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem
   {
-    return [
+    return SidebarNavigationItem::fromArray([
       'template' => static::TEMPLATE,
       'name' => 'templates:navigation:name:' . static::TEMPLATE,
       'tooltip' => 'templates:navigation:tooltips:' . static::TEMPLATE,
       'templateParameters' => [],
       'permissions' => static::requiredPermissions(),
-    ];
+    ]);
   }
 
   /*** {@inheritdoc} */
-  public static function requiredPermissions():int
+  public static function requiredPermissions(): int
   {
-    return AuthorizationService::PERMISSION_FRONTEND;
+    return AuthorizationService\EnumAppPermissions::FRONTEND->value;
   }
 
   /*** {@inheritdoc} */
-  public function execute(array $options = []):void
+  public function execute(array $options = []): void
   {
   }
 }

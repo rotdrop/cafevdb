@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -92,8 +92,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ToolTipsService $toolTipsService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -111,7 +109,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->projectName) {
       return $this->l->t("Instrumentation Numbers for `%s'", [ $this->projectName ]);
@@ -121,7 +119,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function headerText()
+  public function headerText(): string
   {
     $header = $this->shortTitle();
     $header .= "<p>".$this->l->t("The target instrumentation numbers can be filled into this table. ".
@@ -134,7 +132,6 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template       = $this->template;
     $projectId      = $this->projectId;
     $projectMode    = $this->projectId > 0;
     $instrumentInfo = $this->getInstrumentInfo();
@@ -148,9 +145,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['tb'] = self::TABLE;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key
@@ -158,9 +155,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['groupby_fields'] = array_keys($opts['key']);
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'name'),
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
       'voice',
     ];
 

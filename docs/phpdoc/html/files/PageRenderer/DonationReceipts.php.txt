@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,8 +55,8 @@ class DonationReceipts extends PMETableViewBase
   public const AMOUNT_CHECK_FAILURE = 'amount-check-failure';
 
   public const FORM_DATA = [
-    'template' => self::TEMPLATE,
-    'table' => self::TABLE,
+    PersistentCGIKeys::TEMPLATE => self::TEMPLATE,
+    PersistentCGIKeys::TABLE => self::TABLE,
     'self-test-failure' => self::AMOUNT_CHECK_FAILURE,
   ];
 
@@ -162,8 +162,6 @@ class DonationReceipts extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -177,7 +175,7 @@ class DonationReceipts extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return $this->l->t('Donation Receipts');
   }
@@ -185,7 +183,6 @@ class DonationReceipts extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts            = [];
@@ -256,9 +253,9 @@ class DonationReceipts extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
     ];
 
     // Name of field which is the unique key
@@ -270,8 +267,8 @@ class DonationReceipts extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [
       'id',
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      $this->joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
     ];
 
     // Options you wish to give the users
@@ -811,8 +808,8 @@ class DonationReceipts extends PMETableViewBase
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $remapFields = [
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      $this->joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {
@@ -852,8 +849,8 @@ class DonationReceipts extends PMETableViewBase
     }
 
     $remapFields = [
-      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      $this->joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {

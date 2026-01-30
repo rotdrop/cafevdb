@@ -106,9 +106,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">32</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.32" class="phpdocumentor-element-found-in__source" data-line="32" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Support traits for date-time stuff</p>
@@ -140,20 +140,20 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
     <span>
-                                &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null    </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
 </dt>
 <dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
 
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
@@ -178,7 +178,7 @@
                     <article
         class="phpdocumentor-element
             -method
-            -public
+            -protected
                                     -static                    "
 >
     <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
@@ -189,15 +189,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -220,14 +220,14 @@
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
             </section>
 
 </article>
                     <article
         class="phpdocumentor-element
             -method
-            -public
+            -protected
                                     -static                    "
 >
     <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
@@ -246,7 +246,7 @@
         <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
+    <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
@@ -300,7 +300,7 @@
                     <article
         class="phpdocumentor-element
             -method
-            -public
+            -protected
                                     -static                    "
 >
     <h4 class="phpdocumentor-element__name" id="method_ensureDate">
@@ -311,15 +311,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Ensure a valid date.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
+    <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
 
     <div class="phpdocumentor-label-line">

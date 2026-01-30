@@ -55,7 +55,6 @@ class EncryptionController extends OCSController
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   // @todo move this definition somewhere else
   const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';

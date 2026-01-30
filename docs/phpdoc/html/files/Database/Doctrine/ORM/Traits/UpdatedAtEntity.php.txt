@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,21 +21,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Based on, with "At" removed from the names, i.e. updatedAt replaced
- * by updated etc.
- *
- * Timestampable Trait, usable with PHP >= 5.4
- *
- * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
- * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultExpression\CurrentTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -45,6 +37,6 @@ trait UpdatedAtEntity
   use UpdatedAt;
 
   #[Gedmo\Timestampable(on: 'update')]
-  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+  #[ORM\Column(type: 'datetime_immutable', nullable: true, options: [ 'default' => new CurrentTime() ])]
   protected ?DateTimeImmutable $updated = null;
 }

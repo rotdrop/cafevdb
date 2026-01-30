@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,15 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
 
 /**
  * Customize with some defaults, like a random node.
  */
+#[TSAttributes\TypeScript]
 class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
 {
   /** @var Ramsey\Uuid\Provider\NodeProviderInterface */

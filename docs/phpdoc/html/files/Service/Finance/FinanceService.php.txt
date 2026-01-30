@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
@@ -59,7 +60,6 @@ class FinanceService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
 
   /**
@@ -92,6 +92,12 @@ class FinanceService
     'labor-day'               => '05-01',
     'christmas'               => '12-25',
     'christmas-next-day'      => '12-26',
+  ];
+
+  public const SEPA_TRANSLIT_EXTRA = [
+    '[{' => '(',
+    '}]' => ')',
+    ';' => '/',
   ];
 
   /** @var Repositories\SepaDebitMandatesRepository */
@@ -131,8 +137,7 @@ class FinanceService
    */
   public function getDueDate(
     Entities\ProjectParticipantFieldDatum|Entities\ProjectParticipantFieldDataOption $receivable,
-  ): DateTimeInterface
-  {
+  ): DateTimeInterface {
     $field = $receivable->getField();
     if ($field->getMultiplicity() == Types\EnumParticipantFieldMultiplicity::RECURRING) {
       /** @var ReceivablesGeneratorFactory $factory */
@@ -316,7 +321,7 @@ class FinanceService
    *
    * @return string The generated invoice number.
    */
-  public function generateInvoiceNumber(Entities\Musician $originator, null|int|Entities\Project $project, ?DateTimeImmutable $date = null):string
+  public function generateInvoiceNumber(Entities\Musician $originator, null|int|Entities\Project $project, ?DateTimeInterface $date = null):string
   {
     $date = $date ?? (new DateTime);
     $parts = [
@@ -364,7 +369,7 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $templateData = [
-      'recipient' => $this->flattenMusician($compositePayment->getMusician()),
+      'recipient' => EntityArrayAdapter::create($compositePayment->getMusician(), depth: 1),
       'payment' => [
         // amount need not be the donation amount
         'amount' => $compositePayment->getAmount(),
@@ -432,8 +437,8 @@ class FinanceService
     }
 
     $templateData = [
-      'originator' => $this->flattenMusician($invoice->getOriginator()),
-      'recipient' => $this->flattenMusician($invoice->getDebitor()),
+      'originator' => EntityArrayAdapter::create($invoice->getOriginator(), depth: 1),
+      'recipient' => EntityArrayAdapter::create($invoice->getDebitor(), depth: 1),
       'invoice' => [
         // amount need not be the donation amount
         'amount' => $amount->toDecimal(2),
@@ -536,7 +541,7 @@ class FinanceService
 
     // now compose the dataset for the document template engine
     $templateData = [
-      'recipient' => $this->flattenMusician($donationPayment->getMusician()),
+      'recipient' => EntityArrayAdapter::create($donationPayment->getMusician(), depth: 1),
       'donation' => [
         'amount' => $donationAmount,
         'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
@@ -678,8 +683,12 @@ class FinanceService
 
       if (!empty($bankAccount)) {
         $info = $this->getIbanInfo($bankAccount->getIban());
-        $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
-
+        $this->logInfo('BANK INFO ' . print_r($info, true));
+        if (isset($info['bank']) && isset($info['city'])) {
+          $bank = $this->ellipsizeFirst($info['bank'], $info['city'], self::BANK_NAME_MAX);
+        } else {
+          $bank = '';
+        }
         $formData = array_merge($formData, [
           ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
           ConfigConstants::BANK_ACCOUNT_IBAN => $bankAccount->getIban(),
@@ -799,21 +808,20 @@ class FinanceService
     iterable $payments = [],
     array $related = [],
   ): ?array {
-    $eventKind = 'finance';
+    $eventKind = ConfigConstants::FINANCE_CALENDAR_URI;
     $categories = '';
     if ($project) {
       // This triggers adding the event to the respective project when added
       $categories .= $project->getName().',';
     }
-    $categories .= $this->l->t('finance');
-    $calKey       = $eventKind.'calendar';
-    $calendarId   = $this->getConfigValue($calKey.'id', false);
+    $categories .= $this->l->t(ConfigConstants::FINANCE_CALENDAR_URI);
+    $calendarId = $this->getConfigValue($eventKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
 
     $eventData = [
       'summary' => $title,
       'from' => $start->format('d-m-Y'),
       'to' => ($start ?? $end)->format('d-m-Y'),
-      'allday' => true,
+      'allDay' => true,
       'location' => 'Cyber-Space',
       'categories' => $categories,
       'description' => $description,
@@ -871,21 +879,20 @@ class FinanceService
     iterable $payments = [],
     array $related = [],
   ): ?array {
-    $taskKind = 'finance';
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
     $categories = '';
     if ($project) {
       // This triggers adding the task to the respective project when added
       $categories .= $project->getName().',';
     }
-    $categories .= $this->l->t('finance');
-    $calKey       = $taskKind.'calendar';
-    $calendarId   = $this->getConfigValue($calKey.'id', false);
+    $categories .= $this->l->t(ConfigConstants::FINANCE_CALENDAR_URI);
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
 
     $taskData = [
       'summary' => $title,
       'due' => $due->format('d-m-Y'),
       'start' => ($start ?? $due)->format('d-m-Y'),
-      'allday' => true,
+      'allDay' => true,
       'status' => EventsService::TASK_NEEDS_ACTION,
       'location' => 'Cyber-Space',
       'categories' => $categories,
@@ -914,9 +921,8 @@ class FinanceService
    */
   public function deleteFinanceCalendarEntry(mixed $objectIdentifier):void
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $calendarKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($calendarKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     if (!is_array($objectIdentifier)) {
       $objectIdentifier = [ $objectIdentifier ];
     }
@@ -940,9 +946,8 @@ class FinanceService
    */
   public function findFinanceCalendarEntry(string $localUri)
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
+    $taskKind = ConfigConstants::FINANCE_CALENDAR_URI;
+    $calendarId = $this->getConfigValue($taskKind . ConfigConstants::CALENDAR_ID_KEY_POSTFIX, false);
     return $this->eventsService->findCalendarEntry($calendarId, $localUri);
   }
 
@@ -969,10 +974,7 @@ class FinanceService
    */
   public function updateFinanceCalendarEntry(array $event):void
   {
-    $taskKind = 'finance';
-    $calKey = $taskKind.'calendar';
-    $calendarId = $this->getConfigValue($calKey.'id', false);
-    $this->eventsService->udpateCalendarEntry($calendarId, $event);
+    $this->eventsService->updateCalendarEntry($event);
   }
 
   /**
@@ -991,8 +993,8 @@ class FinanceService
   public function sepaTranslit(string $string, ?string $locale = null):string
   {
     return str_replace(
-      ['[{', '}]', ';'],
-      ['(', ')', '/'],
+      array_keys(self::SEPA_TRANSLIT_EXTRA),
+      array_values(self::SEPA_TRANSLIT_EXTRA),
       $this->transliterate($string, $locale)
     );
   }
@@ -1070,14 +1072,17 @@ class FinanceService
     $surName = $this->sepaTranslit($musician['surName']);
 
     $format = empty($projectYear)
-            ? '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X19.19s%.0s+%02d'
-            : '%04d-%04d-%\'X1.1s%\'X1.1s-%-\'X15.15s%04d+%02d';
+            ? '%04x-%04x-%\'X1.1s%\'X1.1s-%-\'X19.19s%.0s+%02d'
+            : '%04x-%04x-%\'X1.1s%\'X1.1s-%-\'X15.15s%04d+%02d';
 
     $ref = sprintf(
       $format,
-      $projectId, $musicianId,
-      $firstName, $surName,
-      $projectName, $projectYear,
+      $projectId & 0xffff,
+      $musicianId & 0xffff,
+      $firstName,
+      $surName,
+      $projectName,
+      $projectYear,
       (int)$sequence);
 
     $ref = strtoupper(Util::normalizeSpaces($ref, 'X'));

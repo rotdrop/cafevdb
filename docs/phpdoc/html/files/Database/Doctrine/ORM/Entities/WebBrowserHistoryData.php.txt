@@ -51,6 +51,11 @@ class WebBrowserHistoryData implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'data', cascade: ['persist'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
   protected Collection $entries;
 
+  /**
+   * @var array<string, mixed>
+   *
+   * Post-data.
+   */
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   #[ORM\Column(type: 'blob', nullable: false, options: ['comment' => 'JSON encrypted'])]
   protected /* resource */ $data;

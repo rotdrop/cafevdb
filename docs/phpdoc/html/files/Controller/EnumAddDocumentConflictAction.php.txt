@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,16 +24,17 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Simple setting as enum.
+ * Conflict resolution actions for DatabaseStorageFolder::add().
  */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumAddDocumentConflictAction: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
 
-  case FAIL = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_FAIL;
-  case REPLACE = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_REPLACE;
-  case RENAME = DatabaseStorageFolder::ADD_DOCUMENT_CONFLICT_RENAME;
+  case FAIL = 'fail';
+  case REPLACE = 'replace';
+  case RENAME = 'rename';
 }

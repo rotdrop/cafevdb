@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,11 +35,11 @@ interface IRenderer
    *
    * @return void
    */
-  public function render(bool $execute = true):void;
+  public function render(bool $execute = true): void;
 
   /** @return string */
-  public function cssPrefix():string;
+  public function cssPrefix(): string;
 
   /** @return string */
-  public function cssClass():string;
+  public function cssClass(): string;
 }

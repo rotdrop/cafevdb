@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Common\Functions;
+
+use BackedEnum;
 
 use OCA\CAFEVDB\Common\VarDumper;
 
@@ -65,4 +67,38 @@ function strCmpEmptyLast(?string $a, ?string $b)
     return -1;
   }
   return strcmp($a, $b);
+}
+
+/**
+ * Convert a backed enum to its value, i.e. ev($arg) === $arg->value.
+ *
+ * @param BackedEnum $arg
+ *
+ * @return int|string
+ */
+function ev(BackedEnum $arg): int|string
+{
+  return $arg->value;
+}
+
+/**
+ * @param string $format
+ *
+ * @param mixed ...$values
+ *
+ * @return string
+ */
+function sprintf(string $format, mixed ...$values): string
+{
+  return \sprintf($format, ...array_map(fn(mixed $value) => $value instanceof BackedEnum ? ev($value) : $value, $values));
+}
+
+/**
+ * @param mixed ...$values
+ *
+ * @return string
+ */
+function strcat(mixed ...$values): string
+{
+  return implode('', array_map(fn(mixed $value) => $value instanceof BackedEnum ? (string)ev($value) : (string)$value, $values));
 }

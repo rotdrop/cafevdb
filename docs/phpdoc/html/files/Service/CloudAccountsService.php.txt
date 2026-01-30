@@ -474,7 +474,7 @@ class CloudAccountsService
    *
    * @return void
    */
-  public function addGroupSubAdmin(IUser $user, array $gids = null):void
+  public function addGroupSubAdmin(IUser $user, ?array $gids = null):void
   {
     $groups = $this->getAdministrableGroups($gids);
     foreach ($groups as $group) {

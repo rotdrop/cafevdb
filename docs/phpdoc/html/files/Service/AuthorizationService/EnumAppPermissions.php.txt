@@ -1,0 +1,50 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Service\AuthorizationService;
+
+/**
+ * Define an an enum for the special permissions granted to persons, used by
+ * the Authorization service.
+ */
+enum EnumAppPermissions: int
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case NONE = 0;
+  case FRONTEND = (1 << 0);
+  case ADDRESSBOOK = (1 << 1);
+  case FILESYSTEM = (1 << 2);
+  case CALENDAR = (1 << 3);
+  case FINANCE = (1 << 4);
+  case MANAGEMENT = (1 << 5);
+  case EMAIL = (1 << 6);
+  case ALL = self::FRONTEND->value
+    | self::ADDRESSBOOK->value
+    | self::FILESYSTEM->value
+    | self::CALENDAR->value
+    | self::FINANCE->value
+    | self::MANAGEMENT->value
+    | self::EMAIL->value;
+}

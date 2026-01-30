@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2025 Claus-Justus Heine
+ * @copyright 2021-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Throwable;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
@@ -317,7 +319,7 @@ class MusicianService
     $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
     try {
       $this->listsService->unsubscribe($list, $musician->getEmail());
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       // for now we ignore any mailing list related errors in order not to
       // annoy the persons who are desperately trying to add persons to
       // the data-base. We should, however, find a notification channel
@@ -340,7 +342,7 @@ class MusicianService
           $this->remove($instrument, true);
           $this->remove($instrument, true);
         }
-        $this->remove($musician, true); // this should be hard-delete
+        $this->remove($musician, flush: true); // this should be hard-delete
       } else {
         $this->logInfo($musician->getPublicName() . ' is used, trying to impersonate');
         // Perhaps: remove all personal data and keep a dummy record as

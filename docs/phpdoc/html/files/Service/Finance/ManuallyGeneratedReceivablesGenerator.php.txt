@@ -127,8 +127,9 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       ->setProject($participant->getProject())
       ->setDataOption($fieldOption);
     $participant->getParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
-    $fieldOption->getFieldData()->add($datum);
-    $participant->getMusician()->getProjectParticipantFieldsData()->add($datum);
+    $fieldOption->getField()->getFieldData()->add($datum);
+    $fieldOption->getFieldData()->set($participant->getMusician()->getId(), $datum);
+    $participant->getMusician()->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
     $participant->getProject()->getParticipantFieldsData()->add($datum);
     return 1; // one new item
   }

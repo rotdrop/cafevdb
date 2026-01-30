@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntityResponse.php"><a href="files/database-doctrine-orm-util-entityresponse.html"><abbr title="Database/Doctrine/ORM/Util/EntityResponse.php">EntityResponse.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">32</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.30" class="phpdocumentor-element-found-in__source" data-line="30" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.32" class="phpdocumentor-element-found-in__source" data-line="32" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">A collection of entities without duplicates.</p>
@@ -138,6 +138,20 @@
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\TemplateParameters">TemplateParameters</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;K extends keyof Database.Doctrine.ORM.EntityMetadata.EntityMap&#039;
+    </dd>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -162,13 +176,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#property_entities">$entities</a>
     <span>
-                        &nbsp;: array&lt;string, array&lt;string|int, mixed&gt;&gt;            </span>
+                        &nbsp;: array&lt;string, array&lt;string|int, string&gt;&gt;            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#property_repositories">$repositories</a>
     <span>
-                        &nbsp;: array&lt;string, array&lt;string|int, mixed&gt;&gt;            </span>
+                        &nbsp;: array&lt;string, array&lt;string, object&gt;&gt;            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -256,24 +270,43 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntityResponse.php"><a href="files/database-doctrine-orm-util-entityresponse.html"><abbr title="Database/Doctrine/ORM/Util/EntityResponse.php">EntityResponse.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">array&lt;string, array&lt;string|int, mixed&gt;&gt;</span>
+            <span class="phpdocumentor-signature__type">array&lt;string, array&lt;string|int, string&gt;&gt;</span>
     <span class="phpdocumentor-signature__name">$entities</span>
     </code>
 
     
-    
+        <section class="phpdocumentor-description"><p>Still difficulties with those TS magic ... the current construct makes
+sure that if K consists of multiple entity names then it is not clear
+which fields are set, while if K only &quot;contains&quot; a single entity name
+then this field must not be unset.</p>
+</section>
+
     
 
         
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#property_entities#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;{ [e in K]: K extends e ? string[] : undefined|string[] }&#039;
+    </dd>
+    </dl>
+                    </section>
         
 
 </article>
@@ -294,16 +327,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntityResponse.php"><a href="files/database-doctrine-orm-util-entityresponse.html"><abbr title="Database/Doctrine/ORM/Util/EntityResponse.php">EntityResponse.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">array&lt;string, array&lt;string|int, mixed&gt;&gt;</span>
+            <span class="phpdocumentor-signature__type">array&lt;string, array&lt;string, object&gt;&gt;</span>
     <span class="phpdocumentor-signature__name">$repositories</span>
     </code>
 
@@ -312,6 +345,20 @@
     
 
         
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#property_repositories#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;{ [e in K]: { [id: string]: Database.Doctrine.ORM.EntityMetadata.EntityDto&lt;e&gt; } }&#039;
+    </dd>
+    </dl>
+                    </section>
         
 
 </article>
@@ -375,9 +422,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Util/EntityResponse.php"><a href="files/database-doctrine-orm-util-entityresponse.html"><abbr title="Database/Doctrine/ORM/Util/EntityResponse.php">EntityResponse.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Util-EntityResponse.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Util/EntityResponse.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>

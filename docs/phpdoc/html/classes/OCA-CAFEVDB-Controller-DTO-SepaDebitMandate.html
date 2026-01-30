@@ -103,7 +103,7 @@
     SepaDebitMandate
 
         <span class="phpdocumentor-element__extends">
-        extends <a href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractResponseDTO.html"><abbr title="\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO">AbstractResponseDTO</abbr></a>
+        extends <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html"><abbr title="\OCA\CAFEVDB\Controller\DTO\SepaBankAccount">SepaBankAccount</abbr></a>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -158,13 +158,13 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountDeleted">$bankAccountDeleted</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountDeleted">$bankAccountDeleted</a>
     <span>
                         &nbsp;: bool            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountSequence">$bankAccountSequence</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountSequence">$bankAccountSequence</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
@@ -184,35 +184,37 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_mandateReference">$mandateReference</a>
     <span>
-                        &nbsp;: string            </span>
+                        &nbsp;: string|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_mandateSequence">$mandateSequence</a>
     <span>
-                        &nbsp;: int            </span>
+                        &nbsp;: array&lt;string|int, string&gt;            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_messages">$messages</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_messages">$messages</a>
     <span>
                         &nbsp;: array&lt;string|int, string&gt;            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_musicianId">$musicianId</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_musicianId">$musicianId</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_projectId">$projectId</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_projectId">$projectId</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
+<dd>Need not be present, if we have a submitted project-id from the
+context, then it will be echoed back.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_state">$state</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_state">$state</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null            </span>
 </dt>
@@ -300,17 +302,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_bankAccountDeleted">
         $bankAccountDeleted
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountDeleted" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountDeleted" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
     
@@ -338,17 +340,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_bankAccountSequence">
         $bankAccountSequence
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountSequence" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountSequence" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
     
@@ -395,7 +397,7 @@
         <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$contents</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -422,9 +424,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
     </aside>
 
     
@@ -460,16 +462,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">string</span>
+            <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$mandateReference</span>
     </code>
 
@@ -498,16 +500,16 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__type">int</span>
+            <span class="phpdocumentor-signature__type">array&lt;string|int, string&gt;</span>
     <span class="phpdocumentor-signature__name">$mandateSequence</span>
     </code>
 
@@ -528,17 +530,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_messages">
         $messages
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_messages" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_messages" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
     
@@ -547,7 +549,7 @@
         <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type">array&lt;string|int, string&gt;</span>
     <span class="phpdocumentor-signature__name">$messages</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -566,17 +568,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_musicianId">
         $musicianId
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_musicianId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_musicianId" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
     
@@ -604,26 +606,28 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_projectId">
         $projectId
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_projectId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_projectId" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Need not be present, if we have a submitted project-id from the
+context, then it will be echoed back.</p>
+
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type">int</span>
     <span class="phpdocumentor-signature__name">$projectId</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">0</span></code>
 
     
     
@@ -642,17 +646,17 @@
 >
     <h4 class="phpdocumentor-element__name" id="property_state">
         $state
-        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_state" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_state" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                         <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaBankAccount.php"><a href="files/controller-dto-sepabankaccount.html"><abbr title="Controller/DTO/SepaBankAccount.php">SepaBankAccount.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Controller/DTO/SepaBankAccount.php.txt"></a>
     </aside>
 
     
@@ -661,7 +665,7 @@
         <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$state</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -740,7 +744,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musicianId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountSequence</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountDeleted</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateSequence</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateDeleted</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateReference</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$contents</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$messages</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$musicianId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountSequence</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bankAccountDeleted</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateSequence</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateDeleted</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mandateReference</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$contents</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$messages</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -792,14 +796,7 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$mandateReference</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$state</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -807,14 +804,21 @@
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$contents</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
-                            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$messages</span>
                 : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;|null</span>
-                            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$state</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Controller-EnumSepaDebitMandateRevocationStatus.html"><abbr title="\OCA\CAFEVDB\Controller\EnumSepaDebitMandateRevocationStatus">EnumSepaDebitMandateRevocationStatus</abbr></a>|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -840,9 +844,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/DTO/SepaDebitMandate.php"><a href="files/controller-dto-sepadebitmandate.html"><abbr title="Controller/DTO/SepaDebitMandate.php">SepaDebitMandate.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Controller/DTO/SepaDebitMandate.php.txt"></a>
     </aside>
 
     
@@ -866,6 +870,31 @@
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#method_fromArray#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(PHPMD.UndefinedVariable)</p>
+</section>
+
+                                    </dd>
+                            <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedLocalVariable)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
         
     
@@ -1193,16 +1222,16 @@
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountDeleted">$bankAccountDeleted</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_bankAccountSequence">$bankAccountSequence</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountDeleted">$bankAccountDeleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_bankAccountSequence">$bankAccountSequence</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_contents">$contents</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_mandateDeleted">$mandateDeleted</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_mandateReference">$mandateReference</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_mandateSequence">$mandateSequence</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_messages">$messages</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_musicianId">$musicianId</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_projectId">$projectId</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaDebitMandate.html#property_state">$state</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_messages">$messages</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_musicianId">$musicianId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_projectId">$projectId</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-DTO-SepaBankAccount.html#property_state">$state</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-DTO-AbstractDTO.html#property_keys">$keys</a></li>
                                             </ul>
                 </li>

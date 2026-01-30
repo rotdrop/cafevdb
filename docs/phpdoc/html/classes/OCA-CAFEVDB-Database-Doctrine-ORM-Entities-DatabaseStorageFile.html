@@ -200,22 +200,19 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created">$created</a>
-    <span>
-                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_file">$file</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_id">$id</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
     <span>
-                        &nbsp;: int            </span>
+                        &nbsp;: int|null            </span>
 </dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_name">$name</a>
@@ -239,12 +236,6 @@
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_type">$type</a>
     <span>
                         &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UpdatedAtEntity.html#property_updated">$updated</a>
-    <span>
-                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -334,10 +325,11 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
+<dd>Get id.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getMimeType">getMimeType()</a>
@@ -475,10 +467,11 @@ queries if the parent elements are not already in memory.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_setId">setId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setMimeType">setMimeType()</a>
@@ -594,69 +587,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -protected
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_created">
-        $created
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/CreatedAtEntity.php"><a href="files/database-doctrine-orm-traits-createdatentity.html"><abbr title="Database/Doctrine/ORM/Traits/CreatedAtEntity.php">CreatedAtEntity.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">45</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/CreatedAtEntity.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null</span>
-    <span class="phpdocumentor-signature__name">$created</span>
-     = <span class="phpdocumentor-signature__default-value">null</span></code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;datetime_immutable&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: true
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\Timestampable">Timestampable</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $on: &#039;create&#039;
-    </dd>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -protected
-                                                                    "
->
     <h4 class="phpdocumentor-element__name" id="property_file">
         $file
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_file" class="headerlink"><i class="fas fa-link"></i></a>
@@ -725,35 +655,42 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_id">
         $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type">int</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
     <span class="phpdocumentor-signature__name">$id</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
     
     
 
         
             <section class="phpdocumentor-attributes">
             <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
                             <dl class="phpdocumentor-argument-list">
@@ -780,6 +717,14 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
     </dt>
     </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
                     </section>
         
 
@@ -801,9 +746,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -900,9 +845,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -987,69 +932,6 @@ decorated entity manager.</p>
     
 
         
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -protected
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_updated">
-        $updated
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UpdatedAtEntity.html#property_updated" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/UpdatedAtEntity.php"><a href="files/database-doctrine-orm-traits-updatedatentity.html"><abbr title="Database/Doctrine/ORM/Traits/UpdatedAtEntity.php">UpdatedAtEntity.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">47</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/UpdatedAtEntity.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null</span>
-    <span class="phpdocumentor-signature__name">$updated</span>
-     = <span class="phpdocumentor-signature__default-value">null</span></code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UpdatedAtEntity.html#property_updated#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;datetime_immutable&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: true
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation\Timestampable">Timestampable</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $on: &#039;update&#039;
-    </dd>
-    </dl>
-                    </section>
         
 
 </article>
@@ -1215,9 +1097,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">194</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.194" class="phpdocumentor-element-found-in__source" data-line="194" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1591,18 +1473,19 @@ decorated entity manager.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Get id.</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
@@ -1675,9 +1558,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">88</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -1792,9 +1675,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -1831,9 +1714,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the entire path up to the root node. This will result in database
@@ -1876,9 +1759,9 @@ queries if the parent elements are not already in memory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -1958,9 +1841,9 @@ queries if the parent elements are not already in memory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">179</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -2040,9 +1923,9 @@ queries if the parent elements are not already in memory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">188</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -2083,9 +1966,9 @@ queries if the parent elements are not already in memory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -2579,21 +2462,22 @@ orphan when it is no longer owned by other directory entries.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2603,7 +2487,7 @@ orphan when it is no longer owned by other directory entries.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2616,7 +2500,7 @@ orphan when it is no longer owned by other directory entries.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -2683,9 +2567,9 @@ orphan when it is no longer owned by other directory entries.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -2732,9 +2616,9 @@ orphan when it is no longer owned by other directory entries.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -2869,9 +2753,9 @@ orphan when it is no longer owned by other directory entries.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php.txt"></a>
     </aside>
 
     
@@ -3173,14 +3057,12 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-CreatedAtEntity.html#property_created">$created</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_file">$file</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_id">$id</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_name">$name</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_orphans">$orphans</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#property_parent">$parent</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#property_type">$type</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UpdatedAtEntity.html#property_updated">$updated</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
                                             </ul>
                 </li>
@@ -3199,7 +3081,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFile">getFile()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileData">getFileData()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileName">getFileName()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getMimeType">getMimeType()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getName">getName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getNumberOfLinks">getNumberOfLinks()</a></li>
@@ -3221,7 +3103,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setExtension">setExtension()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFile">setFile()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFileData">setFileData()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setMimeType">setMimeType()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_setName">setName()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_setParent">setParent()</a></li>

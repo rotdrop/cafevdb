@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,37 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
+use Throwable;
+
 /** Thrown if inconsistencies are detected. */
-class DatabaseInconsistentValueException extends DatabaseException
+class DatabaseInconsistentValueException extends DatabaseEntityException
 {
+  /**
+   * @param string $message
+   *
+   * @param int $code
+   *
+   * @param ?Throwable $previous
+   *
+   * @param ?string $entityClassName
+   *
+   * @param ?string $field
+   *
+   * @param mixed $expected
+   *
+   * @param mixed $actual
+   *
+   * {@inheritdoc}
+   */
+  public function __construct(
+    string $message,
+    int $code = 0,
+    ?Throwable $previous = null,
+    ?string $entityClassName = null,
+    public readonly ?string $field = null,
+    public readonly mixed $expected = null,
+    public readonly mixed $actual = null,
+  ) {
+    parent::__construct($message, $code, $previous, $entityClassName);
+  }
 }

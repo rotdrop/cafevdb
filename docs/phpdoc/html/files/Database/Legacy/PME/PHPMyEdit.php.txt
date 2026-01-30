@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,8 +30,6 @@ use Exception;
 use ReflectionClass;
 use RuntimeException;
 
-use phpMyEdit as LegacyPHPMyEdit;
-
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCP\IDateTimeFormatter;
@@ -43,12 +41,14 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit as LegacyPHPMyEdit;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
 
 /**
- * Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL.
+ * Override phpMyEdit to use OCA\CAFEVDB\Wrapped\Doctrine DBAL and some other
+ * "sugar".
  */
 class PHPMyEdit extends LegacyPHPMyEdit
 {
@@ -161,6 +161,13 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $this->cgi = $options['cgi'];
       $this->operation = $this->get_sys_cgi_var('operation');
       $this->determineOperation();
+    }
+
+    if (!empty($options['fdd'])) {
+      if (!isset($options['execute'])) {
+        $options['execute'] = false;
+      }
+      parent::__construct($options); // oh oh
     }
   }
 
@@ -394,13 +401,12 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $this->logError('RESULT INVALID ' . get_class($stmt));
       return false;
     }
-    $pdo = $this->dbh->getWrappedConnection()->getNativeConnection();
+    $pdo = $this->dbh->getNativeConnection();
     $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
-    $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
-    $result = $stmt->fetch($type);
+    $result = $type === 'n' ? $stmt->fetchNumeric() : $stmt->fetchAssociative();
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
     if ($result !== false
-        && $type == FetchMode::ASSOCIATIVE
+        && $type == 'a'
         && $this->queryHash == $this->generatedQueryHash
         && !empty($this->columnAliases)) {
       $missingColumns = array_diff($this->columnAliases, array_keys($result));
@@ -583,7 +589,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
    */
   public function cgiSysName(string $suffix = ''):string
   {
-    return $this->cgi['prefix']['sys'].$suffix;
+    return $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . $suffix;
   }
 
   /**
@@ -595,7 +601,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
    */
   public function cgiDataName(string $suffix = ''):string
   {
-    return $this->cgi['prefix']['data'].$suffix;
+    return $this->cgi[self::CGI_PREFIX_KEY][self::CGI_DATA_KEY] . $suffix;
   }
 
   /**
@@ -714,7 +720,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
         } elseif (!empty($this->fdd[$k]['datemask'])) {
           return date($this->fdd[$k]['datemask'], $timeStamp);
         } elseif (!empty($this->fdd[$k]['strftimemask'])) {
-          return strftime($this->fdd[$k]['strftimemask'], $timeStamp);
+          return Util::strftime($this->fdd[$k]['strftimemask'], $timeStamp);
         }
     }
     return $value;

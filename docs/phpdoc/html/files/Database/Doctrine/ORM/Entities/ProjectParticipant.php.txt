@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
@@ -63,8 +64,8 @@ class ProjectParticipant implements \ArrayAccess
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => 0, 'comment' => 'Participant has confirmed the registration.'])]
   private bool $registration = false;
 
-  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false, options: ['default' => 'regular'])]
-  private Types\EnumParticipationStatus $participationStatus;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumParticipationStatus::REGULAR])]
+  private Types\EnumParticipationStatus $participationStatus = Types\EnumParticipationStatus::REGULAR;
 
   /**
    * @var Collection<UuidInterface, ProjectParticipantFieldDatum>
@@ -104,7 +105,7 @@ class ProjectParticipant implements \ArrayAccess
    * but we keep it here for convenient access.
    */
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, fetch: 'EXTRA_LAZY', cascade: ['all'], orphanRemoval: true)]
-  private DatabaseStorage $databaseDocuments;
+  private ?DatabaseStorage $databaseDocuments = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?Musician $musician = null, ?Project $project = null)
@@ -120,7 +121,9 @@ class ProjectParticipant implements \ArrayAccess
     if ($project !== null) {
       $this->project = $project;
     }
-    $this->participationStatus = $musician ? $musician->getDefaultParticipationStatus() : Types\EnumParticipationStatus::REGULAR();
+    $this->participationStatus = $musician
+      ? $musician->getDefaultParticipationStatus()
+      : Types\EnumParticipationStatus::REGULAR;
   }
   // phpcs:enable
 
@@ -203,13 +206,10 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setParticipationStatus(string|Types\EnumParticipationStatus $participationStatus):ProjectParticipant
+  public function setParticipationStatus(string|Types\EnumParticipationStatus $participationStatus): ProjectParticipant
   {
-    if ($this->participationStatus != $participationStatus) {
-      $this->participationStatus = is_string($participationStatus)
-        ? new Types\EnumParticipationStatus($participationStatus)
-        : $participationStatus;
-    }
+    $this->participationStatus = Types\EnumParticipationStatus::get($participationStatus);
+
     return $this;
   }
 
@@ -218,7 +218,7 @@ class ProjectParticipant implements \ArrayAccess
    *
     * @return Types\EnumParticipationStatus
    */
-  public function getParticipationStatus():Types\EnumParticipationStatus
+  public function getParticipationStatus(): Types\EnumParticipationStatus
   {
     return $this->participationStatus;
   }
@@ -514,12 +514,12 @@ class ProjectParticipant implements \ArrayAccess
   public function getParticipationContext():ParticipationContext
   {
     if ($this->isOnlyAssociated()) {
-      return ParticipationContext::ASSOCIATES();
+      return ParticipationContext::ASSOCIATES;
     }
     if ($this->isOnlyMusician()) {
-      return ParticipationContext::PARTICIPANTS();
+      return ParticipationContext::PARTICIPANTS;
     }
-    return ParticipationContext::UNRESTRICTED();
+    return ParticipationContext::UNRESTRICTED;
   }
 
   /**

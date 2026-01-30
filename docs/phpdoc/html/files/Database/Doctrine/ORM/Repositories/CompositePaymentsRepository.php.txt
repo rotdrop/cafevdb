@@ -46,7 +46,7 @@ class CompositePaymentsRepository extends EntityRepository
   public function getReceivablesDueDate(int|array|Entities\CompositePayment $identifier):DateTimeInterface
   {
     $id = null;
-    if (filter_var($identifier, FILTER_VALIDATE_INT, ['min_range' => 1])) {
+    if (filter_var($identifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
       $id = $identifier;
     } elseif (is_array[$identifier]) {
       $id = $identifier['id'] ?? null;

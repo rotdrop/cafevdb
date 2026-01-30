@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\GeoPostalCodeTranslation;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Order;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr\Join;
 
 /**
@@ -1143,7 +1144,7 @@ class GeoCodingService
     // sort s.t. the fallback-language comes first and is overwritten
     // later by the correct translation.
     $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
-              ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? Order::Ascending : Order::Descending)]);
 
     /** @var GeoContinent $continent */
     foreach ($this->matching($criteria, GeoContinent::class) as $continent) {
@@ -1184,7 +1185,7 @@ class GeoCodingService
     $continents = [];
 
     $criteria = self::criteriaWhere(['target' => [self::DEFAULT_LANGUAGE, $language]])
-      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? Order::Ascending : Order::Descending)]);
 
     /** @var GeoContinent $continent */
     foreach ($this->matching($criteria, GeoContinent::class) as $continent) {
@@ -1229,7 +1230,7 @@ class GeoCodingService
       $criteria['countryIso'] = $country;
     }
     $criteria = self::criteriaWhere($criteria)
-      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? 'ASC' : 'DESC')]);
+      ->orderBy(['target' => (self::DEFAULT_LANGUAGE < $language ? Order::Ascending : Order::Descending)]);
 
     /** @var Entities\GeoStateProvince $stateProvince */
     foreach ($this->matching($criteria, Entities\GeoStateProvince::class) as $stateProvince) {

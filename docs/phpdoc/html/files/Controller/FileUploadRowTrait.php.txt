@@ -120,12 +120,12 @@ trait FileUploadRowTrait
       }
 
       if (empty($file['upload_mode'])) {
-        $file['upload_mode'] = UploadsController::UPLOAD_MODE_COPY;
+        $file['upload_mode'] = EnumFileUploadMode::COPY;
       }
 
       $file['upload_max_file_size'] = $maxUploadFileSize;
       $file['max_human_file_size']  = $maxHumanFileSize;
-      if ($file['upload_mode'] == UploadsController::UPLOAD_MODE_COPY && !empty($file['original_name'])) {
+      if ($file['upload_mode'] == EnumFileUploadMode::COPY && !empty($file['original_name'])) {
         $file['name'] = $file['original_name'];
       } elseif (empty($file['original_name'])) {
         $file['original_name'] = $file['name']; // clone

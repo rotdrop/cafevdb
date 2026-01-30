@@ -44,6 +44,9 @@ class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
@@ -53,7 +56,7 @@ class MessagesResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
       $messages = [$data['message']];
     }
     return new self(
-      messges: $messsages,
+      messages: $messsages,
       hints: $hints ?? null,
     );
   }

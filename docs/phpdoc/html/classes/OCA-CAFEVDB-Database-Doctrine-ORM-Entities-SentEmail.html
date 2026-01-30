@@ -233,7 +233,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_compositePayment">$compositePayment</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a>|null            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -275,7 +275,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#property_project">$project</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -657,9 +657,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/CreatedAtEntity.php"><a href="files/database-doctrine-orm-traits-createdatentity.html"><abbr title="Database/Doctrine/ORM/Traits/CreatedAtEntity.php">CreatedAtEntity.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/CreatedAtEntity.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/CreatedAtEntity.php.txt"></a>
     </aside>
 
     
@@ -689,6 +689,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: true
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $options: [&#039;default&#039; =&gt; new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultExpression\CurrentTime()]
     </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
@@ -1043,9 +1046,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a>|null</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-CompositePayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment">CompositePayment</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$compositePayment</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1100,7 +1103,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DonationReceipt.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt">DonationReceipt</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$donationReceipt</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1299,7 +1302,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Invoice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Invoice">Invoice</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$invoice</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -1467,7 +1470,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>|null</span>
     <span class="phpdocumentor-signature__name">$project</span>
     </code>
 
@@ -3449,7 +3452,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setProject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setProject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-SentEmail.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SentEmail">SentEmail</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3459,7 +3462,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$project</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,11 +28,14 @@ use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
 
+use function OCA\CAFEVDB\Common\Functions\strcat;
+use function OCA\CAFEVDB\Common\Functions\sprintf;
+
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -212,13 +215,12 @@ class ProjectParticipants extends PMETableViewBase
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      static::TEMPLATE,
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     $this->findProject(enforce: true);
@@ -228,7 +230,7 @@ class ProjectParticipants extends PMETableViewBase
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove the musician from %s?', [ $this->projectName ]);
@@ -243,7 +245,6 @@ class ProjectParticipants extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $expertMode      = $this->expertMode;
     $instrumentInfo  = $this->getInstrumentInfo();
     $instruments     = $instrumentInfo['byId'];
@@ -286,10 +287,10 @@ class ProjectParticipants extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.self::TEMPLATE,
-      'dataPrefix' => [
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::DATA_PREFIX => [
         'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
       ],
     ];
@@ -300,13 +301,13 @@ class ProjectParticipants extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      $this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
-      $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
-      '-' . $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
-      $this->joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
+      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
+      '-' . self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
+      self::joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users
@@ -329,8 +330,8 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += (int)($field['dataType'] == FieldType::RECEIVABLES);
-      $extraFinancial += (int)($field['dataType'] == FieldType::LIABILITIES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::RECEIVABLES);
+      $extraFinancial += (int)($field->getDataType() == FieldDataType::LIABILITIES);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;
@@ -459,7 +460,7 @@ GROUP BY t.id';
 
     $this->defineJoinStructure($opts);
 
-    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = 'NOT $table.participation_status = "' . ParticipationStatus::ASSOCIATED . '"';
+    $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = strcat('NOT $table.participation_status = "', ParticipationStatus::ASSOCIATED, '"');
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'organization',
@@ -714,7 +715,7 @@ GROUP BY t.id';
     // kind of a hack, in principle this should go to the global join structure
     // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
-    $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -757,7 +758,7 @@ GROUP BY t.id';
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $instrumentNames[$instrument];
               },
@@ -1468,8 +1469,8 @@ GROUP BY t.id';
 
     // The following are in order to aid the email form to extract
     // pre-selected musiancs from the form-data.
-    $opts['cgi']['persist']['participationStatusFddIndex'] = $participationStatusFddIndex;
-    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX] = $participationStatusFddIndex;
+    $opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX] = $instrumentsFddIndex;
 
     $opts = $this->mergeDefaultOptions($opts);
 
@@ -1500,8 +1501,8 @@ GROUP BY t.id';
   public function beforeUpdateRemoveDependentVoices(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     // sanitize instrumentation numbers
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
 
     $debugColumns = [ $instrumentsColumn, $voicesColumn ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
@@ -1584,7 +1585,7 @@ GROUP BY t.id';
     }
 
     if ($participationStatus == ParticipationStatus::ASSOCIATED) {
-      $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+      $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
       $instruments = Util::explode(',', $newValues[$instrumentsColumn] ?? '');
       $nonInstruments = array_keys($this->getNonInstruments());
       $realInstruments = array_diff($instruments, $nonInstruments);
@@ -1631,8 +1632,8 @@ GROUP BY t.id';
    */
   public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
-    $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voiceField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
     $debugColumns = [ $instrumentField, $voiceField, ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
@@ -1706,7 +1707,7 @@ GROUP BY t.id';
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
-    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::PARTICIPANTS());
+    $this->projectService->deleteProjectParticipant($entity, ParticipationContext::PARTICIPANTS);
 
     $changed = []; // disable PME delete query
 

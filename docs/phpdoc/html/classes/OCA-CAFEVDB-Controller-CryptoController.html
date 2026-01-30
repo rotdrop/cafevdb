@@ -291,14 +291,6 @@ the seal context.</dd>
 </dt>
 <dd>Log a warning message.</dd>
 
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-CryptoController.html#method_unseal">unseal()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
-</dt>
-<dd>Unseal the given data provided the currently logged in user is part of
-the seal context.</dd>
-
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
@@ -789,9 +781,9 @@ the seal context.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/CryptoController.php"><a href="files/controller-cryptocontroller.html"><abbr title="Controller/CryptoController.php">CryptoController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unseal the given data provided the currently logged in user is part of
@@ -831,6 +823,17 @@ the seal context.</p>
                 Attributes <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#method_batchUnseal#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/crypto/decryption/unseal/batch&#039;
+    </dd>
+    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
@@ -1440,75 +1443,6 @@ the seal context.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_unseal">
-        unseal()
-        <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#method_unseal" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/CryptoController.php"><a href="files/controller-cryptocontroller.html"><abbr title="Controller/CryptoController.php">CryptoController.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">85</span>
-
-            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Unseal the given data provided the currently logged in user is part of
-the seal context.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">unseal</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sealedData</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$metaData</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$sealedData</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$metaData</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#method_unseal#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
-    </dt>
-    </dl>
-                    </section>
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
             </section>
 
 </article>
@@ -2150,9 +2084,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/CryptoController.php"><a href="files/controller-cryptocontroller.html"><abbr title="Controller/CryptoController.php">CryptoController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
     </aside>
 
     
@@ -2199,9 +2133,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/CryptoController.php"><a href="files/controller-cryptocontroller.html"><abbr title="Controller/CryptoController.php">CryptoController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">108</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/Controller/CryptoController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unseal the given data provided the currently logged in user is part of
@@ -2388,7 +2322,6 @@ the seal context.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logger">logger()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Controller-CryptoController.html#method_unseal">unseal()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataDownloadResponse">dataDownloadResponse()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ResponseTrait.html#method_dataResponse">dataResponse()</a></li>

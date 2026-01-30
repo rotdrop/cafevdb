@@ -46,7 +46,7 @@ class Config extends DefaultOptions
     $this->l = $this->l10n();
 
     $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
-    $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) || 0;
+    $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) || 0;
     $deselectInvisibleMiscRecs = $this->getUserValue(EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS, false);
     $deselectInvisibleMiscRecs = filter_var($deselectInvisibleMiscRecs, FILTER_VALIDATE_BOOLEAN);
 

@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">AJAX end-point for progress status.</p>
@@ -138,6 +138,17 @@
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\TypeScript">TypeScript</abbr>]
+    </dt>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -151,6 +162,25 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_GET_URL">GET_URL</a>
+    <span>
+        &nbsp;= &#039;/foregroundjob/progress/{id}&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_POST_URL">POST_URL</a>
+    <span>
+        &nbsp;= &#039;/foregroundjob/progress/{operation}&#039;                            </span>
+</dt>
+
+    </dl>
 
 
 <h4 id="toc-properties">
@@ -206,13 +236,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#method_action">action()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\Http\Response">Response</abbr>    </span>
+                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#method_get">get()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\Http\Response">Response</abbr>    </span>
+                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -330,7 +360,7 @@ understands those.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#method_progressResponse">progressResponse()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Controller\DataResponse">DataResponse</abbr>    </span>
 </dt>
 
     </dl>
@@ -338,6 +368,75 @@ understands those.</dd>
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_GET_URL">
+        GET_URL
+        <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_GET_URL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">GET_URL</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;/foregroundjob/progress/{id}&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_POST_URL">
+        POST_URL
+        <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_POST_URL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">50</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">POST_URL</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;/foregroundjob/progress/{operation}&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -439,9 +538,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
@@ -477,9 +576,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
@@ -515,9 +614,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
@@ -558,9 +657,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
@@ -631,15 +730,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">action</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$operation</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\Response">Response</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">action</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$operation</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -657,6 +756,21 @@ understands those.</dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#method_action#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
 
         
             <section class="phpdocumentor-attributes">
@@ -666,6 +780,17 @@ understands those.</dd>
             </h5>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: self::POST_URL
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
     </dt>
     </dl>
@@ -673,7 +798,7 @@ understands those.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\Response">Response</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span>
             </section>
 
 </article>
@@ -691,15 +816,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\Response">Response</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -717,6 +842,21 @@ understands those.</dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#method_get#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
 
         
             <section class="phpdocumentor-attributes">
@@ -726,6 +866,17 @@ understands those.</dd>
             </h5>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;GET&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: self::GET_URL
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
     </dt>
     </dl>
@@ -733,7 +884,7 @@ understands those.</dd>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\Response">Response</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span>
             </section>
 
 </article>
@@ -1974,15 +2125,15 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/ProgressStatusController.php"><a href="files/controller-progressstatuscontroller.html"><abbr title="Controller/ProgressStatusController.php">ProgressStatusController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">183</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/Controller/ProgressStatusController.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">progressResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Common-IProgressStatus.html"><abbr title="\OCA\CAFEVDB\Common\IProgressStatus">IProgressStatus</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$progress</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">progressResponse</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Common-IProgressStatus.html"><abbr title="\OCA\CAFEVDB\Common\IProgressStatus">IProgressStatus</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$progress</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Controller\DataResponse">DataResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2005,7 +2156,7 @@ understands those.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Controller\DataResponse">DataResponse</abbr></span>
             </section>
 
 </article>
@@ -2116,10 +2267,18 @@ understands those.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_GET_URL">GET_URL</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-ProgressStatusController.html#constant_POST_URL">POST_URL</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>

@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -48,7 +49,6 @@ class InstrumentInsuranceService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
   const ENTITY = Entities\InstrumentInsurance::class;
 
@@ -437,7 +437,7 @@ class InstrumentInsuranceService
     }
 
     $insuranceOverview = [
-      'billTo' => $this->flattenMusician($billToParty, only: []),
+      'billTo' => EntityArrayAdapter::create($billToParty, depth: 0),
       'taxRate' => $this->getTaxRate(),
       'broker' => $broker,
       'musicians' => [],
@@ -622,19 +622,19 @@ class InstrumentInsuranceService
                           ->setAddress($this->l->t('unknown'));
     $germanyRate = (new Entities\InsuranceRate)
                  ->setBroker($oneInsuranceBroker)
-                 ->setGeographicalScope(Types\EnumGeographicalScope::GERMANY())
+                 ->setGeographicalScope(Types\EnumGeographicalScope::GERMANY)
                  ->setRate(0.0043)
                  ->setDueDate('2014-07-01')
                  ->setPolicyNumber('1234567890');
     $europeRate = (new Entities\InsuranceRate)
                 ->setBroker($oneInsuranceBroker)
-                ->setGeographicalScope(Types\EnumGeographicalScope::EUROPE())
+                ->setGeographicalScope(Types\EnumGeographicalScope::EUROPE)
                 ->setRate(0.0051)
                 ->setDueDate('2014-07-01')
                 ->setPolicyNumber('1234567890');
     $worldRate = (new Entities\InsuranceRate)
                ->setBroker($otherInsuranceBroker)
-               ->setGeographicalScope(Types\EnumGeographicalScope::WORLD())
+               ->setGeographicalScope(Types\EnumGeographicalScope::WORLD)
                ->setRate(0.0068)
                ->setDueDate('2014-04-01')
                ->setPolicyNumber('1234567890');

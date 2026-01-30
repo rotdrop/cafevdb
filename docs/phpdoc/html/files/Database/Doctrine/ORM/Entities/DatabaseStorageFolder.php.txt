@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\EnumAddDocumentConflictAction;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -45,15 +46,6 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
   protected static $type = DirEntryType::FOLDER;
-
-  public const ADD_DOCUMENT_CONFLICT_FAIL = 'fail';
-  public const ADD_DOCUMENT_CONFLICT_REPLACE = 'replace';
-  public const ADD_DOCUMENT_CONFLICT_RENAME = 'rename';
-  public const ADD_DOCUMENT_CONFLICTS = [
-    self::ADD_DOCUMENT_CONFLICT_FAIL,
-    self::ADD_DOCUMENT_CONFLICT_REPLACE,
-    self::ADD_DOCUMENT_CONFLICT_RENAME,
-  ];
 
   #[ORM\OneToOne(targetEntity: DatabaseStorage::class, mappedBy: 'root')]
   protected DatabaseStorage $storage;
@@ -131,13 +123,19 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
     );
     if ($existing->count() > 1) {
-      throw new Exceptions\DatabaseException('Directory entry "' . $name . '" already exists multiple times in directory ' . $this->id);
+      throw new Exceptions\DatabaseEntityExistsException(
+        'Directory entry "' . $name . '" already exists multiple times in directory ' . $this->id,
+        entityName: DatabaseStorageFolder::class,
+      );
     }
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFolder $dirEntry */
       $dirEntry = $existing->first();
       if (!($dirEntry instanceof DatabaseStorageFolder)) {
-        throw new Exceptions\DatabaseException('Directory entry "' . $name . '" already exists in directory ' . $this->id . ' and the existing entry is not a directory.');
+        throw new Exceptions\DatabaseEntityExistsException(
+          'Directory entry "' . $name . '" already exists in directory ' . $this->id . ' and the existing entry is not a directory.',
+          $dirEntry,
+        );
       }
       return $dirEntry;
     }
@@ -194,25 +192,31 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    *
    * @param null|string $fileName
    *
-   * @param string $conflict Condflict resolution, fail, rename, replace.
+   * @param EnumAddDocumentConflictAction $conflictAction Conflict resolution, fail, rename, replace.
    *
    * @return null|DatabaseStorageDirEntry The new or existing
    */
-  public function addDocument(EncryptedFile $file, ?string $fileName = null, string $conflict = self::ADD_DOCUMENT_CONFLICT_FAIL):?DatabaseStorageFile
-  {
+  public function addDocument(
+    EncryptedFile $file,
+    ?string $fileName = null,
+    EnumAddDocumentConflictAction $conflictAction = EnumAddDocumentConflictAction::FAIL,
+  ):?DatabaseStorageFile {
     $fileName = $fileName ?? $file->getFileName();
     $fileName = trim($fileName, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $fileName
     );
     if ($existing->count() > 1) {
-      throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists multiple times in directory ' . $this->id);
+      throw new Exceptions\DatabaseEntityExistsException(
+        'Directory entry "' . $fileName . '" already exists multiple times in directory ' . $this->id,
+        newEntity: $file,
+      );
     }
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      switch ($conflict) {
-        case self::ADD_DOCUMENT_CONFLICT_RENAME:
+      switch ($conflictAction) {
+        case EnumAddDocumentConflictAction::RENAME:
           $pathInfo = pathinfo($fileName);
           $namePart = $pathInfo['filename'] . '~';
           $extension = '.' . $pathInfo['extension'];
@@ -234,23 +238,33 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
           // put this into the entity ...
           EntityManager::getInstance()->flush();
           break;
-        case self::ADD_DOCUMENT_CONFLICT_REPLACE:
+        case EnumAddDocumentConflictAction::REPLACE:
           if (!($dirEntry instanceof DatabaseStorageFile)) {
-            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+            throw new Exceptions\DatabaseEntityExistsException(
+              'Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.',
+              existingEntity: $dirEntry,
+              newEntity: $file,
+            );
           }
           $dirEntry
             ->setFile($file)
             ->setUpdated($dirEntry->getUpdated());
           break;
-        default:
-        case self::ADD_DOCUMENT_CONFLICT_FAIL:
+        case EnumAddDocumentConflictAction::FAIL:
           if (!($dirEntry instanceof DatabaseStorageFile)) {
-            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+            throw new Exceptions\DatabaseEntityExistsException(
+              'Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.',
+              existingEntity: $dirEntry,
+              newEntity: $file,
+            );
           }
           if ($dirEntry->getFile() !== $file) {
-            throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
+            throw new Exceptions\DatabaseEntityExistsException(
+              'Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.',
+              existingEntity: $dirEntry,
+              newEntity: $file,
+            );
           }
-          break;
       }
     }
 
@@ -263,23 +277,6 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     }
 
     return $dirEntry;
-  }
-
-  /**
-   * Add the given file to the list of supporting documents if not already present.
-   *
-   * This increases the link-count of the file and add this entity to the
-   * container collection of the encrypted file.
-   *
-   * @param EncryptedFile $file
-   *
-   * @param null|string $fileName
-   *
-   * @return null|DatabaseStorageDirEntry The new or existing directory entry.
-   */
-  public function replaceDocument(EncryptedFile $file, ?string $fileName = null):?DatabaseStorageFile
-  {
-    return $this->addDocument($file, $fileName, replace: true);
   }
 
   /**

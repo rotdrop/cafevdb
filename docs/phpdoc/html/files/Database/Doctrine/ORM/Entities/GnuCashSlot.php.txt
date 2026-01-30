@@ -40,12 +40,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class GnuCashSlot implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $objGuid;
@@ -102,30 +98,6 @@ class GnuCashSlot implements \ArrayAccess
   }
 
   /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId():int
-  {
-    return $this->id;
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return Musician
-   */
-  public function setId(int $id):GnuCashSlot
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
    * @return string OBJGUID.
    */
   public function getObjGuid():string
@@ -170,7 +142,7 @@ class GnuCashSlot implements \ArrayAccess
    */
   public function getSlotType():GnuCashSlotType
   {
-    return GnuCashSlottype($this->slotType);
+    return GnuCashSlottype::get($this->slotType);
   }
 
   /**
@@ -180,7 +152,7 @@ class GnuCashSlot implements \ArrayAccess
    */
   public function setSlotType(int|GnuCashSlotType $slotType):GnuCashSlot
   {
-    $this->slotType = (int)$slotType;
+    $this->slotType = GnuCashSlotType::get($slotType);
 
     return $this;
   }

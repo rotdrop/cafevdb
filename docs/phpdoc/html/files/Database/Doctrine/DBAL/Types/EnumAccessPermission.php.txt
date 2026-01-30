@@ -26,14 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Enum coding access permissions.
- *
- * @method static EnumAccessPermission NONE()
- * @method static EnumAccessPermission READ()
- * @method static EnumAccessPermission READ_WRITE()
  */
-class EnumAccessPermission extends AbstractEnumType
+enum EnumAccessPermission: string
 {
-  public const NONE = 'none';
-  public const READ = 'read';
-  public const READ_WRITE = 'read-write';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
+
+  case NONE = 'none';
+  case READ = 'read';
+  case READ_WRITE = 'read-write';
 }

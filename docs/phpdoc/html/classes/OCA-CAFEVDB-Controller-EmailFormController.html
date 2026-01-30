@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Controller class for the mass-email form</p>
@@ -158,9 +158,27 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TOPIC_UNSPECIFIC">TOPIC_UNSPECIFIC</a>
+    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_DRAFT_EMAILS">DRAFT_EMAILS</a>
     <span>
-        &nbsp;= &#039;general&#039;                            </span>
+        &nbsp;= &#039;draftEmails&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_EMAIL_TEMPLATE_NAME">EMAIL_TEMPLATE_NAME</a>
+    <span>
+        &nbsp;= &#039;emailTemplateName&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_SENT_EMAILS">SENT_EMAILS</a>
+    <span>
+        &nbsp;= &#039;sentEmails&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TEMPLATE_EMAILS">TEMPLATE_EMAILS</a>
+    <span>
+        &nbsp;= &#039;templateEmails&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -230,12 +248,6 @@
     <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_pme">$pme</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_projectService">$projectService</a>
-    <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -377,7 +389,7 @@ container.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_recipientsFilter">recipientsFilter()</a>
     <span>
-                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>    </span>
+                                &nbsp;: <abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -478,6 +490,12 @@ container.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>A short-cut, redirecting to the stock functions for the app.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_deleteUserValue">deleteUserValue()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_di">di()</a>
@@ -858,7 +876,7 @@ dedicated sub-admin group.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_setUserValue">setUserValue()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
@@ -1014,18 +1032,18 @@ context or having sent out an email.</dd>
 
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_TOPIC_UNSPECIFIC">
-        TOPIC_UNSPECIFIC
-        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TOPIC_UNSPECIFIC" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="constant_DRAFT_EMAILS">
+        DRAFT_EMAILS
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_DRAFT_EMAILS" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1033,8 +1051,101 @@ context or having sent out an email.</dd>
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">TOPIC_UNSPECIFIC</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;general&#039;</span>
+    <span class="phpdocumentor-signature__name">DRAFT_EMAILS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;draftEmails&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EMAIL_TEMPLATE_NAME">
+        EMAIL_TEMPLATE_NAME
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_EMAIL_TEMPLATE_NAME" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">69</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EMAIL_TEMPLATE_NAME</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;emailTemplateName&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_SENT_EMAILS">
+        SENT_EMAILS
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_SENT_EMAILS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">72</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">SENT_EMAILS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;sentEmails&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_TEMPLATE_EMAILS">
+        TEMPLATE_EMAILS
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TEMPLATE_EMAILS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TEMPLATE_EMAILS</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;templateEmails&#039;</span>
 </code>
 
 
@@ -1054,9 +1165,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1101,9 +1212,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1177,9 +1288,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1291,9 +1402,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1329,9 +1440,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1367,9 +1478,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1405,9 +1516,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1416,44 +1527,6 @@ context or having sent out an email.</dd>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a></span>
     <span class="phpdocumentor-signature__name">$pme</span>
-    </code>
-
-    
-    
-    
-
-        
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
-    <h4 class="phpdocumentor-element__name" id="property_projectService">
-        $projectService
-        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_projectService" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">75</span>
-
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a></span>
-    <span class="phpdocumentor-signature__name">$projectService</span>
     </code>
 
     
@@ -1481,9 +1554,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -1524,16 +1597,16 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ContactsService.html"><abbr title="\OCA\CAFEVDB\Service\ContactsService">ContactsService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$contactsService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-EmailAddressService.html"><abbr title="\OCA\CAFEVDB\Service\EmailAddressService">EmailAddressService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$emailAddressService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$urlGenerator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pme</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-PageRenderer-Util-Navigation.html"><abbr title="\OCA\CAFEVDB\PageRenderer\Util\Navigation">Navigation</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pageNavigation</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ContactsService.html"><abbr title="\OCA\CAFEVDB\Service\ContactsService">ContactsService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$contactsService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-EmailAddressService.html"><abbr title="\OCA\CAFEVDB\Service\EmailAddressService">EmailAddressService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$emailAddressService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$urlGenerator</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Legacy-PME-PHPMyEdit.html"><abbr title="\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit">PHPMyEdit</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pme</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-PageRenderer-Util-Navigation.html"><abbr title="\OCA\CAFEVDB\PageRenderer\Util\Navigation">Navigation</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$pageNavigation</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1591,13 +1664,6 @@ context or having sent out an email.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$projectService</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Service-ProjectService.html"><abbr title="\OCA\CAFEVDB\Service\ProjectService">ProjectService</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$configService</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a></span>
                             </dt>
@@ -1633,9 +1699,9 @@ context or having sent out an email.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1124</span>
+    <span class="phpdocumentor-element-found-in__line">1159</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1124" class="phpdocumentor-element-found-in__source" data-line="1124" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1159" class="phpdocumentor-element-found-in__source" data-line="1159" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch uploaded attachments, or faked &quot;uploads&quot; from the cloud FS.</p>
@@ -1669,6 +1735,20 @@ context or having sent out an email.</dd>
                 Attributes <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_attachment#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/communication/email/outgoing/attachment/{source}&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $defaults: [&#039;source&#039; =&gt; AttachmentOrigin::UPLOAD-&gt;value]
+    </dd>
+    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
@@ -1737,9 +1817,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">318</span>
+    <span class="phpdocumentor-element-found-in__line">328</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.328" class="phpdocumentor-element-found-in__source" data-line="328" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Email composer related controller function.</p>
@@ -1800,6 +1880,20 @@ container.</p>
                 Attributes <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_composer#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/communication/email/outgoing/composer/{operation}/{topic}&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $defaults: [&#039;operation&#039; =&gt; EnumEmailFormComposerOperation::UPDATE-&gt;value, &#039;topic&#039; =&gt; EnumEmailFormComposerTopic::UNSPECIFIC-&gt;value]
+    </dd>
+    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
@@ -1867,9 +1961,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">997</span>
+    <span class="phpdocumentor-element-found-in__line">1034</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.997" class="phpdocumentor-element-found-in__source" data-line="997" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1034" class="phpdocumentor-element-found-in__source" data-line="1034" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Interact with the cloud contacts.</p>
@@ -1896,6 +1990,21 @@ container.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_contacts#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-EnduserNotificationException.html"><abbr title="\OCA\CAFEVDB\Exceptions\EnduserNotificationException">EnduserNotificationException</abbr></a></span>
+                                                            
+                                             
+                                    </dd>
+                                            </dl>
 
         
             <section class="phpdocumentor-attributes">
@@ -1903,6 +2012,17 @@ container.</p>
                 Attributes <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_contacts#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/communication/email/outgoing/contacts/{operation}&#039;
+    </dd>
+    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
@@ -1930,9 +2050,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">993</span>
+    <span class="phpdocumentor-element-found-in__line">1005</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -1980,9 +2100,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1005</span>
+    <span class="phpdocumentor-element-found-in__line">1017</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -2030,9 +2150,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">565</span>
+    <span class="phpdocumentor-element-found-in__line">577</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.565" class="phpdocumentor-element-found-in__source" data-line="565" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2097,9 +2217,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">366</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the value for the given key.</p>
@@ -2145,9 +2265,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">957</span>
+    <span class="phpdocumentor-element-found-in__line">969</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2211,9 +2331,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">967</span>
+    <span class="phpdocumentor-element-found-in__line">979</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.967" class="phpdocumentor-element-found-in__source" data-line="967" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2265,9 +2385,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1035</span>
+    <span class="phpdocumentor-element-found-in__line">1047</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1035" class="phpdocumentor-element-found-in__source" data-line="1035" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -2329,9 +2449,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">378</span>
+    <span class="phpdocumentor-element-found-in__line">390</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Would rather belong to the EncryptionService.</p>
@@ -2381,9 +2501,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">340</span>
+    <span class="phpdocumentor-element-found-in__line">352</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get a possibly encrypted config value.</p>
@@ -2449,9 +2569,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">804</span>
+    <span class="phpdocumentor-element-found-in__line">816</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.804" class="phpdocumentor-element-found-in__source" data-line="804" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2531,9 +2651,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1019</span>
+    <span class="phpdocumentor-element-found-in__line">1031</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1019" class="phpdocumentor-element-found-in__source" data-line="1019" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -2588,15 +2708,15 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">896</span>
+    <span class="phpdocumentor-element-found-in__line">937</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.896" class="phpdocumentor-element-found-in__source" data-line="896" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">recipientsFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransactionId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">recipientsFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransactionId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2644,6 +2764,17 @@ transaction if any.</p>
             </h5>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/communication/email/outgoing/recipients-filter&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
     </dt>
     </dl>
@@ -2651,7 +2782,7 @@ transaction if any.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr>|<abbr title="\OCP\AppFramework\Http\JSONResponse">JSONResponse</abbr></span>
             </section>
 
 </article>
@@ -2669,9 +2800,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">354</span>
+    <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.354" class="phpdocumentor-element-found-in__source" data-line="354" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2744,9 +2875,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">981</span>
+    <span class="phpdocumentor-element-found-in__line">993</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.981" class="phpdocumentor-element-found-in__source" data-line="981" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -2801,16 +2932,16 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return HTML for the web-form.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">webForm</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">''</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransactionId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$emailTemplate</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">webForm</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$bulkTransactionId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$emailTemplate</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\AppFramework\Http\DataResponse">DataResponse</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2821,7 +2952,7 @@ transaction if any.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$projectId</span>
                 : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">0</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The project id.</p>
 </section>
@@ -2830,7 +2961,7 @@ transaction if any.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$projectName</span>
                 : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">''</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The project name.</p>
 </section>
@@ -2839,7 +2970,7 @@ transaction if any.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$bulkTransactionId</span>
                 : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">0</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>The id of an associated bulk-transaction if any.</p>
 </section>
@@ -2864,6 +2995,17 @@ transaction if any.</p>
                 Attributes <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_webForm#attributes" class="headerlink"><i class="fas fa-link"></i></a>
 
             </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/communication/email/outgoing/form&#039;
+    </dd>
+    </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
         #[<abbr title="\OCP\AppFramework\Http\Attribute\NoAdminRequired">NoAdminRequired</abbr>]
@@ -3008,9 +3150,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">915</span>
+    <span class="phpdocumentor-element-found-in__line">927</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.915" class="phpdocumentor-element-found-in__source" data-line="915" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.927" class="phpdocumentor-element-found-in__source" data-line="927" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3125,9 +3267,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">324</span>
+    <span class="phpdocumentor-element-found-in__line">336</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.324" class="phpdocumentor-element-found-in__source" data-line="324" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3180,9 +3322,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1152</span>
+    <span class="phpdocumentor-element-found-in__line">1164</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1152" class="phpdocumentor-element-found-in__source" data-line="1152" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1164" class="phpdocumentor-element-found-in__source" data-line="1164" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3346,9 +3488,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">841</span>
+    <span class="phpdocumentor-element-found-in__line">853</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.841" class="phpdocumentor-element-found-in__source" data-line="841" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.853" class="phpdocumentor-element-found-in__source" data-line="853" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3385,9 +3527,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">301</span>
+    <span class="phpdocumentor-element-found-in__line">313</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.301" class="phpdocumentor-element-found-in__source" data-line="301" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3440,9 +3582,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">240</span>
+    <span class="phpdocumentor-element-found-in__line">252</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -3463,6 +3605,62 @@ transaction if any.</p>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Config key.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_deleteUserValue">
+        deleteUserValue()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_deleteUserValue" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">212</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">deleteUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Config key.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Use the current user if null.</p>
 </section>
 
             </dd>
@@ -3534,9 +3732,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3589,9 +3787,9 @@ transaction if any.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">281</span>
+    <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.281" class="phpdocumentor-element-found-in__source" data-line="281" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -3667,9 +3865,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">246</span>
+    <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3706,9 +3904,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">859</span>
+    <span class="phpdocumentor-element-found-in__line">871</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.859" class="phpdocumentor-element-found-in__source" data-line="859" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3777,9 +3975,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">888</span>
+    <span class="phpdocumentor-element-found-in__line">900</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.888" class="phpdocumentor-element-found-in__source" data-line="888" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3855,9 +4053,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1086</span>
+    <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1086" class="phpdocumentor-element-found-in__source" data-line="1086" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -3921,9 +4119,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1098</span>
+    <span class="phpdocumentor-element-found-in__line">1110</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1110" class="phpdocumentor-element-found-in__source" data-line="1110" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3960,9 +4158,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">252</span>
+    <span class="phpdocumentor-element-found-in__line">264</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3999,9 +4197,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">214</span>
+    <span class="phpdocumentor-element-found-in__line">226</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -4056,9 +4254,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">687</span>
+    <span class="phpdocumentor-element-found-in__line">699</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.687" class="phpdocumentor-element-found-in__source" data-line="687" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.699" class="phpdocumentor-element-found-in__source" data-line="699" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4099,9 +4297,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">576</span>
+    <span class="phpdocumentor-element-found-in__line">588</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.576" class="phpdocumentor-element-found-in__source" data-line="576" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4138,9 +4336,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">582</span>
+    <span class="phpdocumentor-element-found-in__line">594</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.582" class="phpdocumentor-element-found-in__source" data-line="582" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4177,9 +4375,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">816</span>
+    <span class="phpdocumentor-element-found-in__line">828</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -4227,9 +4425,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">638</span>
+    <span class="phpdocumentor-element-found-in__line">650</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.638" class="phpdocumentor-element-found-in__source" data-line="638" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.650" class="phpdocumentor-element-found-in__source" data-line="650" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the full path to the document templates folder.</p>
@@ -4295,9 +4493,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">763</span>
+    <span class="phpdocumentor-element-found-in__line">775</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.763" class="phpdocumentor-element-found-in__source" data-line="763" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4339,9 +4537,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">594</span>
+    <span class="phpdocumentor-element-found-in__line">606</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.606" class="phpdocumentor-element-found-in__source" data-line="606" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4378,9 +4576,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">588</span>
+    <span class="phpdocumentor-element-found-in__line">600</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4417,9 +4615,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">679</span>
+    <span class="phpdocumentor-element-found-in__line">691</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.679" class="phpdocumentor-element-found-in__source" data-line="679" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4460,9 +4658,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">703</span>
+    <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.703" class="phpdocumentor-element-found-in__source" data-line="703" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4503,9 +4701,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">518</span>
+    <span class="phpdocumentor-element-found-in__line">530</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all the sub-admins of the given or the configured orchestra group.</p>
@@ -4555,9 +4753,9 @@ donationreceipts.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">777</span>
+    <span class="phpdocumentor-element-found-in__line">789</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.777" class="phpdocumentor-element-found-in__source" data-line="777" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4599,9 +4797,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">925</span>
+    <span class="phpdocumentor-element-found-in__line">937</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.925" class="phpdocumentor-element-found-in__source" data-line="925" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4648,9 +4846,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">909</span>
+    <span class="phpdocumentor-element-found-in__line">921</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.909" class="phpdocumentor-element-found-in__source" data-line="909" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.921" class="phpdocumentor-element-found-in__source" data-line="921" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -4698,9 +4896,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">798</span>
+    <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.798" class="phpdocumentor-element-found-in__source" data-line="798" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4741,9 +4939,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">790</span>
+    <span class="phpdocumentor-element-found-in__line">802</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.790" class="phpdocumentor-element-found-in__source" data-line="790" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4784,9 +4982,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">719</span>
+    <span class="phpdocumentor-element-found-in__line">731</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.719" class="phpdocumentor-element-found-in__source" data-line="719" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.731" class="phpdocumentor-element-found-in__source" data-line="731" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4827,9 +5025,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">671</span>
+    <span class="phpdocumentor-element-found-in__line">683</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.671" class="phpdocumentor-element-found-in__source" data-line="671" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4935,9 +5133,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">600</span>
+    <span class="phpdocumentor-element-found-in__line">612</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4974,9 +5172,9 @@ sent-out invoices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">613</span>
+    <span class="phpdocumentor-element-found-in__line">625</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.613" class="phpdocumentor-element-found-in__source" data-line="613" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create the full-path for the sub-folder corresponding to the given config
@@ -5025,9 +5223,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1170</span>
+    <span class="phpdocumentor-element-found-in__line">1182</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1170" class="phpdocumentor-element-found-in__source" data-line="1170" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1182" class="phpdocumentor-element-found-in__source" data-line="1182" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -5078,9 +5276,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1184</span>
+    <span class="phpdocumentor-element-found-in__line">1196</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1184" class="phpdocumentor-element-found-in__source" data-line="1184" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1196" class="phpdocumentor-element-found-in__source" data-line="1196" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -5135,9 +5333,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1198</span>
+    <span class="phpdocumentor-element-found-in__line">1210</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1198" class="phpdocumentor-element-found-in__source" data-line="1198" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1210" class="phpdocumentor-element-found-in__source" data-line="1210" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -5192,9 +5390,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1212</span>
+    <span class="phpdocumentor-element-found-in__line">1224</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1212" class="phpdocumentor-element-found-in__source" data-line="1212" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1224" class="phpdocumentor-element-found-in__source" data-line="1224" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -5249,9 +5447,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">735</span>
+    <span class="phpdocumentor-element-found-in__line">747</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.735" class="phpdocumentor-element-found-in__source" data-line="735" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5292,9 +5490,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">749</span>
+    <span class="phpdocumentor-element-found-in__line">761</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.749" class="phpdocumentor-element-found-in__source" data-line="749" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5336,9 +5534,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1092</span>
+    <span class="phpdocumentor-element-found-in__line">1104</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1092" class="phpdocumentor-element-found-in__source" data-line="1092" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5379,9 +5577,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">828</span>
+    <span class="phpdocumentor-element-found-in__line">840</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.840" class="phpdocumentor-element-found-in__source" data-line="840" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -5533,9 +5731,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">472</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5586,9 +5784,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">482</span>
+    <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5637,9 +5835,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">462</span>
+    <span class="phpdocumentor-element-found-in__line">474</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.462" class="phpdocumentor-element-found-in__source" data-line="462" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5808,9 +6006,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1053</span>
+    <span class="phpdocumentor-element-found-in__line">1065</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1053" class="phpdocumentor-element-found-in__source" data-line="1053" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -5879,9 +6077,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">494</span>
+    <span class="phpdocumentor-element-found-in__line">506</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5939,9 +6137,9 @@ exemption notices.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">551</span>
+    <span class="phpdocumentor-element-found-in__line">563</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.551" class="phpdocumentor-element-found-in__source" data-line="551" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check if the currently logged in or given user-id belongs to the
@@ -5990,9 +6188,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">506</span>
+    <span class="phpdocumentor-element-found-in__line">518</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6089,9 +6287,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">935</span>
+    <span class="phpdocumentor-element-found-in__line">947</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.935" class="phpdocumentor-element-found-in__source" data-line="935" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6138,9 +6336,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">945</span>
+    <span class="phpdocumentor-element-found-in__line">957</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.945" class="phpdocumentor-element-found-in__source" data-line="945" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6260,9 +6458,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6307,9 +6505,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">228</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -6364,9 +6562,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">420</span>
+    <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user.</p>
@@ -6418,9 +6616,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">408</span>
+    <span class="phpdocumentor-element-found-in__line">420</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user id.</p>
@@ -6482,7 +6680,7 @@ dedicated sub-admin group.</p>
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">setUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">setUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -6492,7 +6690,7 @@ dedicated sub-admin group.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$key</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Config key.</p>
@@ -6539,9 +6737,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">451</span>
+    <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.451" class="phpdocumentor-element-found-in__source" data-line="451" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6578,9 +6776,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">443</span>
+    <span class="phpdocumentor-element-found-in__line">455</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.443" class="phpdocumentor-element-found-in__source" data-line="443" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6621,9 +6819,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1225</span>
+    <span class="phpdocumentor-element-found-in__line">1237</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1225" class="phpdocumentor-element-found-in__source" data-line="1225" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1237" class="phpdocumentor-element-found-in__source" data-line="1237" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -6672,9 +6870,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">538</span>
+    <span class="phpdocumentor-element-found-in__line">550</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.538" class="phpdocumentor-element-found-in__source" data-line="538" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the dedicated admin-group if it exists.</p>
@@ -6712,9 +6910,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">528</span>
+    <span class="phpdocumentor-element-found-in__line">540</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.528" class="phpdocumentor-element-found-in__source" data-line="528" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.540" class="phpdocumentor-element-found-in__source" data-line="540" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the id of the dedicated admin-group which contains all sub-admins</p>
@@ -6791,9 +6989,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">437</span>
+    <span class="phpdocumentor-element-found-in__line">449</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fake execution with other user-id. Note that this function will
@@ -6953,9 +7151,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1068</span>
+    <span class="phpdocumentor-element-found-in__line">1080</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1068" class="phpdocumentor-element-found-in__source" data-line="1068" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1080" class="phpdocumentor-element-found-in__source" data-line="1080" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigConstants::formatTimeStamp() with the current date and time.</p>
@@ -7010,9 +7208,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1134</span>
+    <span class="phpdocumentor-element-found-in__line">1146</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1134" class="phpdocumentor-element-found-in__source" data-line="1134" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1146" class="phpdocumentor-element-found-in__source" data-line="1146" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7049,9 +7247,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1111</span>
+    <span class="phpdocumentor-element-found-in__line">1123</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1111" class="phpdocumentor-element-found-in__source" data-line="1111" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -7139,9 +7337,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">390</span>
+    <span class="phpdocumentor-element-found-in__line">402</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7190,9 +7388,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">396</span>
+    <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.396" class="phpdocumentor-element-found-in__source" data-line="396" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7357,9 +7555,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">314</span>
+    <span class="phpdocumentor-element-found-in__line">326</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7422,9 +7620,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">267</span>
+    <span class="phpdocumentor-element-found-in__line">277</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.267" class="phpdocumentor-element-found-in__source" data-line="267" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.277" class="phpdocumentor-element-found-in__source" data-line="277" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Regenerate the draft emails selector.</p>
@@ -7478,9 +7676,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
     
@@ -7521,9 +7719,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">290</span>
+    <span class="phpdocumentor-element-found-in__line">300</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Regenerate the sent-email options after e.g. changing the project
@@ -7578,9 +7776,9 @@ context or having sent out an email.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Controller/EmailFormController.php"><a href="files/controller-emailformcontroller.html"><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">243</span>
+    <span class="phpdocumentor-element-found-in__line">254</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/Controller/EmailFormController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Regenerate the template emails selector.</p>
@@ -7609,11 +7807,29 @@ context or having sent out an email.</p>
                 : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>The selected template.</p>
+</section>
+
             </dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#method_templateEmailOptions#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(PHPMD.UnusedPrivateMethod) (accesed indirectly throw method variable)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
         
     
@@ -7742,7 +7958,10 @@ context or having sent out an email.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TOPIC_UNSPECIFIC">TOPIC_UNSPECIFIC</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_DRAFT_EMAILS">DRAFT_EMAILS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_EMAIL_TEMPLATE_NAME">EMAIL_TEMPLATE_NAME</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_SENT_EMAILS">SENT_EMAILS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_TEMPLATE_EMAILS">TEMPLATE_EMAILS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#constant_UPLOAD_KEY">UPLOAD_KEY</a></li>
                                             </ul>
                 </li>
@@ -7759,7 +7978,6 @@ context or having sent out an email.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_emailAddressService">$emailAddressService</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_pageNavigation">$pageNavigation</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_pme">$pme</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_projectService">$projectService</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-EmailFormController.html#property_urlGenerator">$urlGenerator</a></li>
                                             </ul>
                 </li>
@@ -7802,6 +8020,7 @@ context or having sent out an email.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_dateTimeFormatter">dateTimeFormatter()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_decrypt">decrypt()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_deleteAppValue">deleteAppValue()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_deleteUserValue">deleteUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_di">di()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_encrypt">encrypt()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_encryptionKeyValid">encryptionKeyValid()</a></li>

@@ -105,9 +105,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">35</span>
 
-            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.33" class="phpdocumentor-element-found-in__source" data-line="33" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Fetch app config value with fallback to old keys.</p>
@@ -155,7 +155,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_deleteUserValue">deleteUserValue()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -168,6 +168,12 @@
     <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_setUserValue">setUserValue()</a>
     <span>
                                 &nbsp;: void    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId">__userPreferencesTraitGetUserId()</a>
+    <span>
+                                &nbsp;: string    </span>
 </dt>
 
     </dl>
@@ -201,9 +207,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -244,15 +250,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">deleteUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">deleteUserValue</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -262,7 +268,7 @@
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$key</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Controller-EnumPersonalSettingsKey.html"><abbr title="\OCA\CAFEVDB\Controller\EnumPersonalSettingsKey">EnumPersonalSettingsKey</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Config key.</p>
@@ -300,9 +306,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -365,9 +371,9 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
     </aside>
 
     
@@ -415,6 +421,55 @@
         
     
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method___userPreferencesTraitGetUserId">
+        __userPreferencesTraitGetUserId()
+        <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/UserPreferencesTrait.php"><a href="files/traits-userpreferencestrait.html"><abbr title="Traits/UserPreferencesTrait.php">UserPreferencesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">44</span>
+
+            <a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Traits/UserPreferencesTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">__userPreferencesTraitGetUserId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$userId</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
             </section>
 
@@ -539,6 +594,7 @@
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_deleteUserValue">deleteUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_getUserValue">getUserValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method_setUserValue">setUserValue()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-UserPreferencesTrait.html#method___userPreferencesTraitGetUserId">__userPreferencesTraitGetUserId()</a></li>
                                     </ul>
             </li>
                     </ul>

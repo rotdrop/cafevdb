@@ -26,26 +26,12 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /**
  * Gender for the sake of mail-merge.
- *
- * @method static EnumGender MALE()
- * @method static EnumGender FEMALE()
- * @method static EnumGender DIVERSE()
  */
-class EnumGender extends AbstractEnumType
+enum EnumGender: string
 {
-  public const MALE = 'male';
-  public const FEMALE = 'female';
-  public const DIVERSE = 'diverse';
+  use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
-  /**
-   * Just here in order to inject the enum values into the l10n framework.
-   *
-   * @return void
-   */
-  protected static function translationHack():void
-  {
-    self::t(self::MALE);
-    self::t(self::FEMALE);
-    self::t(self::DIVERSE);
-  }
+  case MALE = 'male';
+  case FEMALE = 'female';
+  case DIVERSE = 'diverse';
 }

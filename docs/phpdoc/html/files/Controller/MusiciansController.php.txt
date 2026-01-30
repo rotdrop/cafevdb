@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,16 +27,19 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use OCP\AppFramework\Controller;
+use ReflectionClass;
+
+use OCP\AppFramework\OCSController;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Uuid;
 
@@ -45,61 +48,23 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
-class MusiciansController extends Controller
+class MusiciansController extends OCSController
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
-
-  public const SCOPE_MUSICIANS = 'musicians';
-  public const SCOPE_CLUB_MEMBERS = 'club-members';
-  public const SCOPE_EXECUTIVE_BOARD = 'executive-board';
-  public const SCOPE_CLOUD_USERS = 'cloud-users';
-  public const SCOPE_ADDRESSBOOK = 'addressbook';
-
-  /** @var Repositories\MusiciansRepository */
-  private $musiciansRepository;
-
-  /** @var array */
-  private $countryNames;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    protected ?string $userId,
-    protected ILogger $logger,
-    protected EntityManager $entityManager,
+    private EntitySerializer $entitySerializer,
     protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-
-    $this->l = $this->l10n();
-    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->countryNames = $this->localeCountryNames();
-
   }
   // phpcs:enable
-
-  /**
-   * Get all the data of the given musician. This mess removes "circular"
-   * associations as we are really only interested into the data for this
-   * single person.
-   *
-   * @param int $musicianId
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function get(int $musicianId):DataResponse
-  {
-    $musician = $this->musiciansRepository->find($musicianId);
-
-    $musicianData = $this->getFlatMusician($musician);
-
-    return self::dataResponse($musicianData);
-  }
 
   /**
    * Search by user-id and names. Pattern may contain wildcards (* and %).
@@ -121,6 +86,7 @@ class MusiciansController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\ApiRoute(verb: 'GET', url: '/musicians/search/{pattern}', defaults: ['pattern' => ''])]
   public function search(
     string $pattern,
     ?int $limit = null,
@@ -128,20 +94,22 @@ class MusiciansController extends Controller
     ?string $projectName = null,
     ?int $projectId = null,
     array $ids = [],
-    string $scope = self::SCOPE_MUSICIANS
-  ):DataResponse {
+    string $scope = EnumMusiciansSearchScope::MUSICIANS->value,
+  ): DataResponse {
+
+    $scope = EnumMusiciansSearchScope::get($scope);
 
     switch ($scope) {
-      case self::SCOPE_ADDRESSBOOK:
-      case self::SCOPE_CLOUD_USERS:
+      case EnumMusiciansSearchScope::ADDRESSBOOK:
+      case EnumMusiciansSearchScope::CLOUD_USERS:
         return self::grumble($this->l->t('Picking users from the cloud or the address-books is not yet supported, sorry.'));
-      case self::SCOPE_EXECUTIVE_BOARD:
+      case EnumMusiciansSearchScope::EXECUTIVE_BOARD:
         $projectId = $this->getExecutiveBoardProjectId();
         break;
-      case self::SCOPE_CLUB_MEMBERS:
+      case EnumMusiciansSearchScope::CLUB_MEMBERS:
         $projectId = $this->getClubMembersProjectId();
         break;
-      case self::SCOPE_MUSICIANS:
+      case EnumMusiciansSearchScope::MUSICIANS:
         // just go
         break;
     }
@@ -188,54 +156,29 @@ class MusiciansController extends Controller
       $criteria[] = [ 'projectParticipation.project' => $project ];
     }
 
-    $musicians = $this->musiciansRepository->findBy($criteria, [
+    $repository = $this->getDatabaseRepository(Entities\Musician::class);
+
+    $musicians = $repository->findBy($criteria, [
       'surName' => 'ASC',
       'firstName' => 'ASC'
     ], $limit, $offset);
 
-    if ($limit !== null && count($ids) > 0) {
-      $criteria = [ [ 'id' => $ids ] ];
+    if (count($ids) > 0) {
+      $criteria = [ 'id' => $ids ];
       if ($project !== null) {
-        $criteria[] = [ 'projectParticipation.project' => $project ];
+        $criteria['projectParticipation.project'] = $project;
       }
-      $byIdMusicians = $this->musiciansRepository->findBy($criteria);
+      $byIdMusicians = $repository->findBy($criteria);
       $musicians = array_merge($musicians, $byIdMusicians);
     }
 
-    $musiciansData = [];
+    $this->entitySerializer->reset();
+    $entityNameSpace = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
+    $this->entitySerializer->setCommonPrefix($entityNameSpace);
     /** @var Entities\Musician $musician */
     foreach ($musicians as $musician) {
-      if (Uuid::asUuid($musician->getSurName()) !== null) {
-        continue; // skip dummy musicians
-      }
-      $musiciansData[] = $this->getFlatMusician($musician, only: []);
+      $this->entitySerializer->addEntity($musician, 0);
     }
-
-    return self::dataResponse($musiciansData);
-  }
-
-  /**
-   * @param Entities\Musician $musician
-   *
-   * @param array $only
-   *
-   * @return array
-   */
-  private function getFlatMusician(Entities\Musician $musician, ?array $only = null):array
-  {
-    return array_merge(
-      [
-        'id' => $musician->getId(),
-        'firstName' => $musician->getFirstName(),
-        'surName' => $musician->getSurName(),
-        'displayName' => $musician->getDisplayName(),
-        'nickName' => $musician->getNickName(),
-        'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
-        'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
-        'userId' => $musician->getUserIdSlug(),
-        'countryName' => $this->countryNames[$musician->getCountry()] ?? '',
-      ],
-      $this->flattenMusician($musician, only: [])
-    );
+    return new DataResponse($this->entitySerializer->export());
   }
 }

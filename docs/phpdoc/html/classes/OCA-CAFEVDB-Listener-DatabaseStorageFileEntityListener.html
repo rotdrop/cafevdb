@@ -291,6 +291,20 @@ DatabaseStorageFile entities.</p>
 </dt>
 <dd>{@inheritdoc}</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_prePersist">prePersist()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_preUpdate">preUpdate()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a>
     <span>
@@ -386,7 +400,7 @@ not throw an exception if the filter is not enabled.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr>    </span>
+                                &nbsp;: bool    </span>
 </dt>
 <dd>Enable the given filter.</dd>
 
@@ -510,6 +524,13 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Set the given name as the current database target entity.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_sanitizeFileName">sanitizeFileName()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>For now just force extensions to be lower case.</dd>
 
     </dl>
 
@@ -1508,9 +1529,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1561,9 +1582,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1588,6 +1609,112 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$eventArgs</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PostUpdateEventArgs">PostUpdateEventArgs</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_prePersist">
+        prePersist()
+        <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_prePersist" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">80</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">prePersist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dirEntry</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PrePersistEventArgs">PrePersistEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventArgs</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dirEntry</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$eventArgs</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PrePersistEventArgs">PrePersistEventArgs</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_preUpdate">
+        preUpdate()
+        <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_preUpdate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">88</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">preUpdate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dirEntry</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs">PreUpdateEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventArgs</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dirEntry</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$eventArgs</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs">PreUpdateEventArgs</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1654,9 +1781,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">513</span>
+    <span class="phpdocumentor-element-found-in__line">509</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.513" class="phpdocumentor-element-found-in__source" data-line="513" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -1711,9 +1838,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">116</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Cleanup the list of orphans by actually removing the orphans.</p>
@@ -1783,9 +1910,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">496</span>
+    <span class="phpdocumentor-element-found-in__line">492</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -1839,9 +1966,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">370</span>
+    <span class="phpdocumentor-element-found-in__line">372</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.370" class="phpdocumentor-element-found-in__source" data-line="370" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -1889,9 +2016,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">484</span>
+    <span class="phpdocumentor-element-found-in__line">480</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -2054,9 +2181,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">442</span>
+    <span class="phpdocumentor-element-found-in__line">438</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.442" class="phpdocumentor-element-found-in__source" data-line="442" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.438" class="phpdocumentor-element-found-in__source" data-line="438" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -2094,9 +2221,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">452</span>
+    <span class="phpdocumentor-element-found-in__line">448</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -2134,9 +2261,9 @@ entity class.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">464</span>
+    <span class="phpdocumentor-element-found-in__line">460</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -2253,16 +2380,16 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">398</span>
+    <span class="phpdocumentor-element-found-in__line">400</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.400" class="phpdocumentor-element-found-in__source" data-line="400" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2292,9 +2419,9 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span>
+        <span class="phpdocumentor-signature__response_type">bool</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The enabled filter.</p>
+                <section class="phpdocumentor-description"><p>The old state of the filter.</p>
 </section>
 
             </section>
@@ -2314,9 +2441,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">470</span>
+    <span class="phpdocumentor-element-found-in__line">466</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.466" class="phpdocumentor-element-found-in__source" data-line="466" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -2349,9 +2476,9 @@ not throw an exception if the filter is not enabled.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">308</span>
+    <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -2425,9 +2552,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -2479,9 +2606,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">345</span>
+    <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -2554,9 +2681,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">327</span>
+    <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.327" class="phpdocumentor-element-found-in__source" data-line="327" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -2637,9 +2764,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">358</span>
+    <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -2698,9 +2825,9 @@ during the search.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">261</span>
+    <span class="phpdocumentor-element-found-in__line">263</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
@@ -2839,9 +2966,9 @@ database entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
@@ -2959,9 +3086,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">428</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -3017,9 +3144,9 @@ return a new collection containing these elements.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
@@ -3093,9 +3220,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">529</span>
+    <span class="phpdocumentor-element-found-in__line">525</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -3197,9 +3324,9 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">383</span>
+    <span class="phpdocumentor-element-found-in__line">385</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.383" class="phpdocumentor-element-found-in__source" data-line="383" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -3407,6 +3534,52 @@ or not. This parameter is ignored if $flush is false.</p>
     
     
 </article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_sanitizeFileName">
+        sanitizeFileName()
+        <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_sanitizeFileName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Listener/DatabaseStorageFileEntityListener.php"><a href="files/listener-databasestoragefileentitylistener.html"><abbr title="Listener/DatabaseStorageFileEntityListener.php">DatabaseStorageFileEntityListener.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">71</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Listener/DatabaseStorageFileEntityListener.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">For now just force extensions to be lower case.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">sanitizeFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dirEntry</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dirEntry</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile">DatabaseStorageFile</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+    
+</article>
             </section>
 
         <div class="phpdocumentor-modal" id="source-view">
@@ -3547,6 +3720,8 @@ or not. This parameter is ignored if $flush is false.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_postRemove">postRemove()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_postUpdate">postUpdate()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_prePersist">prePersist()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_preUpdate">preUpdate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_classMetadata">classMetadata()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_cleanupOrphans">cleanupOrphans()</a></li>
@@ -3578,6 +3753,7 @@ or not. This parameter is ignored if $flush is false.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_refreshEntity">refreshEntity()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_remove">remove()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_setDatabaseRepository">setDatabaseRepository()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Listener-DatabaseStorageFileEntityListener.html#method_sanitizeFileName">sanitizeFileName()</a></li>
                                     </ul>
             </li>
                     </ul>

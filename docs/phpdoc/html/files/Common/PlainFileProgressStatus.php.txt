@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2021-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,20 +25,22 @@
 namespace OCA\CAFEVDB\Common;
 
 use RuntimeException;
+use Throwable;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Storage\AppStorage;use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Storage\AppStorage;
 
 /** Progress status with a plain local file as storage. */
 class PlainFileProgressStatus extends AbstractProgressStatus
 {
-  private const READ_RETRY_LIMIT = 10;
-
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  private const READ_RETRY_LIMIT = 10;
 
   const DATA_DIR = 'progress-status';
 
@@ -59,7 +61,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     protected AppStorage $storage,
   ) {
     $this->file = null;
-    $this->folder = $this->storage->getFolder(self::DATA_DIR);
+    $this->folder = $this->storage->ensureFolder(self::DATA_DIR);
   }
   // phpcs:enable
 
@@ -115,7 +117,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
     if (!empty($this->file)) {
       try {
         $this->file->delete();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
       }
     }
@@ -125,7 +127,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
       try {
         $this->file = $this->folder->getFile($id);
         $this->sync();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->reset();
         // $this->logException($t);
         throw (new Exceptions\ProgressStatusNotFoundException(
@@ -170,7 +172,11 @@ class PlainFileProgressStatus extends AbstractProgressStatus
         return;
       }
     }
-    throw new RuntimeException($this->l->t('Unable to read progress status file "%s" after %d retries.', $this->file->getName(), $i));
+    throw new RuntimeException(
+      $this->l->t(
+        'Unable to read progress status file "%1$s" after %2$d retries.',
+        [$this->file->getName(), $i],
+      ));
   }
 
   /** {@inheritdoc} */

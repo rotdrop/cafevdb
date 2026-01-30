@@ -78,11 +78,11 @@ trait EncryptionContextTrait
   /**
    * Ensure that the encryptionContext contains the user-id of the given musician.
    *
-   * @param Musician $musician
+   * @param Entities\Musician $musician
    *
    * @return void
    */
-  protected function sanitizeEncryptionContext(Musician $musician)
+  protected function sanitizeEncryptionContext(Entities\Musician $musician)
   {
     $userIdSlug = $musician->getUserIdSlug();
     if (!empty($userIdSlug) && !in_array($userIdSlug, $this->encryptionContext ?? [])) {

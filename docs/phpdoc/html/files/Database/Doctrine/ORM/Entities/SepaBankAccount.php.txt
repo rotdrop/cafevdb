@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -126,11 +126,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set iban.
    *
-   * @param null|string $iban
+   * @param string $iban
    *
    * @return SepaBankAccount
    */
-  public function setIban($iban):SepaBankAccount
+  public function setIban(string $iban): SepaBankAccount
   {
     $this->iban = $iban;
 
@@ -140,21 +140,21 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get iban.
    *
-   * @return string
+   * @return ?string
    */
-  public function getIban()
+  public function getIban(): ?string
   {
-    return $this->iban;
+    return $this->iban ?? null;
   }
 
   /**
    * Set bic.
    *
-   * @param null|string $bic
+   * @param string $bic
    *
    * @return SepaBankAccount
    */
-  public function setBic($bic):SepaBankAccount
+  public function setBic(string $bic): SepaBankAccount
   {
     $this->bic = $bic;
 
@@ -164,21 +164,21 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get bic.
    *
-   * @return string
+   * @return ?string
    */
-  public function getBic()
+  public function getBic(): ?string
   {
-    return $this->bic;
+    return $this->bic ?? null;
   }
 
   /**
    * Set blz.
    *
-   * @param null|string $blz
+   * @param string $blz
    *
    * @return SepaBankAccount
    */
-  public function setBlz($blz):SepaBankAccount
+  public function setBlz(string $blz): SepaBankAccount
   {
     $this->blz = $blz;
 
@@ -188,21 +188,21 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get blz.
    *
-   * @return string
+   * @return ?string
    */
-  public function getBlz()
+  public function getBlz(): ?string
   {
-    return $this->blz;
+    return $this->blz ?? null;
   }
 
   /**
    * Set bankAccountOwner.
    *
-   * @param null|string $bankAccountOwner
+   * @param string $bankAccountOwner
    *
    * @return SepaBankAccount
    */
-  public function setBankAccountOwner($bankAccountOwner):SepaBankAccount
+  public function setBankAccountOwner(string $bankAccountOwner): SepaBankAccount
   {
     $this->bankAccountOwner = $bankAccountOwner;
 
@@ -212,23 +212,26 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get bankAccountOwner.
    *
-   * @return string
+   * @return ?string
    */
-  public function getBankAccountOwner():string
+  public function getBankAccountOwner(): ?string
   {
-    return $this->bankAccountOwner;
+    return $this->bankAccountOwner ?? null;
   }
 
   /**
    * Set musician.
    *
-   * @param Musician|null $musician
+   * @param Musician $musician
    *
    * @return SepaBankAccount
    */
-  public function setMusician($musician = null):SepaBankAccount
+  public function setMusician(Musician $musician): SepaBankAccount
   {
     $this->musician = $musician;
+    if ($this->getBankAccountOwner() === null) {
+      $this->bankAccountOwner = $musician->getPublicName(firstNameFirst: true);
+    }
 
     return $this;
   }
@@ -236,11 +239,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician|null|int
+   * @return ?Musician
    */
-  public function getMusician()
+  public function getMusician(): ?Musician
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**
@@ -250,7 +253,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function setSequence(?int $sequence = null):SepaBankAccount
+  public function setSequence(int $sequence): SepaBankAccount
   {
     $this->sequence = $sequence;
 
@@ -260,11 +263,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Get sequence.
    *
-   * @return int|null
+   * @return ?int
    */
-  public function getSequence():?int
+  public function getSequence(): ?int
   {
-    return $this->sequence;
+    return $this->sequence ?? null;
   }
 
   /**
@@ -274,7 +277,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function setPayments(Collection $payments):SepaBankAccount
+  public function setPayments(Collection $payments): SepaBankAccount
   {
     $this->payments = $payments;
 
@@ -286,7 +289,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getPayments():Collection
+  public function getPayments(): Collection
   {
     return $this->payments;
   }
@@ -298,7 +301,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return SepaBankAccount
    */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):SepaBankAccount
+  public function setSepaDebitMandates(Collection $sepaDebitMandates): SepaBankAccount
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 
@@ -310,7 +313,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getSepaDebitMandates():Collection
+  public function getSepaDebitMandates(): Collection
   {
     return $this->sepaDebitMandates;
   }
@@ -323,7 +326,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->payments->count() + $this->sepaDebitMandates->count();
   }

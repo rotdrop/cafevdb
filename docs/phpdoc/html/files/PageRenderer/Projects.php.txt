@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,11 +38,10 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -53,6 +52,7 @@ class Projects extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
   use FieldTraits\InstrumentsTrait;
+  use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
@@ -67,7 +67,7 @@ class Projects extends PMETableViewBase
   private const MAX_POSTER_COLUMNS = 4;
 
   /** @var Entities\Project */
-  private ?Entities\Project $project = null;
+  protected ?Entities\Project $project;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -114,30 +114,23 @@ class Projects extends PMETableViewBase
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     //
-    private EventsService $eventsService,
     private MailingListsService $listsService,
-    private OrganizationalRolesService $orgaRolesService,
     protected ProjectService $projectService,
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
 
     if (!($this->projectId > 0)) {
       $this->projectId = $this->pmeRecordId['id'] ?? null;
     }
-    if ($this->projectId > 0) {
-      $this->project = $this->projectService->findById($this->projectId);
-      $this->projectName = $this->project->getName();
-    }
+    $this->findProject(enforce: false);
 
     if ($this->listOperation()) {
       $this->pme->overrideLabel('Add', $this->l->t('New Project'));
@@ -145,17 +138,23 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
+    $orchestraName = ucfirst(
+      $this->getConfigValue(
+        ConfigConstants::ORCHESTRA_NAME_KEY,
+        '** ' . $this->l->t('unconfigured') . '! **',
+      ),
+    );
     if (!empty($this->projectName)) {
-      return $this->l->t("%s Project %s", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)), $this->projectName]);
+      return $this->l->t("%s Project %s", [ $orchestraName, $this->projectName]);
     } else {
-      return $this->l->t("%s Projects", [ ucfirst($this->getConfigValue(ConfigConstants::ORCHESTRA_NAME_KEY)) ]);
+      return $this->l->t("%s Projects", [ $orchestraName ]);
     }
   }
 
   /** {@inheritdoc} */
-  public function navigationItems():array
+  public function navigationItems(): array
   {
     return [
       AllMusicians::navigationItem(),
@@ -168,9 +167,9 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem
   {
-    $item = parent::navigationItem($projectId, $projectName);
+    $item = parent::navigationItem($projectId, $projectName)->toArray();
 
     $currentYear = date('Y');
     $pmeOptions = \OC::$server->get(IPMEOptions::class);
@@ -179,13 +178,12 @@ class Projects extends PMETableViewBase
     $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field . '_comp'] = '>=';
     $item['templateParameters'][$sysPfx . PHPMyEdit::QUERY_FIELD . $field] = $currentYear - 1;
 
-    return $item;
+    return SidebarNavigationItem::fromArray($item);
   }
 
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $projectId       = $this->projectId;
     $recordsPerPage  = $this->recordsPerPage;
     $instrumentInfo  = $this->getInstrumentInfo();
@@ -198,23 +196,21 @@ class Projects extends PMETableViewBase
       'show-hide-disabled',
     ];
     if (!empty($this->project)) {
-      $opts['css']['postfix'][] = 'project-type-' . (string)$this->project->getType();
+      $opts['css']['postfix'][] = 'project-type-' . $this->project->getType()->value;
     }
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
     $opts['inc'] = $recordsPerPage;
 
-    // Install values for after form-submit, e.g. $this->template ATM
-    // is just the request parameter, while Template below will define
-    // the value of $this->template after form submit.
+    // Data injected into the form submit via invisible inputs.
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       // overwrite with record id to catch changes after copy/insert
-      'projectId' => $this->projectId,
-      'projectName' => $this->projectName,
+      PersistentCGIKeys::PROJECT_ID => $this->projectId,
+      PersistentCGIKeys::PROJECT_NAME => $this->projectName,
     ];
 
     // Name of field which is the unique key
@@ -499,7 +495,7 @@ class Projects extends PMETableViewBase
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName($this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $this->l->t('%1$s, #voices', $instrumentNames[$instrument]);
               },
@@ -858,11 +854,11 @@ class Projects extends PMETableViewBase
       'select' => 'T',
       'display' => [ 'popup' => 'tooltip', ],
       'php' => function($value, $op, $field, $row, $recordId, $pme) {
-        list(
-          'folder' => $folder,
-          'share' => $share,
+        [
+          'path' => $folder,
+          'url' => $share,
           'expires' => $expires
-        ) = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
+        ] = $this->projectService->ensureDownloadsShare($recordId['id'], noCreate: true);
         $filesAppLink = empty($folder)
           ? null
           : $this->userStorage->getFilesAppLink($folder, subDir: true);
@@ -1024,15 +1020,15 @@ class Projects extends PMETableViewBase
       );
 
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
-    if (!empty($this->request[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')])) {
+    if (!empty($this->request->getParam($this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')))) {
       // unset the year filter, as it does not make sense
       //
       // Leave to the user ...
       // unset($this-> parameter Service [$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $yearIdx)]);
     } else {
       $opts['filters']['OR'][] = [
-        'sql' => '$table.type IN ("' . ProjectType::PERMANENT . '","' . ProjectType::TEMPLATE . '")',
-        'text' => $opts['fdd']['type']['name'] . ' IN ("' . $this->l->t(ProjectType::PERMANENT) . '","' . $this->l->t(ProjectType::TEMPLATE) . '")',
+        'sql' => '$table.type IN ("' . ProjectType::PERMANENT->value . '","' . ProjectType::TEMPLATE->value . '")',
+        'text' => $opts['fdd']['type']['name'] . ' IN ("' . $this->l->t(ProjectType::PERMANENT->value) . '","' . $this->l->t(ProjectType::TEMPLATE->value) . '")',
       ];
     }
     if (!$this->showDisabled) {
@@ -1177,7 +1173,7 @@ class Projects extends PMETableViewBase
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array $newVals Set of new values, which may also be modified.
+   * @param array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
@@ -1185,33 +1181,33 @@ class Projects extends PMETableViewBase
     PHPMyEdit &$pme,
     string $op,
     string $step,
-    ?array $oldVals,
+    ?array $oldValues,
     array &$changed,
-    array &$newVals,
+    array &$newValues,
   ):bool {
-    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    if (empty($newVals['name'])) {
+    if (empty($newValues['name'])) {
       return false;
     }
-    $newVals['name'] = $this->projectService->sanitizeName($newVals['name']);
-    if (empty($newVals['name'])) {
+    $newValues['name'] = $this->projectService->sanitizeName($newValues['name']);
+    if (empty($newValues['name'])) {
       return false;
     }
 
     // sanitize instrumentation numbers
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
 
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
     // ProjectParticipants table fails.
-    $instruments = Util::explode(',', $newVals[$instrumentsColumn]??'');
-    foreach (Util::explode(',', $newVals[$instrumentsColumn]??'') as $instrument) {
-      $newVals[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
-                              . ($newVals[$voicesColumn]??'');
+    $instruments = Util::explode(',', $newValues[$instrumentsColumn]??'');
+    foreach (Util::explode(',', $newValues[$instrumentsColumn]??'') as $instrument) {
+      $newValues[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
+                              . ($newValues[$voicesColumn]??'');
     }
-    $voiceItems = Util::explode(',', $newVals[$voicesColumn]);
+    $voiceItems = Util::explode(',', $newValues[$voicesColumn]);
     foreach ($voiceItems as $key => $voiceItem) {
       list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
       if (array_search($instrument, $instruments) === false) {
@@ -1220,24 +1216,24 @@ class Projects extends PMETableViewBase
       }
     }
     sort($voiceItems, SORT_NATURAL);
-    $newVals[$voicesColumn] = implode(',', array_unique($voiceItems));
+    $newValues[$voicesColumn] = implode(',', array_unique($voiceItems));
 
     foreach ([$instrumentsColumn, $voicesColumn] as $column) {
       Util::unsetValue($changed, $column);
-      if (!empty($newVals[$column])) {
+      if (!empty($newValues[$column])) {
         $changed[] = $column;
       }
     }
 
-    if ($newVals['type'] == ProjectType::TEMPLATE) {
+    if ($newValues['type'] == ProjectType::TEMPLATE) {
       // do not create mailing lists for templates
-      $newVals['mailing_list_id'] = 'keep-empty';
+      $newValues['mailing_list_id'] = 'keep-empty';
     }
 
     // unset 'copy_participants'
     Util::unsetValue($changed, 'copy_participants');
 
-    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'after');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
 
     return true;
   }
@@ -1251,11 +1247,11 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param array $oldVals Self-explanatory.
+   * @param array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array $newVals Set of new values, which may also be modified.
+   * @param array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated.
    *
@@ -1268,17 +1264,17 @@ class Projects extends PMETableViewBase
     PHPMyEdit &$pme,
     string $op,
     string $step,
-    array &$oldVals,
+    array &$oldValues,
     array &$changed,
-    array &$newVals,
+    array &$newValues,
   ):bool {
-    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'before');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     if (array_search('name', $changed) !== false) {
 
-      if (isset($newVals['name']) && $newVals['name']) {
-        $newVals['name'] = $this->projectService->sanitizeName($newVals['name']);
-        if ($newVals['name'] === false) {
+      if (isset($newValues['name']) && $newValues['name']) {
+        $newValues['name'] = $this->projectService->sanitizeName($newValues['name']);
+        if ($newValues['name'] === false) {
           return false;
         }
       }
@@ -1286,8 +1282,8 @@ class Projects extends PMETableViewBase
 
     Util::unsetValue($changed, 'mailing_list_id');
 
-    $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
     if (array_search($instrumentsColumn, $changed) !== false
         || array_search($voicesColumn, $changed) !== false) {
 
@@ -1295,7 +1291,7 @@ class Projects extends PMETableViewBase
       // convenience in either case, otherwise adding musicians to the
       // ProjectParticipants table fails.
       foreach (['old', 'new'] as $dataSet) {
-        $dataArray = $dataSet . 'Vals';
+        $dataArray = $dataSet . 'Values';
         ${$dataSet . 'Instruments'} = Util::explode(',', ${$dataArray}[$instrumentsColumn]??'');
         foreach (${$dataSet . 'Instruments'} as $instrument) {
           ${$dataArray}[$voicesColumn] = $instrument . self::JOIN_KEY_SEP . '0' . ','
@@ -1307,7 +1303,7 @@ class Projects extends PMETableViewBase
       }
 
       // Remove the voices definitions for removed instruments
-      $newVoiceItems = Util::explode(',', $newVals[$voicesColumn]??[]);
+      $newVoiceItems = Util::explode(',', $newValues[$voicesColumn]??[]);
       foreach ($newVoiceItems as $key => $voiceItem) {
         list($instrument, $voice) = explode(self::JOIN_KEY_SEP, $voiceItem);
         if (array_search($instrument, $newInstruments) === false) {
@@ -1315,18 +1311,18 @@ class Projects extends PMETableViewBase
           unset($newVoiceItems[$key]);
         }
       }
-      $newVals[$voicesColumn] = implode(',', $newVoiceItems);
+      $newValues[$voicesColumn] = implode(',', $newVoiceItems);
 
       // Update changed to reflect the manipulation
       foreach ([$instrumentsColumn, $voicesColumn] as $column) {
         Util::unsetValue($changed, $column);
-        if ($oldVals[$column] != $newVals[$column]) {
+        if ($oldValues[$column] != $newValues[$column]) {
           $changed[] = $column;
         }
       }
     }
 
-    $this->debugPrintValues($oldVals, $changed, $newVals, null, 'after');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
 
     return true;
   }
@@ -1340,11 +1336,11 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param array $oldVals Self-explanatory.
+   * @param array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array $newVals Set of new values, which may also be modified.
+   * @param array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated.
    *
@@ -1354,16 +1350,16 @@ class Projects extends PMETableViewBase
     PHPMyEdit &$pme,
     string $op,
     string $step,
-    ?array $oldVals,
+    ?array $oldValues,
     array &$changed,
-    array &$newVals,
+    array &$newValues,
   ):bool {
 
-    $this->debug('OLDVALS '.print_r($oldVals, true));
-    $this->debug('NEWVALS '.print_r($newVals, true));
+    $this->debug('OLDVALS '.print_r($oldValues, true));
+    $this->debug('NEWVALS '.print_r($newValues, true));
     $this->debug('CHANGED '.print_r($changed, true));
 
-    $newProjectId = $newVals['id'];
+    $newProjectId = $newValues['id'];
     if (empty($newProjectId)) {
       throw new RuntimeException($this->l->t('Copying participants is requested, but the new project id is not given.'));
     }
@@ -1371,7 +1367,7 @@ class Projects extends PMETableViewBase
     // add the new project id to the persistent CGI array
     $pme->addPersistentCgi([
       'projectId' => $newProjectId,
-      'projectName' => $newVals['name'],
+      'projectName' => $newValues['name'],
     ]);
 
     if ($this->copyOperation()) {
@@ -1385,7 +1381,7 @@ class Projects extends PMETableViewBase
       $this->debug('NEW PROJECT ID ' . $newProjectId);
 
       // clone participants fields if not empty, list of names is given
-      $participantFields = $newVals[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
+      $participantFields = $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
       $participantFields = Util::explode(',', $participantFields);
       $this->debug('PARTICIPANT FIELDS ' . print_r($participantFields, true));
 
@@ -1413,7 +1409,7 @@ class Projects extends PMETableViewBase
       }
 
       // clone participants if requested
-      list(, $copyParticipants) = explode(self::JOIN_KEY_SEP, $newVals['copy_participants']);
+      list(, $copyParticipants) = explode(self::JOIN_KEY_SEP, $newValues['copy_participants']);
       if ($copyParticipants) {
 
         /** @var Repositories\ProjectsRepository $repository */
@@ -1454,10 +1450,10 @@ class Projects extends PMETableViewBase
 
     //throw new RuntimeException('DEBUG STOPPER');
 
-    $this->projectService->createProjectInfraStructure($newVals);
+    $this->projectService->createProjectInfraStructure($newValues);
 
     $this->projectId = $newProjectId;
-    $this->projectName = $newVals['name'];
+    $this->projectName = $newValues['name'];
 
     return true;
   }
@@ -1471,11 +1467,11 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param array $oldVals Self-explanatory.
+   * @param array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array $newVals Set of new values, which may also be modified.
+   * @param array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated.
    */
@@ -1483,17 +1479,17 @@ class Projects extends PMETableViewBase
     PHPMyEdit &$pme,
     string $op,
     string $step,
-    array $oldVals,
+    array $oldValues,
     array &$changed,
-    array &$newVals,
+    array &$newValues,
   ):bool {
     if (array_search('name', $changed) === false) {
       // Nothing more has to be done if the name stays the same
       return true;
     }
 
-    $this->projectService->renameProject($oldVals, $newVals);
-    $this->projectName = $newVals['name'];
+    $this->projectService->renameProject($oldValues, $newValues);
+    $this->projectName = $newValues['name'];
 
     return true;
   }
@@ -1511,11 +1507,11 @@ class Projects extends PMETableViewBase
    *
    * @param string $step 'before' or 'after'.
    *
-   * @param array $oldVals Self-explanatory.
+   * @param array $oldValues Self-explanatory.
    *
    * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param array $newVals Set of new values, which may also be modified.
+   * @param array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated.
    */
@@ -1523,9 +1519,9 @@ class Projects extends PMETableViewBase
     PHPMyEdit &$pme,
     string $op,
     string $step,
-    array &$oldVals,
+    array &$oldValues,
     array &$changed,
-    array &$newVals,
+    array &$newValues,
   ):bool {
     $this->projectService->deleteProject($pme->rec);
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,7 +67,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners as DBALEventListeners;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
@@ -76,6 +78,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMSetup;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
+use OCA\CAFEVDB\Wrapped\Firehed\DbalLogger;
 use OCA\CAFEVDB\Wrapped\Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine as Ramsey;
@@ -94,10 +97,8 @@ class EntityManager extends EntityManagerDecorator
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
-    __DIR__ . "/Doctrine/ORM/Entities",
+    __DIR__ . '/Doctrine/ORM/Entities',
   ];
-  const PROXY_DIR = __DIR__ . "/Doctrine/ORM/Proxies";
-  const DEV_MODE = true;
 
   /**
    * @var string
@@ -146,8 +147,11 @@ class EntityManager extends EntityManagerDecorator
   /** @var string */
   private $userId;
 
-  /** @var bool */
-  private $debug;
+  /** Enable SQL query logging */
+  private bool $debug = false;
+
+  /** Disable on-disk caching of ORM. */
+  private bool $devMode = false;
 
   /** @var bool */
   private $showSoftDeleted;
@@ -156,7 +160,7 @@ class EntityManager extends EntityManagerDecorator
   private $reopenAfterRollback;
 
   /** @var bool */
-  private $typesBound;
+  private bool $typesBound = false;
 
   /** @var bool */
   private $decorateClassMetadata = true;
@@ -294,8 +298,9 @@ class EntityManager extends EntityManagerDecorator
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
       $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
-      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['min_range' => 0]) ?: 0;
+      $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
+      $this->devMode = 0 != ($debugMode & ConfigConstants::DEBUG_ORM);
       $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';
       $this->decorateClassMetadata = true;
     }
@@ -303,6 +308,8 @@ class EntityManager extends EntityManagerDecorator
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
+    } else {
+      $this->logError('NOT CONNECTED');
     }
     $this->dispatchEvent(new Events\EntityManagerBoundEvent($this));
   }
@@ -380,6 +387,11 @@ class EntityManager extends EntityManagerDecorator
   /** {@inheritdoc} */
   public function close():void
   {
+    foreach ($this->getEventManager()->getAllListeners() as $event => $eventListeners) {
+      foreach ($eventListeners as $listener) {
+        $this->getEventManager()->removeEventListener($event, $listener);
+      }
+    }
     parent::close();
     $this->dispatchEvent(new Events\EntityManagerClosedEvent($this));
   }
@@ -408,7 +420,8 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
-   * Check for a valid database connection.
+   * Check for a valid database connection, try to establish a connection if
+   * not connected.
    *
    * @return bool
    */
@@ -435,19 +448,26 @@ class EntityManager extends EntityManagerDecorator
     }
     try {
       if (!$connection->isConnected()) {
-        if (!$connection->connect()) {
-          $this->logError('db cannot connect');
-          return false;
-        }
+        // $connection->connect() is deprecated
+        $connection->getNativeConnection();
+        return $connection->isConnected();
       }
     } catch (Throwable $t) {
-      if (str_contains($this->request->getPathInfo(), 'apps/' . $this->appName)) {
+      if (str_contains($this->request->getPathInfo() ?? '', 'apps/' . $this->appName)) {
         $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params[ConfigConstants::APP_DB_NAME]);
       }
       return false;
     }
     return true;
   }
+
+  private const DBAL_TYPES = [
+    Types\UuidType::class => 'uuid_binary',
+    Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
+    Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
+    Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
+    Types\ArrayType::class => 'array',
+  ];
 
   /**
    * Register the needed additional DBAL types.
@@ -459,56 +479,20 @@ class EntityManager extends EntityManagerDecorator
     if ($this->typesBound) {
       return;
     }
-    $types = [
-      Types\EnumAccessPermission::class => 'enum',
-      Types\EnumDataTransformation::class => 'enum',
-      Types\EnumDirEntryType::class => 'enum',
-      Types\EnumParticipationContext::class => 'enum',
-      Types\EnumFileType::class => 'enum',
-      Types\EnumGender::class => 'enum',
-      Types\EnumGeographicalScope::class => 'enum',
-      Types\EnumGnuCashSlotType::class => 'enum',
-      Types\EnumMemberStatus::class => 'enum',
-      Types\EnumParticipantFieldDataType::class => 'enum',
-      Types\EnumParticipantFieldMultiplicity::class => 'enum',
-      Types\EnumParticipationStatus::class => 'enum',
-      Types\EnumProjectTemporalType::class => 'enum',
-      Types\EnumSepaTransaction::class => 'enum',
-      Types\EnumTaxType::class => 'enum',
-      Types\EnumVCalendarType::class => 'enum',
-      // Ramsey\UuidType::class => null,
-      // Ramsey\UuidBinaryType::class => 'binary',
-      // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
-      Types\UuidType::class => 'uuid_binary',
-      Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
-      Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
-      Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
-    ];
 
     $connection = $this->entityManager->getConnection();
     try {
       $platform = $connection->getDatabasePlatform();
-      foreach ($types as $phpType => $sqlType) {
-        if ($sqlType == 'enum') {
-          $typeName = substr(strrchr($phpType, '\\'), 1);
-          Types\EnumType::registerEnumType($typeName, $phpType);
-
-          // variant in lower case
-          // @todo: WHY?
-          $blah = strtolower($typeName);
-          Types\EnumType::registerEnumType($blah, $phpType);
-          $platform->registerDoctrineTypeMapping($sqlType, $blah);
-
-        } else {
-          $instance = new $phpType;
-          $typeName = $instance->getName();
+      foreach (self::DBAL_TYPES as $phpType => $sqlType) {
+        $instance = new $phpType;
+        $typeName = $instance->getName();
+        if (!Type::hasType($typeName)) {
           Type::addType($typeName, $phpType);
         }
         if (!empty($sqlType)) {
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
         }
       }
-
       // Override datetime stuff
       Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
@@ -518,7 +502,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetimetz_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (Throwable $t) {
-      $this->logException($t);
+      throw new Exceptions\DatabaseException($this->l->t('Unable to register types with DBAL.'), previous: $t);
     }
   }
 
@@ -566,8 +550,12 @@ class EntityManager extends EntityManagerDecorator
   {
     $conParams = $this->connectionParameters($params);
 
+    /** @var Doctrine\Common\EventManager $eventManager */
+    /** @var ORM\Configuration $config */
     list($config, $eventManager) = $this->createSimpleConfiguration();
     list($config, $eventManager, $attributeReader) = $this->createGedmoConfiguration($config, $eventManager);
+
+    $eventManager->addEventSubscriber($this->appContainer->get(Listeners\DoctrineMigrationsListener::class));
 
     $this->attributeReader = $attributeReader;
 
@@ -583,16 +571,9 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::postPersist,
       // ORM\Events::preRemove,
       // ORM\Events::postRemove,
-      \Doctrine\DBAL\Events::postConnect,
+      // \Doctrine\DBAL\Events::postConnect,
       ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
-
-
-    if (self::DEV_MODE) {
-      $config->setAutoGenerateProxyClasses(true);
-    } else {
-      $config->setAutoGenerateProxyClasses(false);
-    }
 
     $this->registerCustomFunctions($config);
 
@@ -604,14 +585,28 @@ class EntityManager extends EntityManagerDecorator
     $quoteStrategy = new ReservedWordQuoteStrategy();
     $config->setQuoteStrategy($quoteStrategy);
 
-    $config->setSQLLogger($this->sqlLogger);
+    // $config->setSQLLogger($this->sqlLogger);
+
+    $middleware = new DBalLogger\Middleware($this->sqlLogger);
+    $config->setMiddlewares([$middleware]);
+
+    $config->setSchemaManagerFactory(new DefaultSchemaManagerFactory);
 
     // obtaining the entity manager
+
     $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
-    $entityManager = new ORMEntityManager($connection, $config);
+    $entityManager = new ORMEntityManager($connection, $config, $eventManager);
 
     if (!$this->showSoftDeleted) {
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
+    }
+
+    if ($this->devMode) {
+      // Shoot-down the cache. Note that this is the regular cache, as we
+      // always keep dev-mode disabled inside the ORM. This way we can force a
+      // shoot-down of the real cache by toggling dev-mode once to true and
+      // back to false again.
+      $config->getMetadataCache()?->clear();
     }
 
     return $entityManager;
@@ -641,8 +636,10 @@ class EntityManager extends EntityManagerDecorator
    */
   private function createSimpleConfiguration():array
   {
-    $cache = null;
-    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache);
+    // Keep dev-mode in ORM disabled, instead we shoot down the ordinary cache
+    // if we think we are in dev-mode.
+    $config = ORMSetup::createAttributeMetadataConfig(self::ENTITY_PATHS, isDevMode: false);
+    $config->enableNativeLazyObjects(true);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
       public function __construct(
@@ -699,12 +696,6 @@ class EntityManager extends EntityManagerDecorator
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
     $driverChain->addDriver($attributeDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
-
-    // general ORM configuration
-    //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
-    $config->setProxyDir(self::PROXY_DIR);
-    $config->setProxyNamespace('OCA\CAFEVDB\Database\Doctrine\ORM\Proxies');
-    $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
 
     // register metadata driver
     $config->setMetadataDriverImpl($driverChain);
@@ -769,8 +760,9 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener->setTranslatableLocale($localeCode);
     $translatableListener->setDefaultLocale(ConfigConstants::DEFAULT_LOCALE);
     $translatableListener->setTranslationFallback(true);
-    $translatableListener->setPersistDefaultLocaleTranslation(true);
+    $translatableListener->setPersistDefaultLocaleTranslation(false);
     $translatableListener->setAnnotationReader($attributeReader);
+    $translatableListener->setDefaultTranslationValue(null);
     $evm->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
@@ -792,13 +784,6 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($foreignKeyListener);
 
     return [ $config, $evm, $attributeReader ];
-  }
-
-  /** {@inheritdoc} */
-  public function postConnect(ConnectionEventArgs $args)
-  {
-    // not yet
-    // $args->getConnection()->executeStatement("SET @@character_set_collations = '" . Constants::CHARACTER_SET . "=" . Constants::SHORT_COLLATION . "'");
   }
 
   /**
@@ -836,19 +821,6 @@ class EntityManager extends EntityManagerDecorator
         if (false && $foreignKey->getForeignTableName() == 'ProjectInstrumentationNumbers') {
           $table->removeForeignKey($foreignKey->getName());
         }
-      }
-
-      $enumColumns = [];
-      // inject enum values into comments
-      foreach ($table->getColumns() as $column) {
-        if ($column->getType() instanceof Types\EnumType) {
-          $enumColumns[] = $column;
-        }
-      }
-
-      /** @var \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Column $column */
-      foreach ($enumColumns as $column) {
-        $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->toArray()))));
       }
     }
   }
@@ -1189,15 +1161,18 @@ class EntityManager extends EntityManagerDecorator
     $level = --$this->transactionNestingLevel;
 
     // the post-commit actions cannot be undone
-    // undo does not throw, it just logs exceptions
-    $this->preCommitActions[$level]->executeUndo();
-    $this->preFlushActions->executeUndo();
+    if ($this->preCommitActions[$level]->active()) {
+      $this->preCommitActions[$level]->executeUndo();
+    }
+    if ($this->preFlushActions->active()) {
+      $this->preFlushActions->executeUndo();
+    }
 
     if (!$this->isTransactionActive() && $this->reopenAfterRollback) {
       try {
         $this->entityManager->close();
         $this->reopen();
-      } catch (\Throable $t) {
+      } catch (Throwable $t) {
         $this->logException($t, 'Unable to reopen after rollback');
       }
     }
@@ -1319,6 +1294,31 @@ class EntityManager extends EntityManagerDecorator
     $this->decorateClassMetadata = $onOff;
   }
 
+  /**
+   * Unfortunately the ORM builtin FilterCollection likes to throw too many
+   * exceptions. So work around that mis-feature.
+   *
+   * @param string $filterName The name of the filter.
+   *
+   * @param bool $state The state to set. Defaults to \true.
+   *
+   * @return bool The old state of the filter.
+   */
+  public function setFilterEnabled(string $filterName, bool $state = true): bool
+  {
+    $oldState = $this->getFilters()->isEnabled($filterName);
+    try {
+      if ($state) {
+        $this->getFilters()->enable($filterName);
+      } else {
+        $this->getFilters()->disable($filterName);
+      }
+    } catch (Throwable) {
+      // just ignore, we just want to have the work done.
+    }
+    return $oldState;
+  }
+
   /** @return void */
   private function createTableLookup():void
   {
@@ -1422,12 +1422,7 @@ class EntityManager extends EntityManagerDecorator
    */
   protected function getLocaleCode(?IL10N $l10n): string
   {
-    $locale = $l10n->getLocaleCode();
-    if ($locale === null) {
-      $locale = ConfigConstants::DEFAULT_LOCALE;
-    } else {
-      $locale = $this->l->getLocaleCode();
-    }
+    $locale = $l10n?->getLocaleCode() ?? ConfigConstants::DEFAULT_LOCALE;
     if (strpos($locale, '_') === false) {
       $locale = $locale . '_' . strtoupper($locale);
     }

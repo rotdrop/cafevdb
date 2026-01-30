@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2020, 2022, 2025 Claus-Justus Heine
+ * @copyright 2011-2020, 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
+
 /** Page-renderer interface. */
 interface IPageRenderer extends IRenderer
 {
@@ -32,14 +34,14 @@ interface IPageRenderer extends IRenderer
    *
    * @return string
    */
-  public function shortTitle();
+  public function shortTitle(): string;
 
   /**
    * Header text informations.
    *
    * @return string
    */
-  public function headerText();
+  public function headerText(): string;
 
   /**
    * Set table-navigation enable/disable.
@@ -48,7 +50,7 @@ interface IPageRenderer extends IRenderer
    *
    * @return void
    */
-  public function navigation(bool $enable):void;
+  public function navigation(bool $enable): void;
 
   /**
    * Return a list of navigation items:
@@ -56,26 +58,25 @@ interface IPageRenderer extends IRenderer
    * [ NAV_ITEM0, NAV_ITEM1, ... ]
    * ```
    *
-   * @return array
+   * @return array<SidebarNavigationItem>
    */
-  public function navigationItems():array;
+  public function navigationItems(): array;
 
   /**
    * Return the navigation item for this renderer.
    *
-   * [
-   *   'template' => TEMPLATE,
-   *   'tooltip' => TOOLTIP,
-   *   'templateParameters' => [ PARAM => VALUE ],
-   *   'permissions' => PERMISSION_MASK,
-   * ]
-   *
-   * @return array
+   * @return SidebarNavigationItem
    */
-  public static function navigationItem(?int $projectId = null, ?string $projectName = null):array;
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem;
 
-  /** A bitwise or of the flags defined in the AuthorizationService class. */
-  public static function requiredPermissions():int;
+  /**
+   * A bitwise or of the flags defined in the AuthorizationService class. This
+   * is the bitwise 'or' of the cases of the
+   * \OCA\CAFEVDB\Service\AuthorizationService\EnumAppPermissions.
+   *
+   * @return int
+   */
+  public static function requiredPermissions(): int;
 
   /**
    * Run underlying table-manager (phpMyEdit for now).
@@ -85,5 +86,5 @@ interface IPageRenderer extends IRenderer
    *
    * @return void
    */
-  public function execute(array $options = []):void;
+  public function execute(array $options = []): void;
 }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,13 +90,10 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setMusician(Musician $musician):MusicianInstrument
+  public function setMusician(Musician $musician): MusicianInstrument
   {
     $this->musician = $musician;
-    if (!$this->musician->getInstruments()->contains($this)) {
-      $this->musician->getInstruments()->add($this);
-    }
-
+    $this->updateInverseSides();
     return $this;
   }
 
@@ -105,7 +102,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return null|Musician
    */
-  public function getMusician():?Musician
+  public function getMusician(): ?Musician
   {
     return $this->musician ?? null;
   }
@@ -117,13 +114,10 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setInstrument(Instrument $instrument):MusicianInstrument
+  public function setInstrument(Instrument $instrument): MusicianInstrument
   {
     $this->instrument = $instrument;
-    if (!$this->instrument->getMusicianInstruments()->contains($this)) {
-      $this->instrument->getMusicianInstruments()->add($this);
-    }
-
+    $this->updateInverseSides();
     return $this;
   }
 
@@ -132,7 +126,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return null|Instrument
    */
-  public function getInstrument():?Instrument
+  public function getInstrument(): ?Instrument
   {
     return $this->instrument ?? null;
   }
@@ -142,7 +136,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return string
    */
-  public function getName():string
+  public function getName(): string
   {
     return $this->instrument->getName();
   }
@@ -154,7 +148,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return MusicianInstrument
    */
-  public function setRanking(int $ranking):MusicianInstrument
+  public function setRanking(int $ranking): MusicianInstrument
   {
     $this->ranking = $ranking;
 
@@ -166,7 +160,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return int
    */
-  public function getRanking():int
+  public function getRanking(): int
   {
     return $this->ranking;
   }
@@ -178,7 +172,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return Instrumente
    */
-  public function setProjectInstruments(Collection $projectInstruments):MusicianInstrument
+  public function setProjectInstruments(Collection $projectInstruments): MusicianInstrument
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -190,7 +184,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getProjectInstruments():Collection
+  public function getProjectInstruments(): Collection
   {
     return $this->projectInstruments;
   }
@@ -201,7 +195,7 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return bool
    */
-  public function isNotAnInstrument():bool
+  public function isNotAnInstrument(): bool
   {
     return $this->instrument->isNotAnInstrument();
   }
@@ -212,18 +206,57 @@ class MusicianInstrument implements \ArrayAccess
    *
    * @return int
    */
-  public function usage():int
+  public function usage(): int
   {
     return $this->projectInstruments->count();
   }
 
   /** {@inheritdoc} */
-  public function __toString():string
+  public function __toString(): string
   {
     $name = (string)$this->instrument;
     if (!empty($this->musician)) {
       $name .= '@' . $this->musician->getUserIdSlug();
     }
     return $name;
+  }
+
+  /**
+   * Update indexed associations.
+   *
+   * @return void
+   */
+  private function updateInverseSides(): void
+  {
+    $instrument = $this->getInstrument();
+    $musician = $this->getMusician();
+    if ($musician) {
+      $indexByValue = $instrument?->getId();
+      $musicianInstruments = $musician->getInstruments();
+      if (!$musicianInstruments->contains($this)) {
+        if ($indexByValue) {
+          $musicianInstruments->set($indexByValue, $this);
+        } else {
+          $musicianInstruments->add($this);
+        }
+      } elseif ($indexByValue && !$musicianInstruments->get($indexByValue)) {
+        $musicianInstruments->removeElement($this);
+        $musicianInstruments->set($indexByValue, $this);
+      }
+    }
+    if ($instrument) {
+      $indexByValue = $musician?->getId();
+      $musicianInstruments = $instrument->getMusicianInstruments();
+      if (!$musicianInstruments->contains($this)) {
+        if ($indexByValue) {
+          $musicianInstruments->set($indexByValue, $this);
+        } else {
+          $musicianInstruments->add($this);
+        }
+      } elseif ($indexByValue && !$musicianInstruments->get($indexByValue)) {
+        $musicianInstruments->removeElement($this);
+        $musicianInstruments->set($indexByValue, $this);
+      }
+    }
   }
 }

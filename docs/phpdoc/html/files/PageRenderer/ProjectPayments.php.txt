@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ use \BadFunctionCallException;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -70,7 +70,7 @@ class ProjectPayments extends PMETableViewBase
   const ROW_TAG_PREFIX = '0;';
 
   /** @var array */
-  private $compositePaymentExpanded = [];
+  private $entityRowsExpanded = [];
 
   protected $joinStructure = [
     self::TABLE => [
@@ -90,7 +90,7 @@ class ProjectPayments extends PMETableViewBase
       .'
   JSON_OBJECTAGG(
     IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key))),
-    IF(__t4.data_type = "' . FieldType::LIABILITIES . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
+    IF(__t4.data_type = "' . FieldDataType::LIABILITIES->value . '", COALESCE(-1 * __t2.option_value, -1 * __t3.data), COALESCE(__t2.option_value, __t3.data))
   ) AS receivable_values,'
       . '
   JSON_OBJECTAGG(
@@ -120,8 +120,8 @@ LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . ' __t3
 ON __t2.field_id = __t3.field_id AND __t2.option_key = __t3.key
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_TABLE . ' __t4
 ON __t2.field_id = __t4.id AND __t4.data_type  IN ('
-        . "   '" . FieldType::RECEIVABLES . "',"
-        . "   '" . FieldType::LIABILITIES . "'"
+        . "   '" . FieldDataType::RECEIVABLES->value . "',"
+        . "   '" . FieldDataType::LIABILITIES->value . "'"
         . ' )
 GROUP BY __t1.id',
       'identifier' => [
@@ -321,8 +321,6 @@ WHERE dsf.id IS NOT NULL',
     protected UserStorage $userStorage,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
       configService: $configService,
       entityManager: $entityManager,
       request: $request,
@@ -330,7 +328,7 @@ WHERE dsf.id IS NOT NULL',
       pageNavigation: $pageNavigation,
       toolTipsService: $toolTipsService,
     );
-    $this->compositePaymentExpanded = $this->request['compositePaymentExpanded'];
+    $this->entityRowsExpanded = $this->request->getParam(PersistentCGIKeys::ENTITY_ROWS_EXPANDED);
 
     $this->findProject(enforce: false);
 
@@ -342,7 +340,7 @@ WHERE dsf.id IS NOT NULL',
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return !empty($this->project)
       ? $this->l->t('Payments for project "%s"', $this->project->getName())
@@ -356,8 +354,6 @@ WHERE dsf.id IS NOT NULL',
    */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
-
     $projectMode = $this->projectId > 0;
 
     $opts            = [];
@@ -371,10 +367,10 @@ WHERE dsf.id IS NOT NULL',
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
-      'compositePaymentExpanded' => $this->compositePaymentExpanded,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::COMPOSITE_PAYMENT_EXPANDED => $this->entityRowsExpanded,
     ];
 
     // Name of field which is the unique key
@@ -392,7 +388,7 @@ WHERE dsf.id IS NOT NULL',
         'project_id',
         'musician_id',
         'id',
-        $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
+        self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
       ];
     }
 
@@ -421,7 +417,7 @@ WHERE dsf.id IS NOT NULL',
         $lastCompositeId = $compositePaymentId;
         $oddProjectPayment = true;
         $cssClasses[] = 'first';
-        if (!($this->compositePaymentExpanded[$compositePaymentId]??false)) {
+        if (!($this->entityRowsExpanded[$compositePaymentId]??false)) {
           $cssClasses[] = 'following-hidden';
         }
         // $cssClasses[] = 'disable-row-click';
@@ -510,7 +506,7 @@ WHERE dsf.id IS NOT NULL',
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
         if ($this->isCompositeRow($row, $pme)) {
-          $html = '<input type="hidden" class="expanded-marker" name="compositePaymentExpanded['.$recordId['id'].']" value="'.(int)($this->compositePaymentExpanded[$recordId['id']]??0).'"/>';
+          $html = '<input type="hidden" class="expanded-marker" name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']" value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
           }
@@ -801,9 +797,9 @@ WHERE dsf.id IS NOT NULL',
   ppf.id AS field_id,
   ppfo.key AS receivable_key,
   IF(ppf.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
      COALESCE(ppftr.content, ppf.name),
      CONCAT_WS(" - ", COALESCE(ppftr.content, ppf.name), COALESCE(ppfotr.content, ppfo.label))
   ) AS receivable_display_label,
@@ -849,9 +845,9 @@ WHERE dsf.id IS NOT NULL',
   , "amount", $table.amount
 )',
           'groups' => 'IF($table.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
         ],
@@ -881,9 +877,9 @@ WHERE dsf.id IS NOT NULL',
   CONCAT_WS("'.self::COMP_KEY_SEP.'", ppf.project_id, ppf.id, BIN2UUID(ppfo.key)) AS composite_key,
   ppfo.*,
   IF(ppf.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
      COALESCE(ppftr.content, ppf.name),
      CONCAT_WS(" - ", COALESCE(ppftr.content, ppf.name), COALESCE(ppfotr.content, ppfo.label))
   ) AS display_label,
@@ -899,7 +895,7 @@ WHERE dsf.id IS NOT NULL',
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   INNER JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
-      AND ppf.data_type IN ("' . FieldType::RECEIVABLES . '","' . FieldType::LIABILITIES . '")'
+      AND ppf.data_type IN ("' . FieldDataType::RECEIVABLES->value . '","' . FieldDataType::LIABILITIES->value . '")'
           . ($projectMode
              ? '
       AND ppf.project_id = ' . $this->projectId
@@ -925,9 +921,9 @@ WHERE dsf.id IS NOT NULL',
                      . ' AND $join_table.project_id = '
                      . $this->joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id'),
           'groups' => 'IF($table.multiplicity IN ("'.
-          FieldMultiplicity::SIMPLE.'","'.
-          FieldMultiplicity::SINGLE.'","'.
-          FieldMultiplicity::GROUPOFPEOPLE.'"),
+          FieldMultiplicity::SIMPLE->value.'","'.
+          FieldMultiplicity::SINGLE->value.'","'.
+          FieldMultiplicity::GROUPOFPEOPLE->value.'"),
   "'.$this->l->t('Single Options').'",
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
@@ -1531,8 +1527,8 @@ WHERE dsf.id IS NOT NULL',
                 $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
                 continue 2;
               case 'balance_documents_folder_id':
-              case $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
-              case $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
+              case self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
+              case self::joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
                 continue 2;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
@@ -1658,8 +1654,8 @@ WHERE dsf.id IS NOT NULL',
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
 
     if (!$this->isCompositeRowTag($oldValues[$rowTagKey])) {
       $paymentId = $oldValues[$rowTagKey] ?? $oldValues[$paymentIdKey];
@@ -1740,11 +1736,11 @@ WHERE dsf.id IS NOT NULL',
     $oldValues['is_donation'] = $oldValues['is_donation'] ?? 0;
     $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
 
-    $compositeKey = $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $compositeKey = $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
 
-    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+    $musicianId = $newValues[self::joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $oldValues['musician_id'] =
       $newValues['musician_id'] = $musicianId;
 
@@ -1778,11 +1774,11 @@ WHERE dsf.id IS NOT NULL',
       foreach ($dataSets as $dataSet) {
         ${$dataSet . 'Values'} = array_merge(
           ${$dataSet . 'Values'}, [
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id') => $projectId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id') => $fieldId,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key') => $receivableKey,
-            $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id') => $pme->rec['id'],
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id') => $projectId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id') => $fieldId,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key') => $receivableKey,
+            self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id') => $pme->rec['id'],
           ]);
 
         // index all values by the key in order to please the
@@ -1828,7 +1824,7 @@ WHERE dsf.id IS NOT NULL',
       $unsetTags[] = 'supporting_document_id';
 
       // handled on the split-level
-      $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
+      $unsetTags[] = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
 
       foreach ($unsetTags as $tag) {
         unset($newValues[$tag]);
@@ -1840,7 +1836,7 @@ WHERE dsf.id IS NOT NULL',
     $nullables = [
       'sepa_transaction_id',
       'balance_documents_folder_id',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'),
+      self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'),
     ];
     foreach ($nullables as $key) {
       foreach (['old', 'new'] as $dataSet) {
@@ -1895,16 +1891,16 @@ WHERE dsf.id IS NOT NULL',
 
     $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
 
-    $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
-    $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
+    $paymentIdKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
+    $rowTagKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
 
-    $amountKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
-    $subjectKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
+    $amountKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount');
+    $subjectKey = self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject');
 
     if (!empty($newValues[$rowTagKey]) && !$this->isCompositeRowTag($newValues[$rowTagKey])) {
       // Sub-payment, redirect to change mode
 
-      $compositeKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
+      $compositeKeyKey = self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key') ;
 
       // redirect to change operation ...
       $oldValues = $newValues;
@@ -1940,11 +1936,11 @@ WHERE dsf.id IS NOT NULL',
     // extract project-id, field-id, receivable_key from the composite-option-key select
     list($projectId, $fieldId, $receivableKey) = explode(
       self::COMP_KEY_SEP,
-      $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')],
+      $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')],
       3
     );
 
-    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
+    $musicianId = $newValues[self::joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $newValues['musician_id'] = $musicianId;
 
     if (($newValues[$amountKey]??null) === null) {
@@ -1957,12 +1953,12 @@ WHERE dsf.id IS NOT NULL',
     } else {
       $newValues['subject'] = $newValues[$subjectKey];
     }
-    unset($newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')]);
+    unset($newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id')]);
 
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
-    $newValues[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id')] = $musicianId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id')] = $projectId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'field_id')] = $fieldId;
+    $newValues[self::joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'receivable_key')] = $receivableKey;
 
     $newValues['project_id'] = $projectId;
 

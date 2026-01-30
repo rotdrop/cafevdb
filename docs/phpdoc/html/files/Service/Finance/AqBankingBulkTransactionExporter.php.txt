@@ -41,7 +41,6 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   const IDENTIFIER = 'aqbanking';
 
   const CSV_DELIMITER = ';';
-  const PURPOSE_LINE_LENGTH = FinanceService::SEPA_PURPOSE_LENGTH / 4;
   const CURRENCY = 'EUR';
   const MANDATE_DATE_FORMAT = 'Y/m/d';
   const DUE_DATE_FORMAT = 'Y/m/d';
@@ -138,11 +137,13 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       ];
     }
 
-    return implode("\n", array_map(
-      function($value) {
-        return implode(self::CSV_DELIMITER, $value);
-      },
-      $transactionTable));
+    return implode(
+      "\n",
+      array_map(
+        fn(array $rowData) => str_putcsv($rowData, self::CSV_DELIMITER),
+        $transactionTable,
+      ),
+    );
   }
 
   /**
@@ -207,11 +208,13 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       ];
     }
 
-    return implode("\n", array_map(
-      function($value) {
-        return implode(self::CSV_DELIMITER, $value);
-      },
-      $transactionTable));
+    return implode(
+      "\n",
+      array_map(
+        fn(array $dataRow) => str_putcsv($dataRow, self::CSV_DELIMITER),
+        $transactionTable,
+      ),
+    );
   }
 
   /**
@@ -252,13 +255,14 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       $subject = Util::removeSpaces($subject);
     }
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
-      $subject = Util::shortenCamelCaseString($subject, FinanceService::SEPA_PURPOSE_LENGTH, 4);
+      $subject = Util::shortenCamelCaseString(
+        $subject,
+        limit: FinanceService::SEPA_PURPOSE_LENGTH,
+        minLen: 4,
+      );
     }
 
-    $purpose = [];
-    for ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
-      $purpose[] = '"' . substr($subject, $i, self::PURPOSE_LINE_LENGTH) . '"';
-    }
+    $purpose = [$subject, '', '', ''];
     return $purpose;
   }
 }

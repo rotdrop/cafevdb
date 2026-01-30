@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,9 +48,9 @@ class AddMusicians extends Musicians
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  const TEMPLATE = parent::ADD_TEMPLATE;
+  const TEMPLATE = 'add-musicians';
 
-  protected null|string|ParticipationContext $participationContext = null;
+  protected ?ParticipationContext $participationContext = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -69,29 +69,29 @@ class AddMusicians extends Musicians
     PhoneNumberService $phoneNumberService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
       //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
-      //
-      $contactsService,
-      $geoCodingService,
-      $insuranceService,
-      $listsService,
-      $musicianService,
-      $phoneNumberService,
+      contactsService: $contactsService,
+      geoCodingService: $geoCodingService,
+      insuranceService: $insuranceService,
+      listsService: $listsService,
+      musicianService: $musicianService,
+      phoneNumberService: $phoneNumberService,
     );
 
     $this->findProject(enforce: true);
-    $this->participationContext = $this->request['participationContext'] ?? null;
+    if ($this->request->getParam(PersistentCGIKeys::PARTICIPATION_CONTEXT) ?? null) {
+      $this->participationContext = ParticipationContext::get($this->request->getParam(PersistentCGIKeys::PARTICIPATION_CONTEXT));
+    }
   }
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     $shortTitle = parent::commonShortTitle();
     if ($shortTitle === null) {
@@ -167,8 +167,8 @@ GROUP BY __t1.instrument_id',
     );
     // $this->logInfo('JOIN STRUCTURE ' . print_r($this->joinStructure, true));
     ['opts' => $opts, 'joinTables' => $joinTables] = parent::generatePMEOptions();
-    $opts['cgi']['persist']['projectId'] = $this->projectId;
-    $opts['cgi']['persist']['participationContext'] = $this->participationContext;
+    $opts['cgi']['persist'][PersistentCGIKeys::PROJECT_ID] = $this->projectId;
+    $opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_CONTEXT] = $this->participationContext->value;
 
     $this->logDebug('JOIN TABLES ' . print_r($joinTables, true));
 
@@ -212,8 +212,8 @@ GROUP BY __t1.instrument_id',
 
     $this->logDebug('FDD ARRAY ' . print_r(array_keys($opts['fdd']), true));
 
-    ++$opts['cgi']['persist']['participationStatusFddIndex'];
-    ++$opts['cgi']['persist']['instrummentsFddIndex'];
+    ++$opts['cgi']['persist'][PersistentCGIKeys::PARTICIPATION_STATUS_FDD_INDEX];
+    ++$opts['cgi']['persist'][PersistentCGIKeys::INSTRUMENTS_FDD_INDEX];
 
     // Filter out already registered musicians
     $opts[PHPMyEdit::OPT_HAVING]['AND'] = [];
@@ -222,7 +222,7 @@ GROUP BY __t1.instrument_id',
     $instrumentFamiliesJoin = $joinTables[self::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project'];
     $instrumentFamily = "COALESCE($instrumentFamiliesJoin.family, '')";
     $participationStatus = "{$projectsJoin}.participation_status";
-    $associated = ParticipationStatus::ASSOCIATED;
+    $associated = ParticipationStatus::ASSOCIATED->value;
     $notAnInstrumentFamily = Entities\ProjectINstrument::NOT_AN_INSTRUMENT_FAMILY;
     if ($this->participationContext == ParticipationContext::ASSOCIATES) {
       // INCLUDE IF

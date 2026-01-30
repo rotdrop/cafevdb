@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait">DateTimeTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait">DateTimeTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-UnusedTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait">UnusedTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Projects</p>
@@ -258,6 +258,15 @@
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_applications">$applications</a>
     <span>
@@ -280,12 +289,6 @@
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_financialBalanceDocumentsStorage">$financialBalanceDocumentsStorage</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorage.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorage">DatabaseStorage</abbr></a>|null            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -348,6 +351,13 @@
     <span>
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>&lt;string|int, <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectPayment.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectPayment">ProjectPayment</abbr></a>&gt;            </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationCalendarEvent">$registrationCalendarEvent</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null            </span>
+</dt>
+<dd>Optional link to the project registration event.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline">$registrationDeadline</a>
@@ -496,9 +506,9 @@ the entity has not been soft deleted.</dd>
 an empty collection if there is no such folder.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
-                                &nbsp;: int    </span>
+                                &nbsp;: null|int    </span>
 </dt>
 <dd>Get id.</dd>
 
@@ -564,6 +574,13 @@ an empty collection if there is no such folder.</dd>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
 </dt>
 <dd>Get payments.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationCalendarEvent">getRegistrationCalendarEvent()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null    </span>
+</dt>
+<dd>Get registrationCalendarEvents.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline">getRegistrationDeadline()</a>
@@ -700,11 +717,11 @@ next call to delete.</dd>
 <dd>Set financialBalanceDocumentsStorage</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setId">setId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
-<dd>Set id.</dd>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setInstrumentationNumbers">setInstrumentationNumbers()</a>
@@ -768,6 +785,13 @@ next call to delete.</dd>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
 </dt>
 <dd>Set payments.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationCalendarEvent">setRegistrationCalendarEvent()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
+</dt>
+<dd>Set registrationCalendarEvents.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline">setRegistrationDeadline()</a>
@@ -881,9 +905,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -970,6 +994,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -983,9 +1090,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">127</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1017,7 +1124,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         $mappedBy: &#039;project&#039;
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $indexBy: &#039;id&#039;
+        $indexBy: &#039;email&#039;
     </dd>
     </dl>
                     </section>
@@ -1041,9 +1148,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">151</span>
+    <span class="phpdocumentor-element-found-in__line">155</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1096,9 +1203,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">135</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1151,9 +1258,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1202,74 +1309,6 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">62</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
     <h4 class="phpdocumentor-element__name" id="property_instrumentationNumbers">
         $instrumentationNumbers
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_instrumentationNumbers" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1280,9 +1319,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1341,9 +1380,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1445,9 +1484,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">The list-id of the mailing list for the members</p>
@@ -1507,9 +1546,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1565,9 +1604,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">114</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1617,6 +1656,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         <dd class="phpdocumentor-argument-list__entry">
         $indexBy: &#039;id&#039;
     </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $fetch: &#039;EXTRA_LAZY&#039;
+    </dd>
     </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
@@ -1647,9 +1689,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1705,9 +1747,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">151</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1760,9 +1802,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">127</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1818,9 +1860,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">139</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -1863,6 +1905,68 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -private
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_registrationCalendarEvent">
+        $registrationCalendarEvent
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationCalendarEvent" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">98</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Optional link to the project registration event.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null</span>
+    <span class="phpdocumentor-signature__name">$registrationCalendarEvent</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationCalendarEvent#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\OneToOne">OneToOne</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $targetEntity: \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $cascade: [&#039;all&#039;]
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $fetch: &#039;EXTRA_LAZY&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $orphanRemoval: true
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_registrationDeadline">
         $registrationDeadline
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1873,9 +1977,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">94</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Optional registration deadline. If null then the date one day before the
@@ -1931,9 +2035,9 @@ imposed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Optional registration start date. If not set then the online registration
@@ -1988,9 +2092,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">155</span>
+    <span class="phpdocumentor-element-found-in__line">159</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -2043,9 +2147,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -2098,9 +2202,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -2109,7 +2213,7 @@ is NOT available.</p>
         <span class="phpdocumentor-signature__visibility">private</span>
             <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumProjectTemporalType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType">EnumProjectTemporalType</abbr></a></span>
     <span class="phpdocumentor-signature__name">$type</span>
-    </code>
+     = <span class="phpdocumentor-signature__default-value">\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY</span></code>
 
     
     
@@ -2126,13 +2230,13 @@ is NOT available.</p>
         #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
     </dt>
         <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;EnumProjectTemporalType&#039;
+        $type: \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types::ENUM
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
         $nullable: false
     </dd>
         <dd class="phpdocumentor-argument-list__entry">
-        $options: [&#039;default&#039; =&gt; &#039;temporary&#039;]
+        $options: [&#039;default&#039; =&gt; \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY]
     </dd>
     </dl>
                     </section>
@@ -2156,9 +2260,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -2233,9 +2337,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
     
@@ -2296,9 +2400,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">182</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2332,9 +2436,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">162</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2368,9 +2472,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">792</span>
+    <span class="phpdocumentor-element-found-in__line">797</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.792" class="phpdocumentor-element-found-in__source" data-line="792" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.797" class="phpdocumentor-element-found-in__source" data-line="797" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2532,9 +2636,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">433</span>
+    <span class="phpdocumentor-element-found-in__line">413</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.433" class="phpdocumentor-element-found-in__source" data-line="433" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get applications.</p>
@@ -2572,9 +2676,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">774</span>
+    <span class="phpdocumentor-element-found-in__line">779</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.774" class="phpdocumentor-element-found-in__source" data-line="774" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.779" class="phpdocumentor-element-found-in__source" data-line="779" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get calendarEvents.</p>
@@ -2612,9 +2716,9 @@ is NOT available.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">629</span>
+    <span class="phpdocumentor-element-found-in__line">634</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.629" class="phpdocumentor-element-found-in__source" data-line="629" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.634" class="phpdocumentor-element-found-in__source" data-line="634" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get compositePayments.</p>
@@ -2693,9 +2797,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">711</span>
+    <span class="phpdocumentor-element-found-in__line">716</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.711" class="phpdocumentor-element-found-in__source" data-line="711" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.716" class="phpdocumentor-element-found-in__source" data-line="716" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get financialBalanceDocumentsFolder.</p>
@@ -2733,9 +2837,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">701</span>
+    <span class="phpdocumentor-element-found-in__line">706</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.701" class="phpdocumentor-element-found-in__source" data-line="701" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.706" class="phpdocumentor-element-found-in__source" data-line="706" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get financialBalanceDocumentsStorage.</p>
@@ -2773,9 +2877,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">722</span>
+    <span class="phpdocumentor-element-found-in__line">727</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.722" class="phpdocumentor-element-found-in__source" data-line="722" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.727" class="phpdocumentor-element-found-in__source" data-line="727" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Recurse to the balance documents folder and return its contents. Return
@@ -2808,22 +2912,22 @@ an empty collection if there is no such folder.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">230</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.230" class="phpdocumentor-element-found-in__source" data-line="230" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2836,7 +2940,7 @@ an empty collection if there is no such folder.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
             </section>
 
 </article>
@@ -2854,9 +2958,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">581</span>
+    <span class="phpdocumentor-element-found-in__line">586</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.581" class="phpdocumentor-element-found-in__source" data-line="581" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.586" class="phpdocumentor-element-found-in__source" data-line="586" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentationNumbers.</p>
@@ -2894,9 +2998,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">653</span>
+    <span class="phpdocumentor-element-found-in__line">658</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.653" class="phpdocumentor-element-found-in__source" data-line="653" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.658" class="phpdocumentor-element-found-in__source" data-line="658" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get invoices.</p>
@@ -2934,9 +3038,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">325</span>
+    <span class="phpdocumentor-element-found-in__line">305</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.325" class="phpdocumentor-element-found-in__source" data-line="325" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.305" class="phpdocumentor-element-found-in__source" data-line="305" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get mailingListId.</p>
@@ -2974,9 +3078,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">278</span>
+    <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.278" class="phpdocumentor-element-found-in__source" data-line="278" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get name.</p>
@@ -3014,16 +3118,16 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">459</span>
+    <span class="phpdocumentor-element-found-in__line">439</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.439" class="phpdocumentor-element-found-in__source" data-line="439" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantFields.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getParticipantFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$participationContext</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">getParticipantFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$participationContext</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#enumcase_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3034,7 +3138,7 @@ an empty collection if there is no such folder.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$participationContext</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a></span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#enumcase_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -3064,9 +3168,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">494</span>
+    <span class="phpdocumentor-element-found-in__line">475</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.475" class="phpdocumentor-element-found-in__source" data-line="475" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantFieldsData.</p>
@@ -3104,9 +3208,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">750</span>
+    <span class="phpdocumentor-element-found-in__line">755</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.750" class="phpdocumentor-element-found-in__source" data-line="750" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.755" class="phpdocumentor-element-found-in__source" data-line="755" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantInstruments.</p>
@@ -3144,16 +3248,16 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">522</span>
+    <span class="phpdocumentor-element-found-in__line">503</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.522" class="phpdocumentor-element-found-in__source" data-line="522" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.503" class="phpdocumentor-element-found-in__source" data-line="503" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participants.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getParticipants</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$participationContext</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">getParticipants</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$participationContext</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#enumcase_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3164,7 +3268,7 @@ an empty collection if there is no such folder.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$participationContext</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext">EnumParticipationContext</abbr></a></span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#constant_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span>            </dt>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumParticipationContext.html#enumcase_UNRESTRICTED"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext::UNRESTRICTED">EnumParticipationContext::UNRESTRICTED</abbr></a></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Defaults to
 UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associated
@@ -3198,9 +3302,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">605</span>
+    <span class="phpdocumentor-element-found-in__line">610</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.605" class="phpdocumentor-element-found-in__source" data-line="605" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.610" class="phpdocumentor-element-found-in__source" data-line="610" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -3230,6 +3334,46 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getRegistrationCalendarEvent">
+        getRegistrationCalendarEvent()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationCalendarEvent" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">562</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.562" class="phpdocumentor-element-found-in__source" data-line="562" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get registrationCalendarEvents.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getRegistrationCalendarEvent</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getRegistrationDeadline">
         getRegistrationDeadline()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3238,9 +3382,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">385</span>
+    <span class="phpdocumentor-element-found-in__line">365</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.365" class="phpdocumentor-element-found-in__source" data-line="365" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns registrationDeadline.</p>
@@ -3278,9 +3422,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">335</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Returns registrationStartDate.</p>
@@ -3318,9 +3462,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">677</span>
+    <span class="phpdocumentor-element-found-in__line">682</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.677" class="phpdocumentor-element-found-in__source" data-line="677" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.682" class="phpdocumentor-element-found-in__source" data-line="682" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sentEmail.</p>
@@ -3358,9 +3502,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">557</span>
+    <span class="phpdocumentor-element-found-in__line">538</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.557" class="phpdocumentor-element-found-in__source" data-line="557" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.538" class="phpdocumentor-element-found-in__source" data-line="538" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandates.</p>
@@ -3398,9 +3542,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">302</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.302" class="phpdocumentor-element-found-in__source" data-line="302" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get type.</p>
@@ -3438,9 +3582,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">409</span>
+    <span class="phpdocumentor-element-found-in__line">389</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.409" class="phpdocumentor-element-found-in__source" data-line="409" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.389" class="phpdocumentor-element-found-in__source" data-line="389" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get webPages.</p>
@@ -3478,9 +3622,9 @@ UNRESTRICTED, can be used to filter out &quot;real&quot; participants or associa
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">254</span>
+    <span class="phpdocumentor-element-found-in__line">234</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.254" class="phpdocumentor-element-found-in__source" data-line="254" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.234" class="phpdocumentor-element-found-in__source" data-line="234" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get year.</p>
@@ -3834,9 +3978,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">421</span>
+    <span class="phpdocumentor-element-found-in__line">401</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.401" class="phpdocumentor-element-found-in__source" data-line="401" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set applications.</p>
@@ -3884,9 +4028,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">762</span>
+    <span class="phpdocumentor-element-found-in__line">767</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.762" class="phpdocumentor-element-found-in__source" data-line="762" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.767" class="phpdocumentor-element-found-in__source" data-line="767" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set calendarEvents.</p>
@@ -3934,9 +4078,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">617</span>
+    <span class="phpdocumentor-element-found-in__line">622</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.617" class="phpdocumentor-element-found-in__source" data-line="617" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.622" class="phpdocumentor-element-found-in__source" data-line="622" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set compositePayments.</p>
@@ -4034,9 +4178,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">689</span>
+    <span class="phpdocumentor-element-found-in__line">694</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.689" class="phpdocumentor-element-found-in__source" data-line="689" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.694" class="phpdocumentor-element-found-in__source" data-line="694" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set financialBalanceDocumentsStorage</p>
@@ -4078,22 +4222,22 @@ next call to delete.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">218</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.218" class="phpdocumentor-element-found-in__source" data-line="218" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Set id.</p>
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -4103,12 +4247,10 @@ next call to delete.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Entity id.</p>
-</section>
-
+                
             </dd>
             </dl>
 
@@ -4118,7 +4260,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -4136,9 +4278,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">569</span>
+    <span class="phpdocumentor-element-found-in__line">574</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.569" class="phpdocumentor-element-found-in__source" data-line="569" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.574" class="phpdocumentor-element-found-in__source" data-line="574" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentationNumbers.</p>
@@ -4186,9 +4328,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">641</span>
+    <span class="phpdocumentor-element-found-in__line">646</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.641" class="phpdocumentor-element-found-in__source" data-line="641" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.646" class="phpdocumentor-element-found-in__source" data-line="646" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set invoices.</p>
@@ -4236,9 +4378,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">314</span>
+    <span class="phpdocumentor-element-found-in__line">294</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set mailingListId.</p>
@@ -4286,9 +4428,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">266</span>
+    <span class="phpdocumentor-element-found-in__line">246</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.266" class="phpdocumentor-element-found-in__source" data-line="266" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set name.</p>
@@ -4336,9 +4478,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">445</span>
+    <span class="phpdocumentor-element-found-in__line">425</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.445" class="phpdocumentor-element-found-in__source" data-line="445" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.425" class="phpdocumentor-element-found-in__source" data-line="425" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantFields.</p>
@@ -4386,9 +4528,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">482</span>
+    <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantFieldsData.</p>
@@ -4436,9 +4578,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">738</span>
+    <span class="phpdocumentor-element-found-in__line">743</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.738" class="phpdocumentor-element-found-in__source" data-line="738" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.743" class="phpdocumentor-element-found-in__source" data-line="743" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantInstruments.</p>
@@ -4486,9 +4628,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">506</span>
+    <span class="phpdocumentor-element-found-in__line">487</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.487" class="phpdocumentor-element-found-in__source" data-line="487" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participants.</p>
@@ -4536,9 +4678,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">593</span>
+    <span class="phpdocumentor-element-found-in__line">598</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.593" class="phpdocumentor-element-found-in__source" data-line="593" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.598" class="phpdocumentor-element-found-in__source" data-line="598" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -4578,6 +4720,56 @@ next call to delete.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setRegistrationCalendarEvent">
+        setRegistrationCalendarEvent()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationCalendarEvent" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">550</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set registrationCalendarEvents.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setRegistrationCalendarEvent</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$registrationCalendarEvent</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$registrationCalendarEvent</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setRegistrationDeadline">
         setRegistrationDeadline()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4586,9 +4778,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">367</span>
+    <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.367" class="phpdocumentor-element-found-in__source" data-line="367" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets registrationDeadline.</p>
@@ -4636,9 +4828,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">337</span>
+    <span class="phpdocumentor-element-found-in__line">317</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.337" class="phpdocumentor-element-found-in__source" data-line="337" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.317" class="phpdocumentor-element-found-in__source" data-line="317" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sets registrationStartDate.</p>
@@ -4686,9 +4878,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">665</span>
+    <span class="phpdocumentor-element-found-in__line">670</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.665" class="phpdocumentor-element-found-in__source" data-line="665" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.670" class="phpdocumentor-element-found-in__source" data-line="670" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sentEmail.</p>
@@ -4736,9 +4928,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">545</span>
+    <span class="phpdocumentor-element-found-in__line">526</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.545" class="phpdocumentor-element-found-in__source" data-line="545" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.526" class="phpdocumentor-element-found-in__source" data-line="526" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandates.</p>
@@ -4786,9 +4978,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">290</span>
+    <span class="phpdocumentor-element-found-in__line">270</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set type.</p>
@@ -4836,9 +5028,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">397</span>
+    <span class="phpdocumentor-element-found-in__line">377</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.377" class="phpdocumentor-element-found-in__source" data-line="377" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set webPages.</p>
@@ -4886,9 +5078,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">242</span>
+    <span class="phpdocumentor-element-found-in__line">222</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.242" class="phpdocumentor-element-found-in__source" data-line="242" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.222" class="phpdocumentor-element-found-in__source" data-line="222" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set year.</p>
@@ -5015,9 +5207,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">786</span>
+    <span class="phpdocumentor-element-found-in__line">791</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.786" class="phpdocumentor-element-found-in__source" data-line="786" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.791" class="phpdocumentor-element-found-in__source" data-line="791" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/Project.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the number of &quot;serious&quot; items which &quot;use&quot; this entity. For
@@ -5319,11 +5511,11 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_applications">$applications</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_calendarEvents">$calendarEvents</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_compositePayments">$compositePayments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_financialBalanceDocumentsStorage">$financialBalanceDocumentsStorage</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_instrumentationNumbers">$instrumentationNumbers</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_invoices">$invoices</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a></li>
@@ -5334,6 +5526,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_participantInstruments">$participantInstruments</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_participants">$participants</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_payments">$payments</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationCalendarEvent">$registrationCalendarEvent</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline">$registrationDeadline</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationStartDate">$registrationStartDate</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_sentEmail">$sentEmail</a></li>
@@ -5360,7 +5553,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getFinancialBalanceDocumentsFolder">getFinancialBalanceDocumentsFolder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getFinancialBalanceDocumentsStorage">getFinancialBalanceDocumentsStorage()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getFinancialBalanceSupportingDocuments">getFinancialBalanceSupportingDocuments()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getInstrumentationNumbers">getInstrumentationNumbers()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getInvoices">getInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getMailingListId">getMailingListId()</a></li>
@@ -5370,6 +5563,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getParticipantInstruments">getParticipantInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getParticipants">getParticipants()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getPayments">getPayments()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationCalendarEvent">getRegistrationCalendarEvent()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline">getRegistrationDeadline()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationStartDate">getRegistrationStartDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getSentEmail">getSentEmail()</a></li>
@@ -5389,7 +5583,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setCompositePayments">setCompositePayments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setFinancialBalanceDocumentsStorage">setFinancialBalanceDocumentsStorage()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setInstrumentationNumbers">setInstrumentationNumbers()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setInvoices">setInvoices()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setMailingListId">setMailingListId()</a></li>
@@ -5399,6 +5593,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setParticipantInstruments">setParticipantInstruments()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setParticipants">setParticipants()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setPayments">setPayments()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationCalendarEvent">setRegistrationCalendarEvent()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline">setRegistrationDeadline()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationStartDate">setRegistrationStartDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setSentEmail">setSentEmail()</a></li>

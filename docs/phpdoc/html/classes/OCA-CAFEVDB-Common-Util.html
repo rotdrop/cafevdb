@@ -112,7 +112,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait">DateTimeTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait">CamelCaseToDashesTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait">DateTimeTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">General static utility routines.</p>
@@ -224,49 +224,12 @@ just appended.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_camelCaseToDashes">camelCaseToDashes()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-<dd>Take an camel-case string and convert to lower-case with dashes
-or underscores between the words. First letter may or may not
-be upper case.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray">cloneArray()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Semi deep clone of an array: entries which are objects will be cloned,
 entries which are arrays will be recursed into by this function.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
-    <span>
-                                &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
-    <span>
-                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
-</dt>
-<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_dashesToCamelCase">dashesToCamelCase()</a>
-    <span>
-                                &nbsp;: null|string    </span>
-</dt>
-<dd>Take any dashed or &quot;underscored&quot; lower-case string and convert to
-camel-case.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
-    <span>
-                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
-</dt>
-<dd>Ensure a valid date.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_escapeDelimiter">escapeDelimiter()</a>
@@ -449,6 +412,45 @@ into
 </dt>
 <dd>Unset all array elements with value $value.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_camelCaseToDashes">camelCaseToDashes()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Take an camel-case string and convert to lower-case with dashes or
+underscores between the words. First letter may or may not be upper
+case. Sequences of numbers and punctutation characters (different from
+what is passed in the $dashes argument) are considered as words,
+e.g. &#039;Example99!&#039; will be converted to &#039;Example_99_!&#039;</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_dashesToCamelCase">dashesToCamelCase()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Take any dashed or &quot;underscored&quot; lower-case string and convert to
+camel-case.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
+</dt>
+<dd>Ensure a valid date.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Common-Util.html#method_arrayMergeTwoRecursive">arrayMergeTwoRecursive()</a>
     <span>
@@ -477,9 +479,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -508,9 +510,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -539,9 +541,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -570,9 +572,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -617,9 +619,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -660,9 +662,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Array-map including keys.</p>
@@ -717,9 +719,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">84</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Merge $arrays recursively where later arguments in the list
@@ -769,9 +771,9 @@ just appended.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">230</span>
+    <span class="phpdocumentor-element-found-in__line">236</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.230" class="phpdocumentor-element-found-in__source" data-line="230" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -817,69 +819,6 @@ just appended.</p>
             -public
                                     -static                    "
 >
-    <h4 class="phpdocumentor-element__name" id="method_camelCaseToDashes">
-        camelCaseToDashes()
-        <a href="classes/OCA-CAFEVDB-Common-Util.html#method_camelCaseToDashes" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">579</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.579" class="phpdocumentor-element-found-in__source" data-line="579" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Take an camel-case string and convert to lower-case with dashes
-or underscores between the words. First letter may or may not
-be upper case.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">camelCaseToDashes</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$separator</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'-'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$string</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>String to work on.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$separator</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">'-'</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Separator to use, defaults to '-'.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
     <h4 class="phpdocumentor-element__name" id="method_cloneArray">
         cloneArray()
         <a href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray" class="headerlink"><i class="fas fa-link"></i></a>
@@ -888,9 +827,9 @@ be upper case.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">701</span>
+    <span class="phpdocumentor-element-found-in__line">662</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.701" class="phpdocumentor-element-found-in__source" data-line="701" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.662" class="phpdocumentor-element-found-in__source" data-line="662" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Semi deep clone of an array: entries which are objects will be cloned,
@@ -937,253 +876,6 @@ entries which are arrays will be recursed into by this function.</p>
             -public
                                     -static                    "
 >
-    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
-        convertToDateTime()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">51</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
-        convertToTimezoneDate()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">89</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$date</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
-</section>
-
-                                    </dd>
-                                            </dl>
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_dashesToCamelCase">
-        dashesToCamelCase()
-        <a href="classes/OCA-CAFEVDB-Common-Util.html#method_dashesToCamelCase" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">554</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.554" class="phpdocumentor-element-found-in__source" data-line="554" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Take any dashed or &quot;underscored&quot; lower-case string and convert to
-camel-case.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">dashesToCamelCase</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$capitalizeFirstCharacter</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dashes</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'_-'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$string</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The string to convert.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$capitalizeFirstCharacter</span>
-                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Self explaining.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$dashes</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
-                 = <span class="phpdocumentor-argument-list__argument__default-value">'_-'</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Characters to replace.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|string</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>Return null if $string is null, otherwise the result of the substitutions.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
-        ensureDate()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">41</span>
-
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Ensure a valid date.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
-                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                    -static                    "
->
     <h4 class="phpdocumentor-element__name" id="method_escapeDelimiter">
         escapeDelimiter()
         <a href="classes/OCA-CAFEVDB-Common-Util.html#method_escapeDelimiter" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1192,9 +884,9 @@ camel-case.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">316</span>
+    <span class="phpdocumentor-element-found-in__line">322</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Escape delimiters in the given value.</p>
@@ -1256,9 +948,9 @@ camel-case.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">262</span>
+    <span class="phpdocumentor-element-found-in__line">268</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.268" class="phpdocumentor-element-found-in__source" data-line="268" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A preg_explode() wrapper with some extra features.</p>
@@ -1341,9 +1033,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">373</span>
+    <span class="phpdocumentor-element-found-in__line">379</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.373" class="phpdocumentor-element-found-in__source" data-line="373" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.379" class="phpdocumentor-element-found-in__source" data-line="379" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explode a string of the form
@@ -1434,9 +1126,9 @@ that it is not necessary to escape the key-delimiter.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">415</span>
+    <span class="phpdocumentor-element-found-in__line">421</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Explode a string of the form
@@ -1517,9 +1209,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
     
@@ -1566,9 +1258,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">759</span>
+    <span class="phpdocumentor-element-found-in__line">720</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.759" class="phpdocumentor-element-found-in__source" data-line="759" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.720" class="phpdocumentor-element-found-in__source" data-line="720" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Decode an file-upload error into some &quot;readable&quot; error string.</p>
@@ -1623,9 +1315,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">636</span>
+    <span class="phpdocumentor-element-found-in__line">597</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dumps a string into a traditional hex dump for programmers,
@@ -1685,9 +1377,9 @@ Supported options:</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">190</span>
+    <span class="phpdocumentor-element-found-in__line">196</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Wrapper around htmlspecialchars(); avoid double encoding, standard
@@ -1750,9 +1442,9 @@ options, UTF-8 for stone-age PHP versions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">211</span>
+    <span class="phpdocumentor-element-found-in__line">217</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.211" class="phpdocumentor-element-found-in__source" data-line="211" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert the given HTML string to markdown. Return null if it is empty.</p>
@@ -1806,9 +1498,9 @@ options, UTF-8 for stone-age PHP versions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">489</span>
+    <span class="phpdocumentor-element-found-in__line">495</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.489" class="phpdocumentor-element-found-in__source" data-line="489" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.495" class="phpdocumentor-element-found-in__source" data-line="495" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Locale-aware &quot;human readable&quot; file-size.</p>
@@ -1883,9 +1575,9 @@ options, UTF-8 for stone-age PHP versions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">297</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.297" class="phpdocumentor-element-found-in__source" data-line="297" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counter-part to self::explode().</p>
@@ -1966,9 +1658,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">439</span>
+    <span class="phpdocumentor-element-found-in__line">445</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.439" class="phpdocumentor-element-found-in__source" data-line="439" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.445" class="phpdocumentor-element-found-in__source" data-line="445" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Undo self::explodeIndexedMulti().</p>
@@ -2030,9 +1722,9 @@ in the output array.. See paramterer $escape.</li>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">462</span>
+    <span class="phpdocumentor-element-found-in__line">468</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.462" class="phpdocumentor-element-found-in__source" data-line="462" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.468" class="phpdocumentor-element-found-in__source" data-line="468" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the maximum upload file size.</p>
@@ -2083,9 +1775,9 @@ space in the cloud FS for the current user into account.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">151</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Normalize spaces and commas after and before spaces.</p>
@@ -2149,9 +1841,9 @@ space in the cloud FS for the current user into account.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">176</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove all whitespace</p>
@@ -2199,9 +1891,9 @@ space in the cloud FS for the current user into account.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">597</span>
+    <span class="phpdocumentor-element-found-in__line">558</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.558" class="phpdocumentor-element-found-in__source" data-line="558" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Shorten the given string by iteratively reducing the size of its
@@ -2271,9 +1963,9 @@ be shortened. This also means that the target-length may not be reached.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">523</span>
+    <span class="phpdocumentor-element-found-in__line">529</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.523" class="phpdocumentor-element-found-in__source" data-line="523" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.529" class="phpdocumentor-element-found-in__source" data-line="529" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the right way (tm).</p>
@@ -2342,9 +2034,9 @@ be shortened. This also means that the target-length may not be reached.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">736</span>
+    <span class="phpdocumentor-element-found-in__line">697</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.736" class="phpdocumentor-element-found-in__source" data-line="736" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.697" class="phpdocumentor-element-found-in__source" data-line="697" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Turn a php $_FILES array of the form
@@ -2407,9 +2099,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">335</span>
+    <span class="phpdocumentor-element-found-in__line">341</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.335" class="phpdocumentor-element-found-in__source" data-line="335" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.341" class="phpdocumentor-element-found-in__source" data-line="341" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Un-escape delimiters in the given value.</p>
@@ -2471,9 +2163,9 @@ into
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">683</span>
+    <span class="phpdocumentor-element-found-in__line">644</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.644" class="phpdocumentor-element-found-in__source" data-line="644" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unset all array elements with value $value.</p>
@@ -2527,6 +2219,315 @@ integer.</p>
                     <article
         class="phpdocumentor-element
             -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_camelCaseToDashes">
+        camelCaseToDashes()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_camelCaseToDashes" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/CamelCaseToDashesTrait.php"><a href="files/toolkit-traits-camelcasetodashestrait.html"><abbr title="Toolkit/Traits/CamelCaseToDashesTrait.php">CamelCaseToDashesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Toolkit/Traits/CamelCaseToDashesTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Take an camel-case string and convert to lower-case with dashes or
+underscores between the words. First letter may or may not be upper
+case. Sequences of numbers and punctutation characters (different from
+what is passed in the $dashes argument) are considered as words,
+e.g. &#039;Example99!&#039; will be converted to &#039;Example_99_!&#039;</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">camelCaseToDashes</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$separator</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'-'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>String to work on.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$separator</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'-'</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Separator to use, defaults to '-'.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
+        convertToDateTime()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string|int|float|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
+        convertToTimezoneDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">89</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$date</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">todo</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_dashesToCamelCase">
+        dashesToCamelCase()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_dashesToCamelCase" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/CamelCaseToDashesTrait.php"><a href="files/toolkit-traits-camelcasetodashestrait.html"><abbr title="Toolkit/Traits/CamelCaseToDashesTrait.php">CamelCaseToDashesTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Traits/CamelCaseToDashesTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Take any dashed or &quot;underscored&quot; lower-case string and convert to
+camel-case.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">dashesToCamelCase</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$string</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$capitalizeFirstCharacter</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dashes</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'_-'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$string</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>the string to convert.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$capitalizeFirstCharacter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>self explaining.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dashes</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'_-'</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Characters to replace, defaults to '-_',
+i.e. dashes and underscores are both considered as separators.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
+        ensureDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">43</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Toolkit/Traits/DateTimeTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Ensure a valid date.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -private
                                     -static                    "
 >
@@ -2538,9 +2539,9 @@ integer.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Common/Util.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Inner work-horse for arrayMergeRecursive.</p>
@@ -2716,12 +2717,7 @@ integer.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arrayMapAssoc">arrayMapAssoc()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arrayMergeRecursive">arrayMergeRecursive()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arraySliceKeys">arraySliceKeys()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_camelCaseToDashes">camelCaseToDashes()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray">cloneArray()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_dashesToCamelCase">dashesToCamelCase()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_escapeDelimiter">escapeDelimiter()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_explode">explode()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_explodeIndexed">explodeIndexed()</a></li>
@@ -2742,6 +2738,11 @@ integer.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_transposeArray">transposeArray()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_unescapeDelimiter">unescapeDelimiter()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_unsetValue">unsetValue()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_camelCaseToDashes">camelCaseToDashes()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-CamelCaseToDashesTrait.html#method_dashesToCamelCase">dashesToCamelCase()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arrayMergeTwoRecursive">arrayMergeTwoRecursive()</a></li>
                                     </ul>
             </li>

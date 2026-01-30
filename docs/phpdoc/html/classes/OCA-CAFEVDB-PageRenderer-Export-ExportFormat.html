@@ -102,8 +102,8 @@
         <h2 class="phpdocumentor-content__title">
     ExportFormat
 
-        <span class="phpdocumentor-element__extends">
-        extends <abbr title="\MyCLabs\Enum\Enum">Enum</abbr>
+            <span class="phpdocumentor-element__extends">
+        : string
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -114,29 +114,27 @@
         </div>
     
     
+            <span class="phpdocumentor-element__extends">
+            uses
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-BackedEnumTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait">BackedEnumTrait</abbr></a>                    </span>
     </h2>
-
-<div class="phpdocumentor-label-line">
-
-
-</div>
 
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.30" class="phpdocumentor-element-found-in__source" data-line="30" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.28" class="phpdocumentor-element-found-in__source" data-line="28" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
     </aside>
 
-            <p class="phpdocumentor-summary">Quasi enum with the supported export formats.</p>
+            <p class="phpdocumentor-summary">Enum for the supported export formats.</p>
+
+        
+        
+        
 
 
-
-
-
-    
-    
+        
 <h3 id="toc">
     Table of Contents
     <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
@@ -149,40 +147,41 @@
 
 
 
-<h4 id="toc-constants">
-    Constants
-    <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+<h4 id="toc-cases">
+    Cases
+    <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#toc-cases" class="headerlink"><i class="fas fa-link"></i></a>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_CSV">CSV</a>
+            <dt class="phpdocumentor-table-of-contents__entry -case -">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_CSV">CSV</a>
     <span>
-        &nbsp;= &#039;csv&#039;                            </span>
+                &nbsp;= &#039;csv&#039;                    </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_EXCEL">EXCEL</a>
+            <dt class="phpdocumentor-table-of-contents__entry -case -">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_EXCEL">EXCEL</a>
     <span>
-        &nbsp;= &#039;excel&#039;                            </span>
+                &nbsp;= &#039;excel&#039;                    </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_HTML">HTML</a>
+            <dt class="phpdocumentor-table-of-contents__entry -case -">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_HTML">HTML</a>
     <span>
-        &nbsp;= &#039;html&#039;                            </span>
+                &nbsp;= &#039;html&#039;                    </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_ODS">ODS</a>
+            <dt class="phpdocumentor-table-of-contents__entry -case -">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_ODS">ODS</a>
     <span>
-        &nbsp;= &#039;ods&#039;                            </span>
+                &nbsp;= &#039;ods&#039;                    </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_PDF">PDF</a>
+            <dt class="phpdocumentor-table-of-contents__entry -case -">
+    <a class="" href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_PDF">PDF</a>
     <span>
-        &nbsp;= &#039;pdf&#039;                            </span>
+                &nbsp;= &#039;pdf&#039;                    </span>
 </dt>
 
     </dl>
@@ -191,52 +190,23 @@
 
 
 
-
-        
-    <section class="phpdocumentor-constants">
-        <h3 class="phpdocumentor-elements__header" id="constants">
-            Constants
-            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+            <section class="phpdocumentor-cases">
+        <h3 class="phpdocumentor-elements__header" id="cases">
+            Cases
+            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#cases" class="headerlink"><i class="fas fa-link"></i></a>
 
         </h3>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_CSV">
-        CSV
-        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_CSV" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">34</span>
-
-            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">CSV</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;csv&#039;</span>
-</code>
-
-
-    
-    
-    
-
-        
-    </article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_EXCEL">
+                    <article
+        class="
+            phpdocumentor-element
+            -enum-case
+        "
+>
+    <h4 class="phpdocumentor-element__name" id="enumcase_EXCEL">
         EXCEL
-        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_EXCEL" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_EXCEL" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
-
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
     :
@@ -247,58 +217,23 @@
 
     
     
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">EXCEL</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;excel&#039;</span>
-</code>
-
-
     
     
     
 
         
     </article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_HTML">
-        HTML
-        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_HTML" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">35</span>
-
-            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">HTML</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;html&#039;</span>
-</code>
-
-
-    
-    
-    
-
-        
-    </article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_ODS">
+                    <article
+        class="
+            phpdocumentor-element
+            -enum-case
+        "
+>
+    <h4 class="phpdocumentor-element__name" id="enumcase_ODS">
         ODS
-        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_ODS" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_ODS" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
-
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
     :
@@ -309,27 +244,77 @@
 
     
     
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">ODS</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;ods&#039;</span>
-</code>
-
-
     
     
     
 
         
     </article>
-                    <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_PDF">
-        PDF
-        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_PDF" class="headerlink"><i class="fas fa-link"></i></a>
+                    <article
+        class="
+            phpdocumentor-element
+            -enum-case
+        "
+>
+    <h4 class="phpdocumentor-element__name" id="enumcase_CSV">
+        CSV
+        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_CSV" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
+            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
+    </aside>
+
+    
+    
+    
+    
+    
+
+        
+    </article>
+                    <article
+        class="
+            phpdocumentor-element
+            -enum-case
+        "
+>
+    <h4 class="phpdocumentor-element__name" id="enumcase_HTML">
+        HTML
+        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_HTML" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">35</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/PageRenderer/Export/ExportFormat.php.txt"></a>
+    </aside>
+
+    
+    
+    
+    
+    
+
+        
+    </article>
+                    <article
+        class="
+            phpdocumentor-element
+            -enum-case
+        "
+>
+    <h4 class="phpdocumentor-element__name" id="enumcase_PDF">
+        PDF
+        <a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_PDF" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/Export/ExportFormat.php"><a href="files/pagerenderer-export-exportformat.html"><abbr title="PageRenderer/Export/ExportFormat.php">ExportFormat.php</abbr></a></abbr>
     :
@@ -340,14 +325,6 @@
 
     
     
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">PDF</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;pdf&#039;</span>
-</code>
-
-
     
     
     
@@ -355,8 +332,6 @@
         
     </article>
             </section>
-
-        
 
         
         <div class="phpdocumentor-modal" id="source-view">
@@ -456,7 +431,7 @@
     </article>
                                 </section>
                 <section class="phpdocumentor-on-this-page__sidebar">
-                                
+                            
     <section class="phpdocumentor-on-this-page__content">
         <strong class="phpdocumentor-on-this-page__title">On this page</strong>
 
@@ -464,20 +439,19 @@
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                        <li><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#toc-constants">Constants</a></li>
-                                                                            </ul>
+                                            <li><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#toc-cases">Cases</a></li>
+                                                        </ul>
             </li>
-                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                            <li class="phpdocumentor-on-this-page-section__title">Cases</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_CSV">CSV</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_EXCEL">EXCEL</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_HTML">HTML</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_ODS">ODS</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#constant_PDF">PDF</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_EXCEL">EXCEL</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_ODS">ODS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_CSV">CSV</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_HTML">HTML</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-PageRenderer-Export-ExportFormat.html#enumcase_PDF">PDF</a></li>
                                             </ul>
                 </li>
-            
             
                     </ul>
     </section>

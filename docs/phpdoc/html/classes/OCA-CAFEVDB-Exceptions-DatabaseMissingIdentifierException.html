@@ -102,7 +102,7 @@
     DatabaseMissingIdentifierException
 
         <span class="phpdocumentor-element__extends">
-        extends <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseException">DatabaseException</abbr></a>
+        extends <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityException">DatabaseEntityException</abbr></a>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">28</span>
+    <span class="phpdocumentor-element-found-in__line">30</span>
 
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.28" class="phpdocumentor-element-found-in__source" data-line="28" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.30" class="phpdocumentor-element-found-in__source" data-line="30" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Thrown if an identifier is missing trying to fetch an entity.</p>
@@ -156,13 +156,13 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_entityClassName">$entityClassName</a>
+            <dt class="phpdocumentor-table-of-contents__entry -property -public">
+    <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityException.html#property_entityClassName">$entityClassName</a>
     <span>
                         &nbsp;: string|null            </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+            <dt class="phpdocumentor-table-of-contents__entry -property -public">
     <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_incompleteIdentifier">$incompleteIdentifier</a>
     <span>
                         &nbsp;: mixed            </span>
@@ -178,18 +178,6 @@
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method___construct">__construct()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getEntityClassName">getEntityClassName()</a>
-    <span>
-                                &nbsp;: null|string    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getIncompleteIdentifier">getIncompleteIdentifier()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
@@ -211,28 +199,28 @@
         class="
             phpdocumentor-element
             -property
-            -protected
-                                                                    "
+            -public
+                                                -read-only                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_entityClassName">
         $entityClassName
-        <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_entityClassName" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityException.html#property_entityClassName" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                            </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseEntityException.php"><a href="files/exceptions-databaseentityexception.html"><abbr title="Exceptions/DatabaseEntityException.php">DatabaseEntityException.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Exceptions/DatabaseEntityException.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$entityClassName</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
@@ -249,28 +237,28 @@
         class="
             phpdocumentor-element
             -property
-            -protected
-                                                                    "
+            -public
+                                                -read-only                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_incompleteIdentifier">
         $incompleteIdentifier
         <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_incompleteIdentifier" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                            </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__visibility">public</span>
             <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">$incompleteIdentifier</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
@@ -305,15 +293,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.31" class="phpdocumentor-element-found-in__source" data-line="31" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$previous</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$incompleteIdentifier</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Throwable">Throwable</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$previous</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$incompleteIdentifier</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -337,7 +325,7 @@
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$previous</span>
-                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Throwable">Throwable</abbr>|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -354,7 +342,8 @@
                 : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"></section>
+
             </dd>
             </dl>
 
@@ -363,94 +352,6 @@
         
     
     
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getEntityClassName">
-        getEntityClassName()
-        <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getEntityClassName" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">45</span>
-
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getEntityClassName</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|string</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The entity class name if any has been given to the
-constructor.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getIncompleteIdentifier">
-        getIncompleteIdentifier()
-        <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getIncompleteIdentifier" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Exceptions/DatabaseMissingIdentifierException.php"><a href="files/exceptions-databasemissingidentifierexception.html"><abbr title="Exceptions/DatabaseMissingIdentifierException.php">DatabaseMissingIdentifierException.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">54</span>
-
-            <a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Exceptions/DatabaseMissingIdentifierException.php.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getIncompleteIdentifier</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-
-        
-    
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">mixed</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The bogus identifier if any has bee given to the
-constructor.</p>
-</section>
-
-            </section>
-
 </article>
             </section>
 
@@ -567,7 +468,7 @@ constructor.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_entityClassName">$entityClassName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityException.html#property_entityClassName">$entityClassName</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#property_incompleteIdentifier">$incompleteIdentifier</a></li>
                                             </ul>
                 </li>
@@ -576,8 +477,6 @@ constructor.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method___construct">__construct()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getEntityClassName">getEntityClassName()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseMissingIdentifierException.html#method_getIncompleteIdentifier">getIncompleteIdentifier()</a></li>
                                     </ul>
             </li>
                     </ul>

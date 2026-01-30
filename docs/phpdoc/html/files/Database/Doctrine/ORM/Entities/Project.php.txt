@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,11 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as Partici
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Order;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * Projects
@@ -51,18 +53,14 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
-  use CAFEVDB\Traits\SoftDeleteableEntity;
-  use CAFEVDB\Traits\UnusedTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TimestampableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
 
   private const DATE_FORMAT = 'Ymd';
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
   private int $year;
@@ -70,8 +68,8 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private string $name;
 
-  #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false, options: ['default' => 'temporary'])]
-  private Types\EnumProjectTemporalType $type;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumProjectTemporalType::TEMPORARY])]
+  private Types\EnumProjectTemporalType $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
    * The list-id of the mailing list for the members
@@ -94,6 +92,12 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'date_immutable', nullable: true)]
   private ?DateTimeImmutable $registrationDeadline = null;
 
+  /**
+   * Optional link to the project registration event.
+   */
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, cascade: ['all'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+  private ?ProjectEvent $registrationCalendarEvent = null;
+
   /** @var Collection<ProjectInstrumentationNumber> */
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
   private Collection $instrumentationNumbers;
@@ -111,7 +115,7 @@ class Project implements \ArrayAccess
    *
    * @todo This does not work well with _AT_Gedmo\Translatable
    */
-  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private Collection $participantFields;
 
@@ -124,7 +128,7 @@ class Project implements \ArrayAccess
   private Collection $participants;
 
   /** @var Collection<int, ProjectApplication> */
-  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'id')]
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'email')]
   private Collection $applications;
 
   /** @var Collection<SepaDebitMandate> */
@@ -175,7 +179,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->webPages = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
-    $this->type = Types\EnumProjectTemporalType::TEMPORARY();
+    $this->type = Types\EnumProjectTemporalType::TEMPORARY;
   }
 
   /** {@inheritdoc} */
@@ -206,30 +210,6 @@ class Project implements \ArrayAccess
     }
 
     // anything else stays empty
-  }
-
-  /**
-   * Set id.
-   *
-   * @param int $id Entity id.
-   *
-   * @return Project
-   */
-  public function setId(int $id):Project
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**
@@ -287,9 +267,9 @@ class Project implements \ArrayAccess
    *
    * @return Project
    */
-  public function setType($type):Project
+  public function setType(string|Types\EnumProjectTemporalType $type): Project
   {
-    $this->type = new Types\EnumProjectTemporalType($type);
+    $this->type = Types\EnumProjectTemporalType::get($type);
 
     return $this;
   }
@@ -459,10 +439,11 @@ class Project implements \ArrayAccess
   public function getParticipantFields(
     string|Types\EnumParticipationContext $participationContext = Types\EnumParticipationContext::UNRESTRICTED,
   ):Collection {
-    // trigger load
-    $this->participantFields->count();
-    // sorting during load does not work when using Translatable
-    $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
+    // Sorting during load does not work when using Translatable, so trigger load.
+    if ($this->participantFields instanceof \OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection) {
+      $this->participantFields->initialize();
+    }
+    $fields = $this->participantFields->matching(Criteria::create(true)->orderBy(['tab' => Order::Ascending, 'displayOrder' => Order::Descending]));
     if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
       $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
         $context = $field->getParticipationContext();
@@ -522,7 +503,7 @@ class Project implements \ArrayAccess
   public function getParticipants(
     string|ParticipationContext $participationContext = ParticipationContext::UNRESTRICTED,
   ):Collection {
-    switch (ParticipationContext::from($participationContext)) {
+    switch (ParticipationContext::get($participationContext)) {
       case ParticipationContext::UNRESTRICTED:
         return $this->participants;
       case ParticipationContext::ASSOCIATES:
@@ -560,6 +541,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set registrationCalendarEvents.
+   *
+   * @param ?ProjectEvent $registrationCalendarEvent
+   *
+   * @return Project
+   */
+  public function setRegistrationCalendarEvent(?ProjectEvent $registrationCalendarEvent): self
+  {
+    $this->registrationCalendarEvent = $registrationCalendarEvent;
+
+    return $this;
+  }
+
+  /**
+   * Get registrationCalendarEvents.
+   *
+   * @return ?ProjectEvent
+   */
+  public function getRegistrationCalendarEvent(): ?ProjectEvent
+  {
+    return $this->registrationCalendarEvent;
+  }
+
+  /**
    * Set instrumentationNumbers.
    *
    * @param Collection $instrumentationNumbers
@@ -578,7 +583,7 @@ class Project implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getInstrumentationNumbers()
+  public function getInstrumentationNumbers(): Collection
   {
     return $this->instrumentationNumbers;
   }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ class UnsealedData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     public readonly string $hash,
     public readonly string $data,
     /** @var array<string, string> */
-    public readonly array $context,
+    public readonly ?array $context,
     public readonly ?IBANMetaData $metaData,
   ) {
   }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,7 +96,12 @@ class BiDirectionalL10N
     if (isset($this->translations[self::FORWARD][$phrase])) {
       return $this->translations[self::FORWARD][$phrase];
     }
-    return $this->l->t(str_replace('%', '%%', $phrase));
+    $escaped = str_replace('%', '%%', $phrase);
+    $result = $this->l->t($escaped);
+    if ($result == $phrase) {
+      $result = $this->l->t(ucfirst($escaped));
+    }
+    return $result;
   }
 
   /**
@@ -133,7 +138,7 @@ class BiDirectionalL10N
     $dir = realpath(__DIR__);
     $appDir = substr($dir, 0, strrpos($dir, $this->appName)).$this->appName;
 
-    foreach (glob($appDir.DIRECTORY_SEPARATOR.'l10n'.DIRECTORY_SEPARATOR.'*.csv') as $file) {
+    foreach (glob($appDir.DIRECTORY_SEPARATOR . 'l10n' . DIRECTORY_SEPARATOR . '*.csv') as $file) {
       $this->mergeCSV($file);
     }
   }
@@ -143,7 +148,7 @@ class BiDirectionalL10N
    *
    * @return void
    */
-  public function mergeCSV(string $fileName):void
+  protected function mergeCSV(string $fileName):void
   {
     $newTranslations = self::parseCSV($fileName, $this->targetLang, $this->keyLang);
     $this->translations = Util::arrayMergeRecursive($this->translations, $newTranslations);
@@ -164,7 +169,7 @@ class BiDirectionalL10N
     if ($file === false) {
       return null;
     }
-    $header = fgetcsv($file);
+    $header = fgetcsv($file, escape: '');
     if (empty($header)) {
       return null;
     }
@@ -174,7 +179,8 @@ class BiDirectionalL10N
 
     $targetLookup = [];
     $keyLookup = [];
-    for ($row = fgetcsv($file); !empty($row); $row = fgetcsv($file)) {
+    for ($row = fgetcsv($file, escape: ''); !empty($row); $row = fgetcsv($file, escape: '')) {
+      // print_r($row);
       if (empty($row[$targetColumn]) || empty($row[$keyColumn])) {
         continue;
       }

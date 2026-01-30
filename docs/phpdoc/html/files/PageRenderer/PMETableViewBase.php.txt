@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,12 +29,14 @@ use Exception;
 use RuntimeException;
 use Throwable;
 
+use Psr\Log\LogLevel;
+
 use OCP\IL10N;
 use OCP\IRequest;
 
-use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\LegacyPageController;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -45,6 +47,7 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /** Base for phpMyEdit based table-views. */
 abstract class PMETableViewBase extends AbstractPageRenderer
@@ -159,11 +162,11 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   protected const PME_NAVIGATION_MULTI = 'GUDM';
 
   protected const PERSISTENT_CGI_KEYS = [
-    'template',
-    'musicianId',
-    'projectId',
-    'projectName',
-    'recordsPerPage',
+    PersistentCGIKeys::TEMPLATE,
+    PersistentCGIKeys::MUSICIAN_ID,
+    PersistentCGIKeys::PROJECT_ID,
+    PersistentCGIKeys::PROJECT_NAME,
+    PersistentCGIKeys::RECORDS_PER_PAGE,
   ];
 
   /** @var IL10N */
@@ -246,8 +249,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
   /** {@inheritdoc} */
   protected function __construct(
-    protected string $template,
-    //
     protected ConfigService $configService,
     protected EntityManager $entityManager,
     protected IRequest $request,
@@ -255,6 +256,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     protected PageNavigation $pageNavigation,
     protected ToolTipsService $toolTipsService,
   ) {
+    parent::__construct($this->appName());
+
     $this->l = $this->l10n();
 
     $this->pmeBare = false;
@@ -279,7 +282,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     ];
 
     foreach ($cgiDefault as $key => $default) {
-      $this->{lcFirst($key)} = $default($this->request[$key] ?? null);
+      $this->{lcFirst($key)} = $default($this->request->getParam($key) ?? null);
     }
 
     $this->defaultFDD = $this->createDefaultFDD();
@@ -300,8 +303,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     ];
 
     foreach (self::PERSISTENT_CGI_KEYS as $key) {
-      $pmeOptions['cgi']['persist'][$key] = $this->{lcFirst($key)};
+      $member = lcFirst($key);
+      if (isset($this->{$member})) {
+        $pmeOptions['cgi']['persist'][$key] = $this->{$member};
+      }
     }
+    $pmeOptions['cgi']['persist'][PersistentCGIKeys::TEMPLATE] = static::TEMPLATE;
 
     $pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
@@ -368,52 +375,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     return $pmeOptions;
   }
 
-  /**
-   * @return array The translated field-multiplicity names.
-   *
-   * @see DBTypes\EnumParticipantFieldMultiplicity
-   */
-  protected function participantFieldMultiplicityNames():array
-  {
-    $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
-    $result = [];
-    foreach ($multiplicities as $tag) {
-      $slug = 'extra field ' . $tag;
-      $result[$tag] = $this->l->t($slug);
-    }
-    return $result;
-  }
-
-  /**
-   * @return array The translated field-data-type names.
-   *
-   * @see DBTypes\EnumParticipantFieldDataType
-   */
-  protected function participantFieldDataTypeNames():array
-  {
-    $dataTypes = array_values(DBTypes\EnumParticipantFieldDataType::toArray());
-    $result = [];
-    foreach ($dataTypes as $tag) {
-      $slug = 'extra field type '.$tag;
-      $result[$tag] = $this->l->t($slug);
-    }
-    return $result;
-  }
-
   /** @return null|string $this->template. */
   public function template():?string
   {
-    return $this->template;
-  }
-
-  /**
-   * @param string $template Template name to set.
-   *
-   * @return void
-   */
-  protected function setTemplate(string $template):void
-  {
-    $this->template = $template;
+    return static::TEMPLATE;
   }
 
   /**
@@ -515,18 +480,18 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   /** @return null|string */
   public function cssClass():string
   {
-    return $this->template;
+    return static::TEMPLATE;
   }
 
   /** @return string Short title for heading. */
-  abstract public function shortTitle();
+  abstract public function shortTitle(): string;
 
   /**
    * @return Header text informations.
    *
    * @todo Display in popup in order not to bloat the small header space.
    */
-  public function headerText()
+  public function headerText(): string
   {
     return $this->shortTitle();
   }
@@ -981,7 +946,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             throw new RuntimeException($this->l->t('Table "%s": missing identifier for field "%s" and grouping field "%s" already set.', [ $table, $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
-          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
             'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
             'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
@@ -997,7 +962,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // We try to copy with this problem by checking for the colon syntax
           // and not doing this hack if we find a usual
           // KEY1:VALUE1,KEY2:VALUE2,... field.
-          $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
+          $deletedField = self::joinTableFieldName($joinInfo, 'deleted');
           if (!empty($oldValues[$deletedField]) && !str_contains($oldValues[$deletedField], self::JOIN_KEY_SEP)) {
             $deletedKeys = Util::explode(self::VALUES_SEP, $oldValues[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
@@ -1035,7 +1000,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           } elseif (isset($pivotColumn['value'])) {
             $identifier[$key] = $pivotColumn['value'];
           } elseif (isset($pivotColumn['self'])) {
-            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $selfField = self::joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField, ];
           } else {
             throw new RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
@@ -1245,7 +1210,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
               foreach ($association->matching(self::criteriaWhere($entityId)) as $entity) {
-                $this->debug('CALLING REMOVE ON ' . $entityClass . ' ' . print_r($entityId, true));
+                $this->logEntityId('CALLING REMOVE ON', $entityClass, $entityId);
                 $association->removeElement($entity);
               }
             }
@@ -1257,7 +1222,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
+              $this->logEntityId('CALLING ADD ON', $entityClass, $entityId);
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
@@ -1276,7 +1241,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             if (empty($entity)) {
               // This can happen, in particular with the new gmail
               // vs. googlemail sanitizer. Log this as an error for now.
-              $this->logError('Unable to find entity ' . $entityClass . ' with id ' . print_r($entityId, true));
+              $this->logEntityId('Unable to find entity', $entityClass, $entityId, LogLevel::ERROR);
               continue;
             }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
@@ -1294,15 +1259,19 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                * select boxes of the user interface.
                */
               if ($softDeleteable && !$entity->isDeleted()) {
-                $this->debug('ONLY SOFT DELETE ' . print_r($entityId, true));
+                $this->logEntityId('ONLY SOFT DELETE', $entityClass, $entityId);
                 $this->remove($entity);
               }
             } else {
               if ($softDeleteable && !$entity->isDeleted()) {
-                $this->debug('SOFT DELETE ' . print_r($entityId, true));
+                $this->logEntityId('SOFT DELETE', $entityClass, $entityId);
                 $this->remove($entity, true); // soft, need flush
               }
-              $this->debug('HARD DELETE ' . print_r($entityId, true) . ' ' . (int)($softDeleteable && (int)$entity->isDeleted()));
+              $this->logEntityId(
+                'HARD DELETE ' . (int)($softDeleteable && (int)$entity->isDeleted()),
+                $entityClass,
+                $entityId,
+              );
               $this->remove($entity); // hard
             }
             $this->flush();
@@ -1347,7 +1316,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $this->logEntityId('ENTITIY ID', $entityClass, $entityId);
 
               // maybe already there caused by ORM persist cascading
               $entity = $this->find($entityId);
@@ -1356,16 +1325,9 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
                 $entity = new $entityClass;
                 foreach ($entityId as $key => $value) {
-                  if (is_numeric($value) && $value <= 0) {
-                    // treat this as autoincrement or otherwise auto-generated ids
-                    continue;
-                  }
-                  if ($meta->hasAssociation($key)) {
-                    $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-                    $value = $this->entityManager->getReference($entityName, $value);
-                  }
                   $entity[$key] = $value;
                 }
+                $meta->getIdentifierColumnValues($entity);
                 $needPersist = true;
               } else {
                 $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
@@ -1392,7 +1354,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
               foreach ($identifierColumns as $key) {
                 // Always set the field with explicitly matching name
-                $selfField = $this->joinTableFieldName($joinInfo, $key);
+                $selfField = self::joinTableFieldName($joinInfo, $key);
                 if (isset($newValues[$selfField])) {
                   $newValues[$selfField] = $identifierColumnValues[$key];
                 }
@@ -1400,7 +1362,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
                 $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
                 if ($pivotColumn === false) {
                   // assume that the 'column' component contains the keys.
-                  $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                  $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
                   $masterField = self::joinTableMasterFieldName($joinInfo);
                   $newValues[$masterField] = $newValues[$keyField] = $identifierColumnValues[$key];
                 } elseif (!is_array($pivotColumn)) {
@@ -1426,12 +1388,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             foreach ($ids as $id) {
               $this->debug('REM ID '.print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('ENTITIY ID '.print_r($entityId, true));
+              $this->logEntityId('ENTITIY ID', $entityClass, $entityId);
               $entity = $this->find($entityId);
               if (empty($entity)) {
                 throw new Exception($this->l->t(
                   'Unable to find entity in table %s given id %s',
-                  [ $table, print_r($entityId, true) ]));
+                  [ $table, print_r($this->flatIdentifier($entityClass, $entityId), true) ]));
               }
               if (method_exists($entity, 'setDeleted')) {
                 $entity['deleted'] = null;
@@ -1470,10 +1432,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $this->debug('Entity not found, creating');
           $entity = new $entityClass;
           foreach ($entityId as $key => $value) {
-            if ($meta->hasAssociation($key)) {
-              $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-              $value = $this->entityManager->getReference($entityName, $value);
-            }
             $entity[$key] = $value;
           }
         }
@@ -1546,7 +1504,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $missingKeys[] = $key;
       }
     }
-    $this->debug('MISSING '.print_r($missingKeys, true));
+    $this->debug('MISSING ' . print_r($missingKeys, true));
 
     // try to fill missing keys of the master table by set keys of join columns
     foreach ($this->joinStructure as $joinInfo) {
@@ -1557,7 +1515,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         if (array_search($keyColumn, $missingKeys) === false) {
           continue;
         }
-        $joinFieldName = $this->joinTableFieldName($joinInfo, $joinColumn);
+        $joinFieldName = self::joinTableFieldName($joinInfo, $joinColumn);
         if (isset($newValues[$joinFieldName])) {
           $newValues[$keyColumn] = $newValues[$joinFieldName];
           $changed[] = $keyColumn;
@@ -1569,7 +1527,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       }
     }
 
-    $this->debug('NEWVALS '.print_r($newValues, true));
+    $this->debug('NEWVALS ' . print_r($newValues, true));
     $changeSets = [];
     foreach ($changed as $field) {
       if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
@@ -1581,8 +1539,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
     $this->debug('CHANGESETS: ' . print_r($changeSets, true));
-
-    $setAgain = [];
 
     $masterEntity = null; // cache for a reference to the master entity
     foreach ($this->joinStructure as $table => $joinInfo) {
@@ -1617,7 +1573,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             throw new RuntimeException($this->l->t('Missing identifier for field "%s" and grouping field "%s" already set.', [ $key, $multiple ]));
           }
           // assume that the 'column' component contains the keys.
-          $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+          $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = Util::explode(self::VALUES_SEP, $newValues[$keyField]);
 
           if (isset($changeSet[$joinInfo['column']])) {
@@ -1650,7 +1606,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             // defaulted if not yet known. This can only be used
             // together with the 'multiple' case and must not
             // introduce additional deletions and modifications.
-            $selfField = $this->joinTableFieldName($joinInfo, $key);
+            $selfField = self::joinTableFieldName($joinInfo, $key);
             $identifier[$key] = [ 'self' => $selfField ];
           } else {
             throw new RuntimeException($this->l->t('Field "%s.%s": nested multi-value join tables with unexpected pivot-column: %s.', [ $table, $key, print_r($pivotColumn, true), ]));
@@ -1672,7 +1628,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // wrap into just another array in order to handle 'self' key-value provider
           $addIdentifier[$addKey] = [ $addIdentifier[$addKey] ];
         }
-        $this->debug('ADDIDS INITIAL: '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS INITIAL: ' . print_r($addIdentifier, true));
 
         foreach ($identifier as $selfKey => $value) {
           if (empty($value['self'])) {
@@ -1691,7 +1647,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
           unset($idValues); // break reference
           unset($idValuesTuple); // break reference
-          $this->debug('ADDIDS INITIALIZED: '.print_r($addIdentifier, true));
+          $this->debug('ADDIDS INITIALIZED: ' . print_r($addIdentifier, true));
 
           // explode key values
           $selfValues = Util::explodeIndexedMulti($newValues[$selfField]);
@@ -1737,7 +1693,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           Util::unsetValue($changed, $selfField);
         }
 
-        $this->debug('ADDIDS FINALLY: '.print_r($addIdentifier, true));
+        $this->debug('ADDIDS FINALLY: ' . print_r($addIdentifier, true));
         $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
 
         if (!empty($joinInfo['association'])) {
@@ -1750,7 +1706,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
 
           $association = $masterEntity[$joinInfo['association']];
-          $this->debug(get_class($association).': '.$association->count());
+          $this->debug(get_class($association) . ': ' . $association->count());
 
           // add entries by adding them to the association of the
           // master entity
@@ -1758,7 +1714,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $ids = $addIdentifier[$add];
             foreach ($ids as $id) {
               $entityId = $meta->extractKeyValues($id);
-              $this->debug('CALLING ADD ON ' . $entityClass . ' ' . print_r($entityId, true));
+              $this->logEntityId('CALLING ADD ON', $entityClass, $entityId);
               $association->add($this->getReference($entityClass, $entityId));
             }
           }
@@ -1778,7 +1734,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // VALUE_N must not contain commas and colons
           $multipleValues[$column] = [
             'data' => [],
-            'default' => $pme->fdd[$field]['default']??null,
+            'default' => $pme->fdd[$field]['default'] ?? null,
           ];
           if (!str_starts_with($field, $table . self::JOIN_KEY_SEP)) {
             // This happens if the master table injects auto-increment ids. In
@@ -1800,7 +1756,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
         }
 
-        $this->debug('MULTIPLE VALUES '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUES ' . print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
@@ -1816,27 +1772,23 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
               $entity = new $entityClass;
               foreach ($entityId as $key => $value) {
-                if ($meta->hasAssociation($key)) {
-                  $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-                  $value = $this->entityManager->getReference($entityName, $value);
-                }
                 $entity[$key] = $value;
               }
+              $meta->getIdentifierColumnValues($entity);
               $needPersist = true;
             } else {
-              $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
+              $this->logEntityId('ENTITY ALREADY THERE', $entityClass, $entityId);
             }
 
             // set further properties ...
             $this->debug('MULTIPLE KEYS ' . print_r($multipleKeys, true));
-            $this->debug('ENTITY ID ' . print_r($entityId, true));
+            $this->logEntityId('ENTITY ID', $entityClass, $entityId);
             $multipleIndex = $this->compositeKeySlice($multipleKeys, $id);
             $this->debug('MULTIPLE INDEX ' . $multipleIndex);
             foreach ($multipleValues as $column => $dataItem) {
-              $value = $dataItem['data'][$multipleIndex]??$dataItem['default'];
+              $value = $dataItem['data'][$multipleIndex] ?? $dataItem['default'];
               $this->debug('Set ' . $entityClass . '::' . $column . ' -> ' . $value);
               $meta->setColumnValue($entity, $column, $value);
-              $setAgain[] = fn() => $meta->setColumnValue($entity, $column, $value);
             }
 
             // persist
@@ -1851,7 +1803,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             $identifierColumnValues = $meta->getIdentifierColumnValues($entity);
             foreach ($identifierColumns as $key) {
               // Always set the field with explicitly matching name
-              $selfField = $this->joinTableFieldName($joinInfo, $key);
+              $selfField = self::joinTableFieldName($joinInfo, $key);
               if (isset($newValues[$selfField])) {
                 $newValues[$selfField] = $identifierColumnValues[$key];
               }
@@ -1859,7 +1811,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $pivotColumn = $this->findJoinColumnPivot($joinInfo, $key);
               if ($pivotColumn === false) {
                 // assume that the 'column' component contains the keys.
-                $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
+                $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
                 $masterField = self::joinTableMasterFieldName($joinInfo);
                 $newValues[$masterField] = $newValues[$keyField] = $identifierColumnValues[$key];
               } elseif (!is_array($pivotColumn)) {
@@ -1890,18 +1842,12 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         $entity = new $entityClass;
         foreach ($entityId as $key => $value) {
           $this->debug('TRY SET ID ' . $key . ' => ' . $value);
-          if ($meta->hasAssociation($key)) {
-            $entityName = $meta->getAssociationMapping($key)['targetEntity'];
-            $value = $this->entityManager->getReference($entityName, $value);
-          }
           $entity[$key] = $value;
         }
         foreach ($changeSet as $column => $field) {
-          $value = $newValues[$field];
-          $this->debug('TRY SET ' . $column . ' => ' . $value);
-          $meta->setColumnValue($entity, $column, $value);
+          $this->debug('TRY SET ' . $column . ' => ' . $newValues[$field]);
+          $meta->setColumnValue($entity, $column, $newValues[$field]);
           Util::unsetValue($changed, $field);
-          $setAgain[] = fn() => $meta->setColumnValue($entity, $column, $value);
         }
 
         if (!($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) || !empty($entity[$joinInfo['column']])) {
@@ -1918,7 +1864,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
         // joined entities which are yet to be inserted.
         if ($joinInfo['flags'] & self::JOIN_MASTER) {
           $this->flush();
-
           $masterEntity = $entity;
           $identifier = $meta->getIdentifierColumnValues($masterEntity);
           foreach (array_keys($this->pme->key) as $key) {
@@ -1937,7 +1882,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               foreach (['identifier', 'filter'] as $columnRestriction) {
                 foreach (($childJoinInfo[$columnRestriction]??[]) as $column => $target) {
                   if ($target === $key) {
-                    // $newValues[$this->joinTableFieldName($table, $column)] = $newValues[$key];
+                    // $newValues[self::joinTableFieldName($table, $column)] = $newValues[$key];
                     $childChangeSet[$column] = $key;
                   }
                 }
@@ -1951,17 +1896,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       }
     }
     $this->flush(); // flush everything to the data-base
-    $this->entityManager->registerPreCommitAction(
-      new GenericUndoable(
-        function() use ($setAgain) {
-          foreach ($setAgain as $setter) {
-            $setter();
-          }
-          $this->flush();
-        },
-        sortOrder: -1,
-      ),
-    );
 
     // As this is not time critical we should perhaps reload the master entity
     // from the database in order to sanitize all associations.
@@ -1996,7 +1930,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     if (empty($table)) {
       $entityName = null;
       foreach ($this->joinStructure as $table => $joinInfo) {
-        if (($joinInfo['flags']??self::JOIN_FLAGS_NONE) & self::JOIN_MASTER) {
+        if (($joinInfo['flags'] ?? self::JOIN_FLAGS_NONE) & self::JOIN_MASTER) {
           $entityName = $joinInfo['entity'];
           break;
         }
@@ -2008,7 +1942,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $meta = $this->classMetadata($entityName);
     $entityId = $meta->extractKeyValues($pmeRecordId);
 
-    $this->logInfo('ENTITY ' . $entityName . ' ' . print_r($entityId, true));
+    $this->logEntityId('ENTITY', $entityName, $entityId, LogLevel::INFO);
 
     return $entityId;
   }
@@ -2030,9 +1964,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * This trigger simply deletes the given entity and prevents the
-   * legacy PHPMyEdit class to do the deletion in order to benefit
-   * from ORM. No fancy things are done, simply the deletion.
+   * This trigger simply deletes the given entity and prevents the legacy
+   * PHPMyEdit class to do the deletion in order to benefit from the ORM. It
+   * is always attempted to hard-delete entities, soft-deleteable entities
+   * have to protect "themselves" by a suitable hardDelete "decider class".
    *
    * @param PHPMyEdit $pme The phpMyEdit instance.
    *
@@ -2051,7 +1986,10 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   public function beforeDeleteSimplyDoDelete(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $entityId = $this->legacyRecordToEntityId($pme->rec);
-    $this->remove($entityId, true);
+
+    // always try hard-delete, in-use soft-deleteable entities have to protect
+    // "themselves" by a suitable "hard-delete decider".
+    $this->remove($entityId, flush: true, hard: true);
 
     $changed = []; // disable PME delete query
 
@@ -2354,25 +2292,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   }
 
   /**
-   * Compute the index into the phpMyEdit field-description data of
-   * the given $tableInfo and $column.
-   *
-   * @param array $fieldDescriptionData See phpMyEdit source code and
-   * look-out for "fdd".
-   *
-   * @param string|array $tableInfo @see joinTableFieldName().
-   *
-   * @param string $column @see joinTableFieldName().
-   *
-   * @return bool|int Result of array_search().
-   */
-  protected function fieldIndex(array $fieldDescriptionData, $tableInfo, string $column)
-  {
-    $fieldName = $this->joinTableFieldName($tableInfo, $column);
-    return array_search($fieldName, array_keys($fieldDescriptionData));
-  }
-
-  /**
    * Generate a join-table field, given join-table and field name.
    *
    * @param array $fieldDescriptionData See phpMyEdit source code and
@@ -2399,7 +2318,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       'input' => 'S',
       'values' => [],
     ];
-    $fieldName = $this->joinTableFieldName($tableInfo, $column);
+    $fieldName = self::joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
     $fdd = Util::arrayMergeRecursive($defaultFDD, $fdd);
     $joinInfo = null;
@@ -2749,6 +2668,49 @@ ON {$mainTableAlias}.`{$field}` = {$alias}.value
     } else {
       $this->logDebug($message, $context, $shift);
     }
+  }
+
+  /**
+   * Print an entity id without causing print_r infinite recursion.
+   *
+   * @param string $prefix
+   *
+   * @param string $entityName
+   *
+   * @param array $entityId
+   *
+   * @param mixed $logLevel
+   *
+   * @return void
+   */
+  protected function logEntityId(string $prefix, string $entityName, array $entityId, mixed $logLevel = null): void
+  {
+    if (!$this->debugRequests && $logLevel === null) {
+      return;
+    }
+    if ($logLevel === null) {
+      $logLevel = $this->debugRequests ? LogLevel::INFO : LogLevel::DEBUG;
+    }
+    $flatId = $this->flattenIdentifier($entityName, $entityId);
+    $this->log($logLevel, $prefix . ' ' . $entityName . ' ' . print_r($flatId, true));
+  }
+
+  /**
+   * Debug helper, flatten an entity id.
+   *
+   * @param string $entityName
+   *
+   * @param array $entityId
+   *
+   * @return array
+   */
+  protected function flattenIdentifier(string $entityName, array $entityId): array
+  {
+    $meta = $this->entityManager->getClassMetadata($entityName);
+    $flattener = $this->appContainer()->get(IdentifierFlattener::class);
+    $flatId = $flattener->flattenIdentifier($meta->getWrappedObject(), $entityId);
+
+    return $flatId;
   }
 
   /**

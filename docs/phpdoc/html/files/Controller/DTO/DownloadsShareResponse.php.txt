@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,11 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
+
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
- * DTO upload file data as reported by PHP, a bit enhanced.
+ * Response DTO for querying the music sheets download folder.
  */
 class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
@@ -37,10 +38,10 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDT
   /** {@inheritdoc} */
   public function __construct(
     /** @var string[] */
-    public readonly array $messages,
-    public readonly ?string $share,
-    public readonly ?string $folder,
+    public readonly ?string $url,
+    public readonly ?string $path,
     ?DateTimeInterface $expires,
+    public readonly array $messages = [],
   ) {
     $this->expires = CarbonImmutable::instance($expires);
   }
@@ -51,16 +52,22 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDT
    * @param array $data
    *
    * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    if (isset($data['message'])) {
+      $messages = [$data['message'], ...($messages ?? [])];
+    }
     return new self(
-      $messages ?? [],
-      $share ?? null,
-      $folder ?? null,
-      $expires ?? null,
+      messages: $messages ?? [],
+      url: $url ?? null,
+      path: $path ?? null,
+      expires: $expires ?? null,
     );
   }
 }

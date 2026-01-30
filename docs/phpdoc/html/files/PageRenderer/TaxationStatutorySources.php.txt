@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -102,20 +102,18 @@ class TaxationStatutorySources extends PMETableViewBase
     protected GeoCodingService $geoCodingService,
   ) {
     parent::__construct(
-      self::TEMPLATE,
-      //
-      $configService,
-      $entityManager,
-      $request,
-      $phpMyEdit,
-      $pageNavigation,
-      $toolTipsService,
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
     );
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function shortTitle()
+  public function shortTitle(): string
   {
     return $this->l->t('Taxation Statutory Sources');
   }
@@ -123,7 +121,6 @@ class TaxationStatutorySources extends PMETableViewBase
   /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
-    $template        = $this->template;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -143,9 +140,9 @@ class TaxationStatutorySources extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = array(
-      'template' => $template,
-      'table' => $opts['tb'],
-      'templateRenderer' => 'template:'.$template,
+      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TABLE => $opts['tb'],
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
       );
 
     // Name of field which is the unique key
@@ -200,7 +197,7 @@ class TaxationStatutorySources extends PMETableViewBase
     $opts['sort_field'] = [
       'country',
       'tax_type',
-      // $this->joinTableFieldName(self::TABLE . self::VALUES_TABLE_SEP . 'L10NTaxTypes', 'l10n_value'),
+      // self::joinTableFieldName(self::TABLE . self::VALUES_TABLE_SEP . 'L10NTaxTypes', 'l10n_value'),
       'law',
     ];
 

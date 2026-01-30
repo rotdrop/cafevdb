@@ -70,6 +70,9 @@ class ReceivablesStatistics extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    * @return self
    *
    * @throws UnexpectedValueException
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   public static function fromArray(array $data): self
   {

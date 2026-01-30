@@ -42,13 +42,9 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 class GeoPostalCode implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\AutoIncrementTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-
-  #[ORM\Column(type: 'integer', nullable: false)]
-  #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-  private int $id;
 
   #[ORM\Column(type: 'string', length: 2, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_general_ci'])]
   private string $country;
@@ -77,16 +73,6 @@ class GeoPostalCode implements \ArrayAccess
   {
     $this->arrayCTOR();
     $this->translations = new ArrayCollection();
-  }
-
-  /**
-   * Get id.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->id;
   }
 
   /**

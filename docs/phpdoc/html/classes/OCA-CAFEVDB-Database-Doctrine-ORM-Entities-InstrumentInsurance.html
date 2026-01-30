@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait">DateTimeTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait">AutoIncrementTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait">DateTimeTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-TimestampableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TimestampableEntity">TimestampableEntity</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -210,6 +210,15 @@
                         &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable">CarbonImmutable</abbr>|null            </span>
 </dt>
 
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int|null            </span>
+</dt>
+<dd>The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_accessory">$accessory</a>
     <span>
@@ -223,12 +232,6 @@
 </dt>
 <dd>A possibly different person which is responsible for paying the
 insurance fees.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_id">$id</a>
-    <span>
-                        &nbsp;: int            </span>
-</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_instrumentHolder">$instrumentHolder</a>
@@ -363,7 +366,7 @@ the entity has not been soft deleted.</dd>
 <dd>Get geographicalScope.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getId">getId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a>
     <span>
                                 &nbsp;: null|int    </span>
 </dt>
@@ -490,11 +493,11 @@ next call to delete.</dd>
 <dd>Set or clear the deleted at timestamp.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setId">setId()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentInsurance">InstrumentInsurance</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
-<dd>Set id.</dd>
+<dd>Set the id. Enforce null for 0 as this is what ORM expects.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setInstrumentHolder">setInstrumentHolder()</a>
@@ -651,6 +654,89 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">The property must be nullable as ORM expects null as uninitialized
+autoincrement value and unfortunately does not accept 0. For TypeScript
+we really do not want this as TS only received initialized entities.</p>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type">int|null</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+        <section class="phpdocumentor-description"><p>This must be protected as otherwise inheritance is not possible:
+althought the consuming class can change the visibility of a method, it
+may not change the visibility of a property.</p>
+</section>
+
+    
+    
+
+        
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $type: &#039;integer&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $nullable: false
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $strategy: &#039;IDENTITY&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
+    </dt>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType">LiteralTypeScriptType</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        &#039;number&#039;
+    </dd>
+    </dl>
+                    </section>
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                                     "
 >
@@ -664,9 +750,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -722,9 +808,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A possibly different person which is responsible for paying the
@@ -780,74 +866,6 @@ insurance fees.</p>
             -private
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_id">
-        $id
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                            </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">48</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-        <span class="phpdocumentor-signature__visibility">private</span>
-            <span class="phpdocumentor-signature__type">int</span>
-    <span class="phpdocumentor-signature__name">$id</span>
-    </code>
-
-    
-    
-    
-
-        
-            <section class="phpdocumentor-attributes">
-            <h5 class="phpdocumentor-elements__header" id="attributes">
-                Attributes <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_id#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-            </h5>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Column">Column</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $type: &#039;integer&#039;
-    </dd>
-        <dd class="phpdocumentor-argument-list__entry">
-        $nullable: false
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\GeneratedValue">GeneratedValue</abbr>]
-    </dt>
-        <dd class="phpdocumentor-argument-list__entry">
-        $strategy: &#039;IDENTITY&#039;
-    </dd>
-    </dl>
-                            <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\Id">Id</abbr>]
-    </dt>
-    </dl>
-                    </section>
-        
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                                    "
->
     <h4 class="phpdocumentor-element__name" id="property_instrumentHolder">
         $instrumentHolder
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_instrumentHolder" class="headerlink"><i class="fas fa-link"></i></a>
@@ -858,9 +876,9 @@ insurance fees.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -924,9 +942,9 @@ insurance fees.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A possibly different person which is the owner of the instrument. If NULL
@@ -981,9 +999,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1036,9 +1054,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1171,9 +1189,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1229,9 +1247,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1287,9 +1305,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1342,9 +1360,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1405,9 +1423,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">96</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
     
@@ -1564,9 +1582,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">344</span>
+    <span class="phpdocumentor-element-found-in__line">316</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.316" class="phpdocumentor-element-found-in__source" data-line="316" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Internal helper, ensure that bill-to is non-empty.</p>
@@ -1621,9 +1639,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">237</span>
+    <span class="phpdocumentor-element-found-in__line">209</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.209" class="phpdocumentor-element-found-in__source" data-line="209" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get accessory.</p>
@@ -1661,9 +1679,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">334</span>
+    <span class="phpdocumentor-element-found-in__line">306</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.306" class="phpdocumentor-element-found-in__source" data-line="306" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get billToParty.</p>
@@ -1701,9 +1719,9 @@ we assume that the instrument holder is also the instrument owner.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">179</span>
+    <span class="phpdocumentor-element-found-in__line">151</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get broker.</p>
@@ -1782,9 +1800,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.161" class="phpdocumentor-element-found-in__source" data-line="161" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get geographicalScope.</p>
@@ -1816,15 +1834,15 @@ the entity has not been soft deleted.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_getId">
         getId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">121</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get id.</p>
@@ -1862,9 +1880,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.145" class="phpdocumentor-element-found-in__source" data-line="145" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentHolder.</p>
@@ -1902,9 +1920,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentOwner.</p>
@@ -1942,9 +1960,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">310</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get insuranceAmount.</p>
@@ -1982,9 +2000,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">396</span>
+    <span class="phpdocumentor-element-found-in__line">368</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.396" class="phpdocumentor-element-found-in__source" data-line="396" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.368" class="phpdocumentor-element-found-in__source" data-line="368" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get insuranceRate.</p>
@@ -2022,9 +2040,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">261</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get manufacturer.</p>
@@ -2062,9 +2080,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">213</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.213" class="phpdocumentor-element-found-in__source" data-line="213" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get object.</p>
@@ -2102,9 +2120,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">373</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.373" class="phpdocumentor-element-found-in__source" data-line="373" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get startOfInsurance.</p>
@@ -2142,9 +2160,9 @@ the entity has not been soft deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get yearOfConstruction.</p>
@@ -2458,9 +2476,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">225</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.225" class="phpdocumentor-element-found-in__source" data-line="225" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set accessory.</p>
@@ -2508,9 +2526,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">294</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.294" class="phpdocumentor-element-found-in__source" data-line="294" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set billToParty.</p>
@@ -2602,22 +2620,22 @@ next call to delete.</p>
 >
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php"><a href="files/database-doctrine-orm-traits-autoincrementtrait.html"><abbr title="Database/Doctrine/ORM/Traits/AutoIncrementTrait.php">AutoIncrementTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">109</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Traits/AutoIncrementTrait.php.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Set id.</p>
+        <p class="phpdocumentor-summary">Set the id. Enforce null for 0 as this is what ORM expects.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentInsurance">InstrumentInsurance</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2627,7 +2645,7 @@ next call to delete.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$id</span>
-                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2640,7 +2658,7 @@ next call to delete.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentInsurance">InstrumentInsurance</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -2658,9 +2676,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">133</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentHolder.</p>
@@ -2708,9 +2726,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">157</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentOwner.</p>
@@ -2758,9 +2776,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">298</span>
+    <span class="phpdocumentor-element-found-in__line">270</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set insuranceAmount.</p>
@@ -2808,9 +2826,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">385</span>
+    <span class="phpdocumentor-element-found-in__line">357</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.357" class="phpdocumentor-element-found-in__source" data-line="357" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set insuranceRate.</p>
@@ -2858,9 +2876,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">249</span>
+    <span class="phpdocumentor-element-found-in__line">221</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set manufacturer.</p>
@@ -2908,9 +2926,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">201</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.201" class="phpdocumentor-element-found-in__source" data-line="201" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set object.</p>
@@ -2958,9 +2976,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">361</span>
+    <span class="phpdocumentor-element-found-in__line">333</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.361" class="phpdocumentor-element-found-in__source" data-line="361" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set startOfInsurance.</p>
@@ -3008,9 +3026,9 @@ next call to delete.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php"><a href="files/database-doctrine-orm-entities-instrumentinsurance.html"><abbr title="Database/Doctrine/ORM/Entities/InstrumentInsurance.php">InstrumentInsurance.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">274</span>
+    <span class="phpdocumentor-element-found-in__line">246</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/InstrumentInsurance.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set yearOfConstruction. This is a string as it may either &quot;unknnow&quot; or
@@ -3353,9 +3371,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_accessory">$accessory</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_billToParty">$billToParty</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_id">$id</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_instrumentHolder">$instrumentHolder</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_instrumentOwner">$instrumentOwner</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#property_insuranceAmount">$insuranceAmount</a></li>
@@ -3381,7 +3399,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getBroker">getBroker()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getGeographicalScope">getGeographicalScope()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getId">getId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_getId">getId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getInstrumentHolder">getInstrumentHolder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getInstrumentOwner">getInstrumentOwner()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_getInsuranceAmount">getInsuranceAmount()</a></li>
@@ -3399,7 +3417,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setAccessory">setAccessory()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setBillToParty">setBillToParty()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setId">setId()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-AutoIncrementTrait.html#method_setId">setId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setInstrumentHolder">setInstrumentHolder()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setInstrumentOwner">setInstrumentOwner()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-InstrumentInsurance.html#method_setInsuranceAmount">setInsuranceAmount()</a></li>

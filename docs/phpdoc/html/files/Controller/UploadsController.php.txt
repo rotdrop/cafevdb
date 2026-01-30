@@ -31,7 +31,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\Constants as CloudConstants;
 use OCP\Files\File;
 use OCP\Files\FileInfo;
@@ -57,25 +57,6 @@ class UploadsController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const UPLOAD_KEY = 'files';
-  public const MOVE_DEST_CLOUD = EnumFileStorageBackend::CLOUD->value;
-  public const MOVE_DEST_DB = EnumFileStorageBackend::DB->value;
-
-  public const MOVE_DESTINATIONS = [
-    self::MOVE_DEST_CLOUD,
-    self::MOVE_DEST_DB,
-  ];
-
-  public const UPLOAD_MODE_COPY = EnumFileUploadMode::COPY->value;
-  public const UPLOAD_MODE_LINK = EnumFileUploadMode::LINK->value;
-  public const UPLOAD_MODE_MOVE = EnumFileUploadMode::MOVE->value;
-  public const UPLOAD_MODE_TEST = EnumFileUploadMode::TEST->value;
-
-  public const UPLOAD_MODES = [
-    self::UPLOAD_MODE_COPY,
-    self::UPLOAD_MODE_LINK,
-    self::UPLOAD_MODE_MOVE,
-    self::UPLOAD_MODE_TEST,
-  ];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -95,8 +76,8 @@ class UploadsController extends Controller
   /**
    * @param string $stashedFile The stashed file-name in the app-storage area.
    * @param string $destinationPath DOCME.
-   * @param string $uploadMode One of the upload-modes self::UPLOAD_MODE_COPY,
-   *   self::UPLOAD_MODE_MOVE, self::UPLOAD_MODE link.
+   * @param string $uploadMode One of the upload-modes EnumFileUploadMode::COPY,
+   *   EnumFileUploadMode::MOVE, self::UPLOAD_MODE link.
    * @param null|string $originalFileName The original upload file-name if any.
    * @param string $storage Either 'cloud' or 'db'. Route has default argument 'cloud'.
    * @param bool $encrypted Whether to store the data encrypted (DB only).
@@ -104,20 +85,23 @@ class UploadsController extends Controller
    * @param string $uploadFolder The sub-folder in the app-storage containing
    * the stashed file.
    *
-   * @return Response
+   * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[Coreattributes\FrontpageRoute(verb: 'POST', url: '/upload/move/{storage}', defaults: ['storage' => EnumFileStorageBackend::CLOUD->value])]
   public function move(
     string $stashedFile,
     string $destinationPath,
-    string $uploadMode = self::UPLOAD_MODE_COPY,
+    string $uploadMode = EnumFileUploadMode::COPY->value,
     ?string $originalFileName = null,
-    string $storage = self::MOVE_DEST_CLOUD,
+    string $storage = EnumFileStorageBackend::CLOUD->value,
     bool $encrypted = false,
     int $ownerId = 0,
     string $uploadFolder = AppStorage::UPLOAD_FOLDER
-  ):Response {
-    if ($uploadMode == self::UPLOAD_MODE_MOVE) {
+  ): DataResponse {
+    $uploadMOde = EnumFileUploadMode::get($uploadMOde);
+    $storage = EnumFileStorageBackend::get($storage);
+    if ($uploadMode == EnumFileUploadMode::MOVE) {
       if (empty($originalFileName)) {
         return self::grumble($this->l->t(
           'Original file path is not given, cannot move files.'
@@ -142,8 +126,8 @@ class UploadsController extends Controller
 
     $appFile = $this->appStorage->getFile($uploadFolder, $stashedFile);
     switch ($storage) {
-      case self::MOVE_DEST_CLOUD:
-        if ($uploadMode == self::UPLOAD_MODE_LINK) {
+      case EnumFileStorageBackend::CLOUD:
+        if ($uploadMode == EnumFileUploadMode::LINK) {
           return self::grumble($this->l->t(
             'Linking files is only support when the destination storage is backed by the data-base.'
           ));
@@ -158,14 +142,14 @@ class UploadsController extends Controller
           'fileName' => basename($destinationPath),
           'downloadLink' => $downloadLink,
         ]);
-      case self::MOVE_DEST_DB:
+      case EnumFileStorageBackend::DB:
         // here $destinationPath is the file-name in the data-base
         if (empty($this->entityManager)) {
           $this->entityManager = $this->di(EntityManager::class);
         }
 
         $dbFileClass = $encrypted ? Entities\EncryptedFile::class : Entities\File::class;
-        if ($uploadMode == self::UPLOAD_MODE_LINK) {
+        if ($uploadMode == EnumFileUploadMode::LINK) {
           // this is somewhat academic as here is no dedicate storage
           // location. However, this is how linking in principle works: just
           // increase the link-count.
@@ -235,40 +219,43 @@ class UploadsController extends Controller
    * @param array $cloudPaths File-names in the cloud storage. May be empty in
    * which case an ordinary upload is assumed.
    *
-   * @param string $uploadMode One of self::UPLOAD_MODE_COPY, self::UPLOAD_MODE_MOVE,
-   * self::UPLOAD_MODE_LINK and self::UPLOAD_MODE_TEST. This only applies
+   * @param string $uploadMode One of EnumFileUploadMode::COPY, EnumFileUploadMode::MOVE,
+   * EnumFileUploadMode::LINK and EnumFileUploadMode::TEST. This only applies
    * to "uploads" from the cloud file-space.
    *
-   * - self::UPLOAD_MODE_COPY The default, just make and copy and generate a
+   * - EnumFileUploadMode::COPY The default, just make and copy and generate a
    *   new file.
    *
-   * - self::UPLOAD_MODE_MOVE This is like copy but removes the source. This is
+   * - EnumFileUploadMode::MOVE This is like copy but removes the source. This is
        somewhat inefficient at it will generate an intermediate temporary
        file.
    *
-   * - self::UPLOAD_MODE_LINK If the cloud file is backed by our db-storage
+   * - EnumFileUploadMode::LINK If the cloud file is backed by our db-storage
    *   then do not copy the source but instead link the existing
    *   file-entity. In this mode no temporary file generated, just the
    *   File-entity id is reported back to the caller
    *
-   * - self::UPLOAD_MODE_TEST check what could be done and return the list of
+   * - EnumFileUploadMode::TEST check what could be done and return the list of
    *   possible modes to the caller.
    *
    * @param string $uploadFolder The sub-folder in the app-storage containing
    * the stashed file.
    *
-   * @return Response
+   * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/upload/stash')]
   public function stash(
     array $cloudPaths = [],
-    string $uploadMode = self::UPLOAD_MODE_COPY,
+    string $uploadMode = EnumFileUploadMode::COPY->value,
     string $uploadFolder = AppStorage::UPLOAD_FOLDER,
-  ):Response {
+  ): DataResponse {
     $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
+
+    $uploadMode = EnumFileUploadMode::get($uploadMode);
 
     $uploads = [];
     if (!empty($cloudPaths)) {
@@ -295,20 +282,20 @@ class UploadsController extends Controller
         $fileEntityId = !empty($dbFile) ? $dbFile->getFile()->getId() : null;
 
         switch ($uploadMode) {
-          case self::UPLOAD_MODE_TEST:
-            $uploadModes = [ self::UPLOAD_MODE_COPY, ];
+          case EnumFileUploadMode::TEST:
+            $uploadModes = [ EnumFileUploadMode::COPY, ];
             if ($cloudFile->getPermissions() & CloudConstants::PERMISSION_DELETE) {
-              $uploadModes[] = self::UPLOAD_MODE_MOVE;
+              $uploadModes[] = EnumFileUploadMode::MOVE;
             }
             if (!empty($dbFile)) {
-              $uploadModes[] = self::UPLOAD_MODE_LINK;
+              $uploadModes[] = EnumFileUploadMode::LINK;
             }
-            $uploads[] = [
-              'original_name' => $path,
-              'upload_mode' => $uploadModes,
-            ];
+            $uploads[] = new DTO\UploadModeTest(
+              originalName: $path,
+              availableUploadModes: $uploadModes,
+            );
             continue 2;
-          case self::UPLOAD_MODE_LINK:
+          case EnumFileUploadMode::LINK:
             if (empty($dbFile)) {
               return self::grumble($this->l->t(
                 'File "%s" is not backed by database-storage and thus cannot be linked.',
@@ -318,7 +305,7 @@ class UploadsController extends Controller
             $originalName = $fileEntityId;
             $tmpName = null;
             break;
-          case self::UPLOAD_MODE_MOVE:
+          case EnumFileUploadMode::MOVE:
             if (!($cloudFile->getPermissions() & CloudConstants::PERMISSION_DELETE)) {
               return self::grumble($this->l->t(
                 'File "%s" cannot be deleted, moving it is therefor not possible.',
@@ -328,14 +315,14 @@ class UploadsController extends Controller
             // the actual deletion should be post-poned until the stashed file
             // has been moved into place.
             // no break
-          case self::UPLOAD_MODE_COPY:
+          case EnumFileUploadMode::COPY:
             try {
               $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
               $uploadFile->putContent($cloudFile->getContent());
             } catch (Throwable $t) {
               return self::grumble($this->l->t('Could not copy cloud file "%s" to upload storage.', $fileName));
             }
-            $originalName = $uploadMode == self::UPLOAD_MODE_MOVE ? $path : $fileName;
+            $originalName = $uploadMode == EnumFileUploadMode::MOVE ? $path : $fileName;
             $tmpName = $uploadFile->getName();
             break;
         }
@@ -352,10 +339,10 @@ class UploadsController extends Controller
           'upload_mode' => $uploadMode,
           'original_name' => $originalName,
         ];
-        $uploads[] = $fileRecord;
+        $uploads[] = DTO\UploadFileData::fromArray($fileRecord);
       }
     } else {
-      if ($uploadMode != self::UPLOAD_MODE_COPY) {
+      if ($uploadMode != EnumFileUploadMode::COPY) {
         return self::grumble($this->l->t(
           'For client-uploads the only supported upload-mode is "copy", "%s" is not possible.',
           $uploadMode
@@ -407,7 +394,7 @@ class UploadsController extends Controller
         $file['upload_max_file_size'] = $maxUploadFileSize;
         $file['max_human_file_size']  = $maxHumanFileSize;
         $file['original_name'] = $file['name']; // clone
-        $file['upload_mode'] = self::UPLOAD_MODE_COPY;
+        $file['upload_mode'] = EnumFileUploadMode::COPY;
 
         try {
           $uploadFile = $this->appStorage->newTemporaryFile($uploadFolder);
@@ -419,9 +406,9 @@ class UploadsController extends Controller
           $file['str_error'] = $this->l->t('Couldn\'t save temporary file for: %s', $file['name']);
           continue;
         }
-        $uploads[] = $file;
+        $uploads[] = DTO\UploadFileData::fromArray($file);
       }
     }
-    return self::dataResponse($uploads);
+    return new DataResponse($uploads);
   }
 }

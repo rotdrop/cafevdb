@@ -353,7 +353,7 @@ class ProjectEvents extends Command
           // siblings.
           $eventData = $calDavService->getCalendarObject($calendarId, $eventUri);
           if (!empty($eventData)) {
-            $eventData['calendaruri'] = $calendarUri;
+            $eventData['calendarUri'] = $calendarUri;
             // $this->logInfo('EVENT DATA ' . print_r($eventData, true));
             if (!$dry) {
               $this->logInfo('SYNC');
@@ -465,7 +465,7 @@ class ProjectEvents extends Command
 
           // check for non-repeating multi-day events and potentially reattach them
           $hours = ($event['end']->getTimestamp() - $event['start']->getTimestamp()) / 3600;
-          if (!$isRegistrationEvent && (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48))) {
+          if (!$isRegistrationEvent && (empty($event['recurrenceId']) && (($event['allDay'] && $hours > 36) || $hours > 48))) {
             if ($fix == 'split') {
               ++$split;
               if ($dry) {

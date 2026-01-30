@@ -66,6 +66,9 @@ class GnuCashBulkTransactionBalancingItemsExporter implements IBulkTransactionEx
   public function fileData(Entities\SepaBulkTransaction $transaction):string
   {
     $data = $this->gnuCashConnectorService->exportBulkTransactionBalancingEntries($transaction);
+    if (empty($data)) {
+      return '';
+    }
 
     $csvData = str_putcsv(array_keys($data[0]), self::CSV_DELIMITER);
     foreach ($data as $record) {
