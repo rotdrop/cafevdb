@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -368,6 +368,12 @@ class ProjectEvent implements \ArrayAccess
   public function getAbsenceField():?ProjectParticipantField
   {
     return $this->absenceField;
+  }
+
+  /** @return \true iff this is the registration event of the associated project. */
+  public function isRegistrationEvent(): bool
+  {
+    return $this === $this->project?->getRegistrationCalendarEvent();
   }
 
   /** {@inheritdoc} */
