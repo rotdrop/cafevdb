@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553;
+use OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
 /** Test aspects of all migrations. */
@@ -46,6 +47,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(Version20260108084800::class)]
 #[Attributes\CoversClass(Version20260108115432::class)]
 #[Attributes\CoversClass(Version20260130130553::class)]
+#[Attributes\CoversClass(Version20260131090857::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -72,6 +74,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
@@ -233,6 +236,14 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion20260130130553')]
+  public function testVersion20260131090857(): void
+  {
+    $migration = substr(__METHOD__, -14);
+    $this->applyMigrations($migration);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testVersion20260131090857')]
   public function testUpToLatest(): void
   {
     $this->applyMigrations('latest');
