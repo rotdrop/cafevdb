@@ -102,13 +102,14 @@ class ProjectEntityListener
    */
   private function registerPreCommitAction(Entities\Project $project):void
   {
-    if (!empty($this->preCommitActions[$project->getId()])) {
+    $objectId = spl_object_id($project);
+    if (!empty($this->preCommitActions[$objectId])) {
       return;
     }
     if (empty($this->eventsService)) {
       $this->eventsService = $this->appContainer->get(EventsService::class);
     }
-    $this->preCommitActions[$project->getId()] = new GenericUndoable(
+    $this->preCommitActions[$objectId] = new GenericUndoable(
       function() use ($project) {
         $oldRegistrationEvent = $this->eventsService->findProjectRegistrationEvent($project);
         if (!empty($oldRegistrationEvent)) {
@@ -150,6 +151,11 @@ class ProjectEntityListener
         }
       }
     );
-    $this->entityManager->registerPreCommitAction($this->preCommitActions[$project->getId()]);
+    $this->entityManager->registerPreCommitAction($this->preCommitActions[$objectId]);
+    $this->entityManager->registerPostCommitAction(
+      function() use ($objectId) {
+        unset($this->preCommitActions[$objectId]);
+      },
+    );
   }
 }
