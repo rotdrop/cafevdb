@@ -2959,6 +2959,8 @@ Whatever.',
         }
       } else {
 
+        $project->setRegistrationCalendarEvent(null);
+
         /** @var Entities\ProjectParticipant $participant */
         foreach ($project->getParticipants() as $participant) {
           $this->deleteProjectParticipant($participant);

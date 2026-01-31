@@ -95,7 +95,7 @@ class Project implements \ArrayAccess
   /**
    * Optional link to the project registration event.
    */
-  #[ORM\OneToOne(targetEntity: ProjectEvent::class, cascade: ['all'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, cascade: ['all'], fetch: 'EXTRA_LAZY')]
   private ?ProjectEvent $registrationCalendarEvent = null;
 
   /** @var Collection<ProjectInstrumentationNumber> */

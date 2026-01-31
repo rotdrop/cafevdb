@@ -1605,6 +1605,9 @@ class EventsService
               isRecurring: $isRecurring,
               flush: false,
             );
+            if ($isRegistrationEvent) {
+              $project->setRegistrationCalendarEvent($projectEvent);
+            }
             $this->flush();
             if ($status) {
               $registered[] = $projectId;
@@ -1642,6 +1645,9 @@ class EventsService
 
       /** @var Entities\ProjectEvent $projectEvent */
       foreach ($staleProjectEvents as $projectEvent) {
+        if ($projectEvent === $project->getRegistrationCalendarEvent()) {
+          $project->setRegistrationCalendarEvent(null);
+        }
         if (!empty($projectEvent->getAbsenceField())) {
           $projectEvent->getAbsenceField()->setProjectEvent(null);
         }
