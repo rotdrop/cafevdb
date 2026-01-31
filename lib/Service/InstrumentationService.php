@@ -139,6 +139,19 @@ class InstrumentationService
       }
 
       $this->entityManager->commit();
+
+      if (!empty($project)) {
+        $participant = (new Entities\ProjectParticipant)
+          ->setMusician($dummy)
+          ->setProject($project)
+          ->setCreated($now)
+          ->setUpdated($now);
+        $dummy->getProjectParticipation()->set($project->getId(), $participant);
+        if (!$persist) {
+          $dummy->setId(1);
+        }
+        $project->getParticipants()->set($dummy->getId(), $participant);
+      }
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
@@ -147,19 +160,6 @@ class InstrumentationService
         $this->l->t('Unable to create a dummy-musician for preview purposes.'),
         previous: $t,
       );
-    }
-
-    if (!empty($project)) {
-      $participant = (new Entities\ProjectParticipant)
-        ->setMusician($dummy)
-        ->setProject($project)
-        ->setCreated($now)
-        ->setUpdated($now);
-      $dummy->getProjectParticipation()->set($project->getId(), $participant);
-      if (!$persist) {
-        $dummy->setId(1);
-      }
-      $project->getParticipants()->set($dummy->getId(), $participant);
     }
 
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
