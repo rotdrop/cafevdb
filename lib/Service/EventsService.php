@@ -95,20 +95,20 @@ class EventsService
    * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
    * instances.
    */
-  private $eventSiblings;
+  private array $eventSiblings = [];
 
   /**
    * @var array Cache the siblings of recurring events by project-id,
    * calendar-uri, recurrence-id, event-uid. This cache contains ProjectEvent
    * entities.
    */
-  private $projectEventSiblings;
+  private array $projectEventSiblings = [];
 
   /**
    * @var array
    * Cached project registration events by project name.
    */
-  private $projectRegistrationEvents;
+  private array $projectRegistrationEvents = [];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -122,6 +122,18 @@ class EventsService
   ) {
     $this->setDatabaseRepository(Entities\ProjectEvent::class);
     $this->l = $this->l10n();
+  }
+
+  /**
+   * Empty cached data, also in order to aid unit testing.
+   *
+   * @return void
+   */
+  public function clearCaches(): void
+  {
+    $this->eventSiblings =
+      $this->projectEventSiblings =
+      $this->projectRegistrationEvents = [];
   }
 
   /**
