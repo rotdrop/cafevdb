@@ -118,6 +118,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -125,6 +126,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
@@ -430,19 +432,28 @@ class ProjectsTest extends TestCase
     // The project registration event.
     $this->assertEquals(1, $project->getCalendarEvents()->count());
 
-    // Hard to test:
-    // - no wiki
-    // - no redaxo
-    // - no file system
-    //
-    $this->renderer->afterInsertTrigger(
-      pme: $this->phpMyEdit,
-      op: 'do not care',
-      step: 'do not care',
-      oldValues: $oldValues,
-      changed: $changed,
-      newValues: $newValues,
-    );
+    $this->entityManager->beginTransaction();
+    try {
+      // Hard to test:
+      // - no wiki
+      // - no redaxo
+      // - no file system
+      //
+      $this->renderer->afterInsertTrigger(
+        pme: $this->phpMyEdit,
+        op: 'do not care',
+        step: 'do not care',
+        oldValues: $oldValues,
+        changed: $changed,
+        newValues: $newValues,
+      );
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollBack();
+      }
+      throw $t;
+    }
   }
 
   private const BEFORE_CHANGED_TRIGGER_DATA = [
