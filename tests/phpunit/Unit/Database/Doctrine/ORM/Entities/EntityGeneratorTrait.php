@@ -107,6 +107,9 @@ trait EntityGeneratorTrait
       ->setId(self::FAKED_ENTITY_ID)
       ->setName('TestProject2099')
       ->setYear(2099);
+    if ($persist) {
+      $this->entityManager->persist($this->project);
+    }
     $this->musician = $this->instrumentationService->getDummyMusician(
       $this->project,
       persist: $persist,
