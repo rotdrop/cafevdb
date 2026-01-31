@@ -124,7 +124,7 @@ class Project implements \ArrayAccess
   private Collection $participantFieldsData;
 
   /** @var Collection<int, ProjectParticipant> */
-  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project', indexBy: 'musician_id')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project', indexBy: 'musician_id', cascade: ['persist'])]
   private Collection $participants;
 
   /** @var Collection<int, ProjectApplication> */
