@@ -220,7 +220,7 @@ class EntityRepositoryControllerTest extends TestCase
 
     // Meta-data ATM does not work without database connection
     $realEntityManager = $mockProvider->getEntityManager();
-    $realEntityManager->persist($this->project);
+    // $realEntityManager->persist($this->project);
 
     $entitySerializer = new EntitySerializer(
       entityManager: $realEntityManager,

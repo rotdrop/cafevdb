@@ -205,8 +205,8 @@ class MusiciansControllerTest extends TestCase
 
     // Meta-data ATM does not work without database connection
     $realEntityManager = $mockProvider->getEntityManager();
-    $realEntityManager->persist($this->project);
-    $realEntityManager->persist($this->musician);
+    // $realEntityManager->persist($this->project);
+    // $realEntityManager->persist($this->musician);
 
     $entitySerializer = new EntitySerializer(
       entityManager: $realEntityManager,
