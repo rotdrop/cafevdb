@@ -49,6 +49,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 /** Setup code for testing migrations. */
 trait SetupMigrationTrait
 {
+  public const LATEST_VERSION = 'latest';
+  public const FIRST_VERSION = 'first';
+
   private EntityManager $entityManager;
 
   private static DoctrineMigrationsService $migrationsService;
@@ -102,7 +105,7 @@ trait SetupMigrationTrait
     $latest = null;
     $unapplied = self::$migrationsService->getUnapplied();
     foreach (array_keys($unapplied) as $version) {
-      if ($upToVersion != 'latest' && (int)$version > (int)$upToVersion) {
+      if ($upToVersion != self::LATEST_VERSION && (int)$version > (int)$upToVersion) {
         break;
       }
       // echo 'APPLY ' . $version . PHP_EOL;
@@ -110,7 +113,7 @@ trait SetupMigrationTrait
       $latest = $version;
       self::$appliedVersions[] = $version;
     }
-    if ($upToVersion != 'latest' && $latest != $upToVersion) {
+    if ($upToVersion != self::LATEST_VERSION && $latest != $upToVersion) {
       throw new UnexpectedValueException("Migration '{$upToVersion}' does not seem to exist.");
     }
 
@@ -137,23 +140,29 @@ trait SetupMigrationTrait
    *
    * @return void
    */
-  public function unapplyMigrations(): void
+  public function unapplyMigrations(string $downBelow = self::FIRST_VERSION): void
   {
     $this->getEntityManager();
 
     foreach (array_reverse(self::$appliedVersions) as $version) {
+      if ($downBelow != self::FIRST_VERSION && (int)$version < (int)$downBelow) {
+        break;
+      }
       self::$migrationsService->apply($version, EnumMigrationDirection::DOWN);
+      array_pop(self::$appliedVersions);
       // echo 'UNAPPLY ' . $version . PHP_EOL;
     }
 
-    // The migrations table has to be dropped manually
-    $sql = 'DROP TABLE IF EXISTS DoctrineMigrationsVersions';
-    $connection = $this->entityManager->getConnection();
-    $connection->prepare($sql)->executeQuery();
+    if ($downBelow == self::FIRST_VERSION) {
+      // The migrations table has to be dropped manually
+      $sql = 'DROP TABLE IF EXISTS DoctrineMigrationsVersions';
+      $connection = $this->entityManager->getConnection();
+      $connection->prepare($sql)->executeQuery();
 
-    // self::$migrationsService->clearCache();
-    $this->assertEquals([], self::$migrationsService->getApplied());
-    self::$appliedVersions = [];
+      // self::$migrationsService->clearCache();
+      $this->assertEquals([], self::$migrationsService->getApplied());
+      self::$appliedVersions = [];
+    }
 
     // $service = $this->mockProvider->getAppContainer()->get(MigrationsServiceInterface::class);
     // echo get_class($service) . PHP_EOL;
