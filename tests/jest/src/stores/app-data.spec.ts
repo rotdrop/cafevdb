@@ -43,6 +43,7 @@ const projectKeys = [
   'id',
   'mailingListId',
   'name',
+  'registrationCalendarEvent',
   'registrationDeadline',
   'registrationStartDate',
   'type',
