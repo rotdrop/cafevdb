@@ -180,6 +180,7 @@ class ProjectsTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
 
     $this->entityManager = $this->entityManager ?? $mockProvider->getEntityManager();
 
