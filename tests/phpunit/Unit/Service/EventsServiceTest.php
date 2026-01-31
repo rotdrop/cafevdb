@@ -31,7 +31,6 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use ReflectionProperty;
 use Sabre\VObject;
 
 use OCP\AppFramework\IAppContainer;
@@ -422,6 +421,7 @@ class EventsServiceTest extends TestCase
     $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
     $this->assertTrue($result);
     $this->assertEquals($projectEventsCount + 1, $this->project->getCalendarEvents()->count());
+    $this->assertTrue($this->project->getRegistrationCalendarEvent()->isRegistrationEvent());
   }
 
   /** @return void */
@@ -481,7 +481,7 @@ class EventsServiceTest extends TestCase
     $storedEvent['calendardata'] = $storedVObject->serialize();
     self::$calendarObjects["{$registrationEvent['calendarid']}-{$registrationEvent['uri']}"] = $storedEvent;
 
-    new ReflectionProperty($this->eventsService, 'projectRegistrationEvents')->setValue($this->eventsService, []);
+    $this->eventsService->clearCaches();
     $this->calDavService->clearCalendarObjectCache();
 
     $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
@@ -504,7 +504,7 @@ class EventsServiceTest extends TestCase
     $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
     $this->assertTrue($result);
 
-    new ReflectionProperty($this->eventsService, 'projectRegistrationEvents')->setValue($this->eventsService, []);
+    $this->eventsService->clearCaches();
     $this->calDavService->clearCalendarObjectCache();
 
     $registrationEvent = $this->eventsService->findProjectRegistrationEvent($this->project);
