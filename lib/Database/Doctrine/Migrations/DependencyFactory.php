@@ -64,11 +64,20 @@ class DependencyFactory extends VanillaDependencyFactory
     return $this->getDependency(
       MigrationFactory::class,
       fn (): MigrationFactory => new class($this->appContainer) implements MigrationFactory {
+        /**
+         * @param IAppContainer $appContainer
+         */
         public function __construct(
           protected IAppContainer $appContainer,
         ) {
         }
-        public function createVersion(string $migrationClassName): AbstractMigration
+
+        /**
+         * @param string $migrationClassName
+         *
+         * @return AbstractStructuralMigration|AbstractTransactionalMigration
+         */
+        public function createVersion(string $migrationClassName): AbstractStructuralMigration|AbstractTransactionalMigration
         {
           return $this->appContainer->resolve($migrationClassName);
         }

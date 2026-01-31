@@ -27,13 +27,13 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version19700101000002 extends AbstractMigration
+final class Version19700101000002 extends AbstractTransactionalMigration
 {
   public const INSTRUMENT_FAMILY_NAMES = [
     'strings',
@@ -174,17 +174,6 @@ final class Version19700101000002 extends AbstractMigration
   public function getDescription(): string
   {
     return $this->l->t('Add standard instrument families');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This is a structural migration and thus cannot be transactional on
-   * MariaDB / MySQL.
-   */
-  public function isTransactional(): bool
-  {
-    return true;
   }
 
   /** {@inheritdoc} */

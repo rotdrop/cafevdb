@@ -26,37 +26,10 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
 
-use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
-
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\AbstractMigration as DoctrineAbstractMigration;
-
 /**
- * Abstract base class for migrations in order to make the entity manager
- * available for transactional migrations. The child class is required to
- * define a boolean constant TRANSACTIONAL in order to finalize the
- * implementation of self::isTransational().
+ * Abstract base class for transactional migrations.
  */
-abstract class AbstractMigration extends DoctrineAbstractMigration
+abstract class AbstractStructuralMigration extends AbstractMigration
 {
-  /**
-   * @param EntityManager $entityManager
-   *
-   * @param IAppContainer $appContainer
-   *
-   * @param IL10N $l
-   */
-  public function __construct(
-    protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
-    protected IL10N $l,
-  ) {
-  }
-
-  /** {@inheritdoc} */
-  public function isTransactional(): bool
-  {
-    return static::TRANSACTIONAL;
-  }
+  protected const TRANSACTIONAL = false;
 }

@@ -26,29 +26,18 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260108084800 extends AbstractMigration
+final class Version20260108084800 extends AbstractStructuralMigration
 {
   /** {@inheritdoc} */
   public function getDescription(): string
   {
     return $this->l->t('Set updated and created to the current time on the database level.');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This is a structural migration and thus cannot be transactional on
-   * MariaDB / MySQL.
-   */
-  public function isTransactional(): bool
-  {
-    return false;
   }
 
   /** {@inheritdoc} */

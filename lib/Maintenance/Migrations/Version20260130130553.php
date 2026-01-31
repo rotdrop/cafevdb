@@ -27,28 +27,17 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
-use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260130130553 extends AbstractMigration
+final class Version20260130130553 extends AbstractStructuralMigration
 {
   /** {@inheritdoc} */
   public function getDescription(): string
   {
     return $this->l->t('Add an association from the project to the project registratition calendar event.');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This is a structural migration and thus cannot be transactional on
-   * MariaDB / MySQL.
-   */
-  public function isTransactional(): bool
-  {
-    return false;
   }
 
   /** {@inheritdoc} */

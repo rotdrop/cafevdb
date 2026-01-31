@@ -26,13 +26,13 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration;
+use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
 /**
  * Add functions and routines to the initial database.
  */
-final class Version19700101000003 extends AbstractMigration
+final class Version19700101000003 extends AbstractStructuralMigration
 {
   private const CREATE_FUNCTION_PREFIX = 'CREATE OR REPLACE FUNCTION';
   private const FUNCTIONS = [
@@ -98,17 +98,6 @@ RETURN
   public function getDescription(): string
   {
     return $this->l->t('Add functions.');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This is a structural migration and thus cannot be transactional on
-   * MariaDB / MySQL.
-   */
-  public function isTransactional(): bool
-  {
-    return false;
   }
 
   /** {@inheritdoc} */
