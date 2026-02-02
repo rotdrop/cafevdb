@@ -393,11 +393,12 @@ trait EntityManagerTrait
    *
    * @param string $filterName
    *
-   * @param bool $state
+   * @param ?bool $state
    *
-   * @return bool The old state of the filter.
+   * @return ?bool The old state of the filter or \null if the filter does not
+   * exist.
    */
-  protected function enableFilter(string $filterName, bool $state = true): bool
+  protected function enableFilter(string $filterName, ?bool $state = true): ?bool
   {
     return $this->entityManager->setFilterEnabled($filterName, $state);
   }
@@ -408,9 +409,10 @@ trait EntityManagerTrait
    *
    * @param string $filterName
    *
-   * @return bool The previous isEnabled() state of the filter.
+   * @return ?bool The previous isEnabled() state of the filter or \null if
+   * the filter does not exist.
    */
-  protected function disableFilter(string $filterName): bool
+  protected function disableFilter(string $filterName): ?bool
   {
     return $this->enableFilter($filterName, false);
   }
