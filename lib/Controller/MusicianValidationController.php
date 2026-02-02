@@ -34,7 +34,6 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
@@ -43,6 +42,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
 /** Validation controller for some personal input fields. */
 class MusicianValidationController extends Controller

@@ -48,7 +48,6 @@ use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -69,6 +68,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Settings\Personal;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;

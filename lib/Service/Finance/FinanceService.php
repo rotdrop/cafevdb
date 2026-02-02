@@ -40,7 +40,6 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
@@ -50,6 +49,7 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 

@@ -43,7 +43,6 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
@@ -56,6 +55,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 /**

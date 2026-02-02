@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Uuid;
 
