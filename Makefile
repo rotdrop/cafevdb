@@ -64,7 +64,8 @@ PHING=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
 # Doctrine/ORM and all related packages.
 #
 
-WRAPPER_NAMESPACE = OCA\\$(APP_NAMESPACE)\\Wrapped
+WRAPPER_NAMESPACE_POSTFIX = Wrapped
+WRAPPER_NAMESPACE = OCA\\$(APP_NAMESPACE)\\$(WRAPPER_NAMESPACE_POSTFIX)
 
 # hash dependencies which occasionally are hacked
 WRAPPER_GIT_DEPENDENCIES =\
@@ -238,6 +239,8 @@ namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
 APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
 APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
 APP_TOOLKIT_NS = CAFEVDB
+APP_ENTITY_PARENT_NS = Database\Doctrine\ORM
+APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 
