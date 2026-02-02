@@ -27,7 +27,7 @@
  * check work on semi-real data.
  */
 
-$appDir = __DIR__ . '/../../../../';
+$appDir = __DIR__ . '/../../../../../';
 
 require_once($appDir . 'vendor-bin/phpunit/vendor/autoload.php');
 require_once($appDir . 'tests/phpunit/bootstrap.php');
