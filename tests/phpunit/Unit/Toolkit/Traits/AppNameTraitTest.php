@@ -45,6 +45,8 @@ class TestAppNameTraitClass
 
 /** Test consistency of the enum with constants from ConfigConstants */
 #[Attributes\CoversTrait(AppNameTrait::class)]
+#[Attributes\CoversMethod(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::class, 'getAppInfoAppName')]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::class)]
 class AppNameTraitTest extends TestCase
 {
   /** @return void */

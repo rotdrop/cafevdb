@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Toolkit;
  * Test the Toolkit\Exceptions\DatabaseEntityException class and some of its child
  * classes.
  */
-#[Attributes\CoversClass(Exceptions\DatabaseEntityNotFoundException::class)]
+#[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotUniqueException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseInconsistentValueException::class)]
 #[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityException::class)]
@@ -73,14 +73,14 @@ class DatabaseEntityExceptionTest extends TestCase
   public function testDatabaseEntityNotFoundException(): void
   {
     try {
-      throw new Exceptions\DatabaseEntityNotFoundException(
+      throw new Toolkit\Exceptions\DatabaseEntityNotFoundException(
         message: self::MESSAGE,
         code: self::CODE,
         previous: self::PREVIOUS,
         entityClassName: self::ENTITY_NAME,
         identifier: self::IDENTIFIER,
       );
-    } catch (Exceptions\DatabaseEntityException $e) {
+    } catch (Toolkit\Exceptions\DatabaseEntityException $e) {
       $this->assertEquals(self::MESSAGE, $e->getMessage());
       $this->assertEquals(self::CODE, $e->getCode());
       $this->assertEquals(self::PREVIOUS, $e->getPrevious());

@@ -39,16 +39,15 @@ use OCA\CAFEVDB\Controller\EntityRepositoryController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
+use OCA\CAFEVDB\Toolkit\Exceptions;
 
 /** Test the EntityRepositoryController. */
 #[Attributes\CoversClass(EntityRepositoryController::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotFoundException::class)]
-#[Attributes\CoversMethod(EntityRepositoryController::class, 'getEntities')]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
