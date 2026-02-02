@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use DateTime;
 use DateTimeImmutable;
@@ -42,26 +40,29 @@ use Spatie\TypeScriptTransformer\TypeScriptTransformer;
 use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Types\TypeScriptType;
 
-use OCA\CAFEVDB\Wrapped\Carbon;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+use OCP\AppFramework\IAppContainer;
+
+use Carbon;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Runner for the PHP to typescript conversion.
  */
 class PhpToTypeScript extends Command
 {
-  private const OPTION_OUTPUT_PREFIX = 'output-prefix';
-  private const OPTION_SOURCE_PREFIX = 'source-prefix';
+  private const OPTION_AS_MODULES = 'as-modules';
   private const OPTION_CONSTANTS = 'constants';
   private const OPTION_CONSTANTS_AS_CONSTANTS = 'constants';
   private const OPTION_CONSTANTS_AS_PROPERTIES = 'properties';
-  private const OPTION_NS_PREFIX = 'ns-prefix';
-  private const OPTION_AS_MODULES = 'as-modules';
-  private const OPTION_SOURCES = 'sources';
-  private const OPTION_OUTPUTS = 'outputs';
   private const OPTION_HELP = 'help';
-  private const OPTION_VERBOSE = 'verbose';
+  private const OPTION_NS_PREFIX = 'ns-prefix';
+  private const OPTION_OUTPUTS = 'outputs';
+  private const OPTION_OUTPUT_PREFIX = 'output-prefix';
   private const OPTION_QUIET = 'quiet';
+  private const OPTION_SCOPED_NS_PREFIX = 'scoped-ns-prefix';
+  private const OPTION_SOURCES = 'sources';
+  private const OPTION_SOURCE_PREFIX = 'source-prefix';
+  private const OPTION_VERBOSE = 'verbose';
   private const OUTPUT_SUFFIX = '.d.ts';
   private const VERBOSITY_MAX = 3;
   private const PHP_PREFIX = 'php-';
@@ -77,6 +78,7 @@ class PhpToTypeScript extends Command
   public function __construct(
     protected array $configInfo,
     protected array $excludes,
+    protected array $scopedNamespaces,
   ) {
     parent::__construct();
   }
@@ -113,6 +115,12 @@ class PhpToTypeScript extends Command
         null,
         InputOption::VALUE_REQUIRED,
         'Specify a namespace prefix to remove, either in PHP notation or in TS notation.',
+      )
+      ->addOption(
+        self::OPTION_SCOPED_NS_PREFIX,
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Specify the scoped namespace prefix of humbug/php-scoper. If --ns-prefix=NS_PREFIX was given then NS_PREFIX is prependet to the scoped namespace prefix.',
       )
       ->addOption(
         self::OPTION_AS_MODULES,
@@ -237,13 +245,21 @@ class PhpToTypeScript extends Command
       $sourcePrefix .= '/';
     }
 
-    $tsNameSpacePrefix = $input->getOption(self::OPTION_NS_PREFIX);
-    if (!empty($tsNameSpacePrefix)) {
+    $namespacePrefix = $input->getOption(self::OPTION_NS_PREFIX);
+    if (!empty($namespacePrefix)) {
+      $namespacePrefix = trim($namespacePrefix, '\\');
       // convert from PHP to TypeScript notation.
-      $tsNameSpacePrefix = str_replace('\\', '.', $tsNameSpacePrefix);
-      if (!str_ends_with($tsNameSpacePrefix, '.')) {
-        $tsNameSpacePrefix .= '.';
+      $tsNamespacePrefix = str_replace('\\', '.', $namespacePrefix);
+      if (!str_ends_with($tsNamespacePrefix, '.')) {
+        $tsNamespacePrefix .= '.';
       }
+    } else {
+      $tsNamespacePrefix = '';
+    }
+
+    $scopedNamespacePrefix = $input->getOption(self::OPTION_SCOPED_NS_PREFIX);
+    if (!empty($scopedNamespacePrefix)) {
+      $scopedNamespacePrefix = trim($namespacePrefix . '\\' . trim($scopedNamespacePrefix, '\\'), '\\');
     }
 
     foreach ($this->configInfo as $outputName => $outputInfo) {
@@ -251,7 +267,10 @@ class PhpToTypeScript extends Command
 
       $excludes = array_merge($this->excludes, $outputInfo['excludes'] ?? []);
 
-      $config = ClassConstantsTransformerConfig::create()
+      $config = TransformerConfig::create()
+        ->appNamespace($namespacePrefix)
+        ->scopedNamespacePrefix($scopedNamespacePrefix)
+        ->scopedNamespaces($this->scopedNamespaces) // in particular
         // path where your PHP classes are
         ->autoDiscoverTypes(...array_map(fn(string $path) => $sourcePrefix . $path, $outputInfo['paths']))
         ->autoDiscoverExcludePaths(...array_map(fn(string $path) => $sourcePrefix . $path, $excludes))
@@ -304,21 +323,21 @@ class PhpToTypeScript extends Command
 
       $types = TypeScriptTransformer::create($config)->transform();
 
-      if (!empty($tsNameSpacePrefix)) {
-        $output->writeln('<info>' . 'Stripping namespace ' . $tsNameSpacePrefix . '</>');
-        $this->fixupTypeScriptTransformer($tsNameSpacePrefix, $outputFile, $output);
+      if (!empty($tsNamespacePrefix)) {
+        $output->writeln('<info>' . 'Stripping namespace ' . $tsNamespacePrefix . '</>');
+        $this->fixupTypeScriptTransformer($tsNamespacePrefix, $outputFile, $output);
       }
 
       if ($input->getOption(self::OPTION_AS_MODULES)) {
         $metadataGenerator = new GenerateEntityMetadata(
-          phpNameSpacePrefix: $input->getOption(self::OPTION_NS_PREFIX),
+          phpNamespacePrefix: $input->getOption(self::OPTION_NS_PREFIX),
           outputPrefix: $outputPrefix . self::TS_MODULES_DIR,
           output: $output,
         );
         $metadataGenerator->generateSparseMetadata();
-        $entityMapNameSpace = $metadataGenerator->exportEntityMap();
+        $entityMapNamespace = $metadataGenerator->exportEntityMap();
         $tsData = file_get_contents($outputFile);
-        $tsData = $entityMapNameSpace . "\n" . $tsData;
+        $tsData = $entityMapNamespace . "\n" . $tsData;
         file_put_contents($outputFile, $tsData);
 
         $this->generateTypeScriptModules($outputPrefix, $outputFile, $output);
@@ -343,7 +362,7 @@ class PhpToTypeScript extends Command
   }
 
   /**
-   * @param string $tsNameSpacePrefix
+   * @param string $tsNamespacePrefix
    *
    * @param string $outputFile
    *
@@ -352,12 +371,12 @@ class PhpToTypeScript extends Command
    * @return void
    */
   private function fixupTypeScriptTransformer(
-    string $tsNameSpacePrefix,
+    string $tsNamespacePrefix,
     string $outputFile,
     ConsoleOutputInterface $output,
   ): void {
     // strip the top-level namespace as requested and record "root" data types.
-    $tsData = str_replace($tsNameSpacePrefix, '', file_get_contents($outputFile));
+    $tsData = str_replace($tsNamespacePrefix, '', file_get_contents($outputFile));
 
     // fixup [key: EnumType]
     //
@@ -408,7 +427,7 @@ class PhpToTypeScript extends Command
     $topLevelTypes = [];
     $currentModule = null;
     $currentFullNS = null;
-    $allNameSpaces = [];
+    $allNamespaces = [];
     $headerData = [];
     $currentData = null;
     $templateString = false;
@@ -427,11 +446,11 @@ class PhpToTypeScript extends Command
       $backticksCount = substr_count($line, '`');
       if (!$templateString && $backticksCount == 0) {
         if (str_starts_with($line, self::NS_DECLARATION)) {
-          $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
-          $currentFullNS = implode('.', $nameSpaces);
-          $textSection->writeln('Current FQ NameSpace ' . $currentFullNS, options: OutputInterface::VERBOSITY_NORMAL);
-          $allNameSpaces[] = $currentFullNS;
-          $allNameSpaces = array_values(array_unique($allNameSpaces));
+          $namespaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
+          $currentFullNS = implode('.', $namespaces);
+          $textSection->writeln('Current FQ Namespace ' . $currentFullNS, options: OutputInterface::VERBOSITY_NORMAL);
+          $allNamespaces[] = $currentFullNS;
+          $allNamespaces = array_values(array_unique($allNamespaces));
         } elseif (str_starts_with($line, self::TYPE_DECLARATION)) {
           [,, $type] = explode(' ', $line);
           [, $typeDefinition] = explode('=', $line);
@@ -445,7 +464,7 @@ class PhpToTypeScript extends Command
       $line = fgets($tsFile, self::LINE_BUFFER_SIZE);
     }
     if (!empty($topLevelTypes)) {
-      $allNameSpaces[] = self::ROOT_NS;
+      $allNamespaces[] = self::ROOT_NS;
     }
     // Second run: emit typedefs, replace namespaces as appropriate
     $templateString = false;
@@ -461,14 +480,14 @@ class PhpToTypeScript extends Command
       $backticksCount = substr_count($line, '`');
       if (!$templateString && $backticksCount == 0) {
         if (str_starts_with($line, self::NS_DECLARATION)) {
-          $nameSpaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
-          $currentFullNS = implode('.', $nameSpaces);
+          $namespaces = explode('.', trim(substr($line, strlen(self::NS_DECLARATION)), ' {'));
+          $currentFullNS = implode('.', $namespaces);
           $modulesPath = $modulesDir;
-          while (!empty($nameSpaces)) {
-            $currentNs = array_shift($nameSpaces);
-            if (!empty($nameSpaces)) {
+          while (!empty($namespaces)) {
+            $currentNs = array_shift($namespaces);
+            if (!empty($namespaces)) {
               // emit trampoline modules
-              $nextNs = reset($nameSpaces);
+              $nextNs = reset($namespaces);
               $currentModule = $modulesPath . $currentNs . '.ts';
               $newData = "export * as {$nextNs} from './{$currentNs}/{$nextNs}.ts';";
               $currentData = file_get_contents($currentModule);
@@ -515,17 +534,17 @@ EOF;
           }
           $line = str_replace($currentFullNS . '.', '', $line);
 
-          foreach ($allNameSpaces as $existingNameSpace) {
-            // if (preg_match('/[[:^alnum:]]' . preg_quote($existingNameSpace . '.') . '/', $typeSpec)) {
-            if (str_starts_with($existingNameSpace, $currentFullNS) && $existingNameSpace != $currentFullNS) {
-              $namespaceForMatch = substr($existingNameSpace, strlen($currentFullNS) + 1);
+          foreach ($allNamespaces as $existingNamespace) {
+            // if (preg_match('/[[:^alnum:]]' . preg_quote($existingNamespace . '.') . '/', $typeSpec)) {
+            if (str_starts_with($existingNamespace, $currentFullNS) && $existingNamespace != $currentFullNS) {
+              $namespaceForMatch = substr($existingNamespace, strlen($currentFullNS) + 1);
             } else {
-              $namespaceForMatch = $existingNameSpace;
+              $namespaceForMatch = $existingNamespace;
             }
             if (preg_match('/(([^:]+):|export type)(.*)([[:^alnum:]])(' . preg_quote($namespaceForMatch . '.') . ')/', $line)) {
               $selfNS = explode('.', $currentFullNS);
-              $refNS = explode('.', $existingNameSpace);
-              $textSection->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNameSpace, options: OutputInterface::VERBOSITY_NORMAL);
+              $refNS = explode('.', $existingNamespace);
+              $textSection->writeln('CROSSREF ' . $currentFullNS . ' ' . $existingNamespace, options: OutputInterface::VERBOSITY_NORMAL);
               $prefix = [];
               // Database.Doctrine.ORM.EntityMetadata
               // Database.Doctrine.ORM.Util
@@ -535,13 +554,13 @@ EOF;
               //  Database.Doctrine.ORM.Entities
               while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS)) {
                 array_shift($selfNS);
-                $importNameSpace = array_shift($refNS);
-                $prefix[] = $importNameSpace;
+                $importNamespace = array_shift($refNS);
+                $prefix[] = $importNamespace;
               }
               // do {
               //   array_shift($selfNS);
-              //   $importNameSpace = array_shift($refNS);
-              //   $prefix[] = $importNameSpace;
+              //   $importNamespace = array_shift($refNS);
+              //   $prefix[] = $importNamespace;
               // } while (!empty($selfNS) && !empty($refNS) && reset($selfNS) == reset($refNS));
               // EntityMetadata
               // Util
@@ -551,7 +570,7 @@ EOF;
               if (!empty($selfNS) && !empty($refNS)) {
                 // can move one level further down.
                 array_shift($selfNS);
-                $importNameSpace = array_shift($refNS);
+                $importNamespace = array_shift($refNS);
               } else {
                 array_pop($prefix);
               }
@@ -561,14 +580,14 @@ EOF;
                 $erasePrefix = implode('.', $prefix) . '.';
               }
               $upFolders = str_repeat('../', count($selfNS));
-              $importPath = "./{$upFolders}{$importNameSpace}";
+              $importPath = "./{$upFolders}{$importNamespace}";
               while (!empty($refNS)) {
-                $erasePrefix .= $importNameSpace . '.';
-                $importNameSpace = array_shift($refNS);
-                $importPath .= '/' . $importNameSpace;
+                $erasePrefix .= $importNamespace . '.';
+                $importNamespace = array_shift($refNS);
+                $importPath .= '/' . $importNamespace;
               }
-              $line = str_replace($erasePrefix . $importNameSpace . '.', $importNameSpace . '.', $line);
-              $headerData[] = "import type * as {$importNameSpace} from '{$importPath}.ts';";
+              $line = str_replace($erasePrefix . $importNamespace . '.', $importNamespace . '.', $line);
+              $headerData[] = "import type * as {$importNamespace} from '{$importPath}.ts';";
             }
           }
           $currentData .= $line . PHP_EOL;

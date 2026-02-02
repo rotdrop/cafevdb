@@ -33,13 +33,18 @@ ini_set('display_errors', 'stderr');
  *
  */
 
-require_once(__DIR__ . '/console-setup.php');
-require_once(__DIR__ . '/../vendor/autoload.php');
-require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
-require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
+try {
+  require_once(__DIR__ . '/console-setup.php');
+  require_once(__DIR__ . '/../vendor/autoload.php');
+  require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
+  require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
+} catch (\Throwable $t) {
+  echo 'composer_not_set_up' . PHP_EOL;
+  return 1;
+}
 
 use OCA\CAFEVDB\Common\ConsoleOutput;
-use OCA\CAFEVDB\DevScripts\PhpToTypeScript;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Spatie\TypeScriptTransformer\Transformers;
 
@@ -62,13 +67,21 @@ $outputFiles = [
   ],
 ];
 
+// obsolete
 $excludes = [
   'lib/Database/Doctrine/ORM/Proxies',
+];
+
+$scopedNamespaces = [
+  \Doctrine::class,
+  \Carbon::class,
+  \Ramsey\Uuid::class,
 ];
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   configInfo: $outputFiles,
   excludes: $excludes,
+  scopedNamespaces: $scopedNamespaces,
 );
 
 $phpToTypeScript->run(

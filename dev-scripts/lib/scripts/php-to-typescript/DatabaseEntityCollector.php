@@ -61,7 +61,14 @@ class DatabaseEntityCollector extends DefaultCollector
       return false;
     }
 
-    if (empty($class->getAttributes(ORM\Entity::class))) {
+    $entityAttribute = ORM\Entity::class;
+    $scopedNamespaces = $this->config->getScopedNamespaces();
+    if (!empty(array_filter($scopedNamespaces, fn(string $nameSpace) => str_starts_with($entityAttribute, $nameSpace)))) {
+      $scopedNamespacePrefix = $this->config->getScopedNamespacePrefix();
+      $entityAttribute = "{$scopedNamespacePrefix}\\{$entityAttribute}";
+    }
+
+    if (empty($class->getAttributes($entityAttribute))) {
       return false;
     }
 

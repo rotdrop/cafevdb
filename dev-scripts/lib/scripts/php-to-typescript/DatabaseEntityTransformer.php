@@ -41,7 +41,7 @@ class DatabaseEntityTransformer extends DtoTransformer
 
   /** {@inheritdoc} */
   public function __construct(
-    ClassConstantsTransformerConfig $config,
+    TransformerConfig $config,
   ) {
     parent::__construct($config);
     $this->classConstantsTransformer = new ClassConstantsTransformer($config);

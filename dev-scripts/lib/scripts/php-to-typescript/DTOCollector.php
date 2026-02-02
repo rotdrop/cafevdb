@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 
@@ -32,7 +30,7 @@ use Spatie\TypeScriptTransformer\Structures\TypesCollection;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\TypeReflectors\ClassTypeReflector;
 
-use OCA\CAFEVDB\Toolkit\DTO\AbstractDTO;
+use OCA\RotDrop\Toolkit\DTO\AbstractDTO;
 
 /**
  * Collect DTOs.
@@ -60,11 +58,13 @@ class DTOCollector extends DefaultCollector
       return false;
     }
 
-    if (! $class->isSubclassOf(AbstractDTO::class)) {
+    $appNamespace = $this->config->getAppNamespace();
+    $dtoClass = str_replace('RotDrop', $appNamespace, AbstractDTO::class);
+
+    if (!$class->isSubclassOf($dtoClass)) {
       return false;
     }
 
     return true;
   }
-
 }

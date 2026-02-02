@@ -38,7 +38,7 @@ class ClassConstantsTransformer implements Transformer
 {
   /** {@inheritdoc} */
   public function __construct(
-    protected ClassConstantsTransformerConfig $config,
+    protected TransformerConfig $config,
   ) {
   }
 

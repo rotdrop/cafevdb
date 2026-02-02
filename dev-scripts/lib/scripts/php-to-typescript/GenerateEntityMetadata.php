@@ -1,9 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
@@ -23,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\DevScripts\PhpToTypeScript;
+namespace OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use ReflectionClass;
 use UnexpectedValueException;
@@ -35,13 +33,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception as ProcessExceptions;
 use Symfony\Component\Console\Helper\ProgressBar;
 
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\FieldMapping;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToOneAssociationMapping;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToManyAssociationMapping;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ToOneOwningSideMapping;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping;
+use OCA\RotDrop\Toolkit\Traits\Constants;
 
 /**
  * Generate enough meta-data for TypeScript to be able to define getters for
@@ -49,9 +41,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\JoinColumnMapping;
  */
 class GenerateEntityMetadata
 {
+  use \OCA\RotDrop\Toolkit\Traits\CamelCaseToDashesTrait;
+
   private array $entityMetaInfo = [];
 
-  private string $entityNameSpace;
+  private string $entityNamespace;
 
   const FIELD_TYPE_OWNED = 'owned';
   const FIELD_TYPE_TO_ONE = 'to-one';
@@ -69,7 +63,7 @@ class GenerateEntityMetadata
   /**
    * CTOR.
    *
-   * @param string $phpNameSpacePrefix PHP-Namespace prefix to strip from the
+   * @param string $phpNamespacePrefix PHP-Namespace prefix to strip from the
    * start. Output will go to subdirectories according to the
    * remaining namespace.
    *
@@ -83,10 +77,10 @@ class GenerateEntityMetadata
    * obtain the list of known databse entities and the meta-data information.
    */
   public function __construct(
-    private string $phpNameSpacePrefix,
+    private string $phpNamespacePrefix,
     private string $outputPrefix,
     private ConsoleOutputInterface $output,
-    private string $ormCliCmd = __DIR__ . '/../orm-cmd.php',
+    private string $ormCliCmd = __DIR__ . '/../../../orm-cmd.php',
   ) {
   }
 
@@ -120,11 +114,11 @@ class GenerateEntityMetadata
    */
   public function dumpTypeScriptData(): void
   {
-    if (!($this->entityNameSpace ?? null)) {
+    if (!($this->entityNamespace ?? null)) {
       throw new UnexpectedValueException('Entity-namespace is null, did you call ' . __CLASS__ . '::generateSparseMetadata()?');
     }
-    $entityParentNameSpace = substr($this->entityNameSpace, 0, strrpos($this->entityNameSpace, '\\'));
-    $entityParentPath = str_replace('\\', Constants::PATH_SEP, $entityParentNameSpace);
+    $entityParentNamespace = substr($this->entityNamespace, 0, strrpos($this->entityNamespace, '\\'));
+    $entityParentPath = str_replace('\\', Constants::PATH_SEP, $entityParentNamespace);
     $forwarderEntityPath = implode(Constants::PATH_SEP, array_fill(0, count(explode(Constants::PATH_SEP, self::META_DATA_FORWARDER_FOLDER)), '..'));
     $forwarderEntityPath .= "/{$entityParentPath}";
 
@@ -143,7 +137,7 @@ import type { EntityReference, EntityReferenceCollection } from './EntitySeriali
     $entityTypeMap = '';
     $entityMetadataTypeMap = '';
     foreach ($this->entityMetaInfo as $entity => $entityInfo) {
-      $upcaseEntity = strtoupper(Util::camelCaseToDashes($entity, '_'));
+      $upcaseEntity = strtoupper(self::camelCaseToDashes($entity, '_'));
 
       $metadataForwarder .= "import {
    type ENTITY_NAME as {$upcaseEntity}_ENTITY_NAME,
@@ -345,18 +339,18 @@ export {
 
       $metadata = json_decode($metadataJson, true);
 
-      if (!str_starts_with($entityName, $this->phpNameSpacePrefix)
+      if (!str_starts_with($entityName, $this->phpNamespacePrefix)
           || str_contains($entityName, 'Wrapped')) {
         $warningsSection->writeln('<error>' . "Entity {$entityName} has been skipped, not ours ..." . '</>');
         continue;
       }
       $shortName = new ReflectionClass($entityName)->getShortName();
-      if (!($this->entityNameSpace ?? null)) {
+      if (!($this->entityNamespace ?? null)) {
         // just assume all entities live in the same namespace ...
-        $this->entityNameSpace = trim(substr(substr($entityName, 0, -strlen($shortName) - 1), strlen($this->phpNameSpacePrefix)), '\\');
-        $headerSection->writeln('Entity-Namespace: ' . $this->entityNameSpace);
+        $this->entityNamespace = trim(substr(substr($entityName, 0, -strlen($shortName) - 1), strlen($this->phpNamespacePrefix)), '\\');
+        $headerSection->writeln('Entity-Namespace: ' . $this->entityNamespace);
       }
-      // $textSection->writeln('NAMESPACE ' . $this->entityNameSpace);
+      // $textSection->writeln('NAMESPACE ' . $this->entityNamespace);
       $entityName = $shortName;
       // echo $entityName . PHP_EOL;
       // print_r($metadata);

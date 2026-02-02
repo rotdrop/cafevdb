@@ -155,7 +155,7 @@ build: dev-setup npm-build post-build
 dev: dev-setup npm-dev post-build
 .PHONY: dev
 
-dev-setup: pre-build composer namespace-wrapper
+dev-setup: pre-build composer namespace-wrapper package-lock.json
 .PHONY: dev-setup
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
@@ -240,7 +240,6 @@ namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
 APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
 APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
 APP_TOOLKIT_NS = CAFEVDB
-APP_ENTITY_PARENT_NS = Database\Doctrine\ORM
 APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
@@ -256,13 +255,13 @@ TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --
 TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 
 #@private
-$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/php-to-typescript/*.php) Makefile
-	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
+$(TS_TYPE_FILES): dev-setup $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/php-to-typescript/*.php) Makefile
+	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)' --scoped-ns-prefix=$(WRAPPER_NAMESPACE_POSTFIX)
 	$(PRETTIER_FORMATTER) --write --ignore-path /dev/null $(TS_TYPES_DIR)
 	[ -x "$(ESLINT)" ] && $(ESLINT) $(TS_TYPES_DIR)
 
 #@private
-ts-type-files: $(TS_TYPE_FILES)
+ts-type-files: dev-setup $(TS_TYPE_FILES)
 # @echo $(TS_TYPE_FILES)
 # @echo $(TS_TYPE_FILES_DEPS)
 .PHONY: ts-type-files
