@@ -1,7 +1,5 @@
 /**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Loose collection of TypeScript stuff for reuse in my Nextcloud apps.
  *
  * @author Claus-Justus Heine
  * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -21,7 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
+import { appName } from '../../config.ts';
 import {
   reactive,
   set as vueSet,
@@ -30,12 +28,12 @@ import axios from '@nextcloud/axios';
 import { translate as t } from '@nextcloud/l10n';
 // eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs';
-import { generateOcsUrl } from '../toolkit/util/generate-url.ts';
-import { type EntityId, type EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
-import { type EntityResponse } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
-import { EnumOrderByOptions } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Repositories.ts';
-import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS } from '../../build/ts-types/php-modules/Database/Constants.ts';
-import entityFactory, { type FrontEndEntity } from '../services/entity-factory.ts';
+import { generateOcsUrl } from '../util/generate-url.ts';
+import { type EntityId, type EntityMap } from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import { type EntityResponse } from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import { EnumOrderByOptions } from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM.ts';
+import { QUERY_OPTIONS_KEY, QUERY_OPTION_WILDCARDS } from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/Constants.ts';
+import entityFactory, { type FrontEndEntity } from './entity-factory.ts';
 import { AppError } from '../types/errors.ts';
 import type { NonNegInt, NumberTuple, ObjectEntries } from '../types/type-traits.ts';
 

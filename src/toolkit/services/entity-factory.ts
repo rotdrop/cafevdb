@@ -1,7 +1,5 @@
 /**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Loose collection of TypeScript stuff for reuse in my Nextcloud apps.
  *
  * @author Claus-Justus Heine
  * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -31,11 +29,11 @@ import type {
   EntityAssociationFieldType,
   EntityMap,
   EntityNames,
-} from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
+} from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type {
   EntityReference,
   EntityReferenceCollection,
-} from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
+} from '../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import * as EntityRepository from './entity-repository.ts';
 import type { DecToZero, NonNegInt, NullableIf, NumberTuple, Zero } from '../types/type-traits.ts';
 
@@ -55,7 +53,7 @@ export type FrontEndEntity<N extends EntityNames, D extends NumberTuple = NonNeg
 
 const entityFactory = async <E extends keyof EntityMap, D extends NumberTuple = Zero>(entityName: E, entityDto: EntityDto<E>): Promise<FrontEndEntity<E, D> > => {
   const metadata: { [K in keyof EntityMap[E]]: EntityFieldMetadata<E> } =
-    (await import(`../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
+    (await import(`../../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata/${entityName}Metadata.ts`)).default;
 
   const dtoStructure = Object.fromEntries(Object.keys(entityDto).map(key => [key, true]));
   const entity: FrontEndEntity<E, D> = <FrontEndEntity<E, D> >{};
