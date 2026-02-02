@@ -22,9 +22,9 @@
  */
 
 import { entityIdentifiers } from './mock-axios-entity-repository-controller.ts';
-import { type EntityMap } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
-import { fetch as fetchEntity, find as findEntity, search as searchEntities } from '@/src/services/entity-repository.ts';
-import type { ObjectEntries } from '@/src/types/type-traits';
+import { type EntityMap } from '@/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import { fetch as fetchEntity, find as findEntity, search as searchEntities } from '@/src/toolkit/services/entity-repository.ts';
+import type { ObjectEntries } from '@/src/toolkit/types/type-traits';
 import { describe, it, expect } from '@jest/globals';
 
 describe('Fetch entities', () => {

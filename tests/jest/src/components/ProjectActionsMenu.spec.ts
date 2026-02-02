@@ -22,7 +22,7 @@
  */
 
 // mock-defining imports must come first
-import { entityIdentifiers, projectFolders } from '../services/mock-axios-entity-repository-controller.ts';
+import { entityIdentifiers, projectFolders } from '../toolkit/services/mock-axios-entity-repository-controller.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 //
 import {
@@ -44,7 +44,7 @@ import { expect, jest } from '@jest/globals';
 // import useAppDataStore from '@/src/stores/app-data.ts';
 import useErrorHandler from '@/src/stores/error-handler.ts';
 import { createPinia } from 'pinia';
-import type { AppError } from '@/src/types/errors.ts';
+import type { AppError } from '@/src/toolkit/types/errors.ts';
 import appRoutes from '@/src/router/routes.ts';
 
 setLoggerSilent(true);

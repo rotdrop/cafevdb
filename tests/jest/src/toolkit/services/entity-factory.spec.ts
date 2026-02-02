@@ -23,12 +23,12 @@
 
 import { generateEntities, entities, dtos } from './entity-repository-setup.ts';
 import { beforeAll, jest } from '@jest/globals';
-import entityFactory from '@/src/services/entity-factory.ts';
+import entityFactory from '@/src/toolkit/services/entity-factory.ts';
 
 const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
 
-jest.mock('@/src/services/entity-repository.ts', () => {
-  const originalModule: object = jest.requireActual('@/src/services/entity-repository.ts');
+jest.mock('@/src/toolkit/services/entity-repository.ts', () => {
+  const originalModule: object = jest.requireActual('@/src/toolkit/services/entity-repository.ts');
 
   return {
     __esModule: true,

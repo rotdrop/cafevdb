@@ -22,8 +22,8 @@
  */
 
 // mock-defining imports must come first
-import { entityIdentifiers } from '../services/mock-axios-entity-repository-controller.ts';
-import { entities } from '../services/entity-repository-setup.ts';
+import { entityIdentifiers } from '../toolkit/services/mock-axios-entity-repository-controller.ts';
+import { entities } from '../toolkit/services/entity-repository-setup.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 // normal imports
 import { beforeEach, describe, it, expect } from '@jest/globals';

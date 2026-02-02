@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@ import { spawnSync } from 'child_process';
 import type { OCSResponse } from '@nextcloud/typings/ocs';
 import path from 'path';
 import fs from 'fs';
-import { type EntityResponse } from '@/build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
-import entityFactory, { type FrontEndEntity } from '@/src/services/entity-factory.ts';
-import type { ObjectEntries } from '@/src/types/type-traits';
+import { type EntityResponse } from '@/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import entityFactory, { type FrontEndEntity } from '@/src/toolkit/services/entity-factory.ts';
+import type { ObjectEntries } from '@/src/toolkit/types/type-traits';
 
 const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
 const inputFilePrefix = 'EntityRepositoryResponse-' as const;
