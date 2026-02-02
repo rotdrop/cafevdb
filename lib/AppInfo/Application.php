@@ -59,9 +59,9 @@ use OCA\CAFEVDB\Settings\PersonalSection;
  *
  */
 
-
 use OCA\CAFEVDB\AddressBook\Registration as AddressBookRegistration;
 use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
+use OCA\CAFEVDB\Database\Registration as DatabaseRegistration;
 use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
@@ -74,9 +74,7 @@ use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
  */
 
 use OCA\CAFEVDB\AddressBook\ContactsAddressBook;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Middleware;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /*
  *
@@ -226,19 +224,6 @@ class Application extends App implements IBootstrap
 
     $context->registerService(self::MEMBERS_APP_NAME, fn($c) => self::getMembersAppName());
 
-    /* Doctrine DBAL needs a factory to be constructed. */
-    $context->registerService(\OCA\CAFEVDB\Database\Connection::class, function($c) {
-      return $c->query(EntityManager::class)->getConnection();
-    });
-
-    $context->registerService(IdentifierFlattener::class, function($c) {
-      $entityManager = $c->query(EntityManager::class);
-      return new IdentifierFlattener(
-        $entityManager->getUnitOfWork(),
-        $entityManager->getMetadataFactory(),
-      );
-    });
-
     // Register Middleware
     $context->registerMiddleWare(Middleware\ExceptionMiddleware::class); // must come first
     $context->registerMiddleWare(Middleware\SubAdminMiddleware::class);
@@ -247,22 +232,13 @@ class Application extends App implements IBootstrap
     $context->registerMiddleware(Middleware\ConfigLockMiddleware::class);
     $context->registerMiddleware(Middleware\ContentSecurityPolicyMiddleware::class);
 
-    // Register listeners
-    ListenerRegistration::register($context);
-
-    // Register PageRenderer stuff
-    PageRendererRegistration::register($context);
-
-    // Register Service stuff
-    ServiceRegistration::register($context);
-
-    // Register Storage stuff
-    StorageRegistration::register($context);
-
-    // Register crypto implementation
-    CryptoRegistration::register($context);
-
     AddressBookRegistration::register($context);
+    CryptoRegistration::register($context);
+    DatabaseRegistration::register($context);
+    ListenerRegistration::register($context);
+    PageRendererRegistration::register($context);
+    ServiceRegistration::register($context);
+    StorageRegistration::register($context);
 
     $context->registerNotifierService(\OCA\CAFEVDB\Notifications\Notifier::class);
   }
