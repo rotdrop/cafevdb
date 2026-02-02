@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Util;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\ORM\EntitySerializer;
 
 use BadMethodCallException;
 use DateTimeImmutable;
@@ -36,8 +36,8 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityArrayAdapter;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
@@ -77,10 +77,10 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReference::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReferenceCollection::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
@@ -117,7 +117,7 @@ class EntityArrayAdapterTest extends TestCase
 
   private EntityArrayAdapter $entityArrayAdapter;
 
-  private Util\EntitySerializer $entitySerializer;
+  private EntitySerializer\EntitySerializer $entitySerializer;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -141,7 +141,7 @@ class EntityArrayAdapterTest extends TestCase
 
     $this->entityManager->persist($this->musician);
 
-    $this->entitySerializer = new Util\EntitySerializer(
+    $this->entitySerializer = new EntitySerializer\EntitySerializer(
       entityManager: $this->entityManager,
       l: $mockProvider->getL10N(),
       logger: $mockProvider->getLoggerInterface(),

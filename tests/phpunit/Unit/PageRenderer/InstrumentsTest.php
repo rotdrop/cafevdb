@@ -43,8 +43,8 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Test aspects of the AllMusicians page renderer. */
-#[Attributes\CoversClass(PageRenderer\Instruments::class)]
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
+#[Attributes\CoversClass(PageRenderer\Instruments::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
 #[Attributes\CoversClass(PageRenderer\Registration::class)]
@@ -83,6 +83,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]

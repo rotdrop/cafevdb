@@ -104,6 +104,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Toolkit;
 
 /** Test aspects of the DatabaseStorageFolder entity. */
 #[Attributes\CoversClass(Entities\DatabaseStorageDirEntry::class)]
@@ -46,7 +47,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(Entities\File::class)]
 #[Attributes\UsesClass(Entities\FileData::class)]
 #[Attributes\UsesClass(EntityManager::class)]
-#[Attributes\UsesClass(Exceptions\DatabaseEntityException::class)]
+#[Attributes\UsesClass(Toolkit\Exceptions\DatabaseEntityException::class)]
 #[Attributes\UsesClass(Exceptions\DatabaseEntityExistsException::class)]
 class DatabaseStorageFolderTest extends TestCase
 {

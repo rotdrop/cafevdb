@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,16 +29,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Toolkit;
 
 /**
- * Test the Exceptions\DatabaseEntityException class and some of its child
+ * Test the Toolkit\Exceptions\DatabaseEntityException class and some of its child
  * classes.
  */
-#[Attributes\CoversClass(Exceptions\DatabaseEntityException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotUniqueException::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseInconsistentValueException::class)]
-#[Attributes\CoversClass(Exceptions\DatabaseMissingIdentifierException::class)]
+#[Attributes\CoversClass(Toolkit\Exceptions\DatabaseEntityException::class)]
+#[Attributes\CoversClass(Toolkit\Exceptions\DatabaseMissingIdentifierException::class)]
 class DatabaseEntityExceptionTest extends TestCase
 {
   private const MESSAGE = 'MESSAGE';

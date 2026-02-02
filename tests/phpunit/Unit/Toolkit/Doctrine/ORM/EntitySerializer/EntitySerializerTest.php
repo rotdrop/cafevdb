@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Util;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\ORM\EntitySerializer;
 
 use ReflectionClass;
 
@@ -32,17 +32,19 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /** Test the entity serializer with fake entities. */
-#[Attributes\CoversClass(EntitySerializer::class)]
-#[Attributes\CoversMethod(EntitySerializer::class, 'addEntity')]
-#[Attributes\CoversMethod(EntitySerializer::class, 'export')]
+#[Attributes\CoversClass(EntitySerializer\EntityReference::class)]
+#[Attributes\CoversClass(EntitySerializer\EntityReferenceCollection::class)]
+#[Attributes\CoversClass(EntitySerializer\EntityResponse::class)]
+#[Attributes\CoversClass(EntitySerializer\EntitySerializer::class)]
+#[Attributes\CoversMethod(EntitySerializer\EntitySerializer::class, 'addEntity')]
+#[Attributes\CoversMethod(EntitySerializer\EntitySerializer::class, 'export')]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -75,9 +77,6 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReference::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityReferenceCollection::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntityResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
@@ -116,7 +115,7 @@ class EntitySerializerTest extends TestCase
 
   private EntityManager $entityManager;
 
-  private EntitySerializer $entitySerializer;
+  private EntitySerializer\EntitySerializer $entitySerializer;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -139,7 +138,7 @@ class EntitySerializerTest extends TestCase
 
     $this->entityManager->persist($this->musician);
 
-    $this->entitySerializer = new EntitySerializer(
+    $this->entitySerializer = new EntitySerializer\EntitySerializer(
       entityManager: $this->entityManager,
       l: $mockProvider->getL10N(),
       logger: $mockProvider->getLoggerInterface(),
@@ -168,7 +167,7 @@ class EntitySerializerTest extends TestCase
     $this->entitySerializer->addEntity($this->musician);
     $exportData = $this->entitySerializer->export();
     json_encode($exportData, JSON_PRETTY_PRINT);
-    $this->assertInstanceOf(Util\EntityResponse::class, $exportData);
+    $this->assertInstanceOf(EntitySerializer\EntityResponse::class, $exportData);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
     $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
@@ -185,7 +184,7 @@ class EntitySerializerTest extends TestCase
     $exportData = $this->entitySerializer->export();
     $jsonData = json_encode($exportData, JSON_PRETTY_PRINT);
     $this->assertGreaterThan(0, strlen($jsonData));
-    $this->assertInstanceOf(Util\EntityResponse::class, $exportData);
+    $this->assertInstanceOf(EntitySerializer\EntityResponse::class, $exportData);
     $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->entities);
     $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->repositories);
     $this->assertArrayHasKey(new ReflectionClass(Entities\SepaBankAccount::class)->getShortName(), $exportData->repositories);
