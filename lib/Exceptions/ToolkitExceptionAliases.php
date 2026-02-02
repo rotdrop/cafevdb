@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Exceptions;
 
 // @codeCoverageIgnoreStart
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseEntityException::class, DatabaseEntityException::class);
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseEntityNotFoundException::class, DatabaseEntityNotFoundException::class);
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseException::class, DatabaseException::class);
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseMissingIdentifierException::class, DatabaseMissingIdentifierException::class);
 class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\EntitySerializationException::class, EntitySerializationException::class);

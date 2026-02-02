@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +20,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Exceptions;
+namespace OCA\RotDrop\Toolkit\Exceptions;
 
-// @codeCoverageIgnoreStart
-include_once(__DIR__ . '/ToolkitExceptionAliases.php');
-// @codeCoverageIgnoreEnd
+/** Thrown if an entity could not be found. */
+class DatabaseEntityNotFoundException extends DatabaseEntityException
+{
+  /**
+   * @param string $message
+   *
+   * @param int $code
+   *
+   * @param ?Throwable $previous
+   *
+   * @param ?string $entityClassName
+   *
+   * @param mixed $identifier
+   *
+   * {@inheritdoc}
+   */
+  public function __construct(
+    string $message,
+    int $code = 0,
+    ?Throwable $previous = null,
+    ?string $entityClassName = null,
+    public readonly mixed $identifier = null,
+  ) {
+    parent::__construct($message, $code, $previous, $entityClassName);
+  }
+}

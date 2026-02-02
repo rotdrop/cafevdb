@@ -625,6 +625,12 @@ class EntityManager extends AbstractEntityManager
     $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
   }
 
+  /** {@inheritdoc} */
+  public function getEntityNamespace(): string
+  {
+    return Entities::class;
+  }
+
   /**
    * @return array A simple configuration instance without extras.
    */
@@ -689,7 +695,7 @@ class EntityManager extends AbstractEntityManager
 
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
-    $driverChain->addDriver($attributeDriver, 'OCA\CAFEVDB\Database\Doctrine\ORM\Entities');
+    $driverChain->addDriver($attributeDriver, $this->getEntityNamespace());
 
     // register metadata driver
     $config->setMetadataDriverImpl($driverChain);

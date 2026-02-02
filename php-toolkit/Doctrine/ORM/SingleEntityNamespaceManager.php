@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +20,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Exceptions;
+namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 
-// @codeCoverageIgnoreStart
-include_once(__DIR__ . '/ToolkitExceptionAliases.php');
-// @codeCoverageIgnoreEnd
+/**
+ * Simplify acces to a single entity namespace is nothing more is managed.
+ */
+interface SingleEntityNamespaceManager
+{
+  /** @return string */
+  public function getEntityNamespace(): string;
+}

@@ -30,6 +30,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\App\IAppManager;
 use Psr\Container\ContainerInterface;
 
+use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
 use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
@@ -38,8 +39,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
 {
-  public const SCOPED_NAMESPACE = 'scopedNamespace';
-
   /**
    * Static service registration routine called by \OCA\CAFEVDB\AppInfo\Application.
    *
@@ -63,17 +62,6 @@ class Registration
         $entityManager->getUnitOfWork(),
         $entityManager->getMetadataFactory(),
       );
-    });
-
-    $context->registerService(self::SCOPED_NAMESPACE, function(ContainerInterface $c) {
-      /** @var AppInfoService $appInfoService */
-      $appInfoService = $c->get(AppInfoService::class);
-      $info = $appInfoService->getAppInfo();
-      if (!isset($info['scopednamespace'])) {
-        $l = $c->get(\OCP\IL10N::class);
-        throw new UnexpectedValueException($l->t('The "scopednamespace" key is missing in "appinfo/info.xml".'));
-      }
-      return "OCA\\{$info['namespace']}\\{$info['scopednamespace']}";
     });
   }
 }

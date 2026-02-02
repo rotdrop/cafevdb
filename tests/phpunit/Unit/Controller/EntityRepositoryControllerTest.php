@@ -209,6 +209,8 @@ class EntityRepositoryControllerTest extends TestCase
         return null;
       },
      );
+     $this->entityManager->method('getEntityNamespace')->willReturn(Entities::class);
+
      $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
 
     /** @var DatabaseProvider $databaseProvider */

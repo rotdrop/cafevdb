@@ -35,11 +35,7 @@ class AppInfoService
 {
   private static string $appInfoPath;
 
-  /** {@inheritdoc} */
-  public function __construct(
-    private IAppManager $appManager,
-  ) {
-  }
+  private static array $appInfo;
 
   /**
    * Determine the path to the app's info.xml file assuming that the app PHP
@@ -84,8 +80,14 @@ class AppInfoService
    *
    * @return array<string, mixed>
    */
-  public function getAppInfo(): array
+  public static function getAppInfo(): array
   {
-    return $this->appManager->getAppInfoByPath(self::getAppInfoPath());
+    if (self::$appInfo ?? null) {
+      return self::$appInfo;
+    }
+    /** @var IAppManager $appManager */
+    $appManager = \OCP\Server::get(IAppManager::class);
+    self::$appInfo = $appManager->getAppInfoByPath(self::getAppInfoPath());
+    return self::$appInfo;
   }
 }

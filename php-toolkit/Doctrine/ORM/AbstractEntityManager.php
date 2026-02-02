@@ -31,7 +31,7 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
  * this namespace. The consuming project's entity manager must extend
  * this class.
  */
-abstract class AbstractEntityManager extends EntityManagerDecorator
+abstract class AbstractEntityManager extends EntityManagerDecorator implements SingleEntityNamespaceManager
 {
   /**
    * @var string
