@@ -25,15 +25,14 @@ namespace OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * This must be replaced by the namespace containing the entity-namespace as
- * this is expected by the GenerateEntityMetadata class.
+ * The metadata generator must generate the metadata in "our" namespace.
  */
-use OCA\RotDrop\Database\Doctrine\ORM as EntityParentNamespace;
+use OCA\RotDrop\Toolkit\Doctrine\ORM;
 
 /**
  * Simple entity reference with optional class name and flattened identifier.
  */
-#[TSAttributes\TemplateParameters('K extends keyof ' . EntityParentNamespace::class . '.EntityMetadata.EntityMap')]
+#[TSAttributes\TemplateParameters('K extends keyof ' . ORM::class . '.EntityMetadata.EntityMap')]
 class EntityReferenceCollection extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
 {
   /** {@inheritdoc} */
@@ -45,7 +44,7 @@ class EntityReferenceCollection extends \OCA\RotDrop\Toolkit\DTO\AbstractDTO
      *
      * The array key is whatever has been specified by "indexBy".
      */
-    #[TSAttributes\LiteralTypeScriptType('{ [index: string|number]: ' . EntityReference::class . '<keyof ' . EntityParentNamespace::class . '.EntityMetadata.EntityMap> }')]
+    #[TSAttributes\LiteralTypeScriptType('{ [index: string|number]: ' . EntityReference::class . '<keyof ' . ORM::class . '.EntityMetadata.EntityMap> }')]
     public readonly array $entities,
   ) {
   }

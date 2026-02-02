@@ -29,14 +29,13 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
 use Doctrine\DBAL\Types;
-use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\Mapping;
-use Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use Doctrine\ORM\Utility\IdentifierFlattener;
 use Doctrine\ORM\Utility\PersisterHelper;
 use Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 
 use OCA\RotDrop\Toolkit\Exceptions;
+use OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager as EntityManager;
 
 /**
  * The goal is to serialize entities (... to JSON ...)  such that the JS
@@ -61,7 +60,7 @@ class EntitySerializer
 
   /** {@inheritdoc} */
   public function __construct(
-    protected AbstractEntityManager $entityManager,
+    protected EntityManager $entityManager,
     protected IL10n $l,
     protected LoggerInterface $logger,
   ) {
@@ -127,7 +126,7 @@ class EntitySerializer
    */
   private function flattenIdentifier(ClassMetadataInterface $classMetaData, array $id): string
   {
-    if ($classMetaData instanceof ClassMetadataDecorator) {
+    if (method_exists($classMetaData, 'getWrappedObject')) {
       $classMetaData = $classMetaData->getWrappedObject();
     }
     $ids = $this->identifierFlattener->flattenIdentifier($classMetaData, $id);
