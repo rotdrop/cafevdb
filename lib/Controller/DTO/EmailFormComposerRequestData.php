@@ -137,7 +137,7 @@ class EmailFormComposerRequestData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResp
       subject: $subject ?? null,
       submitAll: $submitAll ?? null,
       templateEmailOptions: $templateEmailOptions ?? null,
-      fromTag: $fromTag === null ? null : EnumFromTag::get($fromTag),
+      fromTag: ($fromTag ?? null) ? EnumFromTag::get($fromTag) : null,
       templateMessagesSelector: $templateMessagesSelector ?? null,
       draftMessagesSelector: $draftMessagesSelector ?? null,
       sentMessagesSelector: $sentMessagesSelector ?? null,
