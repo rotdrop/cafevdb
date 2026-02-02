@@ -24,18 +24,23 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Maintenance;
 
+use Throwable;
+use UnexpectedValueException;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\AppInfo\Application;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Registration;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\UnitOfWork;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadataFactory;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\UnitOfWork;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /** Test aspects of the application class, in particular service registrations. */
@@ -87,5 +92,45 @@ class ApplicationTest extends TestCase
     $entityManager->method('getMetadataFactory')->willReturn($this->createStub(ClassMetadataFactory::class));
     $identifierFlattener = $appContainer->get(IdentifierFlattener::class);
     $this->assertInstanceOf(IdentifierFlattener::class, $identifierFlattener);
+  }
+
+  private const FAKED_APPINFO = [
+    'namespace' => 'Namespace',
+    'scopednamespace' => 'ScopedNamespace\\SubNamespace',
+  ];
+
+  /** @return void */
+  public function testScopedNamespaceService(): void
+  {
+    $appInfoService = $this->getMockBuilder(AppInfoService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $appInfoService->expects($this->once())->method('getAppInfo')->willReturn(self::FAKED_APPINFO);
+    $this->mockProvider->registerClassInstance(AppInfoService::class, $appInfoService, global: true);
+    $appContainer = $this->mockProvider->getAppContainer();
+    $scopedNamespace = $appContainer->get(Registration::SCOPED_NAMESPACE);
+    $this->assertNotNull($scopedNamespace);
+    $components = explode('\\', $scopedNamespace, 3);
+    $this->assertEquals('OCA', $components[0]);
+    $this->assertEquals(self::FAKED_APPINFO['namespace'], $components[1]);
+    $this->assertEquals(self::FAKED_APPINFO['scopednamespace'], $components[2]);
+  }
+
+  /** @return void */
+  public function testScopedNamespaceServiceFailure(): void
+  {
+    $appInfoService = $this->getMockBuilder(AppInfoService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $appInfoService->expects($this->once())->method('getAppInfo')->willReturn([
+      'namespace' => self::FAKED_APPINFO['namespace'],
+    ]);
+    $this->mockProvider->registerClassInstance(AppInfoService::class, $appInfoService, global: true);
+    $appContainer = $this->mockProvider->getAppContainer();
+    try {
+      $appContainer->get(Registration::SCOPED_NAMESPACE);
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(UnexpectedValueException::class, $t);
+    }
   }
 }

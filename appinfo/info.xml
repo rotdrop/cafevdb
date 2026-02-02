@@ -3,6 +3,7 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
   <id>cafevdb</id>
   <namespace>CAFEVDB</namespace>
+  <scopednamespace>Wrapped</scopednamespace>
   <name>CAFeV DB</name>
   <description>Orchestra Management Application</description>
   <codename>Keep Going</codename>

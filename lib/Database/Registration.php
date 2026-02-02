@@ -24,16 +24,22 @@
 
 namespace OCA\CAFEVDB\Database;
 
+use UnexpectedValueException;
+
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\App\IAppManager;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFEVDB\Toolkit\Service\AppInfoService;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Utility\IdentifierFlattener;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
 {
+  public const SCOPED_NAMESPACE = 'scopedNamespace';
+
   /**
    * Static service registration routine called by \OCA\CAFEVDB\AppInfo\Application.
    *
@@ -47,18 +53,27 @@ class Registration
     $context->registerServiceAlias(AbstractEntityManager::class, EntityManager::class);
 
     /* Doctrine DBAL needs a factory to be constructed. */
-    $context->registerService(Connection::class, function($c) {
-      return $c->query(EntityManagerInterface::class)->getConnection();
+    $context->registerService(Connection::class, function(ContainerInterface $c) {
+      return $c->get(EntityManagerInterface::class)->getConnection();
     });
 
-    $context->registerService(IdentifierFlattener::class, function($c) {
-      $entityManager = $c->query(EntityManagerInterface::class);
+    $context->registerService(IdentifierFlattener::class, function(ContainerInterface $c) {
+      $entityManager = $c->get(EntityManagerInterface::class);
       return new IdentifierFlattener(
         $entityManager->getUnitOfWork(),
         $entityManager->getMetadataFactory(),
       );
     });
 
-
+    $context->registerService(self::SCOPED_NAMESPACE, function(ContainerInterface $c) {
+      /** @var AppInfoService $appInfoService */
+      $appInfoService = $c->get(AppInfoService::class);
+      $info = $appInfoService->getAppInfo();
+      if (!isset($info['scopednamespace'])) {
+        $l = $c->get(\OCP\IL10N::class);
+        throw new UnexpectedValueException($l->t('The "scopednamespace" key is missing in "appinfo/info.xml".'));
+      }
+      return "OCA\\{$info['namespace']}\\{$info['scopednamespace']}";
+    });
   }
 }
