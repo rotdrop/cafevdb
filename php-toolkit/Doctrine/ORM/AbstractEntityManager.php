@@ -27,7 +27,9 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 /**
- * Abstract base class with functionality needed by the classes in this namespace. The consuming project's entity manager must extend this class.
+ * Abstract base class with functionality needed by the classes in
+ * this namespace. The consuming project's entity manager must extend
+ * this class.
  */
 abstract class AbstractEntityManager extends EntityManagerDecorator
 {
@@ -77,14 +79,10 @@ abstract class AbstractEntityManager extends EntityManagerDecorator
       return null;
     }
     $oldState = $this->getFilters()->isEnabled($filterName);
-    try {
-      if ($state) {
-        $this->getFilters()->enable($filterName);
-      } else {
-        $this->getFilters()->disable($filterName);
-      }
-    } catch (Throwable) {
-      // just ignore, we just want to have the work done.
+    if ($state && !$oldState) {
+      $this->getFilters()->enable($filterName);
+    } elseif (!$state && $oldState) {
+      $this->getFilters()->disable($filterName);
     }
     return $oldState;
   }
