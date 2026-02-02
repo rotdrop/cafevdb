@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } f
 import type { ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
 import searchEntities from '../services/search-entities.ts';
-import type { FrontEndEntity } from '../services/entity-factory.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
 
 require('./jquery-readonly.ts');

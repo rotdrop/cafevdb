@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
+import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import { SEARCH_DATABASE_ENTITIES } from '../event-bus-events.ts';
 import { emit as asyncEmit, getEmitResult } from './async-event-bus.ts';
-import type { search as searchRepository, SearchArguments } from './entity-repository.ts';
+import type { search as searchRepository, SearchArguments } from '../toolkit/services/entity-repository.ts';
 
 /**
  * Search for entities of the given name. In order to separate "new"

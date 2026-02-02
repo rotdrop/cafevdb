@@ -377,7 +377,7 @@ import svgEmailUnchecked from '../../img/email-new-path.svg?raw'
 import svgEmailCross from '../../img/email-new-x-path.svg?raw'
 import useAppDataStore from '../stores/app-data.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../types/errors.ts'
+import { AppError } from '../toolkit/types/errors.ts'
 import { generateUrl } from '@nextcloud/router'
 import type {
   CalendarUris,

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import Console from '../util/console.ts';
-import type { AppError, ErrorHandler } from '../types/errors.ts';
+import type { AppError, ErrorHandler } from '../toolkit/types/errors.ts';
 
 const storeId = 'error-handler';
 

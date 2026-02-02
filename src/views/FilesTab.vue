@@ -223,7 +223,7 @@ import type {
   ContactKeys,
   MailMergePayload,
 } from '../types/ajax/mail-merge.ts'
-import type { FrontEndEntity } from '../services/entity-factory.ts'
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)

@@ -71,7 +71,7 @@ import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { NcSelect } from '@nextcloud/vue'
-import { loadEntities } from '../services/entity-repository.ts'
+import { loadEntities } from '../toolkit/services/entity-repository.ts'
 import Console from '../util/console.ts'
 import { type EnumMusiciansSearchScope } from '../../build/ts-types/php-modules/Controller.ts'
 

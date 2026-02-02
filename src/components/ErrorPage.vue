@@ -215,7 +215,7 @@ import {
   isAxiosErrorResponse as isAxiosErrorResponseGuard,
   isAxiosError as isAxiosErrorGuard,
 } from '../toolkit/types/axios-type-guards.ts'
-import { AppError } from '../types/errors.ts'
+import { AppError } from '../toolkit/types/errors.ts'
 import {
   computed,
   onBeforeMount,

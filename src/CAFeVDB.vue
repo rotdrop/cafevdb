@@ -327,7 +327,7 @@ import {
   del as vueDel,
 } from 'vue'
 import Console from './util/console.ts'
-import { AppError } from './types/errors.ts'
+import { AppError } from './toolkit/types/errors.ts'
 import { options as tooltipOptions } from 'floating-vue'
 import md5 from 'blueimp-md5'
 import type {

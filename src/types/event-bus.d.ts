@@ -24,7 +24,7 @@
 // import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { jqXHR } from '@types/jquery/misc.d.ts';
 import { messages } from '../app/notification.ts';
-import type { SearchArguments as SearchEntitiesArguments, search as searchEntities } from '../services/entity-repository.ts';
+import type { SearchArguments as SearchEntitiesArguments, search as searchEntities } from '../toolkit/services/entity-repository.ts';
 
 import {
   ADD_CONTACTS_TO_PROJECT,
@@ -69,8 +69,8 @@ import type { ComponentProps, PropsData } from '../mountable-component-names.ts'
 
 import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
 import type { GlobalState } from '../app/globalstate.ts';
-import type { EntityMap } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/EntityMetadata.ts';
-import type { LegacyPageActionsMenu } from './components';
+import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { LegacyPageActionsMenu } from '../components/LegacyPageActionsMenu.vue';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 

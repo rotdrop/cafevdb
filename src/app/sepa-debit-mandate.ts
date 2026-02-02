@@ -101,7 +101,7 @@ require('./jquery-datetimepicker.ts');
 
 require('./jquery-readonly.ts');
 
-// import { hasProperty } from '../types/type-traits.ts';
+// import { hasProperty } from '../toolkit/types/type-traits.ts';
 // const isSepaBankAccount = (arg: Record<string, unknown>): arg is SepaBankAccount =>
 //   hasProperty('bankAccountSequence', arg);
 // const isSepaDebitMandate = (arg: Record<string, unknown>): arg is SepaDebitMandate =>

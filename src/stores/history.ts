@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ import getInitialState from '../toolkit/util/initial-state.ts';
 import router from '../router/app-router.ts';
 import type { TemplatePostData } from '../util/legacy-post-data.ts';
 import useErrorHandler from './error-handler.ts';
-import { AppError } from '../types/errors.ts';
+import { AppError } from '../toolkit/types/errors.ts';
 import { appName } from '../config.ts';
 import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
 import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';

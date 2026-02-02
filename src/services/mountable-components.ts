@@ -28,7 +28,7 @@ import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
 import type { VueConstructor } from 'vue/types/vue';
-import { AppError } from '../types/errors.ts';
+import { AppError } from '../toolkit/types/errors.ts';
 
 const vueConstructors: Record<string, VueConstructor> = {};
 

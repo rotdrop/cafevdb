@@ -36,7 +36,7 @@ import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
 import { type NextcloudExceptionLogEntry, isNextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
 import type Keyable from '../types/keyable.d.ts';
 import type { IException } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
-import { hasProperty } from '../types/type-traits.ts';
+import { hasProperty } from '../toolkit/types/type-traits.ts';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 

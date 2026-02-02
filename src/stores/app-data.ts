@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,8 +41,8 @@ import {
 } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import Console from '../util/console.ts';
-import { AppError } from '../types/errors.ts';
-import type { ErrorContext, ErrorHandler } from '../types/errors.ts';
+import { AppError } from '../toolkit/types/errors.ts';
+import type { ErrorContext, ErrorHandler } from '../toolkit/types/errors.ts';
 import { appName } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import useErrorHandler from './error-handler.ts';
@@ -50,8 +50,8 @@ import type { AnyPromise } from '../types/promise.d.ts';
 import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
 import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import useDatabaseEntities from './database-entities.ts';
-import type { FrontEndEntity } from '../services/entity-factory.ts';
-import type { EntityReference } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Util.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
+import type { EntityReference } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
 import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 

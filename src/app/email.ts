@@ -96,7 +96,7 @@ import {
   projectModeOffCssClass,
   showSelectableCssClass,
 } from 'emailform.scss';
-import { asKey } from '../types/type-traits.ts';
+import { asKey } from '../toolkit/types/type-traits.ts';
 
 require('cafevdb-selectize.scss');
 

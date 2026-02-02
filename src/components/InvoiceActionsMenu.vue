@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -75,7 +75,7 @@ import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../types/errors.ts'
+import { AppError } from '../toolkit/types/errors.ts'
 import { computed, ref } from 'vue'
 import * as BusEvents from '../event-bus-events.ts'
 import { INVOICE_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'

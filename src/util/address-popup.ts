@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import { appName } from '../config.ts';
 import { translate as t, getCanonicalLocale } from '@nextcloud/l10n';
 import type { Contact } from '../types/address-book.d.ts';
 import { stringValue } from '../util/string-valued.ts';
-import type { FrontEndEntity } from '../services/entity-factory.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 
 const addressItemUnknownLabel = (item: string) =>
   t(appName, '{item}: unknown', { item: t(appName, item) });
