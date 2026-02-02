@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-/** Base-class for database exceptions. */
-class DatabaseException extends \OCA\CAFEVDB\Toolkit\Exceptions\DatabaseException
-{
-}
+// @codeCoverageIgnoreStart
+include_once(__DIR__ . '/ToolkitExceptionAliases.php');
+// @codeCoverageIgnoreEnd

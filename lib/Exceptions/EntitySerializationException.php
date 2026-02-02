@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,25 +24,6 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
-/**
- * Exception thrown by  OCA\CAFEVDB\Database\Doctrine\ORM\Util\EntitySerializer.
- */
-class EntitySerializationException extends DatabaseException
-{
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    string $message,
-    protected mixed $entity,
-    int $code = 0,
-    $previous = null,
-  ) {
-    parent::__construct($message, $code, $previous);
-  }
-  // phpcs:enable
-
-  /** @return mixed */
-  public function getEntity():mixed
-  {
-    return $this->entity;
-  }
-}
+// @codeCoverageIgnoreStart
+include_once(__DIR__ . '/ToolkitExceptionAliases.php');
+// @codeCoverageIgnoreEnd

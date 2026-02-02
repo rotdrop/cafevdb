@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,5 +25,8 @@
 namespace OCA\CAFEVDB\Exceptions;
 
 // @codeCoverageIgnoreStart
-include_once(__DIR__ . '/ToolkitExceptionAliases.php');
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseEntityException::class, DatabaseEntityException::class);
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseException::class, DatabaseException::class);
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\DatabaseMissingIdentifierException::class, DatabaseMissingIdentifierException::class);
+class_alias(\OCA\CAFEVDB\Toolkit\Exceptions\EntitySerializationException::class, EntitySerializationException::class);
 // @codeCoverageIgnoreEnd
