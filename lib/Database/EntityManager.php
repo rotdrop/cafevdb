@@ -58,6 +58,7 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions as CJH;
 use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
 use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
@@ -92,7 +93,7 @@ use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
  * @todo Some of the methods should rather go to a meta-data
  * decorator.
  */
-class EntityManager extends EntityManagerDecorator
+class EntityManager extends AbstractEntityManager
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
@@ -111,12 +112,6 @@ class EntityManager extends EntityManagerDecorator
    * Hash-transformer key, see $this->getDataTransformer()
    */
   const TRANSFORM_HASH = 'hash';
-
-  /**
-   * @var string
-   * The name of the soft-deleteable filter
-   */
-  const SOFT_DELETEABLE_FILTER = 'soft-deleteable';
 
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
   private $entityManager;
@@ -306,6 +301,9 @@ class EntityManager extends EntityManagerDecorator
     }
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
+    if (!$this->showSoftDeleted) {
+      $this->setFilterEnabled(self::SOFT_DELETEABLE_FILTER);
+    }
     if ($this->connected()) {
       $this->registerTypes();
     } else {
@@ -596,10 +594,6 @@ class EntityManager extends EntityManagerDecorator
 
     $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
     $entityManager = new ORMEntityManager($connection, $config, $eventManager);
-
-    if (!$this->showSoftDeleted) {
-      $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
-    }
 
     if ($this->devMode) {
       // Shoot-down the cache. Note that this is the regular cache, as we
@@ -1292,31 +1286,6 @@ class EntityManager extends EntityManagerDecorator
   public function decorateClassMetadata(bool $onOff):void
   {
     $this->decorateClassMetadata = $onOff;
-  }
-
-  /**
-   * Unfortunately the ORM builtin FilterCollection likes to throw too many
-   * exceptions. So work around that mis-feature.
-   *
-   * @param string $filterName The name of the filter.
-   *
-   * @param bool $state The state to set. Defaults to \true.
-   *
-   * @return bool The old state of the filter.
-   */
-  public function setFilterEnabled(string $filterName, bool $state = true): bool
-  {
-    $oldState = $this->getFilters()->isEnabled($filterName);
-    try {
-      if ($state) {
-        $this->getFilters()->enable($filterName);
-      } else {
-        $this->getFilters()->disable($filterName);
-      }
-    } catch (Throwable) {
-      // just ignore, we just want to have the work done.
-    }
-    return $oldState;
   }
 
   /** @return void */
