@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2026 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,27 +20,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database;
+namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /**
- * Define some database specific constants like the desired character set and
- * collation
+ * Provide some constants for options understood by the FindLikeTrait.
  */
 #[TSAttributes\TypeScript]
-class Constants extends \OCA\CAFEVDB\Toolkit\Doctrine\ORM\Constants
+class Constants
 {
-  public const CHARACTER_SET = 'utf8mb4';
-  public const SHORT_COLLATION = 'uca1400_ai_ci';
-  public const FULL_COLLATION = self::CHARACTER_SET . '_' . self::SHORT_COLLATION;
-  /**
-   * @var int
+    /**
+   * @var string
    *
-   * The number of signification digits for monetary values, this means we can
-   * handle values in the ragne of [-99,999.99, +99,999.99].
+   * The very first array element to findBy() as defined in
+   * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait may contain
+   * options if it is strictly equal to this value.
    */
-  public const MONETARY_PRECISION = 7;
-  public const MONETARY_SCALE = 2;
-  public const MONETARY_TYPE = 'DECIMAL(' . self::MONETARY_PRECISION . ', ' . self::MONETARY_SCALE . ')';
+  public const QUERY_OPTIONS_KEY = EntityRepository::QUERY_OPTIONS_KEY;
+  public const QUERY_OPTION_WILDCARDS = EntityRepository::QUERY_OPTION_WILDCARDS;
+  public const WILDCARD_QUERY_OPTIONS = EntityRepository::WILDCARD_QUERY_OPTIONS;
+
 }
