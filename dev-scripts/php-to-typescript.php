@@ -34,7 +34,7 @@ ini_set('display_errors', 'stderr');
  */
 
 try {
-  require_once(__DIR__ . '/console-setup.php');
+  require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once(__DIR__ . '/../vendor/autoload.php');
   require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
   require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
@@ -79,6 +79,7 @@ $scopedNamespaces = [
 ];
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
+  devScriptsFolder: __DIR__,
   configInfo: $outputFiles,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
