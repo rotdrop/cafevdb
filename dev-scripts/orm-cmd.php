@@ -31,7 +31,7 @@
  *
  */
 
-require_once(__DIR__ . '/console-setup.php');
+require_once(__DIR__ . '/lib/scripts/console-setup.php');
 
 /**
  * Get a password from the shell.
