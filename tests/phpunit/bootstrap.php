@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2025 Claus-Justus Heine
+ * @copyright 2021-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,8 @@ putenv('TEST_DONT_LOAD_APPS=1');
 require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
 $wantedApps = [
-  'cafevdb',
+  \OCA\CAFEVDB\AppInfo\Application::getAppName(),
+  \OCA\CAFEVDB\AppInfo\Application::getMembersAppName(),
   'files',
   'files_sharing',
 ];
