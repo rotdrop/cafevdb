@@ -46,6 +46,8 @@ class DatabaseProvider
 
   private const DATABASE_CLIENT = 'mariadb';
 
+  private const DATABASE_DUMP = 'mariadb-dump';
+
   private const DATABASE_USER = 'phpunit';
 
   public const CLOUD_DB_USER = 'nextcloud';
@@ -164,10 +166,10 @@ CREATE USER '{$cloudDbUser}'@'%' IDENTIFIED BY '{$dbPassword}';
 GRANT USAGE ON *.* TO '{$cloudDbUser}'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
 CREATE USER '{$cloudDbUser}'@'localhost' IDENTIFIED BY '{$dbPassword}';
 GRANT USAGE ON *.* TO '{$cloudDbUser}'@'localhost' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-CREATE DATABASE {$this->appName};
-CREATE DATABASE {$this->appName}_cloud_connector;
-GRANT ALL PRIVILEGES ON {$this->appName}.* TO {$dbUser}@`%` WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON `{$this->appName}\\_%`.* TO {$dbUser}@`%` WITH GRANT OPTION;
+CREATE DATABASE {$this->databaseName(EnumDatabasePurpose::APP)};
+CREATE DATABASE {$this->databaseName(EnumDatabasePurpose::CLOUD_CONNECTOR)};
+GRANT ALL PRIVILEGES ON {$this->databaseName(EnumDatabasePurpose::APP)}.* TO {$dbUser}@`%` WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON `{$this->databaseName(EnumDatabasePurpose::APP)}\\_%`.* TO {$dbUser}@`%` WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ";
 
@@ -192,6 +194,50 @@ FLUSH PRIVILEGES;
       'dbUser',
       'dbPassword',
     );
+  }
+
+  /**
+   * @param EnumDatabasePurpose $which
+   *
+   * @return string
+   */
+  public function databaseName(EnumDatabasePurpose $which): string
+  {
+    $name = $this->appName;
+    if ($which == EnumDatabasePurpose::CLOUD_CONNECTOR) {
+      $name .= '_cloud_connector';
+    }
+    return $name;
+  }
+
+  /**
+   * Dump the given database to disk.
+   *
+   * @param EnumDatabasePurpose $which
+   *
+   * @param string $dumpFileBase
+   *
+   * @return void
+   */
+  public function dumpDatabase(
+    EnumDatabasePurpose $which,
+    string $dumpFileBase,
+  ): void {
+    $unixUser = get_current_user();
+    $serverSocketFile = $this->dbFolder. '/server-socket';
+    $dumpBinary = $this->executableFinder->find(self::DATABASE_DUMP);
+    $dbName = $this->databaseName($which);
+    $dumpProcess = new Process([
+      $dumpBinary,
+      '--protocol=SOCKET',
+      '--socket=' . $serverSocketFile,
+      '--user=' . $unixUser,
+      '--routines',
+      $dbName,
+    ]);
+    $dumpProcess->run();
+    $sql = $dumpProcess->getOutput();
+    file_put_contents(\PHPUNIT_ARTIFACTS . '/' . $dumpFileBase . '-' . $dbName . '.sql', $sql);
   }
 
   /**

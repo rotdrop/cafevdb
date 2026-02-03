@@ -58,6 +58,8 @@ trait SetupMigrationTrait
 
   private MockProvider $mockProvider;
 
+  private DatabaseProvider $databaseProvider;
+
   private static array $appliedVersions = [];
 
   /**
@@ -74,12 +76,11 @@ trait SetupMigrationTrait
     /** @var MockProvider $mockProvider */
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    /** @var DatabaseProvider $databaseProvider */
-    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
+    $this->databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
-    if (!$databaseProvider->getDatabaseConfig()) {
+    if (!$this->databaseProvider->getDatabaseConfig()) {
       // echo 'STARTING DB SERVER' . PHP_EOL;
-      $databaseProvider->startServer();
+      $this->databaseProvider->startServer();
     }
 
     $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();

@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\DatabaseProvider;
+use OCA\CAFEVDB\Tests\EnumDatabasePurpose;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
@@ -243,16 +244,15 @@ class CloudUserConnectorServiceTest extends TestCase
   public function testGenerateCloudUserViews(): void
   {
     $this->applyMigrations('latest');
-    $cloudConnectorDatabase = $this->appName . '_cloud_connector';
+    $cloudConnectorDatabase = $this->databaseProvider->dataBaseName(EnumDatabasePurpose::CLOUD_CONNECTOR);
     $dbConfig = $this->databaseProvider->getDatabaseConfig();
     $this->cloudConfig->setSystemValue('dbhost', $dbConfig[ConfigConstants::APP_DB_SERVER]);
     $this->cloudConfig->setSystemValue('dbuser', DatabaseProvider::CLOUD_DB_USER);
 
     $this->cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);
-    $this->cloudUserConnectorService->removeUserSqlViews($cloudConnectorDatabase);
-
     $this->cloudUserConnectorService->updateMusicianPersonalizedViews($cloudConnectorDatabase);
     $this->cloudUserConnectorService->removeMusicianPersonalizedViews($cloudConnectorDatabase);
+    $this->cloudUserConnectorService->removeUserSqlViews($cloudConnectorDatabase);
 
     $this->unapplyMigrations();
   }

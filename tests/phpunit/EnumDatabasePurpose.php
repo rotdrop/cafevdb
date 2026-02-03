@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2026 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,32 +24,8 @@
 
 namespace OCA\CAFEVDB\Tests;
 
-date_default_timezone_set('UTC');
-
-putenv('TEST_DONT_LOAD_APPS=1');
-
-require_once __DIR__ . '/../../../../tests/bootstrap.php';
-
-$wantedApps = [
-  \OCA\CAFEVDB\AppInfo\Application::getAppName(),
-  \OCA\CAFEVDB\AppInfo\Application::getMembersAppName(),
-  'files',
-  'files_sharing',
-];
-
-$appManager = \OCP\Server::get(\OCP\App\IAppManager::class);
-foreach ($wantedApps as $app) {
-  $appManager->loadApp($app);
+enum EnumDatabasePurpose: string
+{
+  case APP = 'app';
+  case CLOUD_CONNECTOR = 'cloudConnector';
 }
-
-require_once __DIR__ . "/../../vendor/autoload.php";
-require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
-
-define('PHPUNIT_ARTIFACTS', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath() . '/build/artifacts/tests/phpunit'));
-
-$databaseProvider = \OCP\Server::get(DatabaseProvider::class);
-
-// stop and cleanup potentially running db-servers
-register_shutdown_function([$databaseProvider, 'stopServer']);
-
-error_reporting(E_ALL);
