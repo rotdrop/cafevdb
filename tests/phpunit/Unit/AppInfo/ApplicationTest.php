@@ -92,9 +92,4 @@ class ApplicationTest extends TestCase
     $identifierFlattener = $appContainer->get(IdentifierFlattener::class);
     $this->assertInstanceOf(IdentifierFlattener::class, $identifierFlattener);
   }
-
-  private const FAKED_APPINFO = [
-    'namespace' => 'Namespace',
-    'scopednamespace' => 'ScopedNamespace\\SubNamespace',
-  ];
 }
