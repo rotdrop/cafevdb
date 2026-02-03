@@ -27,7 +27,7 @@
  * check work on semi-real data.
  */
 
-require_once(__DIR__ . '/../../../../../dev-scripts/console-setup.php');
+require_once(__DIR__ . '/../../../../../dev-scripts/lib/scripts/console-setup.php');
 
 use OCA\CAFEVDB\Controller\DTO;
 
