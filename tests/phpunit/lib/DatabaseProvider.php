@@ -22,7 +22,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests;
+namespace OCA\RotDrop\Tests;
 
 use RuntimeException;
 
@@ -32,13 +32,14 @@ use Symfony\Component\Process\Exception as ProcessExceptions;
 use OCP\ITempManager;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Toolkit\Service\ExecutableFinder;
+use OCA\RotDrop\Tests\Logger;
+
+use OCA\RotDrop\Toolkit\Service\ExecutableFinder;
 
 /** Setup a real database server in order to avoid excessive mocking. */
 class DatabaseProvider
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const DATABASE_SETUP_SCRIPT = 'mariadb-install-db';
 
@@ -66,14 +67,18 @@ skip-networking
 
   private ?string $dbFolder;
 
+  private ?DatabaseConfig $databaseConfig = null;
+
   protected LoggerInterface $logger;
+
+  protected string $appName;
 
   /** {@inheritdoc} */
   public function __construct(
-    protected string $appName,
     protected ITempManager $tempManager,
     protected ExecutableFinder $executableFinder,
   ) {
+    $this->appName = PHPUNIT_NC_APP_NAME;
     $this->tempManager->cleanOld();
     $this->logger = \OCP\Server::get(Logger::class);
   }
@@ -268,22 +273,26 @@ FLUSH PRIVILEGES;
   /**
    * @return ?array
    */
-  public function getDatabaseConfig(): ?array
+  public function getDatabaseConfig(): ?DatabaseConfig
   {
     if (($this->databaseProcess ?? null) === null) {
       return null;
+    }
+    if ($this->databaseConfig !== null) {
+      return $this->databaseConfig;
     }
     $socket = urlencode($this->dbFolder. '/server-socket');
     $url = sprintf(
       '%s://%s:%s@%s?unix_socket=%s',
       'pdo-mysql', self::DATABASE_USER, self::DATABASE_PASSWORD, 'localhost', $socket,
     );
-    return [
-      ConfigConstants::APP_DB_NAME => $this->appName,
-      ConfigConstants::APP_DB_SERVER => $url,
-      ConfigConstants::APP_DB_USER => self::DATABASE_USER,
-      ConfigConstants::APP_DB_PASSWORD => self::DATABASE_PASSWORD,
-    ];
+    $this->databaseConfig = new DatabaseConfig(
+      databaseName: $this->databaseName(EnumDatabasePurpose::APP),
+      databaseServer: $url,
+      databaseUser: self::DATABASE_USER,
+      databasePassword: self::DATABASE_PASSWORD,
+    );
+    return $this->databaseConfig;
   }
 
   /**

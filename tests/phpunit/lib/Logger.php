@@ -1,8 +1,6 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP classes shared between my Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -22,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests;
+namespace OCA\RotDrop\Tests;
 
 use OCP\ILogger;
 use OCP\Log\ILogFactory;
@@ -42,7 +40,7 @@ class Logger extends AbstractLogger
   public function __construct(
     ILogFactory $logFactory,
   ) {
-    $logFolder = realpath(__DIR__ . '/../../build') . '/artifacts/tests/phpunit/';
+    $logFolder = \PHPUNIT_ARTIFACTS;
     if (!file_exists($logFolder)) {
       mkdir($logFolder, 0777, true);
     }

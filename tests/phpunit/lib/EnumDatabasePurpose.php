@@ -1,8 +1,6 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP classes shared between my Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -22,8 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests;
+namespace OCA\RotDrop\Tests;
 
+/** Enumerate the databases provided by the DatabaseProvider class. */
 enum EnumDatabasePurpose: string
 {
   case APP = 'app';
