@@ -56,6 +56,9 @@ use Psr\Log\LoggerInterface;
 
 use OCA\BAV\Service\BAV as BankAccountValidator;
 
+use OCA\RotDrop\Tests\Logger;
+use OCA\RotDrop\Tests\DatabaseProvider;
+
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Database\Connection;
@@ -342,11 +345,13 @@ class MockProvider
         }
         switch ($key) {
           case ConfigConstants::APP_DB_NAME:
+            return $this->databaseProvider->getDatabaseConfig()?->databaseName;
           case ConfigConstants::APP_DB_SERVER:
+            return $this->databaseProvider->getDatabaseConfig()?->databaseServer;
           case ConfigConstants::APP_DB_USER:
+            return $this->databaseProvider->getDatabaseConfig()?->databaseUser;
           case ConfigConstants::APP_DB_PASSWORD:
-            $dbConfig = $this->databaseProvider->getDatabaseConfig();
-            return $dbConfig[$key] ?? null;
+            return $this->databaseProvider->getDatabaseConfig()?->databasePassword;
           case ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY:
           case OldSettingsKeys::APP_KEYS[ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY]:
             return null;

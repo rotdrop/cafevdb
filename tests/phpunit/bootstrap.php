@@ -27,11 +27,15 @@ namespace OCA\CAFEVDB\Tests;
 date_default_timezone_set('UTC');
 
 putenv('TEST_DONT_LOAD_APPS=1');
-
 require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
+require_once __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
+
+define('PHPUNIT_NC_APP_NAME', \OCA\CAFEVDB\AppInfo\Application::getAppName());
+
 $wantedApps = [
-  \OCA\CAFEVDB\AppInfo\Application::getAppName(),
+  \PHPUNIT_NC_APP_NAME,
   \OCA\CAFEVDB\AppInfo\Application::getMembersAppName(),
   'files',
   'files_sharing',
@@ -42,12 +46,10 @@ foreach ($wantedApps as $app) {
   $appManager->loadApp($app);
 }
 
-require_once __DIR__ . "/../../vendor/autoload.php";
-require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
+define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
+define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
-define('PHPUNIT_ARTIFACTS', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath() . '/build/artifacts/tests/phpunit'));
-
-$databaseProvider = \OCP\Server::get(DatabaseProvider::class);
+$databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);
 
 // stop and cleanup potentially running db-servers
 register_shutdown_function([$databaseProvider, 'stopServer']);

@@ -31,11 +31,12 @@ use PHPUnit\Framework\TestCase;
 use OCP\App\IAppManager;
 use OCP\IConfig;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+use OCA\RotDrop\Tests\EnumDatabasePurpose;
+
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
-use OCA\CAFEVDB\Tests\EnumDatabasePurpose;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
@@ -246,7 +247,7 @@ class CloudUserConnectorServiceTest extends TestCase
     $this->applyMigrations('latest');
     $cloudConnectorDatabase = $this->databaseProvider->dataBaseName(EnumDatabasePurpose::CLOUD_CONNECTOR);
     $dbConfig = $this->databaseProvider->getDatabaseConfig();
-    $this->cloudConfig->setSystemValue('dbhost', $dbConfig[ConfigConstants::APP_DB_SERVER]);
+    $this->cloudConfig->setSystemValue('dbhost', $dbConfig->databaseServer);
     $this->cloudConfig->setSystemValue('dbuser', DatabaseProvider::CLOUD_DB_USER);
 
     $this->cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);

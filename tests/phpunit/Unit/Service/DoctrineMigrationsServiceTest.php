@@ -33,6 +33,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCP\IL10N;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+
 use OCA\CAFEVDB\Common\ConsoleLogger;
 use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\Database\Doctrine\Migrations;
@@ -41,7 +43,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 

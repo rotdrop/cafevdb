@@ -30,6 +30,8 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+
 use OCA\CAFEVDB\Common\ConsoleLogger;
 use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -37,7 +39,6 @@ use OCA\CAFEVDB\Maintenance\Migrations\Legacy as LegacyMigrations;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Service\LegacyMigrationsService;
 use OCA\CAFEVDB\Service\MigrationsServiceInterface;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\EventSubscriber;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener;

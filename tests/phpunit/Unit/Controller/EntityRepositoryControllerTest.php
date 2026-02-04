@@ -35,11 +35,12 @@ use OCP\AppFramework\OCS;
 use OCP\IRequest;
 use OC\AppFramework\Middleware\OCSMiddleware;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+
 use OCA\CAFEVDB\Controller\EntityRepositoryController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;

@@ -30,12 +30,13 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+use OCA\RotDrop\Tests\EnumDatabasePurpose;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
-use OCA\CAFEVDB\Tests\EnumDatabasePurpose;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -182,18 +183,18 @@ class ArtifactsTest extends TestCase
     $cloudUserConnectorService = $this->appContainer->get(CloudUserConnectorService::class);
     $dbConfig = $this->databaseProvider->getDatabaseConfig();
     $cloudConfig = $this->mockProvider->getCloudConfig();
-    $cloudConfig->setSystemValue('dbhost', $dbConfig[ConfigConstants::APP_DB_SERVER]);
+    $cloudConfig->setSystemValue('dbhost', $dbConfig->databaseServer);
     $cloudConfig->setSystemValue('dbuser', DatabaseProvider::CLOUD_DB_USER);
     $cloudConnectorDatabase = $this->databaseProvider->dataBaseName(EnumDatabasePurpose::CLOUD_CONNECTOR);
     $cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);
     $cloudUserConnectorService->updateMusicianPersonalizedViews($cloudConnectorDatabase);
 
     $this->databaseProvider->dumpDatabase(
-      \OCA\CAFEVDB\Tests\EnumDatabasePurpose::APP,
+      EnumDatabasePurpose::APP,
       __METHOD__,
     );
     $this->databaseProvider->dumpDatabase(
-      \OCA\CAFEVDB\Tests\EnumDatabasePurpose::CLOUD_CONNECTOR,
+      EnumDatabasePurpose::CLOUD_CONNECTOR,
       __METHOD__,
     );
 

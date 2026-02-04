@@ -30,10 +30,11 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\RotDrop\Tests\DatabaseProvider;
+
 use OCA\CAFEVDB\Database\Doctrine;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service;
-use OCA\CAFEVDB\Tests\DatabaseProvider;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
