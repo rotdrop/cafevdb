@@ -33,6 +33,8 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 
 define('PHPUNIT_NC_APP_NAME', \OCA\CAFEVDB\AppInfo\Application::getAppName());
+define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
+define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
 $wantedApps = [
   \PHPUNIT_NC_APP_NAME,
@@ -45,9 +47,6 @@ $appManager = \OCP\Server::get(\OCP\App\IAppManager::class);
 foreach ($wantedApps as $app) {
   $appManager->loadApp($app);
 }
-
-define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
-define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
 $databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);
 

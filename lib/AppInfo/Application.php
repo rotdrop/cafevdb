@@ -32,11 +32,8 @@ use Exception;
  *
  */
 
-use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
-use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\IAppContainer;
 
 /*
  *
@@ -66,6 +63,7 @@ use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
+use OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication;
 
 /*
  *
@@ -98,42 +96,17 @@ use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 use OCA\CAFeVDBMembers;
 
 // phpcs:disable PSR1.Files.SideEffects
-if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-  include_once __DIR__ . '/../Toolkit/Traits/AppNameTrait.php';
-}
+include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
+// phpcs:enable PSR1.Files.SideEffects
 
 /** {@inheritdoc} */
-class Application extends App implements IBootstrap
+class Application extends AbstractApplication
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\AppNameTrait;
-
   public const APP_ROOT_FOLDER = 'appRootFolder';
 
   public const MEMBERS_APP_NAME = 'membersAppName';
 
-  /** @var IAppContainer */
-  protected static $appContainer;
-
-  protected static string $appName;
-
   protected static string $membersAppName;
-
-  /** {@inheritdoc} */
-  public function __construct(array $urlParams = [])
-  {
-    self::getAppName();
-    parent::__construct(self::$appName, $urlParams);
-  }
-
-  /**
-   * Reads off the app-name from the info.xml file.
-   *
-   * @return string
-   */
-  public static function getAppName(): string
-  {
-    return self::$appName ?? (self::$appName = self::getAppInfoAppName(__DIR__));
-  }
 
   /**
    * Reads off the app-name from the info.xml file.
@@ -145,27 +118,6 @@ class Application extends App implements IBootstrap
     return self::$membersAppName ?? (self::$membersAppName = CAFeVDBMembers\AppInfo\Application::getAppName());
   }
 
-  /** {@inheritdoc} */
-  public function __destruct()
-  {
-    self::$appContainer = null;
-  }
-
-  /**
-   * Static query of a service through the app container.
-   *
-   * @param string $service
-   *
-   * @return mixed
-   */
-  public static function get(string $service)
-  {
-    if (!(self::$appContainer instanceof IAppContainer)) {
-      throw new Exception('Dependency injection not possible, app-container is empty.');
-    }
-    return self::$appContainer->get($service);
-  }
-
   /**
    * {@inheritdoc}
    *
@@ -173,7 +125,7 @@ class Application extends App implements IBootstrap
    */
   public function boot(IBootContext $context): void
   {
-    self::$appContainer = $this->getContainer();
+    parent::boot($context);
 
     $context->injectFn(function(
       $userId,
@@ -210,9 +162,7 @@ class Application extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context): void
   {
-    if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-      throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
-    }
+    parent::register($context);
     if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
       throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
     }
