@@ -3,7 +3,7 @@
  * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,6 +55,8 @@ class ExecutableFinder
    */
   protected $executables = [];
 
+  protected string $cacheKeyPrefix;
+
   /**
    * @param ICacheFactory $cacheFactory
    *
@@ -71,12 +73,12 @@ class ExecutableFinder
     protected ExecutableFinderBackend $executableFinder,
     protected IL10N $l,
     protected ILogger $logger,
-    protected string $appName,
   ) {
     $this->memoryCache = $cacheFactory->createLocking();
     if (!($this->memoryCache instanceof IMemcacheTTL)) {
       $this->memoryCache = $cacheFactory->createLocal();
     }
+    $this->cacheKeyPrefix = str_replace('\\', ':', __CLASS__) . ':' . 'executables:';
   }
 
   /**
@@ -168,6 +170,6 @@ class ExecutableFinder
    */
   private function cacheKey(string $path)
   {
-    return $this->appName . ':' . 'executables:' . $path;
+    return $this->cacheKeyPrefix . $path;
   }
 }
