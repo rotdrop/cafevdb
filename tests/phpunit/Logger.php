@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Tests;
 
-use OCA\ContextChat\AppInfo\Application;
-use OCP\IConfig;
 use OCP\ILogger;
 use OCP\Log\ILogFactory;
 use Psr\Log\LoggerInterface;
