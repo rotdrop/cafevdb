@@ -241,6 +241,31 @@ FLUSH PRIVILEGES;
   }
 
   /**
+   * @param EnumDatabasePurpose $which
+   *
+   * @param string $sqlFile
+   *
+   * @return void
+   */
+  public function loadSql(
+    EnumDatabasePurpose $which,
+    string $sqlFile,
+  ): void {
+    $sql = file_get_contents($sqlFile);
+    $unixUser = get_current_user();
+    $serverSocketFile = $this->dbFolder. '/server-socket';
+    $clientBinary = $this->executableFinder->find(self::DATABASE_CLIENT);
+    $process = new Process([
+      $clientBinary,
+      '--protocol=SOCKET',
+      '--socket=' . $serverSocketFile,
+      '--user=' . $unixUser,
+      $this->databaseName($which),
+    ]);
+    $process->setInput($sql)->run();
+  }
+
+  /**
    * @return ?array
    */
   public function getDatabaseConfig(): ?array
