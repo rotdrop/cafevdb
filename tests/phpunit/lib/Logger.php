@@ -52,6 +52,9 @@ class Logger extends AbstractLogger
   public function log($level, string|\Stringable $message, array $context = []):void
   {
     $level = $this->mapLogLevels($level);
+    if (!isset($context['app'])) {
+      $context['app'] = \PHPUNIT_NC_APP_NAME;
+    }
     $this->wrappedLogger->log($level, $message, $context);
   }
 
