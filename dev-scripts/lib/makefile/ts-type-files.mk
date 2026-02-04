@@ -14,8 +14,8 @@ PRETTIER_FORMATTER = $(ABSSRCDIR)/node_modules/.bin/prettier
 ESLINT = $(ABSSRCDIR)/node_modules/.bin/eslint
 
 ifeq (,$(findstring print_ts_type_files,$(MAKECMDGOALS)))
-TS_TYPE_FILES=$(shell make NO_STDOUT=1 --silent print_ts_type_files)
-TS_TYPE_FILES_DEPS=$(shell make NO_STDOUT=1 --silent print_ts_type_files_deps)
+TS_TYPE_FILES=$(shell make NO_STDOUT=1 --debug=none --silent print_ts_type_files)
+TS_TYPE_FILES_DEPS=$(shell make NO_STDOUT=1 --debug=none --silent print_ts_type_files_deps)
 else ifeq (,$(subst print_ts_type_files,,$(MAKECMDGOALS)))
 else ifeq (,$(subst print_ts_type_files_deps,,$(MAKECMDGOALS)))
 else
@@ -32,9 +32,11 @@ print_ts_type_files_deps: app-toolkit composer.lock
 	echo $$(for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 .PHONY: print_ts_type_files_deps
 
+$(info A$(TS_TYPE_FILES)B)
+
 #@private
 $(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/lib/scripts/php-to-typescript/*.php) Makefile
-	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
+	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)' --scoped-ns-prefix=$(WRAPPER_NAMESPACE_POSTFIX)
 	$(PRETTIER_FORMATTER) --write --ignore-path /dev/null $(TS_TYPES_DIR)
 	[ -x "$(ESLINT)" ] && $(ESLINT) $(TS_TYPES_DIR)
 
