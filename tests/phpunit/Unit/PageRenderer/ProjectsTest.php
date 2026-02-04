@@ -266,6 +266,7 @@ class ProjectsTest extends TestCase
     $mockProvider->registerClassInstance(
       ProjectService::class,
       $projectService,
+      global: true,
     );
 
     $userFolder = $this->createStub(Folder::class);
