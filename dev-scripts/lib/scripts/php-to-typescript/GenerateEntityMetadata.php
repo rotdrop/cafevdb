@@ -335,7 +335,7 @@ export {
       ]);
       $ormCliProcess->run();
       if (!$ormCliProcess->isSuccessful()) {
-        throw new UnexpectedValueException('ORM CLI process failed: ' . $ormCliProcess->getErrorOuput());
+        throw new UnexpectedValueException('ORM CLI process failed: ' . $ormCliProcess->getErrorOutput());
       }
 
       $metadataJson = $ormCliProcess->getOutput();

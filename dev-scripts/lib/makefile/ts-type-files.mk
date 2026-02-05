@@ -37,7 +37,7 @@ print_ts_type_files_deps: app-toolkit composer.lock
 .PHONY: print_ts_type_files_deps
 
 #@private
-$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/lib/scripts/php-to-typescript/*.php) Makefile
+$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/lib/scripts/php-to-typescript/*.php) Makefile package-lock.json
 	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)' --scoped-ns-prefix=$(WRAPPER_NAMESPACE_POSTFIX)
 	$(PRETTIER_FORMATTER) --write --ignore-path /dev/null $(TS_TYPES_DIR)
 	[ -x "$(ESLINT)" ] && $(ESLINT) $(TS_TYPES_DIR)
