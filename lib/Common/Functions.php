@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,18 +70,6 @@ function strCmpEmptyLast(?string $a, ?string $b)
 }
 
 /**
- * Convert a backed enum to its value, i.e. ev($arg) === $arg->value.
- *
- * @param BackedEnum $arg
- *
- * @return int|string
- */
-function ev(BackedEnum $arg): int|string
-{
-  return $arg->value;
-}
-
-/**
  * @param string $format
  *
  * @param mixed ...$values
@@ -90,7 +78,7 @@ function ev(BackedEnum $arg): int|string
  */
 function sprintf(string $format, mixed ...$values): string
 {
-  return \sprintf($format, ...array_map(fn(mixed $value) => $value instanceof BackedEnum ? ev($value) : $value, $values));
+  return \sprintf($format, ...array_map(fn(mixed $value) => $value instanceof BackedEnum ? $value->value : $value, $values));
 }
 
 /**
@@ -100,5 +88,5 @@ function sprintf(string $format, mixed ...$values): string
  */
 function strcat(mixed ...$values): string
 {
-  return implode('', array_map(fn(mixed $value) => $value instanceof BackedEnum ? (string)ev($value) : (string)$value, $values));
+  return implode('', array_map(fn(mixed $value) => $value instanceof BackedEnum ? (string)$value->value : (string)$value, $values));
 }
