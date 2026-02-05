@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\PageRenderer;
 
+use DateTimeImmutable;
 use DOMDocument;
 use Throwable;
 
@@ -196,7 +197,8 @@ class ProjectParticipantsTest extends TestCase
 
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
-      $this->generateProjectParticipant(persist: true);
+      $now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
+      $this->generateProjectParticipant(persist: true, now: $now);
       self::$projectId = $this->project->getId();
       self::$musicianId = $this->musician->getId();
       $this->generateInstruments(persist: true);
@@ -206,11 +208,9 @@ class ProjectParticipantsTest extends TestCase
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     $this->request = $this->mockProvider->getRequest();
-    $this->request->method('getParam')->willReturnCallback(
-      function(string $key, mixed $default = null) {
-        return $this->postData[$key] ?? $default;
-      }
-    );
+    $this->request->method('getParam')->willReturnCallback(function (string $key, mixed $default = null) {
+      return $this->postData[$key] ?? $default;
+    });
 
     $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
 
@@ -230,11 +230,7 @@ class ProjectParticipantsTest extends TestCase
       musicianService: $appContainer->get(MusicianService::class),
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
     );
-    $this->mockProvider->registerClassInstance(
-      ProjectService::class,
-      $projectService,
-      global: true,
-    );
+    $this->mockProvider->registerClassInstance(ProjectService::class, $projectService, global: true);
 
     $this->postData[PersistentCGIKeys::PROJECT_ID] = self::$projectId;
 
@@ -306,19 +302,7 @@ class ProjectParticipantsTest extends TestCase
     $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
     //
     parse_str(
-      str_replace(
-        [
-          '@PROJECT_ID@',
-          '@MUSICIAN_ID@',
-          '@OPERATION@',
-        ],
-        [
-          self::$projectId,
-          self::$musicianId,
-          'Anzeigen',
-        ],
-        self::VIEW_FORM_DATA,
-      ),
+      str_replace(['@PROJECT_ID@', '@MUSICIAN_ID@', '@OPERATION@'], [self::$projectId, self::$musicianId, 'Anzeigen'], self::VIEW_FORM_DATA),
       $this->postData,
     );
     ob_start();
@@ -348,19 +332,7 @@ class ProjectParticipantsTest extends TestCase
     $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
     //
     parse_str(
-      str_replace(
-        [
-          '@PROJECT_ID@',
-          '@MUSICIAN_ID@',
-          '@OPERATION@',
-        ],
-        [
-          self::$projectId,
-          self::$musicianId,
-          'Löschen',
-        ],
-        self::VIEW_FORM_DATA,
-      ),
+      str_replace(['@PROJECT_ID@', '@MUSICIAN_ID@', '@OPERATION@'], [self::$projectId, self::$musicianId, 'Löschen'], self::VIEW_FORM_DATA),
       $this->postData,
     );
     ob_start();
@@ -378,6 +350,76 @@ class ProjectParticipantsTest extends TestCase
     $domDoc->loadHTML($html, LIBXML_PEDANTIC);
   }
 
+  private const RENDER_UPDATE_FORM_VALUES = [
+    'projectId' => '1',
+    'projectName' => 'TestProject2099',
+    'recordsPerPage' => '20',
+    'template' => 'project-participants',
+    'table' => 'ProjectParticipants',
+    'templateRenderer' => 'template:project-participants',
+    'dataPrefix[musicians]' => 'Musicians:',
+    'participationStatusFddIndex' => '34',
+    'instrumentsFddIndex' => '27',
+    'PME_sys_mtable' => 'ProjectParticipants',
+    'PME_sys_mkey[project_id]' => 'int',
+    'PME_sys_mkey[musician_id]' => 'int',
+    'PME_sys_qf0_comp' => '=',
+    'PME_sys_qf1_comp' => '=',
+    'PME_sys_qf57_comp' => '=',
+    'PME_sys_cur_tab' => '0',
+    'PME_sys_qfn' => '',
+    'PME_sys_rec[project_id]' => '1',
+    'PME_sys_rec[musician_id]' => '1',
+    'PME_sys_groupby_rec[project_id]' => '1',
+    'PME_sys_groupby_rec[musician_id]' => '1',
+    'PME_sys_groupby_rec[participation_status]' => 'regular',
+    'PME_sys_groupby_rec[ProjectInstruments__master_key_]' => '',
+    'PME_sys_fm' => '0',
+    'PME_sys_np' => '-1',
+    'PME_sys_fl' => '0',
+    'PME_sys_op_name' => 'change',
+    'PME_data_project_id' => '1',
+    'PME_data_musician_id' => '1',
+    'PME_data_Musicians:organization' => '',
+    'PME_data_Musicians:job_title' => '',
+    'PME_data_Musicians:sur_name' => 'Musterperson',
+    'PME_data_Musicians:first_name' => 'Max',
+    'PME_data_Musicians:nick_name' => '',
+    'PME_data_Musicians:display_name' => '',
+    'PME_data_deleted' => '',
+    'PME_data_Musicians:display_name_personal' => 'Max Musterperson',
+    'PME_data_Musicians:gender' => '',
+    'PME_data_Musicians:user_id_slug' => 'lieschen.mueller',
+    'PME_data_ProjectInstruments:instrument_id' => ['1'],
+    'PME_data_Instruments:sort_order[0]' => '1',
+    'instrumentVoiceRequest[1]' => '',
+    'PME_data_registration[0]' => '0',
+    'PME_data_MusicianInstruments:instrument_id' => ['1', '4'],
+    'PME_data_participation_status' => 'regular',
+    'PME_data_Musicians:default_participation_status' => 'regular',
+    'PME_data_Musicians:deleted' => '2099-01-01 12:00:00.000000',
+    'PME_data_Musicians:cloud_account_disabled[0]' => '1',
+    'PME_data_MusicianEmailAddresses@all:address' => ['john.doe@nowhere.tld'],
+    'PME_data_Musicians:email' => 'john.doe@nowhere.tld',
+    'PME_data_Musicians:mobile_phone' => '0815',
+    'PME_data_Musicians:fixed_line_phone' => '4711',
+    'PME_data_Musicians:address_supplement' => 'Igloo 13',
+    'PME_data_Musicians:street' => 'Unauffindbarweg',
+    'PME_data_Musicians:street_number' => '42',
+    'PME_data_Musicians:po_box' => '',
+    'PME_data_Musicians:postal_code' => 'Z-7',
+    'PME_data_Musicians:city' => 'Nirgends',
+    'PME_data_Musicians:country' => 'AQ',
+    'PME_data_Musicians:birthday' => '01.01.2099',
+    'PME_data_Musicians:remarks' => '',
+    'PME_data_Musicians:language' => '',
+    'PME_data_Musicians:address_book_uri' => '',
+    'PME_data_Musicians:uuid' => '00000000-0000-0000-0000-000000000000',
+    'PME_data_Musicians:updated' => '01.01.2099, 13:00:00',
+    'PME_data_Musicians:created' => '01.01.2099, 13:00:00',
+    'PME_sys_reloadOuterForm' => '',
+  ];
+
   /** {@inheritdoc} */
   #[Attributes\Depends('testApplyMigrations')]
   public function testRenderUpdate(): void
@@ -390,19 +432,7 @@ class ProjectParticipantsTest extends TestCase
     $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
     //
     parse_str(
-      str_replace(
-        [
-          '@PROJECT_ID@',
-          '@MUSICIAN_ID@',
-          '@OPERATION@',
-        ],
-        [
-          self::$projectId,
-          self::$musicianId,
-          'Ändern',
-        ],
-        self::VIEW_FORM_DATA,
-      ),
+      str_replace(['@PROJECT_ID@', '@MUSICIAN_ID@', '@OPERATION@'], [self::$projectId, self::$musicianId, 'Ändern'], self::VIEW_FORM_DATA),
       $this->postData,
     );
     ob_start();
@@ -420,7 +450,8 @@ class ProjectParticipantsTest extends TestCase
     $domDoc->loadHTML($html, LIBXML_PEDANTIC);
     $crawler = new DomCrawler\Crawler($html, uri: 'https://localhost/cafevdb', baseHref: 'https://localhost');
     $form = $crawler->filter('form.pme-form')->form();
-    print_r($form->getValues());
+    // var_export($form->getValues());
+    $this->assertEqualsCanonicalizing(self::RENDER_UPDATE_FORM_VALUES, $form->getValues());
     // ok. we can then examine the data further and modify and submit it ...
   }
 

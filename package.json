@@ -177,6 +177,8 @@
   },
   "prettier": {
     "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 160,
     "plugins": [
       "@prettier/plugin-php"
     ],
