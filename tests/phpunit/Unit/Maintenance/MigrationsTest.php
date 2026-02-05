@@ -191,7 +191,7 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion19700101000003')]
-  public function testExplodeFunction(): void
+  public function testDatabaseFunctionExplode(): void
   {
     $data = ['a', 'b', 'c'];
     $delim = ',';
