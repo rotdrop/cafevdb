@@ -66,7 +66,6 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
-//
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
@@ -197,6 +196,7 @@ class ProjectParticipantsTest extends TestCase
       $this->generateProjectParticipant(persist: true);
       self::$projectId = $this->project->getId();
       self::$musicianId = $this->musician->getId();
+      $this->generateInstruments(persist: true);
       self::$migrationsApplied = true;
     }
 
