@@ -44,7 +44,7 @@ class Logger extends AbstractLogger
     if (!file_exists($logFolder)) {
       mkdir($logFolder, 0777, true);
     }
-    $this->wrappedLogger = $logFactory->getCustomPsrLogger($logFolder . 'cloud-log.json', 'file');
+    $this->wrappedLogger = $logFactory->getCustomPsrLogger($logFolder . '/cloud-log.json', 'file');
     $this->wrappedLogger->info('*** TEST RUN START ***');
   }
 
