@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,8 @@ use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
  */
 trait MusicianGenderTrait
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
   /** @var PHPMyEdit */
   protected PHPMyEdit $pme;
 
@@ -44,7 +46,7 @@ trait MusicianGenderTrait
    *
    * @return array
    */
-  protected function guessGender(array $row):array
+  protected function guessGender(array $row): array
   {
     if (empty($row)) {
       return [];
@@ -57,11 +59,21 @@ trait MusicianGenderTrait
     $lang = $row[$this->joinQueryField($tableName, 'language')];
     $country = $row[$this->joinQueryField($tableName, 'country')];
     $detector = new GenderDetector\GenderDetector();
-    if (!empty($lang)) {
-      $country = substr($lang, 0, 2);
+    if (empty($country)) {
+      $lang = $lang ?? $this->appLocale();
+      $country = locale_get_region($lang);
+      if (empty($country)) {
+        $country = locale_get_primary_language($lang);
+      }
     }
     $country = strtoupper($country);
-    $names = array_filter(array_merge(explode(' ', $firstName), explode(' ', $nickName)));
+    print_r($row);
+    $names = array_filter(
+      array_merge(
+        explode(' ', $firstName),
+        explode(' ', $nickName ?? ''),
+      ),
+    );
     $genderTypes = array_filter(array_map(fn(string $name) => $detector->getGender($name, $country), $names));
     $genderTypes = array_unique(array_map(fn(GenderDetector\Gender $gender) => str_replace('mostly', '', strtolower($gender->name)), $genderTypes));
     return array_combine($genderTypes, array_map(fn(string $name) => $this->l->t($name), $genderTypes));
