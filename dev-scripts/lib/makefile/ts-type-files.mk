@@ -32,8 +32,6 @@ print_ts_type_files_deps: app-toolkit composer.lock
 	echo $$(for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 .PHONY: print_ts_type_files_deps
 
-$(info A$(TS_TYPE_FILES)B)
-
 #@private
 $(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/lib/scripts/php-to-typescript/*.php) Makefile
 	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)' --scoped-ns-prefix=$(WRAPPER_NAMESPACE_POSTFIX)
