@@ -133,11 +133,11 @@ all: help
 
 pre-build: php-scoper-install app-toolkit-stamp
 #	git submodule update --init
-	$(OCC) maintenance:mode --on
+#	$(OCC) maintenance:mode --on
 .PHONY: pre-build
 
 post-build:
-	$(OCC) maintenance:mode --off
+#	$(OCC) maintenance:mode --off
 	chmod g+rw $(ABSSRCDIR)/../../config/config.php
 .PHONY: post-build
 
@@ -153,7 +153,7 @@ build: dev-setup npm-build post-build
 dev: dev-setup npm-dev post-build
 .PHONY: dev
 
-dev-setup: pre-build composer namespace-wrapper package-lock.json
+dev-setup: pre-build composer.lock namespace-wrapper package-lock.json
 .PHONY: dev-setup
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
