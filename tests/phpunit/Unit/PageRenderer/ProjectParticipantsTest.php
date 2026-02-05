@@ -31,6 +31,9 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+// https://symfony.com/doc/current/components/dom_crawler.html#forms
+use Symfony\Component\DomCrawler;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -415,6 +418,10 @@ class ProjectParticipantsTest extends TestCase
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
     $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $crawler = new DomCrawler\Crawler($html, uri: 'https://localhost/cafevdb', baseHref: 'https://localhost');
+    $form = $crawler->filter('form.pme-form')->form();
+    print_r($form->getValues());
+    // ok. we can then examine the data further and modify and submit it ...
   }
 
   // TODO: test update instruments with various choices, including voices

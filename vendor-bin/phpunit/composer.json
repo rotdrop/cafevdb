@@ -11,7 +11,8 @@
   "require-dev": {
     "cweagans/composer-patches": "^1.7",
     "phing/phing": "*",
-    "phpunit/phpunit": "^12.5.4"
+    "phpunit/phpunit": "^12.5.4",
+    "symfony/dom-crawler": "^8.0"
   },
   "autoload-dev": {
     "psr-4": {
