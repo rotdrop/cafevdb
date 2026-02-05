@@ -13,11 +13,15 @@
 PRETTIER_FORMATTER = $(ABSSRCDIR)/node_modules/.bin/prettier
 ESLINT = $(ABSSRCDIR)/node_modules/.bin/eslint
 
-ifeq (,$(findstring print_ts_type_files,$(MAKECMDGOALS)))
+ifeq (,$(findstring print_ts_type_files,$(MAKECMDGOALS))$(findstring clean,$(MAKECMDGOALS)))
 TS_TYPE_FILES=$(shell make NO_STDOUT=1 --debug=none --silent print_ts_type_files)
 TS_TYPE_FILES_DEPS=$(shell make NO_STDOUT=1 --debug=none --silent print_ts_type_files_deps)
-else ifeq (,$(subst print_ts_type_files,,$(MAKECMDGOALS)))
+else ifeq (clean, $(findstring clean,$(MAKECMDGOALS)))
+# ok
 else ifeq (,$(subst print_ts_type_files_deps,,$(MAKECMDGOALS)))
+# ok
+else ifeq (,$(subst print_ts_type_files,,$(MAKECMDGOALS)))
+# ok
 else
 $(error print_ts_type_files[_deps] needs to be the only target, but I got the following targets: $(MAKECMDGOALS))
 endif
