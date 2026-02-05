@@ -253,7 +253,7 @@ class Util
    *
    * @param string $delim The delimiter string.
    *
-   * @param null|string $string The string to split.
+   * @param ?|string $string The string to split.
    *
    * @param int $flags Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED
    * - self::OMIT_EMPTY_FIELDS Omit empty fields from the output array
@@ -275,11 +275,16 @@ class Util
     if (($flags & self::ESCAPED) && !empty($escape)) {
       return
         self::unescapeDelimiter(
-          preg_split('/'.$trimExpr.preg_quote($escape, '/').'.'.'(*SKIP)(*FAIL)|'.preg_quote($delim, '/').$trimExpr.'/s', $string, -1, $pregFlags),
+          preg_split(
+            '/' . $trimExpr . preg_quote($escape, '/') . '.' . '(*SKIP)(*FAIL)|' . preg_quote($delim, '/') . $trimExpr . '/s',
+            $string ?? '',
+            -1,
+            $pregFlags,
+          ),
           $delim,
           $escape);
     } else {
-      return preg_split('/'.$trimExpr.preg_quote($delim, '/').$trimExpr.'/', $string, -1, $pregFlags);
+      return preg_split('/' . $trimExpr.preg_quote($delim, '/') . $trimExpr . '/', $string ?? '', -1, $pregFlags);
     }
   }
 

@@ -24,8 +24,12 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Common;
 
+use Throwable;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
+
+use OCA\RotDrop\Tests\DeprecationException;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -95,5 +99,29 @@ class UtilTest extends TestCase
       extract($arguments);
       $this->assertEquals($expected, Util::strftime($format, $timestamp, $tz, $locale));
     }
+  }
+
+  /**
+   * \null as subject is explicitly allowed, so test it ...
+   *
+   * @return void
+   */
+  public function testExplodeWithNullSubject(): void
+  {
+    $this->expectNotToPerformAssertions();
+    DeprecationException::throwOnDeprecations();
+    try {
+      Util::explode(' ', null);
+    } catch (Throwable $t) {
+      restore_error_handler();
+      throw $t;
+    }
+    try {
+      Util::explode(' ', null, flags: 0);
+    } catch (Throwable $t) {
+      restore_error_handler();
+      throw $t;
+    }
+    restore_error_handler();
   }
 }
