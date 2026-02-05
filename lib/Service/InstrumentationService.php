@@ -134,11 +134,10 @@ class InstrumentationService
           $this->persist($bankAccount);
         }
       }
+
       if ($persist) {
         $this->flush();
       }
-
-      $this->entityManager->commit();
 
       if (!empty($project)) {
         $participant = (new Entities\ProjectParticipant)
@@ -152,6 +151,13 @@ class InstrumentationService
         }
         $project->getParticipants()->set($dummy->getId(), $participant);
       }
+
+      if ($persist) {
+        $this->flush();
+      }
+
+      $this->entityManager->commit();
+
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
