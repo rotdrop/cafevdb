@@ -115,7 +115,9 @@ trait EntityGeneratorTrait
       persist: $persist,
       now: $now,
     );
-    $this->musician->setId(self::FAKED_ENTITY_ID);
+    if (!$persist) {
+      $this->musician->setId(self::FAKED_ENTITY_ID);
+    }
     $this->participant = $this->musician->getProjectParticipantOf(
       $this->project,
     );
