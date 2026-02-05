@@ -128,34 +128,52 @@ trait EntityGeneratorTrait
   /**
    * Add one instrument to $this->musician, $this->project, $this->participant.
    *
+   * @param bool $persist Defaults to \false.
+   *
    * @return void
    */
-  protected function generateInstruments(): void
+  protected function generateInstruments(bool $persist = false): void
   {
     $l10n = $this->mockProvider->getL10N();
-    $families = [];
-    $idOffset = 0;
-    foreach (['string', 'strings'] as $familyName) {
-      $family = new Entities\InstrumentFamily()
-        ->setId(self::FAKED_ENTITY_ID + $idOffset++)
-        ->setFamily($l10n->t($familyName));
-      new ReflectionProperty($family, 'untranslatedFamily')->setValue($family, $familyName);
-      $families[] = $family;
-    }
-    $instruments = [];
-    $idOffset = 0;
-    foreach (['violin', 'doublebass'] as $instrumentName) {
-      $instrument = new Entities\Instrument()
-        ->setId(self::FAKED_ENTITY_ID + $idOffset++)
-        ->setName($l10n->t($instrumentName));
-      new ReflectionProperty($instrument, 'untranslatedName')->setValue($instrument, $instrumentName);
-      foreach ($families as $family) {
-        $instrument->addFamily($family);
+    if ($persist) {
+      // The real database has the standard instruments already available by
+      // means of a setup migration.
+      // $this->entityManager->enableLogging();
+      $searchNames = ['violin', 'double bass'];
+      $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => $searchNames], ['sortOrder' => 'ASC']);
+      $untranslatedNames = array_map(fn($arg) => $arg->getUntranslatedName(), $instruments);
+      $this->assertEquals($searchNames, $untranslatedNames);
+    } else {
+      $families = [];
+      $idOffset = 0;
+      foreach (['string', 'strings'] as $familyName) {
+        $family = new Entities\InstrumentFamily()
+          ->setId(self::FAKED_ENTITY_ID + $idOffset++)
+          ->setFamily($l10n->t($familyName));
+        if ($persist) {
+          $this->entityManager->persist($family);
+        } else {
+          new ReflectionProperty($family, 'untranslatedFamily')->setValue($family, $familyName);
+        }
+        $families[] = $family;
       }
-      $instruments[] = $instrument;
+      $instruments = [];
+      $idOffset = 0;
+      foreach (['violin', 'doublebass'] as $instrumentName) {
+        $instrument = new Entities\Instrument()
+          ->setId(self::FAKED_ENTITY_ID + $idOffset++)
+          ->setName($l10n->t($instrumentName));
+        new ReflectionProperty($instrument, 'untranslatedName')->setValue($instrument, $instrumentName);
+        foreach ($families as $family) {
+          $instrument->addFamily($family);
+        }
+        if ($persist) {
+          $this->entityManager->persist($instrument);
+        }
+        $instruments[] = $instrument;
+      }
     }
     $musicianInstruments = [];
-    $idOffset = 0;
     /** @var Entities\Instrument $instrument */
     foreach ($instruments as $instrument) {
       $musicianInstrument = new Entities\MusicianInstrument()
@@ -163,28 +181,54 @@ trait EntityGeneratorTrait
         ->setMusician($this->musician);
       $this->assertEquals($instrument, $musicianInstrument->getInstrument());
       $this->assertEquals($this->musician, $musicianInstrument->getMusician());
+      if ($persist) {
+        $this->entityManager->persist($musicianInstrument);
+      }
       $musicianInstruments[] = $musicianInstrument;
     }
 
     /** @var Entities\MusicianInstrument $musicianInstrument */
     $musicianInstrument = $musicianInstruments[0];
+    $voicedInstrument = $musicianInstrument->getInstrument();
+    $instrumentationNumbers = [];
+    for ($voice = 0; $voice <= 2; ++$voice) {
+      $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
+        $this->project,
+        $voicedInstrument,
+        $voice,
+      )
+        ->setQuantity($voice);
+      $this->project->getInstrumentationNumbers()->add($instrumentationNumber);
+      if ($persist) {
+        $this->entityManager->persist($instrumentationNumber);
+      }
+      $instrumentationNumbers[] = $instrumentationNumber;
+    }
+
     $projectInstrument = new Entities\ProjectInstrument()
       ->setProjectParticipant($this->participant)
       ->setMusicianInstrument($musicianInstrument);
     $this->assertEquals($musicianInstrument->getInstrument(), $projectInstrument->getInstrument());
 
-    for ($voice = 0; $voice <= 2; ++$voice) {
-      $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
-        $this->project,
-        $projectInstrument->getInstrument(),
-        $voice,
-      )
-        ->setQuantity($voice);
-      $this->project->getInstrumentationNumbers()->add($instrumentationNumber);
-      if ($voice == 1) {
-        $projectInstrument->setInstrumentationNumber($instrumentationNumber);
-        $projectInstrument->getInstrument()->getProjectInstrumentationNumbers()->add($instrumentationNumber);
-        $instrumentationNumber->getProjectInstruments()->add($projectInstrument);
+    $instrumentationNumber = $instrumentationNumbers[1];
+    $projectInstrument->setInstrumentationNumber($instrumentationNumber);
+    $projectInstrument->getInstrument()->getProjectInstrumentationNumbers()->add($instrumentationNumber);
+    $instrumentationNumber->getProjectInstruments()->add($projectInstrument);
+
+    if ($persist) {
+      $this->entityManager->persist($projectInstrument);
+    }
+
+    if ($persist) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->rollBack();
+        }
+        throw $t;
       }
     }
   }
