@@ -27,12 +27,12 @@ $(error print_ts_type_files[_deps] needs to be the only target, but I got the fo
 endif
 
 #@private
-print_ts_type_files: app-toolkit composer.lock
+print_ts_type_files: dev-setup
 	echo $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --outputs))
 .PHONY: print_ts_type_files_deps
 
 #@private
-print_ts_type_files_deps: app-toolkit composer.lock
+print_ts_type_files_deps: dev-setup
 	echo $$(for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
 .PHONY: print_ts_type_files_deps
 
