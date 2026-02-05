@@ -62,6 +62,8 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(PageRenderer\Registration::class)]
 #[Attributes\CoversClass(PageRenderer\Util\Navigation::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
 //
@@ -103,8 +105,10 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
@@ -115,6 +119,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
@@ -129,17 +134,22 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\GeoCodingService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
+#[Attributes\UsesFunction(\OCA\CAFEVDB\Common\Functions\strcat::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -154,6 +164,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class ProjectParticipantsTest extends TestCase
@@ -174,14 +185,18 @@ class ProjectParticipantsTest extends TestCase
 
   private static int $projectId;
 
+  private static int $musicianId;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
     $this->generateCalendarBackend();
+
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
       $this->generateProjectParticipant(persist: true);
       self::$projectId = $this->project->getId();
+      self::$musicianId = $this->musician->getId();
       self::$migrationsApplied = true;
     }
 
@@ -252,13 +267,168 @@ class ProjectParticipantsTest extends TestCase
     $this->assertNotEmpty($this->renderer->navigationItems());
   }
 
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testRenderList(): void
+  {
+    $this->postData[PersistentCGIKeys::TEMPLATE] = PageRenderer\ProjectParticipants::TEMPLATE;
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  // phpcs:disable
+  private const VIEW_FORM_DATA = 'export=&PME_sys_1navfmup=0&PME_sys_navnpup=-1&projectId=@PROJECT_ID@&projectName=Test2026&recordsPerPage=40&template=project-participants&table=ProjectParticipants&templateRenderer=template%3Aproject-participants&dataPrefix%5Bmusicians%5D=Musicians%3A&participationStatusFddIndex=68&instrumentsFddIndex=61&PME_sys_fl=0&PME_sys_qfn=&PME_sys_fm=0&PME_sys_np=-1&PME_sys_cur_tab=0&PME_sys_qf0_comp=%3D&PME_sys_qf0=&PME_sys_qf1_comp=%3D&PME_sys_qf1=&PME_sys_qf56=&PME_sys_qf57_comp=%3D&PME_sys_qf57=&PME_sys_qf74_comp=%3D&export=&PME_sys_1navfmdown=0&PME_sys_navnpdown=-1&PME_sys_mtable=ProjectParticipants&PME_sys_mkey%5Bproject_id%5D=int&PME_sys_mkey%5Bmusician_id%5D=int&PME_sys_reloadOuterForm=&PME_sys_operation=@OPERATION@%3FPME_sys_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%257D%26PME_sys_groupby_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%252C%2522participation_status%2522%253A%2522regular%2522%252C%2522ProjectInstruments__master_key_%2522%253Anull%257D&ambientContainerSelector=%23cafevdb-page-body&dialogHolderCSSId=pme-table-dialog&templateRenderer=template%3Aproject-participants&initialViewOperation=true&initialName=PME_sys_operation&initialValue=@OPERATION@%3FPME_sys_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%257D%26PME_sys_groupby_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%252C%2522participation_status%2522%253A%2522regular%2522%252C%2522ProjectInstruments__master_key_%2522%253Anull%257D&reloadName=PME_sys_operation&reloadValue=@OPERATION@%3FPME_sys_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%257D%26PME_sys_groupby_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%252C%2522participation_status%2522%253A%2522regular%2522%252C%2522ProjectInstruments__master_key_%2522%253Anull%257D&modalDialog=true&modified=false&PME_sys_operation=@OPERATION@%3FPME_sys_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%257D%26PME_sys_groupby_rec%3D%257B%2522project_id%2522%253A%2522@PROJECT_ID@%2522%252C%2522musician_id%2522%253A%2522@MUSICIAN_ID@%2522%252C%2522participation_status%2522%253A%2522regular%2522%252C%2522ProjectInstruments__master_key_%2522%253Anull%257D';
+  // phpcs:enable
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testRenderView(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    parse_str(
+      str_replace(
+        [
+          '@PROJECT_ID@',
+          '@MUSICIAN_ID@',
+          '@OPERATION@',
+        ],
+        [
+          self::$projectId,
+          self::$musicianId,
+          'Anzeigen',
+        ],
+        self::VIEW_FORM_DATA,
+      ),
+      $this->postData,
+    );
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testRenderDelete(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    parse_str(
+      str_replace(
+        [
+          '@PROJECT_ID@',
+          '@MUSICIAN_ID@',
+          '@OPERATION@',
+        ],
+        [
+          self::$projectId,
+          self::$musicianId,
+          'Löschen',
+        ],
+        self::VIEW_FORM_DATA,
+      ),
+      $this->postData,
+    );
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testRenderUpdate(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    parse_str(
+      str_replace(
+        [
+          '@PROJECT_ID@',
+          '@MUSICIAN_ID@',
+          '@OPERATION@',
+        ],
+        [
+          self::$projectId,
+          self::$musicianId,
+          'Ändern',
+        ],
+        self::VIEW_FORM_DATA,
+      ),
+      $this->postData,
+    );
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      ob_end_clean();
+      throw $t;
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+  }
+
+  // TODO: test update instruments with various choices, including voices
+
   /**
    * This is quas a tearDownAfterClass() but we need some mocked / stubbed
    * classes for the entity-manager.
    *
    * @return void
    */
-  #[Attributes\Depends('testApplyMigrations')]
+  #[Attributes\Depends('testRenderDelete')]
+  #[Attributes\Depends('testRenderList')]
+  #[Attributes\Depends('testRenderUpdate')]
+  #[Attributes\Depends('testRenderView')]
   public function testUnapplyMigrations(): void
   {
     $this->unapplyMigrations();
