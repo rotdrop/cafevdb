@@ -114,12 +114,30 @@ class UtilTest extends TestCase
       Util::explode(' ', null);
     } catch (Throwable $t) {
       restore_error_handler();
+      if ($t instanceof DeprecationException) {
+        /** @var DeprecationException $t */
+        print_r($t->getDeprecationWarning());
+      }
       throw $t;
     }
     try {
       Util::explode(' ', null, flags: 0);
     } catch (Throwable $t) {
       restore_error_handler();
+      if ($t instanceof DeprecationException) {
+        /** @var DeprecationException $t */
+        print_r($t->getDeprecationWarning());
+      }
+      throw $t;
+    }
+    try {
+      Util::explode(' ', null, flags: Util::OMIT_EMPTY_FIELDS);
+    } catch (Throwable $t) {
+      restore_error_handler();
+      if ($t instanceof DeprecationException) {
+        /** @var DeprecationException $t */
+        print_r($t->getDeprecationWarning());
+      }
       throw $t;
     }
     restore_error_handler();

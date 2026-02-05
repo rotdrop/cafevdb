@@ -268,7 +268,7 @@ class Util
   public static function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
   {
     if (empty($flags)) {
-      return explode($delim, $string);
+      return explode($delim, $string ?? '');
     }
     $pregFlags = ($flags & self::OMIT_EMPTY_FIELDS) ? PREG_SPLIT_NO_EMPTY : 0;
     $trimExpr = ($flags & self::TRIM) ? '\s*' : '';
