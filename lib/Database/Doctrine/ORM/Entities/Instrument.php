@@ -53,7 +53,7 @@ class Instrument implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 128, nullable: false, unique: true)]
   private string $name;
 
-  private ?string $untranslatedName;
+  private ?string $untranslatedName = null;
 
   #[ORM\Column(type: 'integer', nullable: false, options: ['comment' => 'Orchestral Ordering'])]
   private int $sortOrder;
@@ -114,9 +114,9 @@ class Instrument implements \ArrayAccess
   /**
    * Get the untranslated name.
    *
-   * @return string
+   * @return ?string
    */
-  public function getUntranslatedName():string
+  public function getUntranslatedName(): ?string
   {
     return $this->untranslatedName;
   }

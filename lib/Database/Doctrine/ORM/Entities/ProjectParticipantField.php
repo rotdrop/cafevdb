@@ -76,7 +76,7 @@ class ProjectParticipantField implements \ArrayAccess
    * Untranslated variant of self:$name, filled automatically by
    * Gedmo\Translatable
    */
-  private ?string $untranslatedName;
+  private ?string $untranslatedName = null;
 
   #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
   private FieldMultiplicity $multiplicity;

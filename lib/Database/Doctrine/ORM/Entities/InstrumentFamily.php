@@ -53,7 +53,7 @@ class InstrumentFamily implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
   private string $family;
 
-  private ?string $untranslatedFamily;
+  private ?string $untranslatedFamily = null;
 
   /** @var Collection<Instrument> */
   #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families', indexBy: 'name', orphanRemoval: true, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
@@ -94,9 +94,9 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Get the untranslated family name.
    *
-   * @return string
+   * @return ?string
    */
-  public function getUntranslatedFamily():string
+  public function getUntranslatedFamily(): ?string
   {
     return $this->untranslatedFamily;
   }
