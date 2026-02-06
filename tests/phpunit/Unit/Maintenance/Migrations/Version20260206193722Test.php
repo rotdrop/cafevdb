@@ -38,12 +38,16 @@ use OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553;
 use OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857;
+use OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
 /** Test integer overflow for Unix epoche after 2028. */
 #[Attributes\CoversClass(Version20260206193722::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(Version19700101000001::class)]
 #[Attributes\UsesClass(Version19700101000002::class)]
 #[Attributes\UsesClass(Version19700101000003::class)]
@@ -51,29 +55,99 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 #[Attributes\UsesClass(Version20260108115432::class)]
 #[Attributes\UsesClass(Version20260130130553::class)]
 #[Attributes\UsesClass(Version20260131090857::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DoctrineMigrationsVersion::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\InvoiceNumberHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerClosedEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\EncryptionContextTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class Version20260206193722Test extends TestCase
 {
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use SetupMigrationTrait;
-
-  private const Y2038_EVENT = 'BEGIN:VCALENDAR
-CALSCALE:GREGORIAN
-VERSION:2.0
-PRODID:-//IDN nextcloud.com//Calendar app 6.2.0-rc.1//EN
-BEGIN:VEVENT
-CREATED:20260206T195449Z
-DTSTAMP:20260206T195532Z
-LAST-MODIFIED:20260206T195532Z
-SEQUENCE:3
-UID:cd08ed81-8382-4494-bde3-102c9d8444cc
-DTSTART;VALUE=DATE:20380120
-DTEND;VALUE=DATE:20380120
-STATUS:CONFIRMED
-SUMMARY:Test
-CATEGORIES:Test2099
-END:VEVENT
-END:VCALENDAR';
 
   /** @return void */
   public function testVersion20260206193722(): void
@@ -131,7 +205,7 @@ END:VCALENDAR';
     $throwable = null;
     try {
       $this->unapplyMigrations(downBelow: $migration);
-    } catch (Throwable $throwabled) {
+    } catch (Throwable $throwable) {
       // empty
     }
     $this->assertInstanceOf(DriverException::class, $throwable);

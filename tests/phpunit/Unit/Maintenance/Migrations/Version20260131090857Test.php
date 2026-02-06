@@ -31,24 +31,22 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857;
+use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test attaching the registration events as ProjectEvent entity to the projects. */
-#[Attributes\CoversClass(Version20260131090857::class)]
-#[Attributes\CoversClass(Version20260130130553::class)]
-#[Attributes\UsesClass(Version19700101000001::class)]
-#[Attributes\UsesClass(Version19700101000002::class)]
-#[Attributes\UsesClass(Version19700101000003::class)]
-#[Attributes\UsesClass(Version20260108084800::class)]
-#[Attributes\UsesClass(Version20260108115432::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260130130553::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260131090857::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000001::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000002::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000003::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260108084800::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260108115432::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
@@ -96,8 +94,6 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
@@ -110,7 +106,6 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]

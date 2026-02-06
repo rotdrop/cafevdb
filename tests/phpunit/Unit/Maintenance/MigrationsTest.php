@@ -31,24 +31,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 
 /** Test aspects of all migrations. */
-#[Attributes\CoversClass(Version19700101000001::class)]
-#[Attributes\CoversClass(Version19700101000002::class)]
-#[Attributes\CoversClass(Version19700101000003::class)]
-#[Attributes\CoversClass(Version20260108084800::class)]
-#[Attributes\CoversClass(Version20260108115432::class)]
-#[Attributes\CoversClass(Version20260130130553::class)]
-#[Attributes\CoversClass(Version20260131090857::class)]
-#[Attributes\CoversClass(Version20260206193722::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version19700101000001::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version19700101000002::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version19700101000003::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260108084800::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260108115432::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260130130553::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260131090857::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -121,12 +114,12 @@ class MigrationsTest extends TestCase
     $this->getEntityManager();
     $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findAll();
     $this->assertEquals(
-      count(Version19700101000002::INSTRUMENTS)
+      count(MigrationsNamespace\Version19700101000002::INSTRUMENTS)
       +
       count(Entities\ProjectInstrument::NON_INSTRUMENTS),
       count($instruments),
     );
-    foreach (Version19700101000002::INSTRUMENTS as $instrumentName => $instrumentInfo) {
+    foreach (MigrationsNamespace\Version19700101000002::INSTRUMENTS as $instrumentName => $instrumentInfo) {
       $instrument = $this->entityManager->getRepository(Entities\Instrument::class)->findOneBy(['name' => $instrumentName]);
       $this->assertInstanceOf(Entities\Instrument::class, $instrument);
       foreach ($instrumentInfo['families'] as $familyName) {
@@ -142,13 +135,13 @@ class MigrationsTest extends TestCase
   public function testFamilies(): void
   {
     $familyInstruments = [];
-    foreach (Version19700101000002::INSTRUMENTS as $instrumentName => $instrumentInfo) {
+    foreach (MigrationsNamespace\Version19700101000002::INSTRUMENTS as $instrumentName => $instrumentInfo) {
       foreach ($instrumentInfo['families'] as $familyName) {
         $familyInstruments[$familyName][] = $instrumentName;
       }
     }
     $this->getEntityManager();
-    foreach (Version19700101000002::INSTRUMENT_FAMILY_NAMES as $familyName) {
+    foreach (MigrationsNamespace\Version19700101000002::INSTRUMENT_FAMILY_NAMES as $familyName) {
       $family = $this->entityManager->getRepository(Entities\InstrumentFamily::class)->findOneBy(['family' => $familyName]);
       $this->assertInstanceOf(Entities\InstrumentFamily::class, $family);
       $instrumentNames = array_unique($familyInstruments[$familyName] ?? []);
