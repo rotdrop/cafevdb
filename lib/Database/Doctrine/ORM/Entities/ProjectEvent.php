@@ -91,7 +91,7 @@ class ProjectEvent implements \ArrayAccess
    * The recurrence-id of the event instance as Unix timestamp. Non-recurring
    * events have an id of 0.
    */
-  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+  #[ORM\Column(type: 'bigint', nullable: false, options: ['default' => 0])]
   private int $recurrenceId = 0;
 
   /**

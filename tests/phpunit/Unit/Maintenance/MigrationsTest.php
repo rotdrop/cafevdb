@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(Version20260108115432::class)]
 #[Attributes\CoversClass(Version20260130130553::class)]
 #[Attributes\CoversClass(Version20260131090857::class)]
+#[Attributes\CoversClass(Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -244,6 +245,14 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion20260131090857')]
+  public function testVersion20260206193722(): void
+  {
+    $migration = substr(__METHOD__, -14);
+    $this->applyMigrations($migration);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testVersion20260206193722')]
   public function testUpToLatest(): void
   {
     $this->applyMigrations('latest');

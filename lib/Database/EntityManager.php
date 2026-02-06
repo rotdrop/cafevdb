@@ -1208,7 +1208,7 @@ class EntityManager extends AbstractEntityManager
   /**
    * @return array<int, Throwable>
    */
-  public function getTransactionExceptions():ArrayAdapter
+  public function getTransactionExceptions(): array
   {
     return $this->transactionExceptions;
   }

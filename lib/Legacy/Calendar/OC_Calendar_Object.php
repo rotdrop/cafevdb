@@ -567,11 +567,11 @@ class OC_Calendar_Object
    */
   public function updateVCalendarFromRequest(mixed $request, mixed $vcalendar)
   {
-    $accessclass = isset($request['accessclass']) ? $request['accessclass'] : null;
+    $accessclass = $request['accessclass'] ?? null;
     $summary = $request['summary'];
-    $location = $request['location'];
-    $categories = explode(',', $request['categories']);
-    $allday = isset($request['allDay']);
+    $location = $request['location'] ?? null;
+    $categories = explode(',', $request['categories'] ?? []);
+    $allday = $request['allDay'] ?? false;
     $from = $request['from'];
     $to  = $request['to'];
     if (!$allday) {
@@ -580,8 +580,8 @@ class OC_Calendar_Object
     }
     $vevent = $vcalendar->VEVENT;
     // $this->logInfo(get_class($vcalendar));
-    $description = $request['description'];
-    $repeat = $request['repeat'];
+    $description = $request['description'] ?? null;
+    $repeat = $request['repeat'] ?? 'doesnotrepeat';
     if ($repeat != 'doesnotrepeat') {
       $rrule = '';
       $interval = $request['interval'];
