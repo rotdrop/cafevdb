@@ -27,7 +27,11 @@
  * check work on semi-real data.
  */
 
-require_once(__DIR__ . '/../../../../../dev-scripts/lib/scripts/console-setup.php');
+$appDir = __DIR__ . '/../../../../..';
+
+define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
+
+require_once($appDir. '/dev-scripts/lib/scripts/console-setup.php');
 
 use OCA\CAFEVDB\Controller\DTO;
 
