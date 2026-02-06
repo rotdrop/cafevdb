@@ -37,6 +37,7 @@ PHP = $(shell which php 2> /dev/null) # allow override
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
+TS_PHP_SOURCE_DIRS = lib
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -56,6 +57,9 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
+PHPCS=$(ABSSRCDIR)/vendor/bin/phpcs
+
+MAKEFILE_DEP=Makefile
 
 ###############################################################################
 #
@@ -159,12 +163,14 @@ dev-setup: pre-build composer.lock namespace-wrapper package-lock.json
 include $(DEV_LIB_DIR)/makefile/composer.mk
 
 $(PHING) $(PHPUNIT): composer.lock
+	if ! [ -x $@ ]; then $(COMPOSER) bin phpunit install; else touch $@; fi
 
+#@private
+php-scoper-install: $(PHP_SCOPER)
 .PHONY: php-scoper-install
-php-scoper-install: composer
-	if ! [ -x $(PHP_SCOPER) ]; then\
-  $(COMPOSER) bin php-scoper install;\
-fi
+
+$(PHP_SCOPER): composer.lock
+	if ! [ -x $@ ]; then $(COMPOSER) bin php-scoper install; else touch $@; fi
 
 WRAPPER_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/wrapper-build-hash 2> /dev/null || echo)
 WRAPPER_GIT_BUILD_HASH = $(shell { $(WRAPPER_GIT_DEPENDENCIES:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
@@ -190,7 +196,7 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
 
-$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json Makefile
+$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json $(MAKEFILE_DEP)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
 
 #@private
@@ -201,9 +207,7 @@ composer-wrapped-suggest:
 
 composer-suggest: composer-wrapped-suggest
 
-$(PHP_SCOPER): php-scoper-install
-
-vendor-wrapped: Makefile $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
+vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
 	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
 # scoper does not handle symlinks
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
@@ -243,12 +247,12 @@ APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 
 # fixup the php-toolkit and replace "use Doctrine\" by our scoped version
-app-toolkit-stamp: $(APP_TOOLKIT_DEST)/README.md Makefile
+app-toolkit-stamp: $(APP_TOOLKIT_DEST)/README.md $(MAKEFILE_DEP)
 	find $(APP_TOOLKIT_DEST)/Doctrine -name "*.php" -exec sed -i -e 's/use Doctrine\\/use $(WRAPPER_NAMESPACE)\\Doctrine\\/g' -e 's/extends \\Doctrine/extends \\$(WRAPPER_NAMESPACE)\\Doctrine/g' {} \;
 	date > $@
 
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
-include $(DEV_LIB_DIR)/makefile/ts-type-files.mk
+include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
@@ -293,7 +297,7 @@ CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
- Makefile package-lock.json package.json webpack.config.js .eslintrc.js
+ $(MAKEFILE_DEP) package-lock.json package.json webpack.config.js .eslintrc.js
 
 THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 
@@ -315,7 +319,7 @@ WEBPACK_DEPS =\
  $(L10N_FILES)\
  $(TS_APP_CONFIG)\
  $(SCSS_APP_CONFIG)\
- ts-type-files\
+ ts-types-files\
  scss-variables\
  $(DW_APP_CONFIG)
 
@@ -459,7 +463,7 @@ $(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.htm
 	mkdir -p $(GH_PAGES_JSDOC_HTML)
 	cp -a $(JSDOC_HTML)/. $(GH_PAGES_JSDOC_HTML)/.
 
-$(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) Makefile
+$(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) $(MAKEFILE_DEP)
 	rm -rf $(JSDOC_HTML)
 	mkdir -p $(JSDOC_HTML)
 	$(NPM) run generate-docs
@@ -468,17 +472,18 @@ $(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS)
 #
 ###############################################################################
 
-$(SRCDIR)/vendor/bin/phpcs: composer
+$(PHPCS): composer.lock
+	if ! [ -x $@ ]; then $(COMPOSER) bin phpcs install; else touch $@; fi
 
 PHPCS_IGNORE=lib/Database/Doctrine/ORM/Proxies/,templates/legacy/
 
 .PHONY: phpcs
-phpcs: $(SRCDIR)/vendor/bin/phpcs
-	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
+phpcs: $(PHPCS)
+	$(PHPCS) --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
 
 .PHONY: phpcs-errors
-phpcs-errors: $(SRCDIR)/vendor/bin/phpcs
-	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
+phpcs-errors: $(PHPCS)
+	$(PHPCS) --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
 
 # Builds the source package
 .PHONY: source
@@ -559,7 +564,7 @@ dophpunit: $(PHPUNIT)
 
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
-$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in Makefile
+$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in $(MAKEFILE_DEP)
 	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
 
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)

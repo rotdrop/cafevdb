@@ -33,43 +33,43 @@ ini_set('display_errors', 'stderr');
  *
  */
 
+$appDir = realpath(__DIR__) . '/..';
+define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
+
 try {
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
-  require_once(__DIR__ . '/../vendor/autoload.php');
-  require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
-  require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
+  require_once($appDir . '/vendor/autoload.php');
+  require_once($appDir . '/vendor-wrapped/autoload.php');
+  require_once($appDir . '/vendor-bin/typescript-transformer/vendor/autoload.php');
 } catch (\Throwable $t) {
-  fwrite(STDERR, 'Composer autoloads not set up.' . PHP_EOL);
+  fwrite(STDERR, 'Composer autoloads not set up: ' . $t->getMessage() . PHP_EOL);
   exit(1);
 }
+
+\OC::$composerAutoloader->addPsr4(
+  \OCA\RotDrop\DevScripts\PhpToTypeScript::class . '\\',
+  __DIR__ . '/lib/scripts/php-to-typescript',
+  true,
+);
+\OC::$composerAutoloader->addPsr4(
+  \OCA\RotDrop\Toolkit::class . '\\',
+  $appDir . '/php-toolkit/',
+  true,
+);
+// \OC::$composerAutoloader->addPsr4(
+//   \Spatie\TypeScriptTransformer::class . '\\',
+//   $appDir .'/vendor-bin/typescript-transformer/vendor/spatie/typescript-transformer/src/',
+//   true,
+// );
 
 use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
-use Spatie\TypeScriptTransformer\Transformers;
-
 // store output of different transformers in different files
 
-$outputPrefix = __DIR__ . '/../build/ts-types/php-';
-$outputSuffix = '.d.ts';
-$sourcePrefix = __DIR__ . '/../';
-
-$outputFiles = [
-  'types' => [
-    'transformers' => [
-      Transformers\EnumTransformer::class,
-      PhpToTypeScript\ClassConstantsTransformer::class,
-      Transformers\DtoTransformer::class,
-    ],
-    'paths' => [
-      'lib',
-    ],
-  ],
-];
-
-// obsolete
 $excludes = [
-  'lib/Database/Doctrine/ORM/Proxies',
+  // obsolete
+  // 'lib/Database/Doctrine/ORM/Proxies',
 ];
 
 $scopedNamespaces = [
@@ -80,7 +80,6 @@ $scopedNamespaces = [
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   devScriptsFolder: __DIR__,
-  configInfo: $outputFiles,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
 );

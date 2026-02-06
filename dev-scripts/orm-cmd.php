@@ -31,6 +31,9 @@
  *
  */
 
+$appDir = realpath(__DIR__) . '/..';
+define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
+
 require_once(__DIR__ . '/lib/scripts/console-setup.php');
 
 /**
@@ -159,17 +162,17 @@ use Composer\InstalledVersions;
 use OCA\CAFEVDB\Wrapped\Composer\InstalledVersions as WrappedInstalledVersions;
 
 $installedVersions = [
-  WrappedInstalledVersions::class => __DIR__ . "/../vendor-wrapped/composer/InstalledVersions.php",
-  InstalledVersions::class => __DIR__ . "/../vendor/composer/InstalledVersions.php",
+  WrappedInstalledVersions::class => '/vendor-wrapped/composer/InstalledVersions.php',
+  InstalledVersions::class => '/vendor/composer/InstalledVersions.php',
 ];
 foreach ($installedVersions as $class => $file) {
-  if (!class_exists($class, false) && file_exists($file)) {
-    include_once $file;
+  if (!class_exists($class, false) && file_exists($appDir . $file)) {
+    include_once $appDir . $file;
   }
 }
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . "/../vendor-wrapped/autoload.php";
+require_once $appDir . '/vendor/autoload.php';
+require_once $appDir . '/vendor-wrapped/autoload.php';
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\ConsoleRunner;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
