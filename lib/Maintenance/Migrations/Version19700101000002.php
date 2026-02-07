@@ -177,18 +177,6 @@ final class Version19700101000002 extends AbstractTransactionalMigration
   }
 
   /** {@inheritdoc} */
-  public function up(Schema $schema): void
-  {
-    // this up() migration is auto-generated, please modify it to your needs
-  }
-
-  /** {@inheritdoc} */
-  public function down(Schema $schema): void
-  {
-    // this down() migration is auto-generated, please modify it to your needs
-  }
-
-  /** {@inheritdoc} */
   public function preUp(Schema $schema): void
   {
     // Otherwise the English names will be recorded as translations.

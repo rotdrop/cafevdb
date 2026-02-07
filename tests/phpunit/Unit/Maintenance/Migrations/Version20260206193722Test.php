@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations;
 
+use DateTimeImmutable;
 use Throwable;
 
 use PHPUnit\Framework\TestCase;
@@ -31,30 +32,25 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002;
-use OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857;
-use OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722;
+use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
 /** Test integer overflow for Unix epoche after 2028. */
-#[Attributes\CoversClass(Version20260206193722::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\EventsService::class)]
-#[Attributes\UsesClass(Version19700101000001::class)]
-#[Attributes\UsesClass(Version19700101000002::class)]
-#[Attributes\UsesClass(Version19700101000003::class)]
-#[Attributes\UsesClass(Version20260108084800::class)]
-#[Attributes\UsesClass(Version20260108115432::class)]
-#[Attributes\UsesClass(Version20260130130553::class)]
-#[Attributes\UsesClass(Version20260131090857::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000001::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000002::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version19700101000003::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260108084800::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260108115432::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260130130553::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260207000624::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260131090857::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
@@ -149,12 +145,25 @@ class Version20260206193722Test extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use SetupMigrationTrait;
 
+  private const START_DATE = '20-01-2038';
+  private const END_DATE = '27-01-2038';
+
   /** @return void */
   public function testVersion20260206193722(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
+    /** @var TimeFactory $timeFactory */
+    $timeFactory = $this->getMockBuilder(TimeFactory::class)
+      ->onlyMethods(['getDateTimeImmutable'])
+      ->getMock();
+    $timeFactory
+      ->expects($this->atLeastOnce())
+      ->method('getDateTimeImmutable')
+      ->willReturn(DateTimeImmutable::createFromFormat('d-m-Y', self::START_DATE));
+    $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
+
     /** @var EventsService $eventsService */
     $eventsService = $this->appContainer->get(EventsService::class);
     $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
@@ -170,8 +179,8 @@ class Version20260206193722Test extends TestCase
 
     $eventData = [
       'summary' => 'Overflow Event',
-      'from' => '20-01-2038',
-      'to' => '27-01-2038', // should be converted to a repeating event
+      'from' => self::START_DATE,
+      'to' => self::END_DATE, // should be converted to a repeating event
       'allDay' => true,
       'calendar' => 2,
       'categories' => $this->project->getName(),

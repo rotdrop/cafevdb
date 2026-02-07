@@ -41,6 +41,7 @@ use OCP\IDateTimeZone;
 
 use OCA\DAV\CalDAV\CalDavBackend;
 
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -288,6 +289,7 @@ trait SetupEventsServiceTrait
       calDavService: $this->calDavService,
       vCalendarService: $this->vCalendarService,
       dateTimeFormatter: \OCP\Server::get(IDateTimeFormatter::class),
+      timeFactory: $this->appContainer->get(TimeFactory::class),
     );
   }
 

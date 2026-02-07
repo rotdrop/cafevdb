@@ -22,37 +22,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Tests\Unit;
+namespace OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations;
 
+use DateTimeImmutable;
 use Throwable;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCA\RotDrop\Tests\DatabaseProvider;
-use OCA\RotDrop\Tests\EnumDatabasePurpose;
-
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
-/**
- * Misuse the PHPUnit framework to generate test-data for the members
- * companion app. The idea is that the generated SQL dumps are selectively
- * copied to the test-suite of the companion app and are just loaded there
- * verbatim into the test database.
- */
-#[Attributes\CoversClass(EntityManager::class)]
-#[Attributes\CoversClass(CloudUserConnectorService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+/** Test aspects of the EventsService which need a real database in the background. */
+#[Attributes\CoversClass(EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -68,14 +58,18 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianInstrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
@@ -91,6 +85,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
@@ -99,8 +94,10 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -117,7 +114,6 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
@@ -126,8 +122,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
@@ -136,73 +132,104 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\EntityManagerTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
-class ArtifactsTest extends TestCase
+class EventsServicePersistenceTest extends TestCase
 {
-  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
 
-  /** @return void */
-  public function testArtifacts(): void
+  private EventsService $eventsService;
+
+  private static bool $migrationsApplied = false;
+
+  private static int $projectId;
+
+  private static int $musicianId;
+
+  private static string $projectName;
+
+  /** {@inheritdoc} */
+  public function setup(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer->get(EventsService::class);
-    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
-    // up to the previous
-    $this->applyMigrations(upToVersion: 'latest');
     $this->generateCalendarBackend();
 
-    $this->generateProjectParticipant(persist: true);
-    $this->entityManager->beginTransaction();
-    try {
-      $this->project->setRegistrationStartDate('2099-01-01');
-      $this->project->setRegistrationDeadline('2099-12-31');
-      $this->entityManager->flush();
-      $this->entityManager->commit();
-    } catch (Throwable $t) {
-      if ($this->entityManager->isTransactionActive()) {
-        $this->entityManager->rollback();
-      }
-      $this->unapplyMigrations();
-      throw $t;
+    if (!self::$migrationsApplied) {
+      $this->applyMigrations('latest');
+      $now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
+      $this->generateProjectParticipant(persist: true, now: $now);
+      self::$projectId = $this->project->getId();
+      self::$projectName = $this->project->getName();
+      self::$musicianId = $this->musician->getId();
+      $this->generateInstruments(persist: true);
+      self::$migrationsApplied = true;
     }
 
-    /** @var CloudUserConnectorService $cloudUserConnectorService */
-    $cloudUserConnectorService = $this->appContainer->get(CloudUserConnectorService::class);
-    $dbConfig = $this->databaseProvider->getDatabaseConfig();
-    $cloudConfig = $this->mockProvider->getCloudConfig();
-    $cloudConfig->setSystemValue('dbhost', $dbConfig->databaseServer);
-    $cloudConfig->setSystemValue('dbuser', DatabaseProvider::CLOUD_DB_USER);
-    $cloudConnectorDatabase = $this->databaseProvider->dataBaseName(EnumDatabasePurpose::CLOUD_CONNECTOR);
-    $cloudUserConnectorService->updateUserSqlViews($cloudConnectorDatabase);
-    $cloudUserConnectorService->updateMusicianPersonalizedViews($cloudConnectorDatabase);
+    $this->entityManager = $this->mockProvider->getEntityManager();
+  }
 
-    $this->databaseProvider->dumpDatabase(
-      EnumDatabasePurpose::APP,
-      __METHOD__,
-    );
-    $this->databaseProvider->dumpDatabase(
-      EnumDatabasePurpose::CLOUD_CONNECTOR,
-      __METHOD__,
-    );
+  /** @return void */
+  public function testSetup(): void
+  {
+  }
 
-    // this should be enhanced by further data ...
+  private const FUTURE_YEAR = 2038;
+  private const START_DATE = '20-01-' . self::FUTURE_YEAR;
 
+  /** @return void */
+  #[Attributes\Depends('testSetup')]
+  public function testUnlimitedRecurringProjectEvent(): void
+  {
+    $eventData = [
+      'summary' => 'Overflow Event',
+      'from' => self::START_DATE,
+      'to' => self::START_DATE,
+      'allDay' => true,
+      'calendar' => 2,
+      'categories' => self::$projectName,
+      'repeat' => 'yearly',
+    ];
+
+    /** @var TimeFactory $timeFactory */
+    $timeFactory = $this->getMockBuilder(TimeFactory::class)
+      ->onlyMethods(['getDateTimeImmutable'])
+      ->getMock();
+    $timeFactory
+      ->expects($this->atLeastOnce())
+      ->method('getDateTimeImmutable')
+      ->willReturn(DateTimeImmutable::createFromFormat('d-m-Y', self::START_DATE));
+    $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
+
+    /** @var EventsService $eventsService */
+    $this->eventsService = $this->appContainer->get(EventsService::class);
+    $this->mockProvider->registerClassInstance(EventsService::class, $this->eventsService, global: true);
+
+    $this->project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+
+    $previousEventCount = $this->project->getCalendarEvents()->count();
+
+    $result = $this->eventsService->newEvent($eventData);
+    foreach (['uri', 'uid', 'event'] as $key) {
+      $this->assertArrayHasKey($key, $result);
+    }
+    $expectedEventCount = $previousEventCount + EventsService::PROJECT_EVENTS_RECURRING_FUTURE_YEARS + 1;
+    $projectEvents = $this->project->getCalendarEvents();
+    $this->assertEquals($expectedEventCount, $projectEvents->count());
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testUnlimitedRecurringProjectEvent')]
+  public function testUnapply(): void
+  {
     $this->unapplyMigrations();
   }
 }

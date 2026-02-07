@@ -26,45 +26,32 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
+use RuntimeException;
+
 use OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
 
 /**
- * Ensure the ProjectEvent entities for registration calendar events are
- * linked to the project.
+ * Destructive down of the recurrence-id -> bigint migration. This will error
+ * out unless in testing-mode.
  */
-final class Version20260131090857 extends AbstractTransactionalMigration
+final class Version20260207000624 extends AbstractTransactionalMigration
 {
   /** {@inheritdoc} */
   public function getDescription(): string
   {
-    return $this->l->t('Ensure the ProjectEvent entities for the project registration calendar events are linked to the project.');
-  }
-
-  /** {@inheritdoc} */
-  public function preUp(Schema $schema): void
-  {
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer->get(EventsService::class);
-    $oldSoftDeleteable = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, state: false);
-    $projects = $this->entityManager->getRepository(Entities\Project::class)->findAll();
-    /** @var Entities\Project $project */
-    foreach ($projects as $project) {
-      $eventsService->ensureProjectRegistrationEvent($project);
-    }
-
-    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, state: $oldSoftDeleteable);
+    return $this->l->t('This is a do-nothing migration which, however, must exist for technical reasons.');
   }
 
   /** {@inheritdoc} */
   public function postDown(Schema $schema): void
   {
-    // cannot be easily undown because the various event listeners will
-    // enforce consistency: as long as the calendar events exist the project
-    // events will be regenerated and the registrationevent association will
-    // be established.
+    if ((\ROT_DROP_PHPUNIT ?? null) !== true) {
+      throw new RuntimeException('This migration cannot be undone in production mode.');
+    }
+    $qb = $this->entityManager->createQueryBuilder();
+    $qb->delete(Entities\ProjectEvent::class, 'pe')->where($qb->expr()->gt('pe.recurrenceId', 0x7fffffff));
+    $qb->getQuery()->execute();
   }
 }

@@ -584,9 +584,9 @@ class OC_Calendar_Object
     $repeat = $request['repeat'] ?? 'doesnotrepeat';
     if ($repeat != 'doesnotrepeat') {
       $rrule = '';
-      $interval = $request['interval'];
-      $end = $request['end'];
-      $byoccurrences = $request['byoccurrences'];
+      $interval = $request['interval'] ?? null;
+      $end = $request['end'] ?? null;
+      $byoccurrences = $request['byoccurrences'] ?? null;
       switch ($repeat) {
         case 'daily':
           $rrule .= 'FREQ=DAILY';
@@ -616,7 +616,7 @@ class OC_Calendar_Object
           break;
         case 'monthly':
           $rrule .= 'FREQ=MONTHLY';
-          if ($request['advanced_month_select'] == 'monthday') {
+          if (($request['advanced_month_select'] ?? null) == 'monthday') {
             break;
           } elseif ($request['advanced_month_select'] == 'weekday') {
             if ($request['weekofmonthoptions'] == 'auto') {
@@ -642,70 +642,73 @@ class OC_Calendar_Object
           break;
         case 'yearly':
           $rrule .= 'FREQ=YEARLY';
-          if ($request['advanced_year_select'] == 'bydate') {
-            list($_day, $_month, $_year) = explode('-', $from);
-            $bymonth = date('n', mktime(0, 0, 0, $_month, $_day, $_year));
-            $bymonthday = date('j', mktime(0, 0, 0, $_month, $_day, $_year));
-            $rrule .= ';BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=' . $bymonth . ';BYMONTHDAY=' . $bymonthday;
-          } elseif ($request['advanced_year_select'] == 'byyearday') {
-            list($_day, $_month, $_year) = explode('-', $from);
-            $byyearday = date('z', mktime(0, 0, 0, $_month, $_day, $_year)) + 1;
-            if (isset($request['byyearday'])) {
-              foreach ($request['byyearday'] as $yearday) {
-                $byyearday .= ',' . $yearday;
-              }
-            }
-            $rrule .= ';BYYEARDAY=' . $byyearday;
-          } elseif ($request['advanced_year_select'] == 'byweekno') {
-            list($_day, $_month, $_year) = explode('-', $from);
-            $rrule .= ';BYDAY=' . strtoupper(substr(date('l', mktime(0, 0, 0, $_month, $_day, $_year)), 0, 2));
-            $byweekno = '';
-            foreach ($request['byweekno'] as $weekno) {
-              if ($byweekno == '') {
-                $byweekno = $weekno;
-              } else {
-                $byweekno .= ',' . $weekno;
-              }
-            }
-            $rrule .= ';BYWEEKNO=' . $byweekno;
-          } elseif ($request['advanced_year_select'] == 'bydaymonth') {
-            if (isset($request['weeklyoptions'])) {
-              $days = array_flip($this->getWeeklyOptions());
-              $byday = '';
-              foreach ($request['weeklyoptions'] as $day) {
-                if ($byday == '') {
-                  $byday .= $days[$day];
-                } else {
-                  $byday .= ',' . $days[$day];
+          switch ($request['advanced_year_select'] ?? null) {
+            case 'bydate':
+              list($_day, $_month, $_year) = explode('-', $from);
+              $bymonth = date('n', mktime(0, 0, 0, $_month, $_day, $_year));
+              $bymonthday = date('j', mktime(0, 0, 0, $_month, $_day, $_year));
+              $rrule .= ';BYDAY=MO,TU,WE,TH,FR,SA,SU;BYMONTH=' . $bymonth . ';BYMONTHDAY=' . $bymonthday;
+              break;
+            case 'byyearday':
+              list($_day, $_month, $_year) = explode('-', $from);
+              $byyearday = date('z', mktime(0, 0, 0, $_month, $_day, $_year)) + 1;
+              if (isset($request['byyearday'])) {
+                foreach ($request['byyearday'] as $yearday) {
+                  $byyearday .= ',' . $yearday;
                 }
               }
-              $rrule .= ';BYDAY=' . $byday;
-            }
-            if (isset($request['bymonth'])) {
-              $monthes = array_flip($this->getByMonthOptions());
-              $bymonth = '';
-              foreach ($request['bymonth'] as $month) {
-                if ($bymonth == '') {
-                  $bymonth .= $monthes[$month];
+              $rrule .= ';BYYEARDAY=' . $byyearday;
+              break;
+            case 'byweekno':
+              list($_day, $_month, $_year) = explode('-', $from);
+              $rrule .= ';BYDAY=' . strtoupper(substr(date('l', mktime(0, 0, 0, $_month, $_day, $_year)), 0, 2));
+              $byweekno = '';
+              foreach ($request['byweekno'] as $weekno) {
+                if ($byweekno == '') {
+                  $byweekno = $weekno;
                 } else {
-                  $bymonth .= ',' . $monthes[$month];
+                  $byweekno .= ',' . $weekno;
                 }
               }
-              $rrule .= ';BYMONTH=' . $bymonth;
+              $rrule .= ';BYWEEKNO=' . $byweekno;
+              break;
+            case 'bydaymonth':
+              if (isset($request['weeklyoptions'])) {
+                $days = array_flip($this->getWeeklyOptions());
+                $byday = '';
+                foreach ($request['weeklyoptions'] as $day) {
+                  if ($byday == '') {
+                    $byday .= $days[$day];
+                  } else {
+                    $byday .= ',' . $days[$day];
+                  }
+                }
+                $rrule .= ';BYDAY=' . $byday;
+              }
+              if (isset($request['bymonth'])) {
+                $monthes = array_flip($this->getByMonthOptions());
+                $bymonth = '';
+                foreach ($request['bymonth'] as $month) {
+                  if ($bymonth == '') {
+                    $bymonth .= $monthes[$month];
+                  } else {
+                    $bymonth .= ',' . $monthes[$month];
+                  }
+                }
+                $rrule .= ';BYMONTH=' . $bymonth;
 
-            }
-            if (isset($request['bymonthday'])) {
-              $bymonthday = '';
-              foreach ($request['bymonthday'] as $monthday) {
-                if ($bymonthday == '') {
-                  $bymonthday .= $monthday;
-                } else {
-                  $bymonthday .= ',' . $monthday;
-                }
               }
-              $rrule .= ';BYMONTHDAY=' . $bymonthday;
-
-            }
+              if (isset($request['bymonthday'])) {
+                $bymonthday = '';
+                foreach ($request['bymonthday'] as $monthday) {
+                  if ($bymonthday == '') {
+                    $bymonthday .= $monthday;
+                  } else {
+                    $bymonthday .= ',' . $monthday;
+                  }
+                }
+                $rrule .= ';BYMONTHDAY=' . $bymonthday;
+              }
           }
           break;
         default:
