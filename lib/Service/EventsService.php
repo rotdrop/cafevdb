@@ -60,6 +60,7 @@ use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
 
 use OCA\CAFEVDB\AppInfo\Application;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -91,6 +92,12 @@ class EventsService
   public const RECORD_ABSENCE_CATEGORY = 'record absence';
 
   /**
+   * Recurring events may have not termination. In this case stop generating
+   * events at times beyond this limit in the future.
+   */
+  public const PROJECT_EVENTS_RECURRING_FUTURE_YEARS = 3;
+
+  /**
    * @var array Cache the siblings of recurring events by calendar-id,
    * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
    * instances.
@@ -115,10 +122,11 @@ class EventsService
     protected IUserSession $userSession,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    private ProjectService $projectService,
     private CalDavService $calDavService,
-    private VCalendarService $vCalendarService,
     private IDateTimeFormatter $dateTimeFormatter,
+    private ProjectService $projectService,
+    private TimeFactory $timeFactory,
+    private VCalendarService $vCalendarService,
   ) {
     $this->setDatabaseRepository(Entities\ProjectEvent::class);
     $this->l = $this->l10n();
@@ -445,10 +453,20 @@ class EventsService
    *
    * @param VCalendar $vCalendar
    *
+   * @param ?DateTimeInterface $futureLimit For repeating events without limit
+   * stop at this date. Defaults to
+   * +self::PROJECT_EVENTS_RECURRING_FUTURE_YEARS years in the future.
+   *
    * @return array<int, VEvent>
    */
-  private function getVEventSiblings(int $calendarId, VCalendar $vCalendar):array
-  {
+  private function getVEventSiblings(
+    int $calendarId,
+    VCalendar $vCalendar,
+    ?DateTimeInterface $futureLimit = null,
+  ): array {
+    if ($futureLimit === null) {
+      $futureLimit = $this->timeFactory->getDateTimeImmutable()->modify('+' . self::PROJECT_EVENTS_RECURRING_FUTURE_YEARS . ' years');
+    }
     $vObject = VCalendarService::getVObject($vCalendar);
     $uid = (string)$vObject->UID;
     $sequence = (int)(string)($vObject->SEQUENCE ?? 0);
@@ -466,6 +484,11 @@ class EventsService
         $eventIterator = new EventIterator($vEvents);
         while ($eventIterator->valid()) {
           $sibling = $eventIterator->getEventObject();
+          // the siblings are ordered by start data, bail out if this is
+          // beyond limit.
+          if ($sibling->DTSTART->getDateTime() > $futureLimit) {
+            break;
+          }
           $recurrenceId = $sibling->{'RECURRENCE-ID'}->getDateTime()->getTimestamp();
           if (empty($siblings[$recurrenceId]) || $siblings[$recurrenceId]->{'LAST-MODIFIED'}->getDateTime() < $sibling->{'LAST-MODIFIED'}->getDateTime()) {
             // This might have been intended for an undo-feature. At any rate:
@@ -1212,7 +1235,7 @@ class EventsService
    *
    * @param string $displayName Value to set.
    *
-   * @return bool
+   * @return void
    */
   private function setCalendarDisplayName(string $uri, string $displayName): void
   {
@@ -1338,6 +1361,8 @@ class EventsService
     $categories = null;
     $isRegistrationEvent = false;
 
+    $nowDateTime = $this->timeFactory->getDateTimeImmutable();
+
     if ($type == VCalendarType::VEVENT) {
       // As a temporary hack enforce all events to be public as there is
       // currently no means to share calendars with really full-access. This is
@@ -1356,8 +1381,8 @@ class EventsService
           foreach (VCalendarService::getAllVObjects($originalVCalendar) as $vEvent) {
             if (!empty($vEvent->CLASS) && ($vEvent->CLASS == 'CONFIDENTIAL' || $vEvent->CLASS == 'PRIVATE')) {
               $vEvent->CLASS = 'PUBLIC';
-              $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-              $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+              $vEvent->{'LAST-MODIFIED'} = $nowDateTime;
+              $vEvent->DTSTAMP = $nowDateTime;
             }
           }
           $needUpdate = true;
@@ -1379,8 +1404,8 @@ class EventsService
           if (count($categories) != count($newCategories)) {
             $this->logInfo('REMOVING RECORD ABSENCE CATEGORY');
             VCalendarService::setCategories($vEvent, $newCategories);
-            $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-            $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->{'LAST-MODIFIED'} = $nowDateTime;
+            $vEvent->DTSTAMP = $nowDateTime;
             $needUpdate = true;
           }
         }
@@ -1415,8 +1440,8 @@ class EventsService
               $categories[] = $recordAbsenceCategory;
             }
             VCalendarService::setCategories($vEvent, $categories);
-            $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-            $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->{'LAST-MODIFIED'} = $nowDateTime;
+            $vEvent->DTSTAMP = $nowDateTime;
           }
           $needUpdate = true;
         }
@@ -1463,8 +1488,7 @@ class EventsService
                 'INTERVAL' => 1,
                 'UNTIL' => $dtEnd,
               ]);
-            $vEvent->{'LAST-MODIFIED'} =
-              $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->{'LAST-MODIFIED'} = $vEvent->DTSTAMP = $nowDateTime;
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
             return null; // there will be another event which then is used to update the project links.
           }
@@ -1522,7 +1546,7 @@ class EventsService
 
             foreach ([$vEvent, $vStartEvent, $vEndEvent] as $vObject) {
               $vObject->{'LAST-MODIFIED'} =
-                $vObject->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+                $vObject->DTSTAMP = $nowDateTime;
             }
 
             $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
@@ -1604,7 +1628,7 @@ class EventsService
 
             // register or update the event in the ProjectEvents table.
             /** @var Entities\ProjectEvent $projectEvent */
-            list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
+            list('isNew' => $status, 'entity' => $projectEvent) = $this->registerProjectEvent(
               $project,
               calendarURI: $calURI,
               eventUID: $eventUID,
@@ -1696,7 +1720,7 @@ class EventsService
   {
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     if (empty($referenceTime)) {
-      $referenceTime = new DateTimeImmutable;
+      $referenceTime = $this->timeFactory->getDateTimeImmutable();
     }
     $oldAgeStamp = $referenceTime->getTimestamp() - $oldAgeSeconds;
     $projectEvents = $this->findBy([ '!deleted' => null ]);
@@ -1843,7 +1867,7 @@ class EventsService
    * ```
    * where NEW_STATUS is true if a new event has been registered.
    */
-  private function register(
+  private function registerProjectEvent(
     Entities\Project $project,
     string $calendarURI,
     string $eventUID,
@@ -2042,7 +2066,7 @@ class EventsService
       }
     }
 
-    $timeStamp = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $timeStamp = $this->timeFactory->getDateTimeImmutable();
 
     if (empty($recurrenceId)) {
       // $masterData = null;
@@ -2132,7 +2156,7 @@ class EventsService
       }
     }
 
-    $timeStamp = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $timeStamp = $this->timeFactory->getDateTimeImmutable();
 
     $needUpdate = false;
     if (empty($recurrenceId)) {
@@ -2465,7 +2489,7 @@ class EventsService
     if ($percentComplete == 100) {
       $status = self::TASK_COMPLETED;
       if (empty($dateCompleted)) {
-        $dateCompleted = new DateTimeImmutable;
+        $dateCompleted = $this->timeFactory->getDateTimeImmutable();
       }
     } elseif ($percentComplete == 0) {
       $status = self::TASK_NEEDS_ACTION;
@@ -2477,7 +2501,7 @@ class EventsService
 
     if ($status == self::TASK_COMPLETED) {
       if (empty($dateCompleted)) {
-        $dateCompleted = new DateTimeImmutable;
+        $dateCompleted = $this->timeFactory->getDateTimeImmutable();
       }
     } elseif ($status == self::TASK_NEEDS_ACTION || $status == self::TASK_IN_PROCESS) {
       $dateCompleted = false;
@@ -2575,8 +2599,9 @@ class EventsService
       $this->vCalendarService->addRelations($vCalendar, $vEvent, $changeSet);
     }
 
-    $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-    $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $nowDateTime = $this->timeFactory->getDateTimeImmutable();
+    $vEvent->{'LAST-MODIFIED'} = $nowDateTime;
+    $vEvent->DTSTAMP = $nowDateTime;
 
     $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
   }
@@ -2614,8 +2639,9 @@ class EventsService
       $this->vCalendarService->addRelations($vCalendar, $vTodo, $changeSet);
     }
 
-    $vTodo->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
-    $vTodo->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $nowDateTime = $this->timeFactory->getDateTimeImmutable();
+    $vTodo->{'LAST-MODIFIED'} = $nowDateTime;
+    $vTodo->DTSTAMP = $nowDateTime;
 
     $this->calDavService->updateCalendarObject($calendarId, $taskURI, $vCalendar);
   }
