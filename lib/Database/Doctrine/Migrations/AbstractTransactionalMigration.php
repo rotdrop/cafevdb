@@ -26,10 +26,22 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Schema;
+
 /**
  * Abstract base class for transactional migrations.
  */
 abstract class AbstractTransactionalMigration extends AbstractMigration
 {
   protected const TRANSACTIONAL = true;
+
+  /** {@inheritdoc} */
+  final public function up(Schema $schema): void
+  {
+  }
+
+  /** {@inheritdoc} */
+  final public function down(Schema $schema): void
+  {
+  }
 }
