@@ -125,8 +125,6 @@ class Application extends AbstractApplication
    */
   public function boot(IBootContext $context): void
   {
-    parent::boot($context);
-
     $context->injectFn(function(
       $userId,
       AuthorizationService $authorizationService,
