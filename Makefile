@@ -422,20 +422,27 @@ pre-php-docs: app-toolkit-stamp
 .PHONY: phpdoc
 phpdoc: pre-php-docs $(PHPDOC_HTML)/index.html
 
+# The directory arguments must be relative paths, otherwise funny things
+# are happening.
 $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
 	rm -rf $(PHPDOC_HTML)
 	mkdir -p $(PHPDOC_HTML)
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
+ -d $(SRCDIR)/lib \
+ -d $(SRCDIR)/php-toolkit \
+ -d $(SRCDIR)/tests/phpunit \
+ --defaultpackagename $(APP_NAME) \
  --force \
  --parseprivate \
  --visibility api,public,protected,private,internal \
  --sourcecode \
- --defaultpackagename $(APP_NAME) \
- -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
  -t $(PHPDOC_HTML)
+
+# -d ../php-toolkit \
+# -d ../tests/phpunit \
 
 #--setting guides.enabled=true \
 #
