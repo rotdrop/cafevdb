@@ -1072,7 +1072,7 @@ class MockProvider
    * Return the array of ROUTE_NAME => \Symfony\Component\Routing\Route of
    * defined routes for this app.
    *
-   * @return array<\Symfony\Component\Routing\Route>.
+   * @return array<\Symfony\Component\Routing\Route>
    */
   public function getAppRoutes(): array
   {

@@ -21,9 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @file Access the data-base records of musicians. Return flattened DB entities.
- */
 
 namespace OCA\CAFEVDB\Controller;
 

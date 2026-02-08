@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Common\ConsoleLogger;
 class ConsoleLoggerTest extends TestCase
 {
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    *
    * @return void
    */

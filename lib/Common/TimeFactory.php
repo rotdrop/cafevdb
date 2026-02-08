@@ -33,14 +33,11 @@ use OC\AppFramework\Utility\TimeFactory as CoreTimeFactory;
 /**
  * Like ITimeFactory but stop using DateTime in favour of DateTimeImmutable.
  *
- * @method [[static] return type] [name]([[type] [parameter]<, ...>]) [<description>]
+ * @method int getTime()
+ * Result of calling \time().
  *
- * @method int getTime() Result of calling \time().
- *
- * @method int getTime() Result of calling \time().
- *
- * @method DateTime getDateTime(string $time = 'now', ?DateTimeZone $timezone
- * = null) Return a DateTime object with the given DateTimeZone which defaults
+ * @method DateTime getDateTime(string $time = 'now', ?DateTimeZone $timezone = null)
+ * Return a DateTime object with the given DateTimeZone which defaults
  * to UTC or the timezone configured by generating an instance via
  * static::withTimeZone().
  *

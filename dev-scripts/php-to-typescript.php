@@ -56,11 +56,6 @@ try {
   $appDir . '/php-toolkit/',
   true,
 );
-// \OC::$composerAutoloader->addPsr4(
-//   \Spatie\TypeScriptTransformer::class . '\\',
-//   $appDir .'/vendor-bin/typescript-transformer/vendor/spatie/typescript-transformer/src/',
-//   true,
-// );
 
 use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;

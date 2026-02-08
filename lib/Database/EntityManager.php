@@ -130,6 +130,7 @@ class EntityManager extends AbstractEntityManager
 
   /**
    * @var array Cache of property names indexed by class annotation.
+   *
    * ```
    * [
    *   'entity' => CLASSNAME,

@@ -253,7 +253,7 @@ class Util
    *
    * @param string $delim The delimiter string.
    *
-   * @param ?|string $string The string to split.
+   * @param ?string $string The string to split.
    *
    * @param int $flags Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED
    * - self::OMIT_EMPTY_FIELDS Omit empty fields from the output array

@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @author Thomas Mueller <thomas.mueller@tmit.eu>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Richard Steinmetz <richard@steinmetz.cloud>
+ * @license AGPL-3.0-or-later
  *
  * Mail
  *
@@ -23,9 +24,8 @@ declare(strict_types=1);
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- *
+ * You should have received a copy of the GNU Affero General Public License,
+ * version 3, along with this program. If not, see <http://www.gnu.org/licenses/>
  */
 
 namespace OCA\CAFEVDB\Service\IMAP;

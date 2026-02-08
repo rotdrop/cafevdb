@@ -250,7 +250,7 @@ class MusiciansControllerTest extends TestCase
    *
    * @param bool $throw
    *
-   * @return $array
+   * @return array
    */
   private function callSearch(
     string $pattern,

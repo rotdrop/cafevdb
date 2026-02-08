@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,6 @@ use OCP\IConfig as ICloudConfig;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
-
 
 /**
  * Cleanup temporary file downloads where the share-link has expired. This is
