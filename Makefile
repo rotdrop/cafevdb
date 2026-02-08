@@ -43,23 +43,23 @@ COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
 else
-COMPOSER=$(COMPOSER_SYSTEM)
+COMPOSER = $(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
 #
 NPM = $(shell which npm 2> /dev/null)
-OCC=$(ABSSRCDIR)/../../occ
+OCC = $(ABSSRCDIR)/../../occ
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 WGET = $(shell which wget 2> /dev/null)
-TINYMCE_VERSION=7
+TINYMCE_VERSION = 7
 #
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
-PHING=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
-PHPCS=$(ABSSRCDIR)/vendor/bin/phpcs
+PHING = $(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
+PHPCS = $(ABSSRCDIR)/vendor/bin/phpcs
 
-MAKEFILE_DEP=Makefile
+MAKEFILE_DEP = Makefile
 
 ###############################################################################
 #
@@ -165,8 +165,13 @@ build: dev-setup npm-build post-build
 dev: dev-setup npm-dev post-build
 .PHONY: dev
 
-dev-setup: pre-build composer.lock namespace-wrapper package-lock.json
+#@private
+dev-setup: dev-setup-php package-lock.json
 .PHONY: dev-setup
+
+#@private
+dev-setup-php: pre-build composer.lock namespace-wrapper
+.PHONY: dev-setup-php
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
 
@@ -395,8 +400,9 @@ $(APP_BUILD_HASH):
 #
 # START DOCS
 
-.PHONY: doc
+#@@ Build the documentation. May take a long time
 doc: phpdoc doxygen jsdoc
+.PHONY: doc
 
 GH_PAGES_BUILD_DIR = $(DOC_BUILD_DIR)/gh-pages/
 GH_PAGES_PHPDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/phpdoc/html/
@@ -424,15 +430,15 @@ $(GH_PAGES_PHPDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(PHPDOC_HTML)/index.h
 	mkdir -p $(GH_PAGES_PHPDOC_HTML)
 	cp -a $(PHPDOC_HTML)/. $(GH_PAGES_PHPDOC_HTML)/.
 
-.PHONY: pre-php-docs
-pre-php-docs: app-toolkit-stamp
-
+#@@ Run phpDocumentor
+phpdoc: $(PHPDOC_HTML)/index.html
 .PHONY: phpdoc
-phpdoc: pre-php-docs $(PHPDOC_HTML)/index.html
 
 # The directory arguments must be relative paths, otherwise funny things
 # are happening.
-$(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
+#@private
+$(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
+	$(MAKE) dev-setup-php
 	rm -rf $(PHPDOC_HTML)
 	mkdir -p $(PHPDOC_HTML)
 	$(PHPDOC) run \
@@ -446,14 +452,9 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
  --visibility api,public,protected,private,internal \
  --sourcecode \
  --setting graphs.enabled=$(PHPDOC_GRAPHS) \
+ --setting guides.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
  -t $(PHPDOC_HTML)
-
-# -d ../php-toolkit \
-# -d ../tests/phpunit \
-
-#--setting guides.enabled=true \
-#
 
 DOXYGEN_HTML = $(DOC_BUILD_DIR)/doxygen/html/
 
