@@ -60,6 +60,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
 #[Attributes\CoversClass(CalDavService::class)]
 #[Attributes\CoversClass(EventsService::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectCreatedEventListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectDeletedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\CalendarObjectUpdatedEventListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixEvent::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Service\DTO\EventMatrixRow::class)]

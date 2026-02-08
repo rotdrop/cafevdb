@@ -101,6 +101,7 @@ class ProgressStatusControllerTest extends TestCase
   /** @return void */
   public function testSetup(): void
   {
+    $this->expectNotToPerformAssertions();
   }
 
   /** @return void */

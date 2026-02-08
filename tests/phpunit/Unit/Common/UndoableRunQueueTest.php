@@ -63,7 +63,7 @@ class UndoableRunQueueTest extends TestCase
   public function setup(): void
   {
     /** @var MockProvider $mockProvider */
-    $this->mockProvider = $mockProvider = MockProvider::create($this);
+    $this->mockProvider = MockProvider::create($this);
 
     $this->queue = $this->getQueue();
   }
@@ -81,6 +81,7 @@ class UndoableRunQueueTest extends TestCase
   /** @return void */
   public function testConstruction(): void
   {
+    $this->expectNotToPerformAssertions();
   }
 
   /** @return void */

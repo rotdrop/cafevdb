@@ -30,16 +30,20 @@ use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
-use Pimple\Container as InnerContainer;
 use OC\AppFramework\Utility\SimpleContainer;
+use OC\Session\Memory as MemorySession;
+use Pimple\Container as InnerContainer;
 
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
+use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUser;
 use OCP\IUserSession;
+use OCP\L10N\IFactory as L10NFactory;
 use Psr\Log\LoggerInterface;
 
 use OCA\RotDrop\Tests\Logger;
@@ -52,15 +56,17 @@ abstract class AbstractMockProvider
 
   public readonly string $appName;
 
+  protected array $instances = [];
+
   private ReflectionMethod $getMockBuilderMethod;
 
   private ReflectionMethod $createStubMethod;
 
-  private static IAppContainer $appContainer;
+  protected static IAppContainer $appContainer;
 
   private static array $mockedServices;
 
-  private static array $originalInstances = [];
+  protected static array $originalInstances = [];
 
   private static InnerContainer $serverContainerSnapshot;
 
@@ -206,6 +212,31 @@ abstract class AbstractMockProvider
     }
   }
 
+
+  /**
+   * Register a class instance to be returned by the app-container.
+   *
+   * @param string $className
+   *
+   * @param mixed $instance
+   *
+   * @param bool $global Install into the server container.
+   *
+   * @return void
+   */
+  public function registerClassInstance(string $className, mixed $instance, bool $global = false): void
+  {
+    if ($instance === null) {
+      unset($this->instances[$className]);
+    } else {
+      $this->instances[$className] = $instance;
+    }
+    if ($global) {
+      // echo 'REGISTER GLOBALLY ' . $className . PHP_EOL;
+      $this->registerService($className);
+    }
+  }
+
   /** @return void */
   private function registerServices(): void
   {
@@ -257,6 +288,13 @@ abstract class AbstractMockProvider
   {
     $method = new ReflectionMethod($this->testCase, 'never');
     return $method->invoke($this->testCase);
+  }
+
+  /** {@inheritdoc} */
+  protected function atMost(int $count = 2): mixed
+  {
+    $method = new ReflectionMethod($this->testCase, 'atMost');
+    return $method->invoke($this->testCase, $count);
   }
 
   /**
@@ -311,15 +349,10 @@ abstract class AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder(IUser::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
+    $instance = $this->createStub(IUser::class);
     $instance->method('getUID')->willReturn(self::CLOUD_USER_UID);
 
     $this->instances[$className] = $instance;
-
-    // $instance->expects($this->never())->method('getFirstLogin');
 
     return $instance;
   }
@@ -355,15 +388,12 @@ abstract class AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder(\OC\User\Session::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $instance = $this->createStub(\OC\User\Session::class);
     $instance->method('getUser')->willReturn($this->getUser());
     $instance->method('getSession')->willReturn($this->getSession());
 
     $this->instances[$className] = $instance;
 
-    // $instance->expects($this->never())->method('setVolatileActiveUser');
 
     return $instance;
   }
@@ -379,14 +409,10 @@ abstract class AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->getMockBuilder(IRequest::class)
-      ->disableOriginalConstructor()
-      ->getMock();
+    $instance = $this->createStub(IRequest::class);
     $instance->method('getPathInfo')->willReturn('/apps/' . $this->appName . '/blahblah');
 
     $this->instances[$className] = $instance;
-
-    // $instance->expects($this->never())->method('getEnv');
 
     return $instance;
   }
