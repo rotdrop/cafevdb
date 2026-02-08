@@ -124,6 +124,14 @@ WRAPPED_NAMESPACES =\
 ###############################################################################
 
 PHPDOC = /opt/phpDocumentor/bin/phpdoc
+export PHPDOC_PLANTUML_BIN = $(shell which plantuml 2> /dev/null)
+# The default of phpdoc -Playout=smetana errors out
+export PHPDOC_PLANTUML_ARGUMENTS =
+# The plantuml default layout engine dot takes a huge amount of time,
+# more than 2 hours ...
+export PHPDOC_PLANTUML_TIMEOUTS_SECONDS = 14400
+# ... we therefore disable graphs by default.
+PHPDOC_GRAPHS ?= false
 PHPDOC_TEMPLATE =
 #--template=clean
 #--template=clean --template=xml
@@ -437,7 +445,7 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
  --parseprivate \
  --visibility api,public,protected,private,internal \
  --sourcecode \
- --setting graphs.enabled=true \
+ --setting graphs.enabled=$(PHPDOC_GRAPHS) \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
  -t $(PHPDOC_HTML)
 
