@@ -1,8 +1,8 @@
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index f3488a5..cab531b 100644
+index 4512034..1acc406 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-@@ -19,6 +19,7 @@ import useCalendarObjectInstanceStore from '../store/calendarObjectInstance.js'
+@@ -20,6 +20,7 @@ import useCalendarObjectInstanceStore from '../store/calendarObjectInstance.js'
  import { mapStores, mapState } from 'pinia'
  import { loadState } from '@nextcloud/initial-state'
  import { generateUrl } from '@nextcloud/router'
@@ -10,7 +10,7 @@ index f3488a5..cab531b 100644
  
  /**
   * This is a mixin for the editor. It contains common Vue stuff, that is
-@@ -433,10 +434,20 @@ export default {
+@@ -434,10 +435,20 @@ export default {
  					params,
  				})
  			} catch (error) {
@@ -34,7 +34,7 @@ index f3488a5..cab531b 100644
  		},
  		/**
  		 * Closes the editor and returns to normal calendar-view without running any action.
-@@ -989,4 +1000,7 @@ export default {
+@@ -990,4 +1001,7 @@ export default {
  			next(false)
  		}
  	},
