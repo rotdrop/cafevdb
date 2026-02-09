@@ -25,10 +25,13 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 use OCP\IL10N;
+use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
 
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Service\L10N\AppL10N;
 use OCA\CAFEVDB\Service\L10N\L10NFactory;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -74,6 +77,9 @@ class Registration
    */
   public static function register(IRegistrationContext $context):void
   {
+    $context->registerServiceAlias(ITimeFactory::class, TimeFactory::class);
+    $context->registerServiceAlias(ClockInterface::class, TimeFactory::class);
+
     $context->registerService(
       MigrationsServiceInterface::class,
       function(ContainerInterface $container) {

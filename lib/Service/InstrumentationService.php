@@ -71,12 +71,15 @@ class InstrumentationService
    *
    * @param ?DateTimeInterface $now A date-time object to use instead of (new DateTimeImmutable).
    *
+   * @param bool $delete Whether to flag the person as deleted, defaults to \true.
+   *
    * @return Entities\Musician
    */
   public function getDummyMusician(
     ?Entities\Project $project = null,
     bool $persist = true,
     ?DateTimeInterface $now = null,
+    bool $delete = true,
   ):Entities\Musician {
     // disable "deleted" filter
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
@@ -108,7 +111,7 @@ class InstrumentationService
         ->setBirthday($now)
         ->setMobilePhone('0815')
         ->setFixedLinePhone('4711')
-        ->setDeleted($now)
+        ->setDeleted($delete ? $now : null)
         ->setCreated($now)
         ->setUpdated($now)
         ->setUuid(Uuid::NIL);
@@ -128,7 +131,7 @@ class InstrumentationService
           ->setBlz('70010080')
           ->setBankAccountOwner($dummy->getPublicName())
           ->setSequence(1)
-          ->setDeleted($now);
+          ->setDeleted($delete ? $now : null);
         $dummy->getSepaBankAccounts()->add($bankAccount);
         if ($persist) {
           $this->persist($bankAccount);

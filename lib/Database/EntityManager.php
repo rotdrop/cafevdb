@@ -40,6 +40,7 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -711,13 +712,17 @@ class EntityManager extends AbstractEntityManager
     $loggableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($loggableListener);
 
+    $timeFactory = $this->appContainer->get(TimeFactory::class);
+
     // timestampable
     $timestampableListener = new Gedmo\Timestampable\TimestampableListener();
+    $timestampableListener->setClock($timeFactory);
     $timestampableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($timestampableListener);
 
     // soft deletable
     $softDeletableListener = new Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener->setClock($timeFactory);
     $softDeletableListener->setAnnotationReader($attributeReader);
     $evm->addEventSubscriber($softDeletableListener);
     $config->addFilter(self::SOFT_DELETEABLE_FILTER, \OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
@@ -899,8 +904,8 @@ class EntityManager extends AbstractEntityManager
           // the actual keys may need remapping through join columns
           $targetColumnValues = $columnValues;
           foreach ($association['joinColumns'] as $joinColumn) {
-            $sourceColumn = $joinColumn['name'];
-            $targetColumn = $joinColumn['referencedColumnName'];
+            $sourceColumn = $joinColumn->name;
+            $targetColumn = $joinColumn->referencedColumnName;
             if (isset($targetColumnValues[$sourceColumn])) {
               $value = $targetColumnValues[$sourceColumn];
               unset($targetColumnValues[$sourceColumn]);
@@ -918,7 +923,9 @@ class EntityManager extends AbstractEntityManager
           $meta->setFieldValue($entity, $property, $reference);
 
         } catch (Throwable $t) {
-          // can happen if the relation is allowed to be null
+          if (\ROT_DROP_PHPUNIT) {
+            throw $t;
+          }
           // $this->logException($t);
         }
       }
@@ -1054,7 +1061,7 @@ class EntityManager extends AbstractEntityManager
     if ($this->entityManager === null) {
       return false;
     }
-    $connection = $this->entityManager->getConnection();
+    $this->entityManager->getConnection();
     return $this->entityManager->getConnection()->isTransactionActive();
   }
 

@@ -1057,7 +1057,7 @@ GROUP BY t.id';
           'input' => ($this->showDisabled && $this->expertMode ? '' : 'HR'),
           'name' => $this->l->t('Musician Deleted'),
           'dateformat' => 'medium',
-          'timeformat' => 'short',
+          'timeformat' => 'medium',
           'maxlen' => 19,
         ]
       )
@@ -1670,9 +1670,10 @@ GROUP BY t.id';
                   &&
                   $instrumentationNumber->getVoice() == $voice);
         })) {
+          $instrument = $this->entityManager->getReference(Entities\Instrument::class, $instrumentId);
           $instrumentationNumber = (new Entities\ProjectInstrumentationNumber)
                                  ->setProject($this->project)
-                                 ->setInstrument($instrumentId)
+                                 ->setInstrument($instrument)
                                  ->setVoice($voice)
                                  ->setQuantity(0);
           $this->persist($instrumentationNumber);

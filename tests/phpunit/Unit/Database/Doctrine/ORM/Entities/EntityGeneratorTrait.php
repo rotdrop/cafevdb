@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\ManuallyGeneratedReceivablesGenerator;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -51,9 +52,6 @@ trait EntityGeneratorTrait
   /**
    * The id of "faked" entities. We set this to a high number s.t. it is out
    * of the way of real entities generated in the test database.
-   *
-   * \OCA\CAFEVDB\Service\Finance\FinanceService assumes that ids have no more
-   * than 4 decimal digits ...
    */
   public const FAKED_ENTITY_ID = Constants::FAKED_ENTITY_ID;
 
@@ -79,12 +77,19 @@ trait EntityGeneratorTrait
   private IAppContainer $appContainer;
 
   /**
-   * {@inheritdoc}
+   * @param bool $persist
+   *
+   * @param ?DateTimeInterface $now
+   *
+   * @param bool $delete
    *
    * @return void
    */
-  public function generateProjectParticipant(bool $persist = false, ?DateTimeInterface $now = null): void
-  {
+  public function generateProjectParticipant(
+    bool $persist = false,
+    ?DateTimeInterface $now = null,
+    bool $delete = true,
+  ): void {
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
@@ -114,6 +119,7 @@ trait EntityGeneratorTrait
       $this->project,
       persist: $persist,
       now: $now,
+      delete: $delete,
     );
     if (!$persist) {
       $this->musician->setId(self::FAKED_ENTITY_ID);
@@ -233,16 +239,25 @@ trait EntityGeneratorTrait
     }
   }
 
-  /** @return Entities\ProjectParticipantFieldDatum */
-  protected function generateReceivable(): Entities\ProjectParticipantFieldDatum
-  {
+  /**
+   * @param bool $persist Optionally persist the generated entities, defaults to \false.
+   *
+   * @param string $generatorClass Receivables generator, defaults to
+   * ManuallyGeneratedReceivablesGenerator::class.
+   *
+   * @return Entities\ProjectParticipantFieldDatum
+   */
+  protected function generateReceivable(
+    bool $persist = false,
+    string $generator = ManuallyGeneratedReceivablesGenerator::class,
+  ): Entities\ProjectParticipantFieldDatum {
     if (!empty($this->entities[Entities\ProjectParticipantFieldDatum::class])) {
       return $this->entities[Entities\ProjectParticipantFieldDatum::class];
     }
 
     /** @var Entities\ProjectParticipantField $field */
     $field = new Entities\ProjectParticipantField()
-      ->setId(self::FAKED_ENTITY_ID)
+      ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProject($this->project)
       ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES)
       ->setMultiplicity(
@@ -254,7 +269,9 @@ trait EntityGeneratorTrait
       ->setKey(Entities\ProjectParticipantFieldDataOption::GENERATOR_KEY)
       ->setLabel(
         Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL,
-      );
+      )
+      ->setData($generator)
+      ;
     $field
       ->setDefaultValue($generator)
       ->getDataOptions()
@@ -273,6 +290,23 @@ trait EntityGeneratorTrait
     $this->musician->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
 
     $this->entities[Entities\ProjectParticipantFieldDatum::class] = $datum;
+
+    if ($persist) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->persist($field);
+        $this->entityManager->persist($generator);
+        $this->entityManager->persist($option);
+        $this->entityManager->persist($datum);
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->rollBack();
+        }
+        throw $t;
+      }
+    }
 
     return $datum;
   }
