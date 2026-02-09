@@ -316,7 +316,7 @@ abstract class AbstractMockProvider
         /** {@inheritdoc} */
         public function getUID()
         {
-          return self::CLOUD_USER_UID;
+          return AbstractMockProvider::CLOUD_USER_UID;
         }
         /** {@inheritdoc} */
         public function getLoginName()
