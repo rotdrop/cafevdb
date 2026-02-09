@@ -31,6 +31,7 @@ use OCP\Image;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 /**
@@ -166,7 +167,7 @@ class OrganizationalRolesService
    *
    * @return null|Entities\Project
    */
-  public function executiveBoardProject():?Entities\Project
+  public function executiveBoardProject(): ?Entities\Project
   {
     if (!empty($this->executiveBoardProjectEntity)) {
       return $this->executiveBoardProjectEntity;
@@ -183,7 +184,7 @@ class OrganizationalRolesService
    */
   public function executiveBoardMembers():Collection
   {
-    return $this->executiveBoardProject()->getParticipants();
+    return $this->executiveBoardProject()?->getParticipants() ?? new ArrayCollection;
   }
 
   /**
