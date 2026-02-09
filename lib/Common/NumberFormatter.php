@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,8 @@ class NumberFormatter
 
   protected PhpNumberFormatter $currencyFormatter;
 
+  protected PhpNumberFormatter $numberSpeller;
+
   protected NumberToWords $numberToWords;
 
   protected CurrencyTransformer $currencyTransformer;
@@ -51,6 +53,8 @@ class NumberFormatter
   protected string $currencyISOCode;
 
   protected string $currencySymbol;
+
+  protected bool $fractionalPartAscending;
 
   /**
    * @var string
@@ -115,7 +119,7 @@ class NumberFormatter
     $this->numberSpeller = new PhpNumberFormatter($locale, PhpNumberFormatter::SPELLOUT);
 
     $this->currencyFormatter = new PhpNumberFormatter($locale, PhpNumberFormatter::CURRENCY);
-    $this->currencyIsoCode = $this->currencyFormatter->getTextAttribute(PhpNumberFormatter::CURRENCY_CODE);
+    $this->currencyISOCode = $this->currencyFormatter->getTextAttribute(PhpNumberFormatter::CURRENCY_CODE);
     $this->currencySymbol = $this->currencyFormatter->getSymbol(PhpNumberFormatter::CURRENCY_SYMBOL);
 
     // The following may not work for all locales, the idea is to "ask" the
@@ -165,7 +169,7 @@ class NumberFormatter
     } else {
       $value = (int)round(self::ensureFloat($value) * 100.0, 0);
     }
-    $currencyISOCode = $currencyISOCode ?? $this->currencyIsoCode;
+    $currencyISOCode = $currencyISOCode ?? $this->currencyISOCode;
     $words = $this->currencyTransformer->toWords($value, $currencyISOCode);
     return $this->kwnSanitizer($words, $currencyISOCode);
   }
@@ -183,7 +187,7 @@ class NumberFormatter
    */
   public function formatCurrency(mixed $value, ?string $currencyISOCode = null):string
   {
-    return $this->currencyFormatter->formatCurrency(self::ensureFloat($value), $currencyISOCode ?? $this->currencyIsoCode);
+    return $this->currencyFormatter->formatCurrency(self::ensureFloat($value), $currencyISOCode ?? $this->currencyISOCode);
   }
 
   /**
