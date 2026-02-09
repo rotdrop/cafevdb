@@ -52,13 +52,23 @@ class DeprecationException extends \Exception
     return $this->deprecationWarning;
   }
 
-  /** @return ?callable */
-  public static function throwOnDeprecations(): ?callable
+  /**
+   * @param ?string $exclude Optional regexp with an exclude pattern.
+   *
+   * @return ?callable
+   */
+  public static function throwOnDeprecations(?string $exclude = null): ?callable
   {
     return set_error_handler(
-      function(int $errno, ...$rest) {
-        if ($errno == E_DEPRECATED)  {
-          throw new DeprecationException(deprecationWarning: [$errno, ...$rest]);
+      function(
+        int $errno,
+        string $message,
+        string $file,
+        int $line,
+      ) use ($exclude) {
+        if (($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED)
+            && ($exclude === null || !preg_match($exclude, $message))) {
+          throw new DeprecationException(message: $message, deprecationWarning: compact('errno', 'message', 'file', 'line'));
         }
       },
     );
