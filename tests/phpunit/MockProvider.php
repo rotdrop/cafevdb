@@ -95,8 +95,6 @@ class MockProvider extends AbstractMockProvider
 
   private array $systemConfigValues = [];
 
-  private ReflectionMethod $getMockBuilderMethod;
-
   public const TEST_IBAN = 'DE02700100800030876808';
   public const IBAN_INFO = [
     'iban' => self::TEST_IBAN,
