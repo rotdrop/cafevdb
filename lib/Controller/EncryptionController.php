@@ -76,6 +76,12 @@ class EncryptionController extends OCSController
    */
   #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\ApiRoute(
+    verb: 'GET',
+    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    requirements: [ 'apiVersion' => 'v1' ],
+    defaults: [ 'userId' => null ],
+  )]
   public function getRecryptRequests(?string $userId = null):Response
   {
     if (!$this->isMatchingUserOrAdmin($userId)) {
@@ -111,6 +117,11 @@ class EncryptionController extends OCSController
    * @return Response
    */
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
+  #[CoreAttributes\ApiRoute(
+    verb: 'DELETE',
+    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    requirements: [ 'apiVersion' => 'v1' ],
+  )]
   public function deleteRecryptRequest(string $userId, bool $notifyUser = true):Response
   {
     try {
@@ -133,6 +144,11 @@ class EncryptionController extends OCSController
    */
   #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\ApiRoute(
+    verb: 'PUT',
+    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    requirements: [ 'apiVersion' => 'v1' ],
+  )]
   public function putRecryptRequest(string $userId):Response
   {
     if (!$this->isMatchingUserOrAdmin($userId)) {
@@ -157,6 +173,11 @@ class EncryptionController extends OCSController
    * @return Response
    */
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
+  #[CoreAttributes\ApiRoute(
+    verb: 'POST',
+    url: '/api/{apiVersion}/maintenance/encryption/revoke/{userId}',
+    requirements: [ 'apiVersion' => 'v1' ],
+  )]
   public function revokeCloudAccess(string $userId, bool $allowFailure = false):Response
   {
     try {
@@ -199,6 +220,11 @@ class EncryptionController extends OCSController
    * @return Response
    */
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
+  #[CoreAttributes\ApiRoute(
+    verb: 'POST',
+    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    requirements: [ 'apiVersion' => 'v1' ],
+  )]
   public function handleRecryptRequest(string $userId, bool $notifyUser = true, bool $allowFailure = false):Response
   {
     try {
@@ -250,6 +276,11 @@ class EncryptionController extends OCSController
    * @return Response
    */
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
+  #[CoreAttributes\ApiRoute(
+    verb: 'POST',
+    url: '/api/{apiVersion}/maintenance/encryption/bulk-recryption',
+    requirements: [ 'apiVersion' => 'v1' ],
+  )]
   public function bulkRecryptionRequest(bool $grantAccess, bool $includeDisabled, bool $includeDeactivated, int $offset, int $limit = 1, int $projectId = 0):Response
   {
     $this->entityManager = $this->appContainer->get(EntityManager::class);
