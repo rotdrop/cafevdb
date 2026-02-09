@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Database\EntityManager;
 
@@ -46,14 +47,16 @@ use OCA\CAFEVDB\Database\EntityManager;
  * copied to the test-suite of the companion app and are just loaded there
  * verbatim into the test database.
  */
-#[Attributes\CoversClass(EntityManager::class)]
 #[Attributes\CoversClass(CloudUserConnectorService::class)]
+#[Attributes\CoversClass(EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractFileSystemUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableFolderRename::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
@@ -74,8 +77,12 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianInstrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
@@ -99,8 +106,10 @@ use OCA\CAFEVDB\Database\EntityManager;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -152,11 +161,14 @@ class ArtifactsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
   /** @return void */
   public function testArtifacts(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $userStorage = $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
     /** @var EventsService $eventsService */
@@ -169,10 +181,17 @@ class ArtifactsTest extends TestCase
 
     $this->generateProjectParticipant(persist: true, delete: false);
     $this->generateInstruments(persist: true);
+    $this->musician->setUserIdSlug(MockProvider::CLOUD_USER_UID);
     $this->entityManager->beginTransaction();
     try {
       $this->project->setRegistrationStartDate('2099-01-01');
       $this->project->setRegistrationDeadline('2099-12-31');
+
+      $rowAccessToken = new Entities\MusicianRowAccessToken(
+        $this->musician,
+        '1234',
+      );
+      $this->entityManager->persist($rowAccessToken);
       $this->entityManager->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
