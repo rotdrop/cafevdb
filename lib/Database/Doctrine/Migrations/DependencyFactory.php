@@ -79,7 +79,7 @@ class DependencyFactory extends VanillaDependencyFactory
          */
         public function createVersion(string $migrationClassName): AbstractStructuralMigration|AbstractTransactionalMigration
         {
-          return $this->appContainer->resolve($migrationClassName);
+          return clone $this->appContainer->get($migrationClassName);
         }
       }
     );
