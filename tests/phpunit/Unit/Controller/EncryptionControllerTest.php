@@ -28,7 +28,10 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IRequest;
+
 use OCA\CAFEVDB\Controller;
+use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test aspects of the EncryptionController. */
@@ -54,9 +57,32 @@ class EncryptionControllerTest extends TestCase
 
   private MockProvider $mockProvider;
 
+  private Controller\EncryptionController $controller;
+
+  private array $postData = [];
+
   /** {@inheritdoc} */
   public function setup(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    /** @var IRequest $request */
+    $request = $this->createStub(IRequest::class);
+    $request->method('getParam')->willReturnCallback(
+      function(string $key, mixed $default = null) {
+        return $this->postData[$key] ?? $default;
+      },
+    );
+
+    $appContainer = $this->mockProvider->getAppContainer();
+
+    $this->controller = new Controller\EncryptionController(
+      appName: $this->mockProvider->appName,
+      request: $request,
+      appContainer: $appContainer,
+      keyService: $appContainer->get(AsymmetricKeyService::class),
+      logger: $this->mockProvider->getLoggerInterface(),
+      l: $this->mockProvider->getL10N(),
+    );
   }
 }

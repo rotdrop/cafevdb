@@ -167,7 +167,8 @@ class ArtifactsTest extends TestCase
     $this->applyMigrations(upToVersion: 'latest');
     $this->generateCalendarBackend();
 
-    $this->generateProjectParticipant(persist: true);
+    $this->generateProjectParticipant(persist: true, delete: false);
+    $this->generateInstruments(persist: true);
     $this->entityManager->beginTransaction();
     try {
       $this->project->setRegistrationStartDate('2099-01-01');

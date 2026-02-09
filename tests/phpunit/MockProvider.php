@@ -217,16 +217,29 @@ class MockProvider extends AbstractMockProvider
         unset($this->userConfigValues[$userId . $appName . $key]);
       },
     );
+    $instance->method('getUserKeys')->willReturnCallback(
+      function(string $userId, string $appName) {
+        $tag = $userId . $appName;
+        $userKeys = array_map(
+          fn(string $key) => substr($key, strlen($tag)),
+          array_filter(
+            array_keys($this->userConfigValues),
+            fn(string $key) => str_starts_with($key, $tag),
+          ),
+        );
+        return $userKeys;
+      },
+    );
     $instance->method('setSystemValue')->willReturnCallback(
       function(string $key, mixed $value): void {
         $this->systemConfigValues[$key] = $value;
-      }
+      },
     );
     $instance->method('getSystemValue')->willReturnCallback(
       function(string $key, mixed $default = null): mixed {
         // echo $key . ' => ' . ($this->systemConfigValues[$key] ?? $default) . PHP_EOL;
         return $this->systemConfigValues[$key] ?? $default;
-      }
+      },
     );
 
     $this->instances[$className] = $instance;
