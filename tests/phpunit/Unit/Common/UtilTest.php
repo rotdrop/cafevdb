@@ -142,4 +142,60 @@ class UtilTest extends TestCase
     }
     restore_error_handler();
   }
+
+  private const ARRAY_MERGE_DATA = [
+    [
+      // ordinary merge, non-recursive
+      'input' => [ ['a', 'b', 'c'], ['a', 'b', 'c'], ['a', 'b', 'c'] ],
+      'output' => ['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c'],
+    ],
+    [
+      // ordinary merge, recursive
+      'input' => [
+        ['a', 'b', 'c'],
+        [ ['a', 'b', 'c'] ],
+      ],
+      'output' => ['a', 'b', 'c', ['a', 'b', 'c']],
+    ],
+    [
+      // ordinary merge, recursive
+      'input' => [
+        [ 'a' => ['a', 'b', 'c'] ],
+        [ 'a' => ['a', 'b', 'c'] ],
+      ],
+      'output' => [ 'a' => ['a', 'b', 'c', 'a', 'b', 'c'] ],
+    ],
+    [
+      // non-consecutive numeric keys are also preserverd
+      'input' => [
+        [
+          1 => 'first array scalar value',
+          2 => [ 'a', 'b' ],
+        ],
+        [
+          1 => 'second array Value',
+          2 => [ 'a', 'b' ],
+          4 => 'key-4 value',
+        ]
+      ],
+      'output' => [
+        1 => 'second array Value',
+        2 => ['a', 'b', 'a', 'b'],
+        4 => 'key-4 value',
+      ],
+    ],
+  ];
+
+  /**
+   * Test some aspects of arrayMergeRecursive()
+   *
+   * @return void
+   */
+  public function testArrayMergeRecursive(): void
+  {
+    foreach (self::ARRAY_MERGE_DATA as $test) {
+      $result = Util::arrayMergeRecursive(...$test['input']);
+      $this->assertEquals($test['output'], $result);
+    }
+  }
 }

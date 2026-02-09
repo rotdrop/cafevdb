@@ -111,8 +111,9 @@ class Util
    */
   private static function arrayMergeTwoRecursive(array $dest, array $override):array
   {
+    $isList = array_is_list($override);
     foreach ($override as $key => $value) {
-      if (is_integer($key)) {
+      if ($isList && is_integer($key)) {
         $dest[] = $value;
       } elseif (isset($dest[$key]) && is_array($dest[$key]) && is_array($value)) {
         $dest[$key] = self::arrayMergeTwoRecursive($dest[$key], $value);
