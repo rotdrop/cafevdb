@@ -67,7 +67,7 @@ trait MusicianGenderTrait
       }
     }
     $country = strtoupper($country);
-    print_r($row);
+    // print_r($row);
     $names = array_filter(
       array_merge(
         explode(' ', $firstName),
