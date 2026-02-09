@@ -314,19 +314,23 @@ trait EntityGeneratorTrait
   /**
    * @param ?Closure $transliterate Transliterator to force SEPA compliance of fields.
    *
+   * @param bool $persist
+   *
    * @return Entities\CompositePayment
    */
-  protected function generateCompositePayment(?Closure $transliterate = null): Entities\CompositePayment
-  {
+  protected function generateCompositePayment(
+    ?Closure $transliterate = null,
+    bool $persist = false,
+  ): Entities\CompositePayment {
     if (!empty($this->entities[Entities\CompositePayment::class])) {
       return $this->entities[Entities\CompositePayment::class];
     }
 
-    $datum = $this->generateReceivable();
+    $datum = $this->generateReceivable(persist: $persist);
 
     /** @var Entities\ProjectPayment $projectPayment */
     $projectPayment = new Entities\ProjectPayment()
-      ->setId(self::FAKED_ENTITY_ID)
+      ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ->setReceivable($datum)
       ->setReceivableOption($datum->getDataOption())
@@ -334,7 +338,7 @@ trait EntityGeneratorTrait
 
     /** @var Entities\CompositePayment $compositePayment */
     $compositePayment = new Entities\CompositePayment()
-      ->setId(self::FAKED_ENTITY_ID)
+      ->setId($persist ? null : self::FAKED_ENTITY_ID)
       ->setProjectParticipant($this->participant)
       ;
     $this->musician->getPayments()->add($compositePayment);
@@ -343,6 +347,21 @@ trait EntityGeneratorTrait
 
     $compositePayment->getProjectPayments()->add($projectPayment);
     $compositePayment->updateSubject($transliterate);
+
+    if ($persist) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->persist($compositePayment);
+        $this->entityManager->persist($projectPayment);
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->rollBack();
+        }
+        throw $t;
+      }
+    }
 
     $this->entities[Entities\CompositePayment::class] = $compositePayment;
 

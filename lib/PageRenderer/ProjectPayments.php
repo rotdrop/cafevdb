@@ -370,7 +370,7 @@ WHERE dsf.id IS NOT NULL',
       PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
       PersistentCGIKeys::TABLE => $opts['tb'],
       PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
-      PersistentCGIKeys::COMPOSITE_PAYMENT_EXPANDED => $this->entityRowsExpanded,
+      PersistentCGIKeys::ENTITY_ROWS_EXPANDED => $this->entityRowsExpanded,
     ];
 
     // Name of field which is the unique key
