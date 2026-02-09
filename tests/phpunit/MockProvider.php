@@ -60,6 +60,7 @@ use OCA\BAV\Service\BAV as BankAccountValidator;
 use OCA\RotDrop\Tests\AbstractMockProvider;
 use OCA\RotDrop\Tests\Logger;
 use OCA\RotDrop\Tests\DatabaseProvider;
+use OCA\RotDrop\Tests\EnumConfigSection;
 
 use OCA\CAFEVDB\Common\UndoableRunQueue;
 use OCA\CAFEVDB\Crypto;
@@ -106,33 +107,18 @@ class MockProvider extends AbstractMockProvider
     'city' => 'München',
   ];
 
-  /**
-   * Mock the cloud config provider.
-   *
-   * @return IConfig
-   */
-  public function getCloudConfig():IConfig
-  {
-    $className = IConfig::class;
-
-    if ($this->instances[$className] ?? null) {
-      return $this->instances[$className];
+  /** {@inheritdoc} */
+  protected function cloudConfigGet(
+    EnumConfigSection $section,
+    string $key,
+    ?string $app = null,
+    ?string $user = null,
+  ): mixed {
+    if ($app != $this->appName) {
+      return null;
     }
-
-    $instance = $this->getMockBuilder($className)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $instance->method('setAppValue')->willReturnCallback(
-      function(string $appName, string $key, mixed $value): void {
-        /* ignore */
-      },
-    );
-    $instance->method('getAppValue')->willReturnCallback(
-      function(string $appName, string $key, mixed $default = null): mixed {
-        // print_r($this->appConfigValues);
-        if (isset($this->appConfigValues[$appName . $key])) {
-          return $this->appConfigValues[$appName . $key];
-        }
+    switch ($section) {
+      case EnumConfigSection::APP:
         $newKey = array_search($key, OldSettingsKeys::APP_KEYS);
         if ($newKey !== false) {
           $key = $newKey;
@@ -153,100 +139,13 @@ class MockProvider extends AbstractMockProvider
           case OldSettingsKeys::APP_KEYS[ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY]:
             return null;
         }
-        return $default;
-      }
-    );
-    $instance->method('setAppValue')->willReturnCallback(
-      function(string $appName, string $key, mixed $value): void {
-        $this->appConfigValues[$appName . $key] = $value;
-        // print_r($this->appConfigValues);
-      },
-    );
-    $instance->method('deleteAppValue')->willReturnCallback(
-      function(string $appName, string $key): void {
-        unset($this->appConfigValues[$appName . $key]);
-      },
-    );
-    $instance->method('getAppKeys')->willReturnCallback(
-      function(string $appName): array {
-        $appNameLen = strlen($appName);
-        $appKeys =
-          array_map(
-            fn(string $key) => substr($key, $appNameLen),
-            array_filter(
-              array_keys($this->appConfigValues),
-              fn(string $key) => str_starts_with($key, $appName),
-            ),
-          );
-        return $appKeys;
-      },
-    );
-    $instance->method('getUserValue')->willReturnCallback(
-      function(string $userId, string $appName, string $key, mixed $default = null) {
-        $value = $default;
-        if (isset($this->userConfigValues[$userId . $appName . $key])) {
-          $value = $this->userConfigValues[$userId . $appName . $key];
-        } elseif ($userId == self::EXECUTIVE_BOARD_UID && $appName == 'core') {
-          // Default to German stuff as this is the only region where the app
-          // is used ATM.
-          switch ($key) {
-            case 'timezone':
-              $value = 'Europe/Berlin';
-              break;
-            case 'lang':
-              $value = 'de';
-              break;
-            case 'locale':
-              $value = 'de';
-              break;
-          }
-        }
-        return $value;
-      },
-    );
-    $instance->method('setUserValue')->willReturnCallback(
-      function(string $userId, string $appName, string $key, mixed $value) {
-        if ($key == 'timezone') {
-          print_r(compact('userId', 'appName', 'key', 'value'));
-        }
-        $this->userConfigValues[$userId . $appName . $key] = $value;
-      },
-    );
-    $instance->method('deleteUserValue')->willReturnCallback(
-      function(string $userId, string $appName, string $key): void {
-        unset($this->userConfigValues[$userId . $appName . $key]);
-      },
-    );
-    $instance->method('getUserKeys')->willReturnCallback(
-      function(string $userId, string $appName) {
-        $tag = $userId . $appName;
-        $userKeys = array_map(
-          fn(string $key) => substr($key, strlen($tag)),
-          array_filter(
-            array_keys($this->userConfigValues),
-            fn(string $key) => str_starts_with($key, $tag),
-          ),
-        );
-        return $userKeys;
-      },
-    );
-    $instance->method('setSystemValue')->willReturnCallback(
-      function(string $key, mixed $value): void {
-        $this->systemConfigValues[$key] = $value;
-      },
-    );
-    $instance->method('getSystemValue')->willReturnCallback(
-      function(string $key, mixed $default = null): mixed {
-        // echo $key . ' => ' . ($this->systemConfigValues[$key] ?? $default) . PHP_EOL;
-        return $this->systemConfigValues[$key] ?? $default;
-      },
-    );
-
-    $this->instances[$className] = $instance;
-
-    $instance->expects($this->never())->method('setSystemValues');
-
-    return $instance;
+        break;
+      case EnumConfigSection::USER:
+        break;
+      case EnumConfigSection::SYSTEM:
+        break;
+    }
+    return null;
   }
 
   /**
@@ -616,7 +515,6 @@ class MockProvider extends AbstractMockProvider
         Connection::class => fn(self $self) => $self->getEntityManager()->getConnection(),
         EncryptionService::class => fn(self $self) => $self->getEncryptionService(),
         EntityManager::class => fn(self $self) => $self->getEntityManager(),
-        IConfig::class => fn(self $self) => $self->getCloudConfig(),
         IEventDispatcher::class => fn(self $self) => $self->getEventDispatcher(),
         Registration::USER_LOCALE => fn(self $self) => 'de_DE.UTF-8',
         RepositoryFactory::class => fn(self $self) => $self->getRepositoryFactory(),

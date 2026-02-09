@@ -38,6 +38,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\ISession;
@@ -72,6 +73,12 @@ abstract class AbstractMockProvider
 
   private static array $appContainerSnapshots = [];
 
+  private array $appConfigValues = [];
+
+  private array $userConfigValues = [];
+
+  private array $systemConfigValues = [];
+
   /** {@inheritdoc} */
   private function __construct(
     protected App $app,
@@ -83,6 +90,12 @@ abstract class AbstractMockProvider
 
     $this->getMockBuilderMethod = new ReflectionMethod($this->testCase, 'getMockBuilder');
     $this->createStubMethod = new ReflectionMethod($this->testCase, 'createStub');
+
+    $this->userConfigValues = [
+      self::CLOUD_USER_UID . 'core' . 'timezone' => 'Europe/Berlin',
+      self::CLOUD_USER_UID . 'core' . 'lang' => 'de',
+      self::CLOUD_USER_UID . 'core' . 'locale' => 'de',
+    ];
 
     $this->registerServices();
   }
@@ -443,11 +456,137 @@ abstract class AbstractMockProvider
     return $instance;
   }
 
+  /**
+   * Callback hook for the mocked cloud-config class.
+   *
+   * @param EnumConfigSection $section
+   *
+   * @param string $key
+   *
+   * @param ?string $app App for user and app config.
+   *
+   * @param ?string $user User-id for user config.
+   *
+   * @return mixed Return \null to indicate that there is no value. In this
+   * case a given default value will finally be returned to the
+   * consuming class.
+   */
+  protected function cloudConfigGet(
+    EnumConfigSection $section,
+    string $key,
+    ?string $app = null,
+    ?string $user = null,
+  ): mixed {
+    return null;
+  }
+
+  /**
+   * Mock the cloud config provider.
+   *
+   * @return IConfig
+   */
+  public function getCloudConfig():IConfig
+  {
+    $className = IConfig::class;
+
+    if ($this->instances[$className] ?? null) {
+      return $this->instances[$className];
+    }
+
+    $instance = $this->getMockBuilder($className)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $instance->method('getAppValue')->willReturnCallback(
+      function(string $appName, string $key, mixed $default = null): mixed {
+        // print_r($this->appConfigValues);
+        if (isset($this->appConfigValues[$appName . $key])) {
+          return $this->appConfigValues[$appName . $key];
+        }
+        return $this->cloudConfigGet(EnumConfigSection::APP, $key, $appName) ?? $default;
+      }
+    );
+    $instance->method('setAppValue')->willReturnCallback(
+      function(string $appName, string $key, mixed $value): void {
+        $this->appConfigValues[$appName . $key] = $value;
+        // print_r($this->appConfigValues);
+      },
+    );
+    $instance->method('deleteAppValue')->willReturnCallback(
+      function(string $appName, string $key): void {
+        unset($this->appConfigValues[$appName . $key]);
+      },
+    );
+    $instance->method('getAppKeys')->willReturnCallback(
+      function(string $appName): array {
+        $appNameLen = strlen($appName);
+        $appKeys =
+          array_map(
+            fn(string $key) => substr($key, $appNameLen),
+            array_filter(
+              array_keys($this->appConfigValues),
+              fn(string $key) => str_starts_with($key, $appName),
+            ),
+          );
+        return $appKeys;
+      },
+    );
+    $instance->method('getUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key, mixed $default = null) {
+        if (isset($this->userConfigValues[$userId . $appName . $key])) {
+          return $this->userConfigValues[$userId . $appName . $key];
+        }
+        return $this->cloudConfigGet(EnumConfigSection::USER, $key, $appName, $userId) ?? $default;
+      },
+    );
+    $instance->method('setUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key, mixed $value) {
+        $this->userConfigValues[$userId . $appName . $key] = $value;
+      },
+    );
+    $instance->method('deleteUserValue')->willReturnCallback(
+      function(string $userId, string $appName, string $key): void {
+        unset($this->userConfigValues[$userId . $appName . $key]);
+      },
+    );
+    $instance->method('getUserKeys')->willReturnCallback(
+      function(string $userId, string $appName) {
+        $tag = $userId . $appName;
+        $userKeys = array_map(
+          fn(string $key) => substr($key, strlen($tag)),
+          array_filter(
+            array_keys($this->userConfigValues),
+            fn(string $key) => str_starts_with($key, $tag),
+          ),
+        );
+        return $userKeys;
+      },
+    );
+    $instance->method('setSystemValue')->willReturnCallback(
+      function(string $key, mixed $value): void {
+        $this->systemConfigValues[$key] = $value;
+      },
+    );
+    $instance->method('getSystemValue')->willReturnCallback(
+      function(string $key, mixed $default = null): mixed {
+        return $this->systemConfigValues[$key] ??
+          $this->cloudConfigGet(EnumConfigSection::SYSTEM, $key) ??
+          $default;
+      },
+    );
+
+    $this->instances[$className] = $instance;
+
+    $instance->expects($this->never())->method('setSystemValues');
+
+    return $instance;
+  }
+
   /** @return array */
   protected static function getMockedServices(): array
   {
     return [
       'userId' => fn(self $self) => $self->getUserSession()->getUser()->getUID(),
+      IConfig::class => fn(self $self) => $self->getCloudConfig(),
       IL10N::class => fn(self $self) => $self->getL10N(),
       IRequest::class => fn(self $self) => $self->getRequest(),
       ISession::class => fn(self $self) => $self->getSession(),
