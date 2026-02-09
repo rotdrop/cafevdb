@@ -6051,8 +6051,13 @@ EOT;
 					$stamps[$fd] = false;
 					$fn = null;
 				} else {
-					// Convert back to a date/time object understood by mySQL
-					$stamps[$fd] = $this->makeTimeStampFromUser($fn);
+					// Convert back to a date/time object understood
+					// by mySQL. As hidden fields are not converted to
+					// "human values" values of hidden fields should
+					// already be considered as "database".
+					$stamps[$fd] = $this->hidden($k)
+						? $this->makeTimeStampFromDatabase($fn)
+						: $this->makeTimeStampFromUser($fn);
 					$fn = $this->timestampToDatabase($stamps[$fd], $k);
 					// $fn = date('Y-m-d H:i:s', $stamps[$fd]);
 					// echo "<!-- ".$fn." -->\n";
@@ -6103,7 +6108,7 @@ EOT;
 				// $value already contains the data-base formatted value, so
 				// assume no change if both formatted values coincide.
 				if ($value !== $oldvals[$fd]) {
-					$oldstamp = $oldvals[$fd] != "" ? $this->makeTimeStampFromDatabase($oldvals[$fd]) : false;
+					$oldstamp = !empty($oldvals[$fd]) ? $this->makeTimeStampFromDatabase($oldvals[$fd]) : false;
 					if ($oldstamp != $stamps[$fd]) {
 						$changed[] = $fd;
 					} else {

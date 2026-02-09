@@ -617,7 +617,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     // Ok, the easiest way is probably to simply add the offset in seconds.
     $timeStamp = parent::makeTimeStampFromUser($userInput);
 
-    if ($timeStamp % (24 * 60 * 60) == 0 && !preg_match("/\d{1,2}\:\d{1,2}/", $userInput)) {
+    if ($timeStamp % (24 * 60 * 60) == 0 && !preg_match('/\d{1,2}\:\d{1,2}/', $userInput)) {
       // assume date-only
       return $timeStamp;
     }
@@ -633,7 +633,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     $this->logDebug('ORIG / MOD ' . $timeStamp . ' / ' . $modTimeStamp);
 
     if ($timeZone->getOffset($dateTime) != $timeZone->getOffset($modDateTime)) {
-      $this->logError('Timezone adjustment for failed for user-input ' . $userInput);
+      $this->logError('Timezone adjustment failed for user-input ' . $userInput);
     }
 
     return $modTimeStamp;
@@ -652,9 +652,12 @@ class PHPMyEdit extends LegacyPHPMyEdit
    */
   protected function makeTimeStampFromDatabase($databaseValue)
   {
+    if ($databaseValue === null) {
+      return false; // as would have been returned by strtotime().
+    }
     $timeStamp = parent::makeTimeStampFromDatabase($databaseValue);
 
-    if ($timeStamp % (24 * 60 * 60) != 0 || preg_match("/\d{1,2}\:\d{1,2}/", $databaseValue)) {
+    if ($timeStamp % (24 * 60 * 60) != 0 || preg_match('/\d{1,2}\:\d{1,2}/', $databaseValue)) {
       // assume UTC with time-stamp
       return $timeStamp;
     }
