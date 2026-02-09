@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ class MusicianRowAccessToken implements \ArrayAccess
   private Musician $musician;
 
   #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true, options: ['collation' => 'ascii_bin'])]
-  private ?string $userId;
+  private ?string $userId = null;
 
   /**
    * This field stores a SHA-512 hashed random token. The user supplies the
