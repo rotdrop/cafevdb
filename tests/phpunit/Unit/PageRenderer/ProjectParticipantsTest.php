@@ -32,9 +32,6 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-// https://symfony.com/doc/current/components/dom_crawler.html#forms
-use Symfony\Component\DomCrawler;
-
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\TimeFactory;
@@ -194,6 +191,7 @@ class ProjectParticipantsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+  use GetFormValuesTrait;
   // use \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\PHPUnit\VerifyDeprecations;
 
   private PageRenderer\ProjectParticipants $renderer;
@@ -701,29 +699,5 @@ class ProjectParticipantsTest extends TestCase
   {
     $this->unapplyMigrations();
     self::$migrationsApplied = false;
-  }
-
-  /**
-   * @param string $html
-   *
-   * @return array
-   */
-  private function getFormValues(string $html): array
-  {
-    $domDoc = new DOMDocument('1.0', 'UTF-8');
-    $domDoc->encoding = 'UTF-8';
-    $this->assertTrue($domDoc->loadHTML($html, LIBXML_PEDANTIC));
-    $crawler = new DomCrawler\Crawler($html, uri: 'https://localhost/cafevdb', baseHref: 'https://localhost');
-    // The Symfony form omits non-disabled inputs if there are also disabled
-    // inputs with the same name. As disabled inputs are excluded anyway from
-    // form values just filter out all disabled elements and only then fetch
-    // the form values.
-    $crawler->filter('[disabled]')->each(function(DomCrawler\Crawler $crawler) {
-      foreach ($crawler as $node) {
-        $node->parentNode->removeChild($node);
-      }
-    });
-    $form = $crawler->filter('form.pme-form')->form();
-    return $form->getPhpValues();
   }
 }
