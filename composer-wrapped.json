@@ -33,6 +33,8 @@
     "symfony/string": "*"
   },
   "provide": {
+    "phpunit/phpunit": "*",
+    "psr/clock": "*",
     "psr/log": "^3.0.0",
     "symfony/console": "^6.0.0"
   },

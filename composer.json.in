@@ -56,6 +56,7 @@
     "tuqqu/gender-detector": "^0.5.2"
   },
   "provide": {
+    "psr/clock": "*",
     "psr/log": "^3.0.0",
     "symfony/console": "^6.0.0"
   },

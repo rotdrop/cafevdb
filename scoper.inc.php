@@ -12,6 +12,8 @@ return [
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
+    '/^PHPUnit/',
+    'Psr\\Clock',
     'Psr\\Log',
     'Symfony\\Component\\Console',
     // 'OC',
