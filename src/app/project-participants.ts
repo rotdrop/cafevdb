@@ -456,7 +456,7 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     const prevSelected = $self.data(selectedOptionsKey);
     const instruments = SelectUtils.selected($selectProjectInstruments) as string[];
 
-    const prevVoices: Record<string, ('?'|number)[]> = {};
+    const prevVoices: Record<string, (number)[]> = {};
     const voices: Record<string, ('?'|number)[]> = {};
     for (const instrument of instruments) {
       voices[instrument] = [];
@@ -465,13 +465,19 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
 
     for (const voiceItem of selected) {
       const item = voiceItem.split(':');
-      voices[item[0]].push(+item[1]);
+      const voice = item[1];
+      voices[item[0]].push(voice === '?' ? voice : +voice);
     }
 
     for (const voiceItem of prevSelected) {
       const item = voiceItem.split(':');
-      prevVoices[item[0]].push(item[1]);
+      prevVoices[item[0]].push(+item[1]);
     }
+
+    console.info('VOICES', {
+      voices,
+      prevVoices,
+    });
 
     let doSubmitOuterForm = true;
 
