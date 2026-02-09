@@ -129,7 +129,7 @@ export PHPDOC_PLANTUML_BIN = $(shell which plantuml 2> /dev/null)
 export PHPDOC_PLANTUML_ARGUMENTS =
 # The plantuml default layout engine dot takes a huge amount of time,
 # more than 2 hours ...
-export PHPDOC_PLANTUML_TIMEOUTS_SECONDS = 14400
+export PHPDOC_PLANTUML_TIMEOUT_SECONDS = 14400
 # ... we therefore disable graphs by default.
 PHPDOC_GRAPHS ?= false
 PHPDOC_TEMPLATE =
