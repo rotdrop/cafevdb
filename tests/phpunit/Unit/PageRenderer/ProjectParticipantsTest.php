@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Tests\Unit\PageRenderer;
 
 use DateTimeImmutable;
 use DOMDocument;
+use Exception;
 use Throwable;
 
 use PHPUnit\Framework\TestCase;
@@ -317,8 +318,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      ob_end_clean();
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -358,8 +358,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      ob_end_clean();
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -395,8 +394,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      ob_end_clean();
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -540,8 +538,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      ob_end_clean();
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -573,7 +570,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -615,7 +612,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
@@ -655,7 +652,7 @@ class ProjectParticipantsTest extends TestCase
       $this->renderer->render(execute: true);
       $html = ob_get_contents();
     } catch (Throwable $t) {
-      throw $t;
+      throw new Exception($t->getMessage(), previous: $t);
     } finally {
       ob_end_clean();
     }
