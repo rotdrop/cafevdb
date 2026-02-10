@@ -43,11 +43,9 @@ class MusicianEmailAddressEntityListener
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /**
-   * @var array
-   *
    * Array of email address needing a "pre flush remove" event.
    */
-  private $doTriggerPreFlushRemoveEvent = false;
+  private array $doTriggerPreFlushRemoveEvent = [];
 
   /**
    * @param ILogger $logger
