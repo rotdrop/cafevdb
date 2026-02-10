@@ -55,6 +55,9 @@ trait MusicianGenderTrait
       ($this->pme->fdn[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::MUSICIANS_TABLE)] ?? null
        ? PMETableViewBase::MUSICIANS_TABLE : null);
     $firstName = $row[$this->joinQueryField($tableName, 'first_name')];
+    if (empty($firstName)) {
+      return [];
+    }
     $nickName = $row[$this->joinQueryField($tableName, 'nick_name')];
     $lang = $row[$this->joinQueryField($tableName, 'language')];
     $country = $row[$this->joinQueryField($tableName, 'country')];
