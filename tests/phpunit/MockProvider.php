@@ -90,12 +90,6 @@ class MockProvider extends AbstractMockProvider
 
   public const EXECUTIVE_BOARD_UID = parent::CLOUD_USER_UID;
 
-  private array $appConfigValues = [];
-
-  private array $userConfigValues = [];
-
-  private array $systemConfigValues = [];
-
   public const TEST_IBAN = 'DE02700100800030876808';
   public const IBAN_INFO = [
     'iban' => self::TEST_IBAN,
