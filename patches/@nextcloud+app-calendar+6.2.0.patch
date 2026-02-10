@@ -150,7 +150,7 @@ index e91c26a..db96483 100644
  export default {
  	name: 'ProposalResponseMatrix',
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index 8f678c6..f813858 100644
+index 8f678c6..0c6adde 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 @@ -20,6 +20,7 @@ import { uidToHexColor } from '../utils/color.js'
@@ -161,7 +161,13 @@ index 8f678c6..f813858 100644
  
  /**
   * This is a mixin for the editor. It contains common Vue stuff, that is
-@@ -436,10 +437,20 @@ export default {
+@@ -431,15 +432,25 @@ export default {
+ 			const targetRouteName = getPrefixedRoute(this.$route?.name ?? 'CalendarView', 'CalendarView')
+ 
+ 			try {
+-				this.$router.push({
++				await this.$router.push({
+ 					name: targetRouteName,
  					params,
  				})
  			} catch (error) {
@@ -402,7 +408,7 @@ index bcc91b9..7327d1c 100644
  export type TalkRoomListRequest = {
  	noStatusUpdate?: boolean
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
-index 1f15e81..91b24e9 100644
+index 2e9da19..f356167 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
 @@ -392,7 +392,7 @@ import useCalendarObjectInstanceStore from '../store/calendarObjectInstance.js'
@@ -414,6 +420,42 @@ index 1f15e81..91b24e9 100644
  
  export default {
  	name: 'EditFull',
+@@ -450,13 +450,13 @@ export default {
+ 			cancelButtons: [
+ 				{
+ 					label: t('calendar', 'Discard changes'),
+-					icon: atob(IconDelete.split(',')[1]),
++					icon: IconDelete,
+ 					callback: () => { this.cancel(true) },
+ 				},
+ 				{
+ 					label: t('calendar', 'Cancel'),
+ 					type: 'primary',
+-					icon: atob(IconCancel.split(',')[1]),
++					icon: IconCancel,
+ 					callback: () => { this.closeCancelDialog() },
+ 				},
+ 			],
+diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
+index 75bcf15..68f9abb 100644
+--- a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
++++ b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
+@@ -364,13 +364,13 @@ export default {
+ 			cancelButtons: [
+ 				{
+ 					label: t('calendar', 'Discard changes'),
+-					icon: atob(IconDelete.split(',')[1]),
++					icon: IconDelete,
+ 					callback: () => { this.cancel(true) },
+ 				},
+ 				{
+ 					label: t('calendar', 'Cancel'),
+ 					type: 'primary',
+-					icon: atob(IconCancel.split(',')[1]),
++					icon: IconCancel,
+ 					callback: () => { this.closeCancelDialog() },
+ 				},
+ 			],
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue b/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue
 index 80428b7..013a797 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue
