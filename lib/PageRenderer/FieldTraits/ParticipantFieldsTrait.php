@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -644,6 +644,11 @@ trait ParticipantFieldsTrait
                   $optionKey = $dataOptions->first()->getKey();
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
+                  if ($musician === null) {
+                    $this->reloadOuterForm = true;
+                    return '';
+                  }
+
                   // this code path is not timing critical, so just sync with the file-system
                   $fieldData = [];
                   $dirty = $this->participantFieldsService->populateCloudFileField($field, $musician, fieldData: $fieldData, flush: true);
@@ -723,6 +728,12 @@ trait ParticipantFieldsTrait
                   $fieldId = $field->getId();
                   $optionKey = $dataOptions->first()->getKey();
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
+
+                  if ($musician === null) {
+                    // this can happen if a person changes its status between "associated" and "regular"
+                    $this->reloadOuterForm = true;
+                    return '';
+                  }
 
                   $folderPath = $this->participantFieldsService->doGetFieldFolderPath($field, $musician);
                   $subDir = basename($folderPath);
