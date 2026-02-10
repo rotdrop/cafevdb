@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Legacy\PME;
 
-use PDO;
 use DateTime;
 use Exception;
+use PDO;
 use ReflectionClass;
 use RuntimeException;
 
@@ -64,6 +64,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
   private $errorCode = 0;
   private $errorInfo = null;
   private $overrideOptions;
+  private $exception = null;
 
   private $debug;
 
