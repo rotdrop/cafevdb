@@ -82,7 +82,7 @@ class InsuranceRates extends PMETableViewBase
       $this->projectName = $this->getClubMembersProjectName();
     }
 
-    $this->scopeNames = Types\ENumGeographicalScope::getL10NValues($this->l);
+    $this->scopeNames = Types\EnumGeographicalScope::getL10NValues($this->l);
   }
   // phpcs:enable
 
