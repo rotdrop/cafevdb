@@ -55,9 +55,14 @@ class DeprecationException extends \Exception
   /**
    * @param ?string $exclude Optional regexp with an exclude pattern.
    *
+   * @param int $excludeFromCore Do not throw if the deprecation was triggered
+   * from NC core code. This parameter is the stack-depth: if any of the
+   * previous frames looking up this many frames belongs to the
+   * '\OC'-namespace then no exception is thrown. Defaults to 4.
+   *
    * @return ?callable
    */
-  public static function throwOnDeprecations(?string $exclude = null): ?callable
+  public static function throwOnDeprecations(?string $exclude = null, int $excludeFromCore = 4): ?callable
   {
     return set_error_handler(
       function(
@@ -65,10 +70,23 @@ class DeprecationException extends \Exception
         string $message,
         string $file,
         int $line,
-      ) use ($exclude) {
+      ) use (
+        $exclude,
+        $excludeFromCore,
+      ) {
         if (($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED)
             && ($exclude === null || !preg_match($exclude, $message))) {
-          throw new DeprecationException(message: $message, deprecationWarning: compact('errno', 'message', 'file', 'line'));
+          $blah = '';
+          if ($excludeFromCore) {
+            $backTrace = debug_backtrace(limit: $excludeFromCore);
+            foreach ($backTrace as $frame) {
+              $blah .= ' ' . $frame['class'] ?? 'NO CLASS';
+              if ($frame['class'] && str_starts_with($frame['class'], 'OC\\')) {
+                return;
+              }
+            }
+          }
+          throw new DeprecationException(message: "{$blah} || {$file}:{$line} -- $message", deprecationWarning: compact('errno', 'message', 'file', 'line'));
         }
       },
     );
