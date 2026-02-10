@@ -43,7 +43,12 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
-/** TBD. */
+/**
+ * Renderer not least for generating bank bulk transactions. That is, the view
+ * of the availalbe bank accounts and debit mandates is here augmented by the
+ * controls to generate import data for bank bulk transactions which then can
+ * be submitted to the bank.
+ */
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;
@@ -189,6 +194,7 @@ class SepaBankAccounts extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
+    //
     private FinanceService $financeService,
     protected ProjectParticipantFieldsService $participantFieldsService,
     protected ProjectService $projectService,
