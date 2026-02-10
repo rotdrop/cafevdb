@@ -93,8 +93,9 @@ let preCalendarRoute: Location|undefined;
 let pushDepth = 0;
 
 const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
+  logger.debug('BEFORE CALENDAR ROUTE ENTER', { to, from });
   if (!CALENDAR_APP_ROUTES.includes(from.name!)) {
-    logger.info('Remember previous route before entering calendar stuff', {
+    logger.debug('Remember previous route before entering calendar stuff', {
       from,
       to,
     });
@@ -123,7 +124,9 @@ const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: N
     };
     next(target);
   } else {
-    if (to.transition === 'push') {
+    if (from.path === '/' && from.transition === 'unknown') {
+      pushDepth = 1;
+    } else if (to.transition === 'push') {
       ++pushDepth;
       logger.debug('PUSH DEPTH INCREASE', {
         pushDepth,
@@ -166,12 +169,12 @@ const calendarAppRoutes: RouteConfig[] = [
     name: 'CalendarView',
     beforeEnter: (to, _from, next) => {
       if (returnByPush && pushDepth > 0) {
-        logger.info('Try go back', pushDepth);
+        logger.debug('Try go back', pushDepth);
         next(false);
         asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
         pushDepth = 0;
       } else if (preCalendarRoute) {
-        logger.info('Try restore previous route on leaving calendar stuff', preCalendarRoute);
+        logger.debug('Try restore previous route on leaving calendar stuff', { preCalendarRoute });
         const target = {
           ...preCalendarRoute,
           // Unconditional replace would be wrong, we just redirect
@@ -200,7 +203,7 @@ const projectEventsRoute: RouteConfig = {
   component: ProjectEventsListing,
   props: route => ({ projectName: route.params.eventsProjectName }),
   beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
-    logger.info('BEFORE PROJECT EVENTS LISTING ENTER', {
+    logger.debug('BEFORE PROJECT EVENTS LISTING ENTER', {
       to,
       from,
     });

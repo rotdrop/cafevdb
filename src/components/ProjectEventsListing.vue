@@ -26,6 +26,7 @@
                   :name="project ? t(appName, '{name} - Appointments', { name: project.name }) : t(appName, 'Appointments')"
                   :force-menu="false"
                   @close="handleClose()"
+                  @opened="handleOpened()"
     >
       <template #description>
         <div class="global-actions-container flex-container flex-center">
@@ -331,7 +332,7 @@
         </ul>
       </template>
     </NcAppSidebar>
-    <div class="app-calendar">
+    <div class="app-calendar simple-editor-anchor">
       <router-view />
     </div>
   </div>
@@ -510,6 +511,22 @@ onBeforeRouteUpdate((to, from, next) => {
   }
   next()
 })
+
+const handleOpened = () => {
+  logger.debug('OPENED EVENT', { currentRoute })
+  // check if the current route contains a calendar app component
+  if (CALENDAR_APP_ROUTES.includes(currentRoute.name!)) {
+    for (const instance of Object.values(currentRoute.matched[currentRoute.matched.length - 1].instances)) {
+      // @ts-expect-error: 2339
+      if (typeof instance.repositionPopover === 'function') {
+        nextTick().then(() => {
+          // @ts-expect-error: 2339
+          instance.repositionPopover(true)
+        })
+      }
+    }
+  }
+}
 
 const handleClose = () => {
   if (origin?.transition === 'push' && origin?.transition !== 'push') {
@@ -1312,5 +1329,9 @@ onUnmounted(() => {
       opacity: 0.5;
     }
   }
+}
+
+.simple-editor-anchor {
+  position: relative;
 }
 </style>
