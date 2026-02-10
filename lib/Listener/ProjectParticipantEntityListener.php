@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024-2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -91,7 +91,7 @@ class ProjectParticipantEntityListener
    */
   public function preUpdate(Entity $entity, ORMEvent\PreUpdateEventArgs $event)
   {
-    $this->l = $this->appContainer->get(IL10N::class);
+    $l = $this->appContainer->get(IL10N::class);
     $field = 'participationStatus';
     if ($event->hasChangedField($field)) {
       $participationStatus = (string)$event->getNewValue($field);
@@ -100,7 +100,7 @@ class ProjectParticipantEntityListener
           // confirmed partiticipants must not be "passive"
           if ($entity->getRegistration()) {
             throw new Exceptions\EnduserNotificationException(
-              $this->l->t(
+              $l->t(
                 'Confirmed project participants cannot have a participation status of "%s".',
                 ParticipationStatus::getL10NValues($this->l)[$participationStatus],
               ),
@@ -112,7 +112,7 @@ class ProjectParticipantEntityListener
           $realInstruments = $entity->getRealInstruments();
           if (!$realInstruments->isEmpty()) {
             throw new Exceptions\EnduserNotificationException(
-              $this->l->t(
+              $l->t(
                 'The participation-status cannot be set to "%1$s" as long as the participant is registered to perform with real instruments (%2$s)',
                 [
                   ParticipationStatus::getL10NValues($this->l)[$participationStatus],
