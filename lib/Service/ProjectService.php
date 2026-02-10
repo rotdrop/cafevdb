@@ -2120,7 +2120,7 @@ Whatever.',
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
       $musician = $musiciansRepository->find($id);
-      $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       if ($musician->isDeleted()) {
         $musician = null;
       }
@@ -2139,7 +2139,9 @@ Whatever.',
 
     // check for already registered
     // @todo: check for participationContext
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     $participant = $musician->getProjectParticipantOf($project);
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
     $exists = !empty($participant) && ($participant->getDeleted() === null || $participant->getDeleted() > (new DateTimeImmutable));
     if ($exists) {
       // "exists" is ok if the the participationContext differs
@@ -2360,7 +2362,7 @@ Whatever.',
         'notice' => $this->l->t(
           'Adding the musician with id %d failed with exception %s',
           [ $id, $t->getMessage(), ]
-        ) . $participant->getParticipationStatus(),
+        ) . $participant->getParticipationStatus()->value,
         'exception' => $t,
       ];
       return false;
