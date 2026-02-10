@@ -926,10 +926,10 @@ class Projects extends PMETableViewBase
           $html = $this->templateEditButton(
             $recordId['id'],
             $row[$this->queryField('name')],
-            'project-participant-fields'
+            ProjectParticipantFields::TEMPLATE,
           );
 
-          $value = preg_replace('/,(\S)/', ', $1', $value);
+          $value = preg_replace('/,(\S)/', ', $1', $value ?? '');
           $tooltip = Util::htmlEscape($value);
           $html .= '<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
 
