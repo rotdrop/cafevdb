@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
@@ -132,6 +133,8 @@ class InstrumentsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
       self::$migrationsApplied = true;
@@ -161,6 +164,12 @@ class InstrumentsTest extends TestCase
       pageNavigation: $appContainer->get(PageRenderer\Util\Navigation::class),
       toolTipsService: $appContainer->get(ToolTipsService::class),
     );
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /** {@inheritdoc} */

@@ -33,9 +33,6 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use OCP\IRequest;
-use OCP\Files\IRootFolder;
-use OCP\Files\Node;
-use OCP\Files\Folder;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -54,6 +51,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+use OCA\RotDrop\Tests\DeprecationException;
 
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
 /** Test aspects of the AllMusicians page renderer. */
@@ -151,6 +149,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\UserStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\SimpleSharingService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
@@ -162,6 +161,7 @@ class ProjectsTest extends TestCase
 {
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
   private PageRenderer\Projects $renderer;
 
@@ -176,6 +176,8 @@ class ProjectsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     $this->generateCalendarBackend();
 
     if (!self::$migrationsApplied) {
@@ -260,10 +262,12 @@ class ProjectsTest extends TestCase
     $configService->setConfigValue(ConfigConstants::SHARED_FOLDER, 'orchestra');
     $configService->setConfigValue(ConfigConstants::PROJECTS_FOLDER, 'projects');
 
+    $userStorage = $this->getUserStorageStub();
+
     $projectService = new ProjectService(
       configService: $configService,
       entityManager: $this->entityManager,
-      userStorage: $this->createStub(UserStorage::class),
+      userStorage: $userStorage,
       participantFieldsService: $projectParticipantFieldsService,
       musicianService: $musicianService,
       eventDispatcher: $mockProvider->getEventDispatcher(),
@@ -272,29 +276,6 @@ class ProjectsTest extends TestCase
       ProjectService::class,
       $projectService,
       global: true,
-    );
-
-    $userFolder = $this->createStub(Folder::class);
-    $userFolder->method('get')->willReturnCallback(function(string $path) use ($configService) {
-      $node = $this->createStub(Node::class);
-      $node->method('getPath')->willReturn($path);
-      return $node;
-    });
-
-    $rootFolder = $this->getMockBuilder(IRootFolder::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $rootFolder->expects($this->atLeastOnce())
-      ->method('getUserFolder')
-      ->with(MockProvider::EXECUTIVE_BOARD_UID)
-      ->willReturn($userFolder);
-
-    $userStorage = new UserStorage(
-      userSession: $mockProvider->getUserSession(),
-      appContainer: $mockProvider->getAppContainer(),
-      rootFolder: $rootFolder,
-      logger: $mockProvider->getLoggerInterface(),
-      l: $mockProvider->getL10N(),
     );
 
     $this->renderer = new PageRenderer\Projects(
@@ -309,6 +290,12 @@ class ProjectsTest extends TestCase
       projectService: $projectService,
       userStorage: $userStorage,
     );
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /** {@inheritdoc} */
@@ -616,7 +603,8 @@ class ProjectsTest extends TestCase
     }
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $result = $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $this->assertTrue($result);
   }
 
   // phpcs:disable Generic.Files.LineLength.TooLong
@@ -641,7 +629,8 @@ class ProjectsTest extends TestCase
     }
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $result = $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $this->assertTrue($result);
   }
 
 // phpcs:disable Generic.Files.LineLength.TooLong
@@ -671,7 +660,8 @@ class ProjectsTest extends TestCase
     }
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $result = $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $this->assertTrue($result);
   }
 
   /** @return void */
@@ -698,7 +688,8 @@ class ProjectsTest extends TestCase
     }
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $result = $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $this->assertTrue($result);
   }
 
   /** @return void */
@@ -725,6 +716,7 @@ class ProjectsTest extends TestCase
     }
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $result = $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+    $this->assertTrue($result);
   }
 }

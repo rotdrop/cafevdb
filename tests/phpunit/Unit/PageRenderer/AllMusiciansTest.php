@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
 #[Attributes\CoversClass(PHPMyEdit::class)]
@@ -166,6 +167,8 @@ class AllMusiciansTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
       self::$migrationsApplied = true;
@@ -202,6 +205,12 @@ class AllMusiciansTest extends TestCase
       musicianService: $appContainer->get(MusicianService::class),
       phoneNumberService: $appContainer->get(PhoneNumberService::class),
     );
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /** {@inheritdoc} */

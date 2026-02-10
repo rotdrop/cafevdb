@@ -181,11 +181,11 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class ProjectAssociatesTest extends TestCase
 {
-  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use GetFormValuesTrait;
-  // use \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\PHPUnit\VerifyDeprecations;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
   private PageRenderer\ProjectAssociates $renderer;
 
@@ -273,7 +273,7 @@ class ProjectAssociatesTest extends TestCase
 
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
-    $userStorage = $this->createStub(UserStorage::class);
+    $userStorage = $this->getUserStorageStub();
 
     $projectService = new ProjectService(
       configService: $configService,
