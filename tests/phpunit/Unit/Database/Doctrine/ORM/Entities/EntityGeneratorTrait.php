@@ -136,23 +136,32 @@ trait EntityGeneratorTrait
    *
    * @param bool $persist Defaults to \false.
    *
+   * @param array $instrumentNames Musician instruments, first one also added as project instrument.
+   *
+   * @param int $voices Numer of voices, project instrument gets voice 1 if voices > 0.
+   *
+   * @param array $familyNames If not null the family names for the instruments. Ignored if $persist is \true.
+   *
    * @return void
    */
-  protected function generateInstruments(bool $persist = false): void
-  {
+  protected function generateInstruments(
+    bool $persist = false,
+    array $instrumentNames = ['violin', 'double bass'],
+    int $voices = 2,
+    array $familyNames = ['string', 'strings'],
+  ): void {
     $l10n = $this->mockProvider->getL10N();
     if ($persist) {
       // The real database has the standard instruments already available by
       // means of a setup migration.
       // $this->entityManager->enableLogging();
-      $searchNames = ['violin', 'double bass'];
-      $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => $searchNames], ['sortOrder' => 'ASC']);
+      $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => $instrumentNames], ['sortOrder' => 'ASC']);
       $untranslatedNames = array_map(fn($arg) => $arg->getUntranslatedName(), $instruments);
-      $this->assertEquals($searchNames, $untranslatedNames);
+      $this->assertEquals($instrumentNames, $untranslatedNames);
     } else {
       $families = [];
       $idOffset = 0;
-      foreach (['string', 'strings'] as $familyName) {
+      foreach ($familyNames as $familyName) {
         $family = new Entities\InstrumentFamily()
           ->setId(self::FAKED_ENTITY_ID + $idOffset++)
           ->setFamily($l10n->t($familyName));
@@ -165,7 +174,7 @@ trait EntityGeneratorTrait
       }
       $instruments = [];
       $idOffset = 0;
-      foreach (['violin', 'doublebass'] as $instrumentName) {
+      foreach ($instrumentNames as $instrumentName) {
         $instrument = new Entities\Instrument()
           ->setId(self::FAKED_ENTITY_ID + $idOffset++)
           ->setName($l10n->t($instrumentName));
@@ -197,7 +206,7 @@ trait EntityGeneratorTrait
     $musicianInstrument = $musicianInstruments[0];
     $voicedInstrument = $musicianInstrument->getInstrument();
     $instrumentationNumbers = [];
-    for ($voice = 0; $voice <= 2; ++$voice) {
+    for ($voice = 0; $voice <= $voices; ++$voice) {
       $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
         $this->project,
         $voicedInstrument,
@@ -216,7 +225,7 @@ trait EntityGeneratorTrait
       ->setMusicianInstrument($musicianInstrument);
     $this->assertEquals($musicianInstrument->getInstrument(), $projectInstrument->getInstrument());
 
-    $instrumentationNumber = $instrumentationNumbers[1];
+    $instrumentationNumber = $instrumentationNumbers[$voices > 0 ? 1 : 0];
     $projectInstrument->setInstrumentationNumber($instrumentationNumber);
     $projectInstrument->getInstrument()->getProjectInstrumentationNumbers()->add($instrumentationNumber);
     $instrumentationNumber->getProjectInstruments()->add($projectInstrument);
