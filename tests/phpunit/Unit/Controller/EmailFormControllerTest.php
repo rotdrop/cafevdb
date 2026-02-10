@@ -198,8 +198,6 @@ class EmailFormControllerTest extends TestCase
 
   private int $shareId = 1;
 
-  private int $nodeId = 1;
-
   /** {@inheritdoc} */
   public function setup(): void
   {

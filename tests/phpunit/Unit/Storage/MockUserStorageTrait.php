@@ -48,6 +48,8 @@ trait MockUserStorageTrait
 
   private array $fileNodes = [];
 
+  private int $nodeId = 1;
+
   /**
    * Generate a stub or mock for the UserStorage class.
    *
