@@ -1094,6 +1094,14 @@ GROUP BY t.id';
           case 'change':
           case 'display':
             list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
+            if ($musician == null) {
+              // throw new \InvalidArgumentException(
+              //   'No musician id in data-base row '
+              //   . print_r($row, true) . ' queries: '
+              //   . print_r($this->pme->queryLog(), true)
+              // );
+              return '';
+            }
             $vcard = $this->contactsService->export($musician);
             unset($vcard->PHOTO); // too much information
             $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
