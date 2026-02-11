@@ -500,6 +500,7 @@ logger.info('COMPUTED ORIGIN', { origin, prev })
 onBeforeMount(() => {
   logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
 })
+
 onBeforeRouteUpdate((to, from, next) => {
   logger.debug('ON BEFORE ROUTE UPDATE', {
     to: { ...to },
@@ -510,6 +511,22 @@ onBeforeRouteUpdate((to, from, next) => {
     origin.location.query.hash = to.query.hash
   }
   next()
+})
+
+// Make sure that the event of the route is open in the events listing.
+router.afterEach((to, _from) => {
+  // check if the current route contains a calendar app component
+  if (!CALENDAR_APP_ROUTES.includes(to.name!)) {
+    return
+  }
+  const calendarUri = calendarUriByEventObject[to.params.object]
+  const instanceId = instanceIdByEventObject[to.params.object]
+  if (calendarUri) {
+    expandedState.value[calendarUri] = true
+    if (instanceId && yearsByEvent[instanceId]) {
+      matrixEntryYear[calendarUri] = yearsByEvent[instanceId]
+    }
+  }
 })
 
 const handleOpened = () => {
@@ -541,7 +558,7 @@ const handleClose = () => {
 const project = ref<null | Project>(null)
 const projectEventMatrix = computed<undefined | ProjectEventMatrix>(() => project.value?.eventMatrix)
 
-const calendarOrdering: { [Key in CalendarUris|'']: number } = {
+const calendarOrdering: { [Key in EventMatrixRow['uri']]: number } = {
   concerts: 0,
   rehearsals: 10,
   management: 20,
@@ -636,7 +653,9 @@ const matrixEntryYear = reactive<{ [Key in CalendarUris | '']?: string }>({})
 for (const uri of Object.keys(calendarOrdering) as ((CalendarUris | '')[])) {
   vueSet(matrixEntryYear, uri, currentYear)
 }
-const eventsByYear = reactive<{ [Key in CalendarUris | '']?: Record<string, EventMatrixEvent[]> }>({})
+const calendarUriByEventObject: Record<string, EventMatrixRow['uri']|undefined> = {}
+const instanceIdByEventObject: Record<string, string> = {}
+const eventsByYear = reactive<{ [Key in EventMatrixRow['uri']]?: Record<string, EventMatrixEvent[]> }>({})
 const yearsByEvent = reactive<Record<string, string> >({})
 const expandedState = ref<{ [Key in CalendarUris]?: boolean }>({})
 const hasAbsenceField = ref<Record<string, boolean> >({})
@@ -734,6 +753,8 @@ const syncProjectData = async (projectName: string) => {
           const name = 'EditPopoverView'
           const context = {}
           const eventObject = btoa(event.urlPath)
+          calendarUriByEventObject[eventObject] = entry.uri
+          instanceIdByEventObject[eventObject] = event.instanceId
           const params = {
             ...currentRoute.params,
             object: eventObject,
