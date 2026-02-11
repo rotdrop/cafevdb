@@ -307,11 +307,7 @@ trait SetupEventsServiceTrait
         $this->assertEquals([], $matrixRow->events ?? []);
         continue;
       }
-      $uri = $matrixRow->uri;
-      if ($uri === null) {
-        print_r($matrixRow);
-        throw new UnexpectedValueException('URI is null');
-      }
+      $uri = $matrixRow->uri->value;
       $numEvents = $this->project->getCalendarEvents()->filter(
         fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getCalendarUri() == $uri,
       )->count();

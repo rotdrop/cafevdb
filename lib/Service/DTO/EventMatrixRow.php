@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ use DateTimeInterface;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * DTO for the event matrix rows
@@ -40,7 +41,7 @@ class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
     /** Displayname. */
     public readonly string $name,
     public readonly int $calendarId,
-    public readonly string $uri,
+    public readonly EnumEventMatrixRowUri $uri,
     public readonly string $urlPath,
     /** @var array<EventMatrixEvent> */
     public readonly array $events,
@@ -61,6 +62,7 @@ class EventMatrixRow extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    $uri = EnumEventMatrixRowUri::get($uri);
     return new self(
       name: $name,
       uri: $uri,
