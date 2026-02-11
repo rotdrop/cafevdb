@@ -174,6 +174,7 @@
                       :data-object-id="routerEventEdit[event.instanceId]?.params.object || ''"
                       :data-recurrence-id="routerEventEdit[event.instanceId]?.params.recurrenceId || ''"
                       :exact="true"
+                      :exact-path="true"
                       :force-display-actions="true"
                       :one-line="false"
           >
@@ -266,6 +267,7 @@
               <NcActionRouter v-tooltip="hints['projectevents:event:edit']"
                               :to="routerEventEdit[event.instanceId] || ''"
                               :exact="true"
+                              :exact-path="true"
                               :close-after-click="true"
               >
                 <template #icon>
