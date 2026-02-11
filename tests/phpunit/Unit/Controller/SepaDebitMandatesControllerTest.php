@@ -62,6 +62,8 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
@@ -110,10 +112,14 @@ class SepaDebitMandatesControllerTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $projectsRepository = $this->createStub(EntityRepository::class);
+    $projectsRepository = $this->getMockBuilder(EntityRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
     $projectsRepository->method('find')->with($this->project->getId())->willReturn($this->project);
 
-    $musiciansRepository = $this->createStub(EntityRepository::class);
+    $musiciansRepository = $this->getMockBuilder(EntityRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
     $musiciansRepository->method('find')->with($this->musician->getId())->willReturn($this->musician);
 
     $this->entityManager = $this->createStub(EntityManager::class);
