@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2025 Claus-Justus Heine
+ * @copyright 2021-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -127,8 +127,7 @@ FROM %2$s';
     ?string $user = null,
     ?string $password = null,
     ?string $host = null,
-  ):void
-  {
+  ):void {
     // // $em is your Doctrine\ORM\EntityManager instance
     // $schemaManager = $em->getConnection()->getSchemaManager();
     // // array of Doctrine\DBAL\Schema\Column
@@ -276,9 +275,6 @@ FROM %2$s';
   /**
    * Gnerate autocomplete data from an accounts CSV export from GnuCash. Only
    * valid for autocompletion are income and expense accounts.
-   *
-   * @param null|Entities\Project $project If non-null the project name will
-   * always added as last component to the account name.
    *
    * @return null|array
    * ```[ 'income' => [ AC0, AC1, ... ], 'expense' => [ AC0, AC1, ... ] ]```
@@ -476,7 +472,7 @@ FROM %2$s';
       foreach ($accountData['payments'] as $projectPayment) {
         $receivable = $projectPayment->getReceivable();
         $balancingAccount = $receivable->getBalancingAccount();
-        if (empty($balancingAcount)) {
+        if (empty($balancingAccount)) {
           $field = $receivable->getField();
           if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
             $generatorOption = $field->getManagementOption();
