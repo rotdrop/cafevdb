@@ -1382,11 +1382,10 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-      case (array_shift(
-        array_filter(
-          array_keys(ConfigConstants::CALENDARS),
-          fn(string $uri) => $uri . ConfigConstants::CALENDAR_KEY_POSTFIX == $parameter),
-      ) ?? '') . ConfigConstants::CALENDAR_KEY_POSTFIX:
+      case (array_filter(
+        array_keys(ConfigConstants::CALENDARS),
+        fn(string $uri) => $uri . ConfigConstants::CALENDAR_KEY_POSTFIX == $parameter,
+      )[0] ?? '') . ConfigConstants::CALENDAR_KEY_POSTFIX:
         $real = trim($value);
         $uri = substr($parameter, 0, -strlen(ConfigConstants::CALENDAR_KEY_POSTFIX));
         //$saved = $value[$parameter . '-saved'];
