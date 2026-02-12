@@ -125,6 +125,10 @@ class Application extends AbstractApplication
    */
   public function boot(IBootContext $context): void
   {
+    $context->injectFn(function(\OCA\CAFEVDB\Service\ByPassToSService $byPassToSService) {
+      $byPassToSService->checkForToSByPass();
+    });
+
     $context->injectFn(function(
       $userId,
       AuthorizationService $authorizationService,
