@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,17 +28,21 @@ import generateAppUrl from '../toolkit/util/generate-url.ts';
 const accountsAutocomplete = {
 };
 
-// b'url' => '/projects/accounting/autocomplete/gnucash-accounts/{project}',
+// 'url' => '/projects/accounting/autocomplete/gnucash-accounts/{project}',
 
 /**
  * @param projectIdentifier The project id or the project name.
  */
 const getGnuCashAccountsAutcompleteData = async (projectIdentifier: string|number) => {
+  if (+projectIdentifier <= 0) {
+    console.trace('Non-positive project id, bailing out.', { projectIdentifier });
+    return;
+  }
   const autocompleteData = accountsAutocomplete[projectIdentifier];
   if (autocompleteData) {
     return autocompleteData;
   }
-  const url = generateAppUrl('accounting/autocomplete/gnucash-accounts/' + projectIdentifier);
+  const url = generateAppUrl(`accounting/autocomplete/gnucash-accounts/${projectIdentifier}`);
   try {
     const data = await $.get(url);
     accountsAutocomplete[data.projectName] = data.accounts;

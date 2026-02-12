@@ -235,6 +235,7 @@ class GnuCashConnectorService
       } catch (Exceptions\DatabaseMissingIdentifierException $e) {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('Unable to fetch the project entity from the database given the id-data "%s"', $project),
+          previous: $e,
         );
       }
       $name = $project->getName();

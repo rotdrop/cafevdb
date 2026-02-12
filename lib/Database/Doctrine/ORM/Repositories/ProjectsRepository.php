@@ -78,8 +78,10 @@ class ProjectsRepository extends EntityRepository
   {
     $id = null;
     $name = null;
-    if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
-      $id = $projectIdentifier;
+    if (is_numeric($projectIdentifier)) {
+      if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+        $id = $projectIdentifier;
+      }
     } elseif (is_string($projectIdentifier)) {
       $name = $projectIdentifier;
     } elseif (is_array($projectIdentifier)) {
