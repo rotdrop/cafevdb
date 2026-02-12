@@ -407,6 +407,35 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
   });
   lazyDecrypt($container);
 
+  const $form = $container.find(pmeFormSelector);
+
+  // adding musicians
+  $form
+    .find<HTMLInputElement>(pmeClassSelector('input', 'add'))
+    .addClass(pmeToken('custom')).prop('disabled', false)
+    .off('click').on('click', function() {
+
+      console.info('PAGE TEMPLATE', { participationContext });
+      const $form = jq(this.form!);
+      // if (participationContext === 'associates') {
+      //   const projectName = $form.find('input[name="projectName"]').val();
+      //   asyncEmit(ADD_CONTACTS_TO_PROJECT, { projectName });
+      // } else {
+      //   myLoadAddMusicians($form);
+      // }
+      myLoadAddMusicians($form);
+
+      return false;
+    });
+
+  if ($form.hasClass(pmeToken('list'))
+      || $form.hasClass(pmeToken('view'))
+      || $form.hasClass(pmeToken('delete'))
+  ) {
+    console.debug('PP SKIP READY IN READONLY VIEW');
+    return;
+  }
+
   Musicians.contactValidation($container);
 
   // Enable the controls, in order not to bloat SQL queries these PME
@@ -417,7 +446,6 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
   const $inputGroupOfPeopleId = $container.find<HTMLInputElement>('input.pme-input.groupofpeople-id');
   const $selectVoices = $container.find<HTMLSelectElement>('.pme-value select.pme-input.instrument-voice');
   const $inputVoices = $container.find('.pme-value div.instrument-voice.request.container');
-  const $form = $container.find(PHPMyEdit.classSelector('form', 'form'));
 
   const musicianId = pmeRecordValue($form, 'musicianId');
   const projectId = pmeRecordValue($form, 'projectId');
@@ -954,28 +982,6 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
   // mailing-list service is down.
   $form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click', [{ setup: true }]);
 
-  const pmeForm = $container.find(pmeFormSelector);
-  console.debug('PME FORM', pmeForm, pmeFormSelector);
-
-  // adding musicians
-  pmeForm
-    .find<HTMLInputElement>(pmeClassSelector('input', 'add'))
-    .addClass(pmeToken('custom')).prop('disabled', false)
-    .off('click').on('click', function() {
-
-      console.info('PAGE TEMPLATE', { participationContext });
-      const $form = jq(this.form!);
-      // if (participationContext === 'associates') {
-      //   const projectName = $form.find('input[name="projectName"]').val();
-      //   asyncEmit(ADD_CONTACTS_TO_PROJECT, { projectName });
-      // } else {
-      //   myLoadAddMusicians($form);
-      // }
-      myLoadAddMusicians($form);
-
-      return false;
-    });
-
   if (typeof resizeCB === 'function') {
     $container.on('chosen:update', 'select', function() {
       resizeCB(true); // keep locks
@@ -985,20 +991,20 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
 
   participantFieldsHandlers($container, musicianId, projectId, dialogParameters);
 
-  pmeForm
+  $form
     .find('tr.participant-field.cloud-file, tr.participant-field.db-file, tr.participant-field.cloud-folder')
     .find<HTMLTableRowElement>('td.pme-value .file-upload-row')
     .each(function() { // don't () => ..., no this binding!!!
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
 
-  pmeForm
+  $form
     .find<HTMLTableCellElement>('tr.participant-field tr.field-datum td.documents')
     .each(function() {
       initFileUploadRow.call(this, projectId, musicianId, resizeCB);
     });
 
-  pmeForm
+  $form
     .find<HTMLTableRowElement>(
       'tr.participant-field.simple-valued.receivables'
         + ', '
