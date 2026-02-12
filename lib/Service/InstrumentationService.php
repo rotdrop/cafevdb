@@ -28,6 +28,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Throwable;
 
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -49,8 +50,9 @@ class InstrumentationService
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ConfigService $configService,
-    protected ToolTipsService $toolTipsService,
     protected EntityManager $entityManager,
+    protected TimeFactory $timeFactory,
+    protected ToolTipsService $toolTipsService,
   ) {
     $this->connection = $this->entityManager->getConnection();
     $this->l = $this->l10n();
@@ -90,7 +92,7 @@ class InstrumentationService
       $dummy = $musiciansRepository->findOneBy([ 'uuid' => Uuid::NIL ]);
     }
 
-    $now = $now ?? new DateTimeImmutable;
+    $now = $now ?? $this->timeFactory->getDateTimeImmutable();
 
     $this->entityManager->beginTransaction();
     try {
@@ -143,16 +145,22 @@ class InstrumentationService
       }
 
       if (!empty($project)) {
-        $participant = (new Entities\ProjectParticipant)
-          ->setMusician($dummy)
-          ->setProject($project)
-          ->setCreated($now)
-          ->setUpdated($now);
-        $dummy->getProjectParticipation()->set($project->getId(), $participant);
-        if (!$persist) {
-          $dummy->setId(1);
+        if ($persist) {
+          $participant = $dummy->getProjectParticipantOf($project);
         }
-        $project->getParticipants()->set($dummy->getId(), $participant);
+
+        if (empty($participant)) {
+          $participant = (new Entities\ProjectParticipant)
+            ->setMusician($dummy)
+            ->setProject($project)
+            ->setCreated($now)
+            ->setUpdated($now);
+          $dummy->getProjectParticipation()->set($project->getId(), $participant);
+          if (!$persist) {
+            $dummy->setId(1);
+          }
+          $project->getParticipants()->set($dummy->getId(), $participant);
+        }
       }
 
       if ($persist) {
