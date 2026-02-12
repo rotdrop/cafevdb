@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Tests\Unit\Storage;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\NotFoundException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\IURLGenerator;
@@ -73,30 +74,40 @@ trait MockUserStorageTrait
 
     $this->userStorage->method('ensureFolderChain')->willReturn($this->createStub(Folder::class));
     $this->userStorage->method('copyTree')->willReturn($this->createStub(Folder::class));
-    $this->userStorage->method('get')->willReturnCallback(function(string $path) {
-      if ($this->fileNodes[$path] ?? null) {
-        return $this->fileNodes[$path];
-      }
-      if ($path == '/' || $path == '') {
-        $node = $this->createStub(IRootFolder::class);
-        $this->assertInstanceOf(IRootFolder::class, $node);
-      } else {
-        $node = $this->createStub(Folder::class);
-      }
-      $node->method('getType')->willReturn(Node::TYPE_FOLDER);
-      $node->method('getPath')->willReturn($path);
-      $node->method('getName')->willReturn(basename($path));
-      $parent = dirname($path);
-      if ($parent != $path) {
-        // echo 'PARENT ' . $parent . PHP_EOL;
-        $parent = $this->userStorage->get($parent);
-        $node->method('getParent')->willReturn($parent);
-      }
-      $this->fileNodes[$path] = $node;
-      $node->method('getId')->willReturn($this->nodeId++);
+    $this->userStorage->method('getFile')->willReturnCallback(
+      function(string $path) {
+        $node = $this->userStorage->get($path);
+        if ($node->getType() == Node::TYPE_FILE) {
+          return $node;
+        }
+      },
+    );
+    $this->userStorage->method('get')->willReturnCallback(
+      function(string $path, ?string $type = null, bool $useCache = false, bool $throw = false) {
+        if ($this->fileNodes[$path] ?? null) {
+          return $this->fileNodes[$path];
+        }
+        if ($path == '/' || $path == '') {
+          $node = $this->createStub(IRootFolder::class);
+          $this->assertInstanceOf(IRootFolder::class, $node);
+        } else {
+          $node = $this->createStub(Folder::class);
+        }
+        $node->method('getType')->willReturn(Node::TYPE_FOLDER);
+        $node->method('getPath')->willReturn($path);
+        $node->method('getName')->willReturn(basename($path));
+        $parent = dirname($path);
+        if ($parent != $path) {
+          // echo 'PARENT ' . $parent . PHP_EOL;
+          $parent = $this->userStorage->get($parent);
+          $node->method('getParent')->willReturn($parent);
+        }
+        $this->fileNodes[$path] = $node;
+        $node->method('getId')->willReturn($this->nodeId++);
 
-      return $node;
-    });
+        return $node;
+      },
+    );
     $this->userStorage->method('putContent')->willReturnCallback(
       function(string $path, string $content): File {
         $node = $this->userStorage->get($path);

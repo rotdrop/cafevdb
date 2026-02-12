@@ -47,11 +47,14 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\CoversClass(Service\ProgressStatusService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 class ProgressStatusControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\GetAppStorageTrait;
 
   private const CONTROLLER_CLASS = Controller\ProgressStatusController::class;
   private const EXPECTED_ROUTES = ['get', 'action'];
@@ -74,6 +77,10 @@ class ProgressStatusControllerTest extends TestCase
   public function setup(): void
   {
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->getAppStorage();
+    $this->mockProvider->registerClassInstance(AppStorage::class, $this->appStorage, global: true);
+    $this->mockProvider->registerClassInstance(IAppData::class, $this->appData, global: true);
 
     $this->progressStatusService = new Service\ProgressStatusService(
       appName: $mockProvider->appName,

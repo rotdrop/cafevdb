@@ -36,17 +36,23 @@ use OCP\Files\IAppData;
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EventsService class. */
 #[Attributes\CoversClass(Common\DatabaseProgressStatus::class)]
 #[Attributes\CoversClass(Common\PlainFileProgressStatus::class)]
 #[Attributes\CoversClass(Service\ProgressStatusService::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 class ProgressStatusServiceTest extends TestCase
 {
+  use \OCA\CAFEVDB\Tests\Unit\Storage\GetAppStorageTrait;
+
   private const START = 13;
   private const STOP = 47;
   private const DATA = [
@@ -57,12 +63,16 @@ class ProgressStatusServiceTest extends TestCase
 
   private Service\ProgressStatusService $service;
 
-  private static mixed $progressId;
-
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     $mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->getAppStorage();
+    $this->mockProvider->registerClassInstance(AppStorage::class, $this->appStorage, global: true);
+    $this->mockProvider->registerClassInstance(IAppData::class, $this->appData, global: true);
 
     $this->service = new Service\ProgressStatusService(
       appName: $mockProvider->appName,
@@ -73,7 +83,13 @@ class ProgressStatusServiceTest extends TestCase
   }
 
   /** @return void */
-  public function testCreate(): void
+  public function tearDown(): void
+  {
+    restore_error_handler();
+  }
+
+  /** @return string */
+  private function generateProgressStatus(): string
   {
     $progressStatus = $this->service->create(
       start: self::START,
@@ -84,7 +100,14 @@ class ProgressStatusServiceTest extends TestCase
     $this->assertEquals(self::START, $progressStatus->getCurrent());
     $this->assertEquals(self::STOP, $progressStatus->getTarget());
     $this->assertEqualsCanonicalizing(self::DATA, $progressStatus->getData());
-    $id = $progressStatus->getId();
+
+    return $progressStatus->getId();
+  }
+
+  /** @return void */
+  public function testCreate(): void
+  {
+    $id = $this->generateProgressStatus();
     $progressStatus = $this->service->create(
       start: self::START + 1,
       stop: self::STOP + 1,
@@ -96,34 +119,34 @@ class ProgressStatusServiceTest extends TestCase
     $this->assertEquals(self::STOP + 1, $progressStatus->getTarget());
     $this->assertEquals('update', $progressStatus->getData()['key']);
     $this->assertEquals($id, $progressStatus->getId());
-
-    self::$progressId = $id;
   }
 
   /** @return void */
-  #[Attributes\Depends('testCreate')]
   public function testGet(): void
   {
-    $progressStatus = $this->service->get(self::$progressId);
+    $id = $this->generateProgressStatus();
+
+    $progressStatus = $this->service->get($id);
     $this->assertInstanceOf(Common\IProgressStatus::class, $progressStatus);
-    $this->assertEquals(self::START + 1, $progressStatus->getCurrent());
-    $this->assertEquals(self::STOP + 1 , $progressStatus->getTarget());
-    $this->assertEquals('update', $progressStatus->getData()['key']);
-    $this->assertEquals(self::$progressId, $progressStatus->getId());
+    $this->assertEquals(self::START, $progressStatus->getCurrent());
+    $this->assertEquals(self::STOP, $progressStatus->getTarget());
+    $this->assertEqualsCanonicalizing(self::DATA, $progressStatus->getData());
+    $this->assertEquals($id, $progressStatus->getId());
   }
 
   /** @return void */
-  #[Attributes\Depends('testGet')]
   public function testOperate(): void
   {
-    $progressStatus = $this->service->get(self::$progressId);
+    $id = $this->generateProgressStatus();
+
+    $progressStatus = $this->service->get($id);
     $progressStatus->increment();
-    $this->assertEquals(self::START + 2, $progressStatus->getCurrent());
+    $this->assertEquals(self::START + 1, $progressStatus->getCurrent());
     $progressStatus->increment(delta: 13);
-    $this->assertEquals(self::START + 15, $progressStatus->getCurrent());
+    $this->assertEquals(self::START + 14, $progressStatus->getCurrent());
     $progressStatus->delete();
     try {
-      $progressStatus = $this->service->get(self::$progressId);
+      $progressStatus = $this->service->get($id);
     } catch (Throwable $t) {
       $this->assertInstanceOf(Exceptions\ProgressStatusNotFoundException::class, $t);
     }

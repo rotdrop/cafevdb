@@ -272,6 +272,7 @@ trait EntityGeneratorTrait
       ->setMultiplicity(
         Types\EnumParticipantFieldMultiplicity::RECURRING,
       )
+      ->setDueDate('2099-01-01')
       ->setName('Forderungen');
     $generator = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)

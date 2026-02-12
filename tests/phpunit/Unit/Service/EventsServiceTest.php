@@ -54,7 +54,7 @@ use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the EventsService class. */
 #[Attributes\CoversClass(CalDavService::class)]
@@ -107,12 +107,19 @@ class EventsServiceTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
     $this->generateEventsService();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
 
     // $this->entityManager->expects($this->never())->method('getRepository');
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /** @return void */
@@ -410,6 +417,7 @@ class EventsServiceTest extends TestCase
       $this->eventsService->ensureProjectRegistrationEvent($this->project);
     } catch (Throwable $t) {
       $this->assertInstanceOf(UnexpectedValueException::class, $t);
+      $this->transactionExceptions = [];
     }
     $this->project->setRegistrationDeadline('2099-12-31');
     $this->projectService->expects($this->atLeastOnce())
@@ -421,6 +429,9 @@ class EventsServiceTest extends TestCase
 
     $projectEventsCount = $this->project->getCalendarEvents()->count();
     $result = $this->eventsService->ensureProjectRegistrationEvent($this->project);
+    if (!empty($this->transactionExceptions)) {
+      throw array_pop($this->transactionExceptions);
+    }
     $this->assertTrue($result);
     $this->assertEquals($projectEventsCount + 1, $this->project->getCalendarEvents()->count());
     $this->assertTrue($this->project->getRegistrationCalendarEvent()->isRegistrationEvent());

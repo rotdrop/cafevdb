@@ -36,7 +36,7 @@ trait MockMusiciansRepositoryTrait
 {
   use EntityGeneratorTrait;
 
-  /** @return InstrumentsRepository */
+  /** @return EntityRepository */
   public function getMusiciansRepositoryMock(): EntityRepository
   {
     $repository = $this->getMockBuilder(EntityRepository::class)
