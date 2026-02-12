@@ -57,15 +57,16 @@ class AccountingController extends Controller
   // phpcs:enable
 
   /**
-   * @param null|int|string $project If given either the numeric id or the project name.
+   * @param int|string $project If given either the numeric id or the project name.
    *
    * @return DataResponse
    *
    * @throws Exceptions\End
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/accounting/autocomplete/gnucash-accounts/{project}')]
   public function autocompleteGnuCashAccounts(
-    null|int|string $project,
+    int|string $project,
   ):DataResponse {
     $autocompleteData = $this->gnuCashConnectorService->getAccountsAutocompleteData($project);
 

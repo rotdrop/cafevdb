@@ -298,10 +298,10 @@ $routes = [
         'fieldId' => '^\d+$',
       ],
     ],
-    [
-      'name' => 'Accounting#autocompleteGnuCashAccounts',
-      'url' => '/accounting/autocomplete/gnucash-accounts/{project}',
-    ],
+    // [
+    //   'name' => 'Accounting#autocompleteGnuCashAccounts',
+    //   'url' => '/accounting/autocomplete/gnucash-accounts/{project}',
+    // ],
     /**
      * Project events
      */
