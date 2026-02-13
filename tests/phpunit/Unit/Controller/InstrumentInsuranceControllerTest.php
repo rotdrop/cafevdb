@@ -29,36 +29,36 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\IRequest;
+use OCP\InstrumentInsurance\IManager as InstrumentInsuranceManager;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the InstrumentInsuranceController. */
+#[Attributes\CoversClass(Controller\InstrumentInsuranceController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class InstrumentInsuranceControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\InstrumentInsuranceController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'validate',
+    'download',
+    'download.get',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\InstrumentInsuranceController $controller;
 
   private array $postData = [];
 
@@ -77,15 +77,21 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
+    // For real tests we will need to mock some methods.
+    $fuzzyInputService = $this->createStub(FuzzyInputService::class);
+    $insuranceService = $this->createStub(InstrumentInsuranceService::class);
+    $insuranceService = $this->createStub(InstrumentInsuranceService::class);
+    $projectService = $this->createStub(ProjectService::class);
+    $phpMyEdit = $this->createStub(PHPMyEdit::class);
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\InstrumentInsuranceController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      configService: $this->mockProvider->getConfigService(),
+      fuzzyInputService: $fuzzyInputService,
+      insuranceService: $insuranceService,
+      projectService: $projectService,
+      phpMyEdit: $phpMyEdit,
     );
   }
 

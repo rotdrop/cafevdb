@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,8 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
  * General data validation controller.
  *
  * @todo This controller almost has no code in it, check whether it is needed
- * or move more validation code here.
+ * or move more validation code here. It is actually used in
+ * project-participants-fields.ts.
  */
 class ValidationController extends Controller
 {
@@ -64,6 +65,7 @@ class ValidationController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/general/{topic}')]
   public function serviceSwitch(string $topic, string $value):DataResponse
   {
     switch ($topic) {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Controller;
+
+use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -69,6 +71,7 @@ class BackgroundJobController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/backgroundjob/trigger')]
   public function trigger():DataResponse
   {
     try {
@@ -94,7 +97,7 @@ class BackgroundJobController extends Controller
       $this->di(CleanupFilesCache::class)->run();
 
       return self::response('Ran background jobs');
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return self::grumble(
         $this->l->t(

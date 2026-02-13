@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -125,6 +125,7 @@ class ProjectParticipantFieldsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participant-fields/{topic}/{subTopic}')]
   public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null):Response
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -744,60 +745,5 @@ class ProjectParticipantFieldsController extends Controller
         break;
     }
     return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
-  }
-
-  /**
-   * @param string $topic The kind of object to patch. Currently only
-   * self::REQUEST_SUB_TOPIC_OPTION is supported.
-   *
-   * @param int $fieldId The field to work on.
-   *
-   * @param string $objectId The identifier of the object to patch.
-   *
-   * @return Response
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function patch(string $topic, int $fieldId, string $objectId):Response
-  {
-    /** @var Entities\ProjectParticipantField $field */
-    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-    if (empty($field)) {
-      return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
-    }
-    switch ($topic) {
-      case self::REQUEST_SUB_TOPIC_OPTION:
-        $option = $field->getDataOption($objectId);
-        if (empty($option)) {
-          return self::grumble($this->l->t('Unable to find the option with id "%1$s" for field "%2$s".', [
-            $objectId, $field->getName(),
-          ]));
-        }
-        $patchedFields = [];
-        foreach (self::OPTION_PATCH_FIELDS as $field) {
-          if (isset($this->request[$field])) {
-            $value = $this->request[$field];
-            $option[$field] = empty($value) ? null : $value;
-            $patchedFields[$field] = $value;
-          }
-        }
-        try {
-          $this->flush();
-        } catch (Throwable $t) {
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('Unable to modify the option "%1$s".', $option->getLabel()),
-            previous: $t,
-            httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-          );
-        }
-        return self::dataResponse([
-          'fieldId' => $fieldId,
-          'optionKey' => $objectId,
-          'patchSet' => $patchedFields,
-        ]);
-        break;
-      default:
-        break;
-    }
-    return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $objectId ]));
   }
 }

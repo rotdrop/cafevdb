@@ -29,36 +29,31 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\IRequest;
+use OCP\ConfigCheck\IManager as ConfigCheckManager;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the ConfigCheckController. */
+#[Attributes\CoversClass(Controller\ConfigCheckController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class ConfigCheckControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\ConfigCheckController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'get',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\ConfigCheckController $controller;
 
   private array $postData = [];
 
@@ -77,15 +72,15 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
+    // For real tests we will need to mock some methods.
+    $configCheckService = $this->createStub(ConfigCheckService::class);
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\ConfigCheckController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
+      configCheckService: $configCheckService,
       l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
     );
   }
 

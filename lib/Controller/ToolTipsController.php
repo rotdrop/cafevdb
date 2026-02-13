@@ -61,8 +61,13 @@ class ToolTipsController extends Controller
    *
    * @return DataResponse
    */
-  #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/tooltips/{key}',
+    requirements: [ 'key' => '^.+$' ],
+  )]
   public function get(string $key, ?bool $debug = null, bool $unescaped = false):DataResponse
   {
     $this->toolTipsService->debug($debug);
@@ -86,8 +91,9 @@ class ToolTipsController extends Controller
    *
    * @return DataResponse
    */
-  #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/tooltips')]
+  #[CoreAttributes\NoAdminRequired]
   public function getMultiple(array $keys, ?bool $debug = null, bool $unescaped = false)
   {
     $this->toolTipsService->debug($debug);

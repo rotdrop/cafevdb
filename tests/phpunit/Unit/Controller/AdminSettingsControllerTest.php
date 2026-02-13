@@ -31,34 +31,33 @@ use PHPUnit\Framework\TestCase;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
+use OCA\CAFEVDB\Service\ProblemReportService;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the AdminSettingsController. */
+#[Attributes\CoversClass(Controller\AdminSettingsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class AdminSettingsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\AdminSettingsController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'get',
+    'postadminonly',
+    'postdelegated',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\AdminSettingsController $controller;
 
   private array $postData = [];
 
@@ -67,6 +66,7 @@ class EncryptionControllerTest extends TestCase
   {
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
+    // We probably want to mock it in order to control the available toolkits.
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     /** @var IRequest $request */
@@ -77,15 +77,14 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
-
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\AdminSettingsController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      configService: $this->mockProvider->getConfigService(),
+      emailAddressService: $this->createStub(EmailAddressService::class),
+      gnuCashConnectorService: $this->createStub(GnuCashConnectorService::class),
+      problemReportService: $this->createStub(ProblemReportService::class),
+      wikiRPC: $this->createStub(WikiRPC::class),
     );
   }
 

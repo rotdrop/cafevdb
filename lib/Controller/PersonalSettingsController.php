@@ -36,7 +36,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
@@ -123,8 +123,9 @@ class PersonalSettingsController extends Controller
   /**
    * @return Http\Response Return settings form.
    */
-  #[NoAdminRequired]
-  public function form():Http\Response
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/settings/personal/form')]
+  public function form(): Http\Response
   {
     return $this->personalSettings->getForm();
   }
@@ -138,7 +139,8 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    */
-  #[NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/settings/personal/set/{parameter}')]
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
@@ -308,8 +310,9 @@ class PersonalSettingsController extends Controller
    *
    * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
-  #[NoAdminRequired]
   #[Attributes\SubAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/settings/app/set/{parameter}')]
+  #[CoreAttributes\NoAdminRequired]
   public function setApp(string $parameter, mixed $value):Http\Response
   {
     switch ($parameter) {
@@ -2013,7 +2016,8 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    */
-  #[NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/settings/get/{parameter}')]
   public function get(string $parameter):Http\Response
   {
     switch ($parameter) {
@@ -2075,8 +2079,9 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    */
-  #[NoAdminRequired]
   #[Attributes\SubAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/settings/app/get/{parameter}')]
+  #[CoreAttributes\NoAdminRequired]
   public function getApp(string $parameter):Http\Response
   {
     switch ($parameter) {

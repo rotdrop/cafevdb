@@ -162,6 +162,14 @@ class WebBrowserHistoryController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/a/browser/history/{timestamp}/{modeOrKey}',
+    defaults: [
+      'timestamp' => self::GET_REQUEST_ALL,
+      'modeOrKey' => self::GET_MODE_SHALLOW,
+    ],
+  )]
   public function get(string|float $timestamp, string $modeOrKey = self::GET_MODE_SHALLOW)
   {
     $repository = $this->getDatabaseRepository(Entities\WebBrowserHistoryState::class);
@@ -222,6 +230,7 @@ class WebBrowserHistoryController extends Controller
    * @throws Exceptions\DatabaseException
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'PUT', url: '/a/browser/history/{timestamp}')]
   public function put(float $timestamp, string $position, array $history, array $requestData):DataResponse
   {
     $historyState = new Entities\WebBrowserHistoryState($timestamp, $this->userId);
@@ -291,6 +300,7 @@ class WebBrowserHistoryController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'DELETE', url: '/a/browser/history/{timestamp}')]
   public function delete(float $timestamp):DataResponse
   {
     /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository $repository */

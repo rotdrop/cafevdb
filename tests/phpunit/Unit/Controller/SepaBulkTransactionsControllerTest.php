@@ -28,37 +28,36 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IDateTimeFormatter;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the SepaBulkTransactionsController. */
+#[Attributes\CoversClass(Controller\SepaBulkTransactionsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class SepaBulkTransactionsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\SepaBulkTransactionsController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'serviceswitch',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\SepaBulkTransactionsController $controller;
 
   private array $postData = [];
 
@@ -79,13 +78,16 @@ class EncryptionControllerTest extends TestCase
 
     $appContainer = $this->mockProvider->getAppContainer();
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\SepaBulkTransactionsController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      bulkTransactionService: $this->createStub(SepaBulkTransactionService::class),
+      configService: $this->mockProvider->getConfigService(),
+      dateTimeFormatter: $appContainer->get(IDateTimeFormatter::class),
+      entityManager: $this->createStub(EntityManager::class),
+      financeService: $this->createStub(FinanceService::class),
+      pme: $this->createStub(PHPMyEdit::class),
+      projectService: $this->createStub(ProjectService::class),
     );
   }
 

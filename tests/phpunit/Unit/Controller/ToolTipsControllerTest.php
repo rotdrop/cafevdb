@@ -31,34 +31,35 @@ use PHPUnit\Framework\TestCase;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the ToolTipsController. */
+#[Attributes\CoversClass(Controller\ToolTipsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+class ToolTipsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\ToolTipsController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'get',
+    'getmultiple',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\ToolTipsController $controller;
 
   private array $postData = [];
 
@@ -67,6 +68,7 @@ class EncryptionControllerTest extends TestCase
   {
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
+    // We probably want to mock it in order to control the available toolkits.
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     /** @var IRequest $request */
@@ -77,15 +79,14 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
+    // For real tests we will need to mock some methods.
+    $toolTipsService = $this->mockProvider->getAppContainer()->get(ToolTipsService::class);
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\ToolTipsController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
       logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      toolTipsService: $toolTipsService,
     );
   }
 

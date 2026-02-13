@@ -82,8 +82,16 @@ class VueAppController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/')]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/p/{template}/{projectName}',
+    requirements: [ 'template' => '.+' ],
+    defaults: [ 'projectName' => null ],
+    postfix: 'front',
+  )]
   #[Attributes\AllowIFrameSelf]
-  public function index():TemplateResponse
+  public function index(): TemplateResponse
   {
     // add the vue assets
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
@@ -160,6 +168,7 @@ class VueAppController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/n/{template}', requirements: [ 'template' => '.+' ])]
   public function navigation(
     string $template,
     ?int $projectId = null,

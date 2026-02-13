@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,13 +71,14 @@ class ProblemReportController extends Controller
    * @return Http\DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/a/problem-report')]
   #[Attributes\NoGroupMemberRequired]
   public function post(
     array $user,
     array $errorData,
     ?string $errorHtml,
     ?string $userComment,
-  ):DataResponse {
+  ): DataResponse {
     $status = Http::STATUS_OK;
     try {
       $result = $this->reportService->submit($user, $errorData, $errorHtml, $userComment);

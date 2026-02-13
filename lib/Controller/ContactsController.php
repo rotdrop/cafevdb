@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025, 2026, 2026 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,6 +67,7 @@ class ContactsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/contacts/details/{contactUid}')]
   public function get(int $contactUid):DataResponse
   {
     return self::grumble($this->l->t('UNIMPLEMENTED'));
@@ -90,6 +91,11 @@ class ContactsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url:'/contacts/search/{pattern}',
+    defaults: [ 'pattern' => '', ],
+  )]
   public function search(
     string $pattern,
     ?int $limit = null,
@@ -144,6 +150,7 @@ class ContactsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/contacts/address-books')]
   public function getAddressBooks():DataResponse
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();

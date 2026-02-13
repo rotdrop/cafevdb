@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -65,6 +66,7 @@ class ProjectWebPagesController extends Controller
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/webpages/{topic}')]
   public function serviceSwitch(
     string $topic,
     ?int $projectId = null,

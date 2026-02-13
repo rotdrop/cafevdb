@@ -31,34 +31,27 @@ use PHPUnit\Framework\TestCase;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the BackgroundJobController. */
+#[Attributes\CoversClass(Controller\BackgroundJobController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class BackgroundJobControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\BackgroundJobController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'trigger',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\BackgroundJobController $controller;
 
   private array $postData = [];
 
@@ -67,6 +60,7 @@ class EncryptionControllerTest extends TestCase
   {
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
+    // We probably want to mock it in order to control the available toolkits.
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     /** @var IRequest $request */
@@ -77,15 +71,10 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
-
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\BackgroundJobController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      configService: $this->mockProvider->getConfigService(),
     );
   }
 

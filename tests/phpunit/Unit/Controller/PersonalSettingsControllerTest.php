@@ -28,37 +28,47 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IDateTimeFormatter;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Settings\Personal;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the PersonalSettingsController. */
+#[Attributes\CoversClass(Controller\PersonalSettingsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class PersonalSettingsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\PersonalSettingsController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'form',
+    'get',
+    'getapp',
+    'set',
+    'setapp',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\PersonalSettingsController $controller;
 
   private array $postData = [];
 
@@ -79,13 +89,23 @@ class EncryptionControllerTest extends TestCase
 
     $appContainer = $this->mockProvider->getAppContainer();
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\PersonalSettingsController(
       appName: $this->mockProvider->appName,
       request: $request,
+      configService: $this->mockProvider->getConfigService(),
       appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      calDavService: $this->createStub(CalDavService::class),
+      configCheckService: $this->createStub(ConfigCheckService::class),
+      emailAddressService: $this->createStub(EmailAddressService::class),
+      financeService: $this->createStub(FinanceService::class),
+      fuzzyInputService: $this->createStub(FuzzyInputService::class),
+      personalSettings: $this->createStub(Personal::class),
+      phoneNumberService: $this->createStub(PhoneNumberService::class),
+      projectService: $this->createStub(ProjectService::class),
+      translationService: $this->createStub(TranslationService::class),
+      userStorage: $this->createStub(UserStorage::class),
+      webPagesRPC: $this->createStub(WebPagesRPC::class),
+      wikiRPC: $this->createStub(WikiRPC::class),
     );
   }
 

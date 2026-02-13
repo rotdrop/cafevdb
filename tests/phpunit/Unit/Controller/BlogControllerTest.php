@@ -28,37 +28,46 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\IDateTimeFormatter;
+use OCP\IDateTimeZone;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the BlogController. */
+#[Attributes\CoversClass(Controller\BlogController::class)]
+
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
+class BlogControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\BlogController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'editentry',
+    'action',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\BlogController $controller;
 
   private array $postData = [];
 
@@ -79,13 +88,19 @@ class EncryptionControllerTest extends TestCase
 
     $appContainer = $this->mockProvider->getAppContainer();
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\BlogController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
+      userId: $this->mockProvider->userId,
+      blogMapper: $this->createStub(BlogMapper::class),
+      blogRenderer: $this->createStub(BlogRenderer::class),
+      timeZone: $appContainer->get(IDateTimeZone::class),
+      urlGenerator: $appContainer->get(IURLGenerator::class),
+      dateTimeFormatter: $appContainer->get(IDateTimeFormatter::class),
+      configService: $this->mockProvider->getConfigService(),
       l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
+      toolTipsService: $appContainer->get(ToolTipsService::class),
     );
   }
 

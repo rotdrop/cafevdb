@@ -29,36 +29,35 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\IRequest;
+use OCP\ProjectParticipantFields\IManager as ProjectParticipantFieldsManager;
 
 use OCA\CAFEVDB\Controller;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
-/** Test aspects of the EncryptionController. */
-#[Attributes\CoversClass(Controller\EncryptionController::class)]
+/** Test aspects of the ProjectParticipantFieldsController. */
+#[Attributes\CoversClass(Controller\ProjectParticipantFieldsController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
-class EncryptionControllerTest extends TestCase
+class ProjectParticipantFieldsControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
 
-  private const CONTROLLER_CLASS = Controller\EncryptionController::class;
+  private const CONTROLLER_CLASS = Controller\ProjectParticipantFieldsController::class;
   private const EXPECTED_ROUTES = [
-    'ocs' => [
-      'bulkrecryptionrequest',
-      'deleterecryptrequest',
-      'getrecryptrequests',
-      'handlerecryptrequest',
-      'putrecryptrequest',
-      'revokecloudaccess',
-    ],
+    'serviceswitch',
   ];
 
   private MockProvider $mockProvider;
 
-  private Controller\EncryptionController $controller;
+  private Controller\ProjectParticipantFieldsController $controller;
 
   private array $postData = [];
 
@@ -77,15 +76,22 @@ class EncryptionControllerTest extends TestCase
       },
     );
 
-    $appContainer = $this->mockProvider->getAppContainer();
+    // For real tests we will need to mock some methods.
+    $fuzzyInputService = $this->createStub(FuzzyInputService::class);
+    $participantFieldsService = $this->createStub(ProjectParticipantFieldsService::class);
+    $phpMyEdit = $this->createStub(PHPMyEdit::class);
+    $entityManager = $this->createStub(EntityManager::class);
+    $renderer = $this->createStub(Renderer::class);
 
-    $this->controller = new Controller\EncryptionController(
+    $this->controller = new Controller\ProjectParticipantFieldsController(
       appName: $this->mockProvider->appName,
       request: $request,
-      appContainer: $appContainer,
-      keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
-      l: $this->mockProvider->getL10N(),
+      configService: $this->mockProvider->getConfigService(),
+      entityManager: $entityManager,
+      fuzzyInput: $fuzzyInputService,
+      participantFieldsService: $participantFieldsService,
+      pme: $phpMyEdit,
+      renderer: $renderer,
     );
   }
 

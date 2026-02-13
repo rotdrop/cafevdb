@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,6 +80,7 @@ class BlogController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/blog/editentry')]
   public function editEntry():Response
   {
     $author   = $this->request->getParam('author', $this->userId);
@@ -133,7 +134,6 @@ class BlogController extends Controller
       Constants::RENDER_AS_BLANK,
     );
     $html = $tmpl->render();
-
     return DTO\BlogResponse::fromArray([
       'content' => $html,
       'author' => $author,
@@ -155,6 +155,7 @@ class BlogController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/blog/action/{operation}')]
   public function action(string $operation):Response
   {
     $author    = $this->request->getParam('author', $this->userId);
