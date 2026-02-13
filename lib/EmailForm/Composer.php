@@ -176,6 +176,28 @@ Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 ';
+
+  const DEFAULT_LARGE_ATTACHMENT_TEMPLATE = '<!DOCTYPE html>
+<html lang="[LANGUAGE]">
+  <head>
+    <title>[SHARE_LINK]</title>
+    <meta http-equiv="refresh" content="[REDIRECT_SECONDS];URL=\'[SHARE_LINK]\'"/>
+  </head>
+  <body>
+    <div class="message">
+      You will be redirected to the download location in [REDIRECT_SECONDS] seconds. You may as well
+      click on the download-link below:
+    </div>
+    <blockquote class="link">
+      <a href="[SHARE_LINK]">[SHARE_LINK]</a>
+      <div class="link-info"><code>[FILENAME]</code> -- [FILE_SIZE], [MIME_TYPE]</div>
+    </blockquote>
+    <div class="expiration-notice">
+      Please note that the download link will expire on [EXPIRATION_DATE].
+    </div>
+  </body>
+</html>';
+
   /**
    * @var string
    * @todo Make this configurable
@@ -2555,35 +2577,20 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         sharePerms: \OCP\Constants::PERMISSION_READ,
         expirationDate: $expirationDate
       );
-      $downloadAttachment = $this->l->t(
-        '<!DOCTYPE html>
-<html lang="%1$s">
-  <head>
-    <title>%2$s</title>
-    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
-  </head>
-  <body>
-    <div class="message">
-      You will be redirected to the download location in %6$d seconds. You may as well
-      click on the download-link below:
-    </div>
-    <blockquote class="link">
-      <a href="%2$s">%2$s</a>
-      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
-    </blockquote>
-    <div class="expiration-notice">
-      Please note that the download link will expire on %7$s.
-    </div>
-  </body>
-</html>', [
-          $this->getLanguage(),
-          $shareLink,
-          $fileName,
-          Util::humanFileSize($downloadFile->getSize()),
-          $mimeType,
-          30,
-          $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-        ]);
+      $substitutions = [
+        EnumLargeAttachmentTemplateSubstitution::EXPIRATION_DATE->value => $this->dateTimeFormatter()->formatDate($expirationDate, 'long'),
+        EnumLargeAttachmentTemplateSubstitution::FILENAME->value => $fileName,
+        EnumLargeAttachmentTemplateSubstitution::FILE_SIZE->value => Util::humanFileSize($downloadFile->getSize()),
+        EnumLargeAttachmentTemplateSubstitution::LANGUAGE->value => $this->getLanguage(),
+        EnumLargeAttachmentTemplateSubstitution::MIME_TYPE->value => $mimeType,
+        EnumLargeAttachmentTemplateSubstitution::REDIRECT_SECONDS->value => 30,
+        EnumLargeAttachmentTemplateSubstitution::SHARE_LINK->value => $shareLink,
+      ];
+      $downloadAttachment = str_replace(
+        array_map(fn(string $var) => "[{$var}]", array_keys($substitutions)),
+        array_values($substitutions),
+        $this->l->t(self::DEFAULT_LARGE_ATTACHMENT_TEMPLATE),
+      );
       $data = $downloadAttachment;
       $fileName = $fileName . '.html';
       $transferEncoding = '8bit';
