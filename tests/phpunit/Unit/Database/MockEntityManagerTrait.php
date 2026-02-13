@@ -68,9 +68,22 @@ trait MockEntityManagerTrait
           ->disableOriginalConstructor()
             ->getMock();
           $this->entityRepositories[$className] = $repository;
+        } else {
+          return $repository;
         }
         $repository->method('getEntityManager')->willReturn($this->entityManager);
         $repository->expects($this->never())?->method('createQueryBuilder');
+        if (method_exists($className, 'getId')) {
+          if (!isset($this->entities[$className])) {
+            $this->entities[$className] = new ArrayCollection;
+          }
+          $repository->method('find')->willReturnCallback(
+            function(int|array $id) use ($className) {
+              $id = is_array($id) ? $id['id'] : $id;
+              return $this->entities[$className]->get($id);
+            }
+          );
+        }
         return $repository;
       },
     );
@@ -110,6 +123,7 @@ trait MockEntityManagerTrait
     $this->entityManager->method('contains')->willReturnCallback(
       fn(mixed $entity) => !!($this->entities[get_class($entity)] ?? null)?->contains($entity),
     );
+    $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->mockProvider->registerClassInstance(EntityManager::class, $this->entityManager, global: true);
 
     return $this->entityManager;
