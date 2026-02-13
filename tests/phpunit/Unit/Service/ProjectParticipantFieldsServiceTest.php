@@ -64,6 +64,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
@@ -129,6 +131,8 @@ class ProjectParticipantFieldsServiceTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testSetup')]
+  #[Attributes\Depends('testCreateField')]
+  #[Attributes\Depends('isSupportedType')]
   public function testUnapplyMigrations(): void
   {
     $this->unapplyMigrations();
