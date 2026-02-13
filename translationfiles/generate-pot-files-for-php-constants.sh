@@ -136,15 +136,33 @@ while read -r MATCH; do
     LINE=$(echo "$MATCH"|cut -d: -f 2)
     if [ -z "${SEEN[$ARRAY_KEY]}" ]; then
         SEEN[$ARRAY_KEY]=1
+        TR_VALUE="$PREFIX$EXPRESSION = '$VALUE';"
+        TR_VALUE=$(echo "$TR_VALUE"|sed -Ee 's/^/#. TRANSLATORS: /')
+        if [ $(echo "$VALUE"|wc -l) -gt 1 ]; then
+            TR_VALUE="#. TRANSLATORS:
+$TR_VALUE
+#. TRANSLATORS:"
+        fi
         cat <<EOF
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: $PREFIX$EXPRESSION = '$VALUE';
+$TR_VALUE
 EOF
+    fi
+    # escape double quotes
+    VALUE=$(echo "$VALUE"|sed 's/"/\\"/g')
+    # quote each line
+    VALUE=$(echo "$VALUE"|sed -Ee 's/(^|$)/"/g')
+    # value may be multiline ...
+    MSG_ID="$VALUE"
+    if [ $(echo "$VALUE"|wc -l) -gt 1 ]; then
+        MSG_ID=$(echo "$MSG_ID"|sed -Ee 's/"$/\\n"/')
+        MSG_ID="\"\"
+$MSG_ID"
     fi
     cat <<EOF
 #: $SHORT_FILE:$LINE
 #, php-format
-msgid "$VALUE"
+msgid $MSG_ID
 msgstr ""
 
 EOF
