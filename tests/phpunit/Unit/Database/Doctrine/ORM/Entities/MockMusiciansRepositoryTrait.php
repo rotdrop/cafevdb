@@ -30,15 +30,25 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository as EntityRepository;
+use OCA\CAFEVDB\Tests\Unit\Database;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /** Provide a mock for the instruments repository. */
 trait MockMusiciansRepositoryTrait
 {
+  use Database\MockEntityManagerTrait;
   use EntityGeneratorTrait;
 
   /** @return EntityRepository */
   public function getMusiciansRepositoryMock(): EntityRepository
   {
+    if (!($this->musician ?? null)) {
+      $this->generateProjectParticipant(persist: false);
+    }
+
+    $this->entities[Entities\Project::class] = new ArrayCollection;
+    $this->entities[Entities\Project::class]->set($this->project->getId(), $this->project);
+
     $repository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -132,7 +142,9 @@ trait MockMusiciansRepositoryTrait
       }
       return null;
     });
+    $repository->method('getEntityManager')->willReturn($this->entityManager);
     $repository->expects($this->never())->method('createQueryBuilder');
+    $this->entityRepositories[Entities\Musician::class] = $repository;
 
     return $repository;
   }
