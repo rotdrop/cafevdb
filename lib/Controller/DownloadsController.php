@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,6 +86,11 @@ class DownloadsController extends Controller
    * @return mixed \OCP\Response Something derived from \OCP\Response.
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/download/{section}/{object}',
+    requirements: [ 'section' => '^(?!pdf).*$' ], // why?
+  )]
   public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     switch ($section) {
@@ -104,7 +109,7 @@ class DownloadsController extends Controller
         } else {
           $fileId = $object;
           /** @var Entities\File $file */
-          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($fileId);
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find((int)$fileId);
           if (empty($file)) {
             return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
           }
@@ -127,8 +132,9 @@ class DownloadsController extends Controller
         }
         $meta = $fileCache->get($cacheKey . '-meta');
         if (!empty($meta)) {
-          $fileName = $meta['name']??null;
-          $mimeType = $meta['mimeType']??null;
+          $meta = json_decode($meta, associative: true);
+          $fileName = $meta['name'] ?? null;
+          $mimeType = $meta['mimeType'] ?? null;
         }
         if (empty($mimeType)) {
           /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
@@ -165,6 +171,11 @@ class DownloadsController extends Controller
    * @return mixed \OCP\Response Something derived from \OCP\Response.
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/download/{section}/{object}',
+    requirements: [ 'section' => '^(?!pdf).*$' ], // why?
+  )]
   public function get(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     return $this->fetch($section, $object, $items, $fileName);

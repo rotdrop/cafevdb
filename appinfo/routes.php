@@ -247,22 +247,22 @@ $routes = [
     //   'defaults' => [ 'storage' => 'cloud' ],
     // ],
     // various download stuff
-    [
-      'name' => 'downloads#fetch',
-      'url' => '/download/{section}/{object}',
-      'verb' => 'POST',
-      'requirements' => [
-        'section' => '^(?!pdf).*$',
-      ],
-    ],
-    [
-      'name' => 'downloads#get',
-      'url' => '/download/{section}/{object}',
-      'verb' => 'GET',
-      'requirements' => [
-        'section' => '^(?!pdf).*$',
-      ],
-    ],
+    // [
+    //   'name' => 'downloads#fetch',
+    //   'url' => '/download/{section}/{object}',
+    //   'verb' => 'POST',
+    //   'requirements' => [
+    //     'section' => '^(?!pdf).*$',
+    //   ],
+    // ],
+    // [
+    //   'name' => 'downloads#get',
+    //   'url' => '/download/{section}/{object}',
+    //   'verb' => 'GET',
+    //   'requirements' => [
+    //     'section' => '^(?!pdf).*$',
+    //   ],
+    // ],
     // /**
     //  * Project data validation etc.
     //  */
