@@ -57,7 +57,6 @@
     <command>OCA\CAFEVDB\Command\FilesScan</command>
     <command>OCA\CAFEVDB\Command\GnuCashSetup</command>
     <command>OCA\CAFEVDB\Command\HelloWorld</command>
-    <command>OCA\CAFEVDB\Command\Migrations</command>
     <command>OCA\CAFEVDB\Command\ParticipantFolders</command>
     <command>OCA\CAFEVDB\Command\ProjectEvents</command>
     <command>OCA\CAFEVDB\Command\ProjectFolders</command>

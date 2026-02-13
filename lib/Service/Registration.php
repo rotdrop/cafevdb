@@ -84,12 +84,7 @@ class Registration
       MigrationsServiceInterface::class,
       function(ContainerInterface $container) {
         /** @var DoctrineMigrationsService $doctrineMigrationsService */
-        $doctrineMigrationsService = $container->get(DoctrineMigrationsService::class);
-        if (count($doctrineMigrationsService->getApplied()) > 0) {
-          return $doctrineMigrationsService;
-        } else {
-          return $container->get(LegacyMigrationsService::class);
-        }
+        return $container->get(DoctrineMigrationsService::class);
       }
     );
 

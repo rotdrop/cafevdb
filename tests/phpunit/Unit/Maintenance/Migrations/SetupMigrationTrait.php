@@ -42,7 +42,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
-use OCA\CAFEVDB\Service\LegacyMigrationsService;
 use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
