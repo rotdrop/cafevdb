@@ -50,8 +50,15 @@ import {
 } from './lazy-decryption.ts';
 import debounce from './debounce.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
-import type { DuplicateMusiciansResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type {
+  AddMusiciansResponse,
+  DuplicateMusiciansResponse,
+  EmailValidationResponse,
+  PhoneNumberValidationResponse,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { disabledCssClass } from 'variables.scss';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import { ACCEPT_GENDER_DETECTION } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -88,7 +95,7 @@ const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.Plain
         // ProjectParticipants.loadProjectParticipants(form);
       });
     })
-    .done(async (data) => {
+    .done(async (data: ResponseData<AddMusiciansResponse>) => {
       if (!Ajax.validateResponse(data, ['musicians'])) {
         // Load the underlying base-view in any case in order to go "back" ...
         ProjectParticipants.loadProjectParticipants($form);
@@ -115,7 +122,7 @@ const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.Plain
         // load the instrumentation table, initially restricted to the new musicians
         await ProjectParticipants.loadProjectParticipants($form, data.musicians);
       }
-      Notification.messages(data.message);
+      Notification.messages(data.messages);
     });
 };
 
@@ -152,9 +159,8 @@ const contactValidation = function(container?: string|JQuery) {
     return;
   }
 
-  const acceptGenderClass = 'accept-gender-detection';
   $form
-    .find('button.' + acceptGenderClass + ', .button.' + acceptGenderClass)
+    .find(`button.${ACCEPT_GENDER_DETECTION}, .button.${ACCEPT_GENDER_DETECTION}`)
     .off('click')
     .on('click', function() {
       const $this = $(this);
@@ -196,10 +202,10 @@ const contactValidation = function(container?: string|JQuery) {
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
+        .done(function(data: ResponseData<PhoneNumberValidationResponse>) {
           if (!Ajax.validateResponse(
             data, [
-              'message',
+              'messages',
               'mobilePhone',
               'mobileMeta',
               'fixedLinePhone',
@@ -221,12 +227,9 @@ const contactValidation = function(container?: string|JQuery) {
             fixedLine.attr('title', data.fixedLineMeta);
             fixedLine.cafevTooltip();
           }
-          const message = Array.isArray(data.message)
-            ? data.message.join('<br>')
-            : data.message;
-          if (message !== '') {
+          if (data.messages.length > 0) {
             Dialogs.alert(
-              message,
+              data.messages.join('<br>'),
               t(appName, 'Phone Number Validation'),
               function() {
                 phones.prop('disabled', false);
@@ -278,18 +281,15 @@ const contactValidation = function(container?: string|JQuery) {
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['message', 'email'], cleanup)) {
+        .done(function(data: ResponseData<EmailValidationResponse>) {
+          if (!Ajax.validateResponse(data, ['messages', 'email'], cleanup)) {
             return;
           }
           // inject the sanitized value into their proper input fields
           $emailInput.val(data.email);
-          const message = Array.isArray(data.message)
-            ? data.message.join('<br>')
-            : data.message;
-          if (message) {
+          if (data.messages.length > 0) {
             Dialogs.alert(
-              message,
+              data.messages.join('<br>'),
               t(appName, 'Email Validation'),
               cleanup, true, true);
             Dialogs.debugPopup(data);
@@ -660,7 +660,7 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, cleanup);
     })
-    .done(function(data: DuplicateMusiciansResponse) {
+    .done(function(data: ResponseData<DuplicateMusiciansResponse>) {
       if (!Ajax.validateResponse(data, ['messages'], cleanup)) {
         return;
       }
@@ -818,7 +818,7 @@ const ready = function(container?: string|JQuery) {
     PHPMyEdit.tableDialogLock($container, true);
     PHPMyEdit.tableDialogLoadIndicator($container, true);
 
-    const fail = (data: Ajax.AjaxFailData & { oldInstruments?: string[] }) => {
+    const fail = (data: Ajax.AjaxFailData<{ oldInstruments: string[] }>) => {
       // failure case
 
       const oldInstruments = data.oldInstruments ?? $self.data(selectedOptionsKey) as string[];

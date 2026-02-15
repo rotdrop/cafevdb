@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use Throwable;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -51,9 +52,6 @@ class MusicianValidationController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var MusiciansRepository */
-  protected $musiciansRepository;
-
   /** @var string */
   protected $dataPrefix = '';
 
@@ -71,8 +69,7 @@ class MusicianValidationController extends Controller
     parent::__construct($appName, $request);
 
     $this->l = $this->l10N();
-    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->dataPrefix = $this->request[PersistentCGIKeys::DATA_PREFIX]['musicians'] ?? '';
+    $this->dataPrefix = $this->request->getParam(PersistentCGIKeys::DATA_PREFIX)['musicians'] ?? '';
   }
 
   /**
@@ -95,7 +92,8 @@ class MusicianValidationController extends Controller
    *
    * @param null|string $subTopic Optional subtopic.
    *
-   * @param string $failure
+   * @param string $failure If literal 'error' return
+   * Http::STATUS_BAD_RESPONSE on validation error, otherwise Http::STATUS_OK.
    *
    * @return DataResponse
    */
@@ -186,43 +184,43 @@ class MusicianValidationController extends Controller
           );
         }
 
-        return self::dataResponse([
-          'message' => $message,
-          'mobilePhone' => $mobile['number'],
-          'mobileMeta' => nl2br($mobile['meta']),
-          'fixedLinePhone' => $fixed['number'],
-          'fixedLineMeta' => nl2br($fixed['meta']),
-        ]);
+        return new DTO\PhoneNumberValidationResponse(
+          messages: $message,
+          mobilePhone: $mobile['number'],
+          mobileMeta: nl2br($mobile['meta']),
+          fixedLinePhone: $fixed['number'],
+          fixedLineMeta: nl2br($fixed['meta']),
+        )->response();
 
-        break;
       case 'email':
         $email = $this->requestParameter('email');
 
         if (empty($email)) {
-          $returnFailures([ 'message' => $this->t->t('Submitted email is empty'), 'email' => '' ]);
+          return new DTO\EmailValidationResponse(
+            messages: [ $this->t->t('Submitted email is empty') ],
+            email: '',
+          )->response($failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK);
         }
 
         try {
           $emailArray = $this->emailAddressService->parseAddressString($email);
         } catch (Exceptions\EnduserNotificationException $e) {
-          $messages = $e->getMessage();
+          $message = $e->getMessage();
         }
 
-        if (empty($messages)) {
+        if (empty($message)) {
           $email = implode(', ', array_keys($emailArray));
-        }
-
-        $result = [
-          'message' => $messages ?? null,
-          'email' => $email,
-          'details' => $emailArray,
-        ];
-
-        if (empty($messages)) {
-          return self::dataResponse($result);
+          $messages = [];
         } else {
-          return $returnFailures($result);
+          $messages = [ $message ];
+          $statusCode = $failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK;
         }
+
+        return new DTO\EmailValidationResponse(
+          messages: $messages,
+          email: $email,
+          details: $emailArray ?? [],
+        )->response($statusCode);
 
       case 'autocomplete':
         $country = $this->requestParameter('country');
@@ -363,8 +361,8 @@ class MusicianValidationController extends Controller
 
         $this->logDebug('CRITERIA ' . print_r($criteria, true));
 
-        $musicians = $this->musiciansRepository->findBy($criteria, [
-          'surName' => 'ASC', 'firstName' => 'ASC' ]);
+        $musicians = $this->getDatabaseRepository(Entities\Musician::class)
+          ->findBy($criteria, [ 'surName' => 'ASC', 'firstName' => 'ASC' ]);
 
         $duplicateNames = '';
         $duplicates = [];

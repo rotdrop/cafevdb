@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025-2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,27 +24,17 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse\DuplicateMusician;
-/**
- * Duplicate musicians response DTO.
- */
-class DuplicateMusiciansResponse extends MessagesResponse
+/** Email validation response asserted by MusicianValidationController. */
+class EmailValidationResponse extends MessagesResponse
 {
-  /** @var array<int, DuplicateMusician> $duplicates */
-  public readonly array $duplicates;
-
   /** {@inheritdoc} */
   public function __construct(
     array $messages,
-    array $duplicates,
+    public readonly string $email,
+    /** @var array<string, string> */
+    public readonly array $details = [],
   ) {
     parent::__construct($messages);
-    foreach ($duplicates as $key => $duplicate) {
-      if (is_array($duplicate)) {
-        $duplicates[$key] = DuplicateMusician::fromArray($duplicate);
-      }
-    }
-    $this->duplicates = $duplicates;
   }
 
   /**
@@ -63,8 +53,9 @@ class DuplicateMusiciansResponse extends MessagesResponse
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
 
     return new self(
-      messages: $messages ?? [],
-      duplicates: $duplicates,
+      messages: $messages,
+      email: $email,
+      details: $details ?? [],
     );
   }
 }

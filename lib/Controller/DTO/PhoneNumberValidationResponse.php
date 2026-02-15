@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,28 +24,18 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
-
-/**
- * Duplicate musician DTO.
- */
-class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+/** Phone number validation response MusicianValidationResponse. */
+class PhoneNumberValidationResponse extends MessagesResponse
 {
-  #[TSAttributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
-  public readonly EntityArrayAdapter $musician;
-
   /** {@inheritdoc} */
   public function __construct(
-    public readonly float $duplicatesProbability,
-    /** @var array<string> $reasons */
-    public readonly array $reasons,
-    Entities\Musician $musician,
+    array $messages,
+    public readonly string $mobilePhone,
+    public readonly string $mobileMeta,
+    public readonly string $fixedLinePhone,
+    public readonly string $fixedLineMeta,
   ) {
-    $this->musician = EntityArrayAdapter::create($musician, depth: 0);
+    parent::__construct($messages);
   }
 
   /**
@@ -62,10 +52,13 @@ class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+
     return new self(
-      duplicatesProbability: $duplicatesProbability,
-      reasons: $reasons,
-      musician: $musician,
+      messages: $messages,
+      mobilePhone: $mobilePhone,
+      mobileMeta: $mobileMeta,
+      fixedLinePhone: $fixedLinePhone,
+      fixedLineMeta: $fixedLineMeta,
     );
   }
 }

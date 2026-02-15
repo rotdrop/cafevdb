@@ -22,29 +22,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
+namespace OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse;
 
-use OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse\DuplicateMusician;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+
 /**
- * Duplicate musicians response DTO.
+ * Duplicate musician DTO.
  */
-class DuplicateMusiciansResponse extends MessagesResponse
+#[TSAttributes\InlineTypeScriptType]
+class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
 {
-  /** @var array<int, DuplicateMusician> $duplicates */
-  public readonly array $duplicates;
+  #[TSAttributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
+  public readonly EntityArrayAdapter $musician;
 
   /** {@inheritdoc} */
   public function __construct(
-    array $messages,
-    array $duplicates,
+    public readonly float $duplicatesProbability,
+    /** @var array<string> $reasons */
+    public readonly array $reasons,
+    Entities\Musician $musician,
   ) {
-    parent::__construct($messages);
-    foreach ($duplicates as $key => $duplicate) {
-      if (is_array($duplicate)) {
-        $duplicates[$key] = DuplicateMusician::fromArray($duplicate);
-      }
-    }
-    $this->duplicates = $duplicates;
+    $this->musician = EntityArrayAdapter::create($musician, depth: 0);
   }
 
   /**
@@ -61,10 +63,10 @@ class DuplicateMusiciansResponse extends MessagesResponse
   {
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
-
     return new self(
-      messages: $messages ?? [],
-      duplicates: $duplicates,
+      duplicatesProbability: $duplicatesProbability,
+      reasons: $reasons,
+      musician: $musician,
     );
   }
 }
