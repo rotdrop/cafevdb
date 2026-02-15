@@ -34,7 +34,6 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -42,6 +41,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
 
 /**
  * Musician database entity, representing actually just any natural person,
