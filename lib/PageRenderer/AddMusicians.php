@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCP\IRequest;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -43,12 +44,13 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Musicians table. */
+#[TSAttributes\TypeScript]
 class AddMusicians extends Musicians
 {
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  const TEMPLATE = 'add-musicians';
+  public const TEMPLATE = 'add-musicians';
 
   protected ?ParticipationContext $participationContext = null;
 
@@ -132,7 +134,7 @@ class AddMusicians extends Musicians
           'column' => 'instrument_id',
           'flags' => self::JOIN_READONLY,
         ],
-        DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . self::VALUES_TABLE_SEP . 'project' => [
+        DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . self::VALUES_TABLE_SEP . 'project' => [
           'entity' => null,
           'identifier' => [
             'instrument_id' => [
@@ -149,7 +151,7 @@ class AddMusicians extends Musicians
           'sql' => 'SELECT
   __t1.instrument_id AS instrument_id,
   GROUP_CONCAT(DISTINCT __t2.family) AS family
-FROM ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
+FROM ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t2
 ON __t1.instrument_family_id = __t2.id
   AND __t2.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"

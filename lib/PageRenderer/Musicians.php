@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
@@ -61,9 +63,12 @@ abstract class Musicians extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
-  const CSS_CLASS = 'musicians';
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::MUSICIANS_TABLE;
-  const ALL_EMAILS_TABLE = DatabaseTables::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
+
+  protected const CSS_CLASS = 'musicians';
+
+  protected const ALL_EMAILS_TABLE = DatabaseTables::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
 
   /**
    * Join table structure. All update are handled in
@@ -332,7 +337,7 @@ abstract class Musicians extends PMETableViewBase
           $joinInfo['sql'] = $select
             . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
             . ' FROM ' . $table . ' t
-INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id

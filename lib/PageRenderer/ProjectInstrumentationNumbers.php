@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -35,13 +37,16 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class ProjectInstrumentationNumbers extends PMETableViewBase
 {
   use FieldTraits\InstrumentsTrait;
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  const TEMPLATE = 'project-instrumentation-numbers';
+  public const TEMPLATE = 'project-instrumentation-numbers';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
   private const EXTRA_VOICES = 4;

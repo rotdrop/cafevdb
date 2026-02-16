@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -49,6 +51,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * controls to generate import data for bank bulk transactions which then can
  * be submitted to the bank.
  */
+#[TSAttributes\TypeScript]
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;
@@ -61,13 +64,14 @@ class SepaBankAccounts extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const AMOUNT_TAB_ID = 'amount';
+  protected const AMOUNT_TAB_ID = 'amount';
 
-  const TEMPLATE = 'sepa-bank-accounts';
+  public const TEMPLATE = 'sepa-bank-accounts';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE;
-  const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
 
-  protected $cssClass = 'sepa-bank-accounts';
+  protected $cssClass = self::TEMPLATE;
 
   protected $joinStructure = [
     self::TABLE => [

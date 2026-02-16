@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCP\IRequest;
 
@@ -40,6 +41,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for DonationReceipt entities. */
+#[TSAttributes\TypeScript]
 class DonationReceipts extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
@@ -51,6 +53,8 @@ class DonationReceipts extends PMETableViewBase
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   public const TEMPLATE = 'donation-receipts';
+
+  #[TSAttributes\Hidden]
   public const TABLE = 'DonationReceipts';
 
   protected const FORM_DATA = [

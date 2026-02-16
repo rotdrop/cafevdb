@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
@@ -54,6 +56,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
@@ -74,7 +77,9 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-participants';
+  public const TEMPLATE = 'project-participants';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE;
 
   protected static ParticipationContext $participationContext;
@@ -429,7 +434,7 @@ class ProjectParticipants extends PMETableViewBase
           list($select, $join) = explode('FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
             . 'FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
@@ -442,7 +447,7 @@ GROUP BY t.id';
           list($select, $join) = explode('FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
             . 'FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id

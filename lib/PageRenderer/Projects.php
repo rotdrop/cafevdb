@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 use RuntimeException;
 use DateTimeImmutable;
@@ -48,6 +50,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Projects table. */
+#[TSAttributes\TypeScript]
 class Projects extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
@@ -56,13 +59,16 @@ class Projects extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'projects';
-  public const TABLE = DatabaseTables::PROJECTS_TABLE;
-  const ENTITY = Entities\Project::class;
-  const NAME_LENGTH_MAX = 20;
+  public const TEMPLATE = 'projects';
 
-  const NUM_VOICES_MIN = 2;
-  const NUM_VOICES_EXTRA = 1;
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::PROJECTS_TABLE;
+
+  protected const ENTITY = Entities\Project::class;
+  protected const NAME_LENGTH_MAX = 20;
+
+  protected const NUM_VOICES_MIN = 2;
+  protected const NUM_VOICES_EXTRA = 1;
 
   private const MAX_POSTER_COLUMNS = 4;
 

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -38,6 +40,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** TBD. */
+#[TSAttributes\TypeScript]
 class SepaBulkTransactions extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
@@ -48,8 +51,11 @@ class SepaBulkTransactions extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
-  const TEMPLATE = 'sepa-bulk-transactions';
+  public const TEMPLATE = 'sepa-bulk-transactions';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::SEPA_BULK_TRANSACTIONS_TABLE;
+
   protected const DATA_TABLE = DatabaseTables::SEPA_BULK_TRANSACTION_DATA_TABLE;
 
   const ROW_TAG_PREFIX = '0;';

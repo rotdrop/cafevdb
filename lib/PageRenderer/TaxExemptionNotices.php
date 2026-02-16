@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateTime;
 
 use OCP\IRequest;
@@ -41,6 +43,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator TaxExemptionNotice. */
+#[TSAttributes\TypeScript]
 class TaxExemptionNotices extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
@@ -48,7 +51,9 @@ class TaxExemptionNotices extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
-  const TEMPLATE = 'tax-exemption-notices';
+  public const TEMPLATE = 'tax-exemption-notices';
+
+  #[TSAttributes\Hidden]
   public const TABLE = 'TaxExemptionNotices';
 
   protected $joinStructure = [

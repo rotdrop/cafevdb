@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -38,12 +40,15 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 /** Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class TaxationStatutorySources extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  const TEMPLATE = 'taxation-statutory-sources';
+  public const TEMPLATE = 'taxation-statutory-sources';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE;
 
 

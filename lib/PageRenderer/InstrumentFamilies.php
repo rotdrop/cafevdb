@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -35,13 +37,18 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class InstrumentFamilies extends PMETableViewBase
 {
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  const TEMPLATE = 'instrument-families';
+  public const TEMPLATE = 'instrument-families';
+
+  #[TSAttributes\Hidden]
   public const TABLE = 'InstrumentFamilies';
+
+  protected const INSTRUMENTS_JOIN_TABLE = DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -59,7 +66,7 @@ class InstrumentFamilies extends PMETableViewBase
       ],
       'column' => 'content',
     ],
-    DatabaseTables::INSTRUMENTS_JOIN_TABLE => [
+    self::INSTRUMENTS_JOIN_TABLE => [
       'entity' => null,
       'identifier' => [
         'instrument_family_id' => 'id',
@@ -72,7 +79,7 @@ class InstrumentFamilies extends PMETableViewBase
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => [
-          'table' => DatabaseTables::INSTRUMENTS_JOIN_TABLE,
+          'table' => self::INSTRUMENTS_JOIN_TABLE,
           'column' => 'instrument_id',
         ],
       ],

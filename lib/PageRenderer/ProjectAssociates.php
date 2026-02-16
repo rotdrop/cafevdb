@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use chillerlan\QRCode\QRCode;
 
 use function OCA\CAFEVDB\Common\Functions\strcat as cat;
@@ -43,6 +45,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
  * to the ProjectParticipants table as well as the ProjectParticipants view
  * does, but comes with a reduced set of fields.
  */
+#[TSAttributes\TypeScript]
 class ProjectAssociates extends ProjectParticipants
 {
   use FieldTraits\AllProjectsTrait;
@@ -63,7 +66,9 @@ class ProjectAssociates extends ProjectParticipants
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-associates';
+  public const TEMPLATE = 'project-associates';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE;
 
   private const EXTRA_VOICES = 2;
@@ -361,7 +366,7 @@ class ProjectAssociates extends ProjectParticipants
           $joinInfo['sql'] = $select
             . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
             . ' FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
@@ -375,7 +380,7 @@ GROUP BY t.id';
           $joinInfo['sql'] = $select
             . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
             . ' FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
 INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id

@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use \BadFunctionCallException;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use BadFunctionCallException;
 
 use OCP\IRequest;
 
@@ -52,6 +54,7 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class Invoices extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
@@ -65,8 +68,11 @@ class Invoices extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
-  const TEMPLATE = 'invoices';
+  public const TEMPLATE = 'invoices';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::INVOICES_TABLE;
+
   protected const SPLIT_DATABASE_STORAGE_ENTRIES_TABLE =
     DatabaseTables::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split';
   protected const COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE =

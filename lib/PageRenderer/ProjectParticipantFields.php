@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use RuntimeException;
 
 use OCP\IRequest;
@@ -52,6 +54,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class ProjectParticipantFields extends PMETableViewBase
 {
   use FieldTraits\ProjectEntityTrait;
@@ -60,8 +63,11 @@ class ProjectParticipantFields extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-participant-fields';
+  public const TEMPLATE = 'project-participant-fields';
+
+  #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE;
+
   protected const OPTIONS_TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
   protected const DATA_TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 

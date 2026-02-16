@@ -40,9 +40,8 @@ class DatabaseTables
   const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
   const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
   const FILES_TABLE = 'Files';
-  const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
   const INSTRUMENTS_TABLE = 'Instruments';
-  const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
+  const INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
   const INSURANCE_BROKERS_TABLE = 'InsuranceBrokers';
