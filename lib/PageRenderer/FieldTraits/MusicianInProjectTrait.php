@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024 Claus-Justus Heine
+ * @copyright 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 
 /**
@@ -48,7 +49,7 @@ trait MusicianInProjectTrait
   {
     return "$tableAlias.$musicianId IN (
   SELECT pp.musician_id
-    FROM " . PMETableViewBase::PROJECT_PARTICIPANTS_TABLE ."  pp
+    FROM " . DatabaseTables::PROJECT_PARTICIPANTS_TABLE ."  pp
     WHERE pp.project_id = $projectIdSql
 )";
   }

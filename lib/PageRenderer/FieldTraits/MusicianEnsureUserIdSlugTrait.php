@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\SluggableListener;
 
 /**
@@ -58,8 +59,8 @@ trait MusicianEnsureUserIdSlugTrait
 
     $this->debugPrintValues($oldValues, $changed, $newValues, [ 'tag' ], 'before');
 
-    if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
-      $tag = self::joinTableFieldName(static::MUSICIANS_TABLE, $tag);
+    if (!empty($pme->fdn[self::joinTableMasterFieldName(DatabaseTables::MUSICIANS_TABLE)])) {
+      $tag = self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
       // force regeneration by setting the slug to a "magic" value.

@@ -52,12 +52,11 @@ class DonationReceipts extends PMETableViewBase
 
   public const TEMPLATE = 'donation-receipts';
   public const TABLE = 'DonationReceipts';
-  public const AMOUNT_CHECK_FAILURE = 'amount-check-failure';
 
-  public const FORM_DATA = [
+  protected const FORM_DATA = [
     PersistentCGIKeys::TEMPLATE => self::TEMPLATE,
     PersistentCGIKeys::TABLE => self::TABLE,
-    'self-test-failure' => self::AMOUNT_CHECK_FAILURE,
+    'self-test-failure' => CssClasses::AMOUNT_CHECK_FAILURE,
   ];
 
   protected $joinStructure = [
@@ -65,7 +64,7 @@ class DonationReceipts extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\DonationReceipt::class,
     ],
-    self::COMPOSITE_PAYMENTS_TABLE => [
+    DatabaseTables::COMPOSITE_PAYMENTS_TABLE => [
       'entity' => Entities\CompositePayment::class,
       'identifier' => [
         'id' => 'donation_id',
@@ -73,19 +72,19 @@ class DonationReceipts extends PMETableViewBase
       'column' => 'subject',
       'flags' => self::JOIN_READONLY,
     ],
-    self::PROJECT_PAYMENTS_TABLE => [
+    DatabaseTables::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'id' => false,
         'composite_payment_id' => [
-          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'table' => DatabaseTables::COMPOSITE_PAYMENTS_TABLE,
           'column' => 'id',
         ],
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::TAX_EXEMPTION_NOTICES_TABLE => [
+    DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE => [
       'entity' => Entities\TaxExemptionNotice::class,
       'identifier' => [
         'id' => 'tax_exemption_notice_id',
@@ -93,7 +92,7 @@ class DonationReceipts extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::TAX_EXEMPTION_ITEMS_TABLE => [
+    DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE => [
       'entity' => null,
       'identifier' => [
         'tax_exemption_notice_id' => 'tax_exemption_notice_id',
@@ -102,45 +101,45 @@ class DonationReceipts extends PMETableViewBase
       'column' => 'tax_exemption_notice_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::TAXATION_STATUTORY_SOURCES_TABLE => [
-      'table' => self::TAXATION_STATUTORY_SOURCES_TABLE,
+    DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'table' => DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE,
       'entity' => Entities\TaxationStatutorySource::class,
       'identifier' => [
         'id' => [
-          'table' => self::TAX_EXEMPTION_ITEMS_TABLE,
+          'table' => DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE,
           'column' => 'taxation_statutory_source_id',
         ],
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [
         'id' => [
-          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'table' => DatabaseTables::COMPOSITE_PAYMENTS_TABLE,
           'column' => 'project_id',
         ],
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::MUSICIANS_TABLE => [
+    DatabaseTables::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'identifier' => [
         'id' => [
-          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'table' => DatabaseTables::COMPOSITE_PAYMENTS_TABLE,
           'column' => 'musician_id',
         ],
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::PROJECT_PARTICIPANTS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
         'musician_id' => [
-          'table' => self::MUSICIANS_TABLE,
+          'table' => DatabaseTables::MUSICIANS_TABLE,
           'column' => 'id',
         ],
         'project_id' => false,
@@ -214,7 +213,7 @@ class DonationReceipts extends PMETableViewBase
         self::CSS_TAG_SHOW_HIDE_DISABLED,
         self::CSS_TAG_DIRECT_CHANGE,
       ];
-      if ($row !== null && !($row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'amount_check')] ?? true)) {
+      if ($row !== null && !($row[$this->joinQueryField(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_check')] ?? true)) {
         $classes[] = self::AMOUNT_CHECK_FAILURE;
       }
       return $classes;
@@ -236,7 +235,7 @@ class DonationReceipts extends PMETableViewBase
      * @return array Array of css classes.
      */
     $opts['css']['row'] = function(string $name, null $position, string $divider, array $row, PHPMyEdit $pme):array {
-      if ($row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'amount_check')] ?? true) {
+      if ($row[$this->joinQueryField(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_check')] ?? true) {
         return [];
       }
       return [
@@ -267,8 +266,8 @@ class DonationReceipts extends PMETableViewBase
     // Sorting field(s)
     $opts['sort_field'] = [
       'id',
-      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'name'),
     ];
 
     // Options you wish to give the users
@@ -341,7 +340,7 @@ class DonationReceipts extends PMETableViewBase
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'id',
       [
         'name' => $this->l->t('Musician'),
         'tab'  => [ 'id' => 'tab-all' ],
@@ -362,23 +361,23 @@ class DonationReceipts extends PMETableViewBase
                         ? null
                         : static::musicianInProjectSql($this->projectId)),
           // 'having' => [
-          //   'SUM(' . $joinTables[self::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
+          //   'SUM(' . $joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
           // ],
           'data' => [
             'musician-id' => '$table.id',
-            'projects' => 'JSON_ARRAYAGG(DISTINCT ' . $joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)',
+            'projects' => 'JSON_ARRAYAGG(DISTINCT ' . $joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE] . '.project_id)',
           ],
         ],
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'user_id_slug', [
         'name' => $this->l->t('User Id'),
         'input' => 'RH',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'uuid', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'uuid', [
         'name' => $this->l->t('User Id'),
         'input' => 'RH',
       ]);
@@ -408,7 +407,7 @@ class DonationReceipts extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'id',
       [
         'name'         => $this->l->t('Payment Id'),
         'name|ACFLP'   => $this->l->t('Payment'),
@@ -424,22 +423,22 @@ class DonationReceipts extends PMETableViewBase
         'values|ACP' => [
           'description' => [
             'columns' => ($projectMode
-                          ? [ static::musicianPublicNameSql($joinTables[self::MUSICIANS_TABLE]),
+                          ? [ static::musicianPublicNameSql($joinTables[DatabaseTables::MUSICIANS_TABLE]),
                               'id',
                               'subject', ]
-                          : [ static::musicianPublicNameSql($joinTables[self::MUSICIANS_TABLE]),
+                          : [ static::musicianPublicNameSql($joinTables[DatabaseTables::MUSICIANS_TABLE]),
                               'id',
                               'subject',
-                              $joinTables[self::PROJECTS_TABLE] . '.name',
+                              $joinTables[DatabaseTables::PROJECTS_TABLE] . '.name',
                           ]),
             'divs' => ' - ',
             'ifnull' => false,
             'cast' => false,
           ],
-          'groups' => ($projectMode ? null : $joinTables[self::PROJECTS_TABLE] . '.name'),
-          'orderby' => ($joinTables[self::PROJECTS_TABLE] . '.year DESC, '
-                        . $joinTables[self::PROJECTS_TABLE] . '.name ASC, '
-                        . static::musicianPublicNameSql($joinTables[self::MUSICIANS_TABLE]) . ' ASC'
+          'groups' => ($projectMode ? null : $joinTables[DatabaseTables::PROJECTS_TABLE] . '.name'),
+          'orderby' => ($joinTables[DatabaseTables::PROJECTS_TABLE] . '.year DESC, '
+                        . $joinTables[DatabaseTables::PROJECTS_TABLE] . '.name ASC, '
+                        . static::musicianPublicNameSql($joinTables[DatabaseTables::MUSICIANS_TABLE]) . ' ASC'
           ),
           'filters' => [
             'AND' => [
@@ -447,23 +446,23 @@ class DonationReceipts extends PMETableViewBase
             ],
           ],
           // 'having' => [
-          //   'SUM(' . $joinTables[self::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
+          //   'SUM(' . $joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
           // ],
           'data' => [
             'payment-id' => '$table.id',
             'subject' => '$table.subject',
-            'project-id' => $joinTables[self::PROJECTS_TABLE] . '.id',
-            'musician-id' => $joinTables[self::MUSICIANS_TABLE] . '.id',
-            'amount' => $this->paymentAmountSql($joinTables[self::PROJECT_PAYMENTS_TABLE]),
-            'amount-waived' => $this->paymentAmountWaivedSql($joinTables[self::PROJECT_PAYMENTS_TABLE]),
-            'status' => $this->paymentStatusSql($joinTables[self::PROJECT_PAYMENTS_TABLE]),
+            'project-id' => $joinTables[DatabaseTables::PROJECTS_TABLE] . '.id',
+            'musician-id' => $joinTables[DatabaseTables::MUSICIANS_TABLE] . '.id',
+            'amount' => $this->paymentAmountSql($joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE]),
+            'amount-waived' => $this->paymentAmountWaivedSql($joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE]),
+            'status' => $this->paymentStatusSql($joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE]),
           ],
         ],
         'display|ACP' => $displayControls('lock-unlock-composite-payment-id'),
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'subject',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'subject',
       [
         'tab' => [ 'id' => 'payment', ],
         'name' => $this->l->t('Subject'),
@@ -484,7 +483,7 @@ class DonationReceipts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
       Util::arrayMergeRecursive(
         $this->defaultFDD['date'],
         [
@@ -497,7 +496,7 @@ class DonationReceipts extends PMETableViewBase
     );
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
+      $opts['fdd'], DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount',
       Util::arrayMergeRecursive(
         $this->defaultFDD['money'],
         [
@@ -510,7 +509,7 @@ class DonationReceipts extends PMETableViewBase
       ));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount_waived',
+      $opts['fdd'], DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_waived',
       Util::arrayMergeRecursive(
         $this->defaultFDD['money'],
         [
@@ -535,7 +534,7 @@ class DonationReceipts extends PMETableViewBase
      * sum up to 0.
      */
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount_check',
+      $opts['fdd'], DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_check',
       Util::arrayMergeRecursive(
         [
           'tab' => [ 'id' => 'tab-all', ],
@@ -565,7 +564,7 @@ class DonationReceipts extends PMETableViewBase
       ));
 
     /* list(, $projectIdKey) = */ $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'id',
       [
         'name' => $this->l->t('Project'),
         'tab'  => [ 'id' => 'payment' ],
@@ -586,7 +585,7 @@ class DonationReceipts extends PMETableViewBase
             'ifnull' => [ false ],
           ],
           // 'having' => [
-          //   'SUM(' . $joinTables[self::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
+          //   'SUM(' . $joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE] . '.is_donation) > 0',
           // ],
           'groups'      => 'year',
           'orderby'     => '$table.year DESC, $table.name ASC',
@@ -595,14 +594,14 @@ class DonationReceipts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'name',
       [
         'name'  => $this->l->t('Project Name'),
         'input' => 'VHR',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'year',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'year',
       [
         'name'  => $this->l->t('Project Year'),
         'input' => 'VHR',
@@ -620,10 +619,10 @@ class DonationReceipts extends PMETableViewBase
           return '';
         }
 
-        $donationId = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'id')];
-        $dateOfReceipt = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
-        $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
-        $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
+        $donationId = $row[$this->joinQueryField(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'id')];
+        $dateOfReceipt = $row[$this->joinQueryField(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
+        $musicianName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'id')];
+        $projectName = $row[$this->joinQueryField(DatabaseTables::PROJECTS_TABLE, 'name')];
 
         $fileName = $this->getLegacyDonationReceiptFileName(
           $donationId,
@@ -662,7 +661,7 @@ class DonationReceipts extends PMETableViewBase
 
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-        $dateOfReceipt = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
+        $dateOfReceipt = $row[$this->joinQueryField(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
         $year = substr($dateOfReceipt, 0, 4);
         $dir = $this->getTaxExemptionNoticesPath()
           . UserStorage::PATH_SEP . $year;
@@ -689,7 +688,7 @@ class DonationReceipts extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::TAX_EXEMPTION_NOTICES_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE, 'id',
       [
         'tab'    => [ 'id' => 'document' ],
         'name'   => $this->l->t('Tax Exemption Notice'),
@@ -773,7 +772,7 @@ class DonationReceipts extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     // $opts[PHPMyEdit::OPT_TRIGGERS]['*'][PHPMyEdit::TRIGGER_DATA][] = function(PHPMyEdit $pme, string $op, string $step, array &$row) {
-    //   if (!$row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'amount_check'))) {
+    //   if (!$row[$this->joinQueryField(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount_check'))) {
     //   }
     // };
 
@@ -808,8 +807,8 @@ class DonationReceipts extends PMETableViewBase
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $remapFields = [
-      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {
@@ -849,8 +848,8 @@ class DonationReceipts extends PMETableViewBase
     }
 
     $remapFields = [
-      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
-      self::joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+      self::joinTableFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      self::joinTableFieldName(DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
     ];
 
     foreach ($remapFields as $source => $target) {
@@ -885,7 +884,7 @@ class DonationReceipts extends PMETableViewBase
     return 'CAST(
   SUM(IF(' . $table . '.is_donation, ' . $amountColumn . ', 0))
   /
-  COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
+  COUNT(DISTINCT ' . $this->joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
   AS ' . Constants::MONETARY_TYPE . '
 )';
   }
@@ -903,7 +902,7 @@ class DonationReceipts extends PMETableViewBase
     return 'CAST(
   SUM(IF(NOT ' . $table . '.is_donation, ' . $amountColumn . ', 0))
   /
-  COUNT(DISTINCT ' . $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
+  COUNT(DISTINCT ' . $this->joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE] . '.project_id)
   AS ' . Constants::MONETARY_TYPE . '
 )';
   }

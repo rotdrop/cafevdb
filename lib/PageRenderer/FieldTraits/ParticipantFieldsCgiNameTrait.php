@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+
 /** Small trait-class to fix seom CGI-names. */
 trait ParticipantFieldsCgiNameTrait
 {
@@ -34,7 +36,7 @@ trait ParticipantFieldsCgiNameTrait
    */
   protected static function participantFieldTableName(int $fieldId):string
   {
-    return self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . self::VALUES_TABLE_SEP . $fieldId;
+    return DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . self::VALUES_TABLE_SEP . $fieldId;
   }
 
   /**
@@ -64,6 +66,6 @@ trait ParticipantFieldsCgiNameTrait
    */
   protected static function participantFieldOptionsTableName(int $fieldId):string
   {
-    return self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . self::VALUES_TABLE_SEP . $fieldId;
+    return DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . self::VALUES_TABLE_SEP . $fieldId;
   }
 }

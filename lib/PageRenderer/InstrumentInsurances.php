@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateTime;
 
 use OCP\IRequest;
@@ -43,6 +45,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Render the instrument insurances of the club-members. */
+#[TSAttributes\TypeScript]
 class InstrumentInsurances extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
@@ -51,20 +54,21 @@ class InstrumentInsurances extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const TEMPLATE = 'instrument-insurance';
-  const TABLE = self::INSTRUMENT_INSURANCES_TABLE;
-  const BROKER_TABLE = 'InsuranceBrokers';
-  const RATES_TABLE = 'InsuranceRates';
-  const MEMBERSHIP_TABLE = self::PROJECT_PARTICIPANTS_TABLE . self::VALUES_TABLE_SEP . 'memberShip';
-  const BILL_TO_PARTY_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'billToParty';
-  const INSTRUMENT_OWNER_TABLE = self::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'instrumentOwner';
+  public const TEMPLATE = 'instrument-insurance';
+
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::INSTRUMENT_INSURANCES_TABLE;
+
+  protected const MEMBERSHIP_TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE . self::VALUES_TABLE_SEP . 'memberShip';
+  protected const BILL_TO_PARTY_TABLE = DatabaseTables::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'billToParty';
+  protected const INSTRUMENT_OWNER_TABLE = DatabaseTables::MUSICIANS_TABLE . self::VALUES_TABLE_SEP . 'instrumentOwner';
 
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\InstrumentInsurance::class,
     ],
-    self::RATES_TABLE => [
+    DatabaseTables::INSURANCE_RATES_TABLE => [
       'entity' => Entities\InsuranceRate::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -95,7 +99,7 @@ class InstrumentInsurances extends PMETableViewBase
       ],
       'column' => 'musician_id',
     ],
-    self::TAXATION_STATUTORY_SOURCES_TABLE => [
+    DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE => [
       'entity' => Entities\TaxationStatutorySource::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -269,7 +273,7 @@ class InstrumentInsurances extends PMETableViewBase
     $this->joinStructure[self::MEMBERSHIP_TABLE]['identifier']['project_id']['value'] = $this->projectId;
     $joinTables = $this->defineJoinStructure($opts);
 
-    $joinTables[self::MUSICIANS_TABLE] = 'PMEjoin'.count($opts['fdd']);
+    $joinTables[DatabaseTables::MUSICIANS_TABLE] = 'PMEjoin'.count($opts['fdd']);
     $opts['fdd']['instrument_holder_id'] = [
       'tab'      => [ 'id' => 'tab-all' ],
       'name'     => $this->l->t('Musician'),
@@ -279,7 +283,7 @@ class InstrumentInsurances extends PMETableViewBase
       'sort'     => true,
       'default' => 0,
       'values' => [
-        'table' => self::MUSICIANS_TABLE,
+        'table' => DatabaseTables::MUSICIANS_TABLE,
         'column' => 'id',
         'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
@@ -318,7 +322,7 @@ class InstrumentInsurances extends PMETableViewBase
       'sort'     => true,
       'default' => 0,
       'values' => [
-        'table' => self::MUSICIANS_TABLE,
+        'table' => DatabaseTables::MUSICIANS_TABLE,
         'column' => 'id',
         'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
@@ -361,7 +365,7 @@ class InstrumentInsurances extends PMETableViewBase
       'sort'     => true,
       'default' => 0,
       'values' => [
-        'table' => self::MUSICIANS_TABLE,
+        'table' => DatabaseTables::MUSICIANS_TABLE,
         'column' => 'id',
         'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_owner_id',
@@ -418,7 +422,7 @@ class InstrumentInsurances extends PMETableViewBase
         'select'   => 'T',
       ];
     } else {
-      $joinTables[self::BROKER_TABLE] = 'PMEjoin'.count($opts['fdd']);
+      $joinTables[DatabaseTables::INSURANCE_BROKERS_TABLE] = 'PMEjoin'.count($opts['fdd']);
       $opts['fdd']['broker_id'] = [
         'tab'      => [ 'id' => 'overview'],
         'name'     => $this->l->t('Insurance Broker'),
@@ -438,8 +442,8 @@ class InstrumentInsurances extends PMETableViewBase
       , "dueDate", r.due_date
       , "policyNumber", r.policy_number
 ) ORDER BY r.geographical_scope ASC),"]") AS insurance_rates
-FROM '.self::BROKER_TABLE.' b
-LEFT JOIN '.self::RATES_TABLE.' r
+FROM '.DatabaseTables::INSURANCE_BROKERS_TABLE.' b
+LEFT JOIN '.DatabaseTables::INSURANCE_RATES_TABLE.' r
   ON r.broker_id = b.short_name
 GROUP BY b.short_name',
           'column' => 'short_name',
@@ -574,7 +578,7 @@ GROUP BY b.short_name',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::RATES_TABLE, 'rate',
+      $opts['fdd'], DatabaseTables::INSURANCE_RATES_TABLE, 'rate',
       [
         'tab'  => [ 'id' => 'finance' ],
         'css' => [ 'postfix' => [ 'insurance-rate', 'align-right', ], ],
@@ -593,7 +597,7 @@ GROUP BY b.short_name',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'],  self::TAXATION_STATUTORY_SOURCES_TABLE, 'rate', [
+      $opts['fdd'],  DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'rate', [
         'name' => $this->l->t('Tax Rate'),
         'input' => 'N',
         'tab' => [ 'id' => 'finance' ],
@@ -609,10 +613,10 @@ GROUP BY b.short_name',
       'options' => 'LFACPDV',
       'sort' => true,
       'sql' => 'ROUND($table.insurance_amount
- * ' . $joinTables[self::RATES_TABLE] . '.rate
- * (1 + ' . $joinTables[self::TAXATION_STATUTORY_SOURCES_TABLE] . '.rate), 2)',
+ * ' . $joinTables[DatabaseTables::INSURANCE_RATES_TABLE] . '.rate
+ * (1 + ' . $joinTables[DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE] . '.rate), 2)',
       'php' => function($value, $action, $k, $row, $recordId, $pme) {
-        $taxRate = $row[$this->joinQueryField(self::TAXATION_STATUTORY_SOURCES_TABLE, 'rate')];
+        $taxRate = $row[$this->joinQueryField(DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'rate')];
         return '<span class="insurance-fee-display"
   data-currency-code="' . $this->currencyCode() . '"
   data-tax-rate="' . $taxRate . '"
@@ -623,7 +627,7 @@ GROUP BY b.short_name',
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::RATES_TABLE, 'due_date', Util::arrayMergeRecursive(
+      $opts['fdd'], DatabaseTables::INSURANCE_RATES_TABLE, 'due_date', Util::arrayMergeRecursive(
         $this->defaultFDD['date'], [
           'name' => $this->l->t('Due Date'),
           'tab'  => [ 'id' => 'finance' ],

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as BaseRenderer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
@@ -57,13 +58,13 @@ trait MusicianEmailsTrait
       $address = 'email';
     } else {
       $address = [
-        'table' => BaseRenderer::MUSICIANS_TABLE,
+        'table' => DatabaseTables::MUSICIANS_TABLE,
         'column' => 'email',
       ];
     }
 
     $joinStructure = [
-      BaseRenderer::MUSICIAN_EMAILS_TABLE => [
+      DatabaseTables::MUSICIAN_EMAILS_TABLE => [
         'entity' => Entities\MusicianEmailAddress::class,
         'identifier' => [
           'musician_id' => $musicianIdField,
@@ -71,7 +72,7 @@ trait MusicianEmailsTrait
         ],
         'column' => 'address',
       ],
-      BaseRenderer::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all' => [
+      DatabaseTables::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all' => [
         'entity' => Entities\MusicianEmailAddress::class,
         'identifier' => [
           'musician_id' => $musicianIdField,
@@ -86,12 +87,12 @@ trait MusicianEmailsTrait
       if ($address == 'email') {
         $emailField = '$main_table.email';
       } else {
-        $emailField = $this->joinTables[BaseRenderer::MUSICIANS_TABLE] . '.' . 'email';
+        $emailField = $this->joinTables[DatabaseTables::MUSICIANS_TABLE] . '.' . 'email';
       }
 
       list(, $allEmailsFddName) = $this->makeJoinTableField(
         $fdd,
-        BaseRenderer::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all',
+        DatabaseTables::MUSICIAN_EMAILS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'all',
         'address',
         Util::arrayMergeRecursive(
           $this->defaultFDD['email'], [
@@ -155,10 +156,10 @@ trait MusicianEmailsTrait
           'select|LF' => 'T',
           'sql'    => $emailField,
           'values' => [
-            'table'  => BaseRenderer::MUSICIAN_EMAILS_TABLE,
+            'table'  => DatabaseTables::MUSICIAN_EMAILS_TABLE,
             'column' => 'address',
             'description' => BaseRenderer::trivialDescription('$table.address'),
-            'join'   => [ 'reference' => $this->joinTables[BaseRenderer::MUSICIAN_EMAILS_TABLE], ],
+            'join'   => [ 'reference' => $this->joinTables[DatabaseTables::MUSICIAN_EMAILS_TABLE], ],
           ],
           'css'   => [
             'postfix' => array_merge([
@@ -184,7 +185,7 @@ trait MusicianEmailsTrait
         $fdd['email'] = $emailFieldDescription;
         $emailFddName = 'email';
       } else {
-        list(, $emailFddName) = $this->makeJoinTableField($fdd, BaseRenderer::MUSICIANS_TABLE, 'email', $emailFieldDescription);
+        list(, $emailFddName) = $this->makeJoinTableField($fdd, DatabaseTables::MUSICIANS_TABLE, 'email', $emailFieldDescription);
       }
       $fdd[$emailFddName]['values|ACP'] = Util::arrayMergeRecursive(
         $fdd[$emailFddName]['values'], [

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -77,7 +78,7 @@ trait ParticipantTotalFeesTrait
   protected function makeTotalFeesField(array &$fdd, iterable $monetaryFields, string $financeTab):void
   {
     $this->makeJoinTableField(
-      $fdd, PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount',
+      $fdd, DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount',
       [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Total Project Fees'),
@@ -169,7 +170,7 @@ trait ParticipantTotalFeesTrait
     // generate monster SQL fragment for the total amount to pay
     $totalAmountInvoicedSql = '(' . implode(' + ', $subTotals) . ')';
     $this->makeJoinTableField(
-      $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_invoiced', [
+      $fdd, DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_invoiced', [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Invoiced'),
         'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-invoiced', 'money', ], ],
@@ -199,7 +200,7 @@ trait ParticipantTotalFeesTrait
 
     $column = 'amount';
     list($fddIndex, $fddName) = $this->makeJoinTableField(
-      $fdd, PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'total_amount_transferred', [
+      $fdd, DatabaseTables::PROJECT_PAYMENTS_TABLE, 'total_amount_transferred', [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Transferred'),
         'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-received', 'money', ], ],
@@ -221,7 +222,7 @@ trait ParticipantTotalFeesTrait
     $totalAmountTransferredSql = $this->substituteSQLFragment($fdd, $fddName, $totalAmountTransferredSql, $fddIndex);
 
     $this->makeJoinTableField(
-      $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding', [
+      $fdd, DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding', [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Outstanding'),
         'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-outstanding', 'money', ], ],
@@ -254,8 +255,8 @@ trait ParticipantTotalFeesTrait
    */
   public function totalFeesPreFilterTrigger(PHPMyEdit $pme, string $op, string $step):bool
   {
-    $summaryName = self::joinTableFieldName(PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount');
-    $outstandingName = self::joinTableFieldName(PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
+    $summaryName = self::joinTableFieldName(DatabaseTables::PROJECT_PAYMENTS_TABLE, 'amount');
+    $outstandingName = self::joinTableFieldName(DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
 
     if (!isset($pme->fdn[$summaryName])) {
       // happens if there are no finance fields.

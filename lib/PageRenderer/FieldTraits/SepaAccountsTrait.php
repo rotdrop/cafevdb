@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024-2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\DataConstants;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as ParentClass;
 
 /** SEPA bank account. */
@@ -61,7 +62,7 @@ trait SepaAccountsTrait
     $this->initCrypto();
 
     $joinStructure = [
-      ParentClass::SEPA_BANK_ACCOUNTS_TABLE => [
+      DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE => [
         'entity' => Entities\SepaBankAccount::class,
         'flags' => ParentClass::JOIN_READONLY,
         'identifier' => [
@@ -70,7 +71,7 @@ trait SepaAccountsTrait
         ],
         'column' => 'sequence',
       ],
-      ParentClass::SEPA_DEBIT_MANDATES_TABLE => [
+      DatabaseTables::SEPA_DEBIT_MANDATES_TABLE => [
         'entity' => Entities\SepaDebitMandate::class,
         'flags' => ParentClass::JOIN_READONLY,
         'identifier' => [
@@ -79,7 +80,7 @@ trait SepaAccountsTrait
         ],
         'filter' => [
           'bank_account_sequence' => [
-            'table' => ParentClass::SEPA_BANK_ACCOUNTS_TABLE,
+            'table' => DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE,
             'column' => 'sequence',
           ],
         ],
@@ -87,13 +88,13 @@ trait SepaAccountsTrait
       ],
     ];
     if (!empty($projectId)) {
-      $joinStructure[ParentClass::SEPA_DEBIT_MANDATES_TABLE]['filter']['project_id'] = [ 'value' => [ $projectId, $membersProjectId, ], ];
+      $joinStructure[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE]['filter']['project_id'] = [ 'value' => [ $projectId, $membersProjectId, ], ];
       // $projectWhere = " AND sdm.project_id IN ('".implode("','", $projectRestrictions)."')";
     }
 
     $generator = function(&$fdd) use ($musicianIdField, $projectId, $membersProjectId, $financeTab) {
       $this->makeJoinTableField(
-        $fdd, ParentClass::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
+        $fdd, DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference', [
           'name' => $this->l->t('SEPA Debit Mandate Reference'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
@@ -121,7 +122,7 @@ trait SepaAccountsTrait
         ]);
 
       $this->makeJoinTableField(
-        $fdd, ParentClass::SEPA_DEBIT_MANDATES_TABLE, 'deleted', [
+        $fdd, DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'deleted', [
           'name' => $this->l->t('SEPA Debit Mandate Deleted'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
@@ -149,7 +150,7 @@ trait SepaAccountsTrait
         ]);
 
       list(, $ibanName) = $this->makeJoinTableField(
-        $fdd, ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
+        $fdd, DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE, 'iban', [
           'name' => $this->l->t('SEPA Bank Accounts'),
           'tab' => ['id' => $financeTab],
           'input' => 'S',
@@ -215,9 +216,9 @@ trait SepaAccountsTrait
       "'.ParentClass::COMP_KEY_SEP.'",
       $join_table.musician_id,
       $join_table.sequence,
-      COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
+      COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
     $join_col_fqn)
-  ORDER BY $order_by, COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'filter' => [
             'having' => true,
           ],
@@ -252,12 +253,12 @@ trait SepaAccountsTrait
       if (!empty($projectId)) {
         $fdd[$ibanName]['values|LF'] = $fdd[$ibanName]['values'];
         $fdd[$ibanName]['values|LF']['filters'] = '$table.musician_id IN (SELECT pp.musician_id
-  FROM ' . ParentClass::PROJECT_PARTICIPANTS_TABLE . ' pp
+  FROM ' . DatabaseTables::PROJECT_PARTICIPANTS_TABLE . ' pp
   WHERE pp.project_id = ' . $projectId . ')';
       }
 
       $this->makeJoinTableField(
-        $fdd, ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'deleted', [
+        $fdd, DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE, 'deleted', [
           'name' => $this->l->t('Bank Account Deleted'),
           'tab' => ['id' => $financeTab],
           'input' => 'H',
@@ -269,9 +270,9 @@ trait SepaAccountsTrait
       "'.ParentClass::COMP_KEY_SEP.'",
       $join_table.musician_id,
       $join_table.sequence,
-      COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
+      COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0)),
     $join_col_fqn)
-  ORDER BY $order_by, COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'filter' => [
             'having' => true,
           ],
@@ -285,7 +286,7 @@ trait SepaAccountsTrait
         ]);
 
       $this->makeJoinTableField(
-        $fdd, ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
+        $fdd, DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE, 'sepa_id', [
           'name' => $this->l->t('SEPA Bank Accounts'),
           'tab' => ['id' => $financeTab],
           'input' => 'VS',
@@ -298,8 +299,8 @@ trait SepaAccountsTrait
     "'.ParentClass::COMP_KEY_SEP.'",
     $join_table.musician_id,
     $join_table.sequence,
-    COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0))
-  ORDER BY $order_by, COALESCE(' . $this->joinTables[ParentClass::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
+    COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0))
+  ORDER BY $order_by, COALESCE(' . $this->joinTables[DatabaseTables::SEPA_DEBIT_MANDATES_TABLE] . '.sequence, 0) ASC)',
           'values' => [
             'column' => 'sequence',
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
@@ -322,10 +323,10 @@ trait SepaAccountsTrait
 
             // more efficient would perhaps be JSON
             $sepaIds = Util::explode(',', $value);
-            $accountDeleted = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'deleted')]);
-            $ibans = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'iban')]);
-            $mandateDeleted = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_DEBIT_MANDATES_TABLE, 'deleted')]);
-            $references = Util::explodeIndexed($row[$this->joinQueryField(ParentCLass::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')]);
+            $accountDeleted = Util::explodeIndexed($row[$this->joinQueryField(DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE, 'deleted')]);
+            $ibans = Util::explodeIndexed($row[$this->joinQueryField(DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE, 'iban')]);
+            $mandateDeleted = Util::explodeIndexed($row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'deleted')]);
+            $references = Util::explodeIndexed($row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')]);
 
             $this->logDebug('M DELETED '.print_r($mandateDeleted, true));
             $this->logDebug('A DELETED '.print_r($accountDeleted, true));

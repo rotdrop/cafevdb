@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use \OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -35,12 +37,15 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class InsuranceBrokers extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
 
-  const TEMPLATE = 'insurance-brokers';
-  const TABLE = 'InsuranceBrokers';
+  public const TEMPLATE = 'insurance-brokers';
+
+  #[TSAttributes\Hidden]
+  public const TABLE = 'InsuranceBrokers';
 
   protected $joinStructure = [
     self::TABLE => [

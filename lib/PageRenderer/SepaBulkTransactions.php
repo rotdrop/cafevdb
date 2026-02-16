@@ -49,8 +49,8 @@ class SepaBulkTransactions extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
-  const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
-  const DATA_TABLE = self::SEPA_BULK_TRANSACTION_DATA_TABLE;
+  public const TABLE = DatabaseTables::SEPA_BULK_TRANSACTIONS_TABLE;
+  protected const DATA_TABLE = DatabaseTables::SEPA_BULK_TRANSACTION_DATA_TABLE;
 
   const ROW_TAG_PREFIX = '0;';
 
@@ -72,7 +72,7 @@ class SepaBulkTransactions extends PMETableViewBase
       'column' => 'database_storage_file_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE => [
+    DatabaseTables::DATABASE_STORAGE_DIR_ENTRIES_TABLE => [
       'entity' => Entities\DatabaseStorageFile::class,
       'identifier' => [
         'id' => [
@@ -83,7 +83,7 @@ class SepaBulkTransactions extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::COMPOSITE_PAYMENTS_TABLE => [
+    DatabaseTables::COMPOSITE_PAYMENTS_TABLE => [
       'sql' => "SELECT
   CONCAT('".self::ROW_TAG_PREFIX."', __t1.sepa_transaction_id) AS row_tag,
   __t1.sepa_transaction_id AS sepa_transaction_id,
@@ -95,7 +95,7 @@ class SepaBulkTransactions extends PMETableViewBase
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.bank_account_sequence) ORDER BY __t1.id) AS bank_account_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.debit_mandate_sequence) ORDER BY __t1.id) AS debit_mandate_id,
   SUM(__t1.amount) AS amount
-FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t1
+FROM ".DatabaseTables::COMPOSITE_PAYMENTS_TABLE." __t1
 GROUP BY __t1.sepa_transaction_id
 UNION
 SELECT
@@ -109,7 +109,7 @@ SELECT
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.bank_account_sequence) AS bank_account_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.debit_mandate_sequence) AS debit_mandate_id,
   __t2.amount AS amount
-FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
+FROM ".DatabaseTables::COMPOSITE_PAYMENTS_TABLE." __t2",
       'entity' => Entities\CompositePayment::class,
       'flags' => self::JOIN_READONLY|self::JOIN_GROUP_BY,
       'column' => 'row_tag',
@@ -120,7 +120,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'sepa_transaction_id' => 'id',
       ],
     ],
-    self::PROJECT_PAYMENTS_TABLE => [
+    DatabaseTables::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -128,29 +128,29 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ],
       'filter' => [
         'composite_payment_id' => [
-          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'table' => DatabaseTables::COMPOSITE_PAYMENTS_TABLE,
           'column' => 'id',
         ],
       ],
       'column' => 'id',
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [
         'id' => [
-          'table' => self::PROJECT_PAYMENTS_TABLE,
+          'table' => DatabaseTables::PROJECT_PAYMENTS_TABLE,
           'column' => 'project_id',
         ],
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::SENT_EMAILS_TABLE => [
+    DatabaseTables::SENT_EMAILS_TABLE => [
       'entity' => Entities\SentEmail::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'message_id' => [
-          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'table' => DatabaseTables::COMPOSITE_PAYMENTS_TABLE,
           'column' => 'notification_message_id',
         ],
       ],
@@ -230,7 +230,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       '-submission_dead_line',
       '-created',
       'id',
-      self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
+      self::joinTableFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'row_tag'),
     ];
     $opts['groupby_fields'] = [ 'id' ];
     $opts['groupby_where'] = true;
@@ -284,7 +284,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $oddBulkTransaction = false;
 
       $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
-      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE)]];
 
       $cssClasses = ['bulk-transaction'];
       if ($lastBulkTransactionId != $bulkTransactionId) {
@@ -313,7 +313,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $lastBulkTransactionId = -1;
 
       $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
-      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE)]];
 
       if ($lastBulkTransactionId != $bulkTransactionId) {
         if ($lastBulkTransactionId > 0) {
@@ -355,10 +355,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH', ]);
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'row_tag', [ 'input' => 'SRH', ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'id',
       Util::arrayMergeRecursive(
         [
           'name'     => $this->l->t('Project'),
@@ -378,7 +378,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         ]));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'amount',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'amount',
       array_merge(
         $this->defaultFDD['money'], [
           'tab' => [ 'id' => 'tab-all', ],
@@ -387,18 +387,18 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         ]));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'musician_id',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'musician_id',
       [
         'tab' => [ 'id' =>[ 'bookings', 'transaction' ], ],
         'name'     => $this->l->t('Musician'),
         'css'      => [ 'postfix' => [ 'musician-id', 'squeeze-subsequent-lines', ], ],
         'select' => 'M',
         'input' => 'R',
-        'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
+        'sql' => $this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
         'values' => [
-          'table' => self::MUSICIANS_TABLE,
+          'table' => DatabaseTables::MUSICIANS_TABLE,
           'column' => 'id',
-          'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
+          'join' => '$join_col_fqn = '.$this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
           'description' => [
             'columns' => [ '$table.id', static::musicianPublicNameSql() ],
             'divs' => [ ': ' ],
@@ -418,7 +418,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'bank_account_id', [
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'bank_account_id', [
         'tab' => [ 'id' =>[ 'bookings', ], ],
         'name'     => $this->l->t('IBAN'),
         'css'      => [
@@ -430,15 +430,15 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           ],
         ],
         'select' => 'M',
-        'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
+        'sql' => $this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
         'values' => [
           'table' => "SELECT
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t.musician_id, __t.sequence) AS bank_account_id,
   __t.iban AS sealed_value,
   MD5(__t.iban) AS crypto_hash
-  FROM ".self::SEPA_BANK_ACCOUNTS_TABLE." __t",
+  FROM ".DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE." __t",
           'column' => 'bank_account_id',
-          'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
+          'join' => '$join_col_fqn = '.$this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
           'description' => [
             'columns' => 'CONCAT("<span class=\"iban encryption-placeholder\"
       data-' . DataConstants::DATA_CRYPTO_HASH . '=\"", $table.crypto_hash, "\"
@@ -480,20 +480,20 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'debit_mandate_id', [
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'debit_mandate_id', [
         'tab' => [ 'id' =>[ 'bookings', ], ],
         'name'     => $this->l->t('Mandate Reference'),
         'css'      => [ 'postfix' => ' mandate-reference squeeze-subsequent-lines' ],
         'select' => 'M',
         'input' => 'R',
-        'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
+        'sql' => $this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
         'values' => [
           'table' => "SELECT
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t.musician_id, __t.sequence) AS debit_mandate_id,
   __t.mandate_reference AS mandate_reference
-  FROM ".self::SEPA_DEBIT_MANDATES_TABLE." __t",
+  FROM ".DatabaseTables::SEPA_DEBIT_MANDATES_TABLE." __t",
           'column' => 'debit_mandate_id',
-          'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
+          'join' => '$join_col_fqn = '.$this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.debit_mandate_id',
           'description' => self::trivialDescription('mandate_reference'),
         ],
         'values2glue' => '<br/>',
@@ -506,7 +506,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'subject', [
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'subject', [
         'tab' => [ 'id' => [ 'bookings', ], ],
         'name' => $this->l->t('Subject'),
         'input' => 'RD',
@@ -582,7 +582,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ]);
 
     list(, $msgIdField) = $this->makeJoinTableField(
-      $opts['fdd'], self::SENT_EMAILS_TABLE, 'message_id', [
+      $opts['fdd'], DatabaseTables::SENT_EMAILS_TABLE, 'message_id', [
         'name' => $this->l->t('Pre-Notification'),
         'tab' => [ 'id' => 'transaction' ],
         'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
@@ -621,7 +621,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     }
 
     list(, $msgIdField) = $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'notification_message_id', [
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'notification_message_id', [
         'name' => $this->l->t('Pre-Notification'),
         'tab' => [ 'id' => 'transaction' ],
         'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
@@ -651,7 +651,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     ///////////////////////////////////////////////////////////////////////////
 
     if ($projectMode) {
-      $opts['filters'] = $joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
+      $opts['filters'] = $joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE].'.project_id = '.$projectId;
     }
 
     // redirect all updates through Doctrine\ORM.
@@ -717,8 +717,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   {
     return [
       'entityId' => $entityId,
-      'projectId' => (int)$row[$this->joinQueryIndexField(self::PROJECTS_TABLE, 'id')],
-      'projectName' => $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id')],
+      'projectId' => (int)$row[$this->joinQueryIndexField(DatabaseTables::PROJECTS_TABLE, 'id')],
+      'projectName' => $row[$this->joinQueryField(DatabaseTables::PROJECTS_TABLE, 'id')],
     ];
   }
 
@@ -761,7 +761,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       );
     }
 
-    $rowTagKey = self::joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
+    $rowTagKey = self::joinTableFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'row_tag');
 
     $paymentId = null;
 
@@ -811,7 +811,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
    */
   private function isBulkTransactionRow(array $row, PHPMyEdit $pme)
   {
-    $rowTag = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+    $rowTag = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(DatabaseTables::COMPOSITE_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
   }
 

@@ -49,14 +49,14 @@ class TaxExemptionNotices extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'tax-exemption-notices';
-  const TABLE = 'TaxExemptionNotices';
+  public const TABLE = 'TaxExemptionNotices';
 
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\TaxExemptionNotice::class,
     ],
-    self::TAX_EXEMPTION_ITEMS_TABLE => [
+    DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE => [
       'entity' => null,
       'identifier' => [
         'tax_exemption_notice_id' => 'id',
@@ -65,12 +65,12 @@ class TaxExemptionNotices extends PMETableViewBase
       'column' => 'tax_exemption_notice_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::TAXATION_STATUTORY_SOURCES_TABLE => [
-      'table' => self::TAXATION_STATUTORY_SOURCES_TABLE,
+    DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE => [
+      'table' => DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE,
       'entity' => Entities\TaxationStatutorySource::class,
       'identifier' => [
         'id' => [
-          'table' => self::TAX_EXEMPTION_ITEMS_TABLE,
+          'table' => DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE,
           'column' => 'taxation_statutory_source_id',
         ],
       ],
@@ -193,7 +193,7 @@ class TaxExemptionNotices extends PMETableViewBase
     // add some translations for enum values
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       switch ($table) {
-        case self::TAXATION_STATUTORY_SOURCES_TABLE:
+        case DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE:
           $joinInfo['sql'] = $this->makeEnumTranslationsJoin($joinInfo, [ 'tax_type' => TaxType::class ]);
           break;
         default:
@@ -205,7 +205,7 @@ class TaxExemptionNotices extends PMETableViewBase
     $this->defineJoinStructure($opts);
 
     list(, $fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
+      $opts['fdd'], DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
         'name' => $this->l->t('Context'),
         'css'      => [ 'postfix' => [ 'taxation-statutoryx-sources', 'squeeze-subsequent-lines', 'clip-long-text',  ], ],
         'display|LVFD' => [ 'popup' => 'data' ],
@@ -233,7 +233,7 @@ class TaxExemptionNotices extends PMETableViewBase
       ]);
 
     list(, $fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type', [
+      $opts['fdd'], DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type', [
         'name' => $this->l->t('Tax Types'),
         'css' => [ 'postfix' => [ 'tax-types', ], ],
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn)',
@@ -359,7 +359,7 @@ class TaxExemptionNotices extends PMETableViewBase
           return '';
         }
 
-        $taxTypes = $row[$this->joinQueryField(self::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type')];
+        $taxTypes = $row[$this->joinQueryField(DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'tax_type')];
         $taxTypes = explode(',', $taxTypes);
         $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
         $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];

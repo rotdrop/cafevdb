@@ -44,7 +44,7 @@ class TaxationStatutorySources extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'taxation-statutory-sources';
-  const TABLE = self::TAXATION_STATUTORY_SOURCES_TABLE;
+  public const TABLE = DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE;
 
 
   protected $joinStructure = [
@@ -60,7 +60,7 @@ class TaxationStatutorySources extends PMETableViewBase
       ],
       'column' => 'l10n_value',
     ],
-    self::INVOICES_TABLE => [
+    DatabaseTables::INVOICES_TABLE => [
       'entity' => Entities\Invoices::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -69,7 +69,7 @@ class TaxationStatutorySources extends PMETableViewBase
       ],
       'column' => 'taxation_statutory_source_id',
     ],
-    self::TAX_EXEMPTION_ITEMS_TABLE => [
+    DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE => [
       'entity' => null,
       'identifier' => [
         'tax_exemption_notice_id' => false,
@@ -78,11 +78,11 @@ class TaxationStatutorySources extends PMETableViewBase
       'column' => 'taxation_statutory_source_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::TAX_EXEMPTION_NOTICES_TABLE => [
+    DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE => [
       'entity' => Entities\TaxExemptionNotice::class,
       'identifier' => [
         'id' => [
-          'table' => self::TAX_EXEMPTION_ITEMS_TABLE,
+          'table' => DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE,
           'column' => 'tax_exemption_notice_id',
         ],
       ],
@@ -314,7 +314,7 @@ class TaxationStatutorySources extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($expertMode) {
-        if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id')])) {
+        if (!$expertMode && !empty($row[$this->joinQueryField(DatabaseTables::INSTRUMENTS_TABLE, 'id')])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

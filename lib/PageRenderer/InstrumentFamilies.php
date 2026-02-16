@@ -41,15 +41,14 @@ class InstrumentFamilies extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'instrument-families';
-  const TABLE = 'InstrumentFamilies';
-  private const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
+  public const TABLE = 'InstrumentFamilies';
 
   protected $joinStructure = [
     self::TABLE => [
       'entity' => Entities\InstrumentFamily::class,
       'flags' => self::JOIN_MASTER,
     ],
-    self::FIELD_TRANSLATIONS_TABLE => [
+    DatabaseTables::FIELD_TRANSLATIONS_TABLE => [
       'entity' => null,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -60,7 +59,7 @@ class InstrumentFamilies extends PMETableViewBase
       ],
       'column' => 'content',
     ],
-    self::INSTRUMENTS_JOIN_TABLE => [
+    DatabaseTables::INSTRUMENTS_JOIN_TABLE => [
       'entity' => null,
       'identifier' => [
         'instrument_family_id' => 'id',
@@ -69,11 +68,11 @@ class InstrumentFamilies extends PMETableViewBase
       'column' => 'instrument_family_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::INSTRUMENTS_TABLE => [
+    DatabaseTables::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => [
-          'table' => self::INSTRUMENTS_JOIN_TABLE,
+          'table' => DatabaseTables::INSTRUMENTS_JOIN_TABLE,
           'column' => 'instrument_id',
         ],
       ],
@@ -200,10 +199,10 @@ class InstrumentFamilies extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-        case self::FIELD_TRANSLATIONS_TABLE:
+        case DatabaseTables::FIELD_TRANSLATIONS_TABLE:
           $joinInfo['identifier']['locale']['value'] = $this->getTranslationLanguage();
           break;
-        case self::INSTRUMENTS_TABLE:
+        case DatabaseTables::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
           break;
         default:
@@ -216,14 +215,14 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['fdd']['family'] = [
       'name'   => $this->l->t('Family'),
-      'sql'    => 'IFNULL('.$joinTables[self::FIELD_TRANSLATIONS_TABLE].'.content,$field_name)',
+      'sql'    => 'IFNULL('.$joinTables[DatabaseTables::FIELD_TRANSLATIONS_TABLE].'.content,$field_name)',
       'select' => 'T',
       'maxlen' => 64,
       'sort'   => true,
     ];
 
     list(,$fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENTS_TABLE, 'id', [
+      $opts['fdd'], DatabaseTables::INSTRUMENTS_TABLE, 'id', [
         'name'         => $this->l->t('Instruments'),
         'css'          => [ 'postfix' => ' family-instruments' ],
         'display|LVFD' => [ 'popup' => 'data' ],
@@ -268,7 +267,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($expertMode) {
-        if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id')])) {
+        if (!$expertMode && !empty($row[$this->joinQueryField(DatabaseTables::INSTRUMENTS_TABLE, 'id')])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

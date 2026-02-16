@@ -42,7 +42,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   use FieldTraits\ProjectModeNavigationItemTrait;
 
   const TEMPLATE = 'project-instrumentation-numbers';
-  const TABLE = self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
+  public const TABLE = DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;
 
   private const EXTRA_VOICES = 4;
   private const INSERT_VOICES = 8;
@@ -53,7 +53,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectInstrumentationNumber::class,
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [
         'id' => 'project_id',
@@ -61,7 +61,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::PROJECT_INSTRUMENTS_TABLE => [
+    DatabaseTables::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -72,7 +72,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'column' => 'musician_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::INSTRUMENTS_TABLE => [
+    DatabaseTables::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'identifier' => [
         'id' => 'instrument_id',
@@ -155,9 +155,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts['groupby_fields'] = array_keys($opts['key']);
     // Sorting field(s)
     $opts['sort_field'] = [
-      self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
-      self::joinTableFieldName(self::PROJECTS_TABLE, 'name'),
-      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'year'),
+      self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'name'),
+      self::joinTableFieldName(DatabaseTables::INSTRUMENTS_TABLE, 'sort_order'),
       'voice',
     ];
 
@@ -199,7 +199,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'default'  => ($projectMode ? $projectId : null),
       'sort'     => $sort,
       'values|ACP' => [
-        'table'       => self::PROJECTS_TABLE,
+        'table'       => DatabaseTables::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
           'columns' => [ '$table.name' ],
@@ -208,10 +208,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
-        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => false, // [ 'reference' => $joinTables[DatabaseTables::PROJECTS_TABLE], ],
       ],
       'values|DVFL' => [
-        'table'       => self::PROJECTS_TABLE,
+        'table'       => DatabaseTables::PROJECTS_TABLE,
         'column'      => 'id',
         'description' => [
           'columns'   => [ '$table.name' ],
@@ -220,28 +220,28 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
-        'join'        => false, // [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => false, // [ 'reference' => $joinTables[DatabaseTables::PROJECTS_TABLE], ],
         'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
       ],
     ];
     $this->addSlug('project', $opts['fdd']['project_id']);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'name',
       [
         'name'  => $this->l->t('Project Name'),
         'input' => 'VHR',
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'year',
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'year',
       [
         'name'  => $this->l->t('Project Year'),
         'input' => 'VHR',
       ]);
 
     $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
-      'table' => self::INSTRUMENTS_TABLE,
+      'table' => DatabaseTables::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
       'identifier' => [ 'id' => true ], // just need the key
     ], 'name');
@@ -256,7 +256,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'     => $sort,
       'sql'      => '$main_table.instrument_id',
       'values|ACP'   => [
-        'table' => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
+        'table' => $l10nInstrumentsTable, // DatabaseTables::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
           'columns' => [ 'l10n_name' ],
@@ -264,10 +264,10 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order',
-        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => false, // [ 'reference' => $joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
       ],
       'values|DVFL'   => [
-        'table' => $l10nInstrumentsTable, // self::INSTRUMENTS_TABLE,
+        'table' => $l10nInstrumentsTable, // DatabaseTables::INSTRUMENTS_TABLE,
         'column' => 'id',
         'description' => [
           'columns' => [ 'l10n_name' ],
@@ -275,7 +275,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order',
-        'join' => false, // [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => false, // [ 'reference' => $joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
         'filters' => '$table.id in (SELECT instrument_id FROM $main_table)',
       ],
       //'values2|AVCPDLF' => $instrumentInfo['byId'],
@@ -284,7 +284,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $this->addSlug('instrument', $opts['fdd']['instrument_id']);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENTS_TABLE, 'sort_order',
+      $opts['fdd'], DatabaseTables::INSTRUMENTS_TABLE, 'sort_order',
       [
         'name'  => $this->l->t('Orchestral Sorting'),
         'input' => 'VHR',
@@ -316,7 +316,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'table' => 'SELECT
   t.project_id, t.instrument_id, n.seq AS voice
   FROM ' . self::TABLE . ' t
-  JOIN ' . self::SEQUENCE_TABLE . ' n
+  JOIN ' . DatabaseTables::SEQUENCE_TABLE . ' n
     ON n.seq <= GREATEST(' . self::EXTRA_VOICES . ', (t.voice + 1)) AND n.seq <= GREATEST(' . self::EXTRA_VOICES . ', 1 + (SELECT MAX(t2.voice) FROM ' . self::TABLE . ' t2))
   WHERE t.project_id = $record_id[project_id] AND t.instrument_id = $record_id[instrument_id]
   GROUP BY n.seq',
@@ -356,7 +356,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $this->addSlug('required', $opts['fdd']['quantity']);
 
     list($index, $name) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'musician_id',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Registered'),
         'options' => 'VDLFCP',
@@ -369,7 +369,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $this->addSlug('registered', $opts['fdd'][$name]);
 
     list($index, $name) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
+      $opts['fdd'], DatabaseTables::PROJECT_PARTICIPANTS_TABLE, 'musician_id',
       [
         'name'   => $this->l->t('Confirmed'),
         'options' => 'VDLFCP',
@@ -380,13 +380,13 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
         'sql'    => 'COUNT(DISTINCT $join_col_fqn)',
         'values' => [
           'join' => '$join_table.project_id = $main_table.project_id
-  AND $join_col_fqn = '.$joinTables[self::PROJECT_INSTRUMENTS_TABLE].'.musician_id
+  AND $join_col_fqn = '.$joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].'.musician_id
   AND $join_table.registration = 1',
         ],
       ]);
     $this->addSlug('confirmed', $opts['fdd'][$name]);
 
-    $joinTables[self::PROJECT_PARTICIPANTS_TABLE] = 'PMEjoin'.$index;
+    $joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE] = 'PMEjoin'.$index;
 
     // @todo tooltips
     $opts['fdd']['missing'] = [
@@ -396,9 +396,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       'sort'   => $sort,
       'select' => 'N',
       'sql'    => "CONCAT(
-  COUNT(DISTINCT ".$joinTables[self::PROJECT_INSTRUMENTS_TABLE].".musician_id) - \$main_table.quantity,
+  COUNT(DISTINCT ".$joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".musician_id) - \$main_table.quantity,
   ':',
-  COUNT(DISTINCT ".$joinTables[self::PROJECT_PARTICIPANTS_TABLE].".musician_id) - \$main_table.quantity
+  COUNT(DISTINCT ".$joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE].".musician_id) - \$main_table.quantity
 )",
       'php' => function($balance, $op, $field, $row, $recordId, $pme) {
         $values = Util::explode(':', $balance);
@@ -443,7 +443,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-    //   if ($row[$this->queryField('voice')] == 0 || !empty($row[$this->joinQueryField(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')])) {
+    //   if ($row[$this->queryField('voice')] == 0 || !empty($row[$this->joinQueryField(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'musician_id')])) {
     //     // disallow changes to instrument and voice as the integrity
     //     // constraints would not allow changing these anyway.
     //     $pme->fdd[$this->queryFieldIndex('instrument_id')]['input'] .= 'R';
