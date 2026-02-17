@@ -2122,7 +2122,14 @@ Whatever.',
       $musician = $musiciansRepository->find($id);
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       if ($musician->isDeleted()) {
-        $musician = null;
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t(
+            'The musician for the musician-id "%s" is marked as "deleted", please undelete the person first and then try again', $id,
+          ),
+        ];
+        $this->logInfo('STATUS '. print_r($status, true));
+        return false;
       }
     }
     if (empty($musician)) {
