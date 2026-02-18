@@ -601,16 +601,16 @@ run-jest:
 .PHONY: run-jest
 
 #@@ Runs integration test for TypeScript code
-jest: dev-setup run-jest post-build
+jest: dev-setup ts-app-config ts-types-files run-jest post-build
 .PHONY: jest
 
 #@private
 run-tide:
-	$(EMACS) --batch -l $(ABSSRCDIR)/dev-scripts/tide-project-errors.el|tee tide-errors.log
+	$(EMACS) --batch --file $(SRCDIR)/src/vue-app.ts  -l $(ABSSRCDIR)/dev-scripts/tide-project-errors.el|tee tide-errors.log
 .PHONY: run-tide
 
 #@@ Runs the Emacs Tide IDE in batch mode and diagnoses TypeScript errors.
-tide: dev-setup run-tide post-build
+tide: dev-setup ts-app-config ts-types-files run-tide post-build
 .PHONY: tide
 
 #@@ Runs integration test for PHP and TypeScript code
