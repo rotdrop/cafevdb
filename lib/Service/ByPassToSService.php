@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace OCA\CAFEVDB\Service;
 
+use OC\CapabilitiesManager;
+
+use OCP\App\IAppManager;
 use OCP\ISession;
 use OCP\IRequest;
 use OCP\Share\IShare;
 use Psr\Log\LoggerInterface;
 
-use OCA\TermsOfService\PublicCapabilities;
 use OCA\TermsOfService\AppInfo\Application as TermsOfServiceApp;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\TOSExceptionMapper;
@@ -60,10 +62,14 @@ class ByPassToSService
 
   private const PATH_PREFIX = '/dav/files/';
 
+  private const DEFAULT_TOS_APP_NAME = 'terms_of_service';
+
   private ?string $termUUID;
 
   /** {@inheritdoc} */
   public function __construct(
+    private DomainNameService $domainNameService,
+    private IAppManager $appManager,
     private IRequest $request,
     private ISession $phpSession,
     private TOSExceptionMapper $mapper,
@@ -86,7 +92,8 @@ class ByPassToSService
    */
   public function addExceptionForHostname(IShare $share, string $hostname, bool $exclusive = false): bool
   {
-    $ips = $this->resolveHostname($hostname);
+    $ips = $this->domainNameService->resolveHostname($hostname);
+    $ips = array_merge(...$ips);
     if (empty($ips)) {
       return false;
     }
@@ -94,47 +101,6 @@ class ByPassToSService
     $this->mapper->addToSException($token, $ips, $exclusive);
 
     return true;
-  }
-
-  /**
-   * Try to resolve the given hostname and return an array with its IPv4 and
-   * IPv6 addresses, if any.
-   *
-   * @param string $hostname
-   *
-   * @return array
-   */
-  private function resolveHostname(string $hostname): array
-  {
-    // in principle "localhost" should not be there in DNS ...
-    if ($hostname == 'localhost') {
-      return ['127.0.0.1', '::1'];
-    }
-    $records = dns_get_record($hostname, DNS_A | DNS_AAAA);
-    if ($records === false) {
-      return [];
-    }
-    $result = [];
-    foreach ($records as $record) {
-      if ($record['class'] != 'IN') {
-        continue;
-      }
-      switch ($record['type']) {
-        case 'A':
-          $ip = $record['ip'];
-          if ($this->isIpv4($ip)) {
-            $result[] = $ip;
-          }
-          break;
-        case 'AAAA':
-          $ip = $record['ipv6'];
-          if ($this->isIpv6($ip)) {
-            $result[] = $ip;
-          }
-          break;
-      }
-    }
-    return $result;
   }
 
   /**
@@ -157,9 +123,16 @@ class ByPassToSService
     ) {
       return;
     }
+    $tosAppName = class_exists(TermsOfServiceApp::class) ? TermsOfServiceApp::APPNAME : self::DEFAULT_TOS_APP_NAME;
+    if (!$this->appManager->isEnabledForAnyone($tosAppName)) {
+      // nothing to do
+      return;
+    }
     try {
-      $capabilities = \OCP\Server::get(PublicCapabilities::class)->getCapabilities();
-      $this->termUUID = $capabilities[TermsOfServiceApp::APPNAME][self::TERM_UUID_KEY] ?? null;
+      /** @var CapabilitiesManager $capabilitiesManager */
+      $capabilitiesManager = \OCP\Server::get(CapabilitiesManager::class);
+      $capabilities = $capabilitiesManager->getCapabilities(public: true);
+      $this->termUUID = $capabilities[$tosAppName][self::TERM_UUID_KEY] ?? null;
       if ($this->termUUID === null) {
         $this->logger->error('ToS-App seems to be enabled but the term-uuid cannot be determined. ' . print_r($capabilities, true));
       }
@@ -213,12 +186,13 @@ class ByPassToSService
   private function matchCIDR(string $ip, string $range): bool
   {
     list($subnet, $bits) = array_pad(explode('/', $range), 2, null);
+    $subnetIsIPv6 = $this->domainNameService->isIPv6($subnet);
     if ($bits === null) {
-      $bits = $this->isIPv6($range) ? 128 : 32;
+      $bits = $subnetIsIPv6 ? 128 : 32;
     }
     $bits = (int)$bits;
 
-    if ($this->isIpv4($ip) && $this->isIpv4($subnet)) {
+    if ($this->domainNameService->isIpv4($ip) && !$subnetIsIPv6) {
       $mask = -1 << (32 - $bits);
 
       $ip = ip2long($ip);
@@ -227,7 +201,7 @@ class ByPassToSService
       return ($ip & $mask) === $subnet;
     }
 
-    if ($this->isIpv6($ip) && $this->isIPv6($subnet)) {
+    if ($this->domainNameService->isIpv6($ip) && $subnetIsIPv6) {
       $subnet = inet_pton($subnet);
       $ip = inet_pton($ip);
 
@@ -254,25 +228,5 @@ class ByPassToSService
       }
     }
     return false;
-  }
-
-  /**
-   * @param string $ip
-   *
-   * @return bool
-   */
-  private function isIpv4(string $ip): bool
-  {
-    return false !== filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-  }
-
-  /**
-   * @param string $ip
-   *
-   * @return bool
-   */
-  private function isIpv6(string $ip): bool
-  {
-    return false !== filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
   }
 }
