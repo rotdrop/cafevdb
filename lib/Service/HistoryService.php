@@ -35,8 +35,10 @@ use OCP\IRequest;
 /**
  * Page history via PHP session.
  *
- * @todo This now should be obsolete as the navigation history is handled by
- * the Javascript code.
+ * This only works for the life-time of the web-browser as the session-cookie
+ * dies when closing the browser window. For anything else data would have
+ * been persisted to the database. This already can be done explicitly, but as
+ * of now not automatically.
  */
 #[TSAttributes\TypeScript]
 class HistoryService
