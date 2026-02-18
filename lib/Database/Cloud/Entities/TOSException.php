@@ -24,37 +24,41 @@
 
 namespace OCA\CAFEVDB\Database\Cloud\Entities;
 
+use JsonSerializable;
+
 use OCP\AppFramework\Db\Entity;
 
-/** Cloud blog entity. */
-class Blog extends Entity
+/** A Db entry modelling a ToS exception. */
+class TOSException extends Entity implements JsonSerializable
 {
   public $id;
-  protected $author;
-  protected $created;
-  protected $editor;
-  protected $modified;
-  protected $message;
-  protected $inReplyTo;
-  protected $deleted;
-  protected $priority;
-  protected $popup;
-  protected $reader;
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /**
+   * We only override public shares in order to support simple download-links
+   * for selected shares.
+   */
+  protected $shareToken;
+
+  /**
+   * Comma separated list of networds in CIDR notation, IPv4 or IPv6.
+   */
+  protected $ipRanges;
+
+  /** CTOR */
   public function __construct()
   {
-    // $this->addType('id', 'int'); this is default
-    $this->addType('author', 'string');
-    $this->addType('created', 'int');
-    $this->addType('editor', 'string');
-    $this->addType('modified', 'int');
-    $this->addType('message', 'string');
-    $this->addType('inReplyTo', 'int');
-    $this->addType('deleted', 'bool');
-    $this->addType('priority', 'int');
-    $this->addType('popup', 'bool');
-    $this->addType('reader', 'string');
+    // $this->addType('id', 'integer');
+    $this->addType('shareToken', 'string');
+    $this->addType('ipRanges', 'string');
   }
-  // phpcs:enable
+
+  /** {@inheritdoc} */
+  public function jsonSerialize():mixed
+  {
+    return [
+      'id' => $this->id,
+      'shareToken' => $this->shareToken,
+      'ipRanges' => explode(',', $this->ipRanges),
+    ];
+  }
 }

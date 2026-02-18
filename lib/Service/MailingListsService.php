@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -194,6 +194,9 @@ class MailingListsService
    */
   private $selfLinkBySubscription = [];
 
+  /** The base URI to the rest interface */
+  private string $restUri;
+
   /**
    * @param ConfigService $configService Global app configuration service.
    */
@@ -202,13 +205,11 @@ class MailingListsService
   ) {
     $this->l = $this->l10n();
 
-    $this->restClient = new RestClient([
-      'base_uri' => $this->getConfigValue(
-        ConfigConstants::MAILING_LIST_REST_CONFIG['url'],
-        self::DEFAULT_REST_URI,
-      ),
-    ],
+    $this->restUri = $this->getConfigValue(
+      ConfigConstants::MAILING_LIST_REST_CONFIG['url'],
+      self::DEFAULT_REST_URI,
     );
+    $this->restClient = new RestClient([ 'base_uri' => $this->restUri ]);
     $this->restAuth = [
       $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['user']),
       $this->getConfigValue(ConfigConstants::MAILING_LIST_REST_CONFIG['password']),
@@ -1213,14 +1214,21 @@ class MailingListsService
       $sharingService = $this->di(SimpleSharingService::class);
 
       if ($node) {
-        ['dav' => $url,] = $sharingService->linkShare(
+        ['dav' => $url, 'share' => $share] = $sharingService->linkShare(
           $node,
           $shareOwnerUid,
           sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
         );
-        if (empty($url)) {
+        if (empty($url) || empty($share)) {
           return null;
         }
+        $urlParts = parse_url($this->restUri);
+        if ($urlParts === false || empty($urlParts['host'])) {
+          return null;
+        }
+        /** @var ByPassToSService $byPassToSService */
+        $byPassToSService = $this->di(ByPassToSService::class);
+        $byPassToSService->addExceptionForHostname($share, $urlParts['host']);
       } else {
         $this->logError('No file info for ' . $folderPath);
         return null;
