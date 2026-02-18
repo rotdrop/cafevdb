@@ -93,7 +93,7 @@ class ByPassToSService
   public function addExceptionForHostname(IShare $share, string $hostname, bool $exclusive = false): bool
   {
     $ips = $this->domainNameService->resolveHostname($hostname);
-    $ips = array_merge(...$ips);
+    $ips = array_merge(...array_values($ips));
     if (empty($ips)) {
       return false;
     }
@@ -119,7 +119,7 @@ class ByPassToSService
     $path = $this->request->getPathInfo();
     if ($script != self::SCRIPT
         || !str_starts_with($path, self::PATH_PREFIX)
-        || !$this->request->getMethod() == 'GET'
+        || $this->request->getMethod() != 'GET'
     ) {
       return;
     }
@@ -157,7 +157,7 @@ class ByPassToSService
   private function isAllowedRequest(string $path): bool
   {
     $shareToken = strstr(substr($path, strlen(self::PATH_PREFIX)), '/', true);
-    $exceptions = $this->mapper->getToSExeptions($shareToken);
+    $exceptions = $this->mapper->getToSExceptions($shareToken);
     $remoteIP = $this->request->getRemoteAddress();
     // $json = json_encode($exceptions, JSON_PRETTY_PRINT);
     // $this->logger->info('SHARE TOKEN ' . $shareToken . ' ' . $remoteIP . ' ' . $json);
@@ -187,6 +187,7 @@ class ByPassToSService
   {
     list($subnet, $bits) = array_pad(explode('/', $range), 2, null);
     $subnetIsIPv6 = $this->domainNameService->isIPv6($subnet);
+
     if ($bits === null) {
       $bits = $subnetIsIPv6 ? 128 : 32;
     }
@@ -197,8 +198,8 @@ class ByPassToSService
 
       $ip = ip2long($ip);
       $subnet = ip2long($subnet);
-      $subnet &= $mask;
-      return ($ip & $mask) === $subnet;
+
+      return ($ip & $mask) === ($subnet & $mask);
     }
 
     if ($this->domainNameService->isIpv6($ip) && $subnetIsIPv6) {
@@ -223,9 +224,7 @@ class ByPassToSService
       $binMask = str_pad($binMask, 32, '0');
       $binMask = pack("H*", $binMask);
 
-      if (($ip & $binMask) === $subnet) {
-        return true;
-      }
+      return ($ip & $binMask) === ($subnet & $binMask);
     }
     return false;
   }

@@ -39,7 +39,7 @@ class TOSExceptionMapper extends Mapper
    *
    * @return array<TOSException>
    */
-  public function getToSExeptions(string $shareToken): array
+  public function getToSExceptions(string $shareToken): array
   {
     $qb = $this->db->getQueryBuilder();
     $qb->select('*')

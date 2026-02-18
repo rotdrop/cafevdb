@@ -89,7 +89,8 @@ class DomainNameService
   }
 
   /**
-   * A wrapper around filter_var().
+   * A wrapper around filter_var(). Note that the netmask-bits must not be
+   * specified, just the address part.
    *
    * @param string $ip
    *
@@ -101,7 +102,8 @@ class DomainNameService
   }
 
   /**
-   * A wrapper around filter_var().
+   * A wrapper around filter_var(). Note that the netmask-bits must not be
+   * specified, just the address part.
    *
    * @param string $ip
    *
