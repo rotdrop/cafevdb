@@ -54,15 +54,32 @@ import {
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
 import actionMenu from './vue-action-menu.ts';
+import { replaceOptions as replaceSelectOptions } from './select-utils.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Projects.ts';
+import { TEMPLATE as projectInstrumentationNumbersTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectInstrumentationNumbers.ts';
+import { TEMPLATE as projectParticipantsFieldTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipantFields.ts';
+import {
+  BASE_PATH,
+  END_POINT_CHANGE_INSTRUMENTAION,
+  END_POINT_VALIDATE,
+  END_POINT_MAILING_LISTS,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
-import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
-import type { DownloadsShareResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import type { EnumProjectWebPagesAction } from '../../build/ts-types/php-modules/Controller.ts';
+import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+import type {
+  ChangeProjectInstrumentationResponse,
+  DownloadsShareResponse,
+  ProjectValidationResponse,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { END_POINT as webPagesEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectWebPagesController.ts';
+import {
+  type EnumProjectWebPagesAction,
+  EnumProjectValidationTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
 import type { ProjectWebPage } from '../../build/ts-types/php-modules/PageRenderer/DTO.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 require('projects.scss');
-
-const template = 'projects';
 
 asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   if (event.template !== template) {
@@ -111,13 +128,13 @@ asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
  * (the default). If false, only raise an existing dialog to top.
  */
 const emailPopup = function(post: JQuery.PlainObject, reopen: boolean = false) {
-  const emailDlg = $('#emailformdialog');
-  if (emailDlg.dialog('isOpen') === true) {
+  const $emailDlg = $('#emailformdialog');
+  if ($emailDlg.dialog('isOpen') === true) {
     if (reopen === false) {
-      emailDlg.dialog('moveToTop');
+      $emailDlg.dialog('moveToTop');
       return;
     }
-    emailDlg.dialog('close').remove();
+    $emailDlg.dialog('close').remove();
   }
   pageBusyIcon(true);
   return Email.emailFormPopup(post, false, false, () => pageBusyIcon(false));
@@ -142,13 +159,12 @@ const instrumentationNumbersPopup = (
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = 'project-instrumentation-numbers';
-  const tableOptions: TableDialogOptions = {
+  const template = projectInstrumentationNumbersTemplate;
+  const tableOptions: TableDialogOptions<typeof template> = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: templateRenderer(template),
-    table: 'BesetzungsZahlen',
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
@@ -187,13 +203,12 @@ const participantFieldsPopup = (
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = 'project-participant-fields';
-  const tableOptions: TableDialogOptions = {
+  const template = projectParticipantsFieldTemplate;
+  const tableOptions: TableDialogOptions<typeof template> = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: templateRenderer(template),
-    table: 'ProjectParticipantFields',
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
@@ -229,7 +244,7 @@ const projectViewPopup = async function(
   post: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg'],
 ) {
   const projectId = post.projectId || post.entityId;
-  const tableOptions = {
+  await PHPMyEdit.tableDialogOpen({
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: 'project-overview',
     template,
@@ -244,8 +259,7 @@ const projectViewPopup = async function(
     [pmeSys('rec')]: { id: projectId },
     modalDialog: true,
     modified: false,
-  };
-  await PHPMyEdit.tableDialogOpen(tableOptions);
+  });
 };
 
 const pmeFormInit = (containerSel: string|JQuery) => {
@@ -267,7 +281,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
     const $projectType = $container.find<HTMLSelectElement>(typeSelector);
     const $registrationStart = $container.find<HTMLInputElement>(pmeInputSelector + '.registration-start-date');
 
-    let oldProjectYear = SelectUtils.selectedOptions($year).text();
+    let oldProjectYear = +SelectUtils.selectedOptions($year).text();
     let oldProjectName = $name.val()!;
     let oldProjectType = $projectType.val();
 
@@ -315,23 +329,21 @@ const pmeFormInit = (containerSel: string|JQuery) => {
         $container.data('project-validating', false);
       };
       Notification.hide();
-      $.post(generateAppUrl('validate/projects/name'), post)
+      $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_VALIDATE}/${EnumProjectValidationTopic.NAME}`), post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
           cleanup();
         })
-        .done(function(rqData) {
-          if (!Ajax.validateResponse(rqData, [
-            'projectName', 'projectYear',
-          ])) {
-            cleanup();
+        .done(function(rqData: ResponseData<ProjectValidationResponse>) {
+          if (!Ajax.validateResponse(rqData, ['name', 'year', 'messages'], cleanup)) {
+            return;
           }
-          Notification.messages(rqData.message);
-          $name.val(rqData.projectName);
-          $year.val(rqData.projectYear);
+          Notification.messages(rqData.messages);
+          $name.val(rqData.name);
+          $year.val(rqData.year);
           $year.trigger('chosen:updated');
-          oldProjectYear = rqData.projectYear;
-          oldProjectName = rqData.projectName;
+          oldProjectYear = rqData.year;
+          oldProjectName = rqData.name;
           if (action === 'submit') {
             if (typeof $button !== 'undefined') {
               $form.off('click', submitSel);
@@ -403,11 +415,11 @@ const pmeFormInit = (containerSel: string|JQuery) => {
   const updateLinkShareControls = function($control: JQuery, data: DownloadsShareResponse) {
     Notification.messages(data.messages);
     const $controlContainer = $control.closest(pmeClassSelector('', 'cell-wrapper'));
-    const empty = !data.share;
-    const tooltip = [data.folder, data.share].filter((x) => !!x).join('<br/>');
+    const empty = !data.url;
+    const tooltip = [data.path, data.url].filter((x) => !!x).join('<br/>');
     const $anchor = $controlContainer.find('a.url');
     $controlContainer.toggleClass('empty', empty).toggleClass('has-content', !empty);
-    $anchor.attr('href', data.share ?? '').find('.content').html(data.share ?? '');
+    $anchor.attr('href', data.url ?? '').find('.content').html(data.url ?? '');
     $anchor.cafevTooltip('dispose').attr('title', tooltip).cafevTooltip();
     if (data.expires) {
       const date = new Date(data.expires.substring(0, 10));
@@ -427,7 +439,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
       const projectId = $form.find('input[name="projectId"]').val();
       setBusyIndicators(true, $container, false);
       $.post(
-        generateAppUrl('projects/' + projectId + '/share/downloads'))
+        generateAppUrl(`${BASE_PATH}/${projectId}/share/downloads`))
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {
             setBusyIndicators(false, $container, false);
@@ -448,7 +460,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
       const projectId = $form.find('input[name="projectId"]').val();
       setBusyIndicators(true, $container, true);
       $.ajax({
-        url: generateAppUrl('projects/' + projectId + '/share/downloads'),
+        url: generateAppUrl(`${BASE_PATH}/${projectId}/share/downloads`),
         type: 'DELETE',
       })
         .fail(function(xhr, status, errorThrown) {
@@ -472,7 +484,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
       setBusyIndicators(true, $container, true);
       console.info('DATE', $this.val(), $this.datepicker('getDate'));
       $.ajax({
-        url: generateAppUrl('projects/' + projectId + '/share/downloads'),
+        url: generateAppUrl(`${BASE_PATH}/${projectId}/share/downloads`),
         type: 'PATCH',
         data: {
           expirationDate: $this.val(),
@@ -513,7 +525,7 @@ const pmeFormInit = (containerSel: string|JQuery) => {
 
     const post = (force: boolean) => {
       return $.post(
-        generateAppUrl('projects/mailing-lists/' + operation), {
+        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LISTS}/${operation}`), {
           operation,
           projectId,
           force,
@@ -599,7 +611,7 @@ type ProjectWebPageRequest = {
 const projectWebPageRequest = function(post: ProjectWebPageRequest, $container: JQuery) {
 
   Notification.hide();
-  $.post(generateAppUrl('projects/webpages/' + post.action), post)
+  $.post(generateAppUrl(`${webPagesEndPoint}/${post.action}`), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown);
     })
@@ -964,7 +976,8 @@ const changeArticleLoad = function(containerContext: ContainerContext, iframe?: 
   }
 };
 
-const tableLoadCallback = function(
+const tableLoadCallback: TableLoadCallback<typeof template>['callback'] = function(
+  template,
   selector: string|JQuery,
   parameters: TableDialogCallbackData,
   resizeCB: () => void,
@@ -1126,22 +1139,19 @@ const tableLoadCallback = function(
     for (const [instrument, voice] of Object.entries(additionalVoices || {})) {
       post += '&' + $.param({ [voicesName]: instrument + ':' + voice });
     }
-    $.post(generateAppUrl('projects/change-instrumentation'), post)
+    $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_CHANGE_INSTRUMENTAION}`), post)
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown);
         cleanup();
       })
-      .done(function(rqData) {
-        if (!Ajax.validateResponse(rqData, ['voices'])) {
-          cleanup();
+      .done(function(rqData: ResponseData<ChangeProjectInstrumentationResponse>) {
+        if (!Ajax.validateResponse(rqData, ['voices'], cleanup)) {
+          return;
         }
-        $instrumentationVoicesSelect
-          .empty()
-          .append(rqData.voices);
+        replaceSelectOptions($instrumentationVoicesSelect, rqData.voices);
         $instrumentationVoicesSelect
           .prop('disabled', !rqData.voices)
           .trigger('chosen:updated');
-        Notification.messages(rqData.message);
       });
   };
 
@@ -1211,7 +1221,6 @@ const documentReady = function() {
   PHPMyEdit.addTableLoadCallback(template, {
     callback: tableLoadCallback,
     context: globalState,
-    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(async () => {

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -42,12 +44,15 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 
 /** Fetch one or multiple tooltip via AJAX. */
+#[TSAttributes\TypeScript]
 class WebBrowserHistoryController extends Controller
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+
+  public const BASE_PATH = 'a/browser/history';
 
   public const GET_REQUEST_ALL = 'all';
   public const GET_REQUEST_TIMESTAMPS = 'timestamps';
@@ -162,6 +167,14 @@ class WebBrowserHistoryController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/' . self::BASE_PATH . '/{timestamp}/{modeOrKey}',
+    defaults: [
+      'timestamp' => self::GET_REQUEST_ALL,
+      'modeOrKey' => self::GET_MODE_SHALLOW,
+    ],
+  )]
   public function get(string|float $timestamp, string $modeOrKey = self::GET_MODE_SHALLOW)
   {
     $repository = $this->getDatabaseRepository(Entities\WebBrowserHistoryState::class);
@@ -222,6 +235,7 @@ class WebBrowserHistoryController extends Controller
    * @throws Exceptions\DatabaseException
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'PUT', url: '/' . self::BASE_PATH . '/{timestamp}')]
   public function put(float $timestamp, string $position, array $history, array $requestData):DataResponse
   {
     $historyState = new Entities\WebBrowserHistoryState($timestamp, $this->userId);
@@ -291,6 +305,7 @@ class WebBrowserHistoryController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'DELETE', url: '/' . self::BASE_PATH . '/{timestamp}')]
   public function delete(float $timestamp):DataResponse
   {
     /** @var OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository $repository */

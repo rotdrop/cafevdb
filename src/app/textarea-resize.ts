@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ console.debug('RESIZE EVENTS', { events });
 
 // TriggeredEvent<HTMLElement, undefined, any, any>'
 
-const handler = function(this: HTMLTextAreaElement) {
+const handler = function(this: HTMLTextAreaElement, _event: JQuery.Event) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const textarea = this;
   const $textarea = $(textarea);
@@ -69,9 +69,9 @@ const handler = function(this: HTMLTextAreaElement) {
 const textareaResize = ($container: JQuery<HTMLElement>, textareaSelector?: string) => {
   if (typeof textareaSelector === 'undefined') {
     // Variant with one argument, argument must be textarea.
-    $container.off(events).on(events, handler);
+    $container.off(events).on({ [events]: handler });
   } else {
-    $container.off(events, textareaSelector).on(events, textareaSelector, handler);
+    $container.off(events, textareaSelector).on({ [events]: handler }, textareaSelector);
   }
 };
 

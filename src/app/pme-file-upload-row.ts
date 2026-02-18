@@ -38,10 +38,18 @@ import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
 import { translate as t } from '@nextcloud/l10n';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import { disabledCssClass } from 'variables.scss';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import {
+  BASE_PATH as projectParticipantsBasePath,
+  END_POINT_FILES,
+  FILE_ACTION_DELETE,
+  FILE_ACTION_UPLOAD,
+} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
 
 const defaultUploadUrls = {
-  upload: 'projects/participants/files/upload',
-  delete: 'projects/participants/files/delete',
+  upload: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_UPLOAD}`,
+  delete: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_DELETE}`,
   stash: 'upload/stash',
 };
 
@@ -277,9 +285,9 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       }
     };
-    const doneHandler: Parameters<JQuery.jqXHR['done']>[0] = function(data) {
+    const doneHandler: Parameters<JQuery.jqXHR['done']>[0] = function(data: ResponseData<MessagesResponse>) {
       $.fn.cafevTooltip.remove();
-      if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+      if (!Ajax.validateResponse(data, ['messages'], cleanup)) {
         return;
       }
       $thisRow.trigger('pme:upload-deleted');
@@ -315,7 +323,7 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
             return v;
           }));
       }
-      Notification.messages(data.message);
+      Notification.messages(data.messages);
       cleanup();
     };
 

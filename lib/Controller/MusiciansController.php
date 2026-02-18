@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use ReflectionClass;
 
 use OCP\AppFramework\OCSController;
@@ -45,10 +47,13 @@ use OCA\CAFEVDB\Common\Uuid;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
+#[TSAttributes\TypeScript]
 class MusiciansController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT = 'musicians/search';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -83,7 +88,7 @@ class MusiciansController extends OCSController
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\ApiRoute(verb: 'GET', url: '/musicians/search/{pattern}', defaults: ['pattern' => ''])]
+  #[CoreAttributes\ApiRoute(verb: 'GET', url: '/' . self::END_POINT . '/{pattern}', defaults: ['pattern' => ''])]
   public function search(
     string $pattern,
     ?int $limit = null,

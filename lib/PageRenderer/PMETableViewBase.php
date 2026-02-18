@@ -17,7 +17,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ *m
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -55,13 +55,6 @@ abstract class PMETableViewBase extends AbstractPageRenderer
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /**
-   * Hard-coded sequence table name. This relies on
-   *
-   * @link https://mariadb.com/kb/en/sequence-storage-engine/
-   */
-  protected const SEQUENCE_TABLE = 'seq_0_to_100000_step_1';
-
   protected const JOIN_FLAGS_NONE = 0x00;
 
   /**
@@ -88,14 +81,14 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
   /**
    * Assume the join is (at most) single valued. Otherwise the values
-   * are split by PMETableViewBase::VALUES_SEP (comma). If this flag
+   * are split by DataConstants::VALUES_SEP (comma). If this flag
    * is set, then the expected format of the data field is
    *
    * ```
    * JOIN_KEY:VALUES
    * ```
    *
-   * and VALUES may contain self::VALUES_SEP (comma) and
+   * and VALUES may contain DataConstants::VALUES_SEP (comma) and
    * self::JOIN_KEY_SEP (colon). If this flag is not set then the expected format is
    *
    * ```
@@ -107,56 +100,23 @@ abstract class PMETableViewBase extends AbstractPageRenderer
    */
   protected const JOIN_SINGLE_VALUED = 0x10;
 
-  const COMPOSITE_PAYMENTS_TABLE = 'CompositePayments';
-  const DATABASE_STORAGES_TABLE = 'DatabaseStorages';
-  const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
-  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
-  const FIELD_TRANSLATIONS_TABLE = 'TableFieldTranslations';
-  const FILES_TABLE = 'Files';
-  const INSTRUMENTS_TABLE = 'Instruments';
-  const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
-  const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
-  const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
-  const INVOICES_TABLE = 'Invoices';
-  const INVOICE_ITEMS_TABLE = 'InvoiceItems';
-  const MUSICIANS_TABLE = 'Musicians';
-  const MUSICIAN_EMAILS_TABLE = 'MusicianEmailAddresses';
-  const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
-  const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
-  const PROJECTS_TABLE = 'Projects';
-  const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
-  const PROJECT_INSTRUMENTS_TABLE = 'ProjectInstruments';
-  const PROJECT_PARTICIPANTS_TABLE = 'ProjectParticipants';
-  const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
-  const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
-  const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
-  const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
-  const SENT_EMAILS_TABLE = 'SentEmails';
-  const SEPA_BANK_ACCOUNTS_TABLE = 'SepaBankAccounts';
-  const SEPA_BULK_TRANSACTIONS_TABLE = 'SepaBulkTransactions';
-  const SEPA_BULK_TRANSACTION_DATA_TABLE = 'SepaBulkTransactionData';
-  const SEPA_DEBIT_MANDATES_TABLE = 'SepaDebitMandates';
-  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
-  const TAX_EXEMPTION_ITEMS_TABLE = 'TaxExemptionItems';
-  const TAXATION_STATUTORY_SOURCES_TABLE = 'TaxationStatutorySources';
+  protected const VALUES_SEP = DataConstants::VALUES_SEP;
+  protected const JOIN_FIELD_NAME_SEPARATOR = DataConstants::JOIN_FIELD_NAME_SEPARATOR;
+  protected const JOIN_KEY_SEP = DataConstants::JOIN_KEY_SEP;
+  protected const COMP_KEY_SEP = DataConstants::COMP_KEY_SEP;
+  protected const VALUES_TABLE_SEP = DataConstants::VALUES_TABLE_SEP;
 
-  const VALUES_SEP = DataConstants::VALUES_SEP;
-  const JOIN_FIELD_NAME_SEPARATOR = DataConstants::JOIN_FIELD_NAME_SEPARATOR;
-  const JOIN_KEY_SEP = DataConstants::JOIN_KEY_SEP;
-  const COMP_KEY_SEP = DataConstants::COMP_KEY_SEP;
-  const VALUES_TABLE_SEP = DataConstants::VALUES_TABLE_SEP;
-
-  const MASTER_FIELD_SUFFIX = '__master_key_';
+  protected const MASTER_FIELD_SUFFIX = DataConstants::MASTER_FIELD_SUFFIX;
 
   /**
    * @var string MySQL/MariaDB column quote.
    */
-  const COL_QUOTE = '`';
+  protected const COL_QUOTE = '`';
 
   /** CSS tag for displaying participant fields */
-  const CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY = 'project-participant-fields-display';
-  const CSS_TAG_SHOW_HIDE_DISABLED = 'show-hide-disabled';
-  const CSS_TAG_DIRECT_CHANGE = 'direct-change';
+  protected const CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY = CssClasses::PROJECT_PARTICIPANT_FIELDS_DISPLAY;
+  protected const CSS_TAG_SHOW_HIDE_DISABLED = CssClasses::SHOW_HIDE_DISABLED;
+  protected const CSS_TAG_DIRECT_CHANGE = CssClasses::DIRECT_CHANGE;
 
   protected const PME_NAVIGATION_NO_MULTI = 'GUD';
   protected const PME_NAVIGATION_MULTI = 'GUDM';
@@ -796,7 +756,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
 
       $fdn = $pme->fdn[$key];
       if ($pme->col_has_multiple($fdn)) {
-        $value = preg_replace('/\s*,\s*/', self::VALUES_SEP, $value);
+        $value = preg_replace('/\s*,\s*/', DataConstants::VALUES_SEP, $value);
       }
 
       // @todo what is this
@@ -948,8 +908,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // assume that the 'column' component contains the keys.
           $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
           $identifier[$key] = [
-            'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
-            'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
+            'old' => Util::explode(DataConstants::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
+            'new' => Util::explode(DataConstants::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
           ];
           // Handle "deleted" information if present. This is meant for
           // disabled instruments and the like. This stems from split-inputs
@@ -964,13 +924,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           // KEY1:VALUE1,KEY2:VALUE2,... field.
           $deletedField = self::joinTableFieldName($joinInfo, 'deleted');
           if (!empty($oldValues[$deletedField]) && !str_contains($oldValues[$deletedField], self::JOIN_KEY_SEP)) {
-            $deletedKeys = Util::explode(self::VALUES_SEP, $oldValues[$deletedField]);
+            $deletedKeys = Util::explode(DataConstants::VALUES_SEP, $oldValues[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
               $identifier[$key]['old'][] = $deletedKey;
               $changeSet['deleted'] = $deletedField;
             }
             $identifier[$key]['old'] = array_values(array_unique($identifier[$key]['old']));
-            $newValues[$deletedField] = implode(self::VALUES_SEP, array_diff($deletedKeys, $identifier[$key]['new']));
+            $newValues[$deletedField] = implode(DataConstants::VALUES_SEP, array_diff($deletedKeys, $identifier[$key]['new']));
           }
 
           $identifier[$key]['del'] = array_diff($identifier[$key]['old'], $identifier[$key]['new']);
@@ -1066,13 +1026,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           $selfValues = [];
           foreach (['old', 'new'] as $dataSet) {
             $dataValues = ${$dataSet . 'Values'};
-            $selfValues[$dataSet] = Util::explode(self::VALUES_SEP, $dataValues[$selfField]);
+            $selfValues[$dataSet] = Util::explode(DataConstants::VALUES_SEP, $dataValues[$selfField]);
           }
           $selfValues['del'] = array_diff($selfValues['old'], $selfValues['new']);
           $selfValues['add'] = array_diff($selfValues['new'], $selfValues['old']);
           $selfValues['rem'] = array_intersect($selfValues['new'], $selfValues['old']);
           foreach (['old', 'new', 'del', 'add', 'rem'] as $tag) {
-            $selfValues[$tag] = Util::explodeIndexedMulti(implode(self::VALUES_SEP, $selfValues[$tag]));
+            $selfValues[$tag] = Util::explodeIndexedMulti(implode(DataConstants::VALUES_SEP, $selfValues[$tag]));
           }
 
           $this->debug('SELFVALUES ' . print_r($selfValues, true));
@@ -1086,7 +1046,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               if (!isset($remIdentifier[$key])) {
                 throw new RuntimeException($this->l->t(
                   'Inconsistent removal request for "%1$s" (%3$s), major key "%2$s" (%4$s).', [
-                    $selfField, $multiple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
+                    $selfField, $multiple, implode(DataConstants::VALUES_SEP, $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (array_search($key, $identifier[$multiple]['del']) === false) {
@@ -1115,7 +1075,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               if (!isset($remIdentifier[$key])) {
                 throw new RuntimeException($this->l->t(
                   'Inconsistent add request for "%1$s" (%3$%s), major key "%2$s" (%4$s).', [
-                    $selfField, $multiple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
+                    $selfField, $multiple, implode(DataConstants::VALUES_SEP, $selfValuesTuple), $key]));
               }
               ${$operation.'Identifier'}[$key] = $remIdentifier[$key];
               if (empty($selfValues['rem'][$key])) {
@@ -1144,7 +1104,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
             if (!isset(${$operation.'Identifier'}[$key])) {
               throw new RuntimeException($this->l->t(
                 'Inconsistent remaining data for "%1$s" (%3$s), major key "%2$s" (%4$s).', [
-                  $selfField, $multiple, implode(self::VALUES_SEP, $selfValuesTuple), $key]));
+                  $selfField, $multiple, implode(DataConstants::VALUES_SEP, $selfValuesTuple), $key]));
             }
 
             $this->debug('SELF VALUES TUPLE ' . $key . ' => ' . print_r($selfValuesTuple, true));
@@ -1300,7 +1260,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $multipleValues[$column]['data'][$key] = $value;
             }
           } else {
-            foreach (Util::explodeIndexed($newValues[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
+            foreach (Util::explodeIndexed($newValues[$field], null, DataConstants::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
               $multipleValues[$column]['data'][$key] = $value;
             }
           }
@@ -1574,7 +1534,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
           }
           // assume that the 'column' component contains the keys.
           $keyField = self::joinTableFieldName($joinInfo, $joinInfo['column']);
-          $identifier[$key] = Util::explode(self::VALUES_SEP, $newValues[$keyField]);
+          $identifier[$key] = Util::explode(DataConstants::VALUES_SEP, $newValues[$keyField]);
 
           if (isset($changeSet[$joinInfo['column']])) {
             Util::unsetValue($changed, $changeSet[$joinInfo['column']]);
@@ -1750,7 +1710,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $multipleValues[$column]['data'][$key] = $value;
             }
           } else {
-            foreach (Util::explodeIndexed($newValues[$field], null, self::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
+            foreach (Util::explodeIndexed($newValues[$field], null, DataConstants::VALUES_SEP, self::JOIN_KEY_SEP) as $key => $value) {
               $multipleValues[$column]['data'][$key] = $value;
             }
           }
@@ -2112,13 +2072,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
               $values = array_map(function($value) {
                 return is_numeric($value) ? $value : "'".addslashes($value)."'";
               }, is_array($values) ? $values : [ $values ]);
-              $joinCondition .= 'IN (' . implode(self::VALUES_SEP, $values) . ')';
+              $joinCondition .= 'IN (' . implode(DataConstants::VALUES_SEP, $values) . ')';
             } elseif (!empty($joinTableValue['!value'])) {
               $values = $joinTableValue['!value'];
               $values = array_map(function($value) {
                 return is_numeric($value) ? $value : "'".addslashes($value)."'";
               }, is_array($values) ? $values : [ $values ]);
-              $joinCondition .= 'NOT IN (' . implode(self::VALUES_SEP, $values) . ')';
+              $joinCondition .= 'NOT IN (' . implode(DataConstants::VALUES_SEP, $values) . ')';
             } elseif (!empty($joinTableValue['condition'])) {
               $joinCondition .= $joinTableValue['condition'];
             } elseif (!empty($joinTableValue['self'])) {
@@ -2480,7 +2440,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $l10nJoins = [];
     foreach ($fields as $field) {
       $joinTable = 'jt_'.$field;
-      $l10nJoin = "  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." $joinTable
+      $l10nJoin = "  LEFT JOIN ".DatabaseTables::FIELD_TRANSLATIONS_TABLE." $joinTable
   ON $joinTable.locale = '$lang'
     AND $joinTable.object_class = '$entity'
     AND $joinTable.field = '$field'
@@ -2545,13 +2505,13 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     return [
       'sql' => 'COALESCE($join_col_fqn, $main_table.$field_name)',
       'values' => [
-        'table' => self::FIELD_TRANSLATIONS_TABLE,
+        'table' => DatabaseTables::FIELD_TRANSLATIONS_TABLE,
         'column' => 'content',
         'join' => implode("\nAND ", [
           '$join_table.locale = "' . $lang . '"',
           '$join_table.object_class = "' . addslashes($joinInfo['entity']) . '"',
           '$join_table.field = "'.$field.'"',
-          '$join_table.foreign_key = CAST($main_table.' . $id . ' AS CHAR CHARACTER SET ' . DBConstants::CHARACTER_SET . ') COLLATE ' .  DBConstants::FULL_COLLATION,
+          '$join_table.foreign_key = CAST($main_table.' . $id . ' AS CHAR CHARACTER SET ' . DBConstants::CHARACTER_SET . ') COLLATE ' . DBConstants::FULL_COLLATION,
         ]),
         'filters' => '$table.field = "'.$field.'"
   AND $table.locale = "'.$lang.'

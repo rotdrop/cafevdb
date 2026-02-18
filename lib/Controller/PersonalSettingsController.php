@@ -36,7 +36,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
@@ -96,6 +96,13 @@ class PersonalSettingsController extends Controller
     ],
   ];
 
+  public const BASE_PATH = 'settings';
+  public const END_POINT_GET = 'get';
+  public const END_POINT_APP_GET = 'app/get';
+  public const END_POINT_APP_SET = 'app/set';
+  public const END_POINT_PERSONAL_SET = 'personal/set';
+  public const END_POINT_PERSONAL_FORM = 'personal/form';
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
@@ -123,8 +130,12 @@ class PersonalSettingsController extends Controller
   /**
    * @return Http\Response Return settings form.
    */
-  #[NoAdminRequired]
-  public function form():Http\Response
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_PERSONAL_FORM,
+  )]
+  public function form(): Http\Response
   {
     return $this->personalSettings->getForm();
   }
@@ -138,7 +149,11 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    */
-  #[NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_PERSONAL_SET . '/{parameter}',
+)]
   public function set(string $parameter, mixed $value):Http\Response
   {
     $parameter = Util::dashesToCamelCase($parameter);
@@ -308,9 +323,13 @@ class PersonalSettingsController extends Controller
    *
    * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
-  #[NoAdminRequired]
   #[Attributes\SubAdminRequired]
-  public function setApp(string $parameter, mixed $value):Http\Response
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_APP_SET . '/{parameter}',
+  )]
+  #[CoreAttributes\NoAdminRequired]
+  public function setApp(string $parameter, mixed $value): Http\Response
   {
     switch ($parameter) {
       case ConfigConstants::ORCHESTRA_LOCALE_KEY: // could check for valid locale ...
@@ -961,7 +980,7 @@ class PersonalSettingsController extends Controller
           }
 
           $data = [
-            'project' => $projec->getName(),
+            'project' => $project->getName(),
             'projectId' => $project->getId(),
             'messages' => [
               $this->l->t('Project "%s" successfully validated.', $project->getName()),
@@ -1138,9 +1157,8 @@ class PersonalSettingsController extends Controller
             $this->logException($t);
           }
         }
-        return self::dataResponse([
-          'message' => $messages,
-        ]);
+        return new DTO\MessagesResponse(messages: $messages)->response();
+
       case ConfigConstants::SHARED_FOLDER:
         $appGroup = $this->getConfigValue(ConfigConstants::USER_GROUP_KEY);
         if (empty($appGroup)) {
@@ -1452,7 +1470,12 @@ class PersonalSettingsController extends Controller
           $message = $this->l->t('Display name of musicians-addressbook set to "%s".', $real);
         }
         if ($addressBook->getDisplayName() != $real) {
-          throw new Exceptions\EnduserNotificationException($this->l->t('Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".', [ $real, $addressBook->getDisplayName() ]));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unable to set display-name of musicians-addressbook to "%s", it remains at "%s".',
+              [ $real, $addressBook->getDisplayName() ],
+            ),
+          );
         }
         return (new DTO\NameIdValueResponse(
           message: $message,
@@ -1835,7 +1858,7 @@ class PersonalSettingsController extends Controller
       case EnumSimpleSettingsKey::BULK_EMAIL_SUBJECT_TAG->value:
       case EnumSimpleSettingsKey::EMAIL_USER->value:
       case EnumSimpleSettingsKey::EMAIL_PASSWORD->value:
-        $messages = $messags ?? [];
+        $messages = $messages ?? [];
         return $this->setSimpleConfigValue($parameter, $realValue ?? $value, humanValue: $humanValue ?? null, messages: $messages);
 
       case EnumSimpleSettingsKey::BULK_EMAIL_PRIVACY_NOTICE->value:
@@ -2013,7 +2036,12 @@ class PersonalSettingsController extends Controller
    *
    * @return Http\Response
    */
-  #[NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_GET . '/{parameter}',
+
+  )]
   public function get(string $parameter):Http\Response
   {
     switch ($parameter) {
@@ -2071,36 +2099,44 @@ class PersonalSettingsController extends Controller
   /**
    * Get app settings.
    *
-   * @param string $parameter
+   * @param string|EnumSettingsGetApp $parameter
    *
    * @return Http\Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
-  #[NoAdminRequired]
   #[Attributes\SubAdminRequired]
-  public function getApp(string $parameter):Http\Response
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_APP_GET . '/{parameter}',
+  )]
+  #[CoreAttributes\NoAdminRequired]
+  public function getApp(string|EnumSettingsGetApp $parameter): Http\Response
   {
+    $parameter = EnumSettingsGetApp::get($parameter);
+
     switch ($parameter) {
-      case 'locale-info':
+      case EnumSettingsGetApp::LOCALE_INFO:
         $localeInfo = $this->generateLocaleInfo($this->request->getParam('scope'));
-        return self::dataResponse([
+        return new Http\DataResponse([
           'contents' => $localeInfo,
         ]);
-      case 'translation-templates':
+
+      case EnumSettingsGetApp::TRANSLATION_TEMPLATES:
         $pot = $this->translationService->generateCatalogueTemplates();
 
         $fileName = $this->appName().'-'.$this->timeStamp().'.pot';
 
-        $response = $this->dataDownloadResponse($pot, $fileName, 'text/plain');
+        return new Http\DataDownloadResponse($pot, $fileName, 'text/plain');
 
-        // $response->addCookie($cookieName, $cookieValue);
-
-        return $response;
-      case 'auto-fill-test':
-      case 'auto-fill-test-data':
+      case EnumSettingsGetApp::AUTO_FILL_TEST:
+      case EnumSettingsGetApp::AUTO_FILL_TEST_DATA:
         $templateName = $this->request->getParam('documentTemplate');
         if (empty(ConfigConstants::DOCUMENT_TEMPLATES[$templateName])
             || ConfigConstants::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
-          return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unknown auto-fill template: "%s".', $templateName),
+          );
         }
         $format = $this->request->getParam('format');
 
@@ -2295,20 +2331,24 @@ class PersonalSettingsController extends Controller
             $blocks['recipient'] = 'instins.billTo';
             break;
           default:
-            return self::grumble(
+            throw new Exceptions\EnduserNotificationException(
               $this->l->t(
-                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName));
+                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName,
+              ),
+            );
         }
 
-        if ($parameter == 'auto-fill-test') {
+        if ($parameter == EnumSettingsGetApp::AUTO_FILL_TEST) {
           if ($templateData !== null) {
             /** @var OpenDocumentFiller $documentFiller */
             $documentFiller = $this->di(OpenDocumentFiller::class);
             $templateFileName = $this->getDocumentTemplatesPath($templateName);
             if (empty($templateFileName)) {
-              return self::grumble(
+              throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
-                  'There is no template file for template "%s"', $templateName));
+                  'There is no template file for template "%s"', $templateName,
+                ),
+              );
             }
 
             list($fileData, $mimeType, $fileName) = $documentFiller->fill(
@@ -2323,10 +2363,10 @@ class PersonalSettingsController extends Controller
           $fileName = implode('-', [
             $this->timeStamp(),
             $pathInfo['filename'],
-            'auto-fill-test',
+            EnumSettingsGetApp::AUTO_FILL_TEST->value,
           ]) . '.' . $pathInfo['extension'];
 
-          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+          return new Http\DataDownloadResponse($fileData, $fileName, $mimeType);
         } else {
           /** @var OpenDocumentFiller $documentFiller */
           $documentFiller = $this->di(OpenDocumentFiller::class);
@@ -2338,17 +2378,14 @@ class PersonalSettingsController extends Controller
           $fileName = implode('-', [
             $this->timeStamp(),
             $templateName,
-            'auto-fill-test-data'
+            EnumSettingsGetApp::AUTO_FILL_TEST_DATA->value,
           ])
             . '.' . 'json';
           $mimeType = 'application/json';
 
-          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+          return new Http\DataDownloadResponse($fileData, $fileName, $mimeType);
         }
-      default:
-        break;
     }
-    return self::grumble($this->l->t('Unknown Request: "%s".', $parameter));
   }
 
   /**

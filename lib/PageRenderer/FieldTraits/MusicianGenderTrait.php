@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 use GenderDetector;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\CssClasses;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 
 /**
@@ -52,8 +54,8 @@ trait MusicianGenderTrait
       return [];
     }
     $tableName =
-      ($this->pme->fdn[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::MUSICIANS_TABLE)] ?? null
-       ? PMETableViewBase::MUSICIANS_TABLE : null);
+      ($this->pme->fdn[PMETableViewBase::joinTableMasterFieldName(DatabaseTables::MUSICIANS_TABLE)] ?? null
+       ? DatabaseTables::MUSICIANS_TABLE : null);
     $firstName = $row[$this->joinQueryField($tableName, 'first_name')];
     if (empty($firstName)) {
       return [];
@@ -108,7 +110,7 @@ trait MusicianGenderTrait
 <span class="gender-detector">' . $this->l->t('click to selected the guessed value:') . '</span>
 <span class="space">&nbsp;</span>';
       foreach ($genderTypes as $gender => $l10nGender) {
-        $html .= '<a href="#" class="button accept-gender-detection" data-value="' . $gender . '">' . $l10nGender . '</a>';
+        $html .= '<a href="#" class="button ' . CssClasses::ACCEPT_GENDER_DETECTION . '" data-value="' . $gender . '">' . $l10nGender . '</a>';
       }
     } else {
       $html = '

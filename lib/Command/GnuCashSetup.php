@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2024 Claus-Justus Heine
+ * @copyright 2011-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
+use OCA\CAFEVDB\Service\Finance\GnuCasDatabaseService;
 use OCA\CAFEVDB\Constants;
 
 /** GnuCash connectivity. */
@@ -133,7 +133,7 @@ class GnuCashSetup extends Command
     }
 
     /** @var GnuCashConnectorService $gncService */
-    $gncService = $this->appContainer->get(GnuCashConnectorService::class);
+    $gncService = $this->appContainer->get(GnuCashDatabaseService::class);
 
     $gncService->copyGnuCashTables(
       gnuCashDatabase: $gncOptions['path'],

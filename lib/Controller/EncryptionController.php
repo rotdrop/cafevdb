@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -47,11 +49,19 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 
 /** AJAX end-points in order to support encryption. */
+#[TSAttributes\TypeScript]
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const API_VERSION = 'v1';
+  public const BASE_PATH = 'api/' . self::API_VERSION . '/maintenance/encryption';
+
+  public const END_POINT_RECRYPT = 'recrypt';
+  public const END_POINT_REVOKE = 'revoke';
+  public const END_POINT_BULK_ENCRYPTION = 'bulk-recryption';
 
   // @todo move this definition somewhere else
   const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
@@ -78,7 +88,7 @@ class EncryptionController extends OCSController
   #[Attributes\NoGroupMemberRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'GET',
-    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
     defaults: [ 'userId' => null ],
   )]
@@ -119,7 +129,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'DELETE',
-    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function deleteRecryptRequest(string $userId, bool $notifyUser = true):Response
@@ -146,7 +156,7 @@ class EncryptionController extends OCSController
   #[Attributes\NoGroupMemberRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'PUT',
-    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function putRecryptRequest(string $userId):Response
@@ -175,7 +185,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'POST',
-    url: '/api/{apiVersion}/maintenance/encryption/revoke/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_REVOKE . '/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function revokeCloudAccess(string $userId, bool $allowFailure = false):Response
@@ -222,7 +232,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'POST',
-    url: '/api/{apiVersion}/maintenance/encryption/recrypt/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function handleRecryptRequest(string $userId, bool $notifyUser = true, bool $allowFailure = false):Response
@@ -278,7 +288,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'POST',
-    url: '/api/{apiVersion}/maintenance/encryption/bulk-recryption',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_BULK_ENCRYPTION,
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function bulkRecryptionRequest(bool $grantAccess, bool $includeDisabled, bool $includeDeactivated, int $offset, int $limit = 1, int $projectId = 0):Response

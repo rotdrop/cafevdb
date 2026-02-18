@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use ArrayAccess;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -40,7 +41,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * Record notices of tax exemption from the corporate income tax (or other
  * taxes).
  */
-#[ORM\Table(name: 'TaxExemptionNotices')]
+#[ORM\Table(name: DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE)]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete::class)]
@@ -56,7 +57,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
 
   /** @var Collection<TaxationStatutorySource> */
   #[ORM\ManyToMany(targetEntity: TaxationStatutorySource::class, inversedBy: 'taxExemptionNotices', cascade: ['persist'])]
-  #[ORM\JoinTable(name: 'TaxExemptionItems')]
+  #[ORM\JoinTable(name: DatabaseTables::TAX_EXEMPTION_ITEMS_TABLE)]
   // #[ORM\JoinColumn(nullable: false)]
   // #[ORM\JoinColumn()]
   private Collection $taxationStatutorySources;

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 require('personal-settings.scss');
 
 __webpack_public_path__ = webRoot;
-__webpack_nonce__ = nonce;
+__webpack_nonce__ = nonce ?? '';
 
 onDocumentLoaded(() => {
   attachDialogHandlers();

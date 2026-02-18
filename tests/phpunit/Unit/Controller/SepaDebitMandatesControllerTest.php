@@ -43,12 +43,15 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockProjectsRepositoryTrait;
 
 /** Test aspects of the SepaDebitMandatesController */
 #[Attributes\CoversClass(DTO\SepaBankAccount::class)]
 #[Attributes\CoversClass(DTO\SepaDebitMandate::class)]
 #[Attributes\CoversClass(SepaDebitMandatesController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
@@ -84,6 +87,8 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class SepaDebitMandatesControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use MockMusiciansRepositoryTrait;
+  use MockProjectsRepositoryTrait;
   use TestRoutesAreDefinedTrait;
 
   private const CONTROLLER_CLASS = SepaDebitMandatesController::class;
@@ -112,28 +117,10 @@ class SepaDebitMandatesControllerTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $projectsRepository = $this->getMockBuilder(EntityRepository::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $projectsRepository->method('find')->with($this->project->getId())->willReturn($this->project);
-
-    $musiciansRepository = $this->getMockBuilder(EntityRepository::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $musiciansRepository->method('find')->with($this->musician->getId())->willReturn($this->musician);
-
-    $this->entityManager = $this->createStub(EntityManager::class);
-    $this->entityManager->method('getRepository')->willReturnCallback(
-      function(string $className) use ($projectsRepository, $musiciansRepository) {
-        switch ($className) {
-          case Entities\Project::class:
-            return $projectsRepository;
-          case Entities\Musician::class:
-            return $musiciansRepository;
-        }
-        return $this->createStub(EntityRepository::class);
-      },
-    );
+    $this->getEntityManagerMock();
+    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
+    $this->getMusiciansRepositoryMock();
+    $this->getProjectsRepositoryMock();
 
     $appContainer = $this->mockProvider->getAppContainer();
 
@@ -153,6 +140,8 @@ class SepaDebitMandatesControllerTest extends TestCase
   /** @return void */
   public function testSetup(): void
   {
+    $this->assertInstanceOf(Entities\Musician::class, $this->musician);
+    $this->assertNotNull($this->musician->getId());
   }
 
   /** @return void */

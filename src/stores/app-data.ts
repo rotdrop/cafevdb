@@ -54,6 +54,11 @@ import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 import type { EntityReference } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
 import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
 import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import {
+  BASE_PATH as projectsEndPoint,
+  GET_PROJECT_FOLDER,
+  GET_EVENT_MATRIX,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
 
 export { type EventMatrixEvent };
 
@@ -197,7 +202,7 @@ export default defineStore(storeId, () => {
     projectId: number,
     errorHandler?: ErrorHandler,
   ) => {
-    const url = generateAppUrl('projects/{projectId}/event-matrix', {
+    const url = generateAppUrl(`${projectsEndPoint}/{projectId}/${GET_EVENT_MATRIX}`, {
       projectId,
     });
     try {
@@ -218,7 +223,7 @@ export default defineStore(storeId, () => {
     projectId: number,
     errorHandler?: ErrorHandler,
   ) => {
-    const url = generateAppUrl('projects/{projectId}/folder/all', {
+    const url = generateAppUrl(`${projectsEndPoint}/{projectId}/${GET_PROJECT_FOLDER}`, {
       projectId,
     });
     try {

@@ -72,6 +72,7 @@ let nonce = globalState.nonce;
 
 // this may not be necessary as the actual secret value does not change
 onRequestTokenUpdate(function(token) {
+  __webpack_nonce__ = token;
   globalState.nonce = token;
   nonce = globalState.nonce;
   console.debug('NEW REQUEST TOKEN', token);

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
@@ -54,6 +56,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\AllProjectsTrait;
@@ -74,8 +77,10 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-participants';
-  const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
+  public const TEMPLATE = EnumTemplate::PROJECT_PARTICIPANTS->value;
+
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE;
 
   protected static ParticipationContext $participationContext;
 
@@ -91,17 +96,17 @@ class ProjectParticipants extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\ProjectParticipant::class,
     ],
-    self::MUSICIANS_TABLE => [
+    DatabaseTables::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [ 'id' => 'project_id' ],
       'column' => 'id',
     ],
-    self::PROJECT_INSTRUMENTS_TABLE => [
+    DatabaseTables::PROJECT_INSTRUMENTS_TABLE => [
       'entity' => Entities\ProjectInstrument::class,
       'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
@@ -112,18 +117,18 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    self::INSTRUMENTS_TABLE => [
+    DatabaseTables::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
-          'table' => self::PROJECT_INSTRUMENTS_TABLE,
+          'table' => DatabaseTables::PROJECT_INSTRUMENTS_TABLE,
           'column' => 'instrument_id',
         ],
       ],
       'column' => 'id',
     ],
-    self::MUSICIAN_INSTRUMENTS_TABLE => [
+    DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -131,18 +136,18 @@ class ProjectParticipants extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians' => [
+    DatabaseTables::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians' => [
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
-          'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+          'table' => DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE,
           'column' => 'instrument_id',
         ],
       ],
       'column' => 'id',
     ],
-    self::PROJECT_PAYMENTS_TABLE => [
+    DatabaseTables::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'project_id' => 'project_id',
@@ -152,7 +157,7 @@ class ProjectParticipants extends PMETableViewBase
     ],
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
-    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -162,14 +167,14 @@ class ProjectParticipants extends PMETableViewBase
       'column' => 'id',
     ],
     // the data for the extra input fields
-    self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_REMOVE_EMPTY,
       'identifier' => [
         'project_id' => 'project_id',
         'musician_id' => 'musician_id',
         'field_id' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'option_key' => false,
@@ -178,16 +183,16 @@ class ProjectParticipants extends PMETableViewBase
       'encode' => 'BIN2UUID(%s)',
     ],
     // the data for the extra input fields
-    self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDataOption::class,
       'flags' => 0,
       'identifier' => [
         'field_id' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'key' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
           'column' => 'option_key',
         ],
       ],
@@ -256,10 +261,10 @@ class ProjectParticipants extends PMETableViewBase
     // ));
     $notInstrumentsFilter = array_keys($this->getNonInstruments());
 
-    // $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
+    // $this->joinStructure[DatabaseTables::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
     //   'instrument_id' => [ 'value' => $instrumentsFilter, ],
     // ];
-    $this->joinStructure[self::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
+    $this->joinStructure[DatabaseTables::PROJECT_INSTRUMENTS_TABLE]['filter'] = [
       'instrument_id' => [ '!value' => $notInstrumentsFilter, ],
     ];
 
@@ -287,11 +292,11 @@ class ProjectParticipants extends PMETableViewBase
     //$opts['debug'] = true;
 
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TEMPLATE => self::TEMPLATE,
       PersistentCGIKeys::TABLE => $opts['tb'],
-      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . self::TEMPLATE,
       PersistentCGIKeys::DATA_PREFIX => [
-        'musicians' => self::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
+        'musicians' => DatabaseTables::MUSICIANS_TABLE . self::JOIN_FIELD_NAME_SEPARATOR,
       ],
     ];
 
@@ -301,13 +306,13 @@ class ProjectParticipants extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
-      self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice'),
-      '-' . self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
-      self::joinTableFieldName(self::MUSICIANS_TABLE, 'display_name'),
-      self::joinTableFieldName(self::MUSICIANS_TABLE, 'sur_name'),
-      self::joinTableFieldName(self::MUSICIANS_TABLE, 'first_name'),
-      self::joinTableFieldName(self::MUSICIANS_TABLE, 'nick_name'),
+      self::joinTableFieldName(DatabaseTables::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice'),
+      '-' . self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'section_leader'),
+      self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, 'display_name'),
+      self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, 'sur_name'),
+      self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, 'first_name'),
+      self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, 'nick_name'),
     ];
 
     // Options you wish to give the users
@@ -424,33 +429,33 @@ class ProjectParticipants extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-        case self::INSTRUMENTS_TABLE:
+        case DatabaseTables::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          list($select, $join) = explode('FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
-            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+            . 'FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
 WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY t.id';
           break;
-        case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
+        case DatabaseTables::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-          list($select, $join) = explode('FROM ' . self::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
+          list($select, $join) = explode('FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
-            . 'FROM ' . self::INSTRUMENTS_TABLE . ' t
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+            . 'FROM ' . DatabaseTables::INSTRUMENTS_TABLE . ' t
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
 WHERE NOT __t3.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY t.id';
           break;
-        case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+        case DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
           break;
         default:
@@ -463,7 +468,7 @@ GROUP BY t.id';
     $opts[PHPMyEdit::OPT_FILTERS]['AND'][] = strcat('NOT $table.participation_status = "', ParticipationStatus::ASSOCIATED, '"');
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'organization',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'organization',
       [
         'name'     => $this->l->t('Organization'),
         'tab'      => [ 'id' => 'musician' ],
@@ -472,7 +477,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'job_title',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'job_title',
       [
         'name'     => $this->l->t('Job-Title'),
         'tab'      => [ 'id' => 'musician' ],
@@ -481,7 +486,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'sur_name',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'sur_name',
       [
         'name'     => $this->l->t('Name'),
         'tab'      => [ 'id' => 'musician' ],
@@ -490,7 +495,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'first_name',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'first_name',
       [
         'name'     => $this->l->t('First Name'),
         'tab'      => [ 'id' => 'musician' ],
@@ -499,7 +504,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'nick_name',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'nick_name',
       [
         'name'     => $this->l->t('Nickname'),
         'tab'      => [ 'id' => 'musician' ],
@@ -509,7 +514,7 @@ GROUP BY t.id';
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
+            $firstName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'first_name')];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
             if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -540,7 +545,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'display_name', [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-public-name' ], ],
@@ -549,9 +554,9 @@ GROUP BY t.id';
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
-            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
-            $nickName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
+            $surName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'nick_name')];
             $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
             $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
             if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -599,7 +604,7 @@ GROUP BY t.id';
     $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'display_name_personal', [
         'name'     => $this->l->t('Display-Name (pers.)'),
         'tab'      => [ 'id' => 'musician' ],
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
@@ -610,7 +615,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'gender', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'gender', [
         'name'    => strval($this->l->t('Gender')),
         'tab'     => [ 'id' => [ 'musician' ], ],
         'select'  => 'D',
@@ -639,7 +644,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'user_id_slug', [
         'tab'      => [ 'id' => 'musician' ],
         'name'     => $this->l->t('User Id'),
         'css'      => [ 'postfix' => [ 'musician-name', ], ],
@@ -650,9 +655,9 @@ GROUP BY t.id';
         'sort'     => true,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
-            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
-            $nickName = $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
+            $surName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $firstName = $row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'nick_name')];
             $placeHolder = $this->projectService->defaultUserIdSlug($surName, $firstName, $nickName);
             return [
               'placeholder' => $placeHolder,
@@ -693,29 +698,29 @@ GROUP BY t.id';
           'cast' => [ false ],
         ],
         'orderby'     => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
       ],
       'valueGroups' => $instrumentInfo['idGroups'],
     ];
     $fdd['values|VDPC'] = array_merge($fdd['values'], [
       'filters' => '$table.id IN (SELECT DISTINCT instrument_id
-  FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi
+  FROM '.DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE.' mi
   WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
     ]);
     $fdd['values|LFV'] = array_merge($fdd['values'], [
       'filters' => '$table.id IN (SELECT DISTINCT instrument_id
-  FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi
+  FROM '.DatabaseTables::PROJECT_INSTRUMENTS_TABLE.' pi
   WHERE '.$this->projectId.' = pi.project_id)',
     ]);
 
     // Use $fdd defined above after tweaking its values
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     // kind of a hack, in principle this should go to the global join structure
-    // $this->joinTables[self::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
+    // $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE] = 'PMEjoin'.(count($opts['fdd'])-1);
 
-    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(DatabaseTables::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -725,12 +730,12 @@ GROUP BY t.id';
       'values' => [
         'column' => 'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
       ],
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'voice',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice',
       [
         'tab'      => [ 'id' => 'instrumentation' ],
         'name'     => $this->l->t('Voice'),
@@ -753,12 +758,12 @@ GROUP BY t.id';
             $html = '</div>
 '; // close dropdown-menu
 
-            $instruments = Util::explode(',', $row[$this->joinQueryField(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id')]);
-            $instrumentNames = $pme->set_values($this->joinQueryFieldIndex(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id'))['values'];
+            $instruments = Util::explode(',', $row[$this->joinQueryField(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id')]);
+            $instrumentNames = $pme->set_values($this->joinQueryFieldIndex(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id'))['values'];
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $instrumentNames[$instrument];
               },
@@ -777,22 +782,22 @@ GROUP BY t.id';
         ],
         'sql|VD' => "GROUP_CONCAT(DISTINCT
   IF(\$join_col_fqn > 0,
-     CONCAT(".$this->joinTables[self::INSTRUMENTS_TABLE].".l10n_name,
+     CONCAT(".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".l10n_name,
             ' ',
             \$join_col_fqn),
      NULL)
-  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  ORDER BY ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".sort_order ASC)",
         // copy/change only include non-zero voice
         'sql|CP' => "GROUP_CONCAT(
   DISTINCT
-  IF(".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice > 0,
+  IF(".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".voice > 0,
     CONCAT_WS(
       '".self::JOIN_KEY_SEP."',
-      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
-      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice),
+      ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".voice),
     NULL
   )
-  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  ORDER BY ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".sort_order ASC)",
         'values|CP' => [
           'table' => "SELECT
   CONCAT(pi.instrument_id,'".self::JOIN_KEY_SEP."', IF(n.seq <= GREATEST(" . self::EXTRA_VOICES . ", MAX(pin.voice)), n.seq, '?')) AS value,
@@ -805,20 +810,20 @@ GROUP BY t.id';
   GROUP_CONCAT(IF(pin.voice = n.seq, pin.quantity, NULL)) AS quantity,
   MAX(pin.voice) AS number_of_voices,
   n.seq
-  FROM " . self::PROJECT_INSTRUMENTS_TABLE . " pi
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+  FROM " . DatabaseTables::PROJECT_INSTRUMENTS_TABLE . " pi
+  LEFT JOIN ".DatabaseTables::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".DatabaseTables::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
-  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
-  JOIN " . self::SEQUENCE_TABLE . " n
+  JOIN " . DatabaseTables::SEQUENCE_TABLE . " n
     ON n.seq <= (" . self::EXTRA_VOICES . " + 1 + pin.voice)
     AND n.seq >= 1
-    AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
+    AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
@@ -846,7 +851,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'section_leader',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'section_leader',
       [
        'name|LF' => ' &alpha;',
        'name|CAPVD' => $this->l->t("Section Leader"),
@@ -860,18 +865,18 @@ GROUP BY t.id';
        'escape' => false,
        'sql|CAPDV' => "GROUP_CONCAT(
   DISTINCT
-  IF(".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader IS NULL
-     OR ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader = 0,
+  IF(".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".section_leader IS NULL
+     OR ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".section_leader = 0,
     NULL,
     CONCAT_WS(
       '".self::JOIN_KEY_SEP."',
       CONCAT_WS('".self::COMP_KEY_SEP."',
-        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
-        ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".voice
+        ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".instrument_id,
+        ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".voice
       ),
-      ".$this->joinTables[self::PROJECT_INSTRUMENTS_TABLE].".section_leader)
+      ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTS_TABLE].".section_leader)
   )
-  ORDER BY ".$this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC)",
+  ORDER BY ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".sort_order ASC)",
        'display|LF' => [ 'popup' => function($data) {
          return $this->toolTipsService['section-leader-mark'];
        }],
@@ -886,12 +891,12 @@ GROUP BY t.id';
   i.name,
   COALESCE(ft.content, i.name) AS l10n_name,
   i.sort_order
-  FROM ".self::PROJECT_INSTRUMENTS_TABLE." pi
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+  FROM ".DatabaseTables::PROJECT_INSTRUMENTS_TABLE." pi
+  LEFT JOIN ".DatabaseTables::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
-  LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.project_id = pi.project_id AND pin.instrument_id = pi.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".DatabaseTables::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
@@ -954,7 +959,7 @@ GROUP BY t.id';
       'css'      => [ 'postfix' => [ 'registration', 'tooltip-top', 'align-center', ], ],
     ];
 
-    $musicianInstrumentsJoin = $this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE];
+    $musicianInstrumentsJoin = $this->joinTables[DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE];
 
     $fdd = [
       'name' => $this->l->t('All Instruments'),
@@ -978,7 +983,7 @@ GROUP BY t.id';
       ],
       'sql'         => 'GROUP_CONCAT(DISTINCT
   IF(' . $musicianInstrumentsJoin . '.deleted IS NOT NULL, NULL, $join_col_fqn)
-  ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+  ORDER BY '.$this->joinTables[DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -988,7 +993,7 @@ GROUP BY t.id';
           'ifnull' => [ false ],
         ],
         'orderby'     => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
+        'join' => [ 'reference' => $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
       ],
       'valueGroups' => $instrumentInfo['idGroups'],
       'filter' => [
@@ -999,10 +1004,10 @@ GROUP BY t.id';
 
     // Use $fdd defined above after tweaking its values
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
+      $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
+      $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
         'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
@@ -1040,7 +1045,7 @@ GROUP BY t.id';
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'default_participation_status',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'default_participation_status',
       [
         'select'  => 'D',
         'maxlen'  => 128,
@@ -1052,7 +1057,7 @@ GROUP BY t.id';
 
     // soft-deleted musician kept to keep the instrumentation for the old project
     list(, $fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'deleted', array_merge(
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'deleted', array_merge(
         $this->defaultFDD['deleted'], [
           'input' => ($this->showDisabled && $this->expertMode ? '' : 'HR'),
           'name' => $this->l->t('Musician Deleted'),
@@ -1066,7 +1071,7 @@ GROUP BY t.id';
     $opts['fdd'][$fieldName]['css']['postfix'][] = 'datetime';
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_deactivated', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'cloud_account_deactivated', [
         'name' => $this->l->t('Cloud Account Deactivated'),
         'tab'     => [ 'id' => [ 'miscinfo' ] ],
         'input' => null,
@@ -1086,7 +1091,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_disabled', [
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'cloud_account_disabled', [
         'name' => $this->l->t('Hidden from Cloud'),
         'tab'     => [ 'id' => [ 'miscinfo' ] ],
         'input' => null,
@@ -1156,21 +1161,21 @@ GROUP BY t.id';
     $emailFieldGenerator($opts['fdd']);
 
     $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
-      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'sql' => $this->joinTables[DatabaseTables::MUSICIANS_TABLE] . '.email',
       'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
       'css' => [ 'postfix' => [ 'project-mailing-list', ], ],
       'name' => $this->l->t('Project Mailing List'),
     ]);
 
     $opts['fdd']['announcements_mailing_list'] = $this->announcementsSubscriptionControls(override: [
-      'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
+      'sql' => $this->joinTables[DatabaseTables::MUSICIANS_TABLE] . '.email',
       'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
       'css' => [ 'postfix' => [ 'announcements-mailing-list', ], ],
       'name' => $this->l->t('Announcements List'),
     ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'mobile_phone',
       [
         'name'     => $this->l->t('Mobile Phone'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1185,7 +1190,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'fixed_line_phone',
       [
         'name'     => $this->l->t('Fixed Line Phone'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1200,7 +1205,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'address_supplement',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'address_supplement',
       [
         'name'     => $this->l->t('Address Supplement'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1211,7 +1216,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'street',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'street',
       [
         'name'     => $this->l->t('Street'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1225,7 +1230,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'street_number',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'street_number',
       [
         'name'     => $this->l->t('Street Number'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1236,7 +1241,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'po_box',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'po_box',
       [
         'name'     => $this->l->t('P.O. Box'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1247,7 +1252,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'postal_code',
       [
         'name'     => $this->l->t('Postal Code'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1256,7 +1261,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'city',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'city',
       [
         'name'     => $this->l->t('City'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1268,7 +1273,7 @@ GROUP BY t.id';
     $countryGroups = $this->geoCodingService->countryContinents();
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'country',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'country',
       [
         'name'     => $this->l->t('Country'),
         'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
@@ -1281,11 +1286,11 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'birthday',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'birthday',
       array_merge($this->defaultFDD['birthday'], [ 'tab' => [ 'id' => 'musician' ], ]));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'remarks',
       [
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('General Remarks'),
@@ -1326,7 +1331,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'language',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'language',
       [
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('Language'),
@@ -1340,7 +1345,7 @@ GROUP BY t.id';
     $musicianAvatarFieldGenerator($opts['fdd']);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'address_book_uri',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'address_book_uri',
       [
         'tab'      => [ 'id' => 'miscinfo' ],
         'name'     => $this->l->t('Address Book'),
@@ -1382,7 +1387,7 @@ GROUP BY t.id';
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'uuid',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'uuid',
       [
         'tab'      => [ 'id' => 'miscinfo' ],
         'name'     => 'UUID',
@@ -1396,7 +1401,7 @@ GROUP BY t.id';
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'updated',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'updated',
       array_merge(
         $this->defaultFDD['datetime'],
         [
@@ -1408,7 +1413,7 @@ GROUP BY t.id';
         ]));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'created',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'created',
       array_merge(
         $this->defaultFDD['datetime'],
         [
@@ -1455,7 +1460,7 @@ GROUP BY t.id';
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
       if (!empty($row[$this->queryField('deleted')])
-          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted')])) {
+          || !empty($row[$this->joinQueryField(DatabaseTables::MUSICIANS_TABLE, 'deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace('M', '', $opts['options']);
@@ -1501,8 +1506,8 @@ GROUP BY t.id';
   public function beforeUpdateRemoveDependentVoices(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     // sanitize instrumentation numbers
-    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
-    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice');
 
     $debugColumns = [ $instrumentsColumn, $voicesColumn ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');
@@ -1585,7 +1590,7 @@ GROUP BY t.id';
     }
 
     if ($participationStatus == ParticipationStatus::ASSOCIATED) {
-      $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+      $instrumentsColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
       $instruments = Util::explode(',', $newValues[$instrumentsColumn] ?? '');
       $nonInstruments = array_keys($this->getNonInstruments());
       $realInstruments = array_diff($instruments, $nonInstruments);
@@ -1632,8 +1637,8 @@ GROUP BY t.id';
    */
   public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $voiceField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
-    $instrumentField = self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
+    $voiceField = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice');
+    $instrumentField = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
 
     $debugColumns = [ $instrumentField, $voiceField, ];
     $this->debugPrintValues($oldValues, $changed, $newValues, $debugColumns, 'before');

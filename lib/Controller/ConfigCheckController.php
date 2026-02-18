@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +24,14 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use Psr\Log\LoggerInterface;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Attributes;
 use OCA\CAFEVDB\Controller\DTO;
@@ -39,10 +40,13 @@ use OCA\CAFEVDB\Service\ConfigCheckService;
 /**
  * Endpoint for returning the config-check results.
  */
+#[TSAttributes\TypeScript]
 class ConfigCheckController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  public const END_POINT = 'a/config-check';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -59,7 +63,8 @@ class ConfigCheckController extends Controller
   /**
    * @return DataResponse
    */
-  #[NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT)]
   #[Attributes\NoGroupMemberRequired]
   public function get(): JSONResponse {
     $configCheck = $this->configCheckService->configured();

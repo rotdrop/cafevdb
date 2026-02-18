@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,8 @@
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 
 /**
@@ -60,19 +62,19 @@ trait MusicianInstrumentsRankingTrait
     ?array &$changed,
     ?array &$newValues
   ):bool {
-    $keyField = self::joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
-    $rankingField = self::joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
+    $keyField = self::joinTableFieldName(DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id');
+    $rankingField = self::joinTableFieldName(DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'ranking');
 
     $this->debug('FIELDS: ' . $keyField . ' / ' . $rankingField);
     $this->debugPrintValues($oldValues, $changed, $newValues, [ $keyField, $rankingField ]);
 
     foreach (['old', 'new'] as $dataSet) {
-      $keys = Util::explode(self::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ] ?? ''));
+      $keys = Util::explode(DataConstants::VALUES_SEP, Util::removeSpaces(${$dataSet.'Values'}[$keyField ] ?? ''));
       $ranking = [];
       foreach ($keys as $key) {
         $ranking[] = $key.self::JOIN_KEY_SEP.(count($ranking)+1);
       }
-      ${$dataSet.'Values'}[$rankingField] = implode(self::VALUES_SEP, $ranking);
+      ${$dataSet.'Values'}[$rankingField] = implode(DataConstants::VALUES_SEP, $ranking);
     }
 
     // as the ordering is implied by the ordering of keys the ranking

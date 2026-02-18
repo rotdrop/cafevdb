@@ -29,6 +29,8 @@ import * as PHPMyEdit from './../pme-selectors.ts';
 import * as Notification from './../notification.ts';
 import { subscribe } from '../../services/async-event-bus.ts';
 import { SET_SHOW_DISABLED } from '../../event-bus-events.ts';
+import { SHOW_HIDE_DISABLED } from '../../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { showDisabledCssClass, hideDisabledCssClass } from 'variables.scss';
 
 require('../../legacy/nextcloud/jquery/requesttoken.js');
 
@@ -53,7 +55,7 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
       .done(function(data) {
         showMessage(data.messages);
         const $content = $('#content, #content-vue');
-        const $pmeForm = $content.find(PHPMyEdit.formSelector + '.show-hide-disabled');
+        const $pmeForm = $content.find(`${PHPMyEdit.formSelector}.${SHOW_HIDE_DISABLED}`);
         console.log('form', $pmeForm);
         $pmeForm.each(function() {
           const $form = $(this);
@@ -65,9 +67,9 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
             $reload.trigger('click');
           }
           if (value) {
-            $form.addClass('show-disabled').removeClass('hide-disabled');
+            $form.addClass(showDisabledCssClass).removeClass(hideDisabledCssClass);
           } else {
-            $form.removeClass('show-disabled').addClass('hide-disabled');
+            $form.removeClass(showDisabledCssClass).addClass(hideDisabledCssClass);
           }
         });
         resolve(data);

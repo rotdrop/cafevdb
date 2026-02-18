@@ -30,13 +30,18 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\DTO\DownloadsShareResponse as TestedDTO;
 
 /** Test consistency of the enum with constants from ConfigConstants */
-#[Attributes\CoversClass(DTO\DownloadsShareResponse::class)]
+#[Attributes\CoversClass(TestedDTO::class)]
 class DownloadsShareResponseTest extends TestCase
 {
-  private DTO\DownloadsShareResponse $dto;
+  use TestResponseDTOTrait;
+
+  private const DTO_CLASS = TestedDTO::class;
+
+  private TestedDTO $dto;
+
   /**
    * {@inheritdoc}
    *
@@ -44,44 +49,12 @@ class DownloadsShareResponseTest extends TestCase
    */
   public function setup(): void
   {
-    $this->dto = new DTO\DownloadsShareResponse(
-      messages: ['MESSAGE'],
-      url: 'SHARE',
-      path: 'FOLDER',
+    $this->dto = new TestedDTO(
+      dav: 'DAV URL',
       expires: DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
+      messages: ['MESSAGE'],
+      path: 'FOLDER',
+      url: 'SHARE URL',
     );
-  }
-
-  /** @return void */
-  public function testConstructor(): void
-  {
-    $this->expectNotToPerformAssertions();
-  }
-
-  /** @return void */
-  public function testFromArray(): void
-  {
-    $this->expectNotToPerformAssertions();
-    /* $dto = */DTO\DownloadsShareResponse::fromArray([
-      'messages' => ['MESSAGE'],
-      'expires' => DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
-      'url' => 'SHARE',
-      'path' => 'FOLDER',
-    ]);
-  }
-
-  const JSON_DATA = '{
-    "expires": "2025-11-04T01:02:03.000000Z",
-    "url": "SHARE",
-    "path": "FOLDER",
-    "messages": [
-        "MESSAGE"
-    ]
-}';
-
-  /** @return void */
-  public function testJsonSerialization(): void
-  {
-    $this->assertEquals(self::JSON_DATA, json_encode($this->dto, JSON_PRETTY_PRINT));
   }
 }

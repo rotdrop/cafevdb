@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016, 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2020, 2021, 2022, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ import * as CAFEVDB from './cafevdb.ts';
 import * as Notification from './notification.ts';
 import * as Ajax from './ajax.ts';
 import * as Page from './page.ts';
-import { templateRenderer } from './template-renderer.ts';
+import { templateFromRenderer, templateRenderer } from './template-renderer.ts';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.ts';
 import * as SelectUtils from './select-utils.ts';
@@ -41,12 +41,35 @@ import {
   classSelectors as pmeClassSelectors,
   valueSelector as pmeValueSelector,
 } from './pme-selectors.ts';
-import { type EnumGeographicalScope } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import type { EnumGeographicalScope } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { TEMPLATE as instrumentInsurancesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InstrumentInsurances.ts';
+import { TEMPLATE as insuranceRatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceRates.ts';
+import { TEMPLATE as insuranceBrokersTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceBrokers.ts';
+import type {
+  InstrumentInsuranceValidationResponse,
+  InsuranceBrokerValidationResponse,
+  InsuranceRateValidationResponse,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import {
+  BASE_PATH as controllerBasePath,
+  END_POINT_VALIDATE,
+} from '../../build/ts-types/php-modules/Controller/InstrumentInsuranceController.ts';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('instrument-insurances.scss');
+
+type InsuranceTemplate = typeof instrumentInsurancesTemplate
+  | typeof insuranceBrokersTemplate
+  | typeof insuranceRatesTemplate;
+
+type InsuranceValidationResponse = {
+  [instrumentInsurancesTemplate]: InstrumentInsuranceValidationResponse,
+  [insuranceBrokersTemplate]: InsuranceBrokerValidationResponse,
+  [insuranceRatesTemplate]: InsuranceRateValidationResponse,
+};
 
 const lang = $('html').attr('lang');
 
@@ -125,7 +148,30 @@ const enableScopeOptions = (
   SelectUtils.refreshWidget($scopeSelect);
 };
 
-const pmeFormInit = (containerSel: string) => {
+const getTextInputValues = <T extends InsuranceTemplate>($container: JQuery<HTMLElement>, template: T) => {
+  switch (template) {
+    case insuranceBrokersTemplate:
+      return {
+        broker: $container.find('input.broker') as JQuery<HTMLInputElement>,
+        brokerName: $container.find('input.brokername') as JQuery<HTMLInputElement>,
+        brokerAddress: $container.find('textarea.brokeraddress') as JQuery<HTMLTextAreaElement>,
+      };
+    case insuranceRatesTemplate:
+      return {
+        rate: $container.find('input.rate') as JQuery<HTMLInputElement>,
+        policy: $container.find('input.policy') as JQuery<HTMLInputElement>,
+      };
+    case instrumentInsurancesTemplate:
+      return {
+        insuredItem: $container.find('input.insured-item') as JQuery<HTMLInputElement>,
+        manufacturer: $container.find('input.manufacturer') as JQuery<HTMLInputElement>,
+        constructionYear: $container.find('input.construction-year') as JQuery<HTMLInputElement>,
+        amount: $container.find('input.amount') as JQuery<HTMLInputElement>,
+      };
+  }
+};
+
+const pmeFormInit = <T extends InsuranceTemplate>(containerSel: string, template: T) => {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
   const $form = $container.find(pmeFormSelector);
@@ -135,39 +181,14 @@ const pmeFormInit = (containerSel: string) => {
 
   if ($submits.length > 0) {
 
-    const rateDialog = $container.find('select.broker').length > 0;
-    const brokerDialog = $container.find('input.broker').length > 0;
-
-    let textInputs: Record<string, JQuery<HTMLInputElement>|JQuery<HTMLTextAreaElement> >;
-
-    if (brokerDialog) {
-      textInputs = {
-        $broker: $container.find('input.broker') as JQuery<HTMLInputElement>,
-        $brokerName: $container.find('input.brokername') as JQuery<HTMLInputElement>,
-        $brokerAddress: $container.find('textarea.brokeraddress') as JQuery<HTMLTextAreaElement>,
-      };
-    } else if (rateDialog) {
-      textInputs = {
-        $rate: $container.find('input.rate') as JQuery<HTMLInputElement>,
-        $policy: $container.find('input.policy') as JQuery<HTMLInputElement>,
-      };
-    } else {
-      // need to disable all of these on blur in order to avoid
-      // focus ping-pong
-      textInputs = {
-        $insuredItem: $container.find('input.insured-item') as JQuery<HTMLInputElement>,
-        $manufacturer: $container.find('input.manufacturer') as JQuery<HTMLInputElement>,
-        $constructionYear: $container.find('input.construction-year') as JQuery<HTMLInputElement>,
-        $amount: $container.find('input.amount') as JQuery<HTMLInputElement>,
-      };
-    }
+    const textInputs = getTextInputValues($container, template);
 
     const oldValues = {};
     for (const key in textInputs) {
       oldValues[key] = textInputs[key].val();
     }
 
-    const validate = function(control: string, $button?: JQuery, lockCallback: (lock: boolean) => void = () => {}) {
+    const validate = function(template: InsuranceTemplate, control: string, $button?: JQuery, lockCallback: (lock: boolean) => void = () => {}) {
 
       const validateLock = function() {
         lockCallback(true);
@@ -184,7 +205,7 @@ const pmeFormInit = (containerSel: string) => {
       validateLock();
 
       Notification.hide(function() {
-        $.post(generateAppUrl('insurance/validate/' + control), post)
+        $.post(generateAppUrl(`${controllerBasePath}/${END_POINT_VALIDATE}/${control}`), post)
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown, function() {
               for (const key in textInputs) {
@@ -193,10 +214,10 @@ const pmeFormInit = (containerSel: string) => {
               validateUnlock();
             });
           })
-          .done(function(data) {
+          .done(function(data: ResponseData<InsuranceValidationResponse[typeof template]>) {
             if (!Ajax.validateResponse(
               data,
-              Object.keys(textInputs),
+              Object.keys(textInputs) as (keyof InsuranceValidationResponse[typeof template])[],
               validateUnlock)) {
               for (const key in textInputs) {
                 textInputs[key].val(oldValues[key]);
@@ -204,7 +225,7 @@ const pmeFormInit = (containerSel: string) => {
               return;
             }
 
-            Notification.messages(data.message);
+            Notification.messages(data.messages);
 
             if (typeof textInputs[control] !== 'undefined') {
               textInputs[control].val(data[control]);
@@ -307,7 +328,7 @@ const pmeFormInit = (containerSel: string) => {
         if ($(this).attr('name')!.indexOf('savedelete') < 0) {
           // alert('submit');
           event.preventDefault();
-          validate('submit', $(this));
+          validate(template, 'submit', $(this));
           return false;
         } else {
           return true;
@@ -328,36 +349,34 @@ const pmeFormInit = (containerSel: string) => {
 
 const documentReady = function() {
 
-  PHPMyEdit.addTableLoadCallback('insurance-rates', {
-    callback(selector, parameters, resizeCB) {
+  PHPMyEdit.addTableLoadCallback(insuranceRatesTemplate, {
+    callback(_template, selector, parameters, resizeCB) {
       if (parameters.reason !== 'dialogClose') {
-        pmeFormInit(selector);
+        pmeFormInit(selector, insuranceRatesTemplate);
       }
       resizeCB();
     },
     context: globalState,
-    parameters: [],
   });
 
-  PHPMyEdit.addTableLoadCallback('insurance-brokers', {
-    callback(selector, parameters, resizeCB) {
+  PHPMyEdit.addTableLoadCallback(insuranceBrokersTemplate, {
+    callback(_template, selector, parameters, resizeCB) {
       if (parameters.reason !== 'dialogClose') {
-        pmeFormInit(selector);
+        pmeFormInit(selector, insuranceBrokersTemplate);
       }
       resizeCB();
     },
     context: globalState,
-    parameters: [],
   });
 
-  PHPMyEdit.addTableLoadCallback('instrument-insurance', {
-    callback(selector, parameters, resizeCB) {
+  PHPMyEdit.addTableLoadCallback(instrumentInsurancesTemplate, {
+    callback(template, selector, parameters, resizeCB) {
       if (parameters.reason !== 'dialogClose') {
         pmeExportMenu(selector);
 
         SepaDebitMandate.insuranceReady(selector);
 
-        pmeFormInit(selector);
+        pmeFormInit(selector, template);
 
         $(':button.musician-instrument-insurance').on('click', function() {
           Page.loadPage($(this).attr('name')!);
@@ -367,14 +386,17 @@ const documentReady = function() {
       resizeCB();
     },
     context: globalState,
-    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(async () => {
-    const renderer = $(PHPMyEdit.defaultSelector).find(pmeFormSelector + ' input[name="templateRenderer"]').val();
-    if (renderer === templateRenderer('instrument-insurance')
-        || renderer === templateRenderer('insurance-rates')) {
-      pmeFormInit(PHPMyEdit.defaultSelector);
+    const renderer = $(PHPMyEdit.defaultSelector).find<HTMLInputElement>(pmeFormSelector + ' input[name="templateRenderer"]').val();
+
+    switch (renderer) {
+      case templateRenderer(instrumentInsurancesTemplate):
+      case templateRenderer(insuranceBrokersTemplate):
+      case templateRenderer(insuranceRatesTemplate):
+        pmeFormInit(PHPMyEdit.defaultSelector, templateFromRenderer(renderer));
+        break;
     }
   });
 };

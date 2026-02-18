@@ -334,6 +334,8 @@ import type {
   ConfigCheckResponse,
   SidebarNavigationItem as NavigationItem,
 } from '../build/ts-types/php-modules/Controller/DTO.ts'
+import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/Controller/ConfigCheckController.ts'
+import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
@@ -501,7 +503,7 @@ asyncSubscribe(BusEvents.HISTORY_GO_REQUEST, (event) => {
 })
 
 const configCheck = async () => {
-  const url = generateAppUrl('a/config-check')
+  const url = generateAppUrl(configCheckEndPoint)
   try {
     const response: AxiosResponse<ConfigCheckResponse> = await axios.get(url)
     logger.debug('CONFIG CHECK RESULT', response)
@@ -525,7 +527,7 @@ const updateNavigationItems = async () => {
   if (!pageTemplate.value) {
     return
   }
-  const url = generateAppUrl('n/{pageTemplate}', { pageTemplate: pageTemplate.value })
+  const url = generateAppUrl(`${END_POINT_NAVIGATION}/{pageTemplate}`, { pageTemplate: pageTemplate.value })
   logger.debug('URL', url)
   try {
     const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(

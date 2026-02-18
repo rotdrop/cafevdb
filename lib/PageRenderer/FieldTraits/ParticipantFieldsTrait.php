@@ -38,11 +38,15 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
+use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\CssClasses;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -162,7 +166,7 @@ trait ParticipantFieldsTrait
           'field_id' => [ 'value' => $fieldId, ],
           'option_key' => false,
         ],
-        'reference' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+        'reference' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
         'column' => 'option_key',
         'encode' => 'BIN2UUID(%s)',
       ];
@@ -175,7 +179,7 @@ trait ParticipantFieldsTrait
           'field_id' => [ 'value' => $fieldId, ],
           'key' => false,
         ],
-        'reference' => self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE,
+        'reference' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE,
         'column' => 'key',
         'encode' => 'BIN2UUID(%s)',
       ];
@@ -345,7 +349,7 @@ trait ParticipantFieldsTrait
         $defaultValue = $field->getDefaultValue();
         $defaultButton = '<input type="button"
        value="' . $this->l->t('Revert to default') . '"
-       class="display-postfix revert-to-default [BUTTON_STYLE]"
+       class="display-postfix ' . CssClasses::REVERT_TO_DEFAULT . ' [BUTTON_STYLE]"
        title="' . $this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
        data-field-id="' . $fieldId . '"
        data-field-property="[FIELD_PROPERTY]"
@@ -481,8 +485,11 @@ trait ParticipantFieldsTrait
                 ) {
                   $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                   if ($defaultValue !== '' && $defaultValue !== null) {
-                    $html .=
-                      str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultValue' ], $defaultButton);
+                    $html .= str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'hidden-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                   }
                   if ($op != PHPMyEdit::OPERATION_CHANGE) {
                     return $html;
@@ -590,7 +597,11 @@ trait ParticipantFieldsTrait
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
                   $depositFdd['display|ACP']['postfix'] .=
-                    str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
+                    str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'hidden-text', EnumParticipantFieldPropertyGet::DEFAULT_DEPOSIT->value ],
+                      $defaultButton,
+                    );
                 }
 
                 $depositFdd['php|VDLF'] = $viewCallback;
@@ -832,7 +843,11 @@ trait ParticipantFieldsTrait
                   $valueFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
                   $valueFdd['display|ACP']['postfix'] =
                     ($valueFdd['display|ACP']['postfix'] ?? '')
-                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                    . str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ],
+                      [ 'image-left-of-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                 }
                 break;
             }
@@ -974,8 +989,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } else {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1018,8 +1033,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } elseif (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1074,8 +1089,8 @@ trait ParticipantFieldsTrait
               case FieldDataType::DB_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-                  $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
-                  $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
+                  $optionKeys = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                  $optionValues = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                   $values = array_combine($optionKeys, $optionValues);
                   $fieldId = $field->getId();
                   $subDir = $field->getName();
@@ -1096,8 +1111,8 @@ trait ParticipantFieldsTrait
                 };
                 $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
                   if (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(DataConstants::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                     if (!empty($values)) {
                       list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
@@ -1224,7 +1239,11 @@ trait ParticipantFieldsTrait
                   $keyFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
                   $keyFdd['display|ACP']['postfix'] =
                     ($keyFdd['display|ACP']['postfix'] ?? '')
-                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                    . str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'image-left-of-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                 }
 
                 break;
@@ -1764,10 +1783,10 @@ trait ParticipantFieldsTrait
    m1.display_name AS display_name,
    " . $fdAlias . ".option_key AS group_id,
    " . $fdgAlias . ".group_number AS group_number
-FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m1
+FROM ".DatabaseTables::PROJECT_PARTICIPANTS_TABLE." pp
+LEFT JOIN ".DatabaseTables::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
-LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+LEFT JOIN " . DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".musician_id = pp.musician_id
      AND " . $fdAlias . ".project_id = $this->projectId
      AND " . $fdAlias . ".field_id = $fieldId
@@ -1775,7 +1794,7 @@ LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
 LEFT JOIN (SELECT
     " . $fd2Alias . ".option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY " . $fd2Alias . ".field_id) AS group_number
-    FROM " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fd2Alias . "
+    FROM " . DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fd2Alias . "
     WHERE " . $fd2Alias . ".project_id = $this->projectId AND " . $fd2Alias . ".field_id = $fieldId
     GROUP BY " . $fd2Alias . ".option_key
   ) " . $fdgAlias . "
@@ -1986,15 +2005,15 @@ WHERE pp.project_id = $this->projectId",
   do.label AS group_label,
   do.data AS group_data,
   do.limit AS group_limit
-FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m3
+FROM ".DatabaseTables::PROJECT_PARTICIPANTS_TABLE." pp
+LEFT JOIN ".DatabaseTables::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+LEFT JOIN " . DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".musician_id = pp.musician_id
      AND " . $fdAlias . ".project_id = $this->projectId
      AND " . $fdAlias . ".field_id = $fieldId
      ".($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
+LEFT JOIN ".DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = " . $fdAlias . ".field_id AND do.key = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
                   'column' => 'musician_id',
@@ -2071,10 +2090,10 @@ WHERE pp.project_id = $this->projectId",
   ) AS group_members,
   GROUP_CONCAT(DISTINCT m2_pop.id) AS group_member_ids,
   " . $fdAlias . ".option_key AS group_id
-FROM " . self::MUSICIANS_TABLE . " m2_pop
-INNER JOIN " . self::PROJECT_PARTICIPANTS_TABLE . " pp_pop
+FROM " . DatabaseTables::MUSICIANS_TABLE . " m2_pop
+INNER JOIN " . DatabaseTables::PROJECT_PARTICIPANTS_TABLE . " pp_pop
   ON pp_pop.project_id = " . $this->projectId . " AND m2_pop.id = pp_pop.musician_id
-INNER JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+INNER JOIN " . DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".field_id = " . $fieldId . "
   AND " . $fdAlias . ".project_id = pp_pop.project_id
   AND " . $fdAlias . ".musician_id = m2_pop.id
@@ -2408,7 +2427,7 @@ GROUP BY " . $fdAlias . ".option_key",
             case FieldDataType::CLOUD_FOLDER:
               // collect the data into a JSON array, input is a comma
               // separated list of directory entry names
-              $newValues[$valueName] = json_encode(Util::explode(self::VALUES_SEP, $newValues[$valueName]));
+              $newValues[$valueName] = json_encode(Util::explode(DataConstants::VALUES_SEP, $newValues[$valueName]));
               if ($newValues[$valueName] === $oldValues[$valueName]) {
                 Util::unsetValue($changed, $valueName);
                 continue 3;
@@ -2435,9 +2454,9 @@ GROUP BY " . $fdAlias . ".option_key",
 
           // Tweak the option value to have the desired form. Make sure to
           // escape commas as these count as multi-value separators.
-          $newValues[$valueName] = $key . self::JOIN_KEY_SEP .  Util::escapeDelimiter($newValues[$valueName], PMETableViewBase::VALUES_SEP);
+          $newValues[$valueName] = $key . self::JOIN_KEY_SEP .  Util::escapeDelimiter($newValues[$valueName], DataConstants::VALUES_SEP);
           if (isset($newValues[$depositName])) {
-            $newValues[$depositName] = $key . self::JOIN_KEY_SEP . Util::escapeDelimiter($newValues[$depositName], PMETableViewBase::VALUES_SEP);
+            $newValues[$depositName] = $key . self::JOIN_KEY_SEP . Util::escapeDelimiter($newValues[$depositName], DataConstants::VALUES_SEP);
           }
           break;
         case FieldMultiplicity::RECURRING:

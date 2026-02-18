@@ -164,6 +164,7 @@ const config: Config = deepmerge(
       '\\.(s?css|less)$': 'identity-obj-proxy',
       '^@/(.*)$': '<rootDir>/$1',
       '@nextcloud/paths': '<rootDir>/node_modules/@nextcloud/paths/dist/index.mjs',
+      '\\?raw$': 'jest-raw-loader',
     },
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     // modulePathIgnorePatterns: [],

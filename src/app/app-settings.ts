@@ -111,7 +111,7 @@ const documentReady = function() {
       $('#app-settings').switchClass('', 'open');
     }
     $('#app-settings-header').cafevTooltip('hide');
-    unfocus('#app-settings-header');
+    unfocus();
     return false;
   });
 

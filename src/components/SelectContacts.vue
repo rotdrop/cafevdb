@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -76,6 +76,10 @@ import { contactAddressPopup, contactNameFromContact } from '../util/address-pop
 import stringValue from '../util/string-valued.ts'
 import type { AddressBook, Contact } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
+import {
+  BASE_PATH as contactsBasePath,
+  END_POINT_SEARCH,
+} from '../../build/ts-types/php-modules/Controller/ContactsController.ts'
 
 const COMPONENT_NAME = 'SelectContacts'
 const logger = new Console(COMPONENT_NAME)
@@ -255,7 +259,7 @@ const findContacts = async (query: string, contactUids?: string[]) => {
     params.contactUids = contactUids
   }
   try {
-    const response: AxiosResponse<Contact[]> = await axios.get(generateAppUrl(`contacts/search${query}`), {
+    const response: AxiosResponse<Contact[]> = await axios.get(generateAppUrl(`${contactsBasePath}/${END_POINT_SEARCH}${query}`), {
       params,
       paramsSerializer: params => {
         return qs.stringify(params, { arrayFormat: 'brackets' })

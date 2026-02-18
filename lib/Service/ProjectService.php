@@ -954,10 +954,11 @@ class ProjectService
         $node = $this->userStorage->get($path);
         if (empty($node)) {
           return [
-            'url' => null,
-            'share' => null,
-            'path' => null,
+            'dav' => null,
             'expires' => null,
+            'path' => null,
+            'share' => null,
+            'url' => null,
           ];
         }
       } else {
@@ -1012,11 +1013,11 @@ class ProjectService
       );
     }
     return [
-      'share' => $share,
-      'url' => $url,
-      'path' => $path,
       'dav' => $dav,
       'expires' => $expires ?? null,
+      'path' => $path,
+      'share' => $share,
+      'url' => $url,
     ];
   }
 
@@ -2122,7 +2123,14 @@ Whatever.',
       $musician = $musiciansRepository->find($id);
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
       if ($musician->isDeleted()) {
-        $musician = null;
+        $status[] = [
+          'id' => $id,
+          'notice' => $this->l->t(
+            'The musician for the musician-id "%s" is marked as "deleted", please undelete the person first and then try again', $id,
+          ),
+        ];
+        $this->logInfo('STATUS '. print_r($status, true));
+        return false;
       }
     }
     if (empty($musician)) {

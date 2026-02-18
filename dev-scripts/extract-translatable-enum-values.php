@@ -6,7 +6,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,11 @@ ini_set('display_errors', 'stderr');
  *
  */
 
-require_once(__DIR__ . '/console-setup.php');
+$appDir = realpath(__DIR__) . '/..';
+define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
+
+require_once(__DIR__ . '/lib/scripts/console-setup.php');
+
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor-wrapped/autoload.php');
 

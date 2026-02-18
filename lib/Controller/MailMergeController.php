@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use InvalidArgumentException;
 use Throwable;
 
@@ -60,11 +62,14 @@ use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
+#[TSAttributes\TypeScript]
 class MailMergeController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT = 'documents/mail-merge';
 
   /**
    * @var bool
@@ -131,7 +136,7 @@ class MailMergeController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/documents/mail-merge' )]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT)]
   public function merge(
     null|Int|string $senderId = null,
     ?string $fileName = null,

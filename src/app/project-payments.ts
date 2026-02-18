@@ -33,7 +33,6 @@ import initFileUploadRow from './pme-file-upload-row.ts';
 import ajaxDownload from './file-download.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 import setBusyIndicators from './busy-indicators.ts';
-import { filename } from './path.ts';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
@@ -54,6 +53,7 @@ import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/ProjectPayments.ts';
 
 require('project-payments.scss');
 require('project-participant-fields-display.scss');
@@ -66,8 +66,6 @@ const findByName = <T extends HTMLElement = HTMLFormElement>($container: string|
 const ppAmountName = pmeData('ProjectPayments:amount');
 const ppSubjectName = pmeData('ProjectPayments:subject');
 
-const template = filename(__filename);
-
 asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   if (event.template !== template) {
     return;
@@ -79,8 +77,8 @@ asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
 
 const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg']) => {
   const entityId = data.entityId;
-  const tableOptions = {
-    dialogHolderCSSId: template + '-overview',
+  return PHPMyEdit.tableDialogOpen({
+    dialogHolderCSSId: `${template}-overview`,
     ambientContainerSelector: containerSel,
     template,
     templateRenderer: templateRenderer(template),
@@ -105,8 +103,7 @@ const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof B
     projectName: data.projectName,
     modalDialog: true,
     modified: false,
-  };
-  return PHPMyEdit.tableDialogOpen(tableOptions);
+  });
 };
 
 /**
@@ -124,13 +121,11 @@ const projectPaymentPopup = (container: string|JQuery, post: JQuery.PlainObject)
   // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
   // instrumentation numbers are somewhat nasty and require too
   // many options.
-
-  const tableOptions = {
+  return PHPMyEdit.tableDialogOpen({
     ambientContainerSelector: PHPMyEdit.selector(container),
-    dialogHolderCSSId: template + '-dialog',
+    dialogHolderCSSId: `${template}-dialog`,
     template,
     templateRenderer: templateRenderer(template),
-    Table: 'CompositePayments',
     projectId: post.projectId,
     projectName: post.projectName,
     // Now special options for the dialog popup
@@ -143,8 +138,7 @@ const projectPaymentPopup = (container: string|JQuery, post: JQuery.PlainObject)
     [pmeSys('operation')]: 'Change',
     modalDialog: false,
     modified: false,
-  };
-  return PHPMyEdit.tableDialogOpen({ ...tableOptions, ...post });
+  }, post);
 };
 
 const backgroundDecryption = function(container: string|JQuery) {

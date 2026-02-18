@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,14 +51,14 @@ type Options = typeof defaultOptions;
  * If the container does not contain a form and is not itself a form,
  * then all contained elements are search for ':invalid'.
  *
- * @param options Options with components 'cleanup',
+ * @param userOptions Options with components 'cleanup',
  * 'labelCallback', 'afterDialog' and 'timeout'.
  *
  * @returns true iff no error is found.
  */
-function checkInvalidInputs($container: JQuery, options?: Partial<Options>) {
+function checkInvalidInputs($container: JQuery, userOptions?: Partial<Options>) {
 
-  options = { ...defaultOptions, ...(options || {}) };
+  const options: Options = { ...defaultOptions, ...(userOptions ?? {}) };
   console.info('OPTIONS', options);
 
   const cleanup = options.cleanup;

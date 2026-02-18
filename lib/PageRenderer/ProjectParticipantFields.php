@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use RuntimeException;
 
 use OCP\IRequest;
@@ -52,6 +54,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class ProjectParticipantFields extends PMETableViewBase
 {
   use FieldTraits\ProjectEntityTrait;
@@ -60,10 +63,13 @@ class ProjectParticipantFields extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'project-participant-fields';
-  const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;
-  const OPTIONS_TABLE = self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
-  const DATA_TABLE = self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
+  public const TEMPLATE = EnumTemplate::PROJECT_PARTICIPANT_FIELDS->value;
+
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE;
+
+  protected const OPTIONS_TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
+  protected const DATA_TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
 
   const OPTION_FIELDS = [ 'key', 'label', 'data', 'deposit', 'limit', 'balancing_account', 'tooltip', 'deleted', ];
 
@@ -116,7 +122,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
   /**
    * @var string
-   * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
+   * SQL sub-query in order to join with   DatabaseTables::FIELD_TRANSLATIONS_TABLE
    */
   protected $optionsTable;
 
@@ -135,7 +141,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'project_id' ],
@@ -246,7 +252,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      '-' . self::joinTableFieldName(self::PROJECTS_TABLE, 'year'),
+      '-' . self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'year'),
       'project_id',
       '-display_order',
       'name' ,
@@ -328,7 +334,7 @@ class ProjectParticipantFields extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'year', [
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'year', [
         'tab'       => [ 'id' => 'tab-all' ],
         'name'      => $this->l->t('Year'),
         'input'     => 'VHRS',
@@ -358,7 +364,7 @@ class ProjectParticipantFields extends PMETableViewBase
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
         //        'join'        => '$main_col_fqn = $join_col_fqn',
-        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => [ 'reference' => $joinTables[DatabaseTables::PROJECTS_TABLE], ],
       ],
       'values|DVFL' => [
         'column'      => 'id',
@@ -369,7 +375,7 @@ class ProjectParticipantFields extends PMETableViewBase
         ],
         'groups'      => 'year',
         'orderby'     => '$table.year DESC',
-        'join'        => [ 'reference' => $joinTables[self::PROJECTS_TABLE], ],
+        'join'        => [ 'reference' => $joinTables[DatabaseTables::PROJECTS_TABLE], ],
         'filters'     => '$table.id IN (SELECT project_id FROM $main_table)',
       ],
     ];
@@ -539,10 +545,10 @@ class ProjectParticipantFields extends PMETableViewBase
   CONCAT(
     BIN2UUID(\$join_table.key),
     '" . self::JOIN_KEY_SEP . "',
-    REPLACE(\$join_col_fqn, '" . self::VALUES_SEP . "', '\\\\" . self::VALUES_SEP. "')
+    REPLACE(\$join_col_fqn, '" . DataConstants::VALUES_SEP . "', '\\\\" . DataConstants::VALUES_SEP. "')
   )
   ORDER BY \$join_table.key ASC
-  SEPARATOR '" . self::VALUES_SEP . "'
+  SEPARATOR '" . DataConstants::VALUES_SEP . "'
 )",
         ]);
     }
@@ -1052,7 +1058,7 @@ __EOT__;
     if (!$this->showDisabled) {
       $opts['filters'][] = '$table.deleted IS NULL';
       if ($projectMode === false) {
-        $opts['filters'][] = $joinTables[self::PROJECTS_TABLE].'.deleted IS NULL';
+        $opts['filters'][] = $joinTables[DatabaseTables::PROJECTS_TABLE].'.deleted IS NULL';
       }
     }
     if ($projectMode !== false) {
@@ -1450,7 +1456,7 @@ __EOT__;
 
     foreach ($optionValues as $field => $fieldData) {
       //  TODO: eliminate empty field-data
-      $newValues[$field] = Util::implode(self::VALUES_SEP, $fieldData);
+      $newValues[$field] = Util::implode(DataConstants::VALUES_SEP, $fieldData);
       if ($newValues[$field] != ($oldValues[$field]??null)) {
         $changed[] = $field;
       }

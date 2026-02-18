@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use OCP\IRequest;
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
+use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -43,13 +44,13 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Musicians table. */
+#[TSAttributes\TypeScript]
 class AddMusicians extends Musicians
 {
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  const TEMPLATE = 'add-musicians';
-
+  public const TEMPLATE = EnumTemplate::ADD_MUSICIANS->value;
   protected ?ParticipationContext $participationContext = null;
 
   /** {@inheritdoc} */
@@ -108,7 +109,7 @@ class AddMusicians extends Musicians
     $this->joinStructure = array_merge(
       $this->joinStructure,
       [
-        self::PROJECT_PARTICIPANTS_TABLE => [
+        DatabaseTables::PROJECT_PARTICIPANTS_TABLE => [
           'entity' => Entities\ProjectParticipant::class,
           'identifier' => [
             'project_id' => [
@@ -119,7 +120,7 @@ class AddMusicians extends Musicians
           'column' => 'musician_id',
           'flags' => self::JOIN_READONLY,
         ],
-        self::PROJECT_INSTRUMENTS_TABLE => [
+        DatabaseTables::PROJECT_INSTRUMENTS_TABLE => [
           'entity' => Entities\ProjectInstrument::class,
           'identifier' => [
             'project_id' => [
@@ -132,11 +133,11 @@ class AddMusicians extends Musicians
           'column' => 'instrument_id',
           'flags' => self::JOIN_READONLY,
         ],
-        self::INSTRUMENT_FAMILIES_JOIN_TABLE . self::VALUES_TABLE_SEP . 'project' => [
+        DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . self::VALUES_TABLE_SEP . 'project' => [
           'entity' => null,
           'identifier' => [
             'instrument_id' => [
-              'table' => self::PROJECT_INSTRUMENTS_TABLE,
+              'table' => DatabaseTables::PROJECT_INSTRUMENTS_TABLE,
               'column' => 'instrument_id',
             ],
             'instrument_family_id' => false,
@@ -144,19 +145,19 @@ class AddMusicians extends Musicians
           'column' => 'instrument_id',
           'flags' => self::JOIN_READONLY,
         ],
-        self::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project' => [
+        DatabaseTables::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project' => [
           'entity' => Entities\InstrumentFamily::class,
           'sql' => 'SELECT
   __t1.instrument_id AS instrument_id,
   GROUP_CONCAT(DISTINCT __t2.family) AS family
-FROM ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t2
+FROM ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t1
+INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t2
 ON __t1.instrument_family_id = __t2.id
   AND __t2.family = "' . Entities\ProjectInstrument::NOT_AN_INSTRUMENT_FAMILY . '"
 GROUP BY __t1.instrument_id',
           'identifier' => [
             'instrument_id' => [
-              'table' => self::PROJECT_INSTRUMENTS_TABLE,
+              'table' => DatabaseTables::PROJECT_INSTRUMENTS_TABLE,
               'column' => 'instrument_id',
             ],
           ],
@@ -218,8 +219,8 @@ GROUP BY __t1.instrument_id',
     // Filter out already registered musicians
     $opts[PHPMyEdit::OPT_HAVING]['AND'] = [];
 
-    $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
-    $instrumentFamiliesJoin = $joinTables[self::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project'];
+    $projectsJoin = $joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE];
+    $instrumentFamiliesJoin = $joinTables[DatabaseTables::INSTRUMENT_FAMILIES_TABLE . self::VALUES_TABLE_SEP . 'project'];
     $instrumentFamily = "COALESCE($instrumentFamiliesJoin.family, '')";
     $participationStatus = "{$projectsJoin}.participation_status";
     $associated = ParticipationStatus::ASSOCIATED->value;

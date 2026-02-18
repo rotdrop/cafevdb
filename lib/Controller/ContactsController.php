@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024, 2025, 2026, 2026 Claus-Justus Heine
+ * @copyright 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
@@ -39,11 +41,17 @@ use OCP\IAddressBook;
  * meant for newer parts of the web-interface in contrast to the legacy PME
  * stuff.
  */
+#[TSAttributes\TypeScript]
 class ContactsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
+
+  public const BASE_PATH = 'contacts';
+
+  public const END_POINT_ADDRESS_BOOKS = 'address-books';
+  public const END_POINT_SEARCH = 'search';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -56,21 +64,6 @@ class ContactsController extends Controller
     parent::__construct($appName, $request);
   }
   // phpcs:enable
-
-  /**
-   * Get all the data of the given musician. This mess removes "circular"
-   * associations as we are really only interested into the data for this
-   * single person.
-   *
-   * @param int $contactUid
-   *
-   * @return DataResponse
-   */
-  #[CoreAttributes\NoAdminRequired]
-  public function get(int $contactUid):DataResponse
-  {
-    return self::grumble($this->l->t('UNIMPLEMENTED'));
-  }
 
   /**
    * Search by user-id and names. Pattern may contain wildcards (* and %).
@@ -90,6 +83,11 @@ class ContactsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_SEARCH . '/{pattern}',
+    defaults: [ 'pattern' => '', ],
+  )]
   public function search(
     string $pattern,
     ?int $limit = null,
@@ -144,6 +142,7 @@ class ContactsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::BASE_PATH . '/' . self::END_POINT_ADDRESS_BOOKS)]
   public function getAddressBooks():DataResponse
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();

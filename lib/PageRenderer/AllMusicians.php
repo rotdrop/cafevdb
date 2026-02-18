@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -39,9 +41,10 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Table generator for Musicians table. */
+#[TSAttributes\TypeScript]
 class AllMusicians extends Musicians
 {
-  const TEMPLATE = 'all-musicians';
+  public const TEMPLATE = EnumTemplate::ALL_MUSICIANS->value;
 
   /** {@inheritdoc} */
   public function __construct(

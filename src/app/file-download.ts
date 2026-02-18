@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,7 +63,11 @@ type Options = typeof defaultOptions;
  * @param [parameters] Success and error callbacks .done(), .fail(),
    .errorMessage().
  */
-const download = function(url: string, post?: JQuery.PlainObject|JQuery.NameValuePair[], parameters?: string|Partial<Options>) {
+const download = (
+  url: string,
+  post?: JQuery.PlainObject|JQuery.NameValuePair[],
+  parameters?: string|Partial<Options>,
+) => {
   if (typeof parameters === 'string') { // error message
     const errorMessage = parameters;
     parameters = {

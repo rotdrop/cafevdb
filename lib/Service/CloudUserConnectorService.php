@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Service;
 
-
 use ReflectionClass;
 use Throwable;
 use UnexpectedValueException;
@@ -41,11 +40,13 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician as MusicianEntity;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Service\RequestService;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException as DBALDriverException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms;
 
 /**
  * Manage database-views and grants in order to selectively provide only the
@@ -144,32 +145,32 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   ];
 
   const MUSICIAN_ID_TABLES = [
-    'SepaBankAccounts' => 'musician_id',
-    'SepaDebitMandates' => 'musician_id',
+    DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE => 'musician_id',
+    DatabaseTables::SEPA_DEBIT_MANDATES_TABLE => 'musician_id',
     // 'MusicianRowAccessTokens' => 'musician_id',
     // 'ProjectApplications' => 'musician_id',
-    'ProjectParticipants' => 'musician_id',
-    'MusicianInstruments' => 'musician_id',
-    'ProjectInstruments' => 'musician_id',
+    DatabaseTables::PROJECT_PARTICIPANTS_TABLE => 'musician_id',
+    DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE => 'musician_id',
+    DatabaseTables::PROJECT_INSTRUMENTS_TABLE => 'musician_id',
     // 'ProjectParticipantFieldsData' => 'musician_id', needs extra access controls
-    'ProjectPayments' => 'musician_id',
-    'CompositePayments' => 'musician_id',
-    'EncryptedFileOwners' => 'musician_id',
-    'MusicianEmailAddresses' => 'musician_id',
+    DatabaseTables::PROJECT_PAYMENTS_TABLE => 'musician_id',
+    DatabaseTables::COMPOSITE_PAYMENTS_TABLE => 'musician_id',
+    MusicianEntity::ENCRYPTED_FILE_OWNERS_JOIN_TABLE => 'musician_id',
+    DatabaseTables::MUSICIAN_EMAILS_TABLE => 'musician_id',
   ];
 
   const UNRESTRICTED_TABLES = [
-    'Instruments',
-    'InstrumentFamilies',
-    'instrument_instrument_family',
+    DatabaseTables::INSTRUMENTS_TABLE,
+    DatabaseTables::INSTRUMENT_FAMILIES_TABLE,
+    DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE,
     'GeoContinents',
     'GeoCountries',
     'GeoPostalCodes',
     'GeoPostalCodeTranslations',
-    'InsuranceBrokers',
-    'InsuranceRates',
-    'ProjectInstrumentationNumbers',
-    'TableFieldTranslations',
+    DatabaseTables::INSURANCE_BROKERS_TABLE,
+    DatabaseTables::INSURANCE_RATES_TABLE,
+    DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
+    DatabaseTables::FIELD_TRANSLATIONS_TABLE,
   ];
 
   const GRANT_EXECUTE = 'GRANT EXECUTE ON FUNCTION %1$s TO %2$s@\'localhost\'';
@@ -942,7 +943,7 @@ SELECT t.*
   WHERE t.participant_access <> 'none'
   GROUP BY t.id";
 
-    $table = 'ProjectParticipantFieldsData';
+    $table = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE;
     $column = 'musician_id';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
@@ -954,7 +955,7 @@ SELECT t.* FROM " . $table . " t
       ON t.field_id = ppf.id AND ppf.participant_access <> 'none'
     WHERE t." . $column . " = " . $accessFunction;
 
-    $table = 'ProjectParticipantFieldsDataOptions';
+    $table = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE;
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER

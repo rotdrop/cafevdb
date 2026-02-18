@@ -30,6 +30,9 @@
 @use './variables.scss' as *;
 @use './pme-table-tabs.scss' as *;
 @use './mixins/wysiwyg-editors.scss' as *;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as PageRenderer;
+
+$revertToDefault: PageRenderer.$revertToDefaultCssClass;
 
 form.pme-form.project-participant-fields-display {
 
@@ -189,7 +192,7 @@ form.pme-form.project-participant-fields-display {
       padding:0;
     }
 
-    &.revert-to-default {
+    &.#{$revertToDefault} {
       background-image:url('../img/history.svg');
     }
   }

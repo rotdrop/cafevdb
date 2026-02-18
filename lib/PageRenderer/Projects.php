@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 use RuntimeException;
 use DateTimeImmutable;
@@ -48,6 +50,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**Table generator for Projects table. */
+#[TSAttributes\TypeScript]
 class Projects extends PMETableViewBase
 {
   use FieldTraits\ActionMenuToggleTrait;
@@ -56,13 +59,16 @@ class Projects extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  const TEMPLATE = 'projects';
-  const TABLE = self::PROJECTS_TABLE;
-  const ENTITY = Entities\Project::class;
-  const NAME_LENGTH_MAX = 20;
+  public const TEMPLATE = EnumTemplate::PROJECTS->value;
 
-  const NUM_VOICES_MIN = 2;
-  const NUM_VOICES_EXTRA = 1;
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::PROJECTS_TABLE;
+
+  protected const ENTITY = Entities\Project::class;
+  protected const NAME_LENGTH_MAX = 20;
+
+  protected const NUM_VOICES_MIN = 2;
+  protected const NUM_VOICES_EXTRA = 1;
 
   private const MAX_POSTER_COLUMNS = 4;
 
@@ -74,7 +80,7 @@ class Projects extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => self::ENTITY,
     ],
-    self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [
+    DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [
       'entity' => Entities\ProjectInstrumentationNumber::class,
       'identifier' => [
         'project_id' => 'id',
@@ -83,18 +89,18 @@ class Projects extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    self::INSTRUMENTS_TABLE => [
+    DatabaseTables::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
-          'table' => self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
+          'table' => DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
           'column' => 'instrument_id',
         ],
       ],
       'column' => 'id',
     ],
-    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -205,9 +211,9 @@ class Projects extends PMETableViewBase
 
     // Data injected into the form submit via invisible inputs.
     $opts['cgi']['persist'] = [
-      PersistentCGIKeys::TEMPLATE => static::TEMPLATE,
+      PersistentCGIKeys::TEMPLATE => self::TEMPLATE,
       PersistentCGIKeys::TABLE => $opts['tb'],
-      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . static::TEMPLATE,
+      PersistentCGIKeys::TEMPLATE_RENDERER => DataConstants::RENDERER_PREFIX_TAG . self::TEMPLATE,
       // overwrite with record id to catch changes after copy/insert
       PersistentCGIKeys::PROJECT_ID => $this->projectId,
       PersistentCGIKeys::PROJECT_NAME => $this->projectName,
@@ -265,7 +271,7 @@ class Projects extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-        case self::PROJECT_PARTICIPANT_FIELDS_TABLE:
+        case DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE:
           $tweakedJoinInfo = $joinInfo;
           unset($tweakedJoinInfo['identifier']['project_id']);
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($tweakedJoinInfo, 'name');
@@ -343,14 +349,14 @@ class Projects extends PMETableViewBase
     $this->addSlug('type', $opts['fdd']['type']);
 
     $l10nInstrumentsTable = $this->makeFieldTranslationsJoin([
-      'table' => self::INSTRUMENTS_TABLE,
+      'table' => DatabaseTables::INSTRUMENTS_TABLE,
       'entity' => Entities\Instrument::class,
       'identifier' => [ 'id' => true ], // just need the key
       'column' => 'id',
     ], 'name');
 
     list($index, $name) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id',
       [
         'name'        => $this->l->t('Instrumentation'),
         'decoration'  => [ 'slug' => 'instrumentation' ],
@@ -414,7 +420,7 @@ class Projects extends PMETableViewBase
             'cast' => [ false ],
           ],
           'orderby'     => '$table.sort_order ASC',
-          'join'        => '$join_col_fqn = '.$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
+          'join'        => '$join_col_fqn = '.$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].'.instrument_id',
         ],
         'valueGroups' => $instrumentInfo['idGroups'],
         'filter' => [
@@ -432,7 +438,7 @@ class Projects extends PMETableViewBase
     }
 
     list($index, $name) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice',
       [
         'name|CAP'  => $this->l->t('Voices'),
         'name|LFVD' => $this->l->t('Instrumentation'),
@@ -482,12 +488,12 @@ class Projects extends PMETableViewBase
             } else {
               $instruments = Util::explode(
                 ',',
-                $row[$this->joinQueryField(static::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id')],
+                $row[$this->joinQueryField(DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id')],
                 Util::OMIT_EMPTY_FIELDS|Util::TRIM,
               );
               $instrumentNames = $pme->set_values(
                 $this->joinQueryFieldIndex(
-                  static::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
+                  DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
                   'instrument_id',
                 )
               )['values'];
@@ -495,7 +501,7 @@ class Projects extends PMETableViewBase
 
             $templateParameters = [
               'instruments' => $instruments,
-              'dataName' => $pme->cgiDataName(self::joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
+              'dataName' => $pme->cgiDataName(self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTS_TABLE, 'voice').'[]'),
               'inputLabel' => function($instrument) use ($instrumentNames) {
                 return $this->l->t('%1$s, #voices', $instrumentNames[$instrument]);
               },
@@ -515,16 +521,16 @@ class Projects extends PMETableViewBase
         'tooltip|ACP' => $this->toolTipsService[$this->tooltipSlug('instrumentation-voices').'-ACP'],
         'sql' => "GROUP_CONCAT(
   DISTINCT
-  IF(".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice >= 0,
+  IF(".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice >= 0,
     CONCAT_WS(
       '".self::JOIN_KEY_SEP."',
-      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
-      ".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
+      ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
     NULL
   )
   ORDER BY
-    " . $this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC,
-    " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
+    " . $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".sort_order ASC,
+    " . $this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
         // Values for copy and change, including excess voices to select
         'values|CP' => [
           'table' => "SELECT
@@ -541,15 +547,15 @@ class Projects extends PMETableViewBase
   pin.quantity,
   GREATEST(".self::NUM_VOICES_MIN.", ".self::NUM_VOICES_EXTRA." + MAX(pin.voice)) AS voices_limit,
   n.seq
-  FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+  FROM ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".DatabaseTables::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".DatabaseTables::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
-  JOIN ".self::SEQUENCE_TABLE." n
+  JOIN ".DatabaseTables::SEQUENCE_TABLE." n
     ON n.seq <= 1 + GREATEST(
       " . self::NUM_VOICES_MIN . ",
       (pin.voice + ".self::NUM_VOICES_EXTRA.")
@@ -558,7 +564,7 @@ class Projects extends PMETableViewBase
     AND n.seq <= 1 + GREATEST(
       " . self::NUM_VOICES_MIN . ",
       " . self::NUM_VOICES_EXTRA . " + (SELECT MAX(pin2.voice)
-  FROM " . self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE . " pin2))
+  FROM " . DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE . " pin2))
   WHERE
     pin.project_id = \$record_id[id]
   GROUP BY
@@ -586,16 +592,16 @@ class Projects extends PMETableViewBase
   i.sort_order,
   pin.quantity,
   n.seq
-  FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
-  LEFT JOIN ".self::INSTRUMENTS_TABLE." i
+  FROM ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
+  LEFT JOIN ".DatabaseTables::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
-  LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
+  LEFT JOIN ".DatabaseTables::FIELD_TRANSLATIONS_TABLE." ft
     ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
-  JOIN ".self::SEQUENCE_TABLE." n
-    ON n.seq <= pin.voice AND n.seq >= 0 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
+  JOIN ".DatabaseTables::SEQUENCE_TABLE." n
+    ON n.seq <= pin.voice AND n.seq >= 0 AND n.seq <= (SELECT MAX(pin2.voice) FROM ".DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2)
   WHERE
     pin.project_id = " . ($this->projectId?:0) . " OR " . ($this->projectId?:0) . " <= 0
   GROUP BY
@@ -633,7 +639,7 @@ class Projects extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'quantity',
+      $opts['fdd'], DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'quantity',
       [
         'name' => $this->l->t('Quantity'),
         'input' => 'RH',
@@ -644,12 +650,12 @@ class Projects extends PMETableViewBase
     '".self::JOIN_KEY_SEP."',
     CONCAT_WS(
       '".self::COMP_KEY_SEP."',
-      ".$this->joinTables[self::INSTRUMENTS_TABLE].".id,
-      ".$this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
+      ".$this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".id,
+      ".$this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice),
     \$join_col_fqn)
   ORDER BY
-    " . $this->joinTables[self::INSTRUMENTS_TABLE].".sort_order ASC,
-    " . $this->joinTables[self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
+    " . $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE].".sort_order ASC,
+    " . $this->joinTables[DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE].".voice ASC)",
         'default' => 0,
       ]);
 
@@ -880,7 +886,7 @@ class Projects extends PMETableViewBase
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id',
       [
         'name'         => $this->l->t('Participant Fields'),
         'decoration'   => [ 'slug' => 'participant-fields' ],
@@ -1196,8 +1202,8 @@ class Projects extends PMETableViewBase
     }
 
     // sanitize instrumentation numbers
-    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
 
     // Add zeros to the voices data as the "0" voice is needed for
     // convenience in either case, otherwise adding musicians to the
@@ -1282,8 +1288,8 @@ class Projects extends PMETableViewBase
 
     Util::unsetValue($changed, 'mailing_list_id');
 
-    $instrumentsColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
-    $voicesColumn = self::joinTableFieldName(self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
+    $instrumentsColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id');
+    $voicesColumn = self::joinTableFieldName(DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'voice');
     if (array_search($instrumentsColumn, $changed) !== false
         || array_search($voicesColumn, $changed) !== false) {
 
@@ -1381,7 +1387,7 @@ class Projects extends PMETableViewBase
       $this->debug('NEW PROJECT ID ' . $newProjectId);
 
       // clone participants fields if not empty, list of names is given
-      $participantFields = $newValues[self::joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
+      $participantFields = $newValues[self::joinTableFieldName(DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE, 'id')];
       $participantFields = Util::explode(',', $participantFields);
       $this->debug('PARTICIPANT FIELDS ' . print_r($participantFields, true));
 

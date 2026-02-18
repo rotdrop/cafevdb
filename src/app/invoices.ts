@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,6 @@ import ajaxDownload from './file-download.ts';
 import type { TableDialogCallbackData } from './pme-state.ts';
 import setBusyIndicators from './busy-indicators.ts';
 import { translate as t } from '@nextcloud/l10n';
-import { filename } from './path.ts';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
@@ -55,6 +54,7 @@ import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
 import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Invoices.ts';
 
 require('./jquery-readonly.ts');
 require('invoices.scss');
@@ -69,8 +69,6 @@ const iiAmountName = pmeData('InvoiceItems:amount');
 const iiSubjectName = pmeData('InvoiceItems:subject');
 const iDueDateName = pmeData('due_date');
 
-const template = filename(__filename);
-
 asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   if (event.template !== template) {
     return;
@@ -80,8 +78,8 @@ asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   asyncEmit(BusEvents.POP_BUSY_STATE);
 });
 
-const overviewPopup = async (containerSel: string, data: EventArgs[typeof BusEvents.LEGACY_RECORD_POPUP]) => {
-  const tableOptions = {
+const overviewPopup = (containerSel: string, data: EventArgs[typeof BusEvents.LEGACY_RECORD_POPUP]) =>
+  PHPMyEdit.tableDialogOpen({
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-overview-dialog',
     template,
@@ -107,9 +105,7 @@ const overviewPopup = async (containerSel: string, data: EventArgs[typeof BusEve
     projectName: data.projectName,
     modalDialog: true,
     modified: false,
-  };
-  await PHPMyEdit.tableDialogOpen(tableOptions);
-};
+  });
 
 type ItemPopupData = {
   projectId: number,
@@ -129,17 +125,12 @@ type ItemPopupData = {
  * @param post.projectName Name of the project.
  * @param post.projectId Database id of the project.
  */
-const invoiceItemPopup = (containerSel: string, post: ItemPopupData) => {
-  // Prepare the data-array for PHPMyEdit.tableDialogOpen(). The
-  // instrumentation numbers are somewhat nasty and require too
-  // many options.
-
-  const tableOptions = {
+const invoiceItemPopup = (containerSel: string, post: ItemPopupData) =>
+  PHPMyEdit.tableDialogOpen({
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
     template,
     templateRenderer: templateRenderer(template),
-    Table: 'Invoices',
     projectId: post.projectId,
     projectName: post.projectName as string,
     // Now special options for the dialog popup
@@ -152,9 +143,7 @@ const invoiceItemPopup = (containerSel: string, post: ItemPopupData) => {
     [pmeSys('operation')]: 'Change',
     modalDialog: false,
     modified: false,
-  };
-  PHPMyEdit.tableDialogOpen({ ...tableOptions, ...post });
-};
+  }, post);
 
 const backgroundDecryption = function(container: string|JQuery) {
   const $container = PHPMyEdit.container(container);

@@ -24,13 +24,18 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -45,17 +50,15 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
 /** Validation controller for some personal input fields. */
+#[TSAttributes\TypeScript]
 class MusicianValidationController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var MusiciansRepository */
-  protected $musiciansRepository;
+  public const END_POINT = 'validate/musicians';
 
-  /** @var string */
-  protected $dataPrefix = '';
+  protected string $dataPrefix = '';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -64,15 +67,14 @@ class MusicianValidationController extends Controller
     private EmailAddressService $emailAddressService,
     private GeoCodingService $geoCodingService,
     private PhoneNumberService $phoneNumberService,
-    protected ConfigService $configService,
     protected EntityManager $entityManager,
+    protected IL10N $l,
+    protected LoggerInterface $logger,
     protected PHPMyEdit $pme,
   ) {
     parent::__construct($appName, $request);
 
-    $this->l = $this->l10N();
-    $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->dataPrefix = $this->request[PersistentCGIKeys::DATA_PREFIX]['musicians'] ?? '';
+    $this->dataPrefix = $this->request->getParam(PersistentCGIKeys::DATA_PREFIX)['musicians'] ?? '';
   }
 
   /**
@@ -86,37 +88,34 @@ class MusicianValidationController extends Controller
   private function requestParameter(string $name):string
   {
     return Util::normalizeSpaces(
-      $this->request[$this->pme->cgiDataName($this->dataPrefix . $name)] ?: ''
+      $this->request->getParam($this->pme->cgiDataName($this->dataPrefix . $name), ''),
     );
   }
 
   /**
-   * @param string $topic What to validate.
+   * @param string|EnumMusicianValidationTopic $topic What to validate.
    *
-   * @param null|string $subTopic Optional subtopic.
+   * @param null|string|EnumMusicianValidationSubTopic $subTopic Optional subtopic.
    *
-   * @param string $failure
+   * @param string $failure If literal 'error' return
+   * Http::STATUS_BAD_RESPONSE on validation error, otherwise Http::STATUS_OK.
    *
-   * @return DataResponse
+   * @return DataResponse|JSONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/musicians/{topic}/{subTopic}', defaults: ['subTopic' => ''])]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT . '/{topic}/{subTopic}', defaults: ['subTopic' => ''])]
   public function validate(
-    string $topic,
-    ?string $subTopic = null,
+    string|EnumMusicianValidationTopic $topic,
+    null|string|EnumMusicianValidationSubTopic $subTopic = null,
     string $failure = 'notice',
   ): DataResponse|JSONResponse {
+    $topic = EnumMusicianValidationTopic::get($topic);
+    $subTopic = $subTopic ? EnumMusicianValidationSubTopic::get($subTopic) : null;
     $message = [];
-    switch ($failure) {
-      case 'error':
-        $returnFailures = fn($data) => self::grumble($data);
-        break;
-      default:
-        $returnFailures = fn($data) => self::dataResponse($data);
-        break;
-    }
     switch ($topic) {
-      case 'phone':
+      case EnumMusicianValidationTopic::PHONE:
         $numbers = [
           'mobile' => [
             'number' => $this->requestParameter('mobile_phone'),
@@ -186,51 +185,51 @@ class MusicianValidationController extends Controller
           );
         }
 
-        return self::dataResponse([
-          'message' => $message,
-          'mobilePhone' => $mobile['number'],
-          'mobileMeta' => nl2br($mobile['meta']),
-          'fixedLinePhone' => $fixed['number'],
-          'fixedLineMeta' => nl2br($fixed['meta']),
-        ]);
+        return new DTO\PhoneNumberValidationResponse(
+          messages: $message,
+          mobilePhone: $mobile['number'],
+          mobileMeta: nl2br($mobile['meta']),
+          fixedLinePhone: $fixed['number'],
+          fixedLineMeta: nl2br($fixed['meta']),
+        )->response();
 
-        break;
-      case 'email':
+      case EnumMusicianValidationTopic::EMAIL:
         $email = $this->requestParameter('email');
 
         if (empty($email)) {
-          $returnFailures([ 'message' => $this->t->t('Submitted email is empty'), 'email' => '' ]);
+          return new DTO\EmailValidationResponse(
+            messages: [ $this->t->t('Submitted email is empty') ],
+            email: '',
+          )->response($failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK);
         }
 
         try {
           $emailArray = $this->emailAddressService->parseAddressString($email);
         } catch (Exceptions\EnduserNotificationException $e) {
-          $messages = $e->getMessage();
+          $message = $e->getMessage();
         }
 
-        if (empty($messages)) {
+        if (empty($message)) {
           $email = implode(', ', array_keys($emailArray));
-        }
-
-        $result = [
-          'message' => $messages ?? null,
-          'email' => $email,
-          'details' => $emailArray,
-        ];
-
-        if (empty($messages)) {
-          return self::dataResponse($result);
+          $messages = [];
         } else {
-          return $returnFailures($result);
+          $messages = [ $message ];
+          $statusCode = $failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK;
         }
 
-      case 'autocomplete':
+        return new DTO\EmailValidationResponse(
+          messages: $messages,
+          email: $email,
+          details: $emailArray ?? [],
+        )->response($statusCode);
+
+      case EnumMusicianValidationTopic::AUTOCOMPLETE:
         $country = $this->requestParameter('country');
         $city = $this->requestParameter('city');
         $street = $this->requestParameter('street');
         $postalCode = $this->requestParameter('postal_code');
         switch ($subTopic) {
-          case 'street':
+          case EnumMusicianValidationSubTopic::AUTOCOMPLETE_STREET:
             // separate street data into its own request as the OverPass API is slow.
             $streets = $this->geoCodingService->autoCompleteStreet($country, $city, $postalCode);
 
@@ -243,7 +242,7 @@ class MusicianValidationController extends Controller
               'streets' => $streets,
             ]);
             break;
-          case 'place':
+          case EnumMusicianValidationSubTopic::AUTOCOMPLETE_PLACE:
             // compute auto-comlete for country, city, postal-code in one run
             $locations = $this->geoCodingService->cachedLocations($postalCode, $city, $country);
             if (count($locations) == 0 && ($city || $postalCode)) {
@@ -286,10 +285,12 @@ class MusicianValidationController extends Controller
             ]);
             break;
           default:
-            return self::grumble($this->l->t('Unsupported auto-complete request for "%s".', $subTopic));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unsupported auto-complete request for "%s".', $subTopic ?? 'null'),
+            );
         }
         break;
-      case 'duplicates':
+      case EnumMusicianValidationTopic::DUPLICATES:
         $nameCriteria = [];
         $surName = $this->requestParameter('sur_name');
         if (!empty($surName)) {
@@ -353,18 +354,18 @@ class MusicianValidationController extends Controller
 
         $criteria = array_merge($nameCriteria, $commCriteria, $addressCriteria);
         if (empty($criteria)) {
-          return self::dataResponse([
-            'message' => [],
-            'duplicates' => [],
-          ]);
+          return new DTO\DuplicateMusiciansResponse(
+            messages: [],
+            duplicates: [],
+          )->response();
         }
         array_unshift($criteria, [ '(|' => true ]);
         $criteria[] = [ ')' => true ];
 
         $this->logDebug('CRITERIA ' . print_r($criteria, true));
 
-        $musicians = $this->musiciansRepository->findBy($criteria, [
-          'surName' => 'ASC', 'firstName' => 'ASC' ]);
+        $musicians = $this->getDatabaseRepository(Entities\Musician::class)
+          ->findBy($criteria, [ 'surName' => 'ASC', 'firstName' => 'ASC' ]);
 
         $duplicateNames = '';
         $duplicates = [];
@@ -452,11 +453,7 @@ class MusicianValidationController extends Controller
           messages: $messages,
           duplicates: $duplicates,
         )->response();
-
-      default:
-        break;
     }
-    return self::grumble($this->l->t('Unknown Request'));
   }
 
   /**

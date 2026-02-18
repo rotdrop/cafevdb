@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ use UnexpectedValueException;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM as AppORM;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -49,9 +50,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * also have first to be added to a project as "associates", then they are
  * also "Musician" entities (thow the name is misleading) and then can be used
  * as ordinary participants for payments.
- *
  */
-#[ORM\Table(name: 'CompositePayments')]
+#[ORM\Table(name: DatabaseTables::COMPOSITE_PAYMENTS_TABLE)]
 #[ORM\UniqueConstraint(columns: ['pre_notification_message_id'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository::class)]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\CompositePaymentEntityListener::class])]

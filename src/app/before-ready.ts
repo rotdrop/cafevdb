@@ -203,7 +203,7 @@ const documentReady = function() {
   });
 
   const musiciansCallback: TableLoadCallback = {
-    callback(selector, parameters, resizeCB) {
+    callback(_template, selector, parameters, resizeCB) {
 
       if (parameters.reason === 'tabChange') {
         resizeCB();
@@ -234,14 +234,13 @@ const documentReady = function() {
       $container.find('.cloud-avatar').imagesLoaded(resizeCB);
     },
     context: CAFEVDB,
-    parameters: [],
   };
 
   PHPMyEdit.addTableLoadCallback('all-musicians', musiciansCallback);
   PHPMyEdit.addTableLoadCallback('add-musicians', musiciansCallback);
 
   PHPMyEdit.addTableLoadCallback('project-participant-fields', {
-    callback(selector, parameters, resizeCB) {
+    callback(_template, selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {
         resizeCB();
@@ -251,35 +250,31 @@ const documentReady = function() {
       ProjectExtra.ready(selector, resizeCB);
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('instruments', {
-    callback(_selector, _parameters, resizeCB) {
+    callback(_template, _selector, _parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('instrument-families', {
-    callback(_selector, _parameters, resizeCB) {
+    callback(_template, _selector, _parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('taxation-statutory-sources', {
-    callback(_selector, _parameters, resizeCB) {
+    callback(_template, _selector, _parameters, resizeCB) {
       resizeCB();
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('project-payments', {
-    callback(selector, parameters, resizeCB) {
+    callback(_template, selector, parameters, resizeCB) {
 
       switch (parameters.reason) {
         case 'dialogOpen':
@@ -293,11 +288,10 @@ const documentReady = function() {
       }
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('invoices', {
-    callback(selector, parameters, resizeCB) {
+    callback(_template, selector, parameters, resizeCB) {
 
       switch (parameters.reason) {
         case 'dialogOpen':
@@ -311,11 +305,10 @@ const documentReady = function() {
       }
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   PHPMyEdit.addTableLoadCallback('sepa-bulk-transactions', {
-    callback(selector, parameters, resizeCB) {
+    callback(_template, selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {
         SepaBulkTransactions.backgroundDecryption(selector);
@@ -326,7 +319,6 @@ const documentReady = function() {
       SepaBulkTransactions.ready(selector, resizeCB);
     },
     context: CAFEVDB,
-    parameters: [],
   });
 
   CAFEVDB.addReadyCallback(async () => {

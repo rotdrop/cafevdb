@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use chillerlan\QRCode\QRCode;
 
 use OCP\IRequest;
@@ -61,9 +63,12 @@ abstract class Musicians extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
 
-  const CSS_CLASS = 'musicians';
-  const TABLE = self::MUSICIANS_TABLE;
-  const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::MUSICIANS_TABLE;
+
+  protected const CSS_CLASS = 'musicians';
+
+  protected const ALL_EMAILS_TABLE = DatabaseTables::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
 
   /**
    * Join table structure. All update are handled in
@@ -74,7 +79,7 @@ abstract class Musicians extends PMETableViewBase
       'flags' => self::JOIN_MASTER,
       'entity' => Entities\Musician::class,
     ],
-    self::MUSICIAN_INSTRUMENTS_TABLE => [
+    DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE => [
       'entity' => Entities\MusicianInstrument::class,
       'identifier' => [
         'instrument_id' => false,
@@ -82,18 +87,18 @@ abstract class Musicians extends PMETableViewBase
       ],
       'column' => 'instrument_id',
     ],
-    self::INSTRUMENTS_TABLE => [
+    DatabaseTables::INSTRUMENTS_TABLE => [
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
-          'table' => self::MUSICIAN_INSTRUMENTS_TABLE,
+          'table' => DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE,
           'column' => 'instrument_id',
         ],
       ],
       'column' => 'id',
     ],
-    self::INSTRUMENT_INSURANCES_TABLE => [
+    DatabaseTables::INSTRUMENT_INSURANCES_TABLE => [
       'entity' => Entities\InstrumentInsurance::class,
       'identifier' => [
         'id' => false,
@@ -217,7 +222,7 @@ abstract class Musicians extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order'),
+      self::joinTableFieldName(DatabaseTables::INSTRUMENTS_TABLE, 'sort_order'),
       'display_name',
       'sur_name',
       'first_name',
@@ -326,15 +331,15 @@ abstract class Musicians extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-        case self::INSTRUMENTS_TABLE:
+        case DatabaseTables::INSTRUMENTS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
           list($select, $join) = explode(' FROM ' . $table . ' t', $joinInfo['sql']);
           $joinInfo['sql'] = $select
             . ', GROUP_CONCAT(DISTINCT __t3.family ORDER BY __t3.family ASC) AS families'
             . ' FROM ' . $table . ' t
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
+INNER JOIN ' . DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE . ' __t2
 ON t.id = __t2.instrument_id
-INNER JOIN ' . self::INSTRUMENT_FAMILIES_TABLE . ' __t3
+INNER JOIN ' . DatabaseTables::INSTRUMENT_FAMILIES_TABLE . ' __t3
 ON __t2.instrument_family_id = __t3.id
 ' . $join . '
 GROUP BY t.id';
@@ -591,11 +596,11 @@ GROUP BY t.id';
       'display|LVF' => ['popup' => 'data'],
       'sql'         => 'GROUP_CONCAT(DISTINCT
   IF(
-    ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.deleted IS NOT NULL,
+    ' . $joinTables[DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE] . '.deleted IS NOT NULL,
     NULL,
     $join_col_fqn
   )
-  ORDER BY ' . $joinTables[self::MUSICIAN_INSTRUMENTS_TABLE] . '.ranking ASC, $order_by)',
+  ORDER BY ' . $joinTables[DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE] . '.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -605,7 +610,7 @@ GROUP BY t.id';
           'ifnull' => [ false ],
         ],
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
       ],
       'valueGroups' => $instrumentInfo['idGroups'],
       'filter' => [
@@ -624,9 +629,9 @@ GROUP BY t.id';
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL']);
 
     list($instrumentsFddIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
+      $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
-    $opts['fdd'][self::joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
+    $opts['fdd'][self::joinTableFieldName(DatabaseTables::INSTRUMENTS_TABLE, 'sort_order')] = [
       'tab'         => [ 'id' => [ 'orchestra' ] ],
       'name'        => $this->l->t('Instrument Sort Order'),
       'sql|VCP'     => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -636,12 +641,12 @@ GROUP BY t.id';
       'values' => [
         'column' => 'sort_order',
         'orderby' => '$table.sort_order ASC',
-        'join' => [ 'reference' => $joinTables[self::INSTRUMENTS_TABLE], ],
+        'join' => [ 'reference' => $joinTables[DatabaseTables::INSTRUMENTS_TABLE], ],
       ],
     ];
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
+      $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Instruments'),
         'tab'     => [ 'id' => [ 'orchestra' ] ],
         'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
@@ -883,7 +888,7 @@ GROUP BY t.id';
      */
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
+      $opts['fdd'], DatabaseTables::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
         'tab' => ['id' => 'finance'],
         'input' => 'V' . ($this->financeMode ? '' : 'H'),
         'name' => $this->l->t('Instrument Insurance'),

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,12 +23,12 @@
 
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Musician } from '../types/address-book.d.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 
 export const usePersistentDataStore = defineStore('parsistent-data', () => {
 
   // set of already loaded selectable musicians
-  const selectMusicians = ref<Record<string, Record<number, Record<number, Musician> > > >({});
+  const selectMusicians = ref<Record<string, Record<number, Record<number, FrontEndEntity<'Musician'> > > > >({});
 
   return { selectMusicians };
 });

@@ -65,15 +65,17 @@ import {
 } from 'vue'
 import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import { generateOcsUrl } from '../toolkit/util/generate-url.ts'
+import { generateOcsUrl as generateAppOcsUrl } from '../toolkit/util/generate-url.ts'
 import { musicianAddressPopup } from '../util/address-popup.ts'
 import { usePersistentDataStore } from '../stores/persistent-data.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import type { NcSelect } from '@nextcloud/vue'
 import { loadEntities } from '../toolkit/services/entity-repository.ts'
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
 import Console from '../util/console.ts'
 import { type EnumMusiciansSearchScope } from '../../build/ts-types/php-modules/Controller.ts'
+import { END_POINT as searchEndPoint } from '../../build/ts-types/php-modules/Controller/MusiciansController.ts'
 
 const COMPONENT_NAME = 'SelectMusicians'
 const logger = new Console(COMPONENT_NAME)
@@ -91,21 +93,22 @@ export interface MusicianIdObject {
 }
 
 // Pre Vue 3.3 cannot handle imported complex types here.
-interface Musician {
-  city?: string,
-  country?: string,
-  countryName?: string,
-  email?: string,
-  publicName: string,
-  id: number,
-  personalPublicName?: string,
-  nickName?: string,
-  organization?: string,
-  postalCode?: string,
-  street?: string,
-  streetNumber?: string,
-  userIdSlug?: string,
-}
+// interface Musician {
+//   city?: string|null,
+//   country?: string|null,
+//   countryName?: string|null,
+//   email?: string,
+//   publicName: string,
+//   id: number,
+//   personalPublicName?: string,
+//   nickName?: string,
+//   organization?: string,
+//   postalCode?: string,
+//   street?: string,
+//   streetNumber?: string,
+//   userIdSlug?: string,
+// }
+type Musician = FrontEndEntity<'Musician'>
 
 const props = withDefaults(
   defineProps<{
@@ -315,7 +318,7 @@ const findMusicians = async (query: string, musicianIds?: number[]) => {
     params.ids = musicianIds
   }
   try {
-    const url = generateOcsUrl(`musicians/search${query}`)
+    const url = generateAppOcsUrl(`${searchEndPoint}${query}`)
     const data = await loadEntities<'Musician'>(url, params)
     for (const [id, musician] of Object.entries(data.Musician)) {
       vueSet(musicians.value, id, musician)

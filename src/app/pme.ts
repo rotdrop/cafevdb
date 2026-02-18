@@ -30,6 +30,7 @@ import $, { isJQuerySelect, jq } from './jquery.ts';
 import globalState from './globalstate.ts';
 import * as PMEState from './pme-state.ts';
 import type {
+  PageTemplateValue,
   TableDialogCallbackData,
   TableDialogOptions,
   TriggerData,
@@ -94,6 +95,8 @@ import {
 } from '../services/async-event-bus.ts';
 import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { loadingCssClass } from 'variables.scss';
+import { DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -164,27 +167,23 @@ const pmeInner = function(selector: string|JQuery) {
   return $container.children('div:first') as JQuery<HTMLDivElement>;
 };
 
-const pmeAddTableLoadCallback = function(template: string, cbObject: PMEState.TableLoadCallback) {
+const pmeAddTableLoadCallback = <T extends PageTemplateValue>(
+  template: T,
+  cbObject: PMEState.TableLoadCallback<T>,
+) => {
   if (typeof cbObject.context === 'undefined') {
-    // @ts-expect-error 2683
     cbObject.context = this;
-  }
-  if (typeof cbObject.parameters === 'undefined') {
-    cbObject.parameters = [];
-  }
-  if (typeof cbObject.parameters !== 'object') {
-    cbObject.parameters = [cbObject.parameters];
   }
   PHPMyEdit.tableLoadCallbacks[template] = cbObject;
 };
 
-const tableLoadCallback = function(
-  template: string,
+const tableLoadCallback = <T extends PageTemplateValue>(
+  template: T,
   selector: string,
   parameters?: TableDialogCallbackData,
   resizeReadyCB?: (keepLocked?: boolean) => void,
-) {
-  let cbHandle: PMEState.TableLoadCallback;
+) => {
+  let cbHandle: PMEState.TableLoadCallback<T>;
 
   if (typeof PHPMyEdit.tableLoadCallbacks[template] !== 'undefined') {
     cbHandle = PHPMyEdit.tableLoadCallbacks[template];
@@ -204,9 +203,9 @@ const tableLoadCallback = function(
   const context = cbHandle.context;
 
   if (context) {
-    return callback.call(context, selector, parameters ?? {}, resizeReadyCB, ...cbHandle.parameters);
+    return callback.call(context, template, selector, parameters ?? {}, resizeReadyCB);
   } else {
-    return callback(selector, parameters ?? {}, resizeReadyCB, ...cbHandle.parameters);
+    return callback(template, selector, parameters ?? {}, resizeReadyCB);
   }
 };
 
@@ -440,7 +439,7 @@ const pmePost = (post: JQuery.PlainObject|string) => {
     return $.Deferred().promise();
   }
   closeActionMenus();
-  return $.post(generateAppUrl('page/pme/load'), post)
+  return $.post(generateAppUrl(controllerEndPoint), post)
     .then(
       function(htmlContent, _textStatus, request) {
         console.info('RESOLVE IN PME POST');
@@ -913,7 +912,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
     // This just does not work.
     return false;
   }
-  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<string>;
+  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<PageTemplateValue>;
 
   let viewOperation = false;
 
@@ -946,6 +945,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: dialogCSSId,
     templateRenderer,
+    template: templateFromRenderer(templateRenderer),
     initialViewOperation: viewOperation,
     initialName,
     initialValue,
@@ -971,7 +971,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
  * is also possible to store all values in tableDialogOptions, as this is
  * added to the query-string in any case.
  */
-const pmeTableDialogOpen = async (tableDialogOptions: TableDialogOptions, post?: string|JQuery.PlainObject) => {
+const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOptions: TableDialogOptions<T>, post?: string|JQuery.PlainObject) => {
 
   const containerCSSId = tableDialogOptions.dialogHolderCSSId;
 
@@ -1299,7 +1299,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
     modalizer(true);
   }
 
-  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<string>;
+  const templateRenderer = $templateRenderer.val()! as TemplateRenderer<PageTemplateValue>;
   const template = templateFromRenderer(templateRenderer);
 
   const result = pseudoSubmitPost($form, $element, resetFilter);
@@ -1940,7 +1940,7 @@ const pmeOpenRowDialog = function(element: HTMLElement, event: JQuery.ClickEvent
   let recordEl: undefined|string;
   console.info('DIRECT CHANGE PROBS', globalState.PHPMyEdit, PHPMyEdit, $row, $form);
   if ($row.hasClass(pmeToken('change-enabled'))
-      && ($form.hasClass(pmeToken('direct-change')) || PHPMyEdit.directChange)) {
+      && ($form.hasClass(pmeToken(DIRECT_CHANGE)) || PHPMyEdit.directChange)) {
     recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
       + ' value="Change?' + recordQuery + '"'
       + ' name="' + pmeSys('operation') + '" />';

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
@@ -49,6 +51,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  * controls to generate import data for bank bulk transactions which then can
  * be submitted to the bank.
  */
+#[TSAttributes\TypeScript]
 class SepaBankAccounts extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;
@@ -61,13 +64,14 @@ class SepaBankAccounts extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const AMOUNT_TAB_ID = 'amount';
+  protected const AMOUNT_TAB_ID = 'amount';
 
-  const TEMPLATE = 'sepa-bank-accounts';
-  const TABLE = self::SEPA_BANK_ACCOUNTS_TABLE;
-  const FIXED_COLUMN_SEP = self::VALUES_TABLE_SEP;
+  public const TEMPLATE = EnumTemplate::SEPA_BANK_ACCOUNTS->value;
 
-  protected $cssClass = 'sepa-bank-accounts';
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE;
+
+  protected $cssClass = self::TEMPLATE;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -78,13 +82,13 @@ class SepaBankAccounts extends PMETableViewBase
         'sequence' => false,
       ],
     ],
-    self::MUSICIANS_TABLE => [
+    DatabaseTables::MUSICIANS_TABLE => [
       'entity' => Entities\Musician::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [ 'id' => 'musician_id' ],
       'column' => 'id',
     ],
-    self::SEPA_DEBIT_MANDATES_TABLE => [
+    DatabaseTables::SEPA_DEBIT_MANDATES_TABLE => [
       'entity' => Entities\SepaDebitMandate::class,
       'flags' => self::JOIN_GROUP_BY,
       'identifier' => [
@@ -94,7 +98,7 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'sequence',
     ],
-    self::PROJECT_PARTICIPANTS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipants::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -103,18 +107,18 @@ class SepaBankAccounts extends PMETableViewBase
       ],
       'column' => 'project_id',
     ],
-    self::PROJECTS_TABLE => [
+    DatabaseTables::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'id' => [
-          'table' => self::SEPA_DEBIT_MANDATES_TABLE,
+          'table' => DatabaseTables::SEPA_DEBIT_MANDATES_TABLE,
           'column' => 'project_id',
         ],
       ],
       'column' => 'id',
     ],
-    self::COMPOSITE_PAYMENTS_TABLE => [
+    DatabaseTables::COMPOSITE_PAYMENTS_TABLE => [
       'entity' => Entities\CompositePayment::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -125,12 +129,12 @@ class SepaBankAccounts extends PMETableViewBase
     ],
     // extra input fields depending on the type of the project,
     // e.g. service fees etc.
-    self::PROJECT_PARTICIPANT_FIELDS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE => [
       'entity' => Entities\ProjectParticipantField::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'project_id' => [
-          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANTS_TABLE,
           'column' => 'project_id',
         ],
         'id' => false,
@@ -138,17 +142,17 @@ class SepaBankAccounts extends PMETableViewBase
       'column' => 'id',
     ],
     // the data for the extra input fields
-    self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDatum::class,
       'flags' => self::JOIN_REMOVE_EMPTY,
       'identifier' => [
         'project_id' => [
-          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANTS_TABLE,
           'column' => 'project_id',
         ],
         'musician_id' => 'musician_id',
         'field_id' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'option_key' => false,
@@ -157,27 +161,27 @@ class SepaBankAccounts extends PMETableViewBase
       'encode' => 'BIN2UUID(%s)',
     ],
     // the data for the extra input fields
-    self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
+    DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE => [
       'entity' => Entities\ProjectParticipantFieldDataOption::class,
       'flags' => 0,
       'identifier' => [
         'field_id' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE,
           'column' => 'id',
         ],
         'key' => [
-          'table' => self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE,
           'column' => 'option_key',
         ],
       ],
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    self::PROJECT_PAYMENTS_TABLE => [
+    DatabaseTables::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
       'identifier' => [
         'project_id' => [
-          'table' => self::PROJECT_PARTICIPANTS_TABLE,
+          'table' => DatabaseTables::PROJECT_PARTICIPANTS_TABLE,
           'column' => 'project_id',
         ],
         'musician_id' => 'musician_id',
@@ -274,10 +278,10 @@ class SepaBankAccounts extends PMETableViewBase
 
     // Sorting field(s)
     $opts['sort_field'] = [
-      self::joinTableFieldName(self::MUSICIANS_TABLE, 'id'),
-      self::joinTableFieldName(self::PROJECTS_TABLE, 'id'),
+      self::joinTableFieldName(DatabaseTables::MUSICIANS_TABLE, 'id'),
+      self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'id'),
       'sequence',
-      self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
+      self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence'),
     ];
 
     // Group by for to-many joins
@@ -494,14 +498,14 @@ class SepaBankAccounts extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) use ($projectMode) {
       $joinInfo['table'] = $table;
       switch ($table) {
-        case self::PROJECT_PARTICIPANTS_TABLE:
+        case DatabaseTables::PROJECT_PARTICIPANTS_TABLE:
           if ($projectMode) {
             $joinInfo['identifier']['project_id'] = [
               'value' => $this->project->getId(),
             ];
           }
           break;
-        case self::SEPA_DEBIT_MANDATES_TABLE:
+        case DatabaseTables::SEPA_DEBIT_MANDATES_TABLE:
           if ($projectMode) {
             $joinInfo['filter']['project_id'] = [
               'value' => [ $this->project->getId(), $this->membersProjectId ],
@@ -513,7 +517,7 @@ class SepaBankAccounts extends PMETableViewBase
             ];
           }
           break;
-        case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+        case DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
           break;
         default:
@@ -527,7 +531,7 @@ class SepaBankAccounts extends PMETableViewBase
       list($participantFieldsJoin, $participantFieldsGenerator) =
         $this->renderParticipantFields(
           $monetaryFields, [
-            'table' => self::PROJECT_PARTICIPANTS_TABLE,
+            'table' => DatabaseTables::PROJECT_PARTICIPANTS_TABLE,
             'column' => 'project_id',
           ],
           self::AMOUNT_TAB_ID);
@@ -541,7 +545,7 @@ class SepaBankAccounts extends PMETableViewBase
     ///////////////////////////////////////////////////////////////////////////
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIANS_TABLE, 'id',
+      $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'id',
       [
         'tab'      => [ 'id' => 'tab-all' ],
         'name'     => $this->l->t('Musician'),
@@ -733,7 +737,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     // This is the project from the mandate
     list($projectIndex, $fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECTS_TABLE, 'id', [
+      $opts['fdd'], DatabaseTables::PROJECTS_TABLE, 'id', [
         'tab' => $this->expertMode ? [ 'id' => [ 'mandate', 'miscinfo', ], ] : [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Mandate Project'),
         'input'    => ($projectMode && !$this->expertMode) ? 'H' : 'R',
@@ -763,7 +767,7 @@ class SepaBankAccounts extends PMETableViewBase
       $opts['fdd'][$fieldName]['values|CP']['filters'] =
         ($opts['fdd'][$fieldName]['values']['filters']
          . '
-   AND $table.id in (SELECT pp.project_id FROM '.self::PROJECT_PARTICIPANTS_TABLE.' pp WHERE pp.musician_id = $record_id[musician_id])');
+   AND $table.id in (SELECT pp.project_id FROM '.DatabaseTables::PROJECT_PARTICIPANTS_TABLE.' pp WHERE pp.musician_id = $record_id[musician_id])');
       if ($projectId === $this->membersProjectId) {
         $opts['fdd'][$fieldName] = array_merge(
           $opts['fdd'][$fieldName], [
@@ -778,7 +782,7 @@ class SepaBankAccounts extends PMETableViewBase
     ///////////////////////////////////////////////////////////////////////////
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence',
       [
         'tab'    => [ 'id' => 'mandate' ],
         'name'   => $this->l->t('Mandate Sequence'),
@@ -802,7 +806,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       [
         'tab'    => [ 'id' => 'mandate' ],
         'name'   => $this->l->t('Mandate Reference'),
@@ -845,7 +849,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     list($mandateRecurringIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring',
       [
         'tab' => [ 'id' => 'mandate' ],
         'name' => $this->l->t('Non-Recurring'),
@@ -862,7 +866,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     list($mandateDateIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_date',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'mandate_date',
       [
         'tab' => [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Date Issued'),
@@ -876,7 +880,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_business_days',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_business_days',
       [
         'tab' => [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Notification Target Days'),
@@ -888,7 +892,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_calendar_days',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'pre_notification_calendar_days',
       [
         'tab' => [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Notification Calendar Days'),
@@ -900,7 +904,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id',
       [
         'tab' => [ 'id' => 'mandate' ],
         'name'     => $this->l->t('Written Mandate'),
@@ -917,12 +921,12 @@ class SepaBankAccounts extends PMETableViewBase
           $recordId,
           $pme,
         ) {
-          $mandateReference = $row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')] ?? null;
+          $mandateReference = $row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }
           $musician = $this->findEntity(Entities\Musician::class, $recordId['musician_id']);
-          $projectId = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id')];
+          $projectId = $row[$this->joinQueryField(DatabaseTables::PROJECTS_TABLE, 'id')];
           $project = $this->findEntity(Entities\Project::class, $projectId);
 
           return '<div class="file-upload-wrapper">
@@ -930,7 +934,7 @@ class SepaBankAccounts extends PMETableViewBase
             . $this->dbFileUploadRowHtml(
               $writtenMandateId,
               fieldId: $recordId['musician_id'],
-              optionKey: $row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence')],
+              optionKey: $row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence')],
               subDir: $this->getDebitMandatesFolderName(),
               fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
               overrideFileName: true,
@@ -943,7 +947,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]);
 
     list($mandateDeletedIndex,) = $this->makeJoinTableField(
-      $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'deleted',
+      $opts['fdd'], DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'deleted',
       array_merge($this->defaultFDD['deleted'], [
         'tab'    => [ 'id' => 'mandate' ],
         'name'   => $this->l->t('Mandate Revoked'),
@@ -951,7 +955,7 @@ class SepaBankAccounts extends PMETableViewBase
       ]));
 
     $this->makeJoinTableField(
-      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
+      $opts['fdd'], DatabaseTables::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
       [
         'tab' => [ 'id' => [ 'account', 'mandate' ] ],
         'name'     => $this->l->t('Last-Used Date'),
@@ -999,7 +1003,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     if ($projectMode) {
       $opts['filters']['AND'][] =
-        $this->joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
+        $this->joinTables[DatabaseTables::PROJECT_PARTICIPANTS_TABLE].'.project_id = '.$projectId;
     }
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
@@ -1018,7 +1022,7 @@ class SepaBankAccounts extends PMETableViewBase
       function(&$pme, $op, $step, &$row) use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex) {
         switch ($op) {
           case PHPMyEdit::SQL_QUERY_UPDATE:
-            if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence')])) {
+            if (empty($row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence')])) {
               // enable input for unset debit mandate
               $pme->fdd[$projectIndex]['input'] = '';
               $pme->fdd[$mandateDateIndex]['input'] = 'R';
@@ -1033,7 +1037,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
       if (!empty($row[$this->queryField('deleted')])
-          || !empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'deleted')])) {
+          || !empty($row[$this->joinQueryField(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'deleted')])) {
         // disable the "misc" checkboxes essentially disabling the possibility
         // to draw debit-mandates from deleted/revoked bank accounts and debit
         // mandates. There is also a corresponding check in the backend which
@@ -1154,7 +1158,7 @@ received so far'),
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     $accountSequence = 'sequence';
-    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $readOnlyKeys = [ $accountSequence, $debitMandateSequenceKey ];
     $unsafeChanged = array_intersect($changed, $readOnlyKeys);
     if (!empty($unsafeChanged)) {
@@ -1166,7 +1170,7 @@ received so far'),
     }
     $debitMandateSequence = $newValues[$debitMandateSequenceKey];
 
-    $mandateNonRecurring = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
+    $mandateNonRecurring = self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'non_recurring');
     $newValues[$mandateNonRecurring] = (int)$newValues[$mandateNonRecurring];
     $oldValues[$mandateNonRecurring] = (int)$oldValues[$mandateNonRecurring];
     if ($oldValues[$mandateNonRecurring] == $newValues[$mandateNonRecurring]) {
@@ -1177,7 +1181,7 @@ received so far'),
     }
 
     // Remove "written-mandate-id" because it is handled separately
-    $writtenMandateIdKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
+    $writtenMandateIdKey = self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'written_mandate_id');
     unset($newValues[$writtenMandateIdKey]);
     unset($oldValues[$writtenMandateIdKey]);
     Util::unsetValue($changed, $writtenMandateIdKey);
@@ -1188,7 +1192,7 @@ received so far'),
         if ($key == $debitMandateSequenceKey) {
           continue;
         }
-        if (strpos($key, self::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
+        if (strpos($key, DatabaseTables::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
           ${$valueSet}[$key] = $debitMandateSequence . self::JOIN_KEY_SEP . $value;
         }
       }
@@ -1276,21 +1280,21 @@ received so far'),
 
     $maxSequence = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->sequenceMax($musician);
     $debitMandateSequence = $maxSequence + 1;
-    $debitMandateSequenceKey = self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
+    $debitMandateSequenceKey = self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
     $newValues[$debitMandateSequenceKey] = $debitMandateSequence;
 
     // add some missing values
-    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
+    $newValues[self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
       $newValues['sequence'];
-    $newValues[self::joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
-      $newValues[self::joinTableFieldName(self::PROJECTS_TABLE, 'id')];
+    $newValues[self::joinTableFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
+      $newValues[self::joinTableFieldName(DatabaseTables::PROJECTS_TABLE, 'id')];
 
     // convert to the KEY:VALUE format understood by beforeInsert...
     foreach ($newValues as $key => $value) {
       if ($key == $debitMandateSequenceKey) {
         continue;
       }
-      if (strpos($key, self::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
+      if (strpos($key, DatabaseTables::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
         $newValues[$key] = $debitMandateSequence . self::JOIN_KEY_SEP . $value;
       }
     }

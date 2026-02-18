@@ -33,6 +33,7 @@ use OCP\IRequest;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EncryptionController. */
 #[Attributes\CoversClass(Controller\EncryptionController::class)]
@@ -64,6 +65,8 @@ class EncryptionControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
     /** @var IRequest $request */
@@ -84,5 +87,11 @@ class EncryptionControllerTest extends TestCase
       logger: $this->mockProvider->getLoggerInterface(),
       l: $this->mockProvider->getL10N(),
     );
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 }

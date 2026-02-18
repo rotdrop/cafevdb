@@ -52,6 +52,10 @@ import { AppError } from '../toolkit/types/errors.ts';
 import { appName } from '../config.ts';
 import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
 import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
+import {
+  BASE_PATH as controllerBasePath,
+  GET_REQUEST_TIMESTAMPS as getTimestamps,
+} from '../../build/ts-types/php-modules/Controller/WebBrowserHistoryController.ts';
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -732,12 +736,12 @@ export default defineStore(storeId, () => {
   }
 
   /**
-   * Flat array of available history state in the database. Entries
+   * Flat array of available history states in the database. Entries
      are the time-stamps.
    */
   const savedHistoryStates = ref<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  axios.get<any, AxiosResponse<number[]> >(generateAppUrl('a/browser/history/timestamps'))
+  axios.get<any, AxiosResponse<number[]> >(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
     .then((response) => {
       savedHistoryStates.value = response.data.map(stamp => +(+stamp).toFixed(3));
       logger.info('SAVE HISTORY STATES', { savedHistoryStates: savedHistoryStates.value });
@@ -752,7 +756,7 @@ export default defineStore(storeId, () => {
 
   const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrKey: M)
     : Promise<undefined|LoadHistoryDataType<T, M> > => {
-    const url = generateAppUrl('a/browser/history/{timestamp}/{modeOrKey}', {
+    const url = generateAppUrl(`${controllerBasePath}/{timestamp}/{modeOrKey}`, {
       timestamp,
       modeOrKey,
     });
@@ -815,7 +819,7 @@ export default defineStore(storeId, () => {
     // logger.info('PREPARED HISTORY DATA', JSON.stringify(prepareHistorySaveRecord(), undefined, 2));
     const historySaveData = prepareHistorySaveRecord();
     const url = generateAppUrl(
-      'a/browser/history/{timestamp}', {
+      `${controllerBasePath}/{timestamp}`, {
         timestamp: modificationTime.value,
       });
     try {
@@ -846,7 +850,7 @@ export default defineStore(storeId, () => {
    * @param timestamp Unix timestamp in seconds.
    */
   const deleteHistoryState = async (timestamp: number) => {
-    const url = generateAppUrl('a/browser/history/{timestamp}', { timestamp });
+    const url = generateAppUrl(`${controllerBasePath}/{timestamp}`, { timestamp });
     const time = moment(timestamp * 1000).format('LLL');
 
     try {
@@ -1038,7 +1042,7 @@ export default defineStore(storeId, () => {
       // we need to tweak the keys of the given chain
       let counter = 0;
       const offset = currentHistoryKey.value;
-      const keyMap = Object.fromEntries(keys.map(key => [key, (+offset + (++counter) / 1000.0).toFixed(3)]));
+      const keyMap = Object.fromEntries(keys.map(key => [key, (+offset + (++counter) / 1000.0).toFixed(3)]) as [string, string][]);
       logger.debug('KEYMAP', keyMap);
       for (const key of keys) {
         const entry = chain[key];

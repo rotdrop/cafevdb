@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\CoversClass(Entities\ProjectInstrumentationNumber::class)]
 #[Attributes\CoversClass(Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]

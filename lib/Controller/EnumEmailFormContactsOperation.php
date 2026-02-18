@@ -24,9 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
  * Operations understood by EmailFormControlller::composer().
  */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumEmailFormContactsOperation: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;

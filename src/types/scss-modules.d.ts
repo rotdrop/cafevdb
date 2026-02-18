@@ -34,6 +34,8 @@ declare module 'variables.scss' {
   export const hiddenCssClass: 'hidden';
   export const loadingCssClass: 'loading';
   export const reallyHiddenCssClass: 'reallyhidden';
+  export const showDisabledCssClass: 'show-disabled';
+  export const hideDisabledCssClass: 'hide-dsabled';
 }
 
 declare module 'emailform.scss' {

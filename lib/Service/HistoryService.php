@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCP\IL10N;
@@ -33,9 +35,12 @@ use OCP\IRequest;
 /**
  * Page history via PHP session.
  *
- * @todo This now should be obsolete as the navigation history is handled by
- * the Javascript code.
+ * This only works for the life-time of the web-browser as the session-cookie
+ * dies when closing the browser window. For anything else data would have
+ * been persisted to the database. This already can be done explicitly, but as
+ * of now not automatically.
  */
+#[TSAttributes\TypeScript]
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -51,7 +56,7 @@ class HistoryService
    *
    * Top-level excluded keys which we do not want to cache.
    */
-  private const EXCLUDE_KEYS = [
+  public const EXCLUDED_KEYS = [
     self::HASH_KEY,
     self::FRONTEND_URL_PATH_KEY,
     '_route',
@@ -99,7 +104,7 @@ class HistoryService
    *
    * @return void
    */
-  public function save(?array $data = null, ?string $key = null):void
+  public function save(?array $data = null, ?string $key = null): void
   {
     if ($data === null) {
       $data = $this->request->getParams();
@@ -122,18 +127,16 @@ class HistoryService
    *
    * @return void
    */
-  public function set(string $hash, array $data):void
+  public function set(string $hash, array $data): void
   {
     $urlPath = $data[self::FRONTEND_URL_PATH_KEY];
-    foreach (self::EXCLUDE_KEYS as $key) {
+    foreach (self::EXCLUDED_KEYS as $key) {
       unset($data[$key]);
     }
-    if (!empty($data)) {
-      $historyData = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
-      if (empty($historyData[$hash])) {
-        $historyData[$hash] = $data;
-        $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $historyData);
-      }
+    $historyData = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
+    if (($historyData[$hash] ?? null) === null) {
+      $historyData[$hash] = $data;
+      $this->sessionStoreValue(self::SESSION_HISTORY_KEY, $historyData);
     }
     if (empty($urlPath) || $urlPath === '/') {
       $urlPath = null;
@@ -148,13 +151,13 @@ class HistoryService
    *
    * @return null|array
    */
-  public function get(string $hash):?array
+  public function get(string $hash): ?array
   {
     $data = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY)[$hash] ?? null;
-    if ($data) {
-      $data = array_filter($data, fn($value, $key) => !in_array($key, self::EXCLUDE_KEYS), ARRAY_FILTER_USE_BOTH);
+    if ($data !== null) {
+      $data = array_filter($data, fn($value, $key) => !in_array($key, self::EXCLUDED_KEYS), ARRAY_FILTER_USE_BOTH);
     }
-    return empty($data) ? null : $data;
+    return $data ?? null;
   }
 
   /**
@@ -162,7 +165,7 @@ class HistoryService
    *
    * @return null|string
    */
-  public function getLastUrlPath():?string
+  public function getLastUrlPath(): ?string
   {
     $urlPath = $this->sessionRetrieveValue(self::SESSION_LAST_URL_PATH_KEY, null);
     return $urlPath === '/' ? null : $urlPath;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use UnexpectedValueException;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -35,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Instrumente
  */
-#[ORM\Table(name: 'Instruments')]
+#[ORM\Table(name: DatabaseTables::INSTRUMENTS_TABLE)]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository::class)]
 #[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
@@ -59,7 +60,7 @@ class Instrument implements \ArrayAccess
   private int $sortOrder;
 
   /** @var Collection<string, InstrumentFamily> */
-  #[ORM\JoinTable]
+  #[ORM\JoinTable(name: DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE)]
   #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
   #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments', indexBy: 'family', cascade: ['persist'], fetch: 'EXTRA_LAZY')]

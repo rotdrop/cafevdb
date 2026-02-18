@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -176,6 +177,28 @@ Mit den besten Grüßen,
 <p>
 Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
 ';
+
+  const DEFAULT_LARGE_ATTACHMENT_TEMPLATE = '<!DOCTYPE html>
+<html lang="[LANGUAGE]">
+  <head>
+    <title>[SHARE_LINK]</title>
+    <meta http-equiv="refresh" content="[REDIRECT_SECONDS];URL=\'[SHARE_LINK]\'"/>
+  </head>
+  <body>
+    <div class="message">
+      You will be redirected to the download location in [REDIRECT_SECONDS] seconds. You may as well
+      click on the download-link below:
+    </div>
+    <blockquote class="link">
+      <a href="[SHARE_LINK]">[SHARE_LINK]</a>
+      <div class="link-info"><code>[FILENAME]</code> -- [FILE_SIZE], [MIME_TYPE]</div>
+    </blockquote>
+    <div class="expiration-notice">
+      Please note that the download link will expire on [EXPIRATION_DATE].
+    </div>
+  </body>
+</html>';
+
   /**
    * @var string
    * @todo Make this configurable
@@ -748,7 +771,85 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $musician->getNickName()?:$musician->getFirstName();
+      return $musician->getNickName() ?: $musician->getFirstName();
+    };
+
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::GENDER->value] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $gender = $musician->getGender();
+      if (empty($gender)) {
+        $guesses = $musician->guessGender();
+        if (is_array($guesses) && count($guesses) == 1) {
+          $gender = EnumGender::tryFrom(reset($guesses));
+        }
+      }
+      return $gender ? $gender->t($this->l) : null;
+    };
+
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SALUTATION->value] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+        $unsubstituted = $keyArg[0];
+        if ($keyArg[1]) {
+          $unsubstituted .= ' (' . $keyArg[1] . ')';
+        }
+        return $unsubstituted;
+      }
+      $gender = $musician->getGender();
+      if (empty($gender)) {
+        $guesses = $musician->guessGender();
+        if (is_array($guesses) && count($guesses) == 1) {
+          $gender = EnumGender::tryFrom(reset($guesses));
+        }
+      }
+      switch (strtolower($keyArg[1] ?? '')) {
+        case 'formal':
+        case $this->l->t('formal'):
+        case $this->transliterate($this->l->t('formal')):
+          $formal = true;
+          break;
+        case 'informal':
+        case $this->l->t('informal'):
+        case $this->transliterate($this->l->t('informal')):
+        default:
+          $formal = false;
+          break;
+      }
+      $firstName = $musician->getNickName() ?: $musician->getFirstName();
+      $surName = $musician->getSurName();
+      $l10nArgs = [$firstName, $surName];
+      if ($formal) {
+        switch ($gender) {
+          case EnumGender::DIVERSE:
+            // TRANSLATORS: Formal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('DIVERSE_SALUTATION_FORMAL: Dear %1$s %2$s', $l10nArgs);
+          case EnumGender::FEMALE:
+            // TRANSLATORS: Formal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
+            return $this->l->t('FEMALE_SALUTATION_FORMAL: Dear Mrs. %2$s', $l10nArgs);
+          case EnumGender::MALE:
+            // TRANSLATORS: Formal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
+            return $this->l->t('MALE_SALUTATION_FORMAL: Dear Mr. %2$s', $l10nArgs);
+          default:
+            // TRANSLATORS: Formal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('UNKNOWN_SALUTATION_FORMAL: Dear %1$s %2$', $l10nArgs);
+        }
+      } else {
+        switch ($gender) {
+          case EnumGender::DIVERSE:
+            // TRANSLATORS: Informal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('DIVERSE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          case EnumGender::FEMALE:
+            // TRANSLATORS: Informal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
+            return $this->l->t('FEMALE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          case EnumGender::MALE:
+            // TRANSLATORS: Informal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
+            return $this->l->t('MALE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          default:
+            // TRANSLATORS: Informal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('UNKNOWN_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+        }
+      }
     };
 
     $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DISPLAY_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
@@ -1639,7 +1740,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $variable  = array_map(function($value) {
           return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
-        $handler = $this->substitutions[$nameSpace][$variable[0]]??null;
+        $handler = $this->substitutions[$nameSpace][$variable[0]] ?? null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
             throw new Exceptions\SubstitutionException(
@@ -2555,35 +2656,20 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         sharePerms: \OCP\Constants::PERMISSION_READ,
         expirationDate: $expirationDate
       );
-      $downloadAttachment = $this->l->t(
-        '<!DOCTYPE html>
-<html lang="%1$s">
-  <head>
-    <title>%2$s</title>
-    <meta http-equiv="refresh" content="%6$d;URL=\'%2$s\'"/>
-  </head>
-  <body>
-    <div class="message">
-      You will be redirected to the download location in %6$d seconds. You may as well
-      click on the download-link below:
-    </div>
-    <blockquote class="link">
-      <a href="%2$s">%2$s</a>
-      <div class="link-info"><code>%3$s</code> -- %4$s, %5$s</div>
-    </blockquote>
-    <div class="expiration-notice">
-      Please note that the download link will expire on %7$s.
-    </div>
-  </body>
-</html>', [
-          $this->getLanguage(),
-          $shareLink,
-          $fileName,
-          Util::humanFileSize($downloadFile->getSize()),
-          $mimeType,
-          30,
-          $this->dateTimeFormatter()->formatDate($expirationDate, 'long')
-        ]);
+      $substitutions = [
+        EnumLargeAttachmentTemplateSubstitution::EXPIRATION_DATE->value => $this->dateTimeFormatter()->formatDate($expirationDate, 'long'),
+        EnumLargeAttachmentTemplateSubstitution::FILENAME->value => $fileName,
+        EnumLargeAttachmentTemplateSubstitution::FILE_SIZE->value => Util::humanFileSize($downloadFile->getSize()),
+        EnumLargeAttachmentTemplateSubstitution::LANGUAGE->value => $this->getLanguage(),
+        EnumLargeAttachmentTemplateSubstitution::MIME_TYPE->value => $mimeType,
+        EnumLargeAttachmentTemplateSubstitution::REDIRECT_SECONDS->value => 30,
+        EnumLargeAttachmentTemplateSubstitution::SHARE_LINK->value => $shareLink,
+      ];
+      $downloadAttachment = str_replace(
+        array_map(fn(string $var) => "[{$var}]", array_keys($substitutions)),
+        array_values($substitutions),
+        $this->l->t(self::DEFAULT_LARGE_ATTACHMENT_TEMPLATE),
+      );
       $data = $downloadAttachment;
       $fileName = $fileName . '.html';
       $transferEncoding = '8bit';

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
+ * @copyright 2020-2023, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -42,12 +42,13 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\LiteralTypeScriptProperty;
 
 /**
  * Musician database entity, representing actually just any natural person,
  * also used for non-musician busyness contacts.
  */
-#[ORM\Table(name: 'Musicians')]
+#[ORM\Table(name: DatabaseTables::MUSICIANS_TABLE)]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\MusiciansRepository::class)]
 #[ORM\Index(name: 'country_postal_code_deleted', columns: ['country', 'postal_code', 'deleted'])]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
@@ -67,6 +68,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
   use CAFEVDB\Traits\UuidTrait;
+
+  public const ENCRYPTED_FILE_OWNERS_JOIN_TABLE = 'EncryptedFileOwners';
 
   #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $surName;
@@ -251,7 +254,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private Collection $payments;
 
   /** @var Collection<int, EncryptedFile> */
-  #[ORM\JoinTable(name: 'EncryptedFileOwners')]
+  #[ORM\JoinTable(name: self::ENCRYPTED_FILE_OWNERS_JOIN_TABLE)]
   #[ORM\ManyToMany(targetEntity: EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   private Collection $encryptedFiles;
 
@@ -819,7 +822,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setGender(null|string|Types\EnumGender $gender):Musician
+  public function setGender(null|string|Types\EnumGender $gender): Musician
   {
     if ($gender === null) {
       $this->gender = null;
@@ -835,7 +838,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumGender
    */
-  public function getGender():?Types\EnumGender
+  public function getGender(): ?Types\EnumGender
   {
     return $this->gender;
   }
@@ -843,11 +846,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Guess the gender from the name.
    *
-   * @param null|\OCP\IL10N $l
+   * @param ?|\OCP\IL10N $l
    *
    * @return array An array of guesses.
    */
-  public function guessGender(?\OCP\IL10N $l = null):array
+  public function guessGender(?\OCP\IL10N $l = null): array
   {
     $detector = new GenderDetector\GenderDetector();
     $country = $this->country;

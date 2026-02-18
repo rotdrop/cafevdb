@@ -1466,7 +1466,7 @@ form.pme-form {
   }
 
   table.pme-main {
-    tbody td.pme-navigation div.graphic-links input.hide-disabled:disabled {
+    tbody td.pme-navigation div.graphic-links input.#{$hideDisabledCssClass}:disabled {
       display:none;
     }
   }
@@ -1588,16 +1588,16 @@ form.pme-form {
     }
   }
 
-  &.hide-disabled table.pme-main > {
-    thead > tr > .hide-disabled-hidden,
-    tbody > tr > .hide-disabled-hidden {
+  &.#{$hideDisabledCssClass} table.pme-main > {
+    thead > tr > .#{$hideDisabledCssClass}-hidden,
+    tbody > tr > .#{$hideDisabledCssClass}-hidden {
       display:none!important;
     }
   }
 
-  &.show-disabled table.pme-main > {
-    thead > tr > .show-disabled-hidden,
-    tbody > tr > .show-disabled-hidden {
+  &.#{$showDisabledCssClass} table.pme-main > {
+    thead > tr > .#{$showDisabledCssClass}-hidden,
+    tbody > tr > .#{$showDisabledCssClass}-hidden {
       display:none!important;
     }
   }

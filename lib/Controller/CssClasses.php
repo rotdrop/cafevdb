@@ -33,4 +33,5 @@ class CssClasses
   public const CLASS_SEPARATOR = '-';
   public const APP_NAME_TAG_PREFIX = 'app' . self::CLASS_SEPARATOR;
   public const HIDE_ONLY_CHILD = 'hide-only-child';
+  public const BUSY = 'busy';
 }

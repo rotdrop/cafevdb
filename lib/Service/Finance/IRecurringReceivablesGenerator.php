@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2023, 2025 Claus-Justus Heine
+ * @copyright 2021-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use Closure;
 use DateTimeInterface;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
@@ -197,13 +198,13 @@ interface IRecurringReceivablesGenerator
    * labelled control elements a string can be returned.
    *
    * @param null|string $slug Must be either null or one of the elements of
-   * self::SLUGS. If null all labels will be return, otherwise just the
+   * self::SLUGS. If null all labels will be returned, otherwise just the
    * requested one. If $slug is a string but is not contained in
    * self::OPERATION_SLUGS then null is returned.
    *
-   * @return null|string|arra
+   * @return null|string|Closure|array<string|Closure>
    */
-  public static function operationLabels(?string $slug = null);
+  public static function operationLabels(?string $slug = null): null|string|array|Closure;
 
   /**
    * Bind this instance to the given entity. The idea is to have a

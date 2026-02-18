@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ import { toBackButton as dialogToBackButton } from './dialog-utils.ts';
 import modalizer from './modalizer.ts';
 import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
 import { GET_VUE_COMPONENT, WIKI_POPUP } from '../event-bus-events.ts';
-import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
+import { awaitEmit } from '../services/async-event-bus.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 
 require('dokuwiki-jquery-popup.scss');
@@ -70,7 +70,7 @@ const popupPosition = {
  * @param [reopen] If true, close any already dialog and re-open it
  * (the default). If false, only raise an existing dialog to top.
  */
-const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP], reopen?: boolean) => {
+const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP]['arg'], reopen?: boolean) => {
   if (typeof reopen === 'undefined') {
     reopen = false;
   }
@@ -86,15 +86,13 @@ const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP], reopen?:
     dokuWikiWrapper = undefined;
   }
   if (!dokuWikiWrapper) {
-    dokuWikiWrapper = await getEmitResult(
-      asyncEmit(GET_VUE_COMPONENT, {
-        name: DOKU_WIKI_WRAPPER,
-        propsData: {
-          wikiPage: post.wikiPage,
-          fullScreen: false,
-        },
-      }),
-    );
+    dokuWikiWrapper = await awaitEmit(GET_VUE_COMPONENT, {
+      name: DOKU_WIKI_WRAPPER,
+      propsData: {
+        wikiPage: post.wikiPage,
+        fullScreen: false,
+      },
+    });
     if (!dokuWikiWrapper) {
       return;
     }

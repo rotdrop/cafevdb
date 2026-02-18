@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -40,10 +44,13 @@ use OCA\CAFEVDB\BackgroundJob\CleanupFilesCache;
  * Run background-jobs triggered by AJAX pings from the front-end. The idea
  * here is that these jobs are running with an authenticated user.
  */
+#[TSAttributes\TypeScript]
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  public const END_POINT = 'backgroundjob/trigger';
 
   /**
    * @var int
@@ -69,6 +76,7 @@ class BackgroundJobController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT)]
   public function trigger():DataResponse
   {
     try {
@@ -94,7 +102,7 @@ class BackgroundJobController extends Controller
       $this->di(CleanupFilesCache::class)->run();
 
       return self::response('Ran background jobs');
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return self::grumble(
         $this->l->t(

@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Toolkit\Exceptions;
 #[Attributes\CoversClass(EntityRepositoryController::class)]
 #[Attributes\CoversClass(Exceptions\DatabaseEntityNotFoundException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { ProgressResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { GET_URL, POST_URL } from '../../build/ts-types/php-modules/Controller/ProgressStatusController.ts';
 import type { EnumProgressStatusOperation } from '../../build/ts-types/php-modules/Controller.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 require('progressbar.scss');
 
@@ -82,7 +83,7 @@ const pollProgressStatus = (id: string, parameters: Partial<PollOptions>) => {
       return;
     }
     $.get(generateAppUrl(GET_URL, { id }))
-      .done(function(data: ProgressResponse) {
+      .done(function(data: ResponseData<ProgressResponse>) {
         clearTimeout(progressTimer);
         progressTimer = undefined;
         if (progressTimerStopped) {

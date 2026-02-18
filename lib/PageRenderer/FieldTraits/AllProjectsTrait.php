@@ -25,6 +25,8 @@
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as BaseRenderer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
@@ -34,7 +36,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 trait AllProjectsTrait
 {
   /** @var string */
-  protected static $allProjectsTable = BaseRenderer::PROJECT_PARTICIPANTS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'allProjects';
+  protected static $allProjectsTable = DatabaseTables::PROJECT_PARTICIPANTS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'allProjects';
 
   /** @var ToolTipsService */
   protected ToolTipsService $toolTipsService;
@@ -112,7 +114,7 @@ trait AllProjectsTrait
             'flags' => /* PHPMyEdit::OMIT_SQL| */PHPMyEdit::OMIT_DESC,
           ],
           'values' => [
-            'table' => BaseRenderer::PROJECTS_TABLE,
+            'table' => DatabaseTables::PROJECTS_TABLE,
             'column' => 'name',
             'orderby' => '$table.year ASC, $table.name ASC',
             'groups' => 'year',
@@ -122,7 +124,7 @@ trait AllProjectsTrait
             if (empty($value)) {
               return '';
             }
-            $projects = Util::explode(BaseRenderer::VALUES_SEP, $value, Util::TRIM);
+            $projects = Util::explode(DataConstants::VALUES_SEP, $value, Util::TRIM);
             return implode(', ', array_map(fn($projectName) => '<a target="_blank" href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.indexfront', [ 'template' => 'project-participants', 'projectName' => $projectName ]) . '">' . $projectName . '</a>', $projects));
           },
         ]);

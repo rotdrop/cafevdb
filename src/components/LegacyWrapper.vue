@@ -73,18 +73,18 @@
           <InfoOffIcon />
         </template>
         <NcActionCheckbox v-model="toolTipsEnabled" :model-value="toolTipsEnabled">
-          {{ t(appId, 'Tooltips') }}
+          {{ t(appName, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl"
                       :target="wikiManualUrlTarget"
                       :close-after-click="true"
         >
-          {{ t(appId, 'Manual (other tab or window)') }}
+          {{ t(appName, 'Manual (other tab or window)') }}
         </NcActionLink>
         <NcActionButton :close-after-click="true"
                         @click="onUserManualPopup"
         >
-          {{ t(appId, 'Manual (popup)') }}
+          {{ t(appName, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
     </div>
@@ -190,6 +190,11 @@ import { JQueryAjaxError } from '../types/ajax/jqxhr-error.ts'
 import { storeToRefs } from 'pinia'
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 import type { LegacyPageLoaderResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import {
+  BASE_PATH as controllerBasePath,
+  END_POINT_REMEMBER,
+} from '../../build/ts-types/php-modules/Controller/LegacyPageController.ts'
+import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
 
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
@@ -437,7 +442,8 @@ const doLoadLegacy = async () => {
   post[HASH_KEY] = currentHash
   post[FRONTEND_URL_PATH_KEY] = currentRoute.fullPath
   try {
-    const response: AxiosResponse<LegacyPageLoaderResponse> = await axios.post(generateAppUrl('page/remember/parts'), post)
+    const response: AxiosResponse<LegacyPageLoaderResponse> =
+      await axios.post(generateAppUrl(`${controllerBasePath}/${END_POINT_REMEMBER}/${RENDER_AS_PARTS}`), post)
     const data = response.data // todo: validate
     legacyBodyHtml.value = data.bodyHtml
     legacyHeaderHtml.value = data.headerHtml
@@ -464,7 +470,7 @@ const doLoadLegacy = async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     logger.error('ERROR', {
-      url: generateAppUrl('page/remember/parts'),
+      url: generateAppUrl(`${controllerBasePath}/${END_POINT_REMEMBER}/${RENDER_AS_PARTS}`),
       post: { ...post },
       e,
     })

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -24,6 +24,7 @@ import { translate as t } from '@nextcloud/l10n';
 import calendarRoutes from './calendar-routes.ts';
 import addContactsToProjectsRoute from './add-contacts-to-project.ts';
 import type { RouteConfig } from 'vue-router';
+import { END_POINT_PAGE as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/VueAppController.ts';
 
 // import Console from '../util/console.ts';
 // const COMPONENT_NAME = 'router';
@@ -43,7 +44,7 @@ const routes: RouteConfig[] = [
   },
   {
     // use the human readable project-name and not the data base id for the URLs
-    path: '/p/:template/:projectName?',
+    path: `/${controllerEndPoint}/:template/:projectName?`,
     component: () => import('../components/LegacyWrapperRouterReactivity.vue'),
     name: 'legacy-page',
     props: false,

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,23 +24,38 @@
 import $ from './jquery.ts';
 import * as Ajax from './ajax.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import type { AutocompleteGnuCashAccountsResponse, GnuCashAccountsAutocompleteData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import { END_POINT as autocompleteEndPoint } from '../../build/ts-types/php-modules/Controller/AccountingController.ts';
 
-const accountsAutocomplete = {
+type AccountsAutocompleteData = {
+  [key: string|number]: GnuCashAccountsAutocompleteData,
 };
 
-// b'url' => '/projects/accounting/autocomplete/gnucash-accounts/{project}',
+const accountsAutocomplete: AccountsAutocompleteData = {};
+
+// 'url' => '/projects/accounting/autocomplete/gnucash-accounts/{project}',
 
 /**
+ * Fetch the GnuCash accounts autocompletion data. If none is available, return null on error.
+ *
  * @param projectIdentifier The project id or the project name.
  */
 const getGnuCashAccountsAutcompleteData = async (projectIdentifier: string|number) => {
+  if (+projectIdentifier <= 0) {
+    console.trace('Non-positive project id, bailing out.', { projectIdentifier });
+    return null;
+  }
   const autocompleteData = accountsAutocomplete[projectIdentifier];
   if (autocompleteData) {
     return autocompleteData;
   }
-  const url = generateAppUrl('accounting/autocomplete/gnucash-accounts/' + projectIdentifier);
+  const url = generateAppUrl(`${autocompleteEndPoint}/${projectIdentifier}`);
   try {
-    const data = await $.get(url);
+    const data: ResponseData<AutocompleteGnuCashAccountsResponse> = await $.get(url);
+    if (!Ajax.validateResponse(data, ['projectName', 'accounts'])) {
+      return null;
+    }
     accountsAutocomplete[data.projectName] = data.accounts;
     if (!isNaN(+projectIdentifier)) {
       const projectId = +projectIdentifier;

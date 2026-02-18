@@ -24,12 +24,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 
@@ -39,15 +40,14 @@ use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** AJAX end-points for database migrations. */
+#[TSAttributes\TypeScript]
 class MigrationsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  const ALL_MIGRATIONS = 'all';
-  const LATEST_MIGRATION = 'latest';
-  const MIGRATION_DESCRIPTION = 'description';
-  const UNAPPLIED_MIGRATIONS = 'unapplied';
+  public const BASE_PATH = 'maintenance/migrations';
+  public const END_POINT_APPLY = 'apply';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -65,8 +65,8 @@ class MigrationsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/maintenance/migrations')]
-  public function get():DataResponse
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::BASE_PATH)]
+  public function get(): Http\DataResponse|Http\JSONResponse
   {
     return self::dataResponse([ ConfigConstants::MIGRATIONS_KEY => $this->migrationsService->getUnapplied(), ]);
   }
@@ -79,8 +79,8 @@ class MigrationsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/maintenance/migrations/apply')]
-  public function post():DataResponse
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_APPLY)]
+  public function post(): Http\DataResponse|Http\JSONResponse
   {
     $unapplied = $this->migrationsService->getUnapplied();
     $applied = [];
@@ -90,11 +90,11 @@ class MigrationsController extends Controller
         $applied[] = $version;
       } catch (Throwable $t) {
         $context = [
-          ConfigConstants::MIGRATIONS_KEY => [
-            'payload' => $unapplied,
-            'handled' => $applied,
-            'failing' => $version,
-          ],
+          ConfigConstants::MIGRATIONS_KEY => new DTO\ApplyMigrationsResponse(
+            payload: $unapplied,
+            handled: $applied,
+            failing: $version,
+          ),
         ];
         $message = $this->l->t('Migration step "%1$s" ("%2$s") failed.', [
           $version, $unapplied[$version],
@@ -114,12 +114,10 @@ class MigrationsController extends Controller
         throw new Exceptions\EnduserNotificationException($message, 0, $t, context: $context, httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR);
       }
     }
-    return self::dataResponse([
-      ConfigConstants::MIGRATIONS_KEY => [
-        'payload' => $unapplied,
-        'handled' => $applied,
-        'failing' => [],
-      ],
-    ]);
+    return new DTO\ApplyMigrationsResponse(
+      payload: $unapplied,
+      handled: $applied,
+      failing: [],
+    )->response();
   }
 }

@@ -35,6 +35,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -106,6 +107,7 @@ trait EntityGeneratorTrait
       configService: $this->appContainer->get(ConfigService::class),
       toolTipsService: $this->appContainer->get(ToolTipsService::class),
       entityManager: $this->entityManager,
+      timeFactory: $this->appContainer->get(TimeFactory::class),
     );
 
     $this->project = new Entities\Project()
@@ -121,14 +123,14 @@ trait EntityGeneratorTrait
       now: $now,
       delete: $delete,
     );
-    if (!$persist) {
-      $this->musician->setId(self::FAKED_ENTITY_ID);
-    }
     $this->participant = $this->musician->getProjectParticipantOf(
       $this->project,
     );
-    $this->project->getParticipants()->clear();
-    $this->project->getParticipants()->set($this->musician->getId(), $this->participant);
+    if (!$persist) {
+      $this->musician->setId(self::FAKED_ENTITY_ID);
+      $this->project->getParticipants()->clear();
+      $this->project->getParticipants()->set($this->musician->getId(), $this->participant);
+    }
   }
 
   /**
@@ -272,6 +274,7 @@ trait EntityGeneratorTrait
       ->setMultiplicity(
         Types\EnumParticipantFieldMultiplicity::RECURRING,
       )
+      ->setDueDate('2099-01-01')
       ->setName('Forderungen');
     $generator = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)

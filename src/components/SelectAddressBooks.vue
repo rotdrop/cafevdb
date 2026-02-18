@@ -1,10 +1,10 @@
-<!--
+y<!--
  - Orchestra member, musicion and project management application.
  -
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -53,6 +53,10 @@ import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/compon
 import type { AddressBook } from '../types/address-book.d.ts'
 import Console from '../util/console.ts'
 import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import {
+  BASE_PATH as contactsBasePath,
+  END_POINT_ADDRESS_BOOKS,
+} from '../../build/ts-types/php-modules/Controller/ContactsController.ts'
 
 const COMPONENT_NAME = 'SelectAddressBooks'
 const logger = new Console(COMPONENT_NAME)
@@ -86,7 +90,7 @@ const props = withDefaults(
 
 const inputValObjects = ref<undefined | AddressBook | AddressBook[]>(undefined)
 const initialValObjects = ref<AddressBook | AddressBook[]>([])
-const addressBooks = ref<Record<number, AddressBook> >({})
+const addressBooks = ref<Record<string, AddressBook> >({})
 const ajaxLoading = ref(true)
 
 const addressBooksArray = computed(() => Object.values(addressBooks.value))
@@ -162,7 +166,7 @@ const getValueObject = (noUndefined: boolean) => {
 
 const provideAddressBooks = async () => {
   try {
-    const response = await axios.get(generateAppUrl('contacts/address-books'))
+    const response = await axios.get(generateAppUrl(`${contactsBasePath}/${END_POINT_ADDRESS_BOOKS}`))
     for (const [key, book] of Object.entries(response.data)) {
       vueSet(addressBooks.value, key, book)
     }

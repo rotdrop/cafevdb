@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2025 Claus-Justus Heine
+ * @copyright 2021-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,14 +26,12 @@ namespace OCA\CAFEVDB\Service\Finance;
 
 use NumberFormatter;
 use Throwable;
-use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -43,11 +41,8 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
 
 /**
  * Connect to a GnuCash account book stored in a MariaDB database. This is
@@ -65,149 +60,21 @@ class GnuCashConnectorService
   private const GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE = 'gnucash/autocomplete-accounts.json';
   public const GNU_CASH_INCOME_KEY = 'income';
   public const GNU_CASH_EXPENSE_KEY = 'expense';
-
-  private const GNU_CASH_TABLES = [
-    'accounts',
-    'books',
-    'commodities',
-    'slots',
-    'splits',
-    'transactions',
-  ];
-  private const INSERT_STMT = 'INSERT INTO %1$s (%3$s) SELECT %3$s FROM %2$s ON DUPLICATE KEY UPDATE %1$s.guid = %2$s.guid';
-  private const CREATE_VIEW_STMT = 'CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW %1$s AS
-SELECT *
-FROM %2$s';
-
-  /** @var Connection */
-  private $connection;
-
-  /** @var string */
-  private $appDbHost;
-
-  /** @var string */
-  private $appDbUser;
-
-  /** @var string */
-  private $appDbName;
+  public const DEFAULT_RECEIVABLES_ACCOUNT_TEMPLATE = 'assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    private AppStorage $appStorage,
     private EncryptionService $encryptionService,
+    private EntityManager $entityManager,
+    private FinanceService $financeService,
+    private UserStorage $userStorage,
     protected IAppContainer $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
   ) {
-    if ($this->encryptionService->bound()) {
-      $this->connection = $this->appContainer->get(Connection::class);
-      $this->appDbName = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_NAME);
-      $this->appDbUser = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_USER);
-      $this->appDbHost = $this->encryptionService->getConfigValue(ConfigConstants::APP_DB_SERVER);
-    }
   }
   // phpcs:enable
-
-  /**
-   * Copy the data out of the given GnuCash data-base.
-   *
-   * @param string $gnuCashDatabase
-   *
-   * @param null|string $user
-   *
-   * @param null|string $password
-   *
-   * @param null|string $host
-   *
-   * @return void
-   */
-  public function copyGnuCashTables(
-    string $gnuCashDatabase,
-    ?string $user = null,
-    ?string $password = null,
-    ?string $host = null,
-  ):void
-  {
-    // // $em is your Doctrine\ORM\EntityManager instance
-    // $schemaManager = $em->getConnection()->getSchemaManager();
-    // // array of Doctrine\DBAL\Schema\Column
-    // $columns = $schemaManager->listTableColumns($tableName);
-
-    // $columnNames = [];
-    // foreach($columns as $column){
-    //   $columnNames[] = $column->getName();
-    // }
-    // // $columnNames contains all column names
-
-    /** @var SchemaManager $schemaManager */
-    $schemaManager = $this->connection->getSchemaManager();
-
-    $gncConnection = $this->connection->bind(
-      $gnuCashDatabase,
-      $user,
-      $password,
-      $host,
-    );
-    /** @var SchemaManager $gncSchemaManager */
-    $gncSchemaManager = $gncConnection->getSchemaManager();
-
-    $gncViews = array_keys($gncSchemaManager->listViews());
-
-    foreach (self::GNU_CASH_TABLES as $gncTable) {
-      if (in_array($gncTable, $gncViews)) {
-        // test is not perfect, but just let's skip it if it is a view already.
-        continue;
-      }
-      $gncColumns = array_map(
-        fn($column) => $column->getName(),
-        $gncSchemaManager->listTableColumns($gncTable),
-      );
-      sort($gncColumns);
-
-      $ormTable = 'GnuCash' . ucfirst($gncTable);
-      $ormColumns = array_map(
-        fn($column) => $column->getName(),
-        $schemaManager->listTableColumns($ormTable),
-      );
-      sort($ormColumns);
-
-      if ($gncColumns != $ormColumns) {
-        print_r($ormColumns);
-        print_r($gncColumns);
-        throw new UnexpectedValueException(
-          $this->l->t('%1$s column names differ from expected column-names.', 'GnuCash'),
-        );
-      }
-
-      $sql = vsprintf(
-        'SET FOREIGN_KEY_CHECKS=0;'
-        . self::INSERT_STMT, [
-          $this->appDbName . '.' . $ormTable,
-          $gnuCashDatabase . '.' . $gncTable,
-          implode(',', $gncColumns),
-        ],
-      );
-      $this->logInfo('SQL ' . $sql);
-      $this->connection->prepare($sql)->executeQuery();
-
-      $gncSchemaManager->renameTable($gncTable, $gncTable . '_old');
-
-      try {
-        $sql = vsprintf(
-          self::CREATE_VIEW_STMT, [
-            $gnuCashDatabase . '.' . $gncTable,
-            $this->appDbName . '.' . $ormTable,
-          ],
-        );
-        $this->logInfo('SQL ' . $sql);
-        $gncConnection->prepare($sql)->executeQuery();
-      } catch (Throwable $t) {
-        $this->logException($t);
-        $gncSchemaManager->renameTable($gncTable . '_old', $gncTable);
-      }
-    }
-  }
 
   public const PERSON_KEY = 'PERSON';
   public const PROJECT_KEY = 'PROJECT';
@@ -277,9 +144,6 @@ FROM %2$s';
    * Gnerate autocomplete data from an accounts CSV export from GnuCash. Only
    * valid for autocompletion are income and expense accounts.
    *
-   * @param null|Entities\Project $project If non-null the project name will
-   * always added as last component to the account name.
-   *
    * @return null|array
    * ```[ 'income' => [ AC0, AC1, ... ], 'expense' => [ AC0, AC1, ... ] ]```
    */
@@ -290,24 +154,18 @@ FROM %2$s';
       $this->logError('ACCOUNTS EXPORT FILE IS NOT SET');
       return null;
     }
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->appContainer->get(UserStorage::class);
-    $accountsExportFile = $userStorage->getFile($accountsExport);
+    $accountsExportFile = $this->userStorage->getFile($accountsExport);
     if (empty($accountsExportFile)) {
       $this->logError('UNABLE TO OPEN ACCOUNTS EXPORTS FILE ' . $accountsExport);
       return null;
     }
 
-    /** @var AppStorage $appStorage */
-    $appStorage = $this->appContainer->get(AppStorage::class);
-    $accountsAutocompleteFile = $appStorage->getFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE, throw: false);
+    $accountsAutocompleteFile = $this->appStorage->getFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE, throw: false);
     if ($accountsAutocompleteFile !== null && $accountsExportFile->getMTime() <= $accountsAutocompleteFile->getMTime()) {
       return json_decode($accountsAutocompleteFile->getContent(), true);
     }
 
-    /** @var EntityManager $entityManager */
-    $entityManager = $this->appContainer->get(EntityManager::class);
-    $permanentProjects = $entityManager->getRepository(Entities\Project::class)->findNames(onlyType: ProjectType::PERMANENT);
+    $permanentProjects = $this->entityManager->getRepository(Entities\Project::class)->findNames(onlyType: ProjectType::PERMANENT);
 
     $leafAccountRe = '/:([^0-9]+[0-9]{4}|'
       . implode('|', array_map(fn(string $name) => preg_quote($name), $permanentProjects))
@@ -321,8 +179,8 @@ FROM %2$s';
     $exportData = explode("\n", $accountsExportFile->getContent());
 
     foreach ($exportData as $dataLine) {
-      $lineData = str_getcsv($dataLine, ';');
-      if ($lineData === false) {
+      $lineData = str_getcsv($dataLine, ';', escape: '');
+      if (empty($lineData) || $lineData[0] === null) {
         break;
       }
       $type = strtolower($lineData[0]);
@@ -347,7 +205,7 @@ FROM %2$s';
     }
 
     if (!$accountsAutocompleteFile) {
-      $accountsAutocompleteFile = $appStorage->ensureFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE);
+      $accountsAutocompleteFile = $this->appStorage->ensureFile(self::GNU_CASH_AUTOCOMPLETE_ACCOUNTS_APP_DATA_FILE);
     }
     $accountsAutocompleteFile->putContent(json_encode($autocompleteData));
 
@@ -369,13 +227,20 @@ FROM %2$s';
         $this->l->t('GnuCash accounts autocompletion data is unavailable, please contact an administrator.'),
       );
     }
-    if ($project instanceof Entities\Project) {
-      $name = $project->getName();
+    if (is_string($project) && !is_numeric($project)) {
+      $name = $project;
     } else {
-      /* @var EntityManager $entityManager */
-      $entityManager = $this->appContainer->get(EntityManager::class);
-      $name = $entityManager->getRepository(Entities\Project::class)->findName($project);
+      try {
+        $project = $this->entityManager->getRepository(Entities\Project::class)->ensureProject($project);
+      } catch (Exceptions\DatabaseMissingIdentifierException $e) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to fetch the project entity from the database given the id-data "%s"', $project),
+          previous: $e,
+        );
+      }
+      $name = $project->getName();
     }
+
     foreach ($autocompleteData as &$accounts) {
       foreach ($accounts as &$account) {
         $account .= ':' . $name;
@@ -444,13 +309,11 @@ FROM %2$s';
         $receivableAccounts[$receivableAccount]['payments'][] = $projectPayment;
       }
     }
-    /** @var FinanceService $financeService */
-    $financeService = $this->appContainer->get(FinanceService::class);
     $data = [];
     foreach ($receivableAccounts as $receivableAccount => $accountData) {
       $dueDate = max(
         array_map(
-          fn(Entities\ProjectPayment $payment) => $financeService->getDueDate($payment->getReceivable()),
+          fn(Entities\ProjectPayment $payment) => $this->financeService->getDueDate($payment->getReceivable()),
           $accountData['payments'],
         ),
       );
@@ -476,17 +339,19 @@ FROM %2$s';
       foreach ($accountData['payments'] as $projectPayment) {
         $receivable = $projectPayment->getReceivable();
         $balancingAccount = $receivable->getBalancingAccount();
-        if (empty($balancingAcount)) {
+        if (empty($balancingAccount)) {
           $field = $receivable->getField();
           if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
             $generatorOption = $field->getManagementOption();
             $class = $generatorOption->getData();
+            echo $class . PHP_EOL;
             try {
               $generator = $this->appContainer->get($class);
               if (method_exists($generator, 'generateLegacyBalancingAccount')) {
                 $balancingAccount = $generator->generateLegacyBalancingAccount($receivable);
               }
-            } catch (Throwable) {
+            } catch (Throwable $t) {
+              echo $t->getMessage() . PHP_EOL;
               // ignore
               $balancingAccount = '';
             }
@@ -508,5 +373,11 @@ FROM %2$s';
     }
 
     return $data;
+  }
+
+  /** @return void */
+  protected static function translationInjector(): void
+  {
+    self::t(self::DEFAULT_RECEIVABLES_ACCOUNT_TEMPLATE);
   }
 }

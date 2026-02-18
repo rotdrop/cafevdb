@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import $ from './jquery.js';
 import { appPrefix } from '../config.ts';
 import { LEGACY_QUERY_LOG } from '../mountable-component-names.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-import { emit as asyncEmit, getEmitResult } from '../services/async-event-bus.ts';
+import { awaitEmit } from '../services/async-event-bus.ts';
 
 const vueQueryLogKey = 'vueQueryLog';
 
@@ -40,9 +40,10 @@ const queryLogMenu = async ($queryLogProvider: JQuery) => {
   }
   const queryLog = $queryLogProvider.data('queryLog');
   console.info('QUERY LOG', { queryLog });
-  const queryLogComponent: Vue = await getEmitResult(
-    asyncEmit(GET_VUE_COMPONENT, { name: LEGACY_QUERY_LOG, propsData: { queryLog } }),
-  );
+  const queryLogComponent: Vue = await awaitEmit(GET_VUE_COMPONENT, {
+    name: LEGACY_QUERY_LOG,
+    propsData: { queryLog },
+  });
   queryLogComponent.$mount($queryLogProvider.find('.vue-mount-point')[0]);
   $queryLogProvider.data(vueQueryLogKey, queryLogComponent);
   return queryLogComponent;

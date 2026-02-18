@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -36,10 +38,13 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Fetch one or multiple tooltip via AJAX. */
+#[TSAttributes\TypeScript]
 class ToolTipsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  public const END_POINT = 'tooltips';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -61,8 +66,13 @@ class ToolTipsController extends Controller
    *
    * @return DataResponse
    */
-  #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/' . self::END_POINT . '/{key}',
+    requirements: [ 'key' => '^.+$' ],
+  )]
   public function get(string $key, ?bool $debug = null, bool $unescaped = false):DataResponse
   {
     $this->toolTipsService->debug($debug);
@@ -86,8 +96,9 @@ class ToolTipsController extends Controller
    *
    * @return DataResponse
    */
-  #[CoreAttributes\NoAdminRequired]
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT)]
+  #[CoreAttributes\NoAdminRequired]
   public function getMultiple(array $keys, ?bool $debug = null, bool $unescaped = false)
   {
     $this->toolTipsService->debug($debug);

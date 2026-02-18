@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -515,6 +515,16 @@ import type { AdminInitialState } from '../../build/ts-types/php-modules/Setting
 import * as SettingsKeys from '../../build/ts-types/php-modules/Settings/Admin.ts'
 import type { AdminSettingsResponse, UserRecryptionResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 import type { FontFileNames } from '../../build/ts-types/php-modules/Service/DTO.ts'
+import {
+  END_POINT as controllerEndPoint,
+  POST_REQUEST_FONT_CACHE,
+} from '../../build/ts-types/php-modules/Controller/AdminSettingsController.ts'
+import {
+  BASE_PATH as encryptionBasePath,
+  END_POINT_BULK_ENCRYPTION,
+  END_POINT_REVOKE,
+  END_POINT_RECRYPT,
+} from '../../build/ts-types/php-modules/Controller/EncryptionController.ts'
 
 const IconCancel = IconEmailVerificationFailed
 
@@ -799,7 +809,7 @@ const getSettingsData = async (settingsKeys: (keyof AppAdminSettings)[] = []) =>
     settingsKeys = Object.keys(settings) as (keyof AppAdminSettings)[]
   }
   for (const key of settingsKeys) {
-    requests.push(axios.get(generateAppUrl('settings/admin/{key}', { key })))
+    requests.push(axios.get(generateAppUrl(`${controllerEndPoint}/{key}`, { key })))
   }
   const responses = await Promise.allSettled(requests)
   for (const [i, promiseResult] of responses.entries()) {
@@ -828,7 +838,7 @@ const saveSetting = async (settingsKey: keyof AppAdminSettings, inputValue?: str
     if (inputValue === undefined) {
       logger.info('VALUE vs VMODEL', { inputValue, value })
     }
-    const response: AdminSettingPostResponse = await axios.post(generateAppUrl('settings/admin/{settingsKey}', { settingsKey }), { value })
+    const response: AdminSettingPostResponse = await axios.post(generateAppUrl(`${controllerEndPoint}/{settingsKey}`, { settingsKey }), { value })
     const responseData = response.data
     if (responseData.status === 'unconfirmed') {
       const answer = await dialogConfirm({
@@ -851,7 +861,7 @@ const saveSetting = async (settingsKey: keyof AppAdminSettings, inputValue?: str
       if (permanent.length === 0 && transient.length === 0) {
         const displayValue = Array.isArray(value)
           ? value.join(', ')
-          : (typeof value === 'string') ? value : t(appName, value ? 'true' : 'false')
+          : (typeof value === 'string') ? value : t(appId, value ? 'true' : 'false')
         if (displayValue) {
           transient.push(t(appId, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value: displayValue }))
         } else {
@@ -877,7 +887,7 @@ const saveSetting = async (settingsKey: keyof AppAdminSettings, inputValue?: str
     if (value !== undefined) {
       const displayValue = Array.isArray(value)
         ? value.join(', ')
-        : (typeof value === 'string') ? value : t(appName, value ? 'true' : 'false')
+        : (typeof value === 'string') ? value : t(appId, value ? 'true' : 'false')
       showError(t(appId, 'Could not set "{settingsKey}" to "{value}": {message}', { settingsKey, value: displayValue, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
     } else {
       showError(t(appId, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
@@ -936,7 +946,7 @@ const pollRecryptionRequests = async () => {
  */
 const updateRecryptionRequests = async () => {
   try {
-    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt')
+    const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_RECRYPT}`)
     const response = (await axios.get(url + '?format=json')) as RecryptionGetResponse
     const recryptionRequests = response.data.ocs.data.requests
     // remove requests which are no longer there
@@ -1006,7 +1016,7 @@ const markRecryptionRequest = (/* userId, event */) => {
   }
 }
 const doHandleRecryptionRequest = (userId: string, silent = false, allowFailure = false) => {
-  const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+  const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_RECRYPT}/{userId}`, {
     userId,
   })
   return axios.post(url + '?format=json', {
@@ -1040,7 +1050,7 @@ const awaitRecryptionRequestPromise = async (userId: string, promise: Promise<Us
 }
 const deleteRecryptionRequest = async (userId: string) => {
   try {
-    const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+    const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_RECRYPT}/{userId}`, {
       userId,
     })
     await axios.delete(url + '?format=json')
@@ -1064,11 +1074,9 @@ const deleteRecryptionRequest = async (userId: string) => {
   }
 }
 const doRevokeCloudAccess = (userId: string/*, allowFailure */) => {
-  const url = generateAppOcsUrl(
-    'api/v1/maintenance/encryption/revoke/{userId}', {
-      userId,
-    },
-  )
+  const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_REVOKE}/{userId}`, {
+    userId,
+  })
   return axios.post(url + '?format=json')
 }
 const handleMarkedRecrytpionRequests = async () => {
@@ -1152,7 +1160,7 @@ const handleBulkAccessAction = async (action: AccessActions) => {
   access.action.active = true
   let failedUsers = 0
   try {
-    const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+    const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_BULK_ENCRYPTION}?format=json`)
     const response: BulkRecryptionCountResponse = await axios.post(url, {
       grantAccess: action === 'grant',
       includeDisabled: access.includeDisabled,
@@ -1166,7 +1174,7 @@ const handleBulkAccessAction = async (action: AccessActions) => {
     let count = 0
     let lastUser: string
     do {
-      const url = generateAppOcsUrl('api/v1/maintenance/encryption/bulk-recryption?format=json')
+      const url = generateAppOcsUrl(`${encryptionBasePath}/${END_POINT_BULK_ENCRYPTION}?format=json`)
       const response: BulkRecryptionResponse = await axios.post(url, {
         grantAccess: action === 'grant',
         includeDisabled: access.includeDisabled,
@@ -1229,7 +1237,7 @@ const purgeFontData = () => fontCacheOperaton('purge')
 const fontCacheOperaton = async (operation: FontCacheOperations) => {
   loading.fonts = true
   try {
-    const response = await axios.post(generateAppUrl('settings/admin/font-cache'), { operation })
+    const response = await axios.post(generateAppUrl(`${controllerEndPoint}/${POST_REQUEST_FONT_CACHE}`), { operation })
     const responseData = response.data
     if (responseData.message) {
       showInfo(responseData.message)

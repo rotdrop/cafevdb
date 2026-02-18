@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute\AuthorizedAdminSetting;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -47,24 +49,29 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** AJAX end-points for admin setttings. */
+#[TSAttributes\TypeScript]
 class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  public const POST_REQUEST_FONT_CACHE = 'font-cache';
-  public const DELEGATABLE_POST_REQUESTS = [
-    AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY,
-    AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY,
-    AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX,
-    AdminSettings::WIKI_NAME_SPACE_KEY,
-    AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY,
-    AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY,
-    AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY,
-    FontService::DEFAULT_OFFICE_FONT_CONFIG,
-    self::POST_REQUEST_FONT_CACHE,
-  ];
+  public const END_POINT = 'settings/admin';
 
+  public const POST_REQUEST_FONT_CACHE = 'font-cache';
+
+  /**
+   * Part of a "requirements" attribute paramter.
+   */
+  public const DELEGATABLE_POST_REQUESTS =
+    AdminSettings::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY
+    . '|' . AdminSettings::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . AdminSettings::EMAIL_VERIFICATION_SUFFIX
+    . '|' . AdminSettings::WIKI_NAME_SPACE_KEY
+    . '|' . AdminSettings::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY
+    . '|' . AdminSettings::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY
+    . '|' . AdminSettings::GNU_CASH_ACCOUNTS_TREE_DATA_KEY
+    . '|' . FontService::DEFAULT_OFFICE_FONT_CONFIG
+    . '|' . self::POST_REQUEST_FONT_CACHE;
 
   public const FONT_CACHE_UPDATE = 'update'; // scan for new entries
   public const FONT_CACHE_RESCAN = 'rescan'; // == purge + update
@@ -92,7 +99,8 @@ class AdminSettingsController extends Controller
    *
    * @return DataResponse|JSONResponse
    */
-  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[CoreAttributes\AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT . '/{parameter}')]
   #[Attributes\NoGroupMemberRequired]
   public function get(string $parameter): DataResponse|JSONResponse
   {
@@ -177,6 +185,11 @@ class AdminSettingsController extends Controller
    * @throw Exceptions\EnduserNotificationException
    */
   #[Attributes\NoGroupMemberRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::END_POINT . '/{parameter}',
+    requirements: [ 'parameter' => '^(?!' . self::DELEGATABLE_POST_REQUESTS . ').*$' ],
+  )]
   public function postAdminOnly(string $parameter, mixed $value): DataResponse|JSONResponse
   {
     return $this->post($parameter, $value);
@@ -193,11 +206,16 @@ class AdminSettingsController extends Controller
    *
    * @throw Exceptions\EnduserNotificationException
    */
-  #[AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[CoreAttributes\AuthorizedAdminSetting(settings: AdminSettings::class)]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::END_POINT . '/{parameter}',
+    requirements: [ 'parameter' => '(' . AdminSettingsController::DELEGATABLE_POST_REQUESTS . ')' ],
+  )]
   #[Attributes\NoGroupMemberRequired]
   public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null): DataResponse|JSONResponse
   {
-    if (array_search($parameter, self::DELEGATABLE_POST_REQUESTS) !== false) {
+    if (array_search($parameter, explode('|', self::DELEGATABLE_POST_REQUESTS)) !== false) {
       return $this->post($parameter, $value, $operation);
     }
     throw new Exceptions\EnduserNotificationException(

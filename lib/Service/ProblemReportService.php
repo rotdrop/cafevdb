@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,13 +88,15 @@ class ProblemReportService
    * @return ?array Notification messages which the frontend should present
    * to the user in order to inform the person of where the problem record has
    * been submitted.
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   public function submit(
     array $userData,
     array $errorData,
     ?string $errorHtml,
     ?string $userComment,
-  ):?array {
+  ): ?array {
 
     $this->logInfo(
       'Requested problem report: '
@@ -116,11 +118,9 @@ class ProblemReportService
     }
 
     if (!empty($exceptions)) {
-      if (count($exceptions) == 1) {
-        throw reset($exceptions);
-      }
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('All possibilities (i.e. %s) to submit your problem report have failed. Please use other communication channels to submit it.', implode(', ', array_keys($exceptions))),
+        previous: count($exceptions) == 1 ? array_values($exceptions)[0] : null,
       );
     }
 

@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -51,9 +53,13 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** AJAX endpoint for generating the main page of the app. */
+#[TSAttributes\TypeScript]
 class VueAppController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
+
+  public const END_POINT_PAGE = 'p';
+  public const END_POINT_NAVIGATION = 'n';
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -82,8 +88,16 @@ class VueAppController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/')]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'GET',
+    url: '/' . self::END_POINT_PAGE . '/{template}/{projectName}',
+    requirements: [ 'template' => '.+' ],
+    defaults: [ 'projectName' => null ],
+    postfix: 'front',
+  )]
   #[Attributes\AllowIFrameSelf]
-  public function index():TemplateResponse
+  public function index(): TemplateResponse
   {
     // add the vue assets
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
@@ -107,8 +121,8 @@ class VueAppController extends Controller
     $queryHash = $this->request->getParam('hash');
     if ($queryHash) {
       $initialPostData = $this->historyService->get($queryHash);
-      $this->logInfo('HASH VALUE ' . $queryHash . ' DATA ' . print_r($initialPostData ?? [], true));
-      if (!empty($initialPostData)) {
+      $this->logDebug('HASH VALUE ' . $queryHash . ' DATA ' . print_r($initialPostData ?? [], true));
+      if ($initialPostData !== null) {
         $historyPostData = CommonUtil::arrayMergeRecursive(
           $historyPostData, [
             'post' => [
@@ -127,7 +141,7 @@ class VueAppController extends Controller
       $hash = $queryData['hash'] ?? null;
       if ($hash) {
         $postData = $this->historyService->get($hash);
-        if (!empty($postData)) {
+        if ($postData !== null) {
           $historyPostData = CommonUtil::arrayMergeRecursive(
             $historyPostData, [
               'post' => [
@@ -160,6 +174,11 @@ class VueAppController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::END_POINT_NAVIGATION . '/{template}',
+    requirements: [ 'template' => '.+' ],
+  )]
   public function navigation(
     string $template,
     ?int $projectId = null,

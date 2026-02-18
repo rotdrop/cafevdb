@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,25 +24,33 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\IRequest;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX end-points for instrument insurances */
+#[TSAttributes\TypeScript]
 class InstrumentInsuranceController extends Controller
 {
   use GetPrefixParamsTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const BASE_PATH = 'insurance';
+
+  public const END_POINT_VALIDATE = 'validate';
+  public const END_POINT_DOWNLOAD = 'download';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -51,11 +59,10 @@ class InstrumentInsuranceController extends Controller
     private FuzzyInputService $fuzzyInputService,
     private InstrumentInsuranceService $insuranceService,
     private ProjectService $projectService,
-    protected ConfigService $configService,
     protected PHPMyEdit $phpMyEdit,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-    $this->l = $this->l10N();
   }
   // phpcs:enable
 
@@ -67,14 +74,15 @@ class InstrumentInsuranceController extends Controller
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
-  public function validate(string $control, string $template):Http\Response
+  #[CoreAttributes\FrontpageRoute(verb:'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_VALIDATE . '/{control}')]
+  public function validate(string $control, string $template): Http\Response
   {
     $errorMessages = [];
     $message = [];
     $cgiPrefix  = $this->phpMyEdit->cgiDataName();
     $pmeData = $this->getPrefixParams($cgiPrefix);
     switch ($template) {
-      case 'insurance-brokers':
+      case PageRenderer\InsuranceBrokers::TEMPLATE:
         $cgiKeys = [
           'broker' => 'short_name',
           'brokerName' => 'long_name',
@@ -115,13 +123,15 @@ class InstrumentInsuranceController extends Controller
           case 'brokerAddress':
             break;
           default:
-            return self::grumble($this->l->t('Unknown request: "%s"', $control));
-            break;
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unknown request: "%s"', $control),
+            );
         }
 
-        $values['message'] = $message;
-        return self::dataResponse($values);
-      case 'insurance-rates':
+        $values['messages'] = [$message];
+        return DTO\InsuranceBrokerValidationResponse::fromArray($values)->response();
+
+      case PageRenderer\InsuranceRates::TEMPLATE:
         $cgiKeys = [
           'rate' => 'rate',
           'date' => 'due_date',
@@ -141,7 +151,9 @@ class InstrumentInsuranceController extends Controller
           case 'rate':
             $rate = $this->fuzzyInputService->floatValue($values['rate']);
             if ($rate <= 0 || $rate > 1e-2) {
-              return self::grumble($this->l->t('Invalid insurance rate %f, should be larger than 0 and less than 1 percent.', $rate));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Invalid insurance rate %f, should be larger than 0 and less than 1 percent.', $rate),
+              );
             }
             if ((string)$rate !== (string)$values['rate']) {
               $message[] = $this->l->t(
@@ -154,14 +166,19 @@ class InstrumentInsuranceController extends Controller
           case 'policy': // no way to validate, free-form text
             break; // break on last item
           default:
-            return self::grumble($this->l->t('Unknown request: "%s"', $control));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unknown request: "%s"', $control),
+            );
             break;
         }
-        $values['message'] = $message;
-        return self::dataResponse($values);
-      case 'instrument-insurance':
+        $values['messages'] = $message;
+        return DTO\InsuranceRateValidationResponse::fromArray(
+          $values,
+        )->reponse();
+
+      case PageRenderer\InstrumentInsurances::TEMPLATE:
         $errorMessage = [];
-        $message = [];
+        $messages = [];
         // control -> name mapping
         $cgiKeys = [
           'instrumentHolder' => 'instrument_holder_id',
@@ -253,7 +270,7 @@ class InstrumentInsuranceController extends Controller
           case 'manufacturer':
             $value = $values['manufacturer'];
             if (empty($value)) {
-              $message[] = $this->l->t("Manufacturer field is empty.");
+              $messages[] = $this->l->t("Manufacturer field is empty.");
             } else {
               // Mmmh.
             }
@@ -265,7 +282,7 @@ class InstrumentInsuranceController extends Controller
           case 'construction-year':
             $value = $values['constructionYear'];
             if (empty($value) || $value === (string)$this->l->t('unknown')) {
-              $message[] = $this->l->t("Construction year is unknown.");
+              $messages[] = $this->l->t("Construction year is unknown.");
               // allow free-style like "ca. 1900" and such.
               /* } else if ($value != $this->l->t('unknown') && !preg_match("/[0-9]{4}/", $value)) { */
               /*   $errorMessage = $this->l->t("Construction year must be either a literal `%s' or a four digit year, you typed %s.", */
@@ -302,15 +319,22 @@ class InstrumentInsuranceController extends Controller
         }
 
         if (!empty($errorMessage)) {
-          return self::grumble(implode(' ', $errorMessage));
+          throw new Exceptions\EnduserNotificationException(
+            implode(' ', $errorMessage),
+          );
         }
 
-        $values['message'] = $message;
-        return self::dataResponse($values);
+        $values['messages'] = $messages;
+        return DTO\InstrumentInsuranceValidationResponse::fromArray(
+          $values,
+        )->response();
+
       default:
         break;
     }
-    return self::grumble($this->l->t('Unknown Request: "%s / %s".', [ $control, $template ]));
+    throw new Exceptions\EnduserNotificationException(
+      message: $this->l->t('Unknown Request: "%s / %s".', [ $control, $template ]),
+    );
   }
 
   /**
@@ -324,6 +348,8 @@ class InstrumentInsuranceController extends Controller
    * @return Http\DataDownloadResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DOWNLOAD . '/{musicianId}/{insuranceId}', postfix: '.get')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DOWNLOAD)]
   public function download(int $musicianId, int $insuranceId):Http\DataDownloadResponse
   {
     $overview = $this->insuranceService->musicianOverview($musicianId);
@@ -331,9 +357,9 @@ class InstrumentInsuranceController extends Controller
     $fileName = $this->insuranceService->musicianOverviewFileName($overview);
 
     /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
-    $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+    $mimeTypeDetector = \OCP\Server::get(\OCP\Files\IMimeTypeDetector::class);
     $mimeType = $mimeTypeDetector->detectString($fileData);
 
-    return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+    return new Http\DataDownloadResponse($fileData, $fileName, $mimeType);
   }
 }

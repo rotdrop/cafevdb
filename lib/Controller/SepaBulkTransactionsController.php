@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Controller;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -49,24 +51,29 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX backend for managing bank bulk transactions. */
+#[TSAttributes\TypeScript]
 class SepaBulkTransactionsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const TRANSACTION_TYPE_DEBIT_NOTE = SepaBulkTransactionService::TRANSACTION_TYPE_DEBIT_NOTE;
-  const TRANSACTION_TYPE_BANK_TRANSFER = SepaBulkTransactionService::TRANSACTION_TYPE_BANK_TRANSFER;
-  const TRANSACTION_TYPES = [
+  public const END_POINT = 'finance/sepa/bulk-transactions';
+  public const TOPIC_CREATE = 'create';
+  public const TOPIC_EXPORTT = 'export';
+
+  protected const TRANSACTION_TYPE_DEBIT_NOTE = SepaBulkTransactionService::TRANSACTION_TYPE_DEBIT_NOTE;
+  protected const TRANSACTION_TYPE_BANK_TRANSFER = SepaBulkTransactionService::TRANSACTION_TYPE_BANK_TRANSFER;
+  protected const TRANSACTION_TYPES = [
     self::TRANSACTION_TYPE_DEBIT_NOTE,
     self::TRANSACTION_TYPE_BANK_TRANSFER,
   ];
 
-  const ALARM_FROM_START = FinanceService::VALARM_FROM_START;
-  const ALARM_FROM_END = FinanceService::VALARM_FROM_END;
+  protected const ALARM_FROM_START = FinanceService::VALARM_FROM_START;
+  protected const ALARM_FROM_END = FinanceService::VALARM_FROM_END;
 
-  const EXPORT_PURPOSE_BANK_IMPORT = 'bank-import';
-  const EXPORT_PUPROSE_BALANCING_ITEMS = 'balancing-items';
+  protected const EXPORT_PURPOSE_BANK_IMPORT = 'bank-import';
+  protected const EXPORT_PUPROSE_BALANCING_ITEMS = 'balancing-items';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -100,6 +107,7 @@ class SepaBulkTransactionsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT . '/{topic}')]
   public function serviceSwitch(
     string $topic,
     int $projectId = 0,

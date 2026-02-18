@@ -58,6 +58,8 @@ PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
 PHING = $(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
 PHPCS = $(ABSSRCDIR)/vendor/bin/phpcs
+#
+EMACS = $(shell which emacs 2> /dev/null)
 
 MAKEFILE_DEP = Makefile
 
@@ -593,16 +595,26 @@ phpunitfilter:
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
 .PHONY: phpunitfilter
 
+#@private
 run-jest:
 	npm run jest
 .PHONY: run-jest
 
 #@@ Runs integration test for TypeScript code
-jest: dev-setup run-jest post-build
+jest: dev-setup ts-app-config ts-types-files run-jest post-build
 .PHONY: jest
 
+#@private
+run-tide:
+	$(EMACS) --batch --file $(SRCDIR)/src/vue-app.ts  -l $(ABSSRCDIR)/dev-scripts/tide-project-errors.el|tee tide-errors.log
+.PHONY: run-tide
+
+#@@ Runs the Emacs Tide IDE in batch mode and diagnoses TypeScript errors.
+tide: dev-setup ts-app-config ts-types-files run-tide post-build
+.PHONY: tide
+
 #@@ Runs integration test for PHP and TypeScript code
-test: phpunit jest
+test: phpunit tide jest
 .PHONY: test
 
 .PHONY: l10n

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -78,8 +78,10 @@ class ProjectsRepository extends EntityRepository
   {
     $id = null;
     $name = null;
-    if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
-      $id = $projectIdentifier;
+    if (is_numeric($projectIdentifier)) {
+      if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
+        $id = $projectIdentifier;
+      }
     } elseif (is_string($projectIdentifier)) {
       $name = $projectIdentifier;
     } elseif (is_array($projectIdentifier)) {
@@ -248,56 +250,5 @@ class ProjectsRepository extends EntityRepository
     $query = $qb->getQuery();
 
     return $query->getResult('COLUMN_HYDRATOR');
-  }
-
-  /**
-   * Just query the database for the project name given its id.
-   *
-   * @param int|string|array $projectIdentifier A project-id, a project-name
-   * or an array with keys 'id' or 'name'. Even if the name is given a recurse
-   * to the database will ensure that a project with that name exists.
-   *
-   * @return null|string
-   *
-   * @throws Exceptions\DatabaseMis
-   */
-  public function findName(int|string|array $projectIdentifier):?string
-  {
-    $id = null;
-    $name = null;
-    if (filter_var($projectIdentifier, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
-      $id = $projectIdentifier;
-    } elseif (is_string($projectIdentifier)) {
-      $name = $projectIdentifier;
-    } elseif (is_array($projectIdentifier)) {
-      $id = $projectIdentifier['id'] ?? null;
-      $name = $projectIdentifier['name'] ?? null;
-    }
-    if ($id === null && $name === null) {
-      throw new Exceptions\DatabaseMissingIdentifierException(
-        sprintf(self::t('The identifier is missing for a query to find an instance of "%1$s".'), $this->entityName),
-        entityClassName: $this->entityName,
-        incompleteIdentifier: $projectIdentifier,
-      );
-    }
-    $criteria = [];
-    if (!empty($id)) {
-      $criteria[] = ['id' => $id];
-    }
-    if (!empty($name)) {
-      $criteria[] = ['name' => $name];
-    }
-
-    $queryParts = $this->prepareFindBy($criteria);
-
-    /** @var ORM\QueryBuilder */
-    $qb = $this->generateFindBySelect($queryParts, [ 'mainTable.name' ]);
-    $qb = $this->generateFindByWhere($qb, $queryParts);
-
-    $query = $qb->getQuery();
-
-    $result = $query->getResult('COLUMN_HYDRATOR');
-
-    return count($result) == 1 ? $result[0] : null;
   }
 }

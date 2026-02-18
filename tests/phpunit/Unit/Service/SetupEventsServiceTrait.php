@@ -56,6 +56,8 @@ use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockProjectsRepositoryTrait;
+use OCA\CAFEVDB\Tests\Unit\Database\MockEntityManagerTrait;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -68,8 +70,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 trait SetupEventsServiceTrait
 {
-  use SetupCalendarBackendTrait;
   use EntityGeneratorTrait;
+  use MockEntityManagerTrait;
+  use MockProjectsRepositoryTrait;
+  use SetupCalendarBackendTrait;
 
   private EventsService $eventsService;
 
@@ -111,61 +115,7 @@ trait SetupEventsServiceTrait
     }
     self::addProjectEvents($this->project, $this->defaultCalendars);
 
-    $this->entityManager = $this->getMockBuilder(EntityManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->entityManager->method('getWrappedObject')->willReturn($this->entityManager);
-    $this->entityManager->method('getRepository')->willReturnCallback(
-      function(string $className) {
-        $repository = $this->entityRepositories[$className] ?? null;
-        if ($repository == null) {
-          $repository = $this->getMockBuilder(EntityRepository::class)
-          ->disableOriginalConstructor()
-            ->getMock();
-          $this->entityRepositories[$className] = $repository;
-        }
-        $repository->method('getEntityManager')->willReturn($this->entityManager);
-        $repository->expects($this->never())?->method('createQueryBuilder');
-        return $repository;
-      },
-    );
-    $this->entityManager->method('persist')->willReturnCallback(
-      function(mixed $entity) {
-        if (!method_exists($entity, 'getId')) {
-          // give up for now
-          return;
-        }
-        $class = get_class($entity);
-        if (!isset($this->entities[$class])) {
-          $this->entities[$class] = new ArrayCollection;
-        }
-        $givenId = $entity->getId();
-        if ($givenId !== null) {
-          $oldEntity = $this->entities[$class]->get($givenId);
-          if ($oldEntity) {
-            $this->assertEquals($entity, $oldEntity);
-            return;
-          }
-          $this->entities[$class]->set($givenId, $entity);
-          return;
-        }
-        $newId = \max(0, 0, ...$this->entities[$class]->getKeys()) + 1;
-        $this->entities[$class]->set($newId, $entity);
-      },
-    );
-    $this->entityManager->method('flush')->willReturnCallback(
-      function() {
-        foreach ($this->entities as $entities) {
-          foreach ($entities as $id => $entity) {
-            $entity->setId($id);
-          }
-        }
-      },
-    );
-    $this->entityManager->method('contains')->willReturnCallback(
-      fn(mixed $entity) => !!($this->entities[get_class($entity)] ?? null)?->contains($entity),
-    );
-    $this->mockProvider->registerClassInstance(EntityManager::class, $this->entityManager, global: true);
+    $this->getEntityManagerMock();
 
     // Entities\ProjectEvent
     $repository = $this->getMockBuilder(Repositories\ProjectEventsRepository::class)
@@ -173,101 +123,28 @@ trait SetupEventsServiceTrait
       ->getMock();
     $repository->method('findBy')->willReturnCallback(
       function(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array {
-        if (!isset($criteria['project']) || ($criteria['type'] ?? VCalendarType::VEVENT) != VCalendarType::VEVENT) {
-          throw new UnexpectedValueException('Can only fake search for VEVENT given a project or project-id.');
-        }
-        $projectOrId = $criteria['project'];
-        if ($projectOrId !== $this->project && $projectOrId != $this->project->getId()) {
+        if (array_is_list($criteria)) {
+          // foreach ($criteria as $criterium) {
+          // ain't perfect, but ... for now just return an empty array
           return [];
+          // }
+        } else {
+          if (!isset($criteria['project']) || ($criteria['type'] ?? VCalendarType::VEVENT) != VCalendarType::VEVENT) {
+            throw new UnexpectedValueException('Can only fake search for VEVENT given a project or project-id: ' . print_r($criteria, true));
+          }
+          $projectOrId = $criteria['project'];
+          if ($projectOrId !== $this->project && $projectOrId != $this->project->getId()) {
+            return [];
+          }
+          return $this->project->getCalendarEvents()->toArray();
         }
-        return $this->project->getCalendarEvents()->toArray();
       },
     );
     $repository->method('getEntityManager')->willReturn($this->entityManager);
     $repository->expects($this->never())->method('createQueryBuilder');
     $this->entityRepositories[Entities\ProjectEvent::class] = $repository;
 
-    // Entities\Project
-    $this->entities[Entities\Project::class] = new ArrayCollection;
-    $this->entities[Entities\Project::class]->set($this->project->getId(), $this->project);
-
-
-    $allMethods = array_map(
-      fn(ReflectionMethod $method) => $method->getName(),
-      new ReflectionClass(Repositories\ProjectsRepository::class)->getMethods(),
-    );
-    $wantedMethods = array_diff($allMethods, [
-      'findByIdOrName',
-      'findById',
-      'ensureProject',
-      'findOneBy',
-      'findAll',
-    ]);
-    $repository = $this->getMockBuilder(Repositories\ProjectsRepository::class)
-      ->disableOriginalConstructor()
-      ->onlyMethods($wantedMethods)
-      ->getMock();
-    $repository->method('find')->willReturnCallback(function(mixed $id) {
-      if (is_array($id)) {
-        $id = $id['id'];
-      }
-      $projectId = (int)$id;
-      if ($this->project->getId() == $projectId) {
-        return $this->project;
-      }
-      if (isset($this->entities[Entities\Project::class])) {
-        return $this->entities[Entities\Project::class]->get($projectId);
-      }
-      return null;
-    });
-    $repository->method('findBy')->willReturnCallback(
-      function(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null) {
-        foreach ($criteria as $criterium) {
-          $this->assertTrue(is_array($criterium));
-          $this->assertEquals(1, count($criterium));
-          $this->assertTrue(ctype_alpha(array_keys($criterium)[0]));
-          $field = array_keys($criterium)[0];
-          $method = 'get' . ucfirst($field);
-          $this->assertTrue(method_exists(Entities\Project::class, $method));
-        }
-        $allEntities = ($this->entities[Entities\Project::class] ?? null)?->toArray() ?? [];
-        $allEntities[$this->project->getId()] = $this->project;
-        $entities = array_filter(
-          $allEntities,
-          function(Entities\Project $entity) use ($criteria) {
-            foreach ($criteria as $criterium) {
-              $field = array_keys($criterium)[0];
-              $value = array_values($criterium)[0];
-              $method = 'get' . ucfirst($field);
-              if ($entity->$method() != $value) {
-                return false;
-              }
-            }
-            return true;
-          },
-        );
-        if (!empty($orderBy)) {
-          usort($entities, function(Entities\Project $a, Entities\Project $b) use ($orderBy) {
-            $result = 0;
-            foreach ($orderBy as $field => $direction) {
-              $method = 'get' . ucfirst($field);
-              $result = $a->$method() <=> $b->$method();
-              if ($direction == 'DESC') {
-                $result = -$result;
-              }
-              if ($result) {
-                break;
-              }
-            }
-            return $result;
-          });
-        }
-        return array_slice($entities, $offset ?? 0, $limit);
-      },
-    );
-    $repository->method('getEntityManager')->willReturn($this->entityManager);
-    $repository->expects($this->never())->method('createQueryBuilder');
-    $this->entityRepositories[Entities\Project::class] = $repository;
+    $this->getProjectsRepositoryMock();
 
     // Entities\Invoice
     $repository = $this->createStub(EntityRepository::class);

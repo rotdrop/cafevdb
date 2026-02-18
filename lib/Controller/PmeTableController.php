@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -41,10 +43,13 @@ use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ProjectService;
 
 /** AJAX backends for legacy PME table stuff. */
+#[TSAttributes\TypeScript]
 class PmeTableController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  public const END_POINT = 'page/pme';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -75,7 +80,7 @@ class PmeTableController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/page/pme/{topic}', // load or export
+    url: '/' . self::END_POINT . '/{topic}', // load or export
     defaults: [ 'topic' => 'load' ],
   )]
   public function serviceSwitch(string $topic):Http\Response

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@ use Throwable;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 use OCA\CAFEVDB\Service\MusicianService;
 
@@ -69,7 +71,7 @@ trait MusicianFromRowTrait
       return [ 'musician' => null, 'categories' => [] ];
     }
     $pme = $pme ?? $this->pme;
-    $joinTable = !empty($pme->fdn[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::MUSICIANS_TABLE)]);
+    $joinTable = !empty($pme->fdn[PMETableViewBase::joinTableMasterFieldName(DatabaseTables::MUSICIANS_TABLE)]);
     $data = [];
     foreach ($pme->fds as $idx => $label) {
       if (isset($row[$this->queryIndexField($idx)])) {
@@ -83,7 +85,7 @@ trait MusicianFromRowTrait
     if ($joinTable) {
       // make sure to fetch the id-record
       foreach ($this->joinStructure as $joinInfo) {
-        if ($joinInfo['table'] == PMETableViewBase::MUSICIANS_TABLE) {
+        if ($joinInfo['table'] == DatabaseTables::MUSICIANS_TABLE) {
           $idColumn = $joinInfo['identifier']['id'];
           $id = $row[$this->queryField($idColumn)];
           $musician->setId($id);
@@ -99,21 +101,21 @@ trait MusicianFromRowTrait
       switch ($key) {
         case 'all_projects':
         case 'projects':
-          $categories = array_merge($categories, explode(PMETableViewBase::VALUES_SEP, Util::removeSpaces($value)));
+          $categories = array_merge($categories, explode(DataConstants::VALUES_SEP, Util::removeSpaces($value)));
           break;
-        case self::joinTableFieldName(PMETableViewBase::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
+        case self::joinTableFieldName(DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
           $instrumentInfo = $this->getInstrumentInfo();
-          foreach (explode(PMETableViewBase::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
+          foreach (explode(DataConstants::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
             $categories[] = $instrumentInfo['byId'][$instrumentId] ?? null;
           }
           break;
-        case self::joinTableFieldName(PMETableViewBase::MUSICIAN_EMAILS_TABLE, 'address'):
+        case self::joinTableFieldName(DatabaseTables::MUSICIAN_EMAILS_TABLE, 'address'):
           $musician->setEmail(new Entities\MusicianEmailAddress($value, $musician));
           break;
         default:
           if ($joinTable) {
             $fieldInfo = $this->joinTableField($key);
-            if ($fieldInfo['table'] != PMETableViewBase::MUSICIANS_TABLE) {
+            if ($fieldInfo['table'] != DatabaseTables::MUSICIANS_TABLE) {
               continue 2;
             }
             $column = $fieldInfo['column'];

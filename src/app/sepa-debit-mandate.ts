@@ -80,12 +80,18 @@ import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
 import {
+  ACTION_DIALOG,
   ACTION_PRE_FILLED,
+  ACTION_STORE,
+  ACTION_VALIDATE,
   BASE_PATH,
   END_POINT_BANK_ACCOUNTS,
   END_POINT_DEBIT_MANDATES,
   type END_POINTS,
 } from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
+import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
+import { END_POINT as bulkTransactionsEndPoint, TOPIC_CREATE as bulkTransactionCreate } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 require('cafevdb-selectize.scss');
@@ -559,7 +565,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
     });
 
     FileUpload.init({
-      url: generateAppUrl('upload/stash'),
+      url: generateAppUrl(UploadsController.END_POINT_STASH),
       doneCallback: writtenMandateUploadDone,
       stopCallback: undefined,
       dropZone: mandateFieldset.find('.written-mandate-upload'),
@@ -784,7 +790,7 @@ const defaultLoadOptions = {
 
 const mandateLoad = function(options_: Pick<MandateLoadOptions, 'sepaId'> & Partial<Omit<MandateLoadOptions, 'sepaId'> >) {
   const options = { ...defaultLoadOptions, ...options_ };
-  $.post(generateAppUrl('finance/sepa/debit-mandates/dialog'), options.sepaId)
+  $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_DIALOG}`), options.sepaId)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         options.fail();
@@ -847,7 +853,7 @@ const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omi
   // "submit" the entire form
   const post = $form.serialize();
 
-  $.post(generateAppUrl('finance/sepa/debit-mandates/store'), post)
+  $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_STORE}`), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         options.fail();
@@ -985,7 +991,7 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
   // until end of validation
   validateLock();
 
-  $.post(generateAppUrl('finance/sepa/debit-mandates/validate'), post)
+  $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_VALIDATE}`), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateUnlock,
@@ -1173,7 +1179,7 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
 
   const post = $.param(mandateData);
 
-  $.post(generateAppUrl('finance/sepa/debit-mandates/validate'), post)
+  $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_VALIDATE}`), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, {
         cleanup: validateErrorUnlock,
@@ -1321,7 +1327,7 @@ const mandateExportHandler = function<Element extends HTMLFormElement, Event ext
   };
 
   const formPost = form.serialize();
-  $.post(generateAppUrl('finance/sepa/bulk-transactions/create'), formPost)
+  $.post(generateAppUrl(`${bulkTransactionsEndPoint}/${bulkTransactionCreate}`), formPost)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })
@@ -1909,18 +1915,17 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
   }
 };
 
-const mandatesDocumentReady = function() {
+const mandatesDocumentReady = () => {
 
   PHPMyEdit.addTableLoadCallback(
-    'sepa-bank-accounts',
+    template,
     {
-      callback(selector, parameters, resizeCB) {
+      callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason !== 'dialogClose') {
           mandateReady(selector, parameters, resizeCB);
         }
         resizeCB();
       },
-      parameters: [],
     });
 
   CAFEVDB.addReadyCallback(async () => {

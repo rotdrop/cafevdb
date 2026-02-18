@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 use UnexpectedValueException;
-
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -46,6 +47,7 @@ use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
+#[TSAttributes\TypeScript]
 class DocumentStorageUploadController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -53,6 +55,8 @@ class DocumentStorageUploadController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+
+  public const END_POINT = 'documents';
 
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';
@@ -126,6 +130,11 @@ class DocumentStorageUploadController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/documents/{section}/{topic}/{operation}',
+    requirements: [ 'section' => '^(?!mailmerge).*$' ],
+  )]
   public function documents(
     string $section,
     string $topic,

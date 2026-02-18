@@ -208,7 +208,7 @@ class FinanceService
   }
 
   /**
-   * @param int|Entities\Project $projectOrId Entitiy or its identifier.
+   * @param int|Entities\Project $projectOrId Entity or its identifier.
    *
    * @return bool Whether the given project is the club-members project.
    */
@@ -225,7 +225,7 @@ class FinanceService
 
 
   /**
-   * @param int|Entities\Musician $musicianOrId Entitiy or its identifier.
+   * @param int|Entities\Musician $musicianOrId Entity or its identifier.
    *
    * @return bool Whether the given musician is a club-member.
    */

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Navigation;
@@ -36,14 +38,18 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Table generator for Instruments table. */
+#[TSAttributes\TypeScript]
 class Instruments extends PMETableViewBase
 {
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  const TEMPLATE = 'instruments';
-  const TABLE = self::INSTRUMENTS_TABLE;
-  private const TRANSLATIONS_TABLE = self::FIELD_TRANSLATIONS_TABLE;
+  public const TEMPLATE = EnumTemplate::INSTRUMENTS->value;
+
+  #[TSAttributes\Hidden]
+  public const TABLE = DatabaseTables::INSTRUMENTS_TABLE;
+
+  protected const INSTRUMENT_FAMILIES_JOIN_TABLE = DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE;
 
   /**
    * @var array
@@ -54,7 +60,7 @@ class Instruments extends PMETableViewBase
       'entity' => Entities\Instrument::class,
       'flags' => self::JOIN_MASTER,
     ],
-    self::TRANSLATIONS_TABLE => [
+    DatabaseTables::FIELD_TRANSLATIONS_TABLE => [
       'entity' => null,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
@@ -74,8 +80,8 @@ class Instruments extends PMETableViewBase
       'column' => 'instrument_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::INSTRUMENT_FAMILIES_TABLE => [
-      'table' => self::INSTRUMENT_FAMILIES_TABLE,
+    DatabaseTables::INSTRUMENT_FAMILIES_TABLE => [
+      'table' => DatabaseTables::INSTRUMENT_FAMILIES_TABLE,
       'entity' => Entities\InstrumentFamily::class,
       'identifier' => [
         'id' => [
@@ -208,10 +214,10 @@ class Instruments extends PMETableViewBase
     // set the locale into the joinstructure
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       switch ($table) {
-        case self::TRANSLATIONS_TABLE:
+        case DatabaseTables::FIELD_TRANSLATIONS_TABLE:
           $joinInfo['identifier']['locale']['value'] = $this->getTranslationLanguage();
           break;
-        case self::INSTRUMENT_FAMILIES_TABLE:
+        case DatabaseTables::INSTRUMENT_FAMILIES_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'family');
           break;
         default:
@@ -224,9 +230,9 @@ class Instruments extends PMETableViewBase
     // undeletable, while allowing deletion for unused ones (more
     // practical after adding new instruments)
     $instrumentTables = [
-      self::MUSICIAN_INSTRUMENTS_TABLE => [ 'musician_id', 'instrument_id' ],
-      self::PROJECT_INSTRUMENTS_TABLE => [ 'project_id', 'instrument_id' ],
-      self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [ 'project_id', 'instrument_id' ],
+      DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE => [ 'musician_id', 'instrument_id' ],
+      DatabaseTables::PROJECT_INSTRUMENTS_TABLE => [ 'project_id', 'instrument_id' ],
+      DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE => [ 'project_id', 'instrument_id' ],
     ];
     foreach ($instrumentTables as $table => $columns) {
       $this->joinStructure[$table] = [
@@ -248,7 +254,7 @@ GROUP BY $columns[1]",
 
     $opts['fdd']['name'] = [
       'name'   => $this->l->t('Instrument'),
-      'sql'    => 'COALESCE('.$joinTables[self::TRANSLATIONS_TABLE].'.content, $main_table.$field_name)',
+      'sql'    => 'COALESCE('.$joinTables[DatabaseTables::FIELD_TRANSLATIONS_TABLE].'.content, $main_table.$field_name)',
       'select' => 'T',
       'maxlen' => 64,
       'sort'   => true,
@@ -266,7 +272,7 @@ GROUP BY $columns[1]",
       ];
 
     list(, $fieldName) = $this->makeJoinTableField(
-      $opts['fdd'], self::INSTRUMENT_FAMILIES_TABLE, 'id', [
+      $opts['fdd'], DatabaseTables::INSTRUMENT_FAMILIES_TABLE, 'id', [
         'name'         => $this->l->t('Families'),
         'css'          => [ 'postfix' => ' instrument-families' ],
         'display|LVFD' => [ 'popup' => 'data' ],

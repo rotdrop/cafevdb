@@ -56,7 +56,7 @@ interface LegacyButtonInfo {
 const isLegacyButtonInfo = (buttons: unknown): buttons is LegacyButtonInfo => !!buttons && typeof buttons === 'object';
 
 /* eslint-disable n/no-callback-literal */
-const getLegacyButtons = function(buttons: LegacyButtonType|LegacyButtonInfo|undefined, callback: LegacyCallback) {
+const getLegacyButtons = (buttons: LegacyButtonType|LegacyButtonInfo|undefined, callback: LegacyCallback) => {
   const buttonList: IDialogButton[] = [];
 
   const isButtonInfo = isLegacyButtonInfo(buttons);
@@ -109,7 +109,7 @@ export type LegacyDialogParameters = Omit<LegacyMessageParameters, 'dialogType'>
 const isLegacyMessageParameters = <T extends Partial<LegacyDialogParameters> = LegacyMessageParameters>(arg: unknown): arg is T =>
   (typeof arg !== 'string') && (arg as Record<string, unknown>).content !== undefined;
 
-const message = function({
+const message = ({
   content,
   title,
   dialogType,
@@ -118,7 +118,7 @@ const message = function({
   modal,
   allowHtml,
   dialogClasses,
-}: LegacyMessageParameters) {
+}: LegacyMessageParameters) => {
 
   console.info('MESSAGE', { content, title, dialogType, buttons, callback, modal, allowHtml, dialogClasses });
 
@@ -169,9 +169,9 @@ const message = function({
 
 type AlertInfoOptions = Omit<LegacyDialogParameters, 'callback'|'buttons'|'modal'|'allowHtml'> & Partial<LegacyDialogParameters>;
 
-const alert = function(content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
+const alertInfoNotice = (dialogType: LegacyDialogType, content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) => {
   const defaultArg = {
-    dialogType: DIALOG_TYPE_ALERT,
+    dialogType,
     buttons: OK_BUTTONS,
     callback: () => {},
     modal: false,
@@ -187,29 +187,18 @@ const alert = function(content: string|AlertInfoOptions, title?: string, callbac
         callback: callback ?? function(_arg: boolean) {},
         modal: modal || false,
         allowHtml: allowHtml || false,
-      });
+      },
+  );
 };
 
-const info = function(content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) {
-  const defaultArg = {
-    dialogType: DIALOG_TYPE_INFO,
-    buttons: OK_BUTTONS,
-    callback: () => {},
-    modal: false,
-    allowHtml: false,
-  } as Omit<LegacyMessageParameters, 'title'|'content'>;
-  return message(
-    isLegacyMessageParameters<AlertInfoOptions>(content)
-      ? { ...defaultArg, ...content }
-      : {
-        ...defaultArg,
-        content,
-        title: title as string,
-        callback: callback ?? function(_arg: boolean) {},
-        modal: modal || false,
-        allowHtml: allowHtml || false,
-      });
-};
+const alert = (content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) =>
+  alertInfoNotice(DIALOG_TYPE_ALERT, content, title, callback, modal, allowHtml);
+
+const info = (content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) =>
+  alertInfoNotice(DIALOG_TYPE_INFO, content, title, callback, modal, allowHtml);
+
+const notice = (content: string|AlertInfoOptions, title?: string, callback?: LegacyCallback, modal?: boolean, allowHtml?: boolean) =>
+  alertInfoNotice(DIALOG_TYPE_NOTICE, content, title, callback, modal, allowHtml);
 
 /**
  * Confirm Callback.
@@ -291,7 +280,7 @@ const confirm = (content: string, title: string, options?: LegacyCallback|Legacy
  * @param callback TBD.
  *
  */
-const debugPopup = function(data: unknown, callback?: () => void) {
+const debugPopup = (data: unknown, callback?: () => void) => {
   if (hasProperty('debug', data)) {
     if (typeof callback !== 'function') {
       callback = () => {};
@@ -325,7 +314,7 @@ const getNodePath = (node: Node) => {
   return path;
 };
 
-const filePicker = function(options: LegacyFilePickerParameters) {
+const filePicker = (options: LegacyFilePickerParameters) => {
   const builder = getFilePickerBuilder(options.title);
 
   return builder.setButtonFactory((nodes, path) => {
@@ -352,7 +341,7 @@ const filePicker = function(options: LegacyFilePickerParameters) {
     .pick();
 };
 
-const attachDialogHandlers = function() {
+const attachDialogHandlers = () => {
 
   const $container = $('body');
 
@@ -383,9 +372,10 @@ const attachDialogHandlers = function() {
 
 export {
   alert,
-  info,
+  attachDialogHandlers,
   confirm,
   debugPopup,
   filePicker,
-  attachDialogHandlers,
+  info,
+  notice,
 };

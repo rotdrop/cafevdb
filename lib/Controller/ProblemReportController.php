@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 
@@ -39,10 +40,13 @@ use OCA\CAFEVDB\Service\ProblemReportService;
 /**
  * AJAX endpoints for reporting "frontend" errors, i.e. errors the user was confronted with.
  */
+#[TSAttributes\TypeScript]
 class ProblemReportController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  public const END_POINT = 'a/problem-report';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -71,13 +75,14 @@ class ProblemReportController extends Controller
    * @return Http\DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT)]
   #[Attributes\NoGroupMemberRequired]
   public function post(
     array $user,
     array $errorData,
     ?string $errorHtml,
     ?string $userComment,
-  ):DataResponse {
+  ): Http\DataResponse|Http\JSONResponse {
     $status = Http::STATUS_OK;
     try {
       $result = $this->reportService->submit($user, $errorData, $errorHtml, $userComment);
@@ -85,10 +90,10 @@ class ProblemReportController extends Controller
       $result = null;
     }
     if ($result === null) {
-      $result = $this->l->t('Unfortunately your problem report could not be submitted. Please use other communication channels to submit it.');
+      $result = [$this->l->t('Unfortunately your problem report could not be submitted. Please use other communication channels to submit it.')];
       $status = Http::STATUS_SERVICE_UNAVAILABLE;
     }
 
-    return self::dataResponse([ 'messages' => $result ], $status);
+    return new DTO\MessagesResponse(messages: $result)->response($status);
   }
 }
