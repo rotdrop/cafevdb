@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use Closure;
 use RuntimeException;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -94,7 +95,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   }
 
   /** {@inheritdoc} */
-  public static function operationLabels(?string $slug = null)
+  public static function operationLabels(?string $slug = null): null|array|string|Closure
   {
     $labels = [
       self::OPERATION_OPTION_REGENERATE => true,
