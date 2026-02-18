@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation;
 
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\MappedSuperclass\AbstractTrans
  * (in contrast to storing source-code translations, @see
  * TranslationKey entity).
  */
-#[ORM\Table(name: 'TableFieldTranslations', options: ['row_format' => 'DYNAMIC'])]
+#[ORM\Table(name: DatabaseTables::FIELD_TRANSLATIONS_TABLE, options: ['row_format' => 'DYNAMIC'])]
 #[ORM\Index(name: 'translations_lookup_idx', columns: ['locale', 'object_class', 'foreign_key'])]
 #[ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_class', 'field', 'foreign_key'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Entity\Repository\TranslationRepository::class)]

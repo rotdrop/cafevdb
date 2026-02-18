@@ -26,25 +26,25 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
-
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Order;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Order;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 
 /**
  * Projects
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  */
-#[ORM\Table(name: 'Projects')]
+#[ORM\Table(name: DatabaseTables::PROJECTS_TABLE)]
 #[ORM\UniqueConstraint(columns: ['name'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[ORM\HasLifecycleCallbacks]

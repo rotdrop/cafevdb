@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * instrument. Still we need to handle the more fabular cases for fun
  * -- and otherwise they imply ugly kludges and conventions in the frontend usage.
  */
-#[ORM\Table(name: 'ProjectInstruments')]
+#[ORM\Table(name: DatabaseTables::PROJECT_INSTRUMENTS_TABLE)]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class])]

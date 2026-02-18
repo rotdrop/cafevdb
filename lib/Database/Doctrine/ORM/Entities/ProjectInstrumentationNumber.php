@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -36,7 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  * instruments and projects) but for the "Quantity" column which
  * states how many instruments are needed.
  */
-#[ORM\Table(name: 'ProjectInstrumentationNumbers')]
+#[ORM\Table(name: DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE)]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class ProjectInstrumentationNumber implements \ArrayAccess

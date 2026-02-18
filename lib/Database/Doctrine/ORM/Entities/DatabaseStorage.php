@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,13 +25,13 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * "Join table" which connects storage names to their root directory entry.
  */
-#[ORM\Table(name: 'DatabaseStorages')]
+#[ORM\Table(name: DatabaseTables::DATABASE_STORAGES_TABLE)]
 #[ORM\UniqueConstraint(columns: ['storage_id'])]
 #[ORM\UniqueConstraint(columns: ['root_id'])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStoragesRepository::class)]

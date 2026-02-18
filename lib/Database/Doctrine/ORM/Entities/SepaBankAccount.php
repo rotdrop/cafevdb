@@ -25,16 +25,13 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
-
-// annotations
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping as MediaMonks;
-
-// types
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 /**
  * SepaBankAccount.
@@ -47,7 +44,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
  * Note that a unique constraint is not possible as long as we store
  * the personal data encrypted in the data base.
  */
-#[ORM\Table(name: 'SepaBankAccounts')]
+#[ORM\Table(name: DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE)]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBankAccountsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[Gedmo\SoftDeleteable(fieldName: 'deleted', hardDelete: \OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]

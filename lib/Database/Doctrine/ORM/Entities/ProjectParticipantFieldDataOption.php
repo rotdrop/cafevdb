@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
@@ -41,7 +42,7 @@ use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 /**
  * ProjectParticipantFieldsDataOptions
  */
-#[ORM\Table(name: 'ProjectParticipantFieldsDataOptions')]
+#[ORM\Table(name: DatabaseTables::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE)]
 #[ORM\Index(columns: ['key'])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
