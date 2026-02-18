@@ -81,12 +81,13 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\CoversClass(EmailForm\EnumSubstitutionNamespace::class)]
 #[Attributes\CoversClass(EmailForm\RecipientsFilter::class)]
 #[Attributes\CoversClass(TestedController::class)]
-/** Test the ProjectsController class. */
+/** Test the EmailFormController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Html2Text::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailFormRecipientsFilterHistory::class)]
@@ -767,7 +768,7 @@ class EmailFormControllerTest extends TestCase
       projectId: $this->project->getId(),
       projectName: $this->project->getName(),
     );
-    // print_r($response);
+    // print_r($response->getData());
     $this->assertInstanceOf(Http\JSONResponse::class, $response);
     $this->assertEquals(Http::STATUS_OK, $response->getStatus());
     $data = $response->getData();
@@ -779,6 +780,7 @@ class EmailFormControllerTest extends TestCase
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
     $this->assertEquals(true, $domDoc->loadHTML($requestData->previewData, LIBXML_PEDANTIC));
+    // echo $requestData->previewData . PHP_EOL;
   }
 
 

@@ -32,6 +32,8 @@ enum EnumMemberSubstitutionKey: string
   case FIRST_NAME = 'FIRST_NAME';
   case SUR_NAME = 'SUR_NAME';
   case NICK_NAME = 'NICK_NAME';
+  case GENDER = 'GENDER';
+  case SALUTATION = 'SALUTATION';
   case DISPLAY_NAME = 'DISPLAY_NAME';
   case EMAIL = 'EMAIL';
   case MOBILE_PHONE = 'MOBILE_PHONE';

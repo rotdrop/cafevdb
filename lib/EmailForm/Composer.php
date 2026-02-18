@@ -52,6 +52,7 @@ use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
@@ -770,7 +771,85 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       if (empty($musician)) {
         return $keyArg[0];
       }
-      return $musician->getNickName()?:$musician->getFirstName();
+      return $musician->getNickName() ?: $musician->getFirstName();
+    };
+
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::GENDER->value] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+        return $keyArg[0];
+      }
+      $gender = $musician->getGender();
+      if (empty($gender)) {
+        $guesses = $musician->guessGender();
+        if (is_array($guesses) && count($guesses) == 1) {
+          $gender = EnumGender::tryFrom(reset($guesses));
+        }
+      }
+      return $gender ? $gender->t($this->l) : null;
+    };
+
+    $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::SALUTATION->value] = function(array $keyArg, ?Entities\Musician $musician) {
+      if (empty($musician)) {
+        $unsubstituted = $keyArg[0];
+        if ($keyArg[1]) {
+          $unsubstituted .= ' (' . $keyArg[1] . ')';
+        }
+        return $unsubstituted;
+      }
+      $gender = $musician->getGender();
+      if (empty($gender)) {
+        $guesses = $musician->guessGender();
+        if (is_array($guesses) && count($guesses) == 1) {
+          $gender = EnumGender::tryFrom(reset($guesses));
+        }
+      }
+      switch (strtolower($keyArg[1] ?? '')) {
+        case 'formal':
+        case $this->l->t('formal'):
+        case $this->transliterate($this->l->t('formal')):
+          $formal = true;
+          break;
+        case 'informal':
+        case $this->l->t('informal'):
+        case $this->transliterate($this->l->t('informal')):
+        default:
+          $formal = false;
+          break;
+      }
+      $firstName = $musician->getNickName() ?: $musician->getFirstName();
+      $surName = $musician->getSurName();
+      $l10nArgs = [$firstName, $surName];
+      if ($formal) {
+        switch ($gender) {
+          case EnumGender::DIVERSE:
+            // TRANSLATORS: Formal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('DIVERSE_SALUTATION_FORMAL: Dear %1$s %2$s', $l10nArgs);
+          case EnumGender::FEMALE:
+            // TRANSLATORS: Formal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
+            return $this->l->t('FEMALE_SALUTATION_FORMAL: Dear Mrs. %2$s', $l10nArgs);
+          case EnumGender::MALE:
+            // TRANSLATORS: Formal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
+            return $this->l->t('MALE_SALUTATION_FORMAL: Dear Mr. %2$s', $l10nArgs);
+          default:
+            // TRANSLATORS: Formal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('UNKNOWN_SALUTATION_FORMAL: Dear %1$s %2$', $l10nArgs);
+        }
+      } else {
+        switch ($gender) {
+          case EnumGender::DIVERSE:
+            // TRANSLATORS: Informal start-of-letter salutation for a person with diverse gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('DIVERSE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          case EnumGender::FEMALE:
+            // TRANSLATORS: Informal start-of-letter salutation for a female, possible arguments firstname (1) and surname (2)
+            return $this->l->t('FEMALE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          case EnumGender::MALE:
+            // TRANSLATORS: Informal start-of-letter salutation for a male, possible arguments firstname (1) and surname (2)
+            return $this->l->t('MALE_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+          default:
+            // TRANSLATORS: Informal start-of-letter salutation for a person with unknown gender, possible arguments firstname (1) and surname (2)
+            return $this->l->t('UNKNOWN_SALUTATION_INFORMAL: Dear %1$s', $l10nArgs);
+        }
+      }
     };
 
     $this->substitutions[EnumSubstitutionNamespace::MEMBER->value][EnumMemberSubstitutionKey::DISPLAY_NAME->value] = function(array $keyArg, ?Entities\Musician $musician) {
@@ -1661,7 +1740,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $variable  = array_map(function($value) {
           return preg_replace('/\\\\(.)/u', '$1', html_entity_decode($value, ENT_HTML5, 'UTF-8'));
         }, explode($separator, $matches[4]));
-        $handler = $this->substitutions[$nameSpace][$variable[0]]??null;
+        $handler = $this->substitutions[$nameSpace][$variable[0]] ?? null;
         if (empty($handler) || !is_callable($handler)) {
           if (!is_array($failures)) {
             throw new Exceptions\SubstitutionException(
