@@ -63,7 +63,10 @@ jest.mock('@nextcloud/axios', () => {
             ),
           };
           return result;
-        } else if (url.endsWith(`/apps/cafevdb/projects/${entityIdentifiers.Project.id}/folder/all`)) {
+        } else if (
+          url.endsWith(`/apps/cafevdb/projects/${entityIdentifiers.Project.id}/folder/all`)
+          || url.endsWith(`/apps/cafevdb/projects/${entityIdentifiers.Project.id}/folder`)
+        ) {
           const result: { data: ProjectFolders } = {
             data: projectFolders,
           };

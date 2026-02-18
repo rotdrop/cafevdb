@@ -46,7 +46,6 @@ class ContactsControllerTest extends TestCase
 
   private const CONTROLLER_CLASS = Controller\ContactsController::class;
   private const EXPECTED_ROUTES = [
-    'get',
     'search',
     'getaddressbooks',
   ];

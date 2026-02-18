@@ -87,11 +87,11 @@ class InstrumentInsuranceControllerTest extends TestCase
     $this->controller = new Controller\InstrumentInsuranceController(
       appName: $this->mockProvider->appName,
       request: $request,
-      configService: $this->mockProvider->getConfigService(),
       fuzzyInputService: $fuzzyInputService,
       insuranceService: $insuranceService,
       projectService: $projectService,
       phpMyEdit: $phpMyEdit,
+      l: $this->mockProvider->getL10N(),
     );
   }
 

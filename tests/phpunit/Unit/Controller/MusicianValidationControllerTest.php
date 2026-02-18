@@ -80,10 +80,11 @@ class MusicianValidationControllerTest extends TestCase
     $this->controller = new Controller\MusicianValidationController(
       appName: $this->mockProvider->appName,
       request: $request,
-      configService: $this->mockProvider->getConfigService(),
       emailAddressService: $this->createStub(EmailAddressService::class),
       entityManager: $this->createStub(EntityManager::class),
       geoCodingService: $this->createStub(GeoCodingService::class),
+      l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
       phoneNumberService: $this->createStub(PhoneNumberService::class),
       pme: $this->createStub(PHPMyEdit::class),
     );

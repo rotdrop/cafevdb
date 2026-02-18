@@ -182,6 +182,8 @@ class EmailFormControllerTest extends TestCase
 
   private IL10N $l10n;
 
+  private IRequest $request;
+
   private Service\ProjectService $projectService;
 
   private Toolkit\Service\SimpleSharingService $simpleSharingService;
