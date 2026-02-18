@@ -52,14 +52,35 @@ import {
   classSelector as pmeClassSelector,
   token as pmeToken,
 } from './pme-selectors.ts';
-import type { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
+import { TEMPLATE as projectAssociatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectAssociates.ts';
+import {
+  BASE_PATH,
+  // END_POINT_ADD_MUSICIANS,
+  // END_POINT_FILES,
+  END_POINT_MAILING_LIST,
+  END_POINT_VALIDATE_INSTRUMENTS,
+} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
+import type { EnumValidateInstrumentsContext } from '../../build/ts-types/php-modules/Controller.ts';
 // import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
 // import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
 require('project-participants.scss');
+
+type PersonalRecordTemplate =
+  | typeof addMusiciansTemplate
+  | typeof allMusiciansTemplate
+  | typeof projectAssociatesTemplate
+  | typeof projectParticipantsTemplate
+;
 
 const selectedOptionsKey = '_pp_selectedOptions';
 
@@ -79,15 +100,10 @@ let participationContext: EnumParticipationContext;
  * reloadValue which should be one of 'View' or 'Change' (though
  * 'Delete' should also work).
  */
-const myPersonalRecordDialog = (recordOrNumber: number|Record<string, number>, options?: Partial<TableDialogOptions>) => {
-  if (typeof options === 'undefined') {
-    options = {
-      initialValue: 'View',
-      reloadValue: 'View',
-      projectId: -1,
-    };
-  }
-
+const personalRecordDialog = <S extends PersonalRecordTemplate>(
+  recordOrNumber: number|Record<string, number>,
+  options: Partial<Omit<TableDialogOptions<S>, 'template'> > & Pick<TableDialogOptions<S>, 'template'>,
+) => {
   if (typeof options.initialValue === 'undefined') {
     options.initialValue = 'View';
   }
@@ -123,27 +139,20 @@ const myPersonalRecordDialog = (recordOrNumber: number|Record<string, number>, o
     ...options,
   };
 
-  if (tableOptions.table === 'Musicians') {
-    const projectMode = (options.projectId ?? 0) > 0;
-    tableOptions.template = projectMode ? 'add-musicians' : 'all-musicians';
-    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
-
-    // the proper record id is an object { id: ID }.
-    record = { id: record.musicianId };
-  } else if ((options.projectId ?? 0) > 0) {
-    tableOptions.table = 'ProjectParticipants';
-    tableOptions.template = options.template || 'project-participants';
-    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
-
-    // the proper record id is an object { project_id, musician_id }.
-    // eslint-disable-next-line camelcase
-    record = { musician_id: record.musicianId, project_id: options.projectId! };
-  } else {
-    tableOptions.table = 'Musicians';
-    tableOptions.template = 'all-musicians';
-    tableOptions.templateRenderer = templateRenderer(tableOptions.template);
-    // the proper record id is an object { id: ID }.
-    record = { id: record.musicianId };
+  tableOptions.templateRenderer = templateRenderer(tableOptions.template);
+  switch (tableOptions.template) {
+    case addMusiciansTemplate:
+    case allMusiciansTemplate:
+      record = { id: record.musicianId };
+      break;
+    case projectAssociatesTemplate:
+    case projectParticipantsTemplate:
+      // eslint-disable-next-line camelcase
+      record = { musician_id: record.musicianId, project_id: options.projectId! };
+      break;
+    default:
+      // must not happen, should probably throw ...
+      break;
   }
 
   tableOptions[pmeRecord] = record; // will be converted by $.param
@@ -154,13 +163,13 @@ const myPersonalRecordDialog = (recordOrNumber: number|Record<string, number>, o
   PHPMyEdit.tableDialogOpen(tableOptions as TableDialogOptions);
 };
 
-export type ValidInstrumentChoicesOptions = {
+export type ValidateInstrumentChoicesOptions = {
   $container: JQuery;
   $selectElement: JQuery<HTMLSelectElement>;
-  validationUrl: string;
+  validationContext: EnumValidateInstrumentsContext,
   participationContext: EnumParticipationContext;
   done(data?: unknown): void;
-  fail(data: Ajax.AjaxFailData): void;
+  fail(data: string|Partial<MessagesResponse>): void;
 };
 
 /**
@@ -172,10 +181,10 @@ export type ValidInstrumentChoicesOptions = {
  * server if something changed. However, the validation is triggered
  * by a change event. So what.
  */
-const validateInstrumentChoices = (options: ValidInstrumentChoicesOptions) => {
+const validateInstrumentChoices = (options: ValidateInstrumentChoicesOptions) => {
   const $container = options.$container;
   const $selectMusicianInstrument = options.$selectElement;
-  const ajaxScript = options.validationUrl;
+  const ajaxScript = generateAppUrl(`${BASE_PATH}/${END_POINT_VALIDATE_INSTRUMENTS}/${options.validationContext}`);
   const finalizeCB = options.done;
   const errorCB = options.fail;
   const participationContext = options.participationContext;
@@ -204,9 +213,9 @@ const validateInstrumentChoices = (options: ValidInstrumentChoicesOptions) => {
   }
   $.post(ajaxScript, postData)
     .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, errorCB);
+      Ajax.handleError<MessagesResponse>(xhr, status, errorThrown, errorCB);
     })
-    .done(function(data) {
+    .done(function(data: ResponseData<MessagesResponse>) {
       if (!Ajax.validateResponse(data, ['messages'], errorCB)) {
         return;
       }
@@ -323,7 +332,7 @@ const loadPMETableFiltered = (
  * name @c ProjectId, if present and its value is positive, the main musisians table is
  * loaded in project mode, allowing for adding new participants to the respective project.
  */
-const myLoadMusicians = (
+const loadMusicians = (
   $form: JQuery<HTMLFormElement>,
   ids?: (number|{ [key: number]: number })[],
   projectMode?: boolean,
@@ -335,7 +344,7 @@ const myLoadMusicians = (
     const projectId = ($form.find('input[name="projectId"]').val() as string|undefined) ?? 0;
     projectMode = +projectId > 0;
   }
-  const template = projectMode ? 'add-musicians' : 'all-musicians';
+  const template = projectMode ? addMusiciansTemplate : allMusiciansTemplate;
   const inputTweak = {
     participationContext,
     template,
@@ -356,8 +365,8 @@ const myLoadMusicians = (
  *
  * @param $form The current PME form.
  */
-const myLoadAddMusicians = ($form: JQuery<HTMLFormElement>) => {
-  myLoadMusicians($form, [], true);
+const loadAddMusicians = ($form: JQuery<HTMLFormElement>) => {
+  loadMusicians($form, [], true);
 };
 
 /**
@@ -372,7 +381,7 @@ const myLoadAddMusicians = ($form: JQuery<HTMLFormElement>) => {
  * @param {Function} [afterLoadCallback] An optional callback executed after
  * the PME table has been loaded.
  */
-const myLoadProjectParticipants = async (
+const loadProjectParticipants = async (
   $form: JQuery<HTMLFormElement>,
   musicians?: number[],
   afterLoadCallback: () => void = () => {},
@@ -395,7 +404,7 @@ const myLoadProjectParticipants = async (
   afterLoadCallback();
 };
 
-const myReady = function(selector?: string, dialogParameters?: TableDialogCallbackData, resizeCB: (keepLocked?: boolean) => void = () => {}) {
+const ready = function(selector?: string, dialogParameters?: TableDialogCallbackData, resizeCB: (keepLocked?: boolean) => void = () => {}) {
   selector = PHPMyEdit.selector(selector);
   const $container = PHPMyEdit.container(selector);
 
@@ -403,7 +412,7 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
   console.time('DECRYPTION PROMISE');
   decryptionPromise.done((maxJobs) => {
     console.timeEnd('DECRYPTION PROMISE');
-    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+    console.debug('MAX DECRYPTION JOBS HANDLED', maxJobs);
   });
   lazyDecrypt($container);
 
@@ -415,15 +424,14 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     .addClass(pmeToken('custom')).prop('disabled', false)
     .off('click').on('click', function() {
 
-      console.info('PAGE TEMPLATE', { participationContext });
       const $form = jq(this.form!);
       // if (participationContext === 'associates') {
       //   const projectName = $form.find('input[name="projectName"]').val();
       //   asyncEmit(ADD_CONTACTS_TO_PROJECT, { projectName });
       // } else {
-      //   myLoadAddMusicians($form);
+      //   loadAddMusicians($form);
       // }
-      myLoadAddMusicians($form);
+      loadAddMusicians($form);
 
       return false;
     });
@@ -501,11 +509,6 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
       const item = voiceItem.split(':');
       prevVoices[item[0]].push(+item[1]);
     }
-
-    console.info('VOICES', {
-      voices,
-      prevVoices,
-    });
 
     let doSubmitOuterForm = true;
 
@@ -619,12 +622,12 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     selectedOptionsKey,
     SelectUtils.selected($selectProjectInstruments),
   );
-  console.info('SELECTED PROJECT INSTRUMENTS', $selectProjectInstruments.data(selectedOptionsKey));
+  console.debug('SELECTED PROJECT INSTRUMENTS', $selectProjectInstruments.data(selectedOptionsKey));
 
   $selectProjectInstruments.on('change', function(this: HTMLSelectElement) {
     const $self = $(this);
 
-    console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
+    console.debug('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
 
     PHPMyEdit.tableDialogLock($container, true);
     PHPMyEdit.tableDialogLoadIndicator($container, true);
@@ -635,9 +638,9 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     };
     lockOther(true);
 
-    console.info('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
+    console.debug('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
 
-    const fail = (data: Ajax.AjaxFailData) => {
+    const fail = (data: Ajax.AjaxFailData<{ oldInstruments: string[] }>) => {
       const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
       console.error('ERROR SELECTING INSTRUMENTS', {
         data,
@@ -658,10 +661,10 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     validateInstrumentChoices({
       $container,
       $selectElement: $selectProjectInstruments,
-      validationUrl: generateAppUrl('projects/participants/validate/instruments/project'),
+      validationContext: 'project',
       participationContext,
       done() {
-        console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
+        console.debug('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
 
@@ -688,12 +691,12 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     selectedOptionsKey,
     SelectUtils.selected($selectMusicianInstruments),
   );
-  console.info('SELECTED MUSICIAN INSTRUMENTS', $selectMusicianInstruments.data(selectedOptionsKey));
+  console.debug('SELECTED MUSICIAN INSTRUMENTS', $selectMusicianInstruments.data(selectedOptionsKey));
 
   $selectMusicianInstruments.on('change', function(this: HTMLSelectElement) {
     const $self = $(this);
 
-    console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
+    console.debug('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
 
     PHPMyEdit.tableDialogLock($container, true);
     PHPMyEdit.tableDialogLoadIndicator($container, true);
@@ -704,7 +707,7 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     };
     lockOther(true);
 
-    const fail = (data: Ajax.AjaxFailData) => {
+    const fail = (data: Ajax.AjaxFailData<{ oldInstruments: string[] }>) => {
       const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
       console.error('ERROR SELECTING INSTRUMENTS', {
         data,
@@ -722,11 +725,11 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
       PHPMyEdit.tableDialogLock($container, false);
     };
 
-    console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
+    console.debug('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
     validateInstrumentChoices({
       $container,
       $selectElement: $selectMusicianInstruments,
-      validationUrl: generateAppUrl('projects/participants/validate/instruments/musician'),
+      validationContext: 'musician',
       participationContext,
       done() {
         // Reenable, otherwise the value will not be submitted
@@ -738,7 +741,6 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
           oldInstruments: [...($self.data(selectedOptionsKey) || [])],
         };
         $self.data(selectedOptionsKey, SelectUtils.selected($self));
-        console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
 
         // submit the form with the "right" button,
         // i.e. save any possible changes already
@@ -928,7 +930,7 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
 
     const post = function(force: boolean) {
       $.post(
-        generateAppUrl('projects/participants/mailing-list/' + operation), {
+        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LIST}/${operation}`), {
           projectId,
           musicianId,
           force,
@@ -1016,8 +1018,8 @@ const myReady = function(selector?: string, dialogParameters?: TableDialogCallba
     });
 };
 
-const tableLoadCallback: TableLoadCallback = {
-  callback(selector, parameters, resizeCB) {
+const tableLoadCallback: TableLoadCallback<typeof projectAssociatesTemplate|typeof projectParticipantsTemplate> = {
+  callback(template, selector, parameters, resizeCB) {
 
     if (parameters.reason === 'tabChange') {
       resizeCB();
@@ -1028,6 +1030,16 @@ const tableLoadCallback: TableLoadCallback = {
       resizeCB();
       return;
     }
+
+    participationContext = template === projectParticipantsTemplate
+      ? EnumParticipationContext.PARTICIPANTS
+      : EnumParticipationContext.ASSOCIATES;
+
+    // const $pageBody = $('div#' + appPrefix('page-body'));
+    // if ($pageBody.hasClass('project-participants') || $pageBody.hasClass('project-associates')) {
+    //   participationContext = $pageBody.hasClass('project-participants') ? 'participants' : 'associates';
+    //   ready();
+    // }
 
     const $container = $(selector);
     pmeExportMenu(selector);
@@ -1043,7 +1055,7 @@ const tableLoadCallback: TableLoadCallback = {
       return false;
     });
 
-    myReady(selector, parameters, resizeCB);
+    ready(selector, parameters, resizeCB);
 
     $(':button.musician-instrument-insurance')
       .off('click')
@@ -1059,29 +1071,28 @@ const tableLoadCallback: TableLoadCallback = {
     $container.find('.cloud-avatar').imagesLoaded(resizeCB);
   },
   context: undefined,
-  parameters: [],
 };
 
-const myDocumentReady = function() {
+const documentReady = function() {
 
-  PHPMyEdit.addTableLoadCallback('project-participants', tableLoadCallback);
-  PHPMyEdit.addTableLoadCallback('project-associates', tableLoadCallback);
+  PHPMyEdit.addTableLoadCallback(projectParticipantsTemplate, tableLoadCallback);
+  PHPMyEdit.addTableLoadCallback(projectAssociatesTemplate, tableLoadCallback);
 
   CAFEVDB.addReadyCallback(async () => {
     const $pageBody = $('div#' + appPrefix('page-body'));
     if ($pageBody.hasClass('project-participants') || $pageBody.hasClass('project-associates')) {
-      participationContext = $pageBody.hasClass('project-participants') ? 'participants' : 'associates';
-      console.info('SET PAGE TEMPLATE', { participationContext });
-      myReady();
+      participationContext = $pageBody.hasClass('project-participants')
+        ? EnumParticipationContext.PARTICIPANTS
+        : EnumParticipationContext.ASSOCIATES;
+      ready();
     }
   });
 };
 
 export {
-  myReady as ready,
-  myDocumentReady as documentReady,
-  myLoadProjectParticipants as loadProjectParticipants,
-  myPersonalRecordDialog as personalRecordDialog,
-  myLoadMusicians as loadMusicians,
+  documentReady,
+  loadProjectParticipants,
+  personalRecordDialog,
+  loadMusicians,
   validateInstrumentChoices,
 };

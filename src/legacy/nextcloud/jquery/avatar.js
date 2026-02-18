@@ -67,7 +67,7 @@ import { getCurrentUser } from '@nextcloud/auth'
  *
  */
 
-$.fn.avatar = function(user, size, ie8fix, hidedefault, callback, displayname) {
+$.fn.avatar = function(user, size, _ie8fix, _hidedefault, callback, displayname) {
 	const setAvatarForUnknownUser = function(target) {
 		target.imageplaceholder('?')
 		target.css('background-color', '#b9b9b9')

@@ -30,7 +30,7 @@ import {
 } from './ajax.ts';
 import pageBusyIcon from './busy-icon.ts';
 import * as Dialogs from './dialogs.ts';
-import { personalRecordDialog as participantRecordDialog } from './project-participants.js';
+import { personalRecordDialog as participantRecordDialog } from './project-participants.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 import fileUploadInit from './file-upload.ts';
 import * as DialogUtils from './dialog-utils.ts';
@@ -61,6 +61,7 @@ import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import {
+  EnumEmailFormContactsOperation,
   EnumPersonalSettingsKey,
   type EnumEmailFormComposerOperation as ComposerOperation,
   type EnumEmailFormComposerTopic as ComposerTopic,
@@ -97,8 +98,34 @@ import {
   showSelectableCssClass,
 } from 'emailform.scss';
 import { asKey } from '../toolkit/types/type-traits.ts';
+import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import {
+  END_POINT as validationEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
+import {
+  EnumMusicianValidationTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  BASE_PATH as projectsEndPoint,
+  GET_PROJECT_FOLDER,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
+import { FOLDER_TYPE_PROJECT } from '../../build/ts-types/php-modules/Service/ProjectService.ts';
+import {
+  BASE_PATH,
+  END_POINT_ATTACHMENT,
+  END_POINT_COMPOSER,
+  END_POINT_CONTACTS,
+  END_POINT_FORM,
+  END_POINT_RECIPIENTS,
+} from '../../build/ts-types/php-modules/Controller/EmailFormController.ts';
+import { EnumAttachmentOrigin } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 
 require('cafevdb-selectize.scss');
+
+require('./jquery-readonly.ts');
+require('bootstrap4-duallistbox');
+require('emailform.scss');
 
 type AttachmentElementData = {
   options: string, // HTML fragment
@@ -126,10 +153,6 @@ const selectizeOptions = {
   hideSelected: false,
 };
 
-require('./jquery-readonly.ts');
-require('bootstrap4-duallistbox');
-require('emailform.scss');
-
 const Email = {
   topicUnspecific: 'general',
   active: false,
@@ -143,7 +166,7 @@ asyncSubscribe(LEGACY_UPDATE_EVENTS_SELECTION, (event) => {
 });
 
 const generateEmailFormUrl: typeof generateAppUrl = (url, urlParams, urlOptions) =>
-  generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
+  generateAppUrl(`${BASE_PATH}/${url}`, urlParams, urlOptions);
 
 const generateComposerUrl = <Operation extends ComposerOperation, Topic extends ComposerTopic>(
   operationArg: Operation|ComposerRequestData<Operation, Topic>,
@@ -157,7 +180,7 @@ const generateComposerUrl = <Operation extends ComposerOperation, Topic extends 
   } else {
     operation = operationArg;
   }
-  return generateEmailFormUrl('composer/{operation}/{topic}', { operation, topic });
+  return generateEmailFormUrl(`${END_POINT_COMPOSER}/{operation}/{topic}`, { operation, topic });
 };
 
 function attachmentFromJSON(response: UploadFile) {
@@ -176,7 +199,7 @@ function attachmentFromJSON(response: UploadFile) {
 }
 
 const cloudAttachment = function(paths: string|string[], callback: () => void = () => {}) {
-  $.post(generateEmailFormUrl('attachment/cloud'), { paths })
+  $.post(generateEmailFormUrl(`${END_POINT_ATTACHMENT}/${EnumAttachmentOrigin.CLOUD}`), { paths })
     .fail(ajaxHandleError)
     .done(function(response: UploadFile[]) {
       for (const attachment of response) {
@@ -422,7 +445,7 @@ const emailFormRecipientsHandlers = (
         post += '&' + elementNames[0][1] + '[userInteraction]=' + elementNames[0][2];
       }
     }
-    $.post(generateEmailFormUrl('recipients-filter'), post)
+    $.post(generateEmailFormUrl(`${END_POINT_RECIPIENTS}`), post)
       .fail(function(xhr, textStatus, errorThrown) {
         ajaxHandleError(xhr, textStatus, errorThrown, function() {
           parameters.cleanup();
@@ -672,12 +695,12 @@ const emailFormRecipientsHandlers = (
       const isParticipant = $this.data('isParticipant');
 
       const $formData = $form.find<HTMLFieldSetElement>('fieldset.form-data');
-      const projectId = +$formData.find<HTMLInputElement>('input[name="projectId"]').val()!;
+      const projectId = +($formData.find<HTMLInputElement>('input[name="projectId"]').val() ?? -1);
       const projectName = $formData.find<HTMLInputElement>('input[name="projectName"]').val()!;
 
       participantRecordDialog(
         musicianId, {
-          table: isParticipant ? 'ProjectParticipants' : 'Musicians',
+          template: (projectId > 0 && isParticipant) ? projectParticipantsTemplate : allMusiciansTemplate,
           projectId,
           projectName,
           initialValue: 'Change',
@@ -2066,7 +2089,7 @@ const emailFormCompositionHandlers = (
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
   fileUploadInit({
-    url: generateEmailFormUrl('attachment/upload'),
+    url: generateEmailFormUrl(`${END_POINT_ATTACHMENT}/${EnumAttachmentOrigin.UPLOAD}`),
     doneCallback(json, _index, _container) {
       attachmentFromJSON(json);
     },
@@ -2089,7 +2112,7 @@ const emailFormCompositionHandlers = (
     .off('click')
     .on('click', function() {
       const folderPromise = projectId() > 0
-        ? $.get(generateAppUrl('projects/' + projectId() + '/folder/project')).promise()
+        ? $.get(generateAppUrl(`${projectsEndPoint}/${projectId()}/${GET_PROJECT_FOLDER}/${FOLDER_TYPE_PROJECT}`)).promise()
         : $.Deferred().resolve({ folder: globalState.sharedFolder }).promise();
 
       folderPromise
@@ -2189,7 +2212,7 @@ const emailFormCompositionHandlers = (
       }
 
       const post = { freeFormRecipients: $input.val() };
-      $.post(generateEmailFormUrl('contacts/list'), post)
+      $.post(generateEmailFormUrl(`${END_POINT_CONTACTS}/${EnumEmailFormContactsOperation.LIST}`), post)
         .fail(function(xhr, status, errorThrown) {
           ajaxHandleError(xhr, status, errorThrown, cleanup);
         })
@@ -2217,7 +2240,7 @@ const emailFormCompositionHandlers = (
               create(input, setterCallback) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
                 const selectize = this;
-                $.post(generateAppUrl('validate/musicians/email'), {
+                $.post(generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.EMAIL}`), {
                   failure: 'error',
                   [pmeData('email')]: input,
                 })
@@ -2279,10 +2302,10 @@ const emailFormCompositionHandlers = (
                       };
                     });
                   const innerPost = { addressBookCandidates: selectedFreeForm };
-                  $.post(generateEmailFormUrl('contacts/save'), innerPost)
+                  $.post(generateEmailFormUrl(`${END_POINT_CONTACTS}/${EnumEmailFormContactsOperation.SAVE}`), innerPost)
                     .fail(ajaxHandleError)
                     .done(function(_data) {
-                      $.post(generateEmailFormUrl('contacts/list'), post)
+                      $.post(generateEmailFormUrl(`${END_POINT_CONTACTS}/${EnumEmailFormContactsOperation.LIST}`), post)
                         .fail(ajaxHandleError)
                         .done(function(data: ResponseData<EmailFormListContactsResponse>) {
                           if (!ajaxValidateResponse(data, ['contents'])) {
@@ -2402,7 +2425,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
   if (single === undefined) {
     single = false;
   }
-  $.post(generateEmailFormUrl('form'), post)
+  $.post(generateEmailFormUrl(END_POINT_FORM), post)
     .fail(function(xhr, status, errorThrown) {
       ajaxHandleError(xhr, status, errorThrown, function() {
         Email.active = false;
@@ -2472,8 +2495,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
             // with special greetings to Uschi ...
             const activeTab = $dialogHolder.tabs('option', 'active');
             if (activeTab >= 2) {
-              Dialogs.info({
-                dialogType: Dialogs.DIALOG_TYPE_NOTICE,
+              Dialogs.notice({
                 title: t(appName, 'You will be transferred back to the "edit-message" view'),
                 content: t(appName, 'You have clicked on the "close"-button while visiting the "preview" tab which normally just would close the email widget. It has been reported that this is an unexpected behaviour of the user interface, therefore you are just "transferred" back to the email-composition tab. Just click on "OK" or close this diablog.'),
                 callback: () => {

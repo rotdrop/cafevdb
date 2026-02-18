@@ -29,7 +29,7 @@ import * as CAFEVDB from './cafevdb.ts';
 import * as Page from './page.ts';
 import * as Ajax from './ajax.ts';
 import * as Dialogs from './dialogs.ts';
-import * as ProjectParticipants from './project-participants.js';
+import * as ProjectParticipants from './project-participants.ts';
 import * as PHPMyEdit from './pme.ts';
 import * as Notification from './notification.ts';
 import { selected as selectedValues } from './select-utils.ts';
@@ -58,7 +58,26 @@ import type {
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { disabledCssClass } from 'variables.scss';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import * as PersistentCGIKeys from '../../build/ts-types/php-modules/PageRenderer/PersistentCGIKeys.ts';
 import { ACCEPT_GENDER_DETECTION } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import {
+  BASE_PATH as projectParticipantsBasePath,
+  END_POINT_ADD_MUSICIANS,
+} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
+import {
+  END_POINT as validationEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
+import {
+  END_POINT as mailingListsEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MailingListsController.ts';
+import {
+  EnumMusicianValidationSubTopic,
+  EnumMusicianValidationTopic,
+  // EnumMailingListOperation,
+} from '../../build/ts-types/php-modules/Controller.ts';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -72,6 +91,8 @@ type ErrorTextStatus = JQuery.Ajax.ErrorTextStatus|typeof CANCELLED_STATUS;
 const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
 const selectedOptionsKey = '_m_selectedOptions';
 
+type ExclusiveParticipationContext = EnumParticipationContext.ASSOCIATES|EnumParticipationContext.PARTICIPANTS;
+
 /**
  * Add several musicians.
  *
@@ -80,16 +101,16 @@ const selectedOptionsKey = '_m_selectedOptions';
  * @param {object} post TBD.
  */
 const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.PlainObject) => {
-  const projectId = +$form.find<HTMLInputElement>('input[name="projectId"]').val()!;
-  const projectName = $form.find<HTMLInputElement>('input[name="projectName"]').val()!;
-  const participationContext = $form.find('input[name="participationContext"]').val();
+  const projectId = +$form.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val()!;
+  const projectName = $form.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`).val()!;
+  const participationContext = $form.find(`input[name="${PersistentCGIKeys.PARTICIPATION_CONTEXT}"]`).val()! as ExclusiveParticipationContext;
   if (typeof post === 'undefined') {
     post = $form.serialize();
   }
 
   // Open the change-musician dialog with the newly
   // added musician in case of success.
-  $.post(generateAppUrl('projects/participants/add-musicians'), post)
+  $.post(generateAppUrl(`${projectParticipantsBasePath}/${END_POINT_ADD_MUSICIANS}`), post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, function() {
         // ProjectParticipants.loadProjectParticipants(form);
@@ -111,7 +132,7 @@ const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.Plain
             projectName,
             initialValue: 'Change',
             modified: false,
-            template: 'project-' + participationContext,
+            template: `project-${participationContext}`,
           },
         );
         await ProjectParticipants.loadProjectParticipants(
@@ -197,7 +218,7 @@ const contactValidation = function(container?: string|JQuery) {
       };
 
       $.post(
-        generateAppUrl('validate/musicians/phone'),
+        generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.PHONE}`),
         post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -276,7 +297,7 @@ const contactValidation = function(container?: string|JQuery) {
       };
 
       $.post(
-        generateAppUrl('validate/musicians/email'),
+        generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.EMAIL}`),
         post)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -349,7 +370,7 @@ const contactValidation = function(container?: string|JQuery) {
         displayName,
       };
 
-      $.post(generateAppUrl('mailing-lists/' + operation), post)
+      $.post(generateAppUrl(`${mailingListsEndPoint}/${operation}`), post)
         .fail(onFail)
         .done(function(data) {
           const status = data.status;
@@ -495,7 +516,7 @@ const contactValidation = function(container?: string|JQuery) {
 
     console.info('INITIATE PLACE AUTOCOMPLETE');
     autocompletePlaceRequest = $.post(
-      generateAppUrl('validate/musicians/autocomplete/place'),
+      generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.AUTOCOMPLETE}/${EnumMusicianValidationSubTopic.AUTOCOMPLETE_PLACE}`),
       post)
       .fail(function(xhr, status: ErrorTextStatus, errorThrown) {
         if (status !== 'cancelled') {
@@ -556,7 +577,7 @@ const contactValidation = function(container?: string|JQuery) {
 
     console.info('INITIATE STREET AUTOCOMPLETE');
     autocompleteStreetRequest = $.post(
-      generateAppUrl('validate/musicians/autocomplete/street'),
+      generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.AUTOCOMPLETE}/${EnumMusicianValidationSubTopic.AUTOCOMPLETE_STREET}`),
       post)
       .fail(function(xhr, status: ErrorTextStatus, errorThrown) {
         if (status !== 'cancelled') {
@@ -655,7 +676,7 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
   };
 
   $.post(
-    generateAppUrl('validate/musicians/duplicates'),
+    generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.DUPLICATES}`),
     post)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, cleanup);
@@ -723,13 +744,13 @@ entry.`),
             const $mainForm = $mainContainer.find<HTMLFormElement>(PHPMyEdit.formSelector);
             $container.dialog('close');
             if (maxIds.length === 1) {
-              const projectId = $mainForm.find<HTMLInputElement>('input[name="projectId"]').val();
+              const projectId = +($mainForm.find<HTMLInputElement>('input[name="projectId"]').val() ?? -1);
               const projectName = $mainForm.find<HTMLInputElement>('input[name="projectName"]').val();
               ProjectParticipants.personalRecordDialog(
                 ids[0], {
-                  table: 'Musicians',
+                  template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
                   initialValue: 'View',
-                  projectId: +(projectId ?? -1),
+                  projectId,
                   projectName,
                   [pmeSys('cur_tab')]: 1,
                 });
@@ -765,13 +786,13 @@ the personal data of the respective musician up-to-date.`),
             const $mainForm = $mainContainer.find<HTMLFormElement>(PHPMyEdit.formSelector);
             $container.dialog('close');
             if (numDuplicates === 1) {
-              const projectId = $mainForm.find<HTMLInputElement>('input[name="ProjectId"]').val();
+              const projectId = +($mainForm.find<HTMLInputElement>('input[name="ProjectId"]').val() ?? -1);
               const projectName = $mainForm.find<HTMLInputElement>('input[name="ProjectName"]').val();
               ProjectParticipants.personalRecordDialog(
                 ids[0], {
-                  table: 'Musicians',
+                  template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
                   initialValue: 'View',
-                  projectId: +(projectId ?? -1),
+                  projectId,
                   projectName,
                   [pmeSys('cur_tab')]: 1,
                 });
@@ -834,8 +855,8 @@ const ready = function(container?: string|JQuery) {
     ProjectParticipants.validateInstrumentChoices({
       $container,
       $selectElement: $selectMusicianInstruments,
-      validationUrl: generateAppUrl('projects/participants/validate/instruments/musician'),
-      participationContext: 'participants',
+      validationContext: 'musician',
+      participationContext: EnumParticipationContext.PARTICIPANTS,
       done() {
         // save current instruments
         const failureData = {

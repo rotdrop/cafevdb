@@ -33,6 +33,12 @@ import setBusyIndicators from './busy-indicators.ts';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { translate as t } from '@nextcloud/l10n';
+import {
+  BASE_PATH as migrationsBasePath,
+  END_POINT_APPLY as migrationsApply,
+} from '../../build/ts-types/php-modules/Controller/MigrationsController.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { ApplyMigrationsResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 /**
  * jQuery ready-callback used elsewhere.
@@ -59,7 +65,7 @@ function documentReady() {
     setBusyIndicators(true, $container, false);
 
     // check for pending migrations and handle them
-    $.get(generateAppUrl('maintenance/migrations'))
+    $.get(generateAppUrl(migrationsBasePath))
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, function() {
           setBusyIndicators(false, $container, false);
@@ -90,18 +96,21 @@ function documentReady() {
               return;
             }
             setBusyIndicators(true, $container, false);
-            $.post(generateAppUrl('maintenance/migrations/apply'))
+            $.post(generateAppUrl(`${migrationsBasePath}/${migrationsApply}`))
               .fail(function(xhr, status, errorThrown) {
                 Ajax.handleError(xhr, status, errorThrown, function() {
                   setBusyIndicators(false, $container, false);
                   migrationDialogActive = false;
                 });
               })
-              .done(function(data) {
+              .done(function(data: ResponseData<ApplyMigrationsResponse>) {
+                if (!Ajax.validateResponse(data, ['payload', 'handled', 'failing'])) {
+                  return;
+                }
                 Notification.show(
                   t(appName, 'Successfully applied the following migrations:')
                     + ' '
-                    + data.migrations.handled.join(', '),
+                    + data.handled.join(', '),
                   { timeout: 30 });
                 let redirectTimeout = 10;
                 const makeText = (timeout: number) => t(appName, 'Redirecting to the orchestra app in {timeout} seconds.', { timeout });

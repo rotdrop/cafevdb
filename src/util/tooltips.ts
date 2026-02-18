@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,12 +25,13 @@ import axios from '@nextcloud/axios';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import Console from './console.ts';
 import type { AxiosResponse } from 'axios';
+import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/ToolTipsController.ts';
 
 export const logger = new Console('TOOLTIPS');
 
 export const tooltip = async (key: string) => {
   try {
-    const response = await axios.get(generateAppUrl('tooltips/{key}', { key }), { params: { unescaped: true } });
+    const response = await axios.get(generateAppUrl(`${controllerEndPoint}/{key}`, { key }), { params: { unescaped: true } });
     logger.debug('GOT TOOLTIP', response.data.tooltip || '');
     return response.data.tooltip;
   } catch (e) {
@@ -41,7 +42,7 @@ export const tooltip = async (key: string) => {
 
 export const tooltips = async (keys: string[]) => {
   try {
-    const response: AxiosResponse<Record<string, string> > = await axios.get(generateAppUrl('tooltips'), {
+    const response: AxiosResponse<Record<string, string> > = await axios.get(generateAppUrl(controllerEndPoint), {
       params: {
         unescaped: true,
         keys,

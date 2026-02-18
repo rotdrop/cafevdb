@@ -57,6 +57,14 @@ import type {
 import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import { vueDevTools } from './toolkit/util/vue-devtools.ts';
 import { EnumAddDocumentConflictAction, EnumFileUploadMode, EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
+import { END_POINT as mailMergeEndPoint } from '../build/ts-types/php-modules/Controller/MailMergeController.ts';
+import {
+  DOCUMENT_ACTION_UPLOAD,
+  END_POINT as uploadEndPoint,
+  FINANCE_TOPIC_INVOICES,
+  SECTION_FINANCE,
+} from '../build/ts-types/php-modules/Controller/DocumentStorageUploadController.ts';
+import { END_POINT_PAGE } from '../build/ts-types/php-modules/Controller/VueAppController.ts';
 
 type Toast = ReturnType<typeof showError>;
 
@@ -464,7 +472,7 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
   }
 
   public async handler(_folder: Folder, _content: Node[]) {
-    const route = generateAppUrl('p/projects', {
+    const route = generateAppUrl(`${END_POINT_PAGE}/projects`, {
       // eslint-disable-next-line camelcase
       PME_sys_qfyear: (new Date()).getFullYear() - 1,
       // eslint-disable-next-line camelcase
@@ -514,7 +522,7 @@ class ProjectParticipantFolderEntry implements NewMenuEntry {
   public async handler(folder: Folder, _content: Node[]) {
     // the project-name is the basename of folder.dirname
     const projectName = folder.dirname.substring(folder.dirname.lastIndexOf('/') + 1);
-    const route = generateAppUrl('p/project-participants/{projectName}', {
+    const route = generateAppUrl(`${END_POINT_PAGE}/project-participants/{projectName}`, {
       projectName,
     });
     // <a target="_blank" style="text-decoration: revert; font-style: italic;" href="{route}">project overview</a> page.', {
@@ -584,7 +592,7 @@ class InvoicesEntry implements NewMenuEntry {
         operation: MailMergeCloud,
         invoiceIds: [invoiceData.invoiceNumber],
       };
-      const mailMergeUrl = generateAppUrl('documents/mail-merge');
+      const mailMergeUrl = generateAppUrl(mailMergeEndPoint);
       let mailMergeToast: Toast|null = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
       try {
         const response = await axios.post<MailMergeResponse>(mailMergeUrl, postData);
@@ -594,7 +602,9 @@ class InvoicesEntry implements NewMenuEntry {
         mailMergeToast = null;
         showInfo(t(appName, 'Mail-merge completed, moving document into the proper place ...'));
 
-        const moveUrl = generateAppUrl('documents/finance/invoices/upload');
+        const moveUrl = generateAppUrl(
+          `${uploadEndPoint}/${SECTION_FINANCE}/${FINANCE_TOPIC_INVOICES}/${DOCUMENT_ACTION_UPLOAD}`,
+        );
 
         const moveData = {
           data: {

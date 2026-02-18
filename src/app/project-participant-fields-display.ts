@@ -45,6 +45,16 @@ import {
   inputClassSelector as pmeInputClassSelector,
 } from './pme-selectors.ts';
 import type { TableDialogCallbackData } from './pme-state.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { ParticipantFieldPropertyGetDefaultValue, ParticipantFieldPropertyGetResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import { type EnumParticipantFieldPropertyGet } from '../../build/ts-types/php-modules/Controller.ts';
+import { REVERT_TO_DEFAULT } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import type { RationalNumber } from '../../build/ts-types/php-modules/Common.ts';
+import { END_POINT as participantFieldsEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
+import {
+  EnumParticipantFieldRequestTopic,
+  EnumParticipantFieldRequestSubTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -128,33 +138,40 @@ const participantOptionHandlers = (
   const $pmeForm = $container.find(pmeFormSelector);
 
   $pmeForm
-    .find<HTMLInputElement>('tr.participant-field input.revert-to-default')
+    .find<HTMLInputElement>(`tr.participant-field input.${REVERT_TO_DEFAULT}`)
     .off('click')
     .on('click', function() {
       const $self = $(this);
       const $inputElement = $self.parent().find(pmeInputClassSelector());
       const fieldId = $self.data('fieldId');
-      const fieldProperty = $self.data('fieldProperty') || 'defaultValue';
+      const fieldProperty = ($self.data('fieldProperty') ?? 'defaultValue') as EnumParticipantFieldPropertyGet;
 
-      const revertHandler = function() {
+      const revertHandler = () => {
         $.post(
-          generateAppUrl('projects/participant-fields/property/get'), {
+          generateAppUrl(`${participantFieldsEndPoint}/${EnumParticipantFieldRequestTopic.PROPERTY}/${EnumParticipantFieldRequestSubTopic.GET}`), {
             fieldId,
             property: fieldProperty,
           })
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);
           })
-          .done(function(data) {
+          .done(function(data: ResponseData<ParticipantFieldPropertyGetResponse>) {
             if (!Ajax.validateResponse(data, ['fieldId', 'property', 'value'])) {
               return;
             }
-            if ($inputElement.hasClass('wysiwyg-editor')) {
-              WysiwygEditor.updateEditor($inputElement, data.value?.data || data.value);
-            } else if (isJQuerySelect($inputElement)) {
-              selectedValues($inputElement, data.value.key);
+            if (fieldProperty === 'defaultValue') {
+              const value = data.value as ParticipantFieldPropertyGetDefaultValue;
+              if ($inputElement.hasClass('wysiwyg-editor')) {
+                WysiwygEditor.updateEditor($inputElement, value.data ?? '');
+              } else if (isJQuerySelect($inputElement)) {
+                selectedValues($inputElement, value.key);
+              } else {
+                $inputElement.val(value.data ?? '');
+              }
             } else {
-              $inputElement.val(data.value.data || data.value);
+              const value = data.value as RationalNumber|undefined;
+              // deposit, only a plain input element makes sense
+              $inputElement.val(value ?? '');
             }
           });
       };

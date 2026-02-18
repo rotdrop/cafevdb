@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,17 +28,15 @@ import * as PHPMyEdit from './pme.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import fileDownload from './file-download.ts';
 import { formSelector as pmeFormSelector } from './pme-selectors.ts';
-import { filename } from './path.ts';
 import pmeAutocomplete from './pme-autocomplete.ts';
 import type { TableDialogCallbackData } from './pme-state.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/TaxExemptionNotices.ts';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('tax-exemption-notices.scss');
 require('project-participant-fields-display.scss');
-
-const templateName = filename(__filename);
 
 const pmeFormInit = (containerSel: string, parameters?: TableDialogCallbackData, resizeCB: () => void = () => {}) => {
   containerSel = PHPMyEdit.selector(containerSel);
@@ -70,8 +68,8 @@ const pmeFormInit = (containerSel: string, parameters?: TableDialogCallbackData,
         -1, // projectId
         -1, // musicianId,
         resizeCB, {
-          upload: 'documents/finance/' + templateName + '/upload',
-          delete: 'documents/finance/' + templateName + '/delete',
+          upload: `documents/finance/${template}/upload`,
+          delete: `documents/finance/${template}/delete`,
         });
       const ambientContainerSelector = parameters?.tableDialogOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
@@ -87,26 +85,25 @@ const pmeFormInit = (containerSel: string, parameters?: TableDialogCallbackData,
 const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(
-    templateName, {
-      callback(selector, parameters, resizeCB) {
+    template, {
+      callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
         }
         resizeCB();
       },
-      parameters: [],
     });
 
   addReadyCallback(async () => {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass(templateName)) {
+    if (!container.hasClass(template)) {
       return;
     }
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-    if (renderer === templateRenderer(templateName)) {
+    if (renderer === templateRenderer(template)) {
       pmeFormInit(PHPMyEdit.defaultSelector);
     }
   });

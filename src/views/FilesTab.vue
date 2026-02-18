@@ -224,6 +224,7 @@ import type {
   MailMergePayload,
 } from '../types/ajax/mail-merge.ts'
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
+import { END_POINT as mailMergeEndPoint } from '../../build/ts-types/php-modules/Controller/MailMergeController.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)
@@ -424,7 +425,7 @@ const handleMailMergeRequest = async (operation: MailMergeOperation, event: Targ
     contactKeys: contactKeys.value,
     operation,
   }
-  const ajaxUrl = generateAppUrl('documents/mail-merge')
+  const ajaxUrl = generateAppUrl(mailMergeEndPoint)
 
   try {
     switch (operation) {

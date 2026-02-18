@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,12 @@ import * as DialogUtils from './dialog-utils.ts';
 import { translate as t } from '@nextcloud/l10n';
 import '../legacy/nextcloud/jquery/avatar.js';
 import type { BlogResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import {
+  BASE_PATH,
+  END_POINT_ACTION,
+  END_POINT_EDIT,
+} from '../../build/ts-types/php-modules/Controller/BlogController.ts';
+import { EnumBlogAction } from '../../build/ts-types/php-modules/Controller.ts';
 
 require('blog.scss');
 
@@ -167,8 +173,8 @@ const submit = function(event: JQuery.ClickEvent) {
   }
 
   console.info('GLOBAL', BlogState);
-  const action = (BlogState.blogId ?? -1) > 0 ? 'modify' : 'create';
-  $.post(generateAppUrl('blog/action/' + action), {
+  const action = (BlogState.blogId ?? -1) > 0 ? EnumBlogAction.MODIFY : EnumBlogAction.CREATE;
+  $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_ACTION}/${action}`), {
     blogId: BlogState.blogId,
     inReplyTo: BlogState.inReplyTo,
     content: $('#blogtextarea').val(),
@@ -222,8 +228,7 @@ const popupMessages = function() {
           text: t(appName, 'I have read this popup, please bother me no more!'),
           title: t(appName, 'Mark this popup as read; the popup will not show up again.'),
           click() {
-            const action = 'markread';
-            $.post(generateAppUrl('blog/action/' + action), { blogId: thisBlogId })
+            $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_ACTION}/${EnumBlogAction.MARK_READ}`), { blogId: thisBlogId })
               .fail(function(xhr, status, errorThrown) {
                 const message = Ajax.failMessage(xhr, status, errorThrown);
                 Dialogs.alert(message, t(appName, 'Error'));
@@ -273,7 +278,7 @@ const documentReady = function() {
     $('#blogform #blognewentry').on('click', function(event) {
       event.preventDefault();
       const post = $('#blogform').serializeArray();
-      $.post(generateAppUrl('blog/editentry'), post)
+      $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_EDIT}`), post)
         .fail(function(xhr, status, errorThrown) {
           const message = Ajax.failMessage(xhr, status, errorThrown);
           Dialogs.alert(message, t(appName, 'Error'));
@@ -290,7 +295,7 @@ const documentReady = function() {
       '#blogentryactions button.reply',
       function(event) {
         event.preventDefault();
-        $.post(generateAppUrl('blog/editentry'), {
+        $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_EDIT}`), {
           blogId: -1,
           inReplyTo: $(this).val(),
         })
@@ -307,7 +312,7 @@ const documentReady = function() {
       '#blogentryactions button.edit',
       function(event) {
         event.preventDefault();
-        $.post(generateAppUrl('blog/editentry'), {
+        $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_EDIT}`), {
           blogId: $(this).val(),
           inReplyTo: -1,
         })
@@ -330,8 +335,7 @@ const documentReady = function() {
           t(appName, 'Really delete the entry?'),
           function(decision) {
             if (decision) {
-              const action = 'delete';
-              $.post(generateAppUrl('blog/action/' + action), { blogId })
+              $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_ACTION}/${EnumBlogAction.DELETE}`), { blogId })
                 .fail(function(xhr, status, errorThrown) {
                   const message = Ajax.failMessage(xhr, status, errorThrown);
                   Dialogs.alert(message, t(appName, 'Error'));
@@ -350,8 +354,7 @@ const documentReady = function() {
         event.preventDefault();
         const id = $(this).val();
         const prio = $('#blogpriority' + id).val() ?? 0;
-        const action = 'modify';
-        $.post(generateAppUrl('blog/action/' + action), {
+        $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_ACTION}/${EnumBlogAction.MODIFY}`), {
           content: '',
           blogId: id,
           priority: +prio + 1,
@@ -373,8 +376,7 @@ const documentReady = function() {
         event.preventDefault();
         const id = $(this).val();
         const prio = $('#blogpriority' + id).val() ?? 0;
-        const action = 'modify';
-        $.post(generateAppUrl('blog/action/' + action), {
+        $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_ACTION}/${EnumBlogAction.MODIFY}`), {
           content: '',
           blogId: id,
           priority: +prio - 1,

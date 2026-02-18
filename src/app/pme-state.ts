@@ -32,8 +32,11 @@ import type { PMEInitialState } from '../../build/ts-types/php-modules/Controlle
 import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
 import { type TemplateRenderer } from './template-renderer.ts';
+import type { EnumTemplate } from '../../build/ts-types/php-modules/PageRenderer.ts';
 
-export type TableDialogOptions<S extends string = string> = {
+export type PageTemplateValue = `${EnumTemplate}`;
+
+export type TableDialogOptions<S extends PageTemplateValue = PageTemplateValue> = {
   ambientContainerSelector: string;
   dialogHolderCSSId: string;
   reloadName: string;
@@ -44,11 +47,10 @@ export type TableDialogOptions<S extends string = string> = {
   initialValue: string;
   modified: boolean;
   templateRenderer: TemplateRenderer<S>;
-  template?: string;
+  template: S;
   modalDialog?: boolean;
   projectId?: number;
   projectName?: string;
-  table?: string;
 };
 
 export type RejectTuple = {
@@ -65,22 +67,21 @@ export type TriggerData = {
   postOpen?: ($dialogHolder: JQuery) => void
 };
 
-export type TableDialogCallbackData = {
+export type TableDialogCallbackData<S extends PageTemplateValue = PageTemplateValue> = {
   reason?: 'dialogOpen'|'dialogClose'|'layoutChange'|'tabChange'|'unknown'|'formSubmit';
   htmlResponse?: string;
   closedBy?: string;
   triggerData?: TriggerData;
-  tableDialogOptions?: TableDialogOptions;
+  tableDialogOptions?: TableDialogOptions<S>;
 };
 
-export type TableLoadCallback = {
+export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
   callback(
+    template: T,
     selector: string,
     parameters: TableDialogCallbackData,
     resizeCB: () => void,
-    ...rest: unknown[]
   ):void,
-  parameters: unknown[],
   context?: unknown,
 }
 

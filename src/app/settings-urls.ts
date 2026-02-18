@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,13 @@
 import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { UrlOptions } from '@nextcloud/router';
+import {
+  BASE_PATH,
+  END_POINT_APP_GET,
+  END_POINT_APP_SET,
+  END_POINT_GET,
+  END_POINT_PERSONAL_SET,
+} from '../../build/ts-types/php-modules/Controller/PersonalSettingsController.ts';
 
 /**
  * Generate an URL for the settings-controllers.
@@ -38,7 +45,7 @@ const generateSettingsUrl = (
   url: string,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
-) => generateAppUrl('settings/' + url, urlParams, urlOptions);
+) => generateAppUrl(`${BASE_PATH}/${url}`, urlParams, urlOptions);
 
 /**
  * Generate a setter-URL for the personal-settings-controller.
@@ -53,7 +60,7 @@ const setPersonalUrl = (
   url: EnumPersonalSettingsKey|`${EnumPersonalSettingsKey}`,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
-) => generateSettingsUrl('personal/set/' + url, urlParams, urlOptions);
+) => generateSettingsUrl(`${END_POINT_PERSONAL_SET}/${url}`, urlParams, urlOptions);
 
 /**
  * Generate a setter-URL for the app-settings-controller.
@@ -68,7 +75,7 @@ const setAppUrl = (
   url: string,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
-) => generateSettingsUrl('app/set/' + url, urlParams, urlOptions);
+) => generateSettingsUrl(`${END_POINT_APP_SET}/${url}`, urlParams, urlOptions);
 
 /**
  * Generate a getter-URL for the settings-controllers.
@@ -83,11 +90,27 @@ const getUrl = (
   url: string,
   urlParams?: Record<string, string|number|boolean|null>,
   urlOptions?: UrlOptions,
-) => generateSettingsUrl('get/' + url, urlParams, urlOptions);
+) => generateSettingsUrl(`${END_POINT_GET}/${url}`, urlParams, urlOptions);
+
+/**
+ * Generate a getter-URL for the settings-controllers.
+ *
+ * @param url TBD.
+ *
+ * @param [urlParams] TBD.
+ *
+ * @param [urlOptions] TBD.
+ */
+const getAppUrl = (
+  url: string,
+  urlParams?: Record<string, string|number|boolean|null>,
+  urlOptions?: UrlOptions,
+) => generateSettingsUrl(`${END_POINT_APP_GET}/${url}`, urlParams, urlOptions);
 
 export {
   generateSettingsUrl as generateUrl,
   setPersonalUrl,
   setAppUrl,
   getUrl,
+  getAppUrl,
 };

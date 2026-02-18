@@ -31,7 +31,7 @@ import * as SelectUtils from './select-utils.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.ts';
 import { toolTipsInit } from './cafevdb.ts';
-import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.ts';
+import { setPersonalUrl, setAppUrl, getUrl, generateUrl as generateSettingsUrl } from './settings-urls.ts';
 import fileDownload from './file-download.ts';
 import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
@@ -40,8 +40,15 @@ import { showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import { EnumPersonalSettingsKey, EnumSettingsGetApp } from '../../build/ts-types/php-modules/Controller.ts';
 import { hiddenCssClass } from 'variables.scss';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import {
+  BASE_PATH,
+  END_POINT_APP_GET,
+  END_POINT_PERSONAL_FORM,
+} from '../../build/ts-types/php-modules/Controller/PersonalSettingsController.ts';
+import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -163,7 +170,7 @@ const afterLoad = function(container?: JQuery) {
         $('#userkey .info').show();
         $('#userkey .changed').show();
         showInfo(t(appName, 'Encryption key changed, reloading settings form.'));
-        const url = generateAppUrl('settings/personal/form');
+        const url = generateSettingsUrl(END_POINT_PERSONAL_FORM);
         $.get(url)
           .done((data) => {
             $('#personal-settings-container').replaceWith(data);
@@ -1233,7 +1240,7 @@ const afterLoad = function(container?: JQuery) {
             + '/' + file.original_name;
 
       $.post(
-        generateAppUrl('upload/move'), {
+        generateAppUrl(UploadsController.END_POINT_MOVE), {
           stashedFile: file.tmp_name,
           destinationPath,
           originalFileName: file.original_name,
@@ -1243,12 +1250,12 @@ const afterLoad = function(container?: JQuery) {
           Ajax.handleError(xhr, status, errorThrown);
           $trigger.removeClass('busy');
         })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['message', 'fileName', 'downloadLink'])) {
+        .done(function(data: ResponseData<DTO.FileUploadMoveResponse>) {
+          if (!Ajax.validateResponse(data, ['messages', 'fileName', 'downloadLink'])) {
             $trigger.removeClass('busy');
             return;
           }
-          Notification.messages(data.message);
+          Notification.messages(data.messages);
           const fileName = data.fileName;
           const downloadLink = data.downloadLink;
           $.post(
@@ -1257,12 +1264,12 @@ const afterLoad = function(container?: JQuery) {
               Ajax.handleError(xhr, status, errorThrown);
               $trigger.removeClass('busy');
             })
-            .done(function(data) {
-              if (!Ajax.validateResponse(data, ['message'])) {
+            .done(function(data: ResponseData<DTO.MessagesResponse>) {
+              if (!Ajax.validateResponse(data, ['messages'])) {
                 $trigger.removeClass('busy');
                 return;
               }
-              Notification.messages(data.message);
+              Notification.messages(data.messages);
               $container.find('.upload-placeholder').val(fileName).hide();
               $container.find('.downloadlink')
                 .attr('href', downloadLink)
@@ -1294,7 +1301,7 @@ const afterLoad = function(container?: JQuery) {
       $self.addClass('busy');
 
       fileDownload(
-        'settings/app/get/auto-fill-test', {
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST}`, {
           documentTemplate: $self.data('template'),
           format: $self.data('format'),
         }, {
@@ -1316,7 +1323,7 @@ const afterLoad = function(container?: JQuery) {
       $self.addClass('busy');
 
       fileDownload(
-        'settings/app/get/auto-fill-test-data', {
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST_DATA}`, {
           documentTemplate: $self.data('template'),
         }, {
           always() {
@@ -1337,7 +1344,7 @@ const afterLoad = function(container?: JQuery) {
       $this.addClass('busy');
 
       FileUpload.init({
-        url: generateAppUrl('upload/stash'),
+        url: generateAppUrl(UploadsController.END_POINT_STASH),
         doneCallback(file) {
           moveIntoPlace(file, $container, $this);
         },
@@ -1368,7 +1375,7 @@ const afterLoad = function(container?: JQuery) {
             $this.removeClass('busy');
             return;
           }
-          $.post(generateAppUrl('upload/stash'), { cloudPaths: [path] })
+          $.post(generateAppUrl(UploadsController.END_POINT_STASH), { cloudPaths: [path] })
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
               $this.removeClass('busy');
@@ -1512,7 +1519,7 @@ const afterLoad = function(container?: JQuery) {
     $downloadPoTemplates.on('click', function(_event) {
 
       fileDownload(
-        'settings/app/get/translation-templates',
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.TRANSLATION_TEMPLATES}`,
         [], {
           errorMessage(_url: string, _data: any) {
             return t(appName, 'Unable to download translation templates.');

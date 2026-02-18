@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2024-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ import * as SelectUtils from './select-utils.ts';
  * @param $select TBD.
  */
 const handleTableExportMenu = function($select: JQuery<HTMLSelectElement>) {
-  const exportFormat = SelectUtils.selected($select);
+  const exportFormat = SelectUtils.selected($select) as string;
 
   // this is the form; we need its values
   const form = $('form.pme-form');
@@ -91,7 +91,7 @@ const pmeExportMenu = function(containerSel?: string) {
 
   $exportSelect
     .off('change')
-    .on('change', function() {
+    .on('change', function(this: HTMLSelectElement) {
       handleTableExportMenu($(this));
       return false;
     });

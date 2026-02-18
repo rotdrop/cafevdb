@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ type StringWrapper = { value: string };
 export type StringValued = string|StringWrapper;
 
 const isStringWrapper = (arg: unknown): arg is StringWrapper =>
-  typeof arg === 'object' && arg && 'value' in arg && typeof arg.value === 'string';
+  typeof arg === 'object' && !!arg && 'value' in arg && typeof arg.value === 'string';
 
 export const stringValue = (arg?: StringValued) => isStringWrapper(arg) ? arg.value : arg;
 

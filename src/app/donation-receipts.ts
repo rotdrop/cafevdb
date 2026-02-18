@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ import { templateRenderer } from './template-renderer.ts';
 import * as PHPMyEdit from './pme.ts';
 import initFileUploadRow from './pme-file-upload-row.ts';
 import fileDownload from './file-download.ts';
-import { filename } from './path.ts';
 import {
   inputSelector as pmeInputSelector,
   formSelector as pmeFormSelector,
@@ -41,18 +40,17 @@ import {
   options as getSelectOptions,
   optionByValue as getSelectOptionByValue,
 } from './select-utils.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
 import type { TableLoadCallback } from './pme-state.ts';
 
 require('./jquery-readonly.ts');
 require('project-participant-fields-display.scss');
 require('donation-receipts.scss');
 
-const templateName = filename(__filename);
-
 const pmeFormInit = (
-  containerSel: Parameters<TableLoadCallback['callback']>[0],
-  parameters: Parameters<TableLoadCallback['callback']>[1]|undefined,
-  resizeCB: Parameters<TableLoadCallback['callback']>[2],
+  containerSel: Parameters<TableLoadCallback['callback']>[1],
+  parameters: Parameters<TableLoadCallback['callback']>[2]|undefined,
+  resizeCB: Parameters<TableLoadCallback['callback']>[3],
 ) => {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
@@ -80,9 +78,10 @@ const pmeFormInit = (
         this,
         -1, // projectId
         -1, // musicianId,
-        resizeCB, {
-          upload: 'documents/finance/' + templateName + '/upload',
-          delete: 'documents/finance/' + templateName + '/delete',
+        resizeCB,
+        {
+          upload: 'documents/finance/' + template + '/upload',
+          delete: 'documents/finance/' + template + '/delete',
         });
       const ambientContainerSelector = parameters?.tableDialogOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
@@ -279,11 +278,11 @@ const pmeFormInit = (
   });
 };
 
-const documentReady = function() {
+const documentReady = () => {
 
   PHPMyEdit.addTableLoadCallback(
-    templateName, {
-      callback(selector, parameters, resizeCB) {
+    template, {
+      callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
         }
@@ -291,19 +290,18 @@ const documentReady = function() {
         resizeCB();
       },
       context: globalState,
-      parameters: [],
     });
 
   CAFEVDB.addReadyCallback(async () => {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass(templateName)) {
+    if (!container.hasClass(template)) {
       return;
     }
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-    if (renderer === templateRenderer(templateName)) {
+    if (renderer === templateRenderer(template)) {
       pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });

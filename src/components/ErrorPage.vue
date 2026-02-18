@@ -262,6 +262,8 @@ import globalState from '../app/globalstate.ts'
 import StackTrace from 'stacktrace-js'
 import type { StackFrame } from 'stacktrace-js'
 import Console, { stackTraceOptions } from '../util/console.ts'
+import { END_POINT as reportEndPoint } from '../../build/ts-types/php-modules/Controller/ProblemReportController.ts'
+import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 
 const COMPONENT_NAME = 'ErrorPage'
 const logger = new Console(COMPONENT_NAME)
@@ -449,9 +451,9 @@ const reportError = async () => {
     return
   }
   logger.info('POST DATA', postData)
-  const url = generateAppUrl('a/problem-report')
+  const url = generateAppUrl(reportEndPoint)
   try {
-    const result = await axios.post(url, postData)
+    const result = await axios.post<MessagesResponse>(url, postData)
     const messages = [
       t(appName, 'Your problem-report has been submitted.'),
     ]

@@ -35,6 +35,7 @@ import { translate as t } from '@nextcloud/l10n';
 import type { UnsealedData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { tooltipWideCssClass } from 'tooltips.scss';
+import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/CryptoController.ts';
 
 const cryptoCache: Record<string, UnsealedData> = {};
 
@@ -294,7 +295,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       const valuesChunk = jobsArray.slice(i, i + batchSize);
       increaseDecryptionJobCount(valuesChunk.length);
       const timer = setTimeout(() => {
-        const url = generateAppUrl('crypto/decryption/unseal/batch');
+        const url = generateAppUrl(controllerEndPoint);
         const ajaxPromise = $.post(
           url, {
             sealedData: valuesChunk.map((job) => job.sealedData),

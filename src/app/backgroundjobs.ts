@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import { getCurrentUser } from '@nextcloud/auth';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import axios from '@nextcloud/axios';
 import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
+import { END_POINT } from '../../build/ts-types/php-modules/Controller/BackgroundJobController.ts';
 
 require('../legacy/nextcloud/jquery/requesttoken.js');
 
@@ -35,7 +36,7 @@ const control = {
   interval: 600,
 };
 
-const url = generateAppUrl('backgroundjob/trigger');
+const url = generateAppUrl(END_POINT);
 
 const runner = async function() {
   if (cloudUser) {

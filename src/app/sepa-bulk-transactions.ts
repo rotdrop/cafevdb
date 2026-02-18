@@ -42,10 +42,9 @@ import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names
 import * as BusEvents from '../event-bus-events.ts';
 import actionMenu from './vue-action-menu.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBulkTransactions.ts';
 
 require('sepa-bulk-transactions.scss');
-
-const template = 'sepa-bulk-transactions';
 
 asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
   if (event.template !== template) {
@@ -69,7 +68,7 @@ const backgroundDecryption = (container: string|JQuery) => {
 
 const overviewPopup = async function(containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg']) {
   const entityId = data.entityId;
-  const tableOptions = {
+  await PHPMyEdit.tableDialogOpen({
     dialogHolderCSSId: template + '-overview',
     ambientContainerSelector: containerSel,
     template,
@@ -96,8 +95,7 @@ const overviewPopup = async function(containerSel: string, data: AsyncNextcloudE
     projectName: data.projectName,
     modalDialog: true,
     modified: false,
-  };
-  await PHPMyEdit.tableDialogOpen(tableOptions);
+  });
 };
 
 const ready = function(container: string|JQuery, resizeCB: () => void = () => {}) {

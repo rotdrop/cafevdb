@@ -44,11 +44,18 @@ import {
 import { showSuccess } from '@nextcloud/dialogs';
 import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
 import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import type { ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { AmountResponse, ParticipantFieldGeneratorDefineResponse, ParticipantFieldGeneratorRunResponse, ParticipantFieldOptionDefineResponse, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
 import searchEntities from '../services/search-entities.ts';
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import * as ValidationController from '../../build/ts-types/php-modules/Controller/ValidationController.ts';
+import type {
+  EnumParticipantFieldRequestSubTopic,
+  EnumParticipantFieldRequestTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import { END_POINT } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
 
 require('./jquery-readonly.ts');
 require('../legacy/nextcloud/jquery/octemplate.js');
@@ -63,10 +70,12 @@ require('./jquery-datetimepicker.ts');
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
 
+type RequestTopic = `${EnumParticipantFieldRequestTopic}/${EnumParticipantFieldRequestSubTopic}`;
+
 const balancingAccountsAutocompleteData = {
-  income: [],
-  expense: [],
-  default: [],
+  income: <string[]>[],
+  expense: <string[]>[],
+  default: <string[]>[],
 };
 let balancingAccountsAutocompleteFlavour: 'default'|'income'|'expense' = 'default';
 
@@ -299,10 +308,10 @@ const confirmedReceivablesUpdate = async (
         );
       }
 
-      const request = 'option/regenerate';
+      const request: RequestTopic = 'option/regenerate' as const;
       try {
         const data: ReceivablesStatistics = await $.post(
-          generateAppUrl('projects/participant-fields/' + request), {
+          generateAppUrl(`${END_POINT}/${request}`), {
             data: {
               fieldId,
               key,
@@ -792,11 +801,11 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       setFieldTypeCssClass(fieldTypeData());
       submitDefer.resolve();
     };
-    const request = 'generator/run';
+    const request: RequestTopic = 'generator/run';
     const startDate = $self.closest('tr').find('.field-limit');
     $self.addClass('busy');
     $.post(
-      generateAppUrl('projects/participant-fields/' + request), {
+      generateAppUrl(`${END_POINT}/${request}`), {
         data: {
           fieldId,
           startDate: startDate.val(),
@@ -805,7 +814,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       })
-      .done(function(data) {
+      .done(function(data: ResponseData<ParticipantFieldGeneratorRunResponse>) {
         if (!Ajax.validateResponse(data, ['startDate', 'dataOptionFormInputs'], cleanup)) {
           return;
         }
@@ -820,7 +829,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
         startDate.val(data.startDate);
         resizeCB();
         cleanup();
-        Notification.messages(data.message);
+        Notification.messages(data.messages);
       });
     return false;
   });
@@ -896,11 +905,14 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       };
 
       $.post(
-        generateAppUrl('validate/general/monetary-value'), { value: amount })
+        generateAppUrl(
+          ValidationController.END_POINT_VALIDATE_GENERAL,
+          { topic: ValidationController.TOPIC_MONETARY_VALUE },
+        ), { value: amount })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
+        .done(function(data: ResponseData<AmountResponse>) {
           if (!Ajax.validateResponse(data, ['amount'], cleanup)) {
             return;
           }
@@ -964,7 +976,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       }
       const $row = $self.closest('tr.data-options');
 
-      const request = 'generator/define';
+      const request: RequestTopic = 'generator/define';
       const data = { ...fieldTypeData(), ...$row.data() };
       const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
@@ -987,12 +999,12 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       };
 
       $.post(
-        generateAppUrl('projects/participant-fields/' + request),
+        generateAppUrl(`${END_POINT}/${request}`),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
+        .done(function(data: ResponseData<ParticipantFieldGeneratorDefineResponse>) {
           if (!Ajax.validateResponse(
             data,
             ['value', 'slug', 'operationLabels', 'availableUpdateStrategies'],
@@ -1037,13 +1049,13 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           }
 
           // adjust update strategy options
-          const $updateStrategies = $row.find('select.recurring-receivables-update-strategy');
-          const defaultStrategy = $updateStrategies.data('defaultValue');
+          const $updateStrategies = $row.find<HTMLSelectElement>('select.recurring-receivables-update-strategy');
+          const defaultStrategy = $updateStrategies.data('defaultValue') as UpdateStrategy;
           $updateStrategies.find('option').each(function() {
             const $option = $(this);
-            const optionValue = $option.val();
-            if (optionValue !== '') {
-              $option.prop('disabled', data.availableUpdateStrategies.indexOf($option.val()) === -1);
+            const optionValue = $option.val() as UpdateStrategy;
+            if (optionValue) {
+              $option.prop('disabled', data.availableUpdateStrategies.indexOf(optionValue) === -1);
               if ($option.prop('disabled')) {
                 $option.prop('selected', false);
               } else if (optionValue === defaultStrategy) {
@@ -1055,7 +1067,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
             $updateStrategies.val(data.availableUpdateStrategies[0]);
           }
 
-          Notification.messages(data.message);
+          Notification.messages(data.messages);
 
           cleanup();
         });
@@ -1085,7 +1097,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       // default data selector, if applicable
       const dflt = $container.find('select.default-multi-value');
 
-      const request = 'option/define';
+      const request: RequestTopic = 'option/define';
       const data = Object.assign({ default: dflt.val() }, fieldTypeData(), $row.data());
       const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
@@ -1103,19 +1115,19 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       };
 
       $.post(
-        generateAppUrl('projects/participant-fields/' + request),
+        generateAppUrl(`${END_POINT}/${request}`),
         postData)
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
-        .done(function(data) {
+        .done(function(data: ResponseData<ParticipantFieldOptionDefineResponse>) {
           if (!Ajax.validateResponse(
             data,
-            ['dataOptionSelectOption', 'dataOptionFormInputs'],
+            ['dataOptionSelectOptions', 'dataOptionFormInputs'],
             cleanup)) {
             return;
           }
-          const option = data.dataOptionSelectOption;
+          const option = data.dataOptionSelectOptions;
           const input = data.dataOptionFormInputs;
           $.fn.cafevTooltip.remove();
           let $newRow: JQuery<HTMLTableRowElement>;
