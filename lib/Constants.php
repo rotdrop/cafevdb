@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Toolkit\Traits\Constants as TraitsConstants;
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCA\CAFEVDB\Toolkit\Traits\Constants as TraitsConstants;
 
 /** General constants for the app. */
 #[TSAttributes\TypeScript]
