@@ -191,6 +191,7 @@ import { storeToRefs } from 'pinia'
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 import type { LegacyPageLoaderResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 import {
+  BASE_PATH as controllerBasePath,
   END_POINT_REMEMBER,
 } from '../../build/ts-types/php-modules/Controller/LegacyPageController.ts'
 import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
