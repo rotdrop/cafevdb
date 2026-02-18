@@ -73,18 +73,18 @@
           <InfoOffIcon />
         </template>
         <NcActionCheckbox v-model="toolTipsEnabled" :model-value="toolTipsEnabled">
-          {{ t(appId, 'Tooltips') }}
+          {{ t(appName, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl"
                       :target="wikiManualUrlTarget"
                       :close-after-click="true"
         >
-          {{ t(appId, 'Manual (other tab or window)') }}
+          {{ t(appName, 'Manual (other tab or window)') }}
         </NcActionLink>
         <NcActionButton :close-after-click="true"
                         @click="onUserManualPopup"
         >
-          {{ t(appId, 'Manual (popup)') }}
+          {{ t(appName, 'Manual (popup)') }}
         </NcActionButton>
       </NcActions>
     </div>

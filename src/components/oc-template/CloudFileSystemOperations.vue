@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -35,13 +35,16 @@ import { computed } from 'vue'
 import useTooltipsStore from '../../stores/tooltips.ts'
 import { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts'
 import type { TemplateFileUploadMode } from './oc-template-parameters.d.ts'
+import Console from '../../toolkit/util/console.ts'
+
+const logger = new Console('CloudFileSystemOperations')
 
 const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(Object.values(EnumFileUploadMode).map(mode => 'cloud-file-system-operations:' + mode))
 const hints = tooltipsProvider.tooltipsData
 
 const modeData = computed<Record<TemplateFileUploadMode, { name: string, hint: string }> >(() => {
-  console.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
+  logger.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
   const result = {}
   for (const mode of Object.values(EnumFileUploadMode).filter(value => value !== EnumFileUploadMode.TEST)) {
     result[mode] = { name: t(appName, mode), hint: hints[`cloud-file-system-operations:${mode}`] }
@@ -50,7 +53,7 @@ const modeData = computed<Record<TemplateFileUploadMode, { name: string, hint: s
 })
 
 const inputHtml = (mode: string, modeData: { name: string, hint: string }) => {
-  console.info('CALL INPUT HTML', { mode, modeData: { ...modeData } })
+  logger.info('CALL INPUT HTML', { mode, modeData: { ...modeData } })
   return `<input id = "{widgetCssClass}-${mode}-control"
        type="radio"
        class="radio {widgetCssClass} {widgetCssClass}-input {${mode}CssClass}"
@@ -80,7 +83,7 @@ const template = computed<string>(() => {
   result += `
   </div>
 </div>`
-  console.info('UPDATED TEMPLATE', { result })
+  logger.info('UPDATED TEMPLATE', { result })
   return result
 })
 
@@ -92,7 +95,7 @@ const template = computed<string>(() => {
 //   if (outer.value && inner.value) {
 //     outer.value.innerHTML = inner.value.outerHTML
 //   }
-//   console.info('INNER OUTER WATCHER', { outerInner: outer.value?.innerHTML, innerOuter: inner.value?.outerHTML })
+//   logger.info('INNER OUTER WATCHER', { outerInner: outer.value?.innerHTML, innerOuter: inner.value?.outerHTML })
 // })
 
 // onMounted(() => {
