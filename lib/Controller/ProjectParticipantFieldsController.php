@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use DateTime;
 use RuntimeException;
 use Throwable;
@@ -59,6 +61,7 @@ use OCA\CAFEVDB\Service\ProjectService;
  *
  * @see Entities\ProjectParticipantField
  */
+#[TSAttributes\TypeScript]
 class ProjectParticipantFieldsController extends Controller
 {
   use GetPrefixParamsTrait;
@@ -66,37 +69,7 @@ class ProjectParticipantFieldsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const REQUEST_TOPIC_GENERATOR = 'generator';
-  const REQUEST_TOPIC_OPTION = 'option';
-
-  /**
-   * @var string Resolve a receivables generator with the given user input.
-   */
-  const REQUEST_SUB_TOPIC_DEFINE = 'define';
-
-  /**
-   * @var string Generate (missing) fields.
-   */
-  const REQUEST_SUB_TOPIC_RUN = 'run';
-
-  /**
-   * @var string For the given project (re-)generate all generated
-   * receivables. The other operations refer to one specific receivable.
-   */
-  const REQUEST_SUB_TOPIC_RUN_ALL = 'run-all';
-
-  /**
-   * Recompute one or all receivables, given on the request parameters
-   * provided.
-   */
-  const REQUEST_SUB_TOPIC_REGENERATE = 'regenerate';
-
-  const REQUEST_TOPIC_PROPERTY = 'property';
-  const REQUEST_SUB_TOPIC_GET = 'get';
-
-  const OPTION_PATCH_FIELDS = [
-    'label',
-  ];
+  public const END_POINT = 'projects/participant-fields';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -123,104 +96,112 @@ class ProjectParticipantFieldsController extends Controller
    * @param null|array $data
    *
    * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participant-fields/{topic}/{subTopic}')]
-  public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null):Response
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT . '/{topic}/{subTopic}')]
+  public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null): Response
   {
+    $topic = EnumParticipantFieldRequestTopic::get($topic);
+    $subTopic = $subTopic ? EnumParticipantFieldRequestTopic::get($subTopic) : null;
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
-      case self::REQUEST_TOPIC_PROPERTY:
+      case EnumParticipantFieldRequestTopic::PROPERTY:
         foreach (['fieldId', 'property'] as $parameter) {
           if (empty($this->request[$parameter])) {
-            return self::grumble($this->l->t(
-              'Missing parameters in request "%s": "%s".',
-              [ $topic, $parameter ]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'Missing parameters in request "%s": "%s".',
+                [ $topic, $parameter ]),
+            );
           }
         }
         switch ($subTopic) {
-          case self::REQUEST_SUB_TOPIC_GET:
+          case EnumParticipantFieldSubTopic::GET:
             // fetch the field
-            $fieldId = $this->request['fieldId'];
+            $fieldId = $this->request->getParam('fieldId');
             /** @var Entities\ProjectParticipantField $field */
             $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
             if (empty($field)) {
-              return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Unable to fetch field with id "%d".', $fieldId),
+              );
             }
 
-            $property = $this->request['property'];
-
-            // remap special cases
-            switch ($property) {
-              case 'defaultDeposit':
-                $fieldProperty = 'defaultValue';
-                break;
-              default:
-                $fieldProperty = $property;
-                break;
-            }
+            $property = EnumParticipantFieldPropertyGet::get($this->request->getParam('property'));
 
             try {
-              $propertyValue = $field[$fieldProperty];
+              $propertyValue = $field->getDefaultValue();
             } catch (Throwable $t) {
-              $this->logException($t);
-              return self::grumble(
+              throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
                   'Unable to retrieve property "%s" from field "%s".',
-                  [ $property, $field->getName() ]));
+                  [ $property, $field->getName() ]),
+                previous: $t,
+              );
             }
 
             // handle special cases, in particular the default value and deposit
             switch ($property) {
-              case 'defaultValue':
+              case EnumParticipantFieldPropertyGet::DEFAULT_VALUE:
                 /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */
                 $propertyValue = [
                   'data' => $propertyValue->getData(),
                   'key' => $propertyValue->getKey(),
                 ];
                 break;
-              case 'defaultDeposit':
+              case EnumParticipantFieldPropertyGet::DEFAULT_DEPOSIT:
                 /** @var Entities\ProjectParticipantFieldDataOption $propertyValue */
                 $propertyValue = $propertyValue->getDeposit();
-                // fall through
-              default:
-                $propertyValue = (string)$propertyValue;
                 break;
+              default:
+                throw UnexpectedValueException(
+                  $this->l->t('Received the unexpected value "%s" for the "property" parameter.', $property->value),
+                );
             }
 
-            return self::dataResponse([
-              'message' => $this->l->t('Request successful.'),
+            return DTO\ParticipantFieldPropertyGetResponse::fromArray([
+              'messages' => [ $this->l->t('Request successful.') ],
               'fieldId' => $fieldId,
               'property' => $property,
               'value' =>  $propertyValue,
-            ]);
-            break;
+            ])->response();
+
           default:
             break;
         }
         break;
-      case self::REQUEST_TOPIC_GENERATOR:
+      case EnumParticipantFieldTopic::GENERATOR:
         switch ($subTopic) {
-          case self::REQUEST_SUB_TOPIC_DEFINE:
+          case EnumParticipantFieldSubTopic::DEFINE:
             if (empty($data)) {
-              return self::grumble($this->l->t('Missing parameters in request "%s".', $topic));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Missing parameters in request "%s".', $topic)),
+              );
             }
             $used = $data['used'] === 'used';
             $dataOptions = $projectValues['data_options'];
             $dataOptions = array_values($dataOptions); // get rid of -1 index
             if (count($dataOptions) !== 1) {
-              return self::grumble($this->l->t(
-                'No or too many items available: "%s".',
-                print_r($dataOptions, true) ));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t(
+                  'No or too many items available: "%s".',
+                  print_r($dataOptions, true) )),
+              );
             }
             $item = $dataOptions[0];
             if ($item['label'] != ReceivablesGeneratorFactory::GENERATOR_LABEL) {
-              return self::grumble($this->l->t(
-                'Generator data must be tagged with "%s" label, got "%s".',
-                [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item['label'], ]));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t(
+                  'Generator data must be tagged with "%s" label, got "%s".',
+                  [ ReceivablesGeneratorFactory::GENERATOR_LABEL, $item['label'], ])),
+              );
             }
             if ($item['key'] != Uuid::NIL) {
-              return self::grumble($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key']));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Generator data must be tagged with NIL uuid, got "%s".', $item['key'])),
+              );
             }
 
             $generatorClass = null;
@@ -230,7 +211,9 @@ class ProjectParticipantFieldsController extends Controller
               $this->logException($t);
             }
             if (empty($generatorClass)) {
-              return self::grumble($this->l->t('Generator "%s" could not be instantiated.', $item['data']));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Generator "%s" could not be instantiated.', $item['data'])),
+              );
             }
 
             $operationLabels = $generatorClass::operationLabels();
@@ -242,19 +225,22 @@ class ProjectParticipantFieldsController extends Controller
 
             $updateStrategyChoices = $generatorClass::updateStrategyChoices();
 
-            return self::dataResponse([
-              'message' => $this->l->t('Generator "%s" successfully mapped to PHP-class "%s".', [ $item['data'], $generatorClass, ]),
-              'value' => $generatorClass,
-              'slug' => $generatorClass::slug(),
-              'operationLabels' => $operationLabels,
-              'availableUpdateStrategies' => $updateStrategyChoices,
-            ]);
-          case self::REQUEST_SUB_TOPIC_RUN:
+            return new DTO\ParticipantFieldGeneratorDefineResponse(
+              messages: [$this->l->t('Generator "%s" successfully mapped to PHP-class "%s".', [ $item['data'], $generatorClass, ])],
+              value: $generatorClass,
+              slug: $generatorClass::slug(),
+              operationLabels: $operationLabels,
+              availableUpdateStrategies: $updateStrategyChoices,
+            )->response();
+
+          case EnumParticipantFieldSubTopic::RUN:
             foreach (['fieldId', 'startDate',] as $parameter) {
               if (empty($data[$parameter])) {
-                return self::grumble($this->l->t(
-                  'Missing parameters in request "%s": "%s".',
-                  [ $topic, $parameter ]));
+                new Exceptions\EnduserNotificationException(
+                  ($this->l->t(
+                    'Missing parameters in request "%s": "%s".',
+                    [ $topic, $parameter ])),
+                );
               }
             }
 
@@ -266,14 +252,18 @@ class ProjectParticipantFieldsController extends Controller
             /** @var Entities\ProjectParticipantField $field */
             $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
             if (empty($field)) {
-              return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Unable to fetch field with id "%d".', $fieldId)),
+              );
             }
 
             /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
             $managementOption = $field->getManagementOption();
             if (empty($managementOption)) {
-              return self::grumble(
-                $this->l->t('No management option in field "%s".', $field->getName()));
+              new Exceptions\EnduserNotificationException(
+                (
+                  $this->l->t('No management option in field "%s".', $field->getName())),
+              );
             }
 
             // if we have a start date, then set it as time-stamp into
@@ -290,10 +280,12 @@ class ProjectParticipantFieldsController extends Controller
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
             $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
             if (empty($generator)) {
-              return self::grumble(
-                $this->l->t(
-                  'Unable to load generator for recurring receivables "%s".',
-                  $field->getName()));
+              new Exceptions\EnduserNotificationException(
+                (
+                  $this->l->t(
+                    'Unable to load generator for recurring receivables "%s".',
+                    $field->getName())),
+              );
             }
 
             $this->entityManager->beginTransaction();
@@ -320,186 +312,26 @@ class ProjectParticipantFieldsController extends Controller
               );
             }
 
-            return self::dataResponse([
-              'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
-              'startDate' => $this->dateTimeFormatter()->formatDate(
-                $managementOption->getLimit(), 'medium'),
-              'dataOptionFormInputs' => $inputRows,
-            ]);
-          case self::REQUEST_SUB_TOPIC_REGENERATE:
-            $missing = [];
-            foreach (['fieldId', 'updateStrategy', 'progressToken'] as $parameter) {
-              if (empty($data[$parameter])) {
-                $missing[] = $parameter;
-              }
-            }
-            if (!empty($missing)) {
-              return self::grumble(
-                $this->l->t('Missing parameters in request "%s/%s": "%s".', [
-                  $topic, $subTopic, implode('", "', $missing),
-                ]));
-            }
-            $updateStrategy = $data['updateStrategy'];
-            if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
-              return self::grumble(
-                $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
-            }
-            $this->logInfo('Update Strategy ' . $updateStrategy);
+            return new DTO\ParticipantFieldGeneratorRunResponse(
+              messages: [$this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ])],
+              startDate: $this->dateTimeFormatter()->formatDate(
+                $managementOption->getLimit(),
+                'medium',
+              ),
+              dataOptionFormInputs: $inputRows,
+            )->response();
 
-            // fetch the field
-            $fieldId = $data['fieldId'];
-            /** @var Entities\ProjectParticipantField $field */
-            $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
-            if (empty($field)) {
-              return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
-            }
-
-            // id for progress-bar
-            $progressToken = $data['progressToken'];
-
-            $fieldsAffected = 0;
-            $messages = [];
-            $this->entityManager->beginTransaction();
-            try {
-              $progressStatus = $this->di(ProgressStatusService::class)->get($progressToken);
-
-              /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-              $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
-              if (empty($generator)) {
-                throw new RuntimeException($this->l->t(
-                    'Unable to load generator for recurring receivables "%s".',
-                    $field->getName()));
-              }
-
-              /** @todo Make strategy selectable from UI */
-              list(
-                'added' => $added,
-                'removed' => $removed,
-                'changed' => $changed,
-                'skipped' => $skipped,
-                'notices' => $notices,
-              ) = $generator->updateAll($updateStrategy);
-              $this->flush();
-
-              $messages[] = $this->l->t(
-                'Field "%s", options addded/removed/changed: %d/%d/%d/%d.',
-                [ $field->getName(), $added, $removed, $changed, $skipped ]);
-              $fieldsAffected += $added + $removed + $changed;
-              $messages += (array)$notices;
-              $this->entityManager->commit();
-            } catch (Throwable $t) {
-              $this->logException($t);
-              $this->entityManager->rollback();
-              throw new Exceptions\EnduserNotificationException(
-                $this->l->t('Unable to regenerate receivables for the field "%1$s".', $field->getName()),
-                previous: $t,
-                httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-              );
-            }
-
-            return self::dataResponse([
-              'message' => $messages,
-              'fieldsAffected' => $fieldsAffected,
-            ]);
-
-            break;
-          case self::REQUEST_SUB_TOPIC_RUN_ALL:
-            // for the given project (re-)generate all generated receivables
-            $missing = [];
-            foreach (['projectId', 'updateStrategy', 'progressToken'] as $parameter) {
-              if (empty($data[$parameter])) {
-                $missing[] = $parameter;
-              }
-            }
-            if (!empty($missing)) {
-              return self::grumble(
-                $this->l->t('Missing parameters in request "%s/%s": "%s".', [
-                  $topic, $subTopic, implode('", "', $missing),
-                ]));
-            }
-            $updateStrategy = $data['updateStrategy'];
-            if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
-              return self::grumble(
-                $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
-            }
-            $this->logInfo('Update Strategy ' . $updateStrategy);
-
-            /**  @var Entities\Project $project */
-            $projectId = $data['projectId'];
-            $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-            if (empty($project)) {
-              return self::grumble($this->l->t('Unable to find the project with the id %d.', $projectId));
-            }
-            $generatedFields = $this->participantFieldsService->generatedFields($project);
-            if ($generatedFields->isEmpty()) {
-              return self::response(
-                $this->l->t('Project "%s" has no generated fields.', $project->getName()));
-            }
-
-            // id for progress-bar
-            $progressToken = $data['progressToken'];
-
-            $fieldsAffected = 0;
-            $messages = [];
-            $this->entityManager->beginTransaction();
-            try {
-              $progressStatusService = $this->di(ProgressStatusService::class);
-              foreach ($generatedFields as $field) {
-                $progressStatus = $progressStatusService->get($progressToken);
-
-                /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-                $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
-                if (empty($generator)) {
-                  throw new RuntimeException($this->l->t(
-                    'Unable to load generator for recurring receivables "%s".',
-                    $field->getName()));
-                }
-
-                $generator->generateReceivables();
-                $this->flush();
-
-                /** @todo Make strategy selectable from UI */
-                list(
-                  'added' => $added,
-                  'removed' => $removed,
-                  'changed' => $changed,
-                  'skipped' => $skipped,
-                  'notices' => $notices,
-                ) = $generator->updateAll($updateStrategy);
-                $this->flush();
-
-                $messages[] = $this->l->t(
-                  'Field "%s", options addded/removed/changed/skipped: %d/%d/%d/%d.',
-                  [ $field->getName(), $added, $removed, $changed, $skipped ]);
-                $fieldsAffected += $added + $removed + $changed; // $skipped are not affected
-                // display further messages if present
-                $messages += (array)$notices;
-              }
-
-              $this->entityManager->commit();
-            } catch (Throwable $t) {
-              $this->logException($t);
-              $this->entityManager->rollback();
-              throw new Exceptions\EnduserNotificationException(
-                $this->l->t('Unable to regenerate the autogenerated receivables for the project "%1$s".', $project->getName()),
-                previous: $t,
-                httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
-              );
-            }
-
-            return self::dataResponse([
-              'message' => $messages,
-              'fieldsAffected' => $fieldsAffected,
-            ]);
           default:
             break;
         }
         break;
-      case self::REQUEST_TOPIC_OPTION:
+      case EnumParticipantFieldTopic::OPTION:
         switch ($subTopic) {
-          case self::REQUEST_SUB_TOPIC_DEFINE:
+          case EnumParticipantFieldSubTopic::DEFINE:
             if (empty($data)) {
-              return self::grumble($this->l->t('Missing parameters in request %s', $topic));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Missing parameters in request %s', $topic)),
+              );
             }
             $default = $data['default'];
             $index = $data['index'];
@@ -514,18 +346,22 @@ class ProjectParticipantFieldsController extends Controller
               false);
 
             if (count($dataOptions) !== 1) {
-              return self::grumble($this->l->t(
-                'No or too many items available: %s',
-                print_r($dataOptions, true) ));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t(
+                  'No or too many items available: %s',
+                  print_r($dataOptions, true) )),
+              );
             }
 
             $item = array_shift($dataOptions);
 
             if ($item['label'] === Constants::README_NAME) {
-              return self::grumble($this->l->t(
-                'Using "%1$s" as option-label is not allowed.'
-                . ' The "%2$s"-file is reserved by the app to hold the contents of the tooltip for this field.', [
-                  $item['label'], Constants::README_NAME ]));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t(
+                  'Using "%1$s" as option-label is not allowed.'
+                  . ' The "%2$s"-file is reserved by the app to hold the contents of the tooltip for this field.', [
+                    $item['label'], Constants::README_NAME ])),
+              );
             }
 
             // remove dangerous html
@@ -550,17 +386,21 @@ class ProjectParticipantFieldsController extends Controller
                   if (!empty($item['deposit'])) {
                     $parsed = $this->fuzzyInput->currencyValue($item['deposit']);
                     if ($parsed === false) {
-                      return self::grumble($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ]));
+                      new Exceptions\EnduserNotificationException(
+                        ($this->l->t('Could not parse number: "%s"', [ $item['deposit'] ])),
+                      );
                     }
                     $item['deposit'] = $parsed;
                   }
                   break;
                 case FieldDataType::CLOUD_FILE:
                   if ($item['label'] === Constants::README_NAME) {
-                    return self::grumble($this->l->t(
-                      'Using "%1$s" as option-label is not allowed.'
-                      . ' The "%2$s"-file is used by the app to hold the contents of the help-text for this field.', [
-                        $item['label'], Constants::README_NAME ]));
+                    new Exceptions\EnduserNotificationException(
+                      ($this->l->t(
+                        'Using "%1$s" as option-label is not allowed.'
+                        . ' The "%2$s"-file is used by the app to hold the contents of the help-text for this field.', [
+                          $item['label'], Constants::README_NAME ])),
+                    );
                   }
                   break;
                 default:
@@ -579,12 +419,13 @@ class ProjectParticipantFieldsController extends Controller
             }
             $options = PageNavigation::selectOptions($options);
 
-            return self::dataResponse([
-              'message' => $this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ]),
-              'dataOptionFormInputs' => $input,
-              'dataOptionSelectOption' => $options,
-            ]);
-          case self::REQUEST_SUB_TOPIC_REGENERATE:
+            return new DTO\ParticipantFieldOptionDefineResponse(
+              messages: [$this->l->t("Request \"%s/%s\" successful", [ $topic, $subTopic, ])],
+              dataOptionFormInputs: $input,
+              dataOptionSelectOptions: $options,
+            )->response();
+
+          case EnumParticipantFieldSubTopic::REGENERATE:
             // either musicianId or key may be missing
             $missing = [];
             foreach (['fieldId', 'updateStrategy'] as $parameter) {
@@ -596,15 +437,19 @@ class ProjectParticipantFieldsController extends Controller
               $missing += [ 'key', 'musicianId' ];
             }
             if (!empty($missing)) {
-              return self::grumble(
-                $this->l->t('Missing parameters in request "%s/%s": "%s".', [
-                  $topic, $subTopic, implode('", "', $missing),
-                ]));
+              new Exceptions\EnduserNotificationException(
+                (
+                  $this->l->t('Missing parameters in request "%s/%s": "%s".', [
+                    $topic, $subTopic, implode('", "', $missing),
+                  ])),
+              );
             }
             $updateStrategy = $data['updateStrategy'];
             if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
-              return self::grumble(
-                $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy)));
+              new Exceptions\EnduserNotificationException(
+                (
+                  $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy))),
+              );
             }
             $this->logInfo('Update Strategy ' . $updateStrategy);
 
@@ -612,7 +457,9 @@ class ProjectParticipantFieldsController extends Controller
             /** @var Entities\ProjectParticipantField $field */
             $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
             if (empty($field)) {
-              return self::grumble($this->l->t('Unable to fetch field with id "%s".', $fieldId));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t('Unable to fetch field with id "%s".', $fieldId)),
+              );
             }
 
             /** @var Entities\ProjectParticipant $participant */
@@ -623,9 +470,11 @@ class ProjectParticipantFieldsController extends Controller
                 'musician' => $data['musicianId'],
               ]);
               if (empty($participant)) {
-                return self::grumble($this->l->t(
-                  'Unable to find the musician with the id "%d" in project "%s".',
-                  [ $data['musicianId'], $field->getProject()->getName(), ]));
+                new Exceptions\EnduserNotificationException(
+                  ($this->l->t(
+                    'Unable to find the musician with the id "%d" in project "%s".',
+                    [ $data['musicianId'], $field->getProject()->getName(), ])),
+                );
               }
             }
 
@@ -637,7 +486,9 @@ class ProjectParticipantFieldsController extends Controller
             if (!empty($data['key'])) {
               $receivable = $field->getDataOption($data['key']);
               if (empty($receivable)) {
-                return self::grumble($this->l->t('Unable to fetch receivable with key "%s".', $data['key']));
+                new Exceptions\EnduserNotificationException(
+                  ($this->l->t('Unable to fetch receivable with key "%s".', $data['key'])),
+                );
               }
             }
 
@@ -646,9 +497,11 @@ class ProjectParticipantFieldsController extends Controller
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
             $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
             if (empty($generator)) {
-              return self::grumble($this->l->t(
-                'Unable to load generator for recurring receivables "%s".',
-                $field->getName()));
+              new Exceptions\EnduserNotificationException(
+                ($this->l->t(
+                  'Unable to load generator for recurring receivables "%s".',
+                  $field->getName())),
+              );
             }
 
             $messages = [];
@@ -744,6 +597,8 @@ class ProjectParticipantFieldsController extends Controller
       default:
         break;
     }
-    return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
+    new Exceptions\EnduserNotificationException(
+      ($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ])),
+    );
   }
 }

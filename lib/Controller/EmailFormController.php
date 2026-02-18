@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use Throwable;
@@ -59,10 +61,19 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
+#[TSAttributes\TypeScript]
 class EmailFormController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const BASE_PATH = 'communication/email/outgoing';
+
+  public const END_POINT_FORM = 'form';
+  public const END_POINT_COMPOSER = 'composer';
+  public const END_POINT_RECIPIENTS = 'recipients-filter';
+  public const END_POINT_CONTACTS = 'contacts';
+  public const END_POINT_ATTACHMENT = 'attachment';
 
   public const UPLOAD_KEY = 'files';
 
@@ -107,7 +118,7 @@ class EmailFormController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/communication/email/outgoing/form')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_FORM)]
   public function webForm(
     int $projectId = 0,
     ?string $projectName = null,
@@ -328,7 +339,7 @@ class EmailFormController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/communication/email/outgoing/composer/{operation}/{topic}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_COMPOSER . '/{operation}/{topic}',
     defaults: [
       'operation' => EnumEmailFormComposerOperation::UPDATE->value,
       'topic' => EnumEmailFormComposerTopic::UNSPECIFIC->value,
@@ -935,7 +946,7 @@ class EmailFormController extends Controller
    * @return DataResponse|JSONResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/communication/email/outgoing/recipients-filter')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECIPIENTS)]
   public function recipientsFilter(
     ?int $projectId,
     ?string $projectName,
@@ -1032,7 +1043,7 @@ class EmailFormController extends Controller
    * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/communication/email/outgoing/contacts/{operation}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_CONTACTS . '/{operation}')]
   public function contacts(string $operation): Response
   {
     $operation = EnumEmailFormContactsOperation::get($operation);
@@ -1152,14 +1163,14 @@ class EmailFormController extends Controller
   /**
    * Fetch uploaded attachments, or faked "uploads" from the cloud FS.
    *
-   * @param string $source Attachment origin.
+   * @param string|AttachmentOrigin $source Attachment origin.
    *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/communication/email/outgoing/attachment/{source}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_ATTACHMENT . '/{source}',
     defaults: [ 'source' => AttachmentOrigin::UPLOAD->value ]
   )]
   public function attachment(string $source):DataResponse

@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Controller\DTO;
 
 use OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse\DuplicateMusician;
+
 /**
  * Duplicate musicians response DTO.
  */

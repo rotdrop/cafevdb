@@ -24,13 +24,15 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Database\EntityManager;
+use OCP\IRequest;
+use Psr\Log\LoggerInterface;
+
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 
@@ -38,19 +40,19 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
  * Staff related to financial accounting. Just autocomplete for the GnuCash
  * accounts ATM.
  */
+#[TSAttributes\TypeScript]
 class AccountingController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT = 'accounting/autocomplete/gnucash-accounts';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    protected EntityManager $entityManager,
-    protected GnuCashConnectorService $gnuCashConnectorService,
-    protected ILogger $logger,
+    private GnuCashConnectorService $gnuCashConnectorService,
+    protected LoggerInterface $logger,
   ) {
     parent::__construct($appName, $request);
   }
@@ -61,15 +63,15 @@ class AccountingController extends Controller
    *
    * @return DataResponse
    *
-   * @throws Exceptions\End
+   * @throws Exceptions\EndUserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/accounting/autocomplete/gnucash-accounts/{project}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT . '/{project}')]
   public function autocompleteGnuCashAccounts(
     int|string $project,
-  ):DataResponse {
+  ): Http\DataResponse|Http\JSONResponse {
     $autocompleteData = $this->gnuCashConnectorService->getAccountsAutocompleteData($project);
 
-    return new DataResponse($autocompleteData);
+    return DTO\AutocompleteGnuCashAccountsResponse::fromArray($autocompleteData)->response();
   }
 }

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -36,10 +38,13 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage the web-pages via the CMS. */
+#[TSAttributes\TypeScript]
 class ProjectWebPagesController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const END_POINT = 'project/webpages';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -66,7 +71,7 @@ class ProjectWebPagesController extends Controller
    * @return Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/webpages/{topic}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT . '/{topic}')]
   public function serviceSwitch(
     string $topic,
     ?int $projectId = null,

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
@@ -38,10 +40,13 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /** Encryption/Decryption AJAX end-points. */
+#[TSAttributes\TypeScript]
 class CryptoController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+
+  public const END_POINT = 'crypto/decryption/unseal/batch';
 
   public const META_DATA_IBAN = 'iban';
 
@@ -83,7 +88,7 @@ class CryptoController extends Controller
    * @return Http\DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/crypto/decryption/unseal/batch')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT)]
   public function batchUnseal(array $sealedData, ?string $metaData):Http\DataResponse
   {
     $start = hrtime(true);

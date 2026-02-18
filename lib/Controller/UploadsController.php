@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
- * Simple upload end-point which moved uploaded file to a temporary
+ * Simple upload end-points which move uploaded file to and from a temporary
  * location in the app-storage area.
  */
 #[TSAttributes\TypeScript]
@@ -55,6 +55,9 @@ class UploadsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT_MOVE = 'upload/move';
+  public const END_POINT_STASH = 'upload/stash';
 
   public const UPLOAD_KEY = 'files';
 
@@ -86,9 +89,15 @@ class UploadsController extends Controller
    * the stashed file.
    *
    * @return DataResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[Coreattributes\FrontpageRoute(verb: 'POST', url: '/upload/move/{storage}', defaults: ['storage' => EnumFileStorageBackend::CLOUD->value])]
+  #[Coreattributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::END_POINT_MOVE . '/{storage}',
+    defaults: ['storage' => EnumFileStorageBackend::CLOUD->value],
+  )]
   public function move(
     string $stashedFile,
     string $destinationPath,
@@ -98,28 +107,26 @@ class UploadsController extends Controller
     bool $encrypted = false,
     int $ownerId = 0,
     string $uploadFolder = AppStorage::UPLOAD_FOLDER
-  ): DataResponse {
+  ): Http\DataResponse|Http\JsonResponse {
     $uploadMOde = EnumFileUploadMode::get($uploadMOde);
     $storage = EnumFileStorageBackend::get($storage);
     if ($uploadMode == EnumFileUploadMode::MOVE) {
       if (empty($originalFileName)) {
-        return self::grumble($this->l->t(
-          'Original file path is not given, cannot move files.'
-        ));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Original file path is not given, cannot move files.'),
+        );
       }
       /** @var File $originalFile */
       $originalFile = $this->userStorage->getFile($originalFileName);
       if (empty($originalFile)) {
-        return self::grumble($this->l->t(
-          'The original file "%s" cannot be found, cannot move files.',
-          $originalFileName
-        ));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The original file "%s" cannot be found, cannot move files.', $originalFileName),
+        );
       }
       if (!($originalFile->getPermissions() & CloudConstants::PERMISSION_DELETE)) {
-        return self::grumble($this->l->t(
-          'Original file "%s" cannot be deleted, moving it is therefore not possible.',
-          $originalFileName
-        ));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Original file "%s" cannot be deleted, moving it is therefore not possible.', $originalFileName),
+        );
       }
       $originalFile->delete();
     }
@@ -128,20 +135,21 @@ class UploadsController extends Controller
     switch ($storage) {
       case EnumFileStorageBackend::CLOUD:
         if ($uploadMode == EnumFileUploadMode::LINK) {
-          return self::grumble($this->l->t(
-            'Linking files is only support when the destination storage is backed by the data-base.'
-          ));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Linking files is only support when the destination storage is backed by the data-base.'),
+          );
         }
 
         $this->userStorage->putContent($destinationPath, $appFile->getContent());
         $downloadLink = $this->userStorage->getDownloadLink($destinationPath);
         $appFile->delete();
 
-        return self::dataResponse([
-          'message' => $this->l->t('Moved "%s" to "%s".', [ $stashedFile, $destinationPath ]),
-          'fileName' => basename($destinationPath),
-          'downloadLink' => $downloadLink,
-        ]);
+        return new DTO\FileUploadMoveResponse(
+          messages: [$this->l->t('Moved "%s" to "%s".', [ $stashedFile, $destinationPath ])],
+          fileName: basename($destinationPath),
+          downloadLink: $downloadLink,
+        )->response();
+
       case EnumFileStorageBackend::DB:
         // here $destinationPath is the file-name in the data-base
         if (empty($this->entityManager)) {
@@ -155,13 +163,14 @@ class UploadsController extends Controller
           // increase the link-count.
           $dbFile = $this->entityManager->find(Entities\File::class, $originalFileName);
           if (empty($dbFile)) {
-            return self::grumble($this->l->t('Link source cannot be found.'));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Link source cannot be found.'),
+            );
           }
           if ($encrypted && !($dbFile instanceof Entities\EncryptedFile)) {
-            return self::grumble($this->l->t(
-              'Encryption requested, but link-source "%s" is unencrypted',
-              $dbFile->getName()
-            ));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Encryption requested, but link-source "%s" is unencrypted', $dbFile->getName()),
+            );
           }
         } else {
           /** @var Entities\EncryptedFile $dbFile */
@@ -203,14 +212,16 @@ class UploadsController extends Controller
           . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
           . '&fileName=' . urlencode(basename($destinationPath));
 
-        return self::dataResponse([
-          'message' => $this->l->t('Moved "%1$s" to db-storage with name "%2$s", id %d.', [ $stashedFile, $destinationPath, $dbFile->getId() ]),
-          'fileName' => basename($destinationPath),
-          'fileId' => $dbFile->getId(),
-          'downloadLink' => $downloadLink,
-        ]);
+        return new DTO\FileUploadMoveResponse(
+          messages: [$this->l->t('Moved "%1$s" to db-storage with name "%2$s", id %d.', [ $stashedFile, $destinationPath, $dbFile->getId() ])],
+          fileName: basename($destinationPath),
+          fileId: $dbFile->getId(),
+          downloadLink:  $downloadLink,
+        )->response();
     }
-    return self::grumble($this->l->t('Unknown request'));
+    throw new Exceptions\EnduserNotificationException(
+      $this->l->t('Unknown request'),
+    );
   }
 
   /**
@@ -244,7 +255,7 @@ class UploadsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/upload/stash')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT_STASH)]
   public function stash(
     array $cloudPaths = [],
     string $uploadMode = EnumFileUploadMode::COPY->value,

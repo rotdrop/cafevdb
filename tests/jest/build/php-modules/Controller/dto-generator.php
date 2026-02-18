@@ -45,10 +45,11 @@ $outputDir = rtrim($argv[2], '/');
 switch ($dtoName) {
   case array_pop(explode('\\', DTO\DownloadsShareResponse::class)):
     $dto = new DTO\DownloadsShareResponse(
-      messages: ['MESSAGE'],
-      url: 'SHARE',
-      path: 'FOLDER',
+      dav: 'DAV',
       expires: DateTime::createFromFormat('Y-m-d h:i:s', '2025-11-04 01:02:03'),
+      messages: ['MESSAGE'],
+      path: 'FOLDER',
+      url: 'SHARE',
     );
     break;
   default:

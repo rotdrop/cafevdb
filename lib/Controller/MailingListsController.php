@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
 
 use OCP\AppFramework\Controller;
@@ -37,12 +39,15 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Handle subscription management callbacks */
+#[TSAttributes\TypeScript]
 class MailingListsController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  const OPERATION_INVITE = 'invite';
+  public const END_POINT = 'mailing-lists';
+
+  public const OPERATION_INVITE = 'invite';
   const OPERATION_SUBSCRIBE = 'subscribe';
   const OPERATION_UNSUBSCRIBE = 'unsubscribe';
   const OPERATION_ACCEPT = 'accept';
@@ -70,7 +75,7 @@ class MailingListsController extends Controller
   }
 
   /**
-   * @param string $operation Operation to perform.
+   * @param string|EnumMailingListOperation $operation Operation to perform.
    *
    * @param string $list List id of FQDN.
    *
@@ -83,40 +88,41 @@ class MailingListsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/mailing-lists/{operation}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT. '/{operation}')]
   public function serviceSwitch(
-    string $operation,
+    string|EnumMailingListOperation $operation,
     string $list,
     string $email,
     ?string $displayName = null,
     ?string $role = null,
-  ):DataResponse {
+  ): DataResponse {
+    $operation = EnumMailingListOperation::get($operation);
     if ($list == 'announcements') {
       $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
     }
     try {
       switch ($operation) {
-        case self::OPERATION_INVITE:
+        case EnumMailingListOperation::INVITE:
           $this->logInfo('INVITE ' . $list . ' / ' . $email);
           $this->listsService->invite($list, email: $email, displayName: $displayName);
           break;
-        case self::OPERATION_SUBSCRIBE:
+        case EnumMailingListOperation::SUBSCRIBE:
           $this->logInfo('SUBSCRIBE ' . $list . ' / ' . $email);
           $this->listsService->subscribe($list, email: $email, displayName: $displayName, role: $role);
           break;
-        case self::OPERATION_UNSUBSCRIBE:
+        case EnumMailingListOperation::UNSUBSCRIBE:
           $this->logInfo('UNSUBSCRIBE ' . $list . ' / ' . $email);
           $this->listsService->unsubscribe($list, $email);
           break;
-        case self::OPERATION_ACCEPT:
+        case EnumMailingListOperation::ACCEPT:
           $this->logInfo('ACCEPT SUBSCRIPTION '  . $list  . ' / ' . $email);
           $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_ACCEPT);
           break;
-        case self::OPERATION_REJECT:
+        case EnumMailingListOperation::REJECT:
           $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
           $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
           break;
-        case self::OPERATION_RELOAD:
+        case EnumMailingListOperation::RELOAD:
           break;
         default:
           return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));

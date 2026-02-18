@@ -24,12 +24,13 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
 use OCP\IL10N;
@@ -40,6 +41,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -50,10 +52,15 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  * @todo Check whether the blog is still needed at all. Perhaps replace by
  * context sensisitive one-time popup messages.
  */
+#[TSAttributes\TypeScript]
 class BlogController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  public const BASE_PATH = 'blog';
+  public const END_POINT_EDIT = 'editentry';
+  public const END_POINT_ACTION = 'action';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -77,11 +84,13 @@ class BlogController extends Controller
   /**
    * Return template for editor.
    *
-   * @return Response
+   * @return Http\Response|Http\JsONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/blog/editentry')]
-  public function editEntry():Response
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_EDIT)]
+  public function editEntry(): Http\DataResponse|Http\JsonResponse
   {
     $author   = $this->request->getParam('author', $this->userId);
 
@@ -93,7 +102,9 @@ class BlogController extends Controller
     $reader   = $this->request->getParam('reader', '');
 
     if (empty($author)) {
-      return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Refusing to create blog entry without author identity.'),
+      );
     }
 
     if (!empty($blogId) && !($inReplyTo > 0) && $content == '') {
@@ -101,11 +112,15 @@ class BlogController extends Controller
       try {
         $entry = $this->blogMapper->find($blogId);
       } catch (Throwable $t) {
-        $this->logException($t);
-        return self::grumble($this->l->t('Error, caught an exception `%s\'.', [$t->getMessage()]));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception `%s\'.', [$t->getMessage()]),
+          previous: $t,
+        );
       }
       if (!$entry) {
-        return self::grumble('Blog entry with id `%s\' could not be retrieved.', [$blogId]);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Blog entry with id `%s\' could not be retrieved.', [$blogId]),
+        );
       }
 
       $content = $entry->getMessage();
@@ -150,14 +165,21 @@ class BlogController extends Controller
   /**
    * Return template for editor
    *
-   * @param string $operation
+   * @param string|EnumBlogAction $operation
    *
-   * @return Response
+   * @return Http\DataResponse|Http\JsoNResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/blog/action/{operation}')]
-  public function action(string $operation):Response
+  #[CoreAttributes\FrontpageRoute(
+    verb: 'POST',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_ACTION . '/{action}',
+  )]
+  public function action(string|EnumBlogAction $action): Http\DataResponse|Http\JsonResponse
   {
+    $action = EnumBlogAction::get($action);
+
     $author    = $this->request->getParam('author', $this->userId);
     $blogId    = $this->request->getParam('blogId', null);
     $inReplyTo = $this->request->getParam('inReplyTo', null);
@@ -171,9 +193,10 @@ class BlogController extends Controller
 
     $realValue = filter_var($popup, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
     if ($realValue === null) {
-      return self::grumble(
+      throw new Exceptions\EnduserNotificationException(
         $this->l->t(
-          'Value "%1$s" for set "%2$s" is not convertible to boolean.', [$popup, 'popup']));
+          'Value "%1$s" for set "%2$s" is not convertible to boolean.', [$popup, 'popup']),
+      );
     }
     $popup = $realValue;
 
@@ -182,48 +205,60 @@ class BlogController extends Controller
     }
 
     if (empty($author)) {
-      return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Refusing to create blog entry without author identity.'),
+      );
     }
 
     if ($priority !== false && !is_numeric($priority)) {
-      return self::grumble(
-        $this->l->t('Message priority should be numeric (and in principle positiv and in the range 0 - 255). I got `%s\'', [ $priority ]));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Message priority should be numeric (and in principle positiv and in the range 0 - 255). I got `%s\'',
+          [ $priority ],
+        ),
+      );
     }
 
     $generateContents = true;
     $html = '';
 
-    switch ($operation) {
-      case 'create':
+    switch ($action) {
+      case EnumBlogAction::CREATE:
         // Sanity checks
         if (empty(trim($content))) {
-          return self::grumble($this->l->t('Refusing to create empty blog entry.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Refusing to create empty blog entry.'),
+          );
         }
         $priority = intval($priority) % 256;
         /* $result = */$this->blogMapper->createNote($author, $inReplyTo, $content, $priority, $popup);
         break;
-      case 'modify':
+      case EnumBlogAction::MODIFY:
         if ($blogId < 0) {
-          return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Cannot modify a blog-entry without id.'),
+          );
         }
         $priority = intval($priority) % 256;
         /* $result = */$this->blogMapper->modifyNote($author, $blogId, trim($content), $priority, $popup, $reader);
         break;
-      case 'markread':
+      case EnumBlogAction::MARK_READ:
         if ($blogId < 0) {
-          return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Cannot modify a blog-entry without id.'),
+          );
         }
         /* $result = */$this->blogMapper->modifyNote($author, $blogId, '', false, null, $author);
         $generateContents = false;
         break;
-      case 'delete':
+      case EnumBlogAction::DELETE:
         if ($blogId < 0) {
-          return self::grumble($this->l->t('Cannot delete a blog-thread without id.'));
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Cannot delete a blog-thread without id.'),
+          );
         }
         /* $result = */$this->blogMapper->deleteNote($blogId, false);
         break;
-      default:
-        return self::grumble($this->l->t('Unknown Request'));
     }
 
     if ($generateContents) {

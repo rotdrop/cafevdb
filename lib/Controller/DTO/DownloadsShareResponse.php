@@ -33,14 +33,17 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
  */
 class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+
   public readonly ?CarbonImmutable $expires;
 
   /** {@inheritdoc} */
   public function __construct(
-    /** @var string[] */
-    public readonly ?string $url,
-    public readonly ?string $path,
+    public readonly ?string $dav,
     ?DateTimeInterface $expires,
+    public readonly ?string $path,
+    public readonly ?string $url,
+    /** @var string[] */
     public readonly array $messages = [],
   ) {
     $this->expires = CarbonImmutable::instance($expires);
@@ -65,9 +68,10 @@ class DownloadsShareResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDT
     }
     return new self(
       messages: $messages ?? [],
+      dav: $dav ?? null,
       url: $url ?? null,
       path: $path ?? null,
-      expires: $expires ?? null,
+      expires: self::convertToDateTime($expires),
     );
   }
 }

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -42,10 +44,13 @@ use OCA\CAFEVDB\BackgroundJob\CleanupFilesCache;
  * Run background-jobs triggered by AJAX pings from the front-end. The idea
  * here is that these jobs are running with an authenticated user.
  */
+#[TSAttributes\TypeScript]
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  public const END_POINT = 'backgroundjob/trigger';
 
   /**
    * @var int
@@ -71,7 +76,7 @@ class BackgroundJobController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/backgroundjob/trigger')]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT)]
   public function trigger():DataResponse
   {
     try {

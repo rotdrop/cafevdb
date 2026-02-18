@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
 
 /**
@@ -33,6 +35,7 @@ use OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
  *
  * @todo This should rather be specified per project.
  */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipationContext: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;

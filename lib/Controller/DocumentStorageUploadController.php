@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 use UnexpectedValueException;
-
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -46,6 +47,7 @@ use OCA\CAFEVDB\Storage\Database\Storage as DatabaseStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX endpoint to support maintenance of tax exemption notices. */
+#[TSAttributes\TypeScript]
 class DocumentStorageUploadController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -53,6 +55,8 @@ class DocumentStorageUploadController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+
+  public const END_POINT = 'documents';
 
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';

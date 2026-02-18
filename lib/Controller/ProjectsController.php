@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,6 +61,12 @@ class ProjectsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
+  public const BASE_PATH = 'projects';
+
+  public const END_POINT_VALIDATE = 'validate';
+  public const END_POINT_CHANGE_INSTRUMENTAION = 'change-instrumentation';
+  public const END_POINT_MAILING_LISTS = 'mailing-lists';
+
   const LIST_OPERATION_CREATE = 'create';
   const LIST_OPERATION_SUBSCRIBE = 'subscribe';
   const LIST_OPERATION_CLOSE = 'close';
@@ -80,12 +86,12 @@ class ProjectsController extends Controller
   }
 
   /**
-   * @param string $topic What to validate.
+   * @param string|EnumProjectValidationTopic $topic What to validate.
    *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/validate/projects/{topic}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_VALIDATE . '/{topic}')]
   public function validate(string $topic):DataResponse
   {
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
@@ -98,7 +104,9 @@ class ProjectsController extends Controller
         ];
         foreach ($required as $key => $subject) {
           if (empty($projectValues[$key])) {
-            return self::grumble($this->l->t("The %s must not be empty.", [$subject]));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t("The %s must not be empty.", [$subject]),
+            );
           }
         }
         $control = $this->request->getParam('control', 'name');
@@ -108,7 +116,7 @@ class ProjectsController extends Controller
         $projectYear = $projectValues['year'];
         $attachYear  = !empty($projectValues['type']) && $projectValues['type'] == ProjectType::TEMPORARY->value;
 
-        $infoMessage = "";
+        $messages = [];
         switch ($control) {
           case "submit":
           case "name":
@@ -119,7 +127,7 @@ class ProjectsController extends Controller
             $projectService = $this->di(ProjectService::class);
             $projectName = $projectService->sanitizeName($projectName);
             if ($origName != $projectName) {
-              $infoMessage .= $this->l->t(
+              $messages[] = $this->l->t(
                 'The project name has been simplified from "%s" to "%s".',
                 [ $origName, $projectName ]
               );
@@ -133,26 +141,36 @@ class ProjectsController extends Controller
                 $projectYear = $matches[2];
               }
               if ($projectName == "") {
-                return self::grumble($this->l->t("The project-name must not only consist of the year-number."));
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t("The project-name must not only consist of the year-number."),
+                );
               }
             } elseif ($projectName == "") {
-              return self::grumble($this->l->t("No project-name given."));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t("No project-name given."),
+              );
             }
             if (mb_strlen($projectName) > Renderer::NAME_LENGTH_MAX) {
-              return self::grumble($this->l->t(
-                "The project-name is too long, ".
-                "please use something less than %d characters ".
-                "(excluding the attached year). Thanks",
-                [ Renderer::NAME_LENGTH_MAX ]
-              ));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t(
+                  "The project-name is too long, ".
+                  "please use something less than %d characters ".
+                  "(excluding the attached year). Thanks",
+                  [ Renderer::NAME_LENGTH_MAX ]
+                ),
+              );
             }
             // fallthrough
           case "year":
             if ($projectYear == "") {
-              return self::grumble($this->l->t("No project-year given."));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t("No project-year given."),
+              );
             }
             if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
-              return self::grumble($this->l->t("The project-year has to consist of four digits, e.g. ``1984''."));
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t("The project-year has to consist of four digits, e.g. ``1984''."),
+              );
             }
 
             // Strip the year from the name and replace with the given year
@@ -161,32 +179,40 @@ class ProjectsController extends Controller
             if ($attachYear) {
               $projectName = $strippedName . $projectYear;
               if ($projectName != $origName) {
-                $infoMessage .= $this->l->t("The year %s has been appended to the project-slug %s.", [ $projectYear, $strippedName ]);
+                $messages[] = $this->l->t("The year %s has been appended to the project-slug %s.", [ $projectYear, $strippedName ]);
               }
             }
             // Project name may be empty at this point. Why not
             break;
           default:
-            return self::grumble($this->l->t('Unknown Request'));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unknown Request'),
+            );
         }
 
         $repository = $this->getDatabaseRepository(Entities\Project::class);
         $projects = $repository->shortDescription();
         foreach ($projects['projects'] as $id => $nameYear) {
           if ($id != $projectId && $nameYear['name'] == $projectName && $nameYear['year'] == $projectYear) {
-            return self::grumble($this->l->t(
-              'A project with the name "%1$s" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year.',
-              [ $projectName, $projectYear, $id, $projectId ]
-            ));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'A project with the name "%1$s" already exists in the year %2$s with the id %3$d (new: %4$d). Please choose a different name or year.',
+                [ $projectName, $projectYear, $id, $projectId ]
+              ),
+            );
           }
         }
-        return self::dataResponse(['projectYear' => $projectYear,
-                                   'projectName' => $projectName,
-                                   'message' => $infoMessage ]);
+        return new DTO\ProjectValidationResponse(
+          messages: $messages,
+          year: $projectYear,
+          name: $projectName,
+        )->response();
       default:
         break;
     }
-    return self::grumble($this->l->t('Unknown Request'));
+    throw new Exceptions\EnduserNotificationException(
+      $this->l->t('Unknown Request'),
+    );
   }
 
   /**
@@ -200,7 +226,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/projects/change-instrumentation')]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_CHANGE_INSTRUMENTAION)]
   public function changeInstrumentation(string $instruments, string $voices):DataResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
@@ -238,7 +264,9 @@ class ProjectsController extends Controller
 
     $voicesSelectOptions = PageNavigation::selectOptions($voicesSelectArray, $voices);
 
-    return self::dataResponse([ 'voices' => $voicesSelectOptions ]);
+    return new DTO\ChangeProjectInstrumentationResponse(
+      voices: $voicesSelectOptions,
+    )->response();
   }
 
   /**
@@ -251,7 +279,7 @@ class ProjectsController extends Controller
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/mailing-lists/{operation}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_MAILING_LISTS . '/{operation}')]
   public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
   {
     switch ($operation) {
@@ -384,8 +412,8 @@ class ProjectsController extends Controller
     return self::grumble($this->l->t('Unknown Request: "%s".', $operation));
   }
 
-  const GET_PROJECT_FOLDER = 'folder';
-  const FOLDER_TYPES = [
+  public const GET_PROJECT_FOLDER = 'folder';
+  public const FOLDER_TYPES = [
     ProjectService::FOLDER_TYPE_PROJECT => ConfigConstants::PROJECTS_FOLDER,
     ProjectService::FOLDER_TYPE_PARTICIPANTS => ConfigConstants::PROJECT_PARTICIPANTS_FOLDER,
     ProjectService::FOLDER_TYPE_POSTERS => ConfigConstants::PROJECT_POSTERS_FOLDER,
@@ -393,8 +421,8 @@ class ProjectsController extends Controller
     ProjectService::FOLDER_TYPE_BALANCE => ConfigConstants::BALANCES_FOLDER,
   ];
 
-  const GET_PROJECT_SHARE = 'share';
-  const SHARE_TYPES = [
+  public const GET_PROJECT_SHARE = 'share';
+  public const SHARE_TYPES = [
     ProjectService::FOLDER_TYPE_DOWNLOADS => ConfigConstants::PROJECT_PUBLIC_DOWNLOADS_FOLDER,
   ];
 
@@ -402,7 +430,7 @@ class ProjectsController extends Controller
    * Return the "event matrix", project events sorted by category with extra
    * information.
    */
-  const GET_EVENT_MATRIX = 'event-matrix';
+  public const GET_EVENT_MATRIX = 'event-matrix';
 
   /**
    * @param int $projectId Entity id.
@@ -416,14 +444,14 @@ class ProjectsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'GET',
-    url: '/projects/{projectId}/{topic}/{subTopic}',
+    url: '/' . self::BASE_PATH . '/{projectId}/{topic}/{subTopic}',
     requirements: ['projectId' => '^\d+$'],
     defaults: [
       'topic' => '',
       'subTopic' => ''
     ],
   )]
-  public function get(int $projectId, string $topic = '', string $subTopic = ''):DataResponse|JSONResponse
+  public function get(int $projectId, string $topic = '', string $subTopic = ''): DataResponse|JSONResponse
   {
     if (!($projectId > 0)) {
       throw new Exceptions\EnduserNotificationException(
@@ -502,7 +530,7 @@ class ProjectsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/projects/{projectId}/{topic}/{subTopic}',
+    url: '/' . self::BASE_PATH . '/{projectId}/{topic}/{subTopic}',
     defaults: [
       'topic' => '',
       'subTopic' => ''
@@ -552,7 +580,7 @@ class ProjectsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'DELETE',
-    url: '/projects/{projectId}/{topic}/{subTopic}',
+    url: '/' . self::BASE_PATH . '/{projectId}/{topic}/{subTopic}',
     defaults: [
       'topic' => '',
       'subTopic' => ''
@@ -612,7 +640,7 @@ class ProjectsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'PATCH',
-    url: '/projects/{projectId}/{topic}/{subTopic}',
+    url: '/' . self::BASE_PATH . '/{projectId}/{topic}/{subTopic}',
     defaults: [
       'topic' => '',
       'subTopic' => ''

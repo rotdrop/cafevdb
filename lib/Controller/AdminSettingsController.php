@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Throwable;
 
 use OCP\AppFramework\Controller;
@@ -47,12 +49,16 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 
 /** AJAX end-points for admin setttings. */
+#[TSAttributes\TypeScript]
 class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
+  public const END_POINT = 'settings/admin';
+
   public const POST_REQUEST_FONT_CACHE = 'font-cache';
+
   /**
    * Part of a "requirements" attribute paramter.
    */
@@ -94,7 +100,7 @@ class AdminSettingsController extends Controller
    * @return DataResponse|JSONResponse
    */
   #[CoreAttributes\AuthorizedAdminSetting(settings: AdminSettings::class)]
-  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/settings/admin/{parameter}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/' . self::END_POINT . '/{parameter}')]
   #[Attributes\NoGroupMemberRequired]
   public function get(string $parameter): DataResponse|JSONResponse
   {
@@ -181,7 +187,7 @@ class AdminSettingsController extends Controller
   #[Attributes\NoGroupMemberRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/settings/admin/{parameter}',
+    url: '/' . self::END_POINT . '/{parameter}',
     requirements: [ 'parameter' => '^(?!' . self::DELEGATABLE_POST_REQUESTS . ').*$' ],
   )]
   public function postAdminOnly(string $parameter, mixed $value): DataResponse|JSONResponse
@@ -203,7 +209,7 @@ class AdminSettingsController extends Controller
   #[CoreAttributes\AuthorizedAdminSetting(settings: AdminSettings::class)]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/settings/admin/{parameter}',
+    url: '/' . self::END_POINT . '/{parameter}',
     requirements: [ 'parameter' => '(' . AdminSettingsController::DELEGATABLE_POST_REQUESTS . ')' ],
   )]
   #[Attributes\NoGroupMemberRequired]

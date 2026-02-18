@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
@@ -54,6 +56,7 @@ use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** AJAX end-points for project participants */
+#[TSAttributes\TypeScript]
 class ProjectParticipantsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -62,21 +65,33 @@ class ProjectParticipantsController extends Controller
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
-  const LIST_ACTION_SUBSCRIBE = 'subscribe';
-  const LIST_ACTION_UNSUBSCRIBE = 'unsubscribe';
-  const LIST_ACTION_ENABLE_DELIVERY = 'enable-delivery';
-  const LIST_ACTION_DISABLE_DELIVERY = 'disable-delivery';
-  const LIST_ACTION_RELOAD_SUBSCRIPTION = 'reload-subscription';
+  public const BASE_PATH = 'projects/participants';
+  public const END_POINT_ADD_MUSICIANS = 'add-musicians';
+  public const END_POINT_VALIDATE_INSTRUMENTS = 'validate/instruments'; // TODO: dash
+  public const END_POINT_FILES = 'files';
+  public const END_POINT_MAILING_LIST = 'mailing-list';
+  public const END_POINTS = [
+    self::END_POINT_ADD_MUSICIANS,
+    self::END_POINT_FILES,
+    self::END_POINT_MAILING_LIST,
+    self::END_POINT_VALIDATE_INSTRUMENTS,
+  ];
 
-  const LIST_SUBSCRIPTION_DELIVERY_ENABLED = 'delivery-enabled';
-  const LIST_SUBSCRIPTION_DELIVERY_DISABLED = 'delivery-disabled';
-  const LIST_SUBSCRIPTION_DISABLED_BY_USER = 'disabled-by-user';
-  const LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES = 'disabled-by-bounces';
-  const LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR = 'disabled-by-moderator';
-  const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest';
+  public const LIST_ACTION_SUBSCRIBE = 'subscribe';
+  public const LIST_ACTION_UNSUBSCRIBE = 'unsubscribe';
+  public const LIST_ACTION_ENABLE_DELIVERY = 'enable-delivery';
+  public const LIST_ACTION_DISABLE_DELIVERY = 'disable-delivery';
+  public const LIST_ACTION_RELOAD_SUBSCRIPTION = 'reload-subscription';
 
-  const FILE_ACTION_DELETE = 'delete';
-  const FILE_ACTION_UPLOAD = 'upload';
+  public const LIST_SUBSCRIPTION_DELIVERY_ENABLED = 'delivery-enabled';
+  public const LIST_SUBSCRIPTION_DELIVERY_DISABLED = 'delivery-disabled';
+  public const LIST_SUBSCRIPTION_DISABLED_BY_USER = 'disabled-by-user';
+  public const LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES = 'disabled-by-bounces';
+  public const LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR = 'disabled-by-moderator';
+  public const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest';
+
+  public const FILE_ACTION_DELETE = 'delete';
+  public const FILE_ACTION_UPLOAD = 'upload';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -107,12 +122,12 @@ class ProjectParticipantsController extends Controller
    * @todo Throw exceptions< s.t. the middleware error reporting code can do its work.
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/add-musicians')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_ADD_MUSICIANS)]
   public function addMusicians(
     int $projectId,
     string|ParticipationContext $participationContext,
     ?int $musicianId = null,
-  ): Response {
+  ): Http\DataResponse|Http\JsONResponse {
 
     $participationContext = ParticipationContext::get($participationContext);
     // Multi-mode:
@@ -194,7 +209,6 @@ class ProjectParticipantsController extends Controller
           'template' => 'add-musicians',
         ],
       );
-      // return self::grumble([ 'message' => $messages ]);
 
     } else {
 
@@ -207,14 +221,9 @@ class ProjectParticipantsController extends Controller
         }
       }
 
-      return self::dataResponse(
-        [
-          'musicians' => $musicians,
-          'message' => $messages,
-        ]);
+      return DTO\AddMusiciansResponse::fromArray(compact('musicians', 'messages'))
+        ->response();
     }
-
-    return self::grumble($this->l->t('Unknown Request'));
   }
 
   /**
@@ -233,26 +242,15 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'post', url: '/projects/participants/validate/instruments/{context}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'post', url: '/' . self::BASE_PATH . '/' . self::END_POINT_VALIDATE_INSTRUMENTS . '/{context}')]
   public function validateInstrumentsSelection(
     string|EnumValidateInstrumentsContext $context,
     null|string|array $recordId = [],
     array $instrumentValues = [],
     ?string $only = null,
     ?string $exclude = null,
-  ):Response {
-    $contextCase = EnumValidateInstrumentsContext::tryFrom($context);
-    if ($contextCase === null) {
-      throw new InvalidArgumentException(
-        $this->l->t(
-          'Invalid context specified, expected one of "%1$s", got "%2$s".',
-          [
-            implode('", "', EnumValidateInstrumentsContext::values()),
-            $context,
-          ],
-        ),
-      );
-    }
+  ): Http\DataResponse|Http\JSONResponse {
+    $contextCase = EnumValidateInstrumentsContext::get($context);
 
     $this->logDebug($context . ' / ' . print_r($recordId, true) . ' / ' . print_r($instrumentValues, true));
     if (empty($instrumentValues)) {
@@ -394,7 +392,8 @@ class ProjectParticipantsController extends Controller
         }
 
         // all ok
-        return self::response($messages);
+        return new DTO\MessagesResponse(messages: $messages)
+          ->response();
 
       case EnumValidateInstrumentsContext::PROJECT:
 
@@ -430,7 +429,8 @@ class ProjectParticipantsController extends Controller
         }
 
         // all ok
-        return self::response($messages);
+        return new DTO\MessagesResponse(messages: $messages)
+          ->response();
     }
   }
 
@@ -456,7 +456,7 @@ class ProjectParticipantsController extends Controller
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/projects/participants/files/{operation}')]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_FILES . '/{operation}')]
   public function files(
     string $operation,
     int $musicianId,
@@ -467,7 +467,7 @@ class ProjectParticipantsController extends Controller
     ?string $fileName,
     ?string $data,
     ?string $files = null
-  ):Response {
+  ): Response {
     // $upload_max_filesize = \OCP\Util::computerFileSize(ini_get('upload_max_filesize'));
     // $post_max_size = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     // $maxUploadFileSize = min($upload_max_filesize, $post_max_size);
@@ -589,7 +589,10 @@ class ProjectParticipantsController extends Controller
           $this->entityManager->rollback();
           throw new RuntimeException($this->l->t('Unable to delete file "%s".', $filePath), $t->getCode(), $t);
         }
-        return self::response($this->l->t('Successfully removed file "%s".', $filePath));
+
+        return new DTO\MessagesResponse(
+          messages: [$this->l->t('Successfully removed file "%s".', $filePath)],
+        )->response();
 
       case self::FILE_ACTION_UPLOAD:
 
@@ -1035,7 +1038,7 @@ class ProjectParticipantsController extends Controller
    * @return OCP\AppFramework\Http\Response
    */
   #[CoreAttributes\NoAdminRequired]
-  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/projects/participants/mailing-list/{operation}')]
+  #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_MAILING_LIST . '/{operation}')]
   public function mailingListSubscriptions(
     string $operation,
     int $projectId,

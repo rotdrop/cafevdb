@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use InvalidArgumentException;
 
 use OCP\AppFramework\Controller;
@@ -60,10 +62,16 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** UI entry point providing the non-Vue front pages. */
+#[TSAttributes\TypeScript]
 class LegacyPageController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const BASE_PATH = 'page';
+
+  public const END_POINT_REMEMBER = 'remember';
+  public const END_POINT_LOADER = 'loader';
 
   const DEFAULT_TEMPLATE = PageRenderer\Projects::TEMPLATE;
 
@@ -108,7 +116,7 @@ class LegacyPageController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/page/remember/{renderAs}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_REMEMBER . '/{renderAs}',
     defaults: [
       'renderAs' => 'user',
     ],
@@ -147,7 +155,7 @@ class LegacyPageController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/page/loader/{renderAs}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_LOADER . '/{renderAs}',
     defaults: [
       'renderAs' => 'user',
     ],

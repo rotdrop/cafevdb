@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2025 Claus-Justus Heine
+ * @copyright 2011-2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 /**
- * Member status enum for musicians.
+ * Attachment origin enum.
  */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumAttachmentOrigin: string
 {
   use \OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait;
