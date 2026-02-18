@@ -822,7 +822,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setGender(null|string|Types\EnumGender $gender):Musician
+  public function setGender(null|string|Types\EnumGender $gender): Musician
   {
     if ($gender === null) {
       $this->gender = null;
@@ -838,7 +838,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumGender
    */
-  public function getGender():?Types\EnumGender
+  public function getGender(): ?Types\EnumGender
   {
     return $this->gender;
   }
@@ -846,11 +846,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Guess the gender from the name.
    *
-   * @param null|\OCP\IL10N $l
+   * @param ?|\OCP\IL10N $l
    *
    * @return array An array of guesses.
    */
-  public function guessGender(?\OCP\IL10N $l = null):array
+  public function guessGender(?\OCP\IL10N $l = null): array
   {
     $detector = new GenderDetector\GenderDetector();
     $country = $this->country;
