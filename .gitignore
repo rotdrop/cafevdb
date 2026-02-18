@@ -42,3 +42,5 @@ build-flavour
 .phpunit.cache
 dev-scripts/playground/php/*.php
 **/.ac-php-conf.json
+*.log
+app-toolkit-stamp
