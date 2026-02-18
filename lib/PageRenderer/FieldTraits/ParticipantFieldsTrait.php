@@ -38,11 +38,13 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
+use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet;
 use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\CssClasses;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
@@ -347,7 +349,7 @@ trait ParticipantFieldsTrait
         $defaultValue = $field->getDefaultValue();
         $defaultButton = '<input type="button"
        value="' . $this->l->t('Revert to default') . '"
-       class="display-postfix revert-to-default [BUTTON_STYLE]"
+       class="display-postfix ' . CssClasses::REVERT_TO_DEFAULT . ' [BUTTON_STYLE]"
        title="' . $this->toolTipsService[self::$toolTipsPrefix . ':revert-to-default'].'"
        data-field-id="' . $fieldId . '"
        data-field-property="[FIELD_PROPERTY]"
@@ -483,8 +485,11 @@ trait ParticipantFieldsTrait
                 ) {
                   $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                   if ($defaultValue !== '' && $defaultValue !== null) {
-                    $html .=
-                      str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultValue' ], $defaultButton);
+                    $html .= str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'hidden-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                   }
                   if ($op != PHPMyEdit::OPERATION_CHANGE) {
                     return $html;
@@ -592,7 +597,11 @@ trait ParticipantFieldsTrait
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
                   $depositFdd['display|ACP']['postfix'] .=
-                    str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
+                    str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'hidden-text', EnumParticipantFieldPropertyGet::DEFAULT_DEPOSIT->value ],
+                      $defaultButton,
+                    );
                 }
 
                 $depositFdd['php|VDLF'] = $viewCallback;
@@ -834,7 +843,11 @@ trait ParticipantFieldsTrait
                   $valueFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
                   $valueFdd['display|ACP']['postfix'] =
                     ($valueFdd['display|ACP']['postfix'] ?? '')
-                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                    . str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ],
+                      [ 'image-left-of-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                 }
                 break;
             }
@@ -1226,7 +1239,11 @@ trait ParticipantFieldsTrait
                   $keyFdd['display|ACP'] = $valueFdd['display|ACP'] ?? [];
                   $keyFdd['display|ACP']['postfix'] =
                     ($keyFdd['display|ACP']['postfix'] ?? '')
-                    . str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]', ], [ 'image-left-of-text', 'defaultValue', ], $defaultButton);
+                    . str_replace(
+                      [ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ],
+                      [ 'image-left-of-text', EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value ],
+                      $defaultButton,
+                    );
                 }
 
                 break;

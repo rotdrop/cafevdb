@@ -66,7 +66,7 @@ class ProjectAssociates extends ProjectParticipants
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  public const TEMPLATE = 'project-associates';
+  public const TEMPLATE = EnumTemplate::PROJECT_ASSOCIATES->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE;

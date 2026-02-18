@@ -42,7 +42,7 @@ class Blog extends AbstractPageRenderer
    *
    * The legacy template to load.
    */
-  public const TEMPLATE = 'blog/blog';
+  public const TEMPLATE = EnumTemplate::BLOG->value;
 
   /**
    * @param string $appName

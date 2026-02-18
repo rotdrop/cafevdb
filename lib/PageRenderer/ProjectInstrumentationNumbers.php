@@ -44,7 +44,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  public const TEMPLATE = 'project-instrumentation-numbers';
+  public const TEMPLATE = EnumTemplate::PROJECT_INSTRUMENTATION_NUMBERS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_INSTRUMENTATION_NUMBERS_TABLE;

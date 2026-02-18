@@ -35,5 +35,6 @@ class CssClasses
   public const CSS_PREFIX_POSTFIX = 'page';
   public const DIRECT_CHANGE = 'direct-change';
   public const PROJECT_PARTICIPANT_FIELDS_DISPLAY = 'project-participant-fields-display';
+  public const REVERT_TO_DEFAULT = 'revert-to-default';
   public const SHOW_HIDE_DISABLED = 'show-hide-disabled';
 }

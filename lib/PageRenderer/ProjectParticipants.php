@@ -77,7 +77,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\SepaAccountsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  public const TEMPLATE = 'project-participants';
+  public const TEMPLATE = EnumTemplate::PROJECT_PARTICIPANTS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANTS_TABLE;

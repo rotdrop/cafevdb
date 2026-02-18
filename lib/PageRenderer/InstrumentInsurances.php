@@ -54,7 +54,7 @@ class InstrumentInsurances extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  public const TEMPLATE = 'instrument-insurance';
+  public const TEMPLATE = EnumTemplate::INSTRUMENT_INSURANCES->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::INSTRUMENT_INSURANCES_TABLE;

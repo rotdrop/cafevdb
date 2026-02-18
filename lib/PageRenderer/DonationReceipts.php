@@ -52,10 +52,10 @@ class DonationReceipts extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  public const TEMPLATE = 'donation-receipts';
+  public const TEMPLATE = EnumTemplate::DONATION_RECEIPTS->value;
 
   #[TSAttributes\Hidden]
-  public const TABLE = 'DonationReceipts';
+  public const TABLE = DatabaseTables::DONATION_RECEIPTS_TABLE;
 
   protected const FORM_DATA = [
     PersistentCGIKeys::TEMPLATE => self::TEMPLATE,

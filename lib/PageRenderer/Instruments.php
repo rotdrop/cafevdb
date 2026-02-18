@@ -44,7 +44,7 @@ class Instruments extends PMETableViewBase
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  public const TEMPLATE = 'instruments';
+  public const TEMPLATE = EnumTemplate::INSTRUMENTS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::INSTRUMENTS_TABLE;

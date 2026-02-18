@@ -51,10 +51,10 @@ class TaxExemptionNotices extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
-  public const TEMPLATE = 'tax-exemption-notices';
+  public const TEMPLATE = EnumTemplate::TAX_EXEMPTION_NOTICES->value;
 
   #[TSAttributes\Hidden]
-  public const TABLE = 'TaxExemptionNotices';
+  public const TABLE = DatabaseTables::TAX_EXEMPTION_NOTICES_TABLE;
 
   protected $joinStructure = [
     self::TABLE => [

@@ -41,7 +41,7 @@ class ConfigCheck extends AbstractPageRenderer
    *
    * The legacy template to load.
    */
-  public const TEMPLATE = 'maintenance/configcheck';
+  public const TEMPLATE = EnumTemplate::CONFIG_CHECK->value;
 
   /**
    * @param string $appName

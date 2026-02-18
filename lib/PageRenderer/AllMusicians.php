@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 #[TSAttributes\TypeScript]
 class AllMusicians extends Musicians
 {
-  public const TEMPLATE = 'all-musicians';
+  public const TEMPLATE = EnumTemplate::ALL_MUSICIANS->value;
 
   /** {@inheritdoc} */
   public function __construct(

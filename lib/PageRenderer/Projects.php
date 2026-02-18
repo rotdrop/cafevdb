@@ -59,7 +59,7 @@ class Projects extends PMETableViewBase
   use FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  public const TEMPLATE = 'projects';
+  public const TEMPLATE = EnumTemplate::PROJECTS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECTS_TABLE;

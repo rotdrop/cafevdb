@@ -42,10 +42,10 @@ class InsuranceBrokers extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
 
-  public const TEMPLATE = 'insurance-brokers';
+  public const TEMPLATE = EnumTemplate::INSURANCE_BROKERS->value;
 
   #[TSAttributes\Hidden]
-  public const TABLE = 'InsuranceBrokers';
+  public const TABLE = DatabaseTables::INSURANCE_BROKERS_TABLE;
 
   protected $joinStructure = [
     self::TABLE => [

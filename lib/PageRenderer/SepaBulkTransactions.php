@@ -51,7 +51,7 @@ class SepaBulkTransactions extends PMETableViewBase
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\QueryFieldTrait;
 
-  public const TEMPLATE = 'sepa-bulk-transactions';
+  public const TEMPLATE = EnumTemplate::SEPA_BULK_TRANSACTIONS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::SEPA_BULK_TRANSACTIONS_TABLE;

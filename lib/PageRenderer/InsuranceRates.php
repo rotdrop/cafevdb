@@ -43,7 +43,7 @@ class InsuranceRates extends PMETableViewBase
 {
   use FieldTraits\FinanceModeNavigationItemTrait;
 
-  public const TEMPLATE = 'insurance-rates';
+  public const TEMPLATE = EnumTemplate::INSURANCE_RATES->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::INSURANCE_RATES_TABLE;

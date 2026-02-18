@@ -50,8 +50,7 @@ class AddMusicians extends Musicians
   use FieldTraits\ProjectEntityTrait;
   use FieldTraits\ProjectModeNavigationItemTrait;
 
-  public const TEMPLATE = 'add-musicians';
-
+  public const TEMPLATE = EnumTemplate::ADD_MUSICIANS->value;
   protected ?ParticipationContext $participationContext = null;
 
   /** {@inheritdoc} */

@@ -66,7 +66,7 @@ class SepaBankAccounts extends PMETableViewBase
 
   protected const AMOUNT_TAB_ID = 'amount';
 
-  public const TEMPLATE = 'sepa-bank-accounts';
+  public const TEMPLATE = EnumTemplate::SEPA_BANK_ACCOUNTS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::SEPA_BANK_ACCOUNTS_TABLE;

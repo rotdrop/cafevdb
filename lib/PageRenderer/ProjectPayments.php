@@ -62,7 +62,7 @@ class ProjectPayments extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
-  public const TEMPLATE = 'project-payments';
+  public const TEMPLATE = EnumTemplate::PROJECT_PAYMENTS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::COMPOSITE_PAYMENTS_TABLE;

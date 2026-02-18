@@ -68,7 +68,7 @@ class Invoices extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
-  public const TEMPLATE = 'invoices';
+  public const TEMPLATE = EnumTemplate::INVOICES->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::INVOICES_TABLE;

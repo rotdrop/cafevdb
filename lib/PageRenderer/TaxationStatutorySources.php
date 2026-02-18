@@ -46,7 +46,7 @@ class TaxationStatutorySources extends PMETableViewBase
   use FieldTraits\FinanceModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  public const TEMPLATE = 'taxation-statutory-sources';
+  public const TEMPLATE = EnumTemplate::TAXATION_STATUTORY_SOURCES->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE;

@@ -43,10 +43,10 @@ class InstrumentFamilies extends PMETableViewBase
   use FieldTraits\ProjectModeNavigationItemTrait;
   use FieldTraits\QueryFieldTrait;
 
-  public const TEMPLATE = 'instrument-families';
+  public const TEMPLATE = EnumTemplate::INSTRUMENT_FAMILIES->value;
 
   #[TSAttributes\Hidden]
-  public const TABLE = 'InstrumentFamilies';
+  public const TABLE = DatabaseTables::INSTRUMENT_FAMILIES_TABLE;
 
   protected const INSTRUMENTS_JOIN_TABLE = DatabaseTables::INSTRUMENT_INSTRUMENT_FAMILIES_JOIN_TABLE;
 

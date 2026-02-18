@@ -63,7 +63,7 @@ class ProjectParticipantFields extends PMETableViewBase
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  public const TEMPLATE = 'project-participant-fields';
+  public const TEMPLATE = EnumTemplate::PROJECT_PARTICIPANT_FIELDS->value;
 
   #[TSAttributes\Hidden]
   public const TABLE = DatabaseTables::PROJECT_PARTICIPANT_FIELDS_TABLE;
