@@ -954,10 +954,11 @@ class ProjectService
         $node = $this->userStorage->get($path);
         if (empty($node)) {
           return [
-            'url' => null,
-            'share' => null,
-            'path' => null,
+            'dav' => null,
             'expires' => null,
+            'path' => null,
+            'share' => null,
+            'url' => null,
           ];
         }
       } else {
@@ -1012,11 +1013,11 @@ class ProjectService
       );
     }
     return [
-      'share' => $share,
-      'url' => $url,
-      'path' => $path,
       'dav' => $dav,
       'expires' => $expires ?? null,
+      'path' => $path,
+      'share' => $share,
+      'url' => $url,
     ];
   }
 
