@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine  <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -111,7 +111,7 @@ class DonationReceiptsStorage extends Storage
    *
    * @param bool $flush Whether to flush the changes to the db.
    *
-   * @param EnumAddDocumentConflictAction $conflict
+   * @param EnumAddDocumentConflictAction $conflictAction
    *
    * @return Entities\DatabaseStorageFile
    */
@@ -119,7 +119,7 @@ class DonationReceiptsStorage extends Storage
     Entity $entity,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
+    EnumAddDocumentConflictAction $conflictAction = EnumAddDocumentConflictAction::FAIL,
   ):Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -146,7 +146,7 @@ class DonationReceiptsStorage extends Storage
         $this->persist($yearFolder);
       }
 
-      $document = $yearFolder->addDocument($file, $fileName, conflict: $conflict)
+      $document = $yearFolder->addDocument($file, $fileName, conflictAction: $conflictAction)
         ->setCreated($file->getCreated())
         ->setUpdated($file->getUpdated());
       $this->persist($document);
@@ -185,7 +185,7 @@ class DonationReceiptsStorage extends Storage
     Entities\EncryptedFile $file,
     bool $flush = true,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDocument($entity, $file, $flush, conflict: EnumAddDocumentConflictAction::REPLACE);
+    return $this->addDocument($entity, $file, $flush, conflictAction: EnumAddDocumentConflictAction::REPLACE);
   }
 
   /**

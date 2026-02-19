@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, 2025, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2026, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -173,7 +173,7 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
-   * @param EnumAddDocumentConflictAction $conflict
+   * @param EnumAddDocumentConflictAction $conflictAction
    *
    * @return null|Entities\DatabaseStorageFile
    */
@@ -181,7 +181,7 @@ class ProjectParticipantsStorage extends Storage
     Entities\SepaDebitMandate $debitMandate,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
+    EnumAddDocumentConflictAction $conflictAction = EnumAddDocumentConflictAction::FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -204,7 +204,7 @@ class ProjectParticipantsStorage extends Storage
         $this->persist($folderEntity);
       }
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName, conflict: $conflict);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, conflictAction: $conflictAction);
       $this->persist($documentEntity);
 
       if ($flush) {
@@ -241,7 +241,7 @@ class ProjectParticipantsStorage extends Storage
     bool $flush = true,
     bool $replace = false,
   ):?Entities\DatabaseStorageFile {
-    return $this->addDebitMandate($debitMandate, $file, $flush, conflict: EnumAddDocumentConflictAction::REPLACE);
+    return $this->addDebitMandate($debitMandate, $file, $flush, conflictAction: EnumAddDocumentConflictAction::REPLACE);
   }
 
   /**
@@ -301,7 +301,7 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
-   * @param EnumAddDocumentConflictAction $conflict
+   * @param EnumAddDocumentConflictAction $conflictAction
    *
    * @return null|Entities\DatabaseStorageFile
    */
@@ -309,7 +309,7 @@ class ProjectParticipantsStorage extends Storage
     Entities\CompositePayment $compositePayment,
     Entities\EncryptedFile $file,
     bool $flush = true,
-    EnumAddDocumentConflictAction $conflict = EnumAddDocumentConflictAction::FAIL,
+    EnumAddDocumentConflictAction $conflictAction = EnumAddDocumentConflictAction::FAIL,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -329,7 +329,7 @@ class ProjectParticipantsStorage extends Storage
       $folderEntity = $folderEntity->addSubFolder($this->getBankTransactionsFolderName());
       $this->persist($folderEntity);
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName, conflict: $conflict);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, conflictAction: $conflictAction);
       $this->persist($documentEntity);
 
       if ($flush) {
