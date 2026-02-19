@@ -40,7 +40,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     public readonly string $name,
     public readonly ?int $error,
     public readonly ?string $str_error,
-    public readonly ?string $message,
+    public readonly ?string $message, // why a single message?
     public readonly ?string $tmp_name,
     public readonly string $type,
     public readonly int $size,

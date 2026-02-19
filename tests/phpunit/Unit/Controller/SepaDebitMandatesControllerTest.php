@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
+use DateTimeImmutable;
 use DOMDocument;
 
 use PHPUnit\Framework\Attributes;
@@ -32,8 +33,9 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Controller\SepaDebitMandatesController;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\SepaDebitMandatesController;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -41,36 +43,100 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
-use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockProjectsRepositoryTrait;
+use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the SepaDebitMandatesController */
 #[Attributes\CoversClass(DTO\SepaBankAccount::class)]
 #[Attributes\CoversClass(DTO\SepaDebitMandate::class)]
 #[Attributes\CoversClass(SepaDebitMandatesController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\UuidType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\LogEntry::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitMandate::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoLoggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoSluggableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\InvoiceNumberHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaDebitMandatesRepository::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108084800::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260207000624::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
@@ -78,17 +144,20 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockProjectsRepository
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UnusedTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\AppConfigTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class SepaDebitMandatesControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
-  use MockMusiciansRepositoryTrait;
-  use MockProjectsRepositoryTrait;
+  use MockUserStorageTrait;
+  use SetupCalendarBackendTrait;
+  use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
 
   private const CONTROLLER_CLASS = SepaDebitMandatesController::class;
@@ -110,17 +179,46 @@ class SepaDebitMandatesControllerTest extends TestCase
 
   private MockProvider $mockProvider;
 
+  private TimeFactory $timeFactory;
+
+  private static bool $migrationsApplied = false;
+
+  private static int $projectId;
+
+  private static int $musicianId;
+
+  private DateTimeImmutable $now;
+
   /** {@inheritdoc} */
   public function setup(): void
   {
-    $this->generateProjectParticipant(persist: false);
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
+    $this->generateCalendarBackend();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
-    $this->getEntityManagerMock();
-    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
-    $this->getMusiciansRepositoryMock();
-    $this->getProjectsRepositoryMock();
+    $this->now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
+    /** @var TimeFactory $timeFactory */
+    $timeFactory = $this->getMockBuilder(TimeFactory::class)->getMock();
+    $timeFactory->method('now')->willReturnCallback(fn() => $this->now);
+    $timeFactory->expects($this->never())->method('withTimeZone');
+    $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
+
+    if (!self::$migrationsApplied) {
+      $this->applyMigrations('latest');
+      $this->generateProjectParticipant(persist: true, now: $this->now, delete: false);
+      self::$projectId = $this->project->getId();
+      self::$musicianId = $this->musician->getId();
+
+      self::$migrationsApplied = true;
+    }
+
+    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
+    $this->musician = $this->entityManager->find(Entities\Musician::class, self::$musicianId);
+
+    $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $appContainer = $this->mockProvider->getAppContainer();
 
@@ -138,10 +236,19 @@ class SepaDebitMandatesControllerTest extends TestCase
   }
 
   /** @return void */
-  public function testSetup(): void
+  public function tearDown(): void
   {
-    $this->assertInstanceOf(Entities\Musician::class, $this->musician);
-    $this->assertNotNull($this->musician->getId());
+    restore_error_handler();
+  }
+
+  /**
+   * This is quas a setupBeforeClass() but we need some mocked / stubbed
+   * classes for the entity-manager.
+   *
+   * @return void
+   */
+  public function testApplyMigrations(): void
+  {
   }
 
   /** @return void */
@@ -159,7 +266,49 @@ class SepaDebitMandatesControllerTest extends TestCase
 
     $domDoc = new DOMDocument('1.0', 'UTF-8');
     $domDoc->encoding = 'UTF-8';
-    $domDoc->loadHTML($data->contents, LIBXML_PEDANTIC);
+    $this->assertTrue($domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
     // print_r($result);
+  }
+
+  // /** @return void */
+  // public function testMandateStore(): void
+  // {
+  //   $result = $this->controller->mandateStore(
+  //         $projectId,
+  //   // SEPA "id"
+  //   $musicianId,
+  //   $bankAccountSequence,
+  //   $mandateSequence,
+  //   // Bank account data
+  //   $bankAccountIBAN,
+  //   $bankAccountBIC,
+  //   $bankAccountBLZ,
+  //   $bankAccountOwner,
+  //   // debit-mandate data
+  //   $mandateRegistration,
+  //   $mandateBinding,
+  //   $mandateProjectId,
+  //   $mandateNonRecurring,
+  //   $mandateDate,
+  //   $mandateLastUsedDate,
+  //   $writtenMandateId,
+  //   $writtenMandateFileUpload,
+  //   $mandateUploadLater,
+  //   $uploadPlaceholder,
+  //   );
+  // }
+
+  /**
+   * This is quas a tearDownAfterClass() but we need some mocked / stubbed
+   * classes for the entity-manager.
+   *
+   * @return void
+   */
+  #[Attributes\Depends('testMandateFormBlank')]
+  #[Attributes\Depends('testApplyMigrations')]
+  public function testUnapplyMigrations(): void
+  {
+    $this->unapplyMigrations();
+    self::$migrationsApplied = false;
   }
 }
