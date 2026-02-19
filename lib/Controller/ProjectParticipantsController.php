@@ -88,7 +88,25 @@ class ProjectParticipantsController extends Controller
   public const LIST_SUBSCRIPTION_DISABLED_BY_USER = 'disabled-by-user';
   public const LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES = 'disabled-by-bounces';
   public const LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR = 'disabled-by-moderator';
-  public const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest';
+  public const LIST_SUBSCRIPTION_MODE_DIGEST = 'mode-digest'; // TODO: appears unused
+
+  public const LIST_SUBSCRIPTION_FLAGS = [
+    self::LIST_SUBSCRIPTION_DELIVERY_DISABLED,
+    self::LIST_SUBSCRIPTION_DELIVERY_ENABLED,
+    self::LIST_SUBSCRIPTION_DISABLED_BY_BOUNCES,
+    self::LIST_SUBSCRIPTION_DISABLED_BY_MODERATOR,
+    self::LIST_SUBSCRIPTION_DISABLED_BY_USER,
+  ];
+
+  public const LIST_SUBSCRIPTION_RESPONSE_UNCHANGED = 'unchanged';
+  public const LIST_SUBSCRIPTION_RESPONSE_UNCONFIRMED = 'unconfirmed';
+  public const LIST_SUBSCRIPTION_RESPONSE_SUCCESS = 'success';
+
+  public const LIST_SUBSCRIPTION_RESPONSE_STATUS = [
+    self::LIST_SUBSCRIPTION_RESPONSE_SUCCESS,
+    self::LIST_SUBSCRIPTION_RESPONSE_UNCHANGED,
+    self::LIST_SUBSCRIPTION_RESPONSE_UNCONFIRMED,
+  ];
 
   public const FILE_ACTION_DELETE = 'delete';
   public const FILE_ACTION_UPLOAD = 'upload';
@@ -1036,6 +1054,8 @@ class ProjectParticipantsController extends Controller
    * @param bool $force Enforce the operation.
    *
    * @return OCP\AppFramework\Http\Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_MAILING_LIST . '/{operation}')]
@@ -1048,26 +1068,37 @@ class ProjectParticipantsController extends Controller
     /** @var MailingListsService $listsService */
     $listsService = $this->di(MailingListsService::class);
     if (!$listsService->isConfigured()) {
-      return self::grumble($this->l->t('Mailing-lists REST API is not configured.'));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Mailing-lists REST API is not configured.'),
+      );
     }
 
     $participant = $this->projectService->findParticipant($projectId, $musicianId);
     if (empty($participant)) {
-      return self::grumble($this->l->t('Unable to find the participant by project- and musician-id "%1$d / %2$d".', [ $projectId, $musicianId ]));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'Unable to find the participant by project- and musician-id "%1$d / %2$d".',
+          [ $projectId, $musicianId ],
+        ),
+      );
     }
 
     /** @var Entities\Project $project */
     $project = $participant->getProject();
     $listId = $project->getMailingListId();
     if (empty($listId)) {
-      return self::grumble($this->l->t('The project "%s" does not yet have a mailing-list.', $project->getName()));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The project "%s" does not yet have a mailing-list.', $project->getName()),
+      );
     }
 
     /** @var Entities\Musician $musician */
     $musician = $participant->getMusician();
     $email = $musician->getEmail();
     if (empty($email)) {
-      return self::grumble($this->l->t('The musician "%s" does not have an email-address.', $musician->getPublicName()));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The musician "%s" does not have an email-address.', $musician->getPublicName()),
+      );
     }
 
     $subscriptionStatus = $listsService->getSubscriptionStatus($listId, $email);
@@ -1082,19 +1113,19 @@ class ProjectParticipantsController extends Controller
     switch ($operation) {
       case self::LIST_ACTION_SUBSCRIBE:
         if ($subscriptionStatus == MailingListsService::STATUS_SUBSCRIBED) {
-          return self::dataResponse([ 'status' => 'unchanged' ]);
+          return new DTO\MailingListSubscriptionsResponse(status: 'unchanged')->response();
         }
         if (!$force && empty($participant->getRegistration())) {
-          return self::dataResponse([
-            'status' => 'unconfirmed',
-            'feedback' => $this->l->t(
+          return new DTO\MailingListSubscriptionsResponse(
+            status: 'unconfirmed',
+            feedback: $this->l->t(
               '%1$s participation has not been confirmed yet.'
               . ' Please consider to set the participation status to "confirmed" which also will subscribe %1$s to the project list'
               . ' and will send a notification to the participant.'
               . ' Are you sure that you want to subscribe an unconfirmed participant to the project mailing list?', [
                 $musician->getPublicName(firstNameFirst: true)
               ]),
-          ]);
+          )->response();
         }
         $this->projectService->ensureMailingListSubscription($participant);
         $messages[] = $this->l->t('%1$s <%2$s> has been subscribed to %3$s.', [
@@ -1106,15 +1137,15 @@ class ProjectParticipantsController extends Controller
         break;
       case self::LIST_ACTION_UNSUBSCRIBE:
         if ($subscriptionStatus != MailingListsService::STATUS_SUBSCRIBED) {
-          return self::dataResponse([ 'status' => 'unchanged' ]);
+          return new DTO\MailingListSubscriptionsResponse(status: 'unchanged')->response();
         }
         if (!$force && !empty($participant->getRegistration())) {
-          return self::dataResponse([
-            'status' => 'unconfirmed',
-            'feedback' => $this->l->t('The participation of %1$s has already been been confirmed. Are you really really sure that want to unsubscribe %1$s from the project mailing list?', [
+          return new DTO\MailingListSubscriptionsResponse(
+            status: 'unconfirmed',
+            feedback: $this->l->t('The participation of %1$s has already been been confirmed. Are you really really sure that want to unsubscribe %1$s from the project mailing list?', [
               $musician->getPublicName(firstNameFirst: true)
             ]),
-          ]);
+          )->response();
         }
         $this->projectService->ensureMailingListUnsubscription($participant);
         $messages[] = $this->l->t('%1$s <%2$s> has been unsubscribed from %3$s.', [
@@ -1126,15 +1157,15 @@ class ProjectParticipantsController extends Controller
         break;
       case self::LIST_ACTION_ENABLE_DELIVERY:
         if ($deliveryStatus == MailingListsService::DELIVERY_STATUS_ENABLED) {
-          return self::dataResponse([ 'status' => 'unchanged' ]);
+          return new DTO\MailingListSubscriptionsResponse(status: 'unchanged')->response();
         }
         if (!$force) {
-          return self::dataResponse([
-            'status' => 'unconfirmed',
-            'feedback' => $this->l->t('%1$s can enable message delivery by itself. Are you really sure that you want to enable message delivery for %1$s?', [
+          return new DTO\MailingListSubscriptionsResponse(
+            status: 'unconfirmed',
+            feedback: $this->l->t('%1$s can enable message delivery by itself. Are you really sure that you want to enable message delivery for %1$s?', [
               $musician->getPublicName(firstNameFirst: true)
             ]),
-          ]);
+          )->response();
         }
         $listsService->setSubscriptionPreferences($listId, $email, preferences: [
           MailingListsService::MEMBER_DELIVERY_STATUS => MailingListsService::DELIVERY_STATUS_ENABLED,
@@ -1145,15 +1176,15 @@ class ProjectParticipantsController extends Controller
         break;
       case self::LIST_ACTION_DISABLE_DELIVERY:
         if ($deliveryStatus == MailingListsService::DELIVERY_STATUS_DISABLED_BY_USER) {
-          return self::dataResponse([ 'status' => 'unchanged' ]);
+          return new DTO\MailingListSubscriptionsResponse(status: 'unchanged')->response();
         }
         if (!$force) {
-          return self::dataResponse([
-            'status' => 'unconfirmed',
-            'feedback' => $this->l->t('%1$s can disable message delivery by itself. Are you really sure that you want to disable message delivery for %1$s?', [
+          return new DTO\MailingListSubscriptionsResponse(
+            status: 'unconfirmed',
+            feedback: $this->l->t('%1$s can disable message delivery by itself. Are you really sure that you want to disable message delivery for %1$s?', [
               $musician->getPublicName(firstNameFirst: true)
             ]),
-          ]);
+          )->response();
         }
         // set to "disabled by user" s.t. the victim can re-enable it again by itself
         $listsService->setSubscriptionPreferences($listId, $email, preferences: [
@@ -1167,15 +1198,17 @@ class ProjectParticipantsController extends Controller
         // just fall through to the status query.
         break;
       default:
-        return self::grumble($this->l->t('Unknown list action: "%s".', $operation));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unknown list action: "%s".', $operation),
+        );
     }
 
     // after performing the actions query the REST service again about the status
     $summary = self::mailingListDeliveryStatus($listsService, $listId, $email);
 
     $summary['status'] = 'success';
-    $summary['message'] = $messages;
-    return self::dataResponse($summary);
+    $summary['messages'] = $messages;
+    return DTO\MailingListSubscriptionsResponse::fromArray($summary)->response();
   }
 
   /**

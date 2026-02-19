@@ -55,7 +55,7 @@ import {
 import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { MailingListSubscriptionsResponse, MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
 import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
 import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
@@ -936,14 +936,17 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
           force,
         })
         .fail(onFail)
-        .done(function(data, _textStatus, _request) {
+        .done(function(data: ResponseData<MailingListSubscriptionsResponse>) {
+          if (!Ajax.validateResponse(data, ['status'], cleanup)) {
+            return;
+          }
           if (data.status === 'unconfirmed') {
             Dialogs.confirm(
-              data.feedback,
+              data.feedback!,
               t(appName, 'Confirmation Required'), {
                 callback(answer) {
                   if (answer) {
-                    post(true);
+                    post(true); // will call cleanup
                   } else {
                     Notification.showTemporary(t(appName, 'Unconfirmed, doing nothing.'));
                   }
@@ -953,22 +956,22 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
               });
           } else {
             if (!triggerData.setup) {
-              Notification.messages(data.message);
+              Notification.messages(data.messages);
             }
-            if (data.status !== 'unchanged') {
+            if (data.status !== 'unchanged') { // i.e. status === 'success'
               const $statusDisplay = $this.closest('.pme-value').find('.mailing-list.project.status.status-label');
               const $statusDropDown = $this.closest('.pme-value').find('.mailing-list.project.status.dropdown-container');
               const oldStatus = $statusDropDown.data('status');
-              $statusDropDown.data('status', data.statusTags);
+              $statusDropDown.data('status', data.statusTags!);
               for (const oldFlag of oldStatus) {
                 $statusDisplay.removeClass(oldFlag);
                 $statusDropDown.removeClass(oldFlag);
               }
-              for (const newFlag of data.statusTags) {
+              for (const newFlag of data.statusTags!) {
                 $statusDisplay.addClass(newFlag);
                 $statusDropDown.addClass(newFlag);
               }
-              $statusDisplay.html(t(appName, data.summary));
+              $statusDisplay.html(t(appName, data.summary!));
               cleanup();
             }
           }

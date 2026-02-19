@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use InvalidArgumentException;
 use RuntimeException;
 use Throwable;
@@ -40,6 +42,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Toolkit\Service\SimpleSharingService;
 
 /** Handle participant mailing-list services. */
+#[TSAttributes\TypeScript]
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -101,10 +104,16 @@ class MailingListsService
     self::TEMPLATE_MAILMAN_PREFIX . self::TEMPLATE_MAILMAN_USER,
   ];
 
-  const STATUS_SUBSCRIBED = 'subscribed';
-  const STATUS_UNSUBSCRIBED = 'unsubscribed';
-  const STATUS_INVITED = 'invited';
-  const STATUS_WAITING = 'waiting';
+  public const STATUS_SUBSCRIBED = 'subscribed';
+  public const STATUS_UNSUBSCRIBED = 'unsubscribed';
+  public const STATUS_INVITED = 'invited';
+  public const STATUS_WAITING = 'waiting';
+  public const SUBSCRIPTION_STATUS = [
+    self::STATUS_INVITED,
+    self::STATUS_SUBSCRIBED,
+    self::STATUS_UNSUBSCRIBED,
+    self::STATUS_WAITING,
+  ];
 
   const MODERATION_ACTION_ACCEPT = 'accept';
   const MODERATION_ACTION_REJECT = 'reject';
