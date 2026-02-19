@@ -410,7 +410,7 @@ class DocumentStorageUploadController extends Controller
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $actualConflict,
-          'messages' => $message,
+          'messages' => [$message],
         ]);
 
         return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
