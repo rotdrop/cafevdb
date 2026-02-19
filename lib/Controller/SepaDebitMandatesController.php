@@ -1340,7 +1340,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     $userStorage = $this->di(UserStorage::class);
 
     $originalFilePath = $file['original_name'] ?? null;
-    $uploadMode = $file['upload_mode'] ?? EnumFileUploadMode::COPY;
+    $uploadMode = EnumFileUploadMode::get($file['upload_mode'] ?? EnumFileUploadMode::COPY);
 
     switch ($uploadMode) {
       case EnumFileUploadMode::MOVE:
