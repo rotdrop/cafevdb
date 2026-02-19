@@ -115,9 +115,9 @@ class DatabaseStorageFolderTest extends TestCase
     $newFile = new Entities\EncryptedFile(self::FILE_NAME, mimeType: self::FILE_MIMETYPE);
     try {
       if ($conflictAction) {
-        $dirEntryFile = $this->folder->addDocument($newFile, conflictAction: $conflictAction);
+        /* $dirEntryFile = */$this->folder->addDocument($newFile, conflictAction: $conflictAction);
       } else {
-        $dirEntryFile = $this->folder->addDocument($newFile);
+        /* $dirEntryFile = */$this->folder->addDocument($newFile);
       }
     } catch (Throwable $t) {
       if (!($t instanceof Exceptions\DatabaseEntityExistsException)) {
@@ -133,9 +133,9 @@ class DatabaseStorageFolderTest extends TestCase
     $subFolder = $this->folder->addSubFolder($newFile->getFileName());
     try {
       if ($conflictAction) {
-        $dirEntryFile = $this->folder->addDocument($newFile, conflictAction: $conflictAction);
+        /* $dirEntryFile = */$this->folder->addDocument($newFile, conflictAction: $conflictAction);
       } else {
-        $dirEntryFile = $this->folder->addDocument($newFile);
+        /* $dirEntryFile = */$this->folder->addDocument($newFile);
       }
     } catch (Throwable $t) {
       if (!($t instanceof Exceptions\DatabaseEntityExistsException)) {
@@ -191,7 +191,8 @@ class DatabaseStorageFolderTest extends TestCase
       ->getMock();
     $instance = new ReflectionProperty($entityManager, 'instance');
     $instance->setValue($entityManager, $entityManager);
-    $entityManager->expects($this->atLeastOnce())->method('flush')->willReturnCallback(function() {});
+    $entityManager->expects($this->atLeastOnce())->method('flush')->willReturnCallback(function() {
+    });
 
     $conflictAction = EnumAddDocumentConflictAction::RENAME;
     $rounds = 2;
