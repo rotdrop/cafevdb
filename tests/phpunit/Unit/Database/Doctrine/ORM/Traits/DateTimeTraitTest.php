@@ -86,4 +86,14 @@ class DateTimeTraitTest extends TestCase
       $this->assertInstanceOf(InvalidArgumentException::class, $t);
     }
   }
+
+  /** {@inheritdoc} */
+  public function testConvertToNullFromNullOrEmptyString(): void
+  {
+    $result = TestClass::convertToDateTime('');
+    $this->assertNull($result);
+
+    $result = TestClass::convertToDateTime(null);
+    $this->assertNull($result);
+  }
 }

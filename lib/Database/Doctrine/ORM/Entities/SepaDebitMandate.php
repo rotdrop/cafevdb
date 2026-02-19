@@ -114,7 +114,7 @@ class SepaDebitMandate implements \ArrayAccess
   private ?int $preNotificationBusinessDays = 5;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private ?DateTimeImmutable $lastUsedDate;
+  private ?DateTimeImmutable $lastUsedDate = null;
 
   #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private ?DatabaseStorageFile $writtenMandate = null;

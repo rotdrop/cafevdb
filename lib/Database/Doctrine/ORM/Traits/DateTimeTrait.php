@@ -52,10 +52,14 @@ trait DateTimeTrait
    */
   public static function convertToDateTime($dateTime): ?CarbonImmutable
   {
-    if ($dateTime instanceof CarbonImmutable || $dateTime === null) {
+    if ($dateTime instanceof CarbonImmutable) {
       return $dateTime;
     } else {
-      return CarbonImmutable::instance(self::convertToDateTimeImmutable($dateTime));
+      $dateTime = self::convertToDateTimeImmutable($dateTime);
+      if ($dateTime === null)  {
+        return $dateTime;
+      }
+      return CarbonImmutable::instance($dateTime);
     }
   }
 }

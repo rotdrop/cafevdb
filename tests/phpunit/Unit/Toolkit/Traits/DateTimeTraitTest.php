@@ -104,6 +104,16 @@ class DateTimeTraitTest extends TestCase
     }
   }
 
+  /** {@inheritdoc} */
+  public function testConvertToNullFromNullOrEmptyString(): void
+  {
+    $result = TestClass::convertToDateTime('');
+    $this->assertNull($result);
+
+    $result = TestClass::convertToDateTime(null);
+    $this->assertNull($result);
+  }
+
   private const TIMEZONE_DATES = [
     'null' => '{
     "date": "2024-01-01 00:00:00.000000",
