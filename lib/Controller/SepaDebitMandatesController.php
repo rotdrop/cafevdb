@@ -675,13 +675,15 @@ Therefore you have to enable the validation checkbox again before you are allowe
     $blz  = '';
     $bic  = $bankAccount->getBic();
 
-    $ibanValidator = new IBAN($iban);
-    if ($ibanValidator->Verify()) {
-      $blz = $ibanValidator->Bank();
-      if ($this->bav->isValidBank($blz)) {
-        $bic = $this->bav->getMainAgency($blz)->getBIC();
+    if (!empty($iban)) {
+      $ibanValidator = new IBAN($iban);
+      if ($ibanValidator->Verify()) {
+        $blz = $ibanValidator->Bank();
+        if ($this->bav->isValidBank($blz)) {
+          $bic = $this->bav->getMainAgency($blz)->getBIC();
+        }
+        $iban = $ibanValidator->MachineFormat();
       }
-      $iban = $ibanValidator->MachineFormat();
     }
 
     $memberProjectId = $this->getConfigValue('memberProjectId', 0);
@@ -832,7 +834,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     $writtenMandateFileUpload,
     $mandateUploadLater,
     $uploadPlaceholder,
-  ) {
+  ): Http\DataResponse|Http\JSONResponse {
     $requiredKeys = [
       'musicianId',
       ConfigConstants::BANK_ACCOUNT_IBAN,
@@ -1159,12 +1161,15 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DELETE)]
-  public function mandateDelete(int $musicianId, int $mandateSequence):Response
+  public function mandateDelete(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
+
   {
-    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'delete');
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::DELETE);
   }
 
   /**
@@ -1173,12 +1178,14 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DISABLE)]
-  public function mandateDisable(int $musicianId, int $mandateSequence):Response
+  public function mandateDisable(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
   {
-    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'disable');
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::DISABLE);
   }
 
   /**
@@ -1187,12 +1194,14 @@ Therefore you have to enable the validation checkbox again before you are allowe
    * @param int $mandateSequence The mandate sequence.
    *
    * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_REACTIVATE)]
-  public function mandateReactivate(int $musicianId, int $mandateSequence):Reponse
+  public function mandateReactivate(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
   {
-    return $this->handleMandateRevocation($musicianId, $mandateSequence, 'reactivate');
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::REACTIVATE);
   }
 
   /**
@@ -1323,7 +1332,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
    *
    * @return DataResponse A response object.
    */
-  private function storeMandateHardCopy(array $files, Entities\SepaDebitMandate $debitMandate):DataResponse
+  private function storeMandateHardCopy(array $files, Entities\SepaDebitMandate $debitMandate): DataResponse
   {
     $file = array_shift($files); // only one
 
@@ -1514,10 +1523,10 @@ Therefore you have to enable the validation checkbox again before you are allowe
       'download' => $downloadLink,
       'filesApp' => $filesAppLink,
       'conflict' => $conflict,
-      'messages' => $message,
+      'messages' => [$message],
     ];
 
-    return self::dataResponse([ DTO\UploadFileData::fromArray($file) ]);
+    return new Http\DataResponse([ DTO\UploadFileData::fromArray($file) ]);
   }
 
   /**
@@ -1525,15 +1534,17 @@ Therefore you have to enable the validation checkbox again before you are allowe
    *
    * @param int $mandateSequence The mandate sequence.
    *
-   * @param string $operation The operation to perform.
+   * @param EnumSepaDebitMandateRevocationAction $operation The operation to perform.
    *
-   * @return Response
+   * @return Http\DataResponse|Http\JSONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
    */
   private function handleMandateRevocation(
     int $musicianId,
     int $mandateSequence,
-    string $operation,
-  ): Response {
+    EnumSepaDebitMandateRevocationAction $operation,
+  ): Http\DataResponse|Http\JSONResponse {
     $requiredKeys = [ 'musicianId', 'mandateSequence' ];
     foreach ($requiredKeys as $required) {
       if (empty(${$required})) {
@@ -1547,8 +1558,6 @@ Therefore you have to enable the validation checkbox again before you are allowe
       }
     }
 
-    $operation = EnumSepaDebitMandateRevocationAction::from($operation);
-
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     /** @var Entities\SepaDebitMandate $mandate */
     $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
@@ -1556,38 +1565,54 @@ Therefore you have to enable the validation checkbox again before you are allowe
     $projectId = $mandate->getProject()->getId();
     $bankAccountSequence = $mandate->getSepaBankAccount()->getSequence();
 
-    switch ($operation) {
-      case 'delete':
-        $this->remove($mandate, true);
-        break;
-      case 'disable':
-        if (!empty($mandate->getDeleted())) {
-          throw new Exceptions\EnduserNotificationException(
-            $this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference),
-          );
-        }
-        $mandate->setDeleted('now');
-        $this->flush();
-        break;
-      case 'reactivate':
-        if (empty($mandate->getDeleted())) {
-          throw new Exceptions\EnduserNotificationException(
+    $this->entityManager->beginTransaction();
+    try {
+      switch ($operation) {
+        case EnumSepaDebitMandateRevocationAction::DELETE:
+          $this->remove($mandate, flush: true);
+          break;
+        case EnumSepaDebitMandateRevocationAction::DISABLE:
+          if (!empty($mandate->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference),
+            );
+          }
+          $mandate->setDeleted('now');
+          $this->flush();
+          break;
+        case EnumSepaDebitMandateRevocationAction::REACTIVATE:
+          if (empty($mandate->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
             $this->l->t('SEPA debit mandate with reference "%s" is already active.', $reference),
-          );
-        }
-        $mandate->setDeleted(null);
-        $this->flush();
-        break;
-      default:
+            );
+          }
+          $mandate->setDeleted(null);
+          $this->flush();
+          break;
+      }
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      }
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      } else {
         throw new Exceptions\EnduserNotificationException(
-          $this->l->t('Unknown revocation action: "%s".', $operation),
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+              httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
         );
+      }
+
     }
 
     $responseData = [
       'projectId' => $projectId,
       'musicianId' => $musicianId,
       'bankAccountSequence' => $bankAccountSequence,
+      'bankAccountDeleted' => $mandate->getSepaBankAccount()->isDeleted(),
     ];
     if ($this->entityManager->contains($mandate)) {
       if (!empty($mandate->getDeleted())) {
@@ -1602,6 +1627,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
         'state' => $state,
         'mandateSequence' => $mandate->getSequence(),
         'mandateReference' => $mandate->getMandateReference(),
+        'mandateDeleted' => $mandate->isDeleted(),
       ]);
     } else {
       $responseData = Util::arrayMergeRecursive($responseData, [
@@ -1609,6 +1635,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
         'messages' => [$this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference)],
         'mandateSequence' => 0,
         'mandateReference' => '',
+        'mandateDeleted' => $mandate->isDeleted(),
       ]);
     }
 
