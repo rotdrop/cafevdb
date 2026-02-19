@@ -606,7 +606,7 @@ jest: dev-setup ts-app-config ts-types-files run-jest post-build
 
 #@private
 run-tide:
-	$(EMACS) --batch --file $(SRCDIR)/src/vue-app.ts  -l $(ABSSRCDIR)/dev-scripts/tide-project-errors.el|tee tide-errors.log
+	$(EMACS) --batch --file $(SRCDIR)/src/vue-app.ts  -l $(DEV_LIB_DIR)/scripts/tide-project-errors.el|tee tide-errors.log
 .PHONY: run-tide
 
 #@@ Runs the Emacs Tide IDE in batch mode and diagnoses TypeScript errors.
