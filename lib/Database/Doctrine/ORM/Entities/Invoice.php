@@ -352,7 +352,7 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @return Invoice
    */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):Invoice
+  public function setProjectParticipant(ProjectParticipant $projectParticipant):Invoice
   {
     $this->projectParticipant = $projectParticipant;
 
