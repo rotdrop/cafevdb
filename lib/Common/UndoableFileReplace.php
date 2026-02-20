@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2022, 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,7 +74,7 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   /** {@inheritdoc} */
   public function do():void
   {
-    $startTime = $this->timeFactory->getTime();
+    $startTime = $this->timeFactory->now()->getTimestamp();
     if ($this->name instanceof Closure) {
       $this->name = ($this->name)();
     }
@@ -105,10 +105,10 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
       }
     }
     $this->userStorage->putContent($this->name, $this->content);
-    if ($startTime + 1 < $this->timeFactory->getTime()) {
-      time_sleep_until($startTime + 1);
+    if ($startTime + 1 < $this->timeFactory->now()->getTimestamp()) {
+      $this->timeFactory->sleepUntil($startTime + 1);
     }
-    $endTime = $this->timeFactory->getTime();
+    $endTime = $this->timeFactory->now()->getTimestamp();
     $this->doneInterval = [ $startTime, $endTime ];
   }
 

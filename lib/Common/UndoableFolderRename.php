@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,7 +86,7 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    */
   public function do():void
   {
-    $startTime = $this->timeFactory->getTime();
+    $startTime = $this->timeFactory->now()->getTimestamp();
     if ($this->oldName instanceof Closure) {
       $this->oldName = ($this->oldName)();
     }
@@ -140,11 +140,11 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
 
     $oldReporting = error_reporting();
     error_reporting($oldReporting & ~E_WARNING);
-    if ($startTime + 1 < $this->timeFactory->getTime()) {
-      time_sleep_until($startTime + 1);
+    if ($startTime + 1 < $this->timeFactory->now()->getTimestamp()) {
+      $this->timeFactory->sleepUntil($startTime + 1);
     }
     error_reporting($oldReporting);
-    $endTime = $this->timeFactory->getTime();
+    $endTime = $this->timeFactory->now()->getTimestamp();
     $this->doneInterval = [ $startTime, $endTime ];
   }
 

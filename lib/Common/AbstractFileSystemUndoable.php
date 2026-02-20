@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Common;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -39,18 +38,18 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
   /** @var IL10N */
   protected IL10N $l;
 
-  /** @var ITimeFactory */
-  protected $timeFactory;
+  /** @var TimeFactory */
+  protected TimeFactory $timeFactory;
 
   /** @var UserStorage */
-  protected $userStorage;
+  protected UserStorage $userStorage;
 
   /** {@inheritdoc} */
   public function initialize(IAppContainer $appContainer):void
   {
     parent::initialize($appContainer);
     $this->userStorage = $this->appContainer->get(UserStorage::class);
-    $this->timeFactory = $this->appContainer->get(ITimeFactory::class);
+    $this->timeFactory = $this->appContainer->get(TimeFactory::class);
     $this->l = $this->appContainer->get(IL10N::class);
     $this->logger = $this->appContainer->get(ILogger::class);
   }
@@ -78,7 +77,7 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
    */
   protected function renamedName(string $path):string
   {
-    $time = $this->timeFactory->getTime();
+    $time = $this->timeFactory->now()->getTimestamp();
     $pathInfo = pathinfo($path);
     $renamed = $pathInfo['dirname']
       . UserStorage::PATH_SEP

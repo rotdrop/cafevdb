@@ -66,4 +66,16 @@ class TimeFactory extends CoreTimeFactory
   {
     return DateTimeImmutable::createFromMutable($this->getDateTime($time, $timezone));
   }
+
+  /**
+   * A wrapper around time_sleep_until().
+   *
+   * @param float $timestamp Argument for time_sleep_until() (see PHP doc).
+   *
+   * @return bool
+   */
+  public function sleepUntil(float $timestamp): bool
+  {
+    return \time_sleep_until($timestamp);
+  }
 }

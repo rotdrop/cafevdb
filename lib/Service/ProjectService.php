@@ -2877,7 +2877,7 @@ Whatever.',
           // trash-bin. Currently a file's MTIME in NextCloud has only
           // second resolution, so ...
           if ($this->getTimeStamp() < $startTime + 1) {
-            time_sleep_until($startTime + 1);
+            $this->sleepUntil($startTime + 1);
           }
           $endTime = $this->getTimeStamp();
           return [ $startTime, $endTime ];

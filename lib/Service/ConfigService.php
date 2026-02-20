@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ use RuntimeException;
 use Throwable;
 
 use OCP\AppFramework\IAppContainer;
-use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
 use OCP\IDateTimeFormatter;
@@ -48,6 +47,7 @@ use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Exceptions;
@@ -167,10 +167,10 @@ class ConfigService
     return $this->secureRandom ?? ($this->secureRandom = $this->appContainer->get(ISecureRandom::class));
   }
 
-  /** @return ITimeFactory */
-  public function getTimeFactory():ITimeFactory
+  /** @return TimeFactory */
+  public function getTimeFactory(): TimeFactory
   {
-    return $this->appContainer->get(ITimeFactory::class);
+    return $this->appContainer->get(TimeFactory::class);
   }
 
   /** @return IConfig */

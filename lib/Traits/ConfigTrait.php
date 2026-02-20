@@ -1101,9 +1101,19 @@ trait ConfigTrait
   }
 
   /** @return int Return the current Unix timestamp. */
-  protected function getTimeStamp():int
+  protected function getTimeStamp(): int
   {
-    return $this->configService->getTimeFactory()->getTime();
+    return $this->configService->getTimeFactory()->now()->getTimestamp();
+  }
+
+  /**
+   * Finally this is a wrapper around time_sleep_until()
+   *
+   * @return bool
+   */
+  protected function sleepUntil(float $timestamp): bool
+  {
+    return $this->configService->getTimeFactory()->sleepUntil($timestamp);
   }
 
   /** @return string */
