@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -108,7 +108,10 @@ class AssociationSlugHandler implements SlugHandlerInterface
     $targetMeta = $objectManager->getClassMetadata($targetEntity);
 
     $uow = $objectManager->getUnitOfWork();
-    $association = $meta->getReflectionProperty($associationField)->getValue($object);
+
+    $association = $meta->getPropertyAccessor($associationField)->getValue($object);
+    // $association = $meta->getReflectionProperty($associationField)->getValue($object);
+
     if ($meta->isCollectionValuedAssociation($associationField)) {
       $collection = $association;
     } else {
@@ -118,8 +121,11 @@ class AssociationSlugHandler implements SlugHandlerInterface
       if (empty($targetObject)) {
         continue;
       }
-      $oldTargetSlug = $targetMeta->getReflectionProperty($associationSlugField)->getValue($targetObject);
-      $targetMeta->getReflectionProperty($associationSlugField)->setValue($targetObject, $slug);
+      // $oldTargetSlug = $targetMeta->getReflectionProperty($associationSlugField)->getValue($targetObject);
+      $propertyAccessor = $targetMeta->getPropertyAccessor($associationSlugField);
+      $oldTargetSlug = $propertyAccessor->getValue($targetObject);
+      // $targetMeta->getReflectionProperty($associationSlugField)->setValue($targetObject, $slug);
+      $propertyAccessor->setValue($targetObject, $slug);
       $targetState = $uow->getEntityState($targetObject);
       if ($targetState == UnitOfWork::STATE_MANAGED || $targetState == UnitOfWork::STATE_NEW) {
         $eventAdapter->setOriginalObjectProperty($uow, $targetObject, $associationSlugField, $oldTargetSlug);
