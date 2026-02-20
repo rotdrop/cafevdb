@@ -212,6 +212,7 @@ class MusicianValidationController extends Controller
         if (empty($message)) {
           $email = implode(', ', array_keys($emailArray));
           $messages = [];
+          $statusCode = Http::STATUS_OK;
         } else {
           $messages = [ $message ];
           $statusCode = $failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK;
