@@ -22,6 +22,7 @@
  */
 
 @use './variables.scss' as *;
+@use '../build/scss-variables/Controller/CssClasses.scss' as CCC;
 
 .sepa-debit-mandate-dialog.ui-dialog {
 
@@ -173,15 +174,15 @@
 
   /* visibility control */
 
-  fieldset.have-data.unused .hidden-have-data-unused,
-  fieldset.no-written-mandate .hidden-no-written-mandate,
-  fieldset.no-written-mandate .hidden-no-written-mandate + input[type="checkbox"] + label,
-  fieldset.have-written-mandate .hidden-have-written-mandate,
-  fieldset.have-written-mandate .hidden-have-written-mandate + input[type="checkbox"] + label,
-  fieldset.used .hidden-used,
-  fieldset.unused .hidden-unused,
-  fieldset.have-data .hidden-have-data,
-  fieldset.no-data .hidden-no-data {
+  fieldset.have-data.unused .#{CCC.$hiddenCssClass}-have-data-unused,
+  fieldset.#{CCC.$noWrittenMandateCssClass} .#{CCC.$hiddenCssClass}-#{CCC.$noWrittenMandateCssClass},
+  fieldset.#{CCC.$noWrittenMandateCssClass} .#{CCC.$hiddenCssClass}-#{CCC.$noWrittenMandateCssClass} + input[type="checkbox"] + label,
+  fieldset.#{CCC.$haveWrittenMandateCssClass} .#{CCC.$hiddenCssClass}-#{CCC.$haveWrittenMandateCssClass},
+  fieldset.#{CCC.$haveWrittenMandateCssClass} .#{CCC.$hiddenCssClass}-#{CCC.$haveWrittenMandateCssClass} + input[type="checkbox"] + label,
+  fieldset.used .#{CCC.$hiddenCssClass}-used,
+  fieldset.unused .#{CCC.$hiddenCssClass}-unused,
+  fieldset.have-data .#{CCC.$hiddenCssClass}-have-data,
+  fieldset.no-data .#{CCC.$hiddenCssClass}-no-data {
     display:none!important;
   }
 
@@ -208,19 +209,19 @@
       }
 
       &:not(:checked) ~ .debit-mandate-binding {
-        &.hidden-if-unlocked {
+        &.#{CCC.$hiddenCssClass}-if-unlocked {
           display:none!important;
         }
-        &.hidden-if-locked {
+        &.#{CCC.$hiddenCssClass}-if-locked {
           display:inline-block!important;
         }
       }
 
       &:checked ~ .debit-mandate-binding {
-        &.hidden-if-locked {
+        &.#{CCC.$hiddenCssClass}-if-locked {
           display:none!important;
         }
-        &.hidden-if-unlocked {
+        &.#{CCC.$hiddenCssClass}-if-unlocked {
           display:inline-block!important;
         }
       }
@@ -232,10 +233,10 @@
           background-size: 16px 16px;
         }
         .debit-mandate-binding {
-          &.hidden-if-locked {
+          &.#{CCC.$hiddenCssClass}-if-locked {
             display:none!important;
           }
-          &.hidden-if-unlocked {
+          &.#{CCC.$hiddenCssClass}-if-unlocked {
             display:inline-block!important;
           }
         }
@@ -341,7 +342,7 @@
       display:block!important;
     }
 
-    #upload-written-mandate-later + label {
+    ##{uploadWrittenMandateLaterCssClass} + label {
       position:absolute;
       right:0;
       bottom:0;
@@ -359,7 +360,7 @@
     }
   }
 
-  .written-mandate-upload {
+  .#{CCC.$writtenMandateUploadCssClass} {
     .upload-placeholder {
       width:20em;
     }
@@ -501,7 +502,7 @@ form.pme-form {
     }
 
     tr.pme-row.empty-mandate-project {
-      ~ tr.pme-row.empty-mandate-project-hidden {
+      ~ tr.pme-row.empty-mandate-project-#{$hiddenCssClass} {
         display:none;
       }
     }

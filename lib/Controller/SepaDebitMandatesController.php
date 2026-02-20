@@ -43,6 +43,7 @@ use OCA\BAV\Service\BAV as BankAccountValidator;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -105,6 +106,7 @@ class SepaDebitMandatesController extends Controller
 
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
+  public const WRITTEN_MANDATE_FILE_UPLOAD = 'writtenMandateFileUpload';
 
   /** @var Repositories\SepaBankAccountsRepository */
   private $bankAccountsRepository;
@@ -121,6 +123,7 @@ class SepaDebitMandatesController extends Controller
     private FuzzyInputService $fuzzyInputService,
     private ProjectService $projectService,
     private StorageFactory $storageFactory,
+    private TimeFactory $timeFactory,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
   ) {
@@ -187,10 +190,10 @@ class SepaDebitMandatesController extends Controller
       );
     }
 
-    $musicianId = (int)$this->request['musicianId'];
-    $reference  = $this->request['mandateReference'];
-    $mandateProjectId  = (int)$this->request['mandateProjectId'];
-    $mandateNonRecurring = $this->request['mandateNonRecurring'];
+    $musicianId = (int)$this->request->getParam('musicianId');
+    $reference  = $this->request->getParam('mandateReference');
+    $mandateProjectId  = (int)$this->request->getParam('mandateProjectId');
+    $mandateNonRecurring = $this->request->getParam('mandateNonRecurring');
     $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
     $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
@@ -202,7 +205,7 @@ class SepaDebitMandatesController extends Controller
     $BIC  = $this->request[ConfigConstants::BANK_ACCOUNT_BIC];
     $owner = $this->request[ConfigConstants::BANK_ACCOUNT_OWNER];
 
-    $changed = $this->request['changed'];
+    $changed = $this->request->getParam('changed');
     $value = $this->request[$changed];
 
     $validations = [
@@ -273,7 +276,7 @@ class SepaDebitMandatesController extends Controller
           break;
         case 'mandateLastUsedDate':
           // Store the lastUsedDate immediately, if other fields are disabled
-          if (empty($this->request['mandateDate'])) {
+          if (empty($this->request->getParam('mandateDate'))) {
             $mandate = [
               'mandateReference' => $reference,
               'musicianId' => $musicianId,
@@ -660,7 +663,7 @@ Therefore you have to enable the validation checkbox again before you are allowe
     if (empty($mandate)) {
       $mandate = (new Entities\SepaDebitMandate)
         ->setNonRecurring(false /* !empty($project) */)
-        ->setMandateDate(new DateTimeImmutable)
+        ->setMandateDate($this->timeFactory->now())
         ->setSequence(0);
 
       if (empty($bankAccount)) {
@@ -779,9 +782,9 @@ Therefore you have to enable the validation checkbox again before you are allowe
       'bankAccountInUse' => $bankAccount->inUse(),
       'bankAccountDeleted' => $bankAccount->getDeleted(),
 
-      'writtenMandateId' => $writtenMandateId??null,
-      'writtenMandateDownloadLink' => $writtenMandateDownloadLink??null,
-      'writtenMandateFileName' => $writtenMandateFileName??null,
+      'writtenMandateId' => $writtenMandateId ?? null,
+      'writtenMandateDownloadLink' => $writtenMandateDownloadLink ?? null,
+      'writtenMandateFileName' => $writtenMandateFileName ?? null,
 
       'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
       'toolTips' => $this->toolTipsService(),
@@ -805,35 +808,82 @@ Therefore you have to enable the validation checkbox again before you are allowe
     ])->response();
   }
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.MissingParamTag
-
   /**
+   * Slurp in all the values of the debit mandate form and react accordingly.
+   *
+   * @param int $projectId The project context the debit mandate form was
+   * started from. Can be different from the $mandateProjectId below.
+   *
+   * @param int $musicianId
+   *
+   * @param int $bankAccountSequence
+   *
+   * @param int $mandateSequence
+   *
+   * @param string $bankAccountIBAN
+   *
+   * @param string $bankAccountBIC
+   *
+   * @param string $bankAccountBLZ
+   *
+   * @param string $bankAccountOwner
+   *
+   * @param ?string $mandateRegistration Checkbox value. If present this is a
+   * request for the registration of a mandate, or the modification of an
+   * existing mandate.
+   *
+   * @param ?string $mandateBinding The two possible values are the cases of
+   * the enum EnumSepaDebitMandateBinding.  This is actually only used in the
+   * frontend. This method uses the $mandateProjectId to determine the
+   * binding: a mandate bound to the special member's project is "for all
+   * receivables".
+   *
+   * @param int $mandateProjectId The project the mandate is bound to.
+   *
+   * @param int $mandateNonRecurring
+   *
+   * @param string $mandateDate Date of issuing the mandate.
+   *
+   * @param ?string $mandateLastUsedDate Absent if the mandate is non-recurring.
+   *
+   * @param int $writtenMandateId Database id of an Entities\DatabaseStorageFile entity.
+   *
+   * @param string $writtenMandateFileUpload JSON data of uploaded files.
+   *
+   * @param ?string $mandateUploadLater Checkbox value. The user may choose to
+   * upload the hardcopy later by activating the corresponding
+   * checkbox. Otherwise an error/warning will be exposed to the user.
+   *
+   * @param string $uploadPlaceholder Unused here. Contains either a placehold
+   * message or the name of the recently uploaded hardcopy or the name of the
+   * already stored hardcopy.
+   *
    * @return Response
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_STORE)]
   public function mandateStore(
-    $projectId,
+    int $projectId,
     // SEPA "id"
-    $musicianId,
-    $bankAccountSequence,
-    $mandateSequence,
+    int $musicianId,
+    int $bankAccountSequence,
+    int $mandateSequence,
     // Bank account data
-    $bankAccountIBAN,
-    $bankAccountBIC,
-    $bankAccountBLZ,
-    $bankAccountOwner,
+    string $bankAccountIBAN,
+    string $bankAccountBIC,
+    string $bankAccountBLZ,
+    string $bankAccountOwner,
     // debit-mandate data
-    $mandateRegistration,
-    $mandateBinding,
-    $mandateProjectId,
-    $mandateNonRecurring,
-    $mandateDate,
-    $mandateLastUsedDate,
-    $writtenMandateId,
-    $writtenMandateFileUpload,
-    $mandateUploadLater,
-    $uploadPlaceholder,
+    ?string $mandateRegistration,
+    ?string $mandateBinding,
+    int $mandateProjectId,
+    int $mandateNonRecurring,
+    string $mandateDate,
+    ?string $mandateLastUsedDate,
+    int $writtenMandateId,
+    string $writtenMandateFileUpload,
+    ?string $mandateUploadLater,
+    string $uploadPlaceholder,
   ): Http\DataResponse|Http\JSONResponse {
     $requiredKeys = [
       'musicianId',
@@ -1107,8 +1157,6 @@ Therefore you have to enable the validation checkbox again before you are allowe
     ])->response();
   }
 
-  // phpcs:enable
-
   /**
    * Pre-fill the configured PDF-form with the values of the geven musician
    *
@@ -1167,7 +1215,6 @@ Therefore you have to enable the validation checkbox again before you are allowe
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DELETE)]
   public function mandateDelete(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
-
   {
     return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::DELETE);
   }
@@ -1223,14 +1270,14 @@ Therefore you have to enable the validation checkbox again before you are allowe
       case self::HARDCOPY_ACTION_UPLOAD:
         // we mis-use the participant-data upload form, so the actual identifiers
         // are in the "data" parameter and have to be remapped.
-        $data = $this->request['data'];
+        $data = $this->request->getParam('data');
         $uploadData = json_decode($data, true);
         $musicianId = $uploadData['fieldId'];
         $mandateSequence = $uploadData['optionKey'];
-        $files = $this->request['files'];
+        $files = $this->request->getParam('files');
         break;
       case self::HARDCOPY_ACTION_DELETE:
-        $mandateSequence = $this->request['optionKey'];
+        $mandateSequence = $this->request->getParam('optionKey');
         break;
     }
 

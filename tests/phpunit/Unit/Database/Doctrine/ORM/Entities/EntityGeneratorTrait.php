@@ -63,7 +63,8 @@ trait EntityGeneratorTrait
   protected const MUSICIAN_IBAN = 'DE02120300000000202051';
   protected const MUSICIAN_BIC = 'BYLADEM1001';
   protected const MUSICIAN_BLZ = '12030000';
-  protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber*in, Konto';
+  protected const MUSICIAN_BANK_ACCOUNT = '0000202051';
+  protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber:in, Konto';
 
   protected const RECEIVABLE_OPTION_KEY = '2b826186-ef29-11f0-a81f-27218343fe72';
 

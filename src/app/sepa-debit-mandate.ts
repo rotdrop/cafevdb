@@ -74,25 +74,40 @@ import type {
   SepaBankAccount,
   SepaDebitMandateValidation,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { EnumFileUploadMode, type EnumSepaDebitMandateRevocationAction, type EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  CssClasses,
+  EnumFileUploadMode,
+  EnumSepaDebitMandateBinding,
+  type EnumSepaDebitMandateRevocationAction,
+  type EnumSepaDebitMandateValidationParam,
+} from '../../build/ts-types/php-modules/Controller.ts';
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
 import {
   ACTION_DIALOG,
+  ACTION_HARDCOPY,
   ACTION_PRE_FILLED,
   ACTION_STORE,
   ACTION_VALIDATE,
   BASE_PATH,
   END_POINT_BANK_ACCOUNTS,
   END_POINT_DEBIT_MANDATES,
+  HARDCOPY_ACTION_DELETE,
+  HARDCOPY_ACTION_UPLOAD,
+  WRITTEN_MANDATE_FILE_UPLOAD,
   type END_POINTS,
 } from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
 import { END_POINT as bulkTransactionsEndPoint, TOPIC_CREATE as bulkTransactionCreate } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import {
+  HAVE_WRITTEN_MANDATE,
+  NO_WRITTEN_MANDATE,
+  WRITTEN_MANDATE_UPLOAD,
+} from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -148,10 +163,10 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
   const mandateFormSelector = 'form.sepa-debit-mandate-form';
   const projectSelectSelector = 'select.mandateProjectId';
   // const projectIdSelector = '.mandateProjectId';
-  const projectIdOnlySelector = '.mandateProjectId.only-for-project';
-  const projectIdAllSelector = '.mandateProjectId.for-all-receivables';
-  const allReceivablesSelector = 'input.for-all-receivables';
-  const onlyProjectSelector = 'input.only-for-project';
+  const projectIdOnlySelector = `.mandateProjectId.${EnumSepaDebitMandateBinding.ONLY_FOR_PROJECT}`;
+  const projectIdAllSelector = `.mandateProjectId.${EnumSepaDebitMandateBinding.FOR_ALL_RECEIVABLES}`;
+  const allReceivablesSelector = `input.${EnumSepaDebitMandateBinding.FOR_ALL_RECEIVABLES}`;
+  const onlyProjectSelector = `input.${EnumSepaDebitMandateBinding.ONLY_FOR_PROJECT}`;
   const instantValidationSelector = 'input.sepa-validation-toggle';
   const mandateRegistrationSelector = 'input.debit-mandate-registration';
   const mandateDateSelector = 'input.mandateDate';
@@ -300,7 +315,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
   });
 
   const fileUploadTemplate = $('#fileUploadTemplate');
-  const uploadWrapperId = appName + 'written-mandate-upload-wrapper';
+  const uploadWrapperId = `${appName}-${WRITTEN_MANDATE_UPLOAD}-wrapper` as const;
   const $uploadUi = fileUploadTemplate.octemplate<TemplateParameters['fileUploadTemplate']>({
     wrapperId: uploadWrapperId,
     formClass: 'file-upload-form',
@@ -327,7 +342,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
   const writtenMandateUploadDone: FileUpload.Options['doneCallback'] = (file, _index, _$container) => {
     console.info('FILE', { file });
     const mandateFieldset = $popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
-    mandateFieldset.find('input.written-mandate-file-upload').val(JSON.stringify([file]));
+    mandateFieldset.find(`input[name="${WRITTEN_MANDATE_FILE_UPLOAD}"]`).val(JSON.stringify([file]));
     const fileName = (file.upload_mode !== EnumFileUploadMode.LINK)
       ? file.original_name
       : file.name;
@@ -335,7 +350,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       .val(fileName)
       .lockUnlock('lock', true);
     // we now should pretend that we have no written mandate in order to get the styling right
-    mandateFieldset.removeClass('have-written-mandate').addClass('no-written-mandate');
+    mandateFieldset.removeClass(HAVE_WRITTEN_MANDATE).addClass(NO_WRITTEN_MANDATE);
   };
 
   $popup.on(
@@ -361,7 +376,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   $popup.on(
     'change',
-    mandateFormSelector + ' ' + 'input.upload-written-mandate-later',
+    `${mandateFormSelector} input.${CssClasses.UPLOAD_WRITTEN_MANDATE_LATER}`,
     function() {
       $(mandateFormSelector + ' ' + uploadPlaceholderSelector)
         .prop('required', !$(this).prop('checked'));
@@ -391,8 +406,8 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
         });
         $self.find('input[type="button"]:not(.download-mandate-form)').prop('disabled', true);
         $self.find('input[type="radio"], select').readonly(true);
-        $self.find('input[type="button"].download-mandate-form').prop('disabled', $self.hasClass('no-written-mandate'));
-        $self.find('input[type="button"].upload-button').prop('disabled', !$self.hasClass('no-written-mandate'));
+        $self.find('input[type="button"].download-mandate-form').prop('disabled', $self.hasClass(NO_WRITTEN_MANDATE));
+        $self.find('input[type="button"].upload-button').prop('disabled', !$self.hasClass(NO_WRITTEN_MANDATE));
       }
     });
   };
@@ -568,7 +583,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       url: generateAppUrl(UploadsController.END_POINT_STASH),
       doneCallback: writtenMandateUploadDone,
       stopCallback: undefined,
-      dropZone: mandateFieldset.find('.written-mandate-upload'),
+      dropZone: mandateFieldset.find(`input.${WRITTEN_MANDATE_UPLOAD}`),
       containerSelector: '#' + uploadWrapperId,
       inputSelector: 'input[type="file"]',
       multiple: false,
@@ -840,10 +855,10 @@ const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omi
 
   const $form = options.$form;
   const $mandateFieldset = $form.find('fieldset.debit-mandate');
-  if ($mandateFieldset.hasClass('no-written-mandate')
+  if ($mandateFieldset.hasClass(NO_WRITTEN_MANDATE)
       && (!$mandateFieldset.hasClass('no-data') || $form.find('input.debit-mandate-registration').prop('checked'))
-      && !$mandateFieldset.find('input.upload-written-mandate-later').prop('checked')
-      && $mandateFieldset.find('input.written-mandate-file-upload').val() === '') {
+    && !$mandateFieldset.find(`input.${CssClasses.UPLOAD_WRITTEN_MANDATE_LATER}`).prop('checked')
+    && $mandateFieldset.find(`input[name="${WRITTEN_MANDATE_FILE_UPLOAD}"]`).val() === '') {
     Dialogs.alert(t(appName, 'Please either upload a copy of the written and signed debit-mandate or at least check the "upload later" option'), t(appName, 'Missing Data'));
     options.fail();
     options.always();
@@ -1907,8 +1922,8 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
           projectId,
           musicianId,
           resizeCB, {
-            upload: 'finance/sepa/debit-mandates/hardcopy/upload',
-            delete: 'finance/sepa/debit-mandates/hardcopy/delete',
+            upload: `${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_HARDCOPY}/${HARDCOPY_ACTION_UPLOAD}`,
+            delete: `${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_HARDCOPY}/${HARDCOPY_ACTION_DELETE}`,
           });
         $(this).on('pme:upload-done pme:upload-deleted', notifyUpload);
       });

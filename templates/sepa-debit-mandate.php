@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Controller\CssClasses;
+use OCA\CAFEVDB\Controller\EnumSepaDebitMandateBinding as Binding;
+use OCA\CAFEVDB\Controller\SepaDebitMandatesController as Controller;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNaviation;
 
 $title = $l->t("SEPA Bank Information for %s", $musicianName);
@@ -42,19 +45,19 @@ $isMembersProject = $projectId == $memberProjectId;
 
 // compute current or default value for mandate binding
 if ($haveMandate) {
-  $mandateBinding = $mandateProjectId == $memberProjectId ? 'for-all-receivables' : 'only-for-project';
+  $mandateBinding = $mandateProjectId == $memberProjectId ? Binding::FOR_ALL_RECEIVABLES : Binding::ONLY_FOR_PROJECT;
 } else {
-  $mandateBinding = $isClubMember ? 'for-all-receivables' : 'only-for-project';
+  $mandateBinding = $isClubMember ? Binding::FOR_ALL_RECEIVABLES : Binding::ONLY_FOR_PROJECT;
 }
 
 $mandateImpossible = !$isClubMember && empty($projectOptions);
 
 $bindingText = [
-  'only-for-project' => [
+  Binding::ONLY_FOR_PROJECT->value => [
     $l->t('only for'),
     $l->t('only for "%s"', $mandateProjectName),
   ],
-  'for-all-receivables' => [
+  Binding::FOR_ALL_RECEIVABLES->value => [
     $l->t('for all receivables'),
     $l->t('for all receivables'),
   ],
@@ -64,7 +67,7 @@ $mandateCss = implode(' ', array_filter([
   'debit-mandate',
   (empty($haveMandate) ? 'no-data' : 'have-data'),
   (empty($mandateInUse) ? 'unused' : 'used'),
-  (empty($writtenMandateId) ? 'no-written-mandate' : 'have-written-mandate'),
+  (empty($writtenMandateId) ? CssClasses::NO_WRITTEN_MANDATE : CssClasses::HAVE_WRITTEN_MANDATE),
   ($isClubMember ? 'club-member' : null),
   (empty($mandateDeleted) ? null : 'deleted'),
 ]));
@@ -201,24 +204,24 @@ function u(string $arg):int {
 
           <?php if (count($projectOptions) > 0) { ?>
           <span class="debit-mandate-binding hidden-have-data hidden-if-locked">
-            <input id="sepa-debit-mandate-only-for-project"
-                   class="only-for-project bankAccount projectMandate checkbox"
+            <input id="sepa-debit-mandate-<?= Binding::ONLY_FOR_PROJECT->value ?>
+                   class="<?= Binding::ONLY_FOR_PROJECT->value ?> bankAccount projectMandate checkbox"
                    type="radio"
                    name="mandateBinding"
-                   value="only-for-project"
-                   <?php ($mandateBinding == 'only-for-project') && u('checked') ?>
+                   value="<?= Binding::ONLY_FOR_PROJECT->value ?>
+                   <?php ($mandateBinding == Binding::ONLY_FOR_PROJECT) && u('checked') ?>
             />
-            <label for="sepa-debit-mandate-only-for-project"
-                   title="<?= $toolTips['sepa-bank-data-form:debit-mandate:only-for-project']; ?>"
+            <label for="sepa-debit-mandate-<?= Binding::ONLY_FOR_PROJECT->value ?>
+                   title="<?= $toolTips['sepa-bank-data-form:debit-mandate:' . Binding::ONLY_FOR_PROJECT->value]; ?>"
                    class="tooltip-right">
-              <?php p($bindingText['only-for-project'][0]); ?>
+              <?php p($bindingText[Binding::ONLY_FOR_PROJECT->value][0]); ?>
             </label>
             <?php if (count($projectOptions) > 1) { ?>
             <select name="mandateProjectId"
-                    class="mandateProjectId only-for-project selectize"
+                    class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value  ?> selectize"
                     placeholder="<?php p($l->t('Select a Project')); ?>"
-                    <?php ($mandateBinding == 'for-all-receivables') && u('disabled'); ?>
-                    <?php ($mandateBinding == 'only-for-project') && u('required'); ?>
+                    <?php ($mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('disabled'); ?>
+                    <?php ($mandateBinding == Binding::ONLY_FOR_PROJECT) && u('required'); ?>
             >
               <option value=""></option>
               <?= PageNaviation::selectOptions($projectOptions, $mandateProjectId); ?>
@@ -227,9 +230,9 @@ function u(string $arg):int {
               $projectOption = reset($projectOptions); ?>
             <span class="debit-mandate-project">
               <input type="hidden"
-                     class="mandateProjectId only-for-project"
+                     class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value ?>
                      name="mandateProjectId"
-                     <?php ($mandateBinding == 'for-all-receivables') && u('disabled'); ?>
+                     <?php ($mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('disabled'); ?>
                      value="<?php p($projectOption['value']); ?>"
               />
               <?php p($projectOption['name']); ?>
@@ -238,32 +241,32 @@ function u(string $arg):int {
           </span>
           <?php } else { ?>
           <input type="hidden"
-                 class="mandateProjectId only-for-project"
+                 class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value ?>
                  name="mandateProjectId"
-                 <?php ($mandateBinding == 'for-all-receivables') && u('disabled'); ?>
+                 <?php ($mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('disabled'); ?>
                  value="0"
           />
           <?php } ?>
           <span class="debit-mandate-binding hidden-have-data hidden-if-locked">
             <input type="hidden"
-                   class="mandateProjectId for-all-receivables"
+                   class="mandateProjectId <?= Binding::FOR_ALL_RECEIVABLES->value ?>"
                    name="mandateProjectId"
                    value="<?php p($memberProjectId); ?>"
-                   <?php ($mandateBinding == 'only-for-project') && u('disabled'); ?>
+                   <?php ($mandateBinding == Binding::ONLY_FOR_PROJECT) && u('disabled'); ?>
             />
-            <input id="sepa-debit-mandate-for-all-receivables"
-                   class="for-all-receivables bankAccount projectMandate checkbox"
+            <input id="sepa-debit-mandate-<?= Binding::FOR_ALL_RECEIVABLES->value ?>"
+                   class="<?= Binding::FOR_ALL_RECEIVABLES->value ?> bankAccount projectMandate checkbox"
                    type="radio"
                    name="mandateBinding"
-                   value="for-all-receivables"
+                   value="<?= Binding::FOR_ALL_RECEIVABLES->value ?>"
                    <?php !$isClubMember && u('data-no-club-member="1"'); ?>
                    <?php !$isClubMember && u('disabled'); ?>
-                   <?php ($isClubMember && $mandateBinding == 'for-all-receivables') && u('checked'); ?>
+                   <?php ($isClubMember && $mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('checked'); ?>
             />
-            <label for="sepa-debit-mandate-for-all-receivables"
-                   title="<?= $toolTips['sepa-bank-data-form:debit-mandate:for-all-receivables']; ?>"
+            <label for="sepa-debit-mandate-<?= Binding::FOR_ALL_RECEIVABLES->value ?>"
+                   title="<?= $toolTips['sepa-bank-data-form:debit-mandate:' . Binding::FOR_ALL_RECEIVABLES->value]; ?>"
                    class="tooltip-right">
-              <?php p($bindingText['for-all-receivables'][0]); ?>
+              <?php p($bindingText[Binding::FOR_ALL_RECEIVABLES->value][0]); ?>
             </label>
           </span>
           <span class="debit-mandate-binding hidden-no-data hidden-if-unlocked">
@@ -271,7 +274,7 @@ function u(string $arg):int {
               <?php p($l->t('Project-binding:')); ?>
             </span>
             <span class="debit-mandate-binding value">
-              <?php p($bindingText[$mandateBinding][1]); ?>
+              <?php p($bindingText[$mandateBinding->value][1]); ?>
             </span>
           </span>
 
@@ -315,11 +318,11 @@ function u(string $arg):int {
               />
             </div>
             <div class="file-data inline-block">
-              <a class="download-link hidden-no-written-mandate"
+              <a class="download-link <?= CssClasses::HIDDEN ?>-<?= CssClasses::NO_WRITTEN_MANDATE ?>"
                  title="<?= $toolTips['sepa-bank-data-form:debit-mandate:download']; ?>"
                  href="<?= $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?>
               </a>
-              <input class="upload-placeholder no-validation hidden-have-written-mandate"
+              <input class="upload-placeholder no-validation <?= CssClasses::HIDDEN ?>-<?= CssClasses::HAVE_WRITTEN_MANDATE ?>"
                      title="<?= $toolTips['sepa-bank-data-form:upload:from-client']; ?>"
                      placeholder="<?= $l->t('Upload filled SEPA debit mandate');  ?>"
                      type="text"
@@ -327,17 +330,17 @@ function u(string $arg):int {
                      value="<?php p($writtenMandateFileName); ?>"
                      <?php !empty($haveMandate) && u('required'); ?>
               />
-              <input type="hidden" name="writtenMandateFileUpload" class="written-mandate-file-upload" value=""/>
+              <input type="hidden" name="<?= Controller::WRITTEN_MANDATE_FILE_UPLOAD ?>" value=""/>
             </div>
-            <input id="upload-written-mandate-later"
-                   class="upload-written-mandate-later bankAccount projectMandate checkbox inline-block hidden-have-written-mandate"
+            <input id="<?= CssClasses::UPLOAD_WRITTEN_MANDATE_LATER ?>"
+                   class="<?= CssClasses::UPLOAD_WRITTEN_MANDATE_LATER ?> bankAccount projectMandate checkbox inline-block <?= CssClasses::HIDDEN ?>-<?= CssClasses::HAVE_WRITTEN_MANDATE ?>"
                    type="checkbox"
                    name="mandateUploadLater"
                    value="mandateUploadLater"
             />
-            <label for="upload-written-mandate-later"
+            <label for="<?= CssClasses::UPLOAD_WRITTEN_MANDATE_LATER ?>"
                    title="<?= $toolTips['sepa-bank-data-form:debit-mandate:upload:later']; ?>"
-                   class="tooltip-right inline-block hidden-have-written-mandate">
+                   class="tooltip-right inline-block <?= CssClasses::HIDDEN ?>-<?= CssClasses::HAVE_WRITTEN_MANDATE ?>">
               <?= $l->t('upload later'); ?>
             </label>
           </div>

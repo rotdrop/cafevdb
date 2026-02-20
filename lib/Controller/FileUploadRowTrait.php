@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -108,6 +108,7 @@ trait FileUploadRowTrait
 
     $totalSize = 0;
     foreach ($files as &$file) {
+      // TODO: $file should have the format of DTO\UploadFileData.
 
       $totalSize += $file['size'];
 

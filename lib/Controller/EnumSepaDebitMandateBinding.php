@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,17 +26,12 @@ namespace OCA\CAFEVDB\Controller;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-/** CSS classes shared between the legacy templates, scss and typescript. */
-#[TSAttributes\TypeScript]
-class CssClasses
+/** The two possible bindings for debit mandates. */
+#[TSAttributes\TypeScript(options: ['nativeEnums' => true])]
+enum EnumSepaDebitMandateBinding: string
 {
-  public const CLASS_SEPARATOR = '-';
-  public const APP_NAME_TAG_PREFIX = 'app' . self::CLASS_SEPARATOR;
-  public const HIDE_ONLY_CHILD = 'hide-only-child';
-  public const BUSY = 'busy';
-  public const NO_WRITTEN_MANDATE = 'no-written-mandate';
-  public const HAVE_WRITTEN_MANDATE = 'have-written-mandate';
-  public const HIDDEN = 'hidden';
-  public const UPLOAD_WRITTEN_MANDATE_LATER = 'upload-written-mandate-later';
-  public const WRITTEN_MANDATE_UPLOAD = 'written-mandate-upload';
+  use \OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait;
+
+  case FOR_ALL_RECEIVABLES = 'for-all-receivables';
+  case ONLY_FOR_PROJECT = 'only-for-project';
 }

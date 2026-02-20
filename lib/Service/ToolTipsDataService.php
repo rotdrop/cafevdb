@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\EnumSepaDebitMandateBinding;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -1434,8 +1435,8 @@ therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
             FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
           ),
-          'only-for-project' => self::t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
-          'for-all-receivables' => self::t('Use this as a general debit-mandate for all receivables of this person. Note that we accept general debit mandates only for club-members.'),
+          EnumSepaDebitMandateBinding::ONLY_FOR_PROJECT->value => self::t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
+          EnumSepaDebitMandateBinding::FOR_ALL_RECEIVABLES->value => self::t('Use this as a general debit-mandate for all receivables of this person. Note that we accept general debit mandates only for club-members.'),
           'download' => [
             'default' => self::t('Download the existing signed hard-copy of the debit mandate.'),
             'form' => self::t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
