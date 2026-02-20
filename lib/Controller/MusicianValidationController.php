@@ -58,6 +58,13 @@ class MusicianValidationController extends Controller
 
   public const END_POINT = 'validate/musicians';
 
+  public const EMAIL_VALIDATION_ON_FAILURE_ERROR = 'error';
+  public const EMAIL_VALIDATION_ON_FAILURE_NOTICE = 'notice';
+  public const EMAIL_VALIDATION_ON_FAILURE = [
+    self::EMAIL_VALIDATION_ON_FAILURE_ERROR,
+    self::EMAIL_VALIDATION_ON_FAILURE_NOTICE,
+  ];
+
   protected string $dataPrefix = '';
 
   /** {@inheritdoc} */
@@ -113,7 +120,7 @@ class MusicianValidationController extends Controller
   ): DataResponse|JSONResponse {
     $topic = EnumMusicianValidationTopic::get($topic);
     $subTopic = $subTopic ? EnumMusicianValidationSubTopic::get($subTopic) : null;
-    $message = [];
+    $messages = [];
     switch ($topic) {
       case EnumMusicianValidationTopic::PHONE:
         $numbers = [
@@ -147,7 +154,7 @@ class MusicianValidationController extends Controller
             // empty
           }
           if (!$number['valid'] && !empty($number['number'])) {
-            $message[] = $this->l->t(
+            $messages[] = $this->l->t(
               'The phone number %s does not appear to be a valid phone number. ',
               [ $number['number'], ]
             );
@@ -160,7 +167,7 @@ class MusicianValidationController extends Controller
           $tmp = $fixed;
           $fixed = $mobile;
           $mobile = $tmp;
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'This (%s) is a fixed line phone number, injecting it in the correct column.',
             [ $fixed['number'] ]
           );
@@ -169,7 +176,7 @@ class MusicianValidationController extends Controller
           $tmp = $mobile;
           $mobile = $fixed;
           $fixed = $tmp;
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'This (%s) is a mobile phone number, injecting it in the correct column.',
             [ $mobile['number'] ]
           );
@@ -178,15 +185,19 @@ class MusicianValidationController extends Controller
           $tmp = $fixed;
           $fixed = $mobile;
           $mobile = $tmp;
+          $messages[] = $this->l->t(
+            'Mobile and fixed line numbers appear to be interchanged, switching input fields.',
+            [ $mobile['number'] ]
+          );
         } elseif ($mobile['valid'] && !$mobile['isMobile']) {
-          $message[] = $this->l->t(
+          $messages[] = $this->l->t(
             'The phone number %s does not appear to be a mobile phone number. ',
             [ $mobile['number'] ]
           );
         }
 
         return new DTO\PhoneNumberValidationResponse(
-          messages: $message,
+          messages: $messages,
           mobilePhone: $mobile['number'],
           mobileMeta: nl2br($mobile['meta']),
           fixedLinePhone: $fixed['number'],
@@ -198,9 +209,9 @@ class MusicianValidationController extends Controller
 
         if (empty($email)) {
           return new DTO\EmailValidationResponse(
-            messages: [ $this->t->t('Submitted email is empty') ],
+            messages: [ $this->l->t('Submitted email is empty') ],
             email: '',
-          )->response($failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK);
+          )->response($failure == 'error' ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK);
         }
 
         try {
@@ -215,7 +226,7 @@ class MusicianValidationController extends Controller
           $statusCode = Http::STATUS_OK;
         } else {
           $messages = [ $message ];
-          $statusCode = $failure ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK;
+          $statusCode = $failure == 'error' ? Http::STATUS_BAD_REQUEST : Http::STATUS_OK;
         }
 
         return new DTO\EmailValidationResponse(
