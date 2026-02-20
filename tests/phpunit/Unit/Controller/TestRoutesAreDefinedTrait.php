@@ -46,7 +46,7 @@ trait TestRoutesAreDefinedTrait
    *
    * @return void
    */
-  public function testRoutesAreDefined(bool $verbose = false): void
+  public function testRoutesAreDefined(): void
   {
     $entityManager = $this->entityManager ?? null;
     if ($entityManager && method_exists($entityManager, 'expects')) {
@@ -64,9 +64,9 @@ trait TestRoutesAreDefinedTrait
       fn(string $key) => str_starts_with($key, $prefix) || str_starts_with($key, $ocsPrefix),
       ARRAY_FILTER_USE_KEY,
     );
-    if ($verbose) {
-      print_r(array_keys($controllerRoutes));
-    }
+    // if ($verbose) {
+    //   print_r(array_keys($controllerRoutes));
+    // }
     $expectedRoutes = [];
     $prefixCallback = fn(string $name) => (str_starts_with($name, $appName)
                                            ? $name
