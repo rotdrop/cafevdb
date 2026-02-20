@@ -38,12 +38,12 @@ require('blueimp-file-upload/js/jquery.iframe-transport');
 type jqXHR = JQuery.jqXHR;
 const uploadingFiles: Record<string, jqXHR|jqXHR[]> = {};
 
-export type UploadFile = UploadFileData & { status?: 'new' };
+export type UploadFile = UploadFileData;
 
 interface UploadData {
-  result: UploadFile[]|Record<string, UploadFile>,
-  files: UploadFile[],
-  originalFiles: UploadFile[],
+  result: UploadFileData[]|Record<string, UploadFileData>,
+  files: UploadFileData[],
+  originalFiles: UploadFileData[],
   textStatus: 'dirorzero'|string,
   errorThrown: string,
   submit: () => jqXHR,
@@ -67,7 +67,7 @@ const cancelUploads = function() {
   });
 };
 
-function defaultDoneCallback(file: UploadFile, _index: number|string|symbol, $container:JQuery) {
+function defaultDoneCallback(file: UploadFileData, _index: number|string|symbol, $container:JQuery) {
   file.status = 'new';
   // file.index = index;
   $container.data('files') || $container.data('files', []);
@@ -227,7 +227,7 @@ function init(parameters: Partial<Options>) {
 
       const errors: string[] = [];
 
-      const processUpload = function(upload: UploadFile, index: string|number) {
+      const processUpload = function(upload: UploadFileData, index: string|number) {
 
         if ((upload.error ?? 0) !== 0) {
           errors.push(upload.str_error!);

@@ -32,6 +32,8 @@ use OCA\CAFEVDB\Controller\EnumFileUploadMode;
 
 /**
  * DTO upload file data as reported by PHP, a bit enhanced.
+ *
+ * @SuppressWarnings(PHPMD.CamelCaseParameterName)
  */
 class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
@@ -50,6 +52,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     public readonly ?UploadFileMetaData $meta,
     public readonly ?EnumFileUploadOrigin $origin,
     public readonly ?EnumFileUploadMode $upload_mode,
+    public readonly ?string $status = null,
   ) {
   }
 
@@ -64,6 +67,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
    *
    * @SuppressWarnings(PHPMD.UndefinedVariable)
    * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+   * @SuppressWarnings(PHPMD.CamelCaseVariableName)
    */
   public static function fromArray(array $data): self
   {
@@ -100,6 +104,7 @@ class UploadFileData extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
       meta: $meta ?? null,
       origin: $origin ?? null,
       upload_mode: $upload_mode ?? null,
+      status: $status ?? null,
     );
   }
 }
