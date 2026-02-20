@@ -1,0 +1,72 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+
+/**
+ * Duplicate musician DTO.
+ */
+#[TSAttributes\InlineTypeScriptType]
+class DuplicateMusician extends \OCA\CAFEVDB\Toolkit\DTO\AbstractDTO
+{
+  #[TSAttributes\LiteralTypeScriptType(ORM::class . ".EntityMetadata.EntityDto<'Musician'>")]
+  public readonly EntityArrayAdapter $musician;
+
+  /** {@inheritdoc} */
+  public function __construct(
+    public readonly float $duplicatesProbability,
+    /** @var array<string> $reasons */
+    public readonly array $reasons,
+    Entities\Musician $musician,
+  ) {
+    $this->musician = EntityArrayAdapter::create($musician, depth: 0);
+  }
+
+  /**
+   * Initialize from the given array.
+   *
+   * @param array $data
+   *
+   * @return self
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+   */
+  public static function fromArray(array $data): self
+  {
+    static::initKeys();
+    extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
+    return new self(
+      duplicatesProbability: $duplicatesProbability,
+      reasons: $reasons,
+      musician: $musician,
+    );
+  }
+}

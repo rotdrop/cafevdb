@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -113,7 +116,7 @@
     
             <span class="phpdocumentor-element__extends">
             uses
-                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait">FakeTranslationTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -122,11 +125,11 @@
 </div>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">37</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.37" class="phpdocumentor-element-found-in__source" data-line="37" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Find an executable and cache the result.</p>
@@ -177,7 +180,7 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_appName">$appName</a>
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_cacheKeyPrefix">$cacheKeyPrefix</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
@@ -197,7 +200,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_l">$l</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
+                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -310,6 +313,12 @@
 <dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
 understands those.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t">t()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#method_cacheKey">cacheKey()</a>
     <span>
@@ -347,11 +356,11 @@ understands those.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -396,11 +405,11 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
@@ -426,19 +435,19 @@ understands those.</dd>
             -protected
                                                                     "
 >
-    <h4 class="phpdocumentor-element__name" id="property_appName">
-        $appName
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_appName" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_cacheKeyPrefix">
+        $cacheKeyPrefix
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_cacheKeyPrefix" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -446,7 +455,7 @@ understands those.</dd>
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
             <span class="phpdocumentor-signature__type">string</span>
-    <span class="phpdocumentor-signature__name">$appName</span>
+    <span class="phpdocumentor-signature__name">$cacheKeyPrefix</span>
     </code>
 
     
@@ -472,11 +481,11 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -510,11 +519,11 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -550,18 +559,18 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
         <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$l</span>
     </code>
 
@@ -588,11 +597,11 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -626,11 +635,11 @@ understands those.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -669,17 +678,17 @@ understands those.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\ICacheFactory">ICacheFactory</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cacheFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$executableFinder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\ICacheFactory">ICacheFactory</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cacheFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$executableFinder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -695,6 +704,13 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$l</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$executableFinder</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Symfony\Component\Process\ExecutableFinder">ExecutableFinder</abbr></span>
                             </dt>
@@ -702,22 +718,8 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$l</span>
-                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$logger</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-argument-list__argument__name">$appName</span>
-                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -742,11 +744,11 @@ understands those.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">167</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.167" class="phpdocumentor-element-found-in__source" data-line="167" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Clear the memory cache of found executables.</p>
@@ -778,11 +780,11 @@ understands those.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Try to find the given executable.</p>
@@ -860,11 +862,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log the given message at the specified level.</p>
@@ -945,11 +947,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">228</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
@@ -1023,11 +1025,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">207</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
@@ -1101,11 +1103,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
@@ -1185,11 +1187,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
@@ -1263,11 +1265,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored logger class</p>
@@ -1303,11 +1305,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">250</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
@@ -1381,11 +1383,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">271</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
@@ -1459,11 +1461,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored appConmtainer instance.</p>
@@ -1499,11 +1501,11 @@ basename of a Un*x program.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
@@ -1537,6 +1539,69 @@ understands those.</p>
                     <article
         class="phpdocumentor-element
             -method
+            -protected
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_t">
+        t()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/FakeTranslationTrait.php"><a href="files/lib-toolkit-traits-faketranslationtrait.html"><abbr title="lib/Toolkit/Traits/FakeTranslationTrait.php">FakeTranslationTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/lib/Toolkit/Traits/FakeTranslationTrait.php.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$text</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$parameters</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$l</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -private
                                                         "
 >
@@ -1546,11 +1611,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">177</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -1599,11 +1664,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -1644,11 +1709,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/ExecutableFinder.php"><a href="files/toolkit-service-executablefinder.html"><abbr title="Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Service/ExecutableFinder.php"><a href="files/lib-toolkit-service-executablefinder.html"><abbr title="lib/Toolkit/Service/ExecutableFinder.php">ExecutableFinder.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/Toolkit/Service/ExecutableFinder.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt"></a>
     </aside>
 
     
@@ -1690,7 +1755,7 @@ understands those.</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/Toolkit/Service/ExecutableFinder.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/Toolkit/Service/ExecutableFinder.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>
@@ -1807,7 +1872,7 @@ understands those.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_appContainer">$appContainer</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_appName">$appName</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_cacheKeyPrefix">$cacheKeyPrefix</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_executableFinder">$executableFinder</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_executables">$executables</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#property_l">$l</a></li>
@@ -1832,6 +1897,7 @@ understands those.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_appContainer">appContainer()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Traits-FakeTranslationTrait.html#method_t">t()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#method_cacheKey">cacheKey()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#method_getCacheValue">getCacheValue()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Toolkit-Service-ExecutableFinder.html#method_setCacheValue">setCacheValue()</a></li>

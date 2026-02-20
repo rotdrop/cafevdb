@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -127,11 +130,11 @@
 </div>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Base class for the specific receivable generators.</p>
@@ -255,7 +258,7 @@ the constructor.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#method_operationLabels">operationLabels()</a>
     <span>
-                                &nbsp;: null|string|<abbr title="\OCA\CAFEVDB\Service\Finance\arra">arra</abbr>    </span>
+                                &nbsp;: null|string|<abbr title="\Closure">Closure</abbr>|array&lt;string|int, string|<abbr title="\Closure">Closure</abbr>&gt;    </span>
 </dt>
 <dd>Return an array of button-labels (or just one label), indexed by
 operation slug. If a label is literal false the corresponding UI element
@@ -371,7 +374,7 @@ entity class.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter">disableFilter()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: bool|null    </span>
 </dt>
 <dd>Disable the given filter. In contrast to the upstream-method does
 not throw an exception if the filter is not enabled.</dd>
@@ -379,7 +382,7 @@ not throw an exception if the filter is not enabled.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: bool|null    </span>
 </dt>
 <dd>Enable the given filter.</dd>
 
@@ -544,11 +547,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -582,11 +585,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -620,11 +623,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -658,11 +661,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -696,11 +699,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -734,11 +737,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -772,11 +775,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -815,11 +818,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
     
@@ -867,11 +870,11 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sub-account name (leaf) where for the bookkeeping of receivables
@@ -908,11 +911,11 @@ generated by the generator.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">119</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.119" class="phpdocumentor-element-found-in__source" data-line="119" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Bind this instance to the given entity. The idea is to have a
@@ -967,11 +970,11 @@ status class in order to give feedback during long running updates.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">350</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the due-date for the given receivable or the maximum of all due-dates.</p>
@@ -1017,11 +1020,11 @@ status class in order to give feedback during long running updates.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return an array of button-labels (or just one label), indexed by
@@ -1031,7 +1034,7 @@ labelled control elements a string can be returned.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">operationLabels</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$slug</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string|<abbr title="\OCA\CAFEVDB\Service\Finance\arra">arra</abbr></span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">operationLabels</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$slug</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string|<abbr title="\Closure">Closure</abbr>|array&lt;string|int, string|<abbr title="\Closure">Closure</abbr>&gt;</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1045,7 +1048,7 @@ labelled control elements a string can be returned.</p>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Must be either null or one of the elements of
-self::SLUGS. If null all labels will be return, otherwise just the
+self::SLUGS. If null all labels will be returned, otherwise just the
 requested one. If $slug is a string but is not contained in
 self::OPERATION_SLUGS then null is returned.</p>
 </section>
@@ -1059,7 +1062,7 @@ self::OPERATION_SLUGS then null is returned.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">null|string|<abbr title="\OCA\CAFEVDB\Service\Finance\arra">arra</abbr></span>
+        <span class="phpdocumentor-signature__response_type">null|string|<abbr title="\Closure">Closure</abbr>|array&lt;string|int, string|<abbr title="\Closure">Closure</abbr>&gt;</span>
             </section>
 
 </article>
@@ -1075,11 +1078,11 @@ self::OPERATION_SLUGS then null is returned.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flags controlling the intended user interaction in the per-musician view.</p>
@@ -1115,11 +1118,11 @@ self::OPERATION_SLUGS then null is returned.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compute the amounts to invoice for all relevant musicians and
@@ -1179,11 +1182,11 @@ field-data for all participants.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.273" class="phpdocumentor-element-found-in__source" data-line="273" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the amount to invoice for the bound service-fee field.</p>
@@ -1260,11 +1263,11 @@ field-data for the participant.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the amount to invoice for bound service-fee field.</p>
@@ -1342,11 +1345,11 @@ field-data for the given option.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">An array of possible conflict resolutions for conflicting data-items.</p>
@@ -1382,11 +1385,11 @@ field-data for the given option.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">511</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.511" class="phpdocumentor-element-found-in__source" data-line="511" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -1439,11 +1442,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Clear the cache.</p>
@@ -1475,11 +1478,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">492</span>
+    <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -1531,11 +1534,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">372</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -1581,11 +1584,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">480</span>
+    <span class="phpdocumentor-element-found-in__line">482</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -1644,11 +1647,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Creates a Query from a named query.</p>
@@ -1694,11 +1697,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Creates a new Query object.</p>
@@ -1746,11 +1749,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">438</span>
+    <span class="phpdocumentor-element-found-in__line">440</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.438" class="phpdocumentor-element-found-in__source" data-line="438" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -1786,11 +1789,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">448</span>
+    <span class="phpdocumentor-element-found-in__line">450</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.450" class="phpdocumentor-element-found-in__source" data-line="450" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -1826,11 +1829,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">460</span>
+    <span class="phpdocumentor-element-found-in__line">462</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.462" class="phpdocumentor-element-found-in__source" data-line="462" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -1890,11 +1893,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">413</span>
+    <span class="phpdocumentor-element-found-in__line">415</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Disable the given filter. In contrast to the upstream-method does
@@ -1902,7 +1905,7 @@ not throw an exception if the filter is not enabled.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">disableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">disableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1925,9 +1928,10 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The previous isEnabled() state of the filter.</p>
+                <section class="phpdocumentor-description"><p>The previous isEnabled() state of the filter or \null if
+the filter does not exist.</p>
 </section>
 
             </section>
@@ -1945,18 +1949,18 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">400</span>
+    <span class="phpdocumentor-element-found-in__line">401</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.400" class="phpdocumentor-element-found-in__source" data-line="400" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.401" class="phpdocumentor-element-found-in__source" data-line="401" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1973,7 +1977,7 @@ not throw an exception if the filter is not enabled.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$state</span>
-                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1986,9 +1990,10 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The old state of the filter.</p>
+                <section class="phpdocumentor-description"><p>The old state of the filter or \null if the filter does not
+exist.</p>
 </section>
 
             </section>
@@ -2006,11 +2011,11 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">466</span>
+    <span class="phpdocumentor-element-found-in__line">468</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.466" class="phpdocumentor-element-found-in__source" data-line="466" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.468" class="phpdocumentor-element-found-in__source" data-line="468" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -2041,11 +2046,11 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -2117,11 +2122,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -2171,11 +2176,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -2246,11 +2251,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -2329,11 +2334,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -2390,11 +2395,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">263</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
@@ -2476,11 +2481,11 @@ makes use of optimistic locking fails.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set and get the given name as the current database target entity.</p>
@@ -2531,11 +2536,11 @@ database entity.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
@@ -2604,11 +2609,11 @@ without actually loading it, if the entity is not yet loaded.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">428</span>
+    <span class="phpdocumentor-element-found-in__line">430</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -2662,11 +2667,11 @@ return a new collection containing these elements.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
@@ -2738,11 +2743,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">525</span>
+    <span class="phpdocumentor-element-found-in__line">527</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.527" class="phpdocumentor-element-found-in__source" data-line="527" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -2802,11 +2807,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a QueryBuilder instance</p>
@@ -2842,11 +2847,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">385</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -2897,11 +2902,11 @@ to allow for &quot;-&gt;&quot; chaining.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Removes an entity instance.</p>
@@ -2998,7 +3003,7 @@ or not. This parameter is ignored if $flush is false.</p>
                     <span class="phpdocumentor-tag__name">throws</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityNotFoundException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityNotFoundException">DatabaseEntityNotFoundException</abbr></a></span>
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityNotFoundException">DatabaseEntityNotFoundException</abbr></span>
                                                             
                                              
                                     </dd>
@@ -3020,11 +3025,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the given name as the current database target entity.</p>
@@ -3066,17 +3071,17 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/FakeTranslationTrait.php"><a href="files/toolkit-traits-faketranslationtrait.html"><abbr title="Toolkit/Traits/FakeTranslationTrait.php">FakeTranslationTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/FakeTranslationTrait.php"><a href="files/lib-toolkit-traits-faketranslationtrait.html"><abbr title="lib/Toolkit/Traits/FakeTranslationTrait.php">FakeTranslationTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Toolkit/Traits/FakeTranslationTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/lib/Toolkit/Traits/FakeTranslationTrait.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">t</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameters</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3095,6 +3100,13 @@ or not. This parameter is ignored if $flush is false.</p>
                 <span class="phpdocumentor-argument-list__argument__name">$parameters</span>
                 : <span class="phpdocumentor-argument-list__argument__type">string|array&lt;string|int, mixed&gt;</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$l</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
@@ -3122,11 +3134,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Inject some translations of constants into the machinery.</p>
@@ -3158,11 +3170,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/AbstractReceivablesGenerator.php"><a href="files/service-finance-abstractreceivablesgenerator.html"><abbr title="Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/Finance/AbstractReceivablesGenerator.php"><a href="files/lib-service-finance-abstractreceivablesgenerator.html"><abbr title="lib/Service/Finance/AbstractReceivablesGenerator.php">AbstractReceivablesGenerator.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">190</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-AbstractReceivablesGenerator.html#source-view.190" class="phpdocumentor-element-found-in__source" data-line="190" data-modal="source-view" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update just the given receivable and participant.</p>
@@ -3243,7 +3255,7 @@ or not. This parameter is ignored if $flush is false.</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/Service/Finance/AbstractReceivablesGenerator.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/Service/Finance/AbstractReceivablesGenerator.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>

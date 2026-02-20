@@ -1,0 +1,1885 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use DateTimeImmutable;
+use InvalidArgumentException;
+use PHP_IBAN\IBAN;
+use Throwable;
+use ValueError;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IRequest;
+
+use OCA\BAV\Service\BAV as BankAccountValidator;
+
+use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Common\TimeFactory;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+
+/** AJAX endpoints for debit mandates */
+#[TSAttributes\TypeScript]
+class SepaDebitMandatesController extends Controller
+{
+  use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const BASE_PATH = 'finance/sepa';
+
+  public const END_POINT_BANK_ACCOUNTS = 'bank-account';
+  public const END_POINT_DEBIT_MANDATES = 'debit-mandates';
+  public const END_POINTS = [
+    self::END_POINT_BANK_ACCOUNTS,
+    self::END_POINT_DEBIT_MANDATES,
+  ];
+
+  public const ACTION_DELETE = EnumSepaDebitMandateRevocationAction::DELETE->value;
+  public const ACTION_DIALOG = 'dialog';
+  public const ACTION_DISABLE = EnumSepaDebitMandateRevocationAction::DISABLE->value;
+  public const ACTION_HARDCOPY = 'hardcopy';
+  public const ACTION_PRE_FILLED = 'pre-filled';
+  public const ACTION_REACTIVATE = EnumSepaDebitMandateRevocationAction::REACTIVATE->value;
+  public const ACTION_STORE = 'store';
+  public const ACTION_VALIDATE = 'validate';
+
+  public const DEBIT_MANDATE_ACTIONS = [
+    self::ACTION_DELETE,
+    self::ACTION_DIALOG,
+    self::ACTION_DISABLE,
+    self::ACTION_HARDCOPY,
+    self::ACTION_PRE_FILLED,
+    self::ACTION_REACTIVATE,
+    self::ACTION_STORE,
+    self::ACTION_VALIDATE,
+  ];
+
+  public const BANK_ACCOUNT_ACTIONS = [
+    self::ACTION_DELETE,
+    self::ACTION_DISABLE,
+    self::ACTION_REACTIVATE,
+  ];
+
+  public const HARDCOPY_ACTION_UPLOAD = 'upload';
+  public const HARDCOPY_ACTION_DELETE = 'delete';
+  public const WRITTEN_MANDATE_FILE_UPLOAD = 'writtenMandateFileUpload';
+
+  /** @var Repositories\SepaBankAccountsRepository */
+  private $bankAccountsRepository;
+
+  /** @var Repositories\SepaDebitMandatesRepository */
+  private $debitMandatesRepository;
+
+  /** {@inheritdoc} */
+  public function __construct(
+    $appName,
+    IRequest $request,
+    private BankAccountValidator $bav,
+    private FinanceService $financeService,
+    private FuzzyInputService $fuzzyInputService,
+    private ProjectService $projectService,
+    private StorageFactory $storageFactory,
+    private TimeFactory $timeFactory,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+  ) {
+    parent::__construct($appName, $request);
+    $this->l = $this->l10N();
+
+    $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+    $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+  }
+
+  private const MANDATE_VALIDATE_REQUIRED = [
+    'mandateProjectId' => FILTER_VALIDATE_INT,
+    'musicianId' => FILTER_VALIDATE_INT,
+    'mandateReference' => null,
+    'bankAccountSequence' => FILTER_VALIDATE_INT,
+    'mandateSequence' => FILTER_VALIDATE_INT,
+  ];
+
+  /**
+   * @param string $changed The name of the changed parameter.
+   *
+   * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
+   *
+   * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_VALIDATE)]
+  public function mandateValidate(string $changed): Response
+  {
+    $missing = [];
+    $failed = [];
+    foreach (self::MANDATE_VALIDATE_REQUIRED as $required => $validation) {
+      $value = $this->request->getParam($required, false);
+      if ($value === false) {
+        $missing[] = $required;
+      } elseif ($value !== '') {
+        switch ($validation) {
+          case FILTER_VALIDATE_INT:
+            if (filter_var($value, $validation, ['options' => ['min_range' => 0]]) === false) {
+              $failed[$required] = $value;
+            }
+            break;
+        }
+      }
+    }
+
+    if (!empty($missing)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Required information "%s" not provided.', implode('", "', $missing)),
+        context: [
+          'missing' => $missing,
+          'required' => array_keys(self::MANDATE_VALIDATE_REQUIRED),
+        ],
+      );
+    }
+    if (!empty($failed)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('The following data does not satisfy its constraints: "%s"', print_r($failed, true)),
+        context: [
+          'failed' => $failed,
+        ],
+      );
+    }
+
+    $musicianId = (int)$this->request->getParam('musicianId');
+    $reference  = $this->request->getParam('mandateReference');
+    $mandateProjectId  = (int)$this->request->getParam('mandateProjectId');
+    $mandateNonRecurring = $this->request->getParam('mandateNonRecurring');
+    $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+
+    $this->logDebug('NON RECUR '.$mandateNonRecurring.' '.(!!$mandateNonRecurring));
+
+    $memberProjectId = $this->getConfigValue('memberProjectId', null);
+
+    $IBAN = $this->request[ConfigConstants::BANK_ACCOUNT_IBAN];
+    $BLZ  = $this->request[ConfigConstants::BANK_ACCOUNT_BLZ];
+    $BIC  = $this->request[ConfigConstants::BANK_ACCOUNT_BIC];
+    $owner = $this->request[ConfigConstants::BANK_ACCOUNT_OWNER];
+
+    $changed = $this->request->getParam('changed');
+    $value = $this->request[$changed];
+
+    $validations = [
+      [
+        'changed' => $changed,
+        'value' => $value,
+        'initiator' => null,
+      ],
+    ];
+
+    if ($changed != ConfigConstants::BANK_ACCOUNT_IBAN
+        && !empty($IBAN) && str_starts_with($IBAN, 'DE') && (empty($BLZ) || empty($BIC))) {
+      // re-run the IBAN validation
+      $validations[] = [
+        'changed' => ConfigConstants::BANK_ACCOUNT_IBAN,
+        'value' => $IBAN,
+      ];
+    }
+
+    $feedback = [];
+    $messages = [];
+
+    while (($validation = array_pop($validations)) !== null) {
+
+      $changed = $validation['changed'];
+      $value = $validation['value'];
+      $initialValue = $value;
+      $initiator = $validation['initiator'];
+
+      $newValidations = [];
+      switch ($changed) {
+        case 'mandateProjectId':
+          $newValidations[] = [
+            'changed' => 'orchestraMember',
+            'value' => ($mandateProjectId === $memberProjectId) ? 'member' : '',
+          ];
+          $newValidations[] = [
+            'changed' => 'musicianId',
+            'value' => $musicianId,
+          ];
+          break;
+        case 'orchestraMember':
+          // tricky, for now just generate a new reference
+          // @todo This has be made foolproof!
+          $newProjectId = ($value === 'member') ? $memberProjectId : $mandateProjectId;
+          $mandate = $this->financeService->fetchSepaMandate($newProjectId, $musicianId);
+          if (!empty($mandate)) {
+            $reference = $mandate['mandateReference'];
+            $IBAN = $mandate['IBAN'];
+            $BLZ = $mandate['BLZ'];
+            $BIC = $mandate['BIC'];
+            $messages[] = $this->l->t('Found exisiting mandate with reference "%s"', $reference);
+          } elseif (!empty($newProjectId) && !empty($musicianId)) {
+            $mandate = (new Entities\SepaDebitMandate)
+              ->setProject($this->getReference(Entities\Project::class, $newProjectId))
+              ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
+            $reference = $this->financeService->generateSepaMandateReference($mandate);
+            $messages[] = $this->l->t('Generated new reference "%s"', $reference);
+          } elseif (empty($newProjectId)) {
+            $reference = '';
+            $messages[] = $this->l->t('No project, delete mandate-reference.');
+          }
+          $mandateProjectId = $newProjectId;
+          $newValidations[] = [
+            'changed' => 'mandateNonRecurring',
+            'value' => $value != 'member',
+          ];
+          break;
+        case 'mandateLastUsedDate':
+          // Store the lastUsedDate immediately, if other fields are disabled
+          if (empty($this->request->getParam('mandateDate'))) {
+            $mandate = [
+              'mandateReference' => $reference,
+              'musicianId' => $musicianId,
+              'projectId' => $mandateProjectId,
+              'lastUsedDate' => $value,
+            ];
+            if (!$this->financeService->storeSepaMandate($mandate)) {
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('Failed setting `%s\' to `%s\'.', [ $changed, $value, ]),
+                context: [
+                  'mandate' => $mandate,
+                  'changed' => $changed,
+                  'value' => $value,
+                ],
+              );
+            }
+          }
+          // no break
+        case 'mandateNonRecurring':
+          $mandateNonRecurring = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+          break;
+        case 'mandateDate':
+          // Whatever the user likes ;)
+          // The date-picker does some validation on its own, so just live with it.
+          return DTO\SepaDebitMandateValidation::fromArray([
+            'messages' => [$this->l->t('Value for `%s\' set to `%s\'.', [ $changed, $value ])],
+            'suggestions' => [],
+            'value' => $value,
+          ])->response();
+        case 'musicianId':
+          if (empty($musicianId)) {
+            $newValidations[] = [
+              'changed' => ConfigConstants::BANK_ACCOUNT_OWNER,
+              'value' => '',
+            ];
+            break;
+          }
+          if (empty($mandateProjectId)) {
+            break;
+          }
+          $participant = $this->projectService->findParticipant($mandateProjectId, $musicianId);
+          if (empty($participant)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Participant %d not found in project %d.', [ $musicianId, $mandateProjectId ]),
+            );
+          }
+          $newOwner = $participant['musician']['firstName'] . ' ' . $participant['musician']['LastName'];
+          if (!empty($mandateProjectId)) {
+            $newValidations[] = [
+              'changed' => 'mandateProjectId',
+              'value' => $mandateProjectId,
+            ];
+          }
+          if (true || empty($owner)) {
+            $newValidations[] = [
+              'changed' => ConfigConstants::BANK_ACCOUNT_OWNER,
+              'value' => $newOwner,
+            ];
+          } else {
+            $feedback['owner'] = $this->l->t('Set bank-account owner to musician\'s name?');
+          }
+          break;
+        case ConfigConstants::BANK_ACCOUNT_OWNER:
+          $this->logInfo('OWNER ' . $value . ' ' . $this->financeService->sepaTranslit($value));
+          $value = $this->financeService->sepaTranslit($value);
+          if (!$this->financeService->validateSepaString($value)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Account owner contains invalid characters: "%s"', $value),
+            );
+          }
+          $owner = $value;
+          break;
+        case ConfigConstants::BANK_ACCOUNT_IBAN:
+          if (empty($value)) {
+            $IBAN = '';
+            $BLZ = null;
+            $BIC = '';
+            break;
+          }
+          $value = Util::removeSpaces($value);
+          $iban = new IBAN($value);
+          if (!$iban->Verify() && is_numeric($value)) {
+            // maybe simply the bank account number, if we have a BLZ,
+            // then compute the IBAN
+            $blz = $BLZ;
+
+            if (empty($BLZ)) {
+              throw new Exceptions\EnduserNotificationException(
+                $this->l->t('BLZ not given, cannot validate the bank account.'),
+              );
+            }
+
+            // First validate the BLZ
+            if (!$this->bav->isValidBank($blz)) {
+              if (strlen($blz) != 8 || !is_numeric($blz)) {
+                throw new Exceptions\EnduserNotificationException(
+                  $this->l->t('A German bank id consists of exactly 8 digits: %s.', [ $blz ]),
+                );
+              }
+
+              $suggestions = $this->fuzzyInputService->transposition($blz, function($input) {
+                return $this->bav->isValidBank($input);
+              });
+
+              return DTO\SepaDebitMandateValidation::fromArray([
+                  'messages' => [$this->l->t('Invalid German(?) bank id "%s".', [ $blz    ])],
+                  'suggestions' => $suggestions,
+              ])->response(Http::STATUS_BAD_REQUEST);
+            }
+
+            // BLZ is valid -- or at least appears to be valid
+
+            // assume this is a bank account number and validate it with BAV
+            if (!$this->bav->isValidAccount($value)) {
+              $messages = [$this->l->t(
+                'Invalid German(?) bank account number %s @ %s.',
+                [ $value, $blz ]
+              )];
+              $suggestions = $this->fuzzyInputService->transposition($value, function($input) {
+                return $this->bav->isValidAccount($input);
+              });
+
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => $messages,
+                'suggestions' => $suggestions,
+                'blz' => $blz,
+              ])->response(Http::STATUS_BAD_REQUEST);
+            }
+            $value = $this->financeService->makeIBAN($blz, $value);
+          }
+          $iban = new IBAN($value);
+          if (!$iban->Verify()) {
+            $message = $this->l->t('Invalid IBAN: "%s".', $value);
+            $message .= ' ' . $this->l->t(
+              'Hint: it is possible to disable instant validations by unchecking the checkbox labelled "%s".
+Please note, however, that it is impossible to save the entered IBAN if the validation is disabled.
+Therefore you have to enable the validation checkbox again before you are allowed to save the data to the database.',
+              $this->l->t('Instant IBAN Validation:'),
+            );
+            $messages[] = $message;
+            $suggestions = [];
+            // $this->logInfo('Try Alternatives');
+            foreach ($iban->MistranscriptionSuggestions() as $alternative) {
+              // $this->logInfo('ALTERNATIVE '.$alternative);
+              if ($iban->Verify($alternative)) {
+                $alternative = $iban->MachineFormat($alternative);
+                $alternative = $iban->HumanFormat($alternative);
+                $suggestions[] = $alternative;
+              }
+            }
+            if (empty($suggestions)) {
+              $suggestions = $this->fuzzyInputService->transposition($value, function($input) use ($iban) {
+                return $iban->Verify($input);
+              });
+            }
+
+            return DTO\SepaDebitMandateValidation::fromArray([
+              'messages' => $messages,
+              'suggestions' => $suggestions,
+            ])->response(Http::STATUS_BAD_REQUEST);
+          }
+
+          // Still this may be a valid "hand" generated IBAN but with the
+          // wrong bank-account number. If this is a German IBAN, then also
+          // check the bank account number with BAV.
+          if ($iban->Country() == 'DE') {
+            $ktnr = $iban->Account();
+            $blz = $iban->Bank();
+            if (!$this->bav->isValidBank($blz)) {
+              $suggestions = $this->fuzzyInputService->transposition($blz, function($input) {
+                return $this->bav->isValidBank($input);
+              });
+              $message = $this->l->t('Invalid German(?) bank id "%s".', [ $blz ]);
+              $suggestions = implode(', ', $suggestions);
+
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => [$message],
+                'suggestions' => $suggestions,
+              ])->response(Http::STATUS_BAD_REQUEST);
+            }
+
+            // BLZ is valid after this point
+
+            if (!$this->bav->isValidAccount($ktnr)) {
+              $message = $this->l->t(
+                'Invalid German(?) bank account number %s @ %s.',
+                [ $ktnr, $blz ]
+              );
+              $suggestions = $this->fuzzyInputService->transposition($ktnr, function($input) {
+                return $this->bav->isValidAccount($input);
+              });
+
+              return DTO\SepaDebitMandateValidation::fromArray([
+                'messages' => [$message],
+                'suggestions' => $suggestions,
+                'blz' => $blz,
+              ])->response(Http::STATUS_BAD_REQUEST);
+            }
+          }
+
+          $value = $iban->MachineFormat();
+          $IBAN = $value;
+
+          // Compute as well the BLZ and the BIC
+          $blz = $iban->Bank();
+          if ($this->bav->isValidBank($blz)) {
+            $BLZ = $blz;
+            $BIC = $this->bav->getMainAgency($blz)->getBIC();
+          }
+          break;
+        case ConfigConstants::BANK_ACCOUNT_BLZ:
+          if ($value == '') {
+            $BLZ = null;
+            break;
+          }
+          $value = Util::removeSpaces($value);
+          if (!$this->bav->isValidBank($value)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]),
+            );
+          }
+          // set also the BIC
+          $BLZ = $value;
+          $agency = $this->bav->getMainAgency($value);
+          $bic = $agency->getBIC();
+          if ($this->financeService->validateSWIFT($bic)) {
+            $BIC = $bic;
+          }
+
+          // re-run the IBAN validation
+          $newValidations[] = [
+            'changed' => ConfigConstants::BANK_ACCOUNT_IBAN,
+            'value' => $IBAN,
+          ];
+          break;
+        case ConfigConstants::BANK_ACCOUNT_BIC:
+          if ($value == '') {
+            $BIC = '';
+            break;
+          }
+          $value = Util::removeSpaces($value);
+          if (!$this->financeService->validateSWIFT($value)) {
+            // maybe a BLZ
+            if ($this->bav->isValidBank($value)) {
+              $BLZ = $value;
+              $agency = $this->bav->getMainAgency($value);
+              $value = $agency->getBIC();
+              // Set also the BLZ
+            }
+          }
+          if (!$this->financeService->validateSWIFT($value)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Value for `%s\' invalid: `%s\'.', [ $changed, $value ]),
+            );
+          }
+          $BIC = $value;
+          break;
+        default:
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'Unknown Request: %s / %s / %s',
+              [
+                'validate',
+                empty($changed) ? $this->l->t('nothing changed') : print_r($changed, true),
+                empty($value) ? $this->l->t('no data') : print_r($value, true),
+              ]),
+            context: [
+              'changed' => $changed,
+              'value' => $value,
+            ],
+          );
+      }
+
+      if ($initialValue != $value) {
+        $messages[] = $this->l->t(
+          'Value for "%s" set to "%s".', [ $changed, $value ]);
+      }
+
+      foreach ($newValidations as $validation) {
+        if ($initiator == $validation['changed']) {
+          // $this->logInfo('SKIP INITIATOR '.$initiator);
+          // avoid first-level recursion
+          continue;
+        }
+        $validation['initiator'] = $changed;
+        $validations[] = $validation;
+      }
+
+      if (!empty($validations)) {
+        continue;
+      }
+
+      // return with all the sanitized and canonicalized values for the
+      // bank-account
+
+      return DTO\SepaDebitMandateValidation::fromArray([
+        'messages' => $messages,
+        'suggestions' => [],
+        'mandateProjectId' => $mandateProjectId ? (int)$mandateProjectId : null,
+        'reference' => $reference,
+        'iban' => $IBAN,
+        'blz' => $BLZ ? (int)$BLZ : null,
+        'bic' => $BIC,
+        'owner' => $owner,
+        'feedback' => $feedback,
+        'mandateNonRecurring' => $mandateNonRecurring,
+      ])->response();
+
+    } // validation loop
+  }
+
+  /**
+   * @param int $projectId The project-id.
+   *
+   * @param int $musicianId The musician-id.
+   * @param int $bankAccountSequence The bank-account sequence (per-musician sequence count).
+   * @param int $mandateSequence The debit-mandate sequence (per-musician sequence count).
+   *
+   * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DIALOG)]
+  public function mandateForm(
+    int $projectId,
+    int $musicianId,
+    int $bankAccountSequence,
+    int $mandateSequence,
+  ):Response {
+
+    // @todo
+    $mandateExpired = false;
+
+    if (empty($musicianId)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Parameter musicianId must be set, but is empty.'),
+      );
+    }
+
+    // disable soft-deletion filter as we are fetching specific data.
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /** @var Entities\Musician $musician */
+    $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
+
+    if ($projectId > 0) {
+      /** @var Entities\Project $project */
+      $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
+    }
+
+    $this->logDebug('CALLED WITH '.print_r([$projectId, $musicianId, $bankAccountSequence, $mandateSequence], true));
+
+    if (!empty($mandateSequence)) {
+      /** @var Entities\SepaDebitMandate $mandate */
+      $mandate = $this->debitMandatesRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $mandateSequence,
+      ]);
+
+      if (empty($mandate)) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'Unable to load SEPA debit mandate for musician %s/%d, sequence count %d',
+            [$musician->getPublicName(), $musician->getId(), $mandateSequence]
+          ),
+        );
+      }
+
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $mandate->getSepaBankAccount();
+    } elseif (!empty($bankAccountSequence)) {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $this->bankAccountsRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $bankAccountSequence,
+      ]);
+      $mandate = null;
+    } else {
+      $bankAccount = null;
+      $mandate = null;
+    }
+
+    if (empty($mandate)) {
+      $mandate = (new Entities\SepaDebitMandate)
+        ->setNonRecurring(false /* !empty($project) */)
+        ->setMandateDate($this->timeFactory->now())
+        ->setSequence(0);
+
+      if (empty($bankAccount)) {
+        $bankAccount = (new Entities\SepaBankAccount)
+          ->setMusician($musician)
+          ->setSequence(0);
+      }
+    }
+
+    // If we have a valid IBAN, compute BLZ and BIC
+    $iban = $bankAccount->getIban();
+    $blz  = '';
+    $bic  = $bankAccount->getBic();
+
+    if (!empty($iban)) {
+      $ibanValidator = new IBAN($iban);
+      if ($ibanValidator->Verify()) {
+        $blz = $ibanValidator->Bank();
+        if ($this->bav->isValidBank($blz)) {
+          $bic = $this->bav->getMainAgency($blz)->getBIC();
+        }
+        $iban = $ibanValidator->MachineFormat();
+      }
+    }
+
+    $memberProjectId = $this->getConfigValue('memberProjectId', 0);
+    $isClubMember = ($memberProjectId == $projectId) || $musician->isMemberOf($memberProjectId);
+
+    $projectOptions = [];
+    if (empty($project)) {
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($musician->getProjectParticipation() as $participant) {
+        $participantProject = $participant->getProject();
+        $tempory = Types\EnumProjectTemporalType::TEMPORARY;
+        if ($participantProject->getType() == $tempory) {
+          $name = $participantProject['name'];
+          $year = $participantProject['year'];
+          $shortName = str_replace($year, '', $name);
+          $projectOptions[] = [
+            'value' => $participantProject['id'],
+            'name' => $name,
+            'label' => $shortName,
+            'group' => $year,
+          ];
+        }
+      }
+      if (count($projectOptions) <= 5) {
+        foreach ($projectOptions as &$option) {
+          unset($option['label']);
+          unset($option['group']);
+        }
+      }
+    } elseif ($projectId != $memberProjectId) {
+      $projectOptions[] = [
+        'value' => $projectId,
+        'name' => $project->getName(),
+      ];
+    }
+
+    /** @var Entities\EncryptedFile $writtenMandate */
+    $writtenMandate = $mandate->getWrittenMandate();
+    if (!empty($writtenMandate)) {
+      $writtenMandateId = $writtenMandate->getId();
+      $writtenMandateDownloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+        'section' => DownloadsController::SECTION_DATABASE,
+        'object' => $writtenMandateId,
+      ]);
+      $writtenMandateFileName = $mandate->getMandateReference();
+      $extension = Util::fileExtensionFromMimeType($writtenMandate->getMimeType());
+      if (!empty($extension)) {
+        $writtenMandateFileName .= '.' . $extension;
+      }
+      $writtenMandateDownloadLink = $writtenMandateDownloadLink
+        . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+        . '&fileName=' . urlencode($writtenMandateFileName);
+    }
+
+    $mandateUsage = $this->debitMandatesRepository->usage($mandate, true);
+    $lastUsedDate = self::convertToDateTime($mandateUsage['lastUsed'] ?? null);
+
+    $templateParameters = [
+      'projectId' => $projectId,
+      'projectName' => !empty($project) ? $project->getName() : null,
+
+      'musicianId' => $musicianId,
+      'musicianName' => $musician->getPublicName(),
+
+      'mandateProjectId' => $mandate->getProject() ? $mandate->getProject()->getId() : 0,
+      'mandateProjectName' => $mandate->getProject() ? $mandate->getProject()->getName() : null,
+
+      // members are not allowed to give per-project mandates
+      'memberProjectId' => $memberProjectId,
+      'isClubMember' => $isClubMember,
+
+      'projectOptions' => $projectOptions,
+
+      'participantFolder' => empty($project) ? '' : $this->projectService->ensureParticipantFolder($project, $musician, dry: true),
+
+      'cssClass' => 'sepadebitmandate',
+
+      'mandateSequence' => $mandate->getSequence(),
+      'mandateReference' => $mandate->getMandateReference(),
+      'mandateExpired' => $mandateExpired, // @todo
+      'mandateDate' => $mandate->getMandateDate(),
+      'mandateLastUsedDate' => $lastUsedDate, // $mandate->getLastUsedDate(),
+      'mandateNonRecurring' => $mandate->getNonRecurring(),
+      'mandateInUse' => $mandate->inUse(),
+      'mandateDeleted' => $mandate->getDeleted(),
+
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      ConfigConstants::BANK_ACCOUNT_OWNER => $bankAccount->getBankAccountOwner(),
+
+      ConfigConstants::BANK_ACCOUNT_IBAN => $iban,
+      ConfigConstants::BANK_ACCOUNT_BLZ => $blz,
+      ConfigConstants::BANK_ACCOUNT_BIC => $bic,
+      'bankAccountInUse' => $bankAccount->inUse(),
+      'bankAccountDeleted' => $bankAccount->getDeleted(),
+
+      'writtenMandateId' => $writtenMandateId ?? null,
+      'writtenMandateDownloadLink' => $writtenMandateDownloadLink ?? null,
+      'writtenMandateFileName' => $writtenMandateFileName ?? null,
+
+      'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
+      'toolTips' => $this->toolTipsService(),
+    ];
+
+    $tmpl = $this->templateResponse(
+      'sepa-debit-mandate',
+      $templateParameters,
+    );
+    $html = $tmpl->render();
+
+    return DTO\SepaDebitMandate::fromArray([
+      'contents' => $html,
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
+      'mandateSequence' => $mandate->getSequence(),
+      'mandateDeleted' => !empty($mandate->getDeleted()),
+      'mandateReference' => $mandate->getMandateReference(),
+    ])->response();
+  }
+
+  /**
+   * Slurp in all the values of the debit mandate form and react accordingly.
+   *
+   * @param int $projectId The project context the debit mandate form was
+   * started from. Can be different from the $mandateProjectId below.
+   *
+   * @param int $musicianId
+   *
+   * @param int $bankAccountSequence
+   *
+   * @param int $mandateSequence
+   *
+   * @param string $bankAccountIBAN
+   *
+   * @param string $bankAccountBIC
+   *
+   * @param string $bankAccountBLZ
+   *
+   * @param string $bankAccountOwner
+   *
+   * @param ?string $mandateRegistration Checkbox value. If present this is a
+   * request for the registration of a mandate, or the modification of an
+   * existing mandate.
+   *
+   * @param ?string $mandateBinding The two possible values are the cases of
+   * the enum EnumSepaDebitMandateBinding.  This is actually only used in the
+   * frontend. This method uses the $mandateProjectId to determine the
+   * binding: a mandate bound to the special member's project is "for all
+   * receivables".
+   *
+   * @param int $mandateProjectId The project the mandate is bound to.
+   *
+   * @param int $mandateNonRecurring
+   *
+   * @param string $mandateDate Date of issuing the mandate.
+   *
+   * @param ?string $mandateLastUsedDate Absent if the mandate is non-recurring.
+   *
+   * @param int $writtenMandateId Database id of an Entities\DatabaseStorageFile entity.
+   *
+   * @param string $writtenMandateFileUpload JSON data of uploaded files.
+   *
+   * @param ?string $mandateUploadLater Checkbox value. The user may choose to
+   * upload the hardcopy later by activating the corresponding
+   * checkbox. Otherwise an error/warning will be exposed to the user.
+   *
+   * @param string $uploadPlaceholder Unused here. Contains either a placehold
+   * message or the name of the recently uploaded hardcopy or the name of the
+   * already stored hardcopy.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_STORE)]
+  public function mandateStore(
+    int $projectId,
+    // SEPA "id"
+    int $musicianId,
+    int $bankAccountSequence,
+    int $mandateSequence,
+    // Bank account data
+    string $bankAccountIBAN,
+    string $bankAccountBIC,
+    string $bankAccountBLZ,
+    string $bankAccountOwner,
+    // debit-mandate data
+    ?string $mandateRegistration,
+    ?string $mandateBinding,
+    int $mandateProjectId,
+    int $mandateNonRecurring,
+    string $mandateDate,
+    ?string $mandateLastUsedDate,
+    int $writtenMandateId,
+    string $writtenMandateFileUpload,
+    ?string $mandateUploadLater,
+    string $uploadPlaceholder,
+  ): Http\DataResponse|Http\JSONResponse {
+    $requiredKeys = [
+      'musicianId',
+      ConfigConstants::BANK_ACCOUNT_IBAN,
+      ConfigConstants::BANK_ACCOUNT_OWNER,
+    ];
+
+    if (!empty($mandateSequence) || !empty($mandateRegistration)) {
+      $requiredKeys = array_merge(
+        $requiredKeys, [
+          'mandateBinding',
+          'mandateProjectId',
+          'mandateDate',
+        ]);
+
+      $mandateNonRecurring = filter_var($mandateNonRecurring, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+      if ($mandateNonRecurring === null) {
+        $requiredKeys[] = 'mandateNonRecurring';
+      }
+    }
+
+    if (!empty($bankAccountIBAN) && str_starts_with($bankAccountIBAN, 'DE')) {
+      $requiredKeys[] = ConfigConstants::BANK_ACCOUNT_BLZ;
+      $requiredKeys[] = ConfigConstants::BANK_ACCOUNT_BIC;
+    }
+
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t("Required information `%s' not provided.", $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
+      }
+    }
+
+    // Aquire data-base Entities
+
+    // First check the bank-account
+    /** @var Entities\Musician $musician */
+    /** @var Entities\SepaBankAccount $bankAccount */
+    if (!empty($bankAccountSequence)) {
+      /** @var Entities\SepaBankAccount $bankAccount */
+      $bankAccount = $this->bankAccountsRepository->find([
+        'musician' => $musicianId,
+        'sequence' => $bankAccountSequence,
+      ]);
+      $musician = $bankAccount->getMusician();
+
+    } else {
+      $bankAccount = (new Entities\SepaBankAccount)
+        ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
+    }
+
+    if ($bankAccount->inUse() && $bankAccount->getIban() !== $bankAccountIBAN) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'The current bank account has already been used for payments or is bound to debit-mandates. '
+          . 'Therefore the IBAN must not be changed. Please create a new account; you may disable the current account, at you option.'
+        ),
+      );
+    }
+
+    // set the new values
+    $bankAccount->setIban($bankAccountIBAN)
+      ->setBlz($bankAccountBLZ)
+      ->setBic($bankAccountBIC)
+      ->setBankAccountOwner($bankAccountOwner);
+
+    try {
+      $this->financeService->validateSepaAccount($bankAccount); // throws on error
+    } catch (InvalidArgumentException $e) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Bank-account failed to validate: %s.', $e->getMessage()),
+        previous: $e,
+      );
+    }
+
+    if ($bankAccount->getSequence() == null) {
+      // as a unique constraint on IBAN and owner on the data-base level
+      // is not possible (the data is stored encrypted), we check for
+      // duplicates here. As there are not so many bank accounts per
+      // musician this should be fairly fast. Of course, this does not
+      // hack the problem when two different operators enter the same
+      // account at the same time through the web-interface.
+
+      $existingAccounts = $this->bankAccountsRepository->findBy([ 'musician' => $musicianId ]);
+      /** @var Entities\SepaBankAccount $oldAccount */
+      foreach ($existingAccounts as $oldAccount) {
+        if ($oldAccount->getIban() == $bankAccountIBAN) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'The IBAN %1$s, account-owner %2$s, has already been recorded for the musician %3$s.', [
+                $bankAccountIBAN,
+                $oldAccount->getBankAccountOwner(),
+                $oldAccount->getMusician()->getPublicName(),
+              ]),
+          );
+        }
+      }
+    }
+
+    do {
+      try {
+        // try persist with increasing sequence until we succeed
+        $this->bankAccountsRepository->persist($bankAccount);
+      } catch (UniqueConstraintViolationException $e) {
+        if ($bankAccount->inUse()) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to modify already used bank-account.'),
+            previous: $e,
+          );
+        }
+        $this->entityManager->reopen();
+        $this->clearDatabaseRepository();
+        $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+        $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+
+        $bankAccount->setSequence(null);
+      }
+    } while ($bankAccount->getSequence() === null);
+
+    if (empty($mandateRegistration) && empty($mandateSequence)) {
+
+      return DTO\SepaBankAccount::fromArray([
+        'messages' => [$this->l->t(
+          'Successfully stored the bank account with IBAN "%s" and owner "%s"',
+          [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]
+        )],
+        'projectId' => $projectId,
+        'musicianId' => $musicianId,
+        'bankAccountSequence' => $bankAccount->getSequence(),
+        'bankAccountDeleted' => false,
+      ])->response();
+    }
+
+    // From here on we should have a real musician entity:
+    $musician = $bankAccount->getMusician();
+
+    // Check for the debit-mandate.
+    if (!empty($mandateSequence)) {
+      /** @var Entities\SepaDebitMandate $debitMandate */
+      $debitMandate = $this->debitMandatesRepository->find([
+        'musician' => $musician,
+        'sequence' => $mandateSequence,
+      ]);
+
+      if ($debitMandate->getSepaBankAccount() != $bankAccount) {
+        // would be allowable if not in use, but does not fit the
+        // layout of the UI: this cannot happen unless things are
+        // garbled.
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The bank-account with IBAN %1$s bound to the existing mandate does not match the submitted bank-account with IBAN %2$s.', [
+            $debitMandate->getSepaBankAccount()->getIban(),
+            $bankAccountIBAN,
+          ]),
+        );
+      }
+      $musician = $debitMandate->getMusician();
+      // $mandateProject = $debitMandate->getProject();
+    } else {
+      $debitMandate = (new Entities\SepaDebitMandate)
+        ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
+    }
+
+    // @todo check if this works as expected
+    // @todo validate, check for date-in-the-future
+    $mandateDate = self::convertToDateTime($mandateDate);
+
+    if ($debitMandate->inUse()) {
+      if ($debitMandate->getMandateDate() != $mandateDate) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The current debit-mandate already has been used for payments. '
+            . 'Therefore the date of the debit-mandate must not be changed. Please create a new debit-mandate; you may disable the current mandate, at you option.'
+          ),
+        );
+      }
+      if ($debitMandate->getNonRecurring() != $mandateNonRecurring
+          && $mandateNonRecurring && $debitMandate->usage() > 1) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The current debit-mandate already has been used for more than a single payment. '
+            . 'Therefore it can non longer be changed from "recurring" to "non-recurring".'
+          ),
+        );
+      }
+      if ($debitMandate->getProject()->getId() != $mandateProjectId) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The current debit-mandate already has been used for payments. Therefore the project-binding can no longer be changed.'),
+        );
+      }
+      if ($debitMandate->getWrittenMandate() != null && (int)$writtenMandateId <= 0) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('The current debit-mandate alrady has been used for payments. Therefore the stored copy of the written mandate cannot be deleted.'),
+        );
+      }
+      // just make sure it does not change.
+      $mandateReference = $debitMandate->getMandateReference();
+    } else {
+      $debitMandate->setProject($this->getReference(Entities\Project::class, (int)$mandateProjectId));
+      $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
+    }
+
+    // set the new values
+    $debitMandate->setSepaBankAccount($bankAccount)
+      ->setMandateDate($mandateDate)
+      ->setNonRecurring($mandateNonRecurring)
+      ->setMandateReference($mandateReference)
+      ->setLastUsedDate($mandateLastUsedDate);
+
+    do {
+      try {
+        // try persist with increasing sequence until we succeed
+        $this->debitMandatesRepository->persist($debitMandate);
+        $this->flush();
+      } catch (UniqueConstraintViolationException $e) {
+        if ($debitMandate->inUse()) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t('Unable to modify already used debit-mandate.'),
+            previous: $e,
+          );
+        }
+        $this->entityManager->reopen(); // this cannot work ...
+        $this->clearDatabaseRepository();
+        $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+        $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+        $debitMandate->setSequence(null);
+      }
+    } while ($debitMandate->getSequence() === null);
+
+    $messages = [
+      $this->l->t(
+        'Successfully stored the bank-account with IBAN "%s" and owner "%s"',
+        [ $bankAccount->getIban(), $bankAccount->getBankAccountOwner()]
+      ),
+      $this->l->t(
+        'Successfully stored the debit-mandate with reference "%s" for the IBAN "%s".',
+        [ $debitMandate->getMandateReference(), $bankAccount->getIban()]
+      ),
+    ];
+
+    if (!empty($writtenMandateFileUpload)) {
+      $files = $this->prepareUploadInfo($writtenMandateFileUpload, optionKey: 0, multiple: false);
+
+      if ($files instanceof DataResponse) {
+        $uploadMessages = self::getResponseMessages($files);
+        if (empty($uploadMessages)) {
+          $uploadMessages = [ $this->l->t('Unknown upload failure.') ];
+        }
+      } else {
+        // this handles the entire storage logic, including hard-links and
+        // moving cloud-files.
+        $uploadResponse = $this->storeMandateHardCopy($files, $debitMandate);
+        $uploadMessages = self::getResponseMessages($uploadResponse);
+      }
+      $messages = array_merge($messages, $uploadMessages);
+    }
+
+    return DTO\SepaDebitMandate::fromArray([
+      'messages' => $messages,
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'bankAccountSequence' => $bankAccount->getSequence(),
+      'mandateSequence' => $debitMandate->getSequence(),
+      'bankAccountDeleted' => !empty($bankAccount->getDeleted()),
+      'mandateDeleted' => !empty($debitMandate->getDeleted()),
+      'mandateReference' => $debitMandate->getMandateReference(),
+    ])->response();
+  }
+
+  /**
+   * Pre-fill the configured PDF-form with the values of the geven musician
+   *
+   * @param null|int $projectId The project-id.
+   *
+   * @param int $musicianId The musician-id.
+   *
+   * @param int $bankAccountSequence The bank-account-sequence.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_PRE_FILLED)]
+  public function preFilledMandateForm(
+    ?int $projectId,
+    int $musicianId,
+    int $bankAccountSequence,
+  ):Response {
+
+    if (empty($projectId)) {
+      /** @var Entities\Musician $musician */
+      $musician = $this->getDatabaseRepository(Entities\Musician::class)->find($musicianId);
+      $clubMembersProjectId = $this->getClubMembersProjectId();
+      if ($musician->isMemberOf($clubMembersProjectId)) {
+        $projectId = $clubMembersProjectId;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'General debit-mandate requested but musician "%s" is not a club member.',
+            $musician->getPublicName()),
+        );
+      }
+    }
+
+    list($formData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
+      $bankAccountSequence, $projectId, $musicianId);
+
+    if (empty($formData)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find a fillable debit mandate form.'),
+      );
+    }
+
+    return $this->dataDownloadResponse($formData, $fileName, $mimeType);
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
+   * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DELETE)]
+  public function mandateDelete(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
+  {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::DELETE);
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
+   * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_DISABLE)]
+  public function mandateDisable(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
+  {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::DISABLE);
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
+   * @return Response
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_REACTIVATE)]
+  public function mandateReactivate(int $musicianId, int $mandateSequence): Http\DataResponse|Http\JSONResponse
+  {
+    return $this->handleMandateRevocation($musicianId, $mandateSequence, EnumSepaDebitMandateRevocationAction::REACTIVATE);
+  }
+
+  /**
+   * @param string $operation One of HARDCOPY_ACTION_UPLOAD or HARDCOPY_ACTION_DELETE.
+   *
+   * @param int $musicianId The musician-id.
+   *
+   * @param null|int $mandateSequence The mandate-sequence.
+   *
+   * @param bool $force Whether to enforce the operation.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_DEBIT_MANDATES . '/' . self::ACTION_HARDCOPY . '/{operation}')]
+  public function mandateHardcopy(string $operation, int $musicianId, ?int $mandateSequence, bool $force = false):Response
+  {
+    switch ($operation) {
+      case self::HARDCOPY_ACTION_UPLOAD:
+        // we mis-use the participant-data upload form, so the actual identifiers
+        // are in the "data" parameter and have to be remapped.
+        $data = $this->request->getParam('data');
+        $uploadData = json_decode($data, true);
+        $musicianId = $uploadData['fieldId'];
+        $mandateSequence = $uploadData['optionKey'];
+        $files = $this->request->getParam('files');
+        break;
+      case self::HARDCOPY_ACTION_DELETE:
+        $mandateSequence = $this->request->getParam('optionKey');
+        break;
+    }
+
+    $requiredKeys = [ 'musicianId', 'mandateSequence' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information "%s" not provided.', $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
+      }
+    }
+
+    /** @var Entities\SepaDebitMandate $mandate */
+    $debitMandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
+
+    if (empty($debitMandate)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find a debit mandate for musician id "%1$d" with sequence "%2$d".', [ $musicianId, $mandateSequence ]),
+      );
+    }
+    $mandateReference = $debitMandate->getMandateReference();
+
+    switch ($operation) {
+      case self::HARDCOPY_ACTION_UPLOAD:
+        // the following should be made a service routine or Trait
+
+        $files = $this->prepareUploadInfo($files, $mandateSequence, multiple: false);
+        if ($files instanceof Http\Response) {
+          // error generated
+          return $files;
+        }
+
+        return $this->storeMandateHardCopy($files, $debitMandate);
+
+      case self::HARDCOPY_ACTION_DELETE:
+        $writtenMandate = $debitMandate->getWrittenMandate();
+        if (empty($writtenMandate)) {
+          // ok, it is not there ...
+          return self::response($this->l->t('We have no hard-copy of the written-mandate for "%1$s", so we cannot delete it.', $mandateReference));
+        }
+        if (!$debitMandate->unused() && !$force) {
+          return self::grumble([
+            'message' => $this->l->t('The debit mandate "%1$s" is already in use, the hard-copy of the written-mandate should only be replaced, but not deleted.', $mandateReference),
+            'confirmation' => [
+              'question' => $this->l->t('Are you sure you want to proceed?'),
+              'override' => 'force',
+            ],
+          ]);
+        }
+
+        // ok, delete it
+        $musician = $debitMandate->getMusician();
+        $project = $debitMandate->getProject();
+        if ($project->getId() == $this->getClubMembersProjectId()) {
+          $participants = $musician->getProjectParticipation();
+        } else {
+          $participants = [ $musician->getProjectParticipantOf($project) ];
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+          foreach ($participants as $participant) {
+            $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+            $storage->removeDebitMandate($debitMandate, flush: false);
+          }
+          $debitMandate->setWrittenMandate(null);
+
+          $this->flush();
+
+          $this->entityManager->commit();
+        } catch (Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          if ($t instanceof Exceptions\EnduserNotificationException) {
+            throw $t;
+          } else {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Error, caught an exception. No changes were performed.'),
+              previous: $t,
+              httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+            );
+          }
+        }
+
+        return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
+    }
+    throw new Exceptions\EnduserNotificationException($this->l->t('UNIMPLEMENTED'));
+  }
+
+  /**
+   * @param array $files File upload data as prepared by
+   * FileUploadRowTrait::prepareUploadInfo().
+   *
+   * @param Entities\SepaDebitMandate $debitMandate The mandate to work on.
+   *
+   * @return DataResponse A response object.
+   */
+  private function storeMandateHardCopy(array $files, Entities\SepaDebitMandate $debitMandate): DataResponse
+  {
+    $file = array_shift($files); // only one
+
+    if ($file['error'] != UPLOAD_ERR_OK) {
+      return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
+    }
+
+    /** @var Entities\Musician $musician */
+    $musician = $debitMandate->getMusician();
+    /** @var Entities\Project $project */
+    $project = $debitMandate->getProject();
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->di(UserStorage::class);
+
+    $originalFilePath = $file['original_name'] ?? null;
+    $uploadMode = EnumFileUploadMode::get($file['upload_mode'] ?? EnumFileUploadMode::COPY);
+
+    switch ($uploadMode) {
+      case EnumFileUploadMode::MOVE:
+        if (empty($originalFilePath)) {
+          return self::grumble($this->l->t('Move operation requested, but the original file path has not been specified.'));
+        }
+        $originalFile = $userStorage->get($originalFilePath);
+        if (empty($originalFile)) {
+          return self::grumble($this->l->t('Move operation requested, but the original file "%s" cannot be found.', $originalFilePath));
+        }
+        break;
+      case EnumFileUploadMode::LINK:
+        $originalFileId = $file['original_name'];
+        if (empty($originalFileId)) {
+          return self::grumble($this->l->t('Link operation requested, but the id of the original file has not been specified.'));
+        }
+        $originalFile = $this->entityManager->find(Entities\File::class, $originalFileId);
+        if (empty($originalFile)) {
+          return self::grumble($this->l->t('Link operation requested, but the existing original file with id "%s" cannot be found.', $originalFileId));
+        }
+        $originalFilePath = $originalFile->getFileName();
+        break;
+      case EnumFileUploadMode::COPY:
+        // this is the default, nothing special
+        break;
+    }
+
+    $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
+
+    /** @var Entities\DatabaseStorageFile $writtenMandate */
+    $writtenMandate = $debitMandate->getWrittenMandate();
+    $writtenMandateFile = $writtenMandate ? $writtenMandate->getFile() : null;
+
+    $conflict = null;
+    $this->entityManager->beginTransaction();
+    try {
+
+      if ($project->getId() == $this->getClubMembersProjectId()) {
+        $participants = $musician->getProjectParticipation();
+      } else {
+        $participants = [ $musician->getProjectParticipantOf($project) ];
+      }
+
+      switch ($uploadMode) {
+        case EnumFileUploadMode::MOVE:
+          $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
+          // no break
+        case EnumFileUploadMode::COPY:
+          $fileContent = $this->getUploadContent($file);
+
+          /** @var \OCP\Files\IMimeTypeDetector $mimeTypeDetector */
+          $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
+          $mimeType = $mimeTypeDetector->detectString($fileContent);
+
+          if (!empty($writtenMandateFile) && $writtenMandateFile->getNumberOfLinks() > count($participants)) {
+            $writtenMandateFile = null;
+          }
+
+          if (empty($writtenMandateFile)) {
+            $writtenMandateFile = new Entities\EncryptedFile(
+              data: $fileContent,
+              mimeType: $mimeType,
+              owner: $musician,
+            );
+            $this->persist($writtenMandateFile);
+          } else {
+            $conflict = EnumAddDocumentConflictAction::REPLACE;
+            $writtenMandateFile
+              ->setMimeType($mimeType)
+              ->setSize(strlen($fileContent))
+              ->getFileData()->setData($fileContent);
+          }
+          $writtenMandateFile->setFileName($originalFileName);
+
+          break;
+        case EnumFileUploadMode::LINK:
+          $fileContent = null;
+          /** @var Entities\EncryptedFile $originalFile */
+          if (!empty($writtenMandateFile) && $writtenMandateFile->getId() == $originalFileId) {
+            return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
+              $originalFile->getFileName(), $originalFileId
+            ]));
+          }
+          $writtenMandateFile = $originalFile;
+          break;
+      }
+
+      $mimeType = $writtenMandateFile->getMimeType();
+
+      /** @var Entities\ProjectParticipant $participant */
+      foreach ($participants as $participant) {
+        $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+        $writtenMandate = $storage->replaceDebitMandate($debitMandate, $writtenMandateFile, flush: false);
+        if ($participant->getProject() == $debitMandate->getProject()) {
+          $debitMandate->setWrittenMandate($writtenMandate);
+          $writtenMandateFileName = $writtenMandate->getName();
+        }
+      }
+
+      $this->flush();
+
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if ($t instanceof Execptions\EnduserNotificationException) {
+        throw $t;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    if ($uploadMode != EnumFileUploadMode::LINK) {
+      $this->removeStashedFile($file);
+    }
+
+    $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
+      'section' => DownloadsController::SECTION_DATABASE,
+      'object' => $writtenMandate->getId(),
+    ])
+      . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
+      . '&fileName=' . urlencode($writtenMandateFileName);
+
+    $filesAppLink = '';
+    try {
+      $filesAppPath = implode(
+        UserStorage::PATH_SEP, [
+          $this->projectService->ensureParticipantFolder($debitMandate->getProject(), $musician, dry: true),
+          $this->getDocumentsFolderName(),
+          $this->getDebitMandatesFolderName(),
+        ]);
+      $filesAppLink = $userStorage->getFilesAppLink($filesAppPath, true);
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to get files-app link for ' . $filesAppPath);
+    }
+
+    unset($file['tmp_name']);
+
+    switch ($uploadMode) {
+      case EnumFileUploadMode::COPY:
+        $message = $this->l->t('Upload of "%s" as "%s" successful.', [ $file['name'], $writtenMandateFileName ]);
+        break;
+      case EnumFileUploadMode::MOVE:
+        $message = $this->l->t('Move of "%s" to "%s" successful.', [ $originalFilePath, $writtenMandateFileName ]);
+        break;
+      case EnumFileUploadMode::LINK:
+        $message = $this->l->t('Linking of file id "%s" to "%s" successful.', [ $originalFileId, $writtenMandateFileName ]);
+        break;
+    }
+    $file['message'] = $message;
+    $file['name'] = $writtenMandateFileName;
+
+    $pathInfo = pathinfo($writtenMandateFileName);
+
+    $this->projectService->ensureParticipantFolder($project, $musician, dry: false);
+
+    $file['meta'] = [
+      'musicianId' => $musician->getId(),
+      'projectId' => $project->getId(),
+      // 'pathChain' => $pathChain, ?? needed ??
+      'dirName' => $pathInfo['dirname'],
+      'baseName' => $pathInfo['basename'],
+      'extension' => $pathInfo['extension']??'',
+      'fileName' => $pathInfo['filename'],
+      'fileId'   => $writtenMandate->getId(),
+      'storageBackend'  => EnumFileStorageBackend::DB->value,
+      'download' => $downloadLink,
+      'filesApp' => $filesAppLink,
+      'conflict' => $conflict,
+      'messages' => [$message],
+    ];
+
+    return new Http\DataResponse([ DTO\UploadFileData::fromArray($file) ]);
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $mandateSequence The mandate sequence.
+   *
+   * @param EnumSepaDebitMandateRevocationAction $operation The operation to perform.
+   *
+   * @return Http\DataResponse|Http\JSONResponse
+   *
+   * @throws Exceptions\EnduserNotificationException
+   */
+  private function handleMandateRevocation(
+    int $musicianId,
+    int $mandateSequence,
+    EnumSepaDebitMandateRevocationAction $operation,
+  ): Http\DataResponse|Http\JSONResponse {
+    $requiredKeys = [ 'musicianId', 'mandateSequence' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Required information "%s" not provided.', $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
+      }
+    }
+
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    /** @var Entities\SepaDebitMandate $mandate */
+    $mandate = $this->debitMandatesRepository->find([ 'musician' => $musicianId, 'sequence' => $mandateSequence ]);
+    $reference = $mandate->getMandateReference();
+    $projectId = $mandate->getProject()->getId();
+    $bankAccountSequence = $mandate->getSepaBankAccount()->getSequence();
+
+    $this->entityManager->beginTransaction();
+    try {
+      switch ($operation) {
+        case EnumSepaDebitMandateRevocationAction::DELETE:
+          $this->remove($mandate, flush: true);
+          break;
+        case EnumSepaDebitMandateRevocationAction::DISABLE:
+          if (!empty($mandate->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('SEPA debit mandate with reference "%s" is already disabled.', $reference),
+            );
+          }
+          $mandate->setDeleted('now');
+          $this->flush();
+          break;
+        case EnumSepaDebitMandateRevocationAction::REACTIVATE:
+          if (empty($mandate->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
+            $this->l->t('SEPA debit mandate with reference "%s" is already active.', $reference),
+            );
+          }
+          $mandate->setDeleted(null);
+          $this->flush();
+          break;
+      }
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->pushTransactionException($t);
+        $this->entityManager->rollback();
+      }
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+              httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
+
+    }
+
+    $responseData = [
+      'projectId' => $projectId,
+      'musicianId' => $musicianId,
+      'bankAccountSequence' => $bankAccountSequence,
+      'bankAccountDeleted' => $mandate->getSepaBankAccount()->isDeleted(),
+    ];
+    if ($this->entityManager->contains($mandate)) {
+      if (!empty($mandate->getDeleted())) {
+        $message = $this->l->t('SEPA debit mandate with reference "%s" has been invalidated.', $reference);
+        $state = EnumSepaDebitMandateRevocationStatus::INVALIDATED;
+      } else {
+        $message = $this->l->t('SEPA debit mandate with reference "%s" has been reactivated.', $reference);
+        $state = EnumSepaDebitMandateRevocationStatus::REACTIVATED;
+      }
+      $responseData = Util::arrayMergeRecursive($responseData, [
+        'messages' => [$message],
+        'state' => $state,
+        'mandateSequence' => $mandate->getSequence(),
+        'mandateReference' => $mandate->getMandateReference(),
+        'mandateDeleted' => $mandate->isDeleted(),
+      ]);
+    } else {
+      $responseData = Util::arrayMergeRecursive($responseData, [
+        'state' => EnumSepaDebitMandateRevocationStatus::DELETED,
+        'messages' => [$this->l->t('SEPA debit mandate with reference "%s" has been deleted.', $reference)],
+        'mandateSequence' => 0,
+        'mandateReference' => '',
+        'mandateDeleted' => $mandate->isDeleted(),
+      ]);
+    }
+
+    return DTO\SepaDebitMandate::fromArray($responseData)->response();
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $bankAccountSequence The bank-account sequence.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_DELETE)]
+  public function accountDelete(int $musicianId, int $bankAccountSequence):Response
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'delete');
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $bankAccountSequence The bank-account sequence.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_DISABLE)]
+  public function accountDisable(int $musicianId, int $bankAccountSequence):Response
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'disable');
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $bankAccountSequence The bank-account sequence.
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_BANK_ACCOUNTS . '/' . self::ACTION_REACTIVATE)]
+  public function accountReactivate(int $musicianId, int $bankAccountSequence):Response
+  {
+    return $this->handleAccountRevocation($musicianId, $bankAccountSequence, 'reactivate');
+  }
+
+  /**
+   * @param int $musicianId The musician id.
+   *
+   * @param int $bankAccountSequence The bank-account sequence.
+   *
+   * @param string $action The action to perform.
+   *
+   * @return Response
+   *
+   * @throws ValueError Thrown if $action is not a valid value of EnumSepaDebitMandateRevocationAction.
+   */
+  private function handleAccountRevocation(
+    int $musicianId,
+    int $bankAccountSequence,
+    string $action,
+  ): Response {
+    $requiredKeys = [ 'musicianId', 'bankAccountSequence' ];
+    foreach ($requiredKeys as $required) {
+      if (empty(${$required})) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t("Required information `%s' not provided.", $required),
+          context: [
+            'required' => $requiredKeys,
+            'missing' => $required,
+          ],
+        );
+      }
+    }
+
+    $action = EnumSepaDebitMandateRevocationAction::get($action);
+
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /** @var Entities\SepaBankAccount $account */
+    $account = $this->bankAccountsRepository->find([ 'musician' => $musicianId, 'sequence' => $bankAccountSequence ]);
+    $iban = $account->getIban();
+
+    // enclose into a transaction as a "bunch" (one or two ...) mandates may be affected.
+    $this->entityManager->beginTransaction();
+    try {
+
+      $affectedMandates = [];
+      switch ($action) {
+        case EnumSepaDebitMandateRevocationAction::DELETE:
+          /** @var Entities\SepaDebitMandate $mandate */
+          foreach ($account->getSepaDebitMandates() as $mandate) {
+            if (empty($mandate->getDeleted())) {
+              $affectedMandates[] = $mandate->getMandateReference();
+            }
+          }
+          if (!empty($affectedMandates)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The account with IBAN "%s" cannot be deleted as the following associated mandates are still active: %s.', [
+                  $iban,
+                  implode(', ', $affectedMandates),
+                ],
+              ),
+              context: [
+                'iban' => $iban,
+                'mandates' => $affectedMandates,
+              ],
+            );
+          }
+          // Ok, no active mandate, try to delete the deactivated mandates
+
+          /** @var Entities\SepaDebitMandate $mandate */
+          foreach ($account->getSepaDebitMandates() as $mandate) {
+            $this->remove($mandate);
+          }
+          $this->remove($account);
+          $this->flush();
+          break;
+        case EnumSepaDebitMandateRevocationAction::DISABLE:
+          if (!empty($account->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Bank account with IBAN "%s" is already disabled.', $iban),
+            );
+          }
+          /** @var Entities\SepaDebitMandate $mandate */
+          foreach ($account->getSepaDebitMandates() as $mandate) {
+            if (empty($mandate->getDeleted())) {
+              $affectedMandates[] = $mandate->getMandateReference();
+            }
+          }
+          if (!empty($affectedMandates)) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t(
+                'The account with IBAN "%s" cannot be disabled as the following associated mandates are still active: %s.', [
+                  $iban,
+                  implode(', ', $affectedMandates)
+                ],
+              ),
+              context: [
+                'iban' => $iban,
+                'mandated' => $affectedMandates,
+              ],
+            );
+          }
+          $account->setDeleted('now');
+          $this->flush();
+          break;
+        case EnumSepaDebitMandateRevocationAction::REACTIVATE:
+          if (empty($account->getDeleted())) {
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Bank account with IBAN "%s" is already active.', $iban),
+            );
+          }
+          $account->setDeleted(null);
+          $this->flush();
+          break;
+      }
+
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->logException($t);
+      $this->entityManager->rollback();
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      } else {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Error, caught an exception. No changes were performed.'),
+          previous: $t,
+          httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    $messages = [];
+    if ($this->entityManager->contains($account)) {
+      if (!empty($account->getDeleted())) {
+        $messages[] = $this->l->t('Bank account with IBAN "%s" has been invalidated.', $iban);
+        $state = EnumSepaDebitMandateRevocationStatus::INVALIDATED;
+      } else {
+        $messages[] = $this->l->t('Bank account with IBAN "%s" has been reactivated.', $iban);
+        $messages[] = $this->l->t('Please note that associated debit-mandates need to be reactivated separately, they are still disabled.');
+        $state = EnumSepaDebitMandateRevocationStatus::REACTIVATED;
+      }
+    } else {
+      $messages[] = $this->l->t('Bank account with IBAN "%s" has been deleted.', $iban);
+      $state = EnumSepaDebitMandateRevocationStatus::DELETED;
+    }
+
+    return new DTO\SepaBankAccount(
+      musicianId: $account->getMusician()->getId(),
+      bankAccountSequence: $account->getSequence(),
+      bankAccountDeleted: $account->isDeleted(),
+      messages: $messages,
+      state: $state,
+    )->response();
+  }
+}

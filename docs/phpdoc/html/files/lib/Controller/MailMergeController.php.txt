@@ -1,0 +1,561 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use InvalidArgumentException;
+use Throwable;
+
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\AppFramework\Http\Response;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Files\Folder;
+use OCP\IAddressBook;
+use OCP\IRequest;
+use Psr\Log\LoggerInterface as ILogger;
+
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\ImagesService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
+
+/**
+ * Make the stored personal data accessible for the web-interface. This is
+ * meant for newer parts of the web-interface in contrast to the legacy PME
+ * stuff.
+ */
+#[TSAttributes\TypeScript]
+class MailMergeController extends Controller
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  public const END_POINT = 'documents/mail-merge';
+
+  /**
+   * @var bool
+   *
+   * @todo maybe add another download-option to the mail-merge menu
+   */
+  const AS_PDF = false;
+
+  const OPERATION_DOWNLOAD = 'download';
+  const OPERATION_CLOUD = 'cloud';
+  const OPERATION_DATASET = 'dataset';
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    string $appName,
+    IRequest $request,
+    private FinanceService $financeService,
+    private IContactsManager $contactsManager,
+    private ImagesService $imagesService,
+    private InstrumentInsuranceService $insuranceService,
+    private OpenDocumentFiller $documentFiller,
+    private OrganizationalRolesService $rolesService,
+    private UserStorage $userStorage,
+    protected ?string $userId,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected ILogger $logger,
+  ) {
+    parent::__construct($appName, $request);
+
+    $this->l = $this->l10n();
+  }
+  // phpcs:enable
+
+  /**
+   * Try to perform a mail-merge of a document which is assumed to need
+   * somehow a sender/recipient context (i.e. a letter).
+   *
+   * @param null|int|string $senderId Database id or uid of sender. If null
+   * the current loggged on user is the sender.
+   *
+   * @param null|string $fileName
+   *
+   * @param null|string $templateName
+   *
+   * @param array $recipientIds Database ids of recipients (Musicians table).
+   *
+   * @param int $projectId
+   *
+   * @param array $contactKeys
+   *
+   * @param array $addressBookUris
+   *
+   * @param array $compositePaymentIds
+   *
+   * @param array $invoiceIds Database ids or invoice numbers of invoices.
+   *
+   * @param string $operation
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @return Response
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT)]
+  public function merge(
+    null|Int|string $senderId = null,
+    ?string $fileName = null,
+    ?string $templateName = null,
+    array $recipientIds = [],
+    int $projectId = 0,
+    array $contactKeys = [],
+    array $addressBookUris = [],
+    array $compositePaymentIds = [],
+    array $invoiceIds = [],
+    string $operation = self::OPERATION_DOWNLOAD,
+    ?int $limit = null,
+    ?int $offset = null,
+  ):Response {
+
+    $templateData = [];
+    $blocks = [];
+
+    $project = $projectId > 0
+      ? $this->getDatabaseRepository(Entities\Project::class)->find($projectId)
+      : null;
+
+    $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
+
+    if ($senderId === null) {
+      $senderId = $this->userId();
+    }
+
+    /** @var Entities\Musician $sender */
+    $sender = $musiciansRepository->findOneBy([
+      '(|id' => $senderId,
+      'userIdSlug' => $senderId,
+    ]);
+
+    if (empty($sender)) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to determine the sender given its id "%s"', $senderId),
+      );
+    }
+
+    $senderId = $sender->getId();
+    $senderUserId = $sender->getUserIdSlug();
+
+    foreach (OrganizationalRolesService::BOARD_MEMBERS as $role) {
+      if ($this->rolesService->isDedicatedBoardMember($role, $senderUserId)) {
+        $blocks['sender'] = 'org.' . $role;
+        break;
+      }
+    }
+
+    $senderInitials = $sender->getInitials();
+    $timeStamp = $this->formatTimeStamp();
+    $mailMergeCount = 0;
+    $recipientSlug = '';
+
+    // determine if we have a special template
+    if ($fileName !== null) {
+      foreach (ConfigConstants::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
+        if ($templateMeta['type'] != ConfigConstants::DOCUMENT_TYPE_TEMPLATE) {
+          continue;
+        }
+        $templateFileName = $this->getDocumentTemplatesPath($templateName);
+        if ($templateFileName == $fileName) {
+          break;
+        }
+        $templateName = null;
+      }
+    } elseif ($templateName !== null) {
+      $fileName = $this->getDocumentTemplatesPath($templateName);
+      if (empty($fileName) && $operation == self::OPERATION_DATASET) {
+        $fileName = $templateName; // ok for testing
+      }
+      if (empty($fileName)) {
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName),
+        );
+      }
+    } else {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'),
+      );
+    }
+
+    try {
+
+      if ($operation == self::OPERATION_CLOUD) {
+        /** @var Folder */
+        $cloudFolder = $this->ensureCloudDestinationFolder($project, $timeStamp);
+      }
+
+      if (empty($blocks['sender'])) {
+        $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+        $templateData['sender'] = EntityArrayAdapter::create($sender, depth: 0);
+
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
+        $signature = $this->rolesService->dedicatedBoardMemberSignature(
+          OrganizationalRolesService::BOARD_MEMBER_ROLE, $senderId
+        );
+        if (!empty($signature)) {
+          /** @var \OCP\Image $signature */
+          $signature = $this->imagesService->generateDataUri($signature->data(), $signature->dataMimeType());
+        }
+        $templateData['sender']['signature'] = $signature;
+      }
+
+      if (!empty($project)) {
+        $templateData['project'] = EntityArrayAdapter::create($project, 1);
+      }
+
+      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds) && empty($invoiceIds));
+
+      // fill also some financial tax exemption notice abbreviations ...
+      $taxTypes = array_map(fn(string $value) => Util::dashesToCamelCase($value, dashes: ' -_'), TaxType::values());
+      foreach ($taxTypes as $taxType) {
+        $blocks[$taxType . 'Exemption'] = 'org.taxAuthorities.exemptionNotices.' . $taxType;
+      }
+
+      if ($noRecipients) {
+        switch ($operation) {
+          case self::OPERATION_CLOUD:
+          case self::OPERATION_DOWNLOAD:
+            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill(
+              templateFileName: $fileName,
+              templateData: $templateData,
+              blocks: $blocks,
+              asPdf: self::AS_PDF,
+            );
+            $filledFile = pathinfo($filledFileName);
+            $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . $filledFile['extension'];
+            if ($operation == self::OPERATION_DOWNLOAD) {
+              return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
+            } else {
+              $cloudFolder->newFile($filledFileName, $fileData);
+              $mailMergeCount = 1;
+              return new DTO\MailMergeResponse(
+                messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+                cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                cloudFiles: [],
+                count: $mailMergeCount,
+                senderId: $sender->getId(),
+              )->response();
+            }
+          case self::OPERATION_DATASET:
+            $fillData = $this->documentFiller->fillData($templateData);
+            $filledFile = pathinfo($fileName);
+            $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . 'json';
+            if (!empty($blocks)) {
+              $fillData['__blocks__'] = $blocks;
+            }
+            $fileData = json_encode($fillData);
+            return $this->dataDownloadResponse($fileData, $filledFileName, 'application/json');
+          default:
+            throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
+        }
+      } else {
+
+        if (!empty($compositePaymentIds)) {
+          $recipients = $this
+            ->getDatabaseRepository(Entities\CompositePayment::class)
+            ->findBy(
+              [ 'id' => $compositePaymentIds, ],
+              limit: $limit,
+              offset: $offset,
+            );
+        } elseif (!empty($invoiceIds)) {
+          $recipients = $this
+            ->getDatabaseRepository(Entities\Invoice::class)
+            ->findBy(
+              [
+                '(|id' => $invoiceIds,
+                'invoiceNumber' => $invoiceIds,
+              ],
+              limit: $limit,
+              offset: $offset,
+            );
+        } else {
+          if (count($recipientIds) == 1 && reset($recipientIds) == 0) {
+            $criteria = [];
+            if (!empty($project)) {
+              $criteria[] = [ 'projectParticipation.project' => $project ];
+            }
+            $recipients = $musiciansRepository->findBy($criteria, limit: $limit, offset: $offset);
+          } else {
+            $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ], limit: $limit, offset: $offset);
+          }
+
+          $addressBookRecipients = $this->contactsToEntities($contactKeys, $addressBookUris);
+
+          $recipients = array_merge($recipients, $addressBookRecipients);
+        }
+
+        if (count($recipients) > 1) {
+          $rootDirectory = implode('-', [
+            $timeStamp,
+            $senderInitials,
+            pathinfo($fileName, PATHINFO_FILENAME),
+          ]);
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+              $cloudFolder = $cloudFolder->newFolder($rootDirectory);
+              break;
+            case self::OPERATION_DOWNLOAD:
+            case self::OPERATION_DATASET:
+              $dataStream = fopen("php://memory", 'w');
+              $zipStream = new ZipStream(outputStream: $dataStream);
+              break;
+          }
+        }
+
+        $cloudFiles = [];
+
+        foreach ($recipients as $recipient) {
+
+          if ($recipient instanceof Entities\CompositePayment) {
+            /** @var Entities\CompositePayment $compositePayment */
+            $compositePayment = $recipient;
+            $recipient = $compositePayment->getMusician();
+            if ($compositePayment->countDonations() > 0) {
+              $paymentData = $this->financeService->generateReceiptOfDonationMailMergeData($compositePayment);
+            } else {
+              $paymentData = $this->financeService->generatePaymentMailMergeData($compositePayment);
+            }
+          } elseif ($recipient instanceof Entities\Invoice) {
+            /** @var Entities\Invoice $invoice */
+            $invoice = $recipient;
+            $recipient = $invoice->getDebitor();
+            $paymentData = $this->financeService->generateInvoiceMailMergeData($invoice);
+          } else {
+            $paymentData = [];
+          }
+          $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+          $recipientData = EntityArrayAdapter::create($recipient, depth: 2);
+          if ($recipientData['addressSupplement'] == 'c/o ' . $recipientData['name']) {
+            // clear the name and just keep the addressSupplement
+            unset($recipientData['name']);
+          }
+          $recipientTemplateData = array_merge(
+            [
+              'recipient' => $recipientData,
+            ],
+            $paymentData,
+            $templateData,
+            [
+              'instins' => $this->insuranceService->musicianOverview($recipient),
+            ],
+          );
+          $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
+
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+            case self::OPERATION_DOWNLOAD:
+              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill(
+                templateFileName: $fileName,
+                templateData: $recipientTemplateData,
+                blocks: $blocks,
+                asPdf: self::AS_PDF,
+              );
+              break;
+            case self::OPERATION_DATASET:
+              $fillData = $this->documentFiller->fillData($recipientTemplateData);
+              if (!empty($blocks)) {
+                $fillData['__blocks__'] = $blocks;
+              }
+              $fileData = json_encode($fillData, JSON_PARTIAL_OUTPUT_ON_ERROR);
+              $filledFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.' . 'json';
+              $mimeType = 'application/json';
+              break;
+            default:
+              throw new InvalidArgumentException('Unknown operation: "' . $operation . '".');
+          }
+
+          $filledFile = pathinfo($filledFileName);
+          $recipientSlug = Util::dashesToCamelCase($recipient->getUserIdSlug(), true, '_-.');
+          $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], $recipientSlug ]) . '.' . $filledFile['extension'];
+
+          if (count($recipients) <= 1) {
+            switch ($operation) {
+              case self::OPERATION_CLOUD:
+                $cloudFolder->newFile($filledFileName, $fileData);
+                $mailMergeCount = 1;
+                return new DTO\MailMergeResponse(
+                  messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+                  cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+                  cloudFiles: [ $filledFileName ],
+                  count: $mailMergeCount,
+                  senderId: $sender->getId(),
+                )->response();
+              case self::OPERATION_DOWNLOAD:
+              case self::OPERATION_DATASET:
+                return $this->dataDownloadResponse($fileData, $filledFileName, $mimeType);
+            }
+          }
+
+          switch ($operation) {
+            case self::OPERATION_CLOUD:
+              $cloudFolder->newFile($filledFileName, $fileData);
+              $cloudFiles[] = $filledFileName;
+              break;
+            case self::OPERATION_DOWNLOAD:
+            case self::OPERATION_DATASET:
+              $zipStream->addFile($rootDirectory . '/' . $filledFileName, $fileData);
+          }
+          $mailMergeCount++;
+          $recipientSlug = ''; // reset for error message
+        }
+
+        switch ($operation) {
+          case self::OPERATION_CLOUD:
+            return new DTO\MailMergeResponse(
+              messages: [$this->l->n('Mail-merge successful, %n file substituted.', 'Mail-merge successful, %n files substituted.', $mailMergeCount)],
+              cloudFolder: substr(strchr($cloudFolder->getPath(), '/files/'), strlen('/files')),
+              cloudFiles: $cloudFiles,
+              count: $mailMergeCount,
+              senderId: $sender->getId(),
+            )->response();
+          case self::OPERATION_DOWNLOAD:
+          case self::OPERATION_DATASET:
+            $zipStream->finish();
+            rewind($dataStream);
+            $fileData = stream_get_contents($dataStream);
+            fclose($dataStream);
+
+            return $this->dataDownloadResponse($fileData, $rootDirectory . '.zip', 'application/zip');
+        }
+      }
+    } catch (Throwable $t) {
+      if ($t instanceof Exceptions\EnduserNotificationException) {
+        throw $t;
+      }
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Exception during mail-merge: "%s"', $t->getMessage()),
+        context: [
+          'conversions' => $mailMergeCount,
+          'failingRecipient' => $recipientSlug,
+        ],
+        previous: $t,
+      );
+    }
+  }
+
+  /**
+   * @param null|Entities\Project $project
+   *
+   * @param null|string $timeStamp
+   *
+   * @return Folder
+   */
+  private function ensureCloudDestinationFolder(?Entities\Project $project = null, ?string $timeStamp = null):Folder
+  {
+    $timeStamp = $timeStamp ?? $this->formatTimeStamp();
+    $year = substr($timeStamp, 0, 4);
+    if (empty($project)) {
+      $pathChain = [
+        $this->getSharedFolderPath(),
+        $this->l->t('Documents'),
+        $this->l->t('MailMerge'),
+        $year,
+      ];
+    } else {
+      /** @var ProjectService $projectService */
+      $projectService = $this->di(ProjectService::class);
+      $pathChain = [
+        /* $projectFolder = */reset($projectService->ensureProjectFolders($project, only: ProjectService::FOLDER_TYPE_PROJECT, dry: true)),
+        $this->l->t('MailMerge'),
+      ];
+    }
+
+    return $this->userStorage->ensureFolderChain($pathChain);
+  }
+
+  /**
+   * In order to simplify the program flow we generate fake musician entities
+   * for each provided contact.
+   *
+   * @param array $contactKeys
+   *
+   * @param array $addressBookUris
+   *
+   * @return array
+   */
+  private function contactsToEntities(array $contactKeys, array $addressBookUris):array
+  {
+    $addressBooks = $this->contactsManager->getUserAddressBooks();
+    $addressBooks = array_combine(
+      array_map(fn($b) => $b->getKey(), $addressBooks),
+      $addressBooks
+    );
+
+    $entities = [];
+
+    foreach ($contactKeys as $contactInfo) {
+      $bookKey = $contactInfo['book'];
+      /** @var IAddressBook $addressBook */
+      $addressBook = $addressBooks[$bookKey] ?? null;
+      if ($addressBook) {
+        $searchProperties = [];
+        if ($contactInfo['uri'] ?? null) {
+          $searchProperties[] = 'URI';
+        }
+        if ($contactInfo['uid'] ?? null) {
+          $searchProperties[] = 'UID';
+        }
+        $key = $contactInfo['key'];
+        $contact = $addressBook->search($key, $searchProperties, [
+          'strict_search' => true,
+          'types' => true,
+        ]);
+        if (!empty($contact)) {
+          $contact = array_shift($contact);
+
+          /** @var ContactsService $contactsService */
+          $contactsService = $this->di(ContactsService::class);
+
+          $entities[] = $contactsService->importCardData(null, $contact);
+        }
+      }
+    }
+
+    return $entities;
+  }
+}

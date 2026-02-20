@@ -1,0 +1,259 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Service;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCP\Group\ISubAdmin as IGroupSubAdminManager;
+use OCP\IConfig;
+use OCP\IGroupManager;
+use OCP\IUserManager;
+use Psr\Log\LoggerInterface as ILogger;
+
+use OCA\CAFEVDB\Service\AuthorizationService\EnumAppPermissions;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+
+/**
+ * Rudimentary service which just checks if a user belongs to the
+ * configured orchestra group and/or is a group admin. Also provide
+ * contact informations for the group-admins.
+ */
+#[TSAttributes\TypeScript]
+class AuthorizationService
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+
+  public const MANAGEMENT = 'management';
+  public const FRONTEND = 'frontend';
+  public const ADDRESSBOOK = 'addressbook';
+  public const FILESYSTEM = 'filesystem';
+  public const CALENDAR = 'calendar';
+  public const FINANCE = 'finance';
+  public const EMAIL = 'email';
+
+  public const ALL_GROUP_SUFFIX = '';
+  public const MANAGEMENT_GROUP_SUFFIX = '-' . self::MANAGEMENT;
+  public const FRONTEND_GROUP_SUFFIX = '-' . self::FRONTEND;
+  public const ADDRESSBOOK_GROUP_SUFFIX = '-' . self::ADDRESSBOOK;
+  public const FILESYSTEM_GROUP_SUFFIX = '-' . self::FILESYSTEM;
+  public const CALENDAR_GROUP_SUFFIX = '-' . self::CALENDAR;
+  public const FINANCE_GROUP_SUFFIX = '-' . self::FINANCE;
+  public const EMAIL_GROUP_SUFFIX = '-' . self::EMAIL;
+
+  public const PERMISSION_NONE = EnumAppPermissions::NONE->value;
+  public const PERMISSION_FRONTEND = EnumAppPermissions::FRONTEND->value;
+  public const PERMISSION_ADDRESSBOOK = EnumAppPermissions::ADDRESSBOOK->value;
+  public const PERMISSION_FILESYSTEM = EnumAppPermissions::FILESYSTEM->value;
+  public const PERMISSION_CALENDAR = EnumAppPermissions::CALENDAR->value;
+  public const PERMISSION_FINANCE = EnumAppPermissions::FINANCE->value;
+  public const PERMISSION_MANAGEMENT = EnumAppPermissions::MANAGEMENT->value;
+  public const PERMISSION_EMAIL = EnumAppPermissions::EMAIL->value;
+  public const PERMISSION_ALL = EnumAppPermissions::ALL->value;
+
+  /**
+   * @var array
+   *
+   * Mapping between permission classes and group suffixes. The mapping is
+   * 1-1, the overlap is handled by self::IMPLIED_PERMISSIONS.
+   */
+  public const GROUP_SUFFIX_LIST = [
+    self::PERMISSION_ALL => self::ALL_GROUP_SUFFIX,
+    self::PERMISSION_FRONTEND => self::FRONTEND_GROUP_SUFFIX,
+    self::PERMISSION_ADDRESSBOOK => self::ADDRESSBOOK_GROUP_SUFFIX,
+    self::PERMISSION_FILESYSTEM => self::FILESYSTEM_GROUP_SUFFIX,
+    self::PERMISSION_CALENDAR => self::CALENDAR_GROUP_SUFFIX,
+    self::PERMISSION_FINANCE => self::FINANCE_GROUP_SUFFIX,
+    self::PERMISSION_MANAGEMENT => self::MANAGEMENT_GROUP_SUFFIX,
+    self::PERMISSION_EMAIL => self::EMAIL_GROUP_SUFFIX,
+  ];
+
+  /**
+   * @var array
+   *
+   * Some permissions may imply other permissions.
+   */
+  public const IMPLIED_PERMISSIONS = [
+    self::PERMISSION_ALL => 0,
+    self::PERMISSION_MANAGEMENT => self::PERMISSION_ALL,
+    self::PERMISSION_FRONTEND => self::PERMISSION_ALL, // but that may change ...
+    self::PERMISSION_ADDRESSBOOK => 0,
+    self::PERMISSION_FILESYSTEM => 0,
+    self::PERMISSION_CALENDAR => 0,
+    self::PERMISSION_FINANCE => self::PERMISSION_FILESYSTEM,
+    self::PERMISSION_EMAIL => 0,
+  ];
+
+  /**
+   * @var string
+   *
+   * The group id of cloud users which are allowed to access the backend services like file-system etc.
+   */
+  private $userGroupId;
+
+  /**
+   * @param null|string $userId Current logged on user id or null.
+   *
+   * @param IGroupManager $groupManager
+   *
+   * @param IGroupSubAdminManager $groupSubAdminManager
+   *
+   * @param IUserManager $userManager
+   *
+   * @param ?string $appName
+   *
+   * @param IConfig $cloudConfig
+   *
+   * @param ILogger $logger In order to satisfy LoggerTrait.
+   */
+  public function __construct(
+    private ?string $userId,
+    private IGroupManager $groupManager,
+    private IGroupSubAdminManager $groupSubAdminManager,
+    private IUserManager $userManager,
+    protected string $appName,
+    protected IConfig $cloudConfig,
+    protected ILogger $logger,
+  ) {
+    $this->userGroupId = $this->getAppValue(ConfigConstants::USER_GROUP_KEY);
+  }
+
+  /**
+   * Log a textual description of the given permission bit-mask.
+   *
+   * @param null|string $userId The user-id to check, if null use the user-id of
+   * the currently logged-on user.
+   *
+   * @param int $permissions
+   *
+   * @param int  $logLevel
+   *
+   * @return void
+   */
+  protected function logPermissions(?string $userId, int $permissions, int $logLevel = \OCP\ILogger::INFO):void
+  {
+    if ($permissions === self::PERMISSION_NONE) {
+      $this->log($logLevel, 'User ' . $userId . ' is not allowed to use the app ' . $this->appName);
+    } elseif ($permissions === self::PERMISSION_ALL) {
+      $this->log($logLevel, 'User ' . $userId . ' has the permission to use all services of the app ' . $this->appName);
+    } else {
+      $permissionStrings = [];
+      if ($permissions & self::PERMISSION_FILESYSTEM) {
+        $permissionStrings[] = self::FILESYSTEM;
+      }
+      if ($permissions & self::PERMISSION_CALENDAR) {
+        $permissionStrings[] = self::CALENDAR;
+      }
+      if ($permissions & self::PERMISSION_ADDRESSBOOK) {
+        $permissionStrings[] = self::ADDRESSBOOK;
+      }
+      if ($permissions & self::PERMISSION_FRONTEND) {
+        $permissionStrings[] = self::FRONTEND;
+      }
+      if ($permissions & self::PERMISSION_FINANCE) {
+        $permissionStrings[] = self::FINANCE;
+      }
+      if ($permissions & self::PERMISSION_MANAGEMENT) {
+        $permissionStrings[] = self::MANAGEMENT;
+      }
+      if ($permissions & self::PERMISSION_EMAIL) {
+        $permissionStrings[] = self::EMAIL;
+      }
+      $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
+    }
+  }
+
+  /**
+   * Compute the permission mask for the given or the currently logged-on user.
+   *
+   * @param null|string $userId The user-id to check, if null use the user-id of
+   * the currently logged-on user.
+   *
+   * @return int The bit-mask of permissions, based on the group-memberships
+   * of the user.
+   */
+  public function getUserPermissions(?string $userId = null):int
+  {
+    if (empty($userId)) {
+      $userId = $this->userId;
+    }
+    if (empty($userId) || empty($this->userGroupId)) {
+      return self::PERMISSION_NONE;
+    }
+    $userPermissions = self::PERMISSION_NONE;
+    foreach (self::GROUP_SUFFIX_LIST as $permissions => $suffix) {
+      $groupId = $this->userGroupId . $suffix;
+      if ($this->groupManager->isInGroup($userId, $groupId)) {
+        $userPermissions |= $permissions|self::IMPLIED_PERMISSIONS[$permissions];
+      }
+      if ($userPermissions == self::PERMISSION_ALL) {
+        break;
+      }
+    }
+    $this->logPermissions($userId, $userPermissions, \OCP\ILogger::DEBUG);
+    return $userPermissions;
+  }
+
+  /**
+   * Basic check for authorization. Permissions are granted on the basis of group memberships.
+   *
+   * @param null|string $userId Id of the user to check.
+   *
+   * @param int $requestedPermissions The permissions to check for. Defaults to everything.
+   *
+   * @return bool Status of the check.
+   */
+  public function authorized(?string $userId, int $requestedPermissions = self::PERMISSION_ALL):bool
+  {
+    $userPermissions = $this->getUserPermissions($userId);
+    // $this->logInfo('PERMISSION CHECK: ' . $userId . ' -- ' . (int)($userPermissions & $requestedPermissions) . ' vs ' . (int)$requestedPermissions);
+    return $requestedPermissions == ($userPermissions & $requestedPermissions);
+  }
+
+  /**
+   * Check whether the given user-id is a sub-admin for the configured
+   * orchestra group.
+   *
+   * @param null|string $userId Id of the user to check.
+   *
+   * @return bool Status of the check.
+   */
+  public function isAdmin(?string $userId):bool
+  {
+    if (empty($userId)) {
+      $userId = $this->userId;
+    }
+    if (empty($this->userGroupId)) {
+      return false;
+    }
+    $user = $this->userManager->get($userId);
+    $group = $this->groupManager->get($this->userGroupId);
+
+    if (empty($user) || empty($group)) {
+      return false;
+    }
+    return $this->groupSubAdminManager->isSubAdminofGroup($user, $group);
+  }
+}

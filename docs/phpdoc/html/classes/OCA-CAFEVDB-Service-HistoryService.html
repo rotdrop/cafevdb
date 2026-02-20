@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -121,37 +124,36 @@
 </div>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Page history via PHP session.</p>
 
 
-
-
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">todo</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>This now should be obsolete as the navigation history is handled by
-the Javascript code.</p>
+    <section class="phpdocumentor-description"><p>This only works for the life-time of the web-browser as the session-cookie
+dies when closing the browser window. For anything else data would have
+been persisted to the database. This already can be done explicitly, but as
+of now not automatically.</p>
 </section>
 
-                                    </dd>
-                                            </dl>
+
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\TypeScript">TypeScript</abbr>]
+    </dt>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -171,6 +173,26 @@ the Javascript code.</p>
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDED_KEYS">EXCLUDED_KEYS</a>
+    <span>
+        &nbsp;= [
+    self::HASH_KEY,
+    self::FRONTEND_URL_PATH_KEY,
+    &#039;_route&#039;,
+    &#039;renderAs&#039;,
+    &#039;template&#039;,
+    &#039;projectId&#039;,
+    &#039;projectName&#039;,
+    &#039;eventsProjectId&#039;,
+    &#039;eventsProjectName&#039;,
+    // calendar app
+    &#039;recurrenceId&#039;,
+    &#039;object&#039;,
+    &#039;context&#039;,
+]                            </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_FRONTEND_URL_PATH_KEY">FRONTEND_URL_PATH_KEY</a>
     <span>
@@ -193,26 +215,6 @@ the Javascript code.</p>
     <a class="" href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_SESSION_LAST_URL_PATH_KEY">SESSION_LAST_URL_PATH_KEY</a>
     <span>
         &nbsp;= &#039;LastUrlPath&#039;                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
-    <a class="" href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDE_KEYS">EXCLUDE_KEYS</a>
-    <span>
-        &nbsp;= [
-    self::HASH_KEY,
-    self::FRONTEND_URL_PATH_KEY,
-    &#039;_route&#039;,
-    &#039;renderAs&#039;,
-    &#039;template&#039;,
-    &#039;projectId&#039;,
-    &#039;projectName&#039;,
-    &#039;eventsProjectId&#039;,
-    &#039;eventsProjectName&#039;,
-    // calendar app
-    &#039;recurrenceId&#039;,
-    &#039;object&#039;,
-    &#039;context&#039;,
-]                            </span>
 </dt>
 
     </dl>
@@ -422,6 +424,53 @@ how this is done.</dd>
 
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EXCLUDED_KEYS">
+        EXCLUDED_KEYS
+        <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDED_KEYS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">59</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+    <span class="phpdocumentor-signature__name">EXCLUDED_KEYS</span>
+    = <span class="phpdocumentor-signature__default-value">[
+    self::HASH_KEY,
+    self::FRONTEND_URL_PATH_KEY,
+    &#039;_route&#039;,
+    &#039;renderAs&#039;,
+    &#039;template&#039;,
+    &#039;projectId&#039;,
+    &#039;projectName&#039;,
+    &#039;eventsProjectId&#039;,
+    &#039;eventsProjectName&#039;,
+    // calendar app
+    &#039;recurrenceId&#039;,
+    &#039;object&#039;,
+    &#039;context&#039;,
+]</span>
+</code>
+
+
+    
+        <section class="phpdocumentor-description"><p>Top-level excluded keys which we do not want to cache.</p>
+</section>
+
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_FRONTEND_URL_PATH_KEY">
         FRONTEND_URL_PATH_KEY
         <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_FRONTEND_URL_PATH_KEY" class="headerlink"><i class="fas fa-link"></i></a>
@@ -429,11 +478,11 @@ how this is done.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -460,11 +509,11 @@ how this is done.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -491,11 +540,11 @@ how this is done.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -522,11 +571,11 @@ how this is done.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -541,53 +590,6 @@ how this is done.</dd>
 
     
     
-    
-
-        
-    </article>
-                    <article class="phpdocumentor-element -constant -private ">
-    <h4 class="phpdocumentor-element__name" id="constant_EXCLUDE_KEYS">
-        EXCLUDE_KEYS
-        <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDE_KEYS" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">54</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
-    </aside>
-
-    
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
-    <span class="phpdocumentor-signature__name">EXCLUDE_KEYS</span>
-    = <span class="phpdocumentor-signature__default-value">[
-    self::HASH_KEY,
-    self::FRONTEND_URL_PATH_KEY,
-    &#039;_route&#039;,
-    &#039;renderAs&#039;,
-    &#039;template&#039;,
-    &#039;projectId&#039;,
-    &#039;projectName&#039;,
-    &#039;eventsProjectId&#039;,
-    &#039;eventsProjectName&#039;,
-    // calendar app
-    &#039;recurrenceId&#039;,
-    &#039;object&#039;,
-    &#039;context&#039;,
-]</span>
-</code>
-
-
-    
-        <section class="phpdocumentor-description"><p>Top-level excluded keys which we do not want to cache.</p>
-</section>
-
     
 
         
@@ -616,11 +618,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
@@ -654,11 +656,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -692,11 +694,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -730,11 +732,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -768,11 +770,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -806,11 +808,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -844,11 +846,11 @@ how this is done.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -887,11 +889,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
     
@@ -960,11 +962,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">151</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Retrieve previously stored request data from the PHP session.</p>
@@ -1010,11 +1012,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">165</span>
+    <span class="phpdocumentor-element-found-in__line">168</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.168" class="phpdocumentor-element-found-in__source" data-line="168" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the most recent frontend url path from the session, if it exists.</p>
@@ -1050,11 +1052,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log the given message at the specified level.</p>
@@ -1135,11 +1137,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">228</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a debug message.</p>
@@ -1213,11 +1215,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">207</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an error.</p>
@@ -1291,11 +1293,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
     
@@ -1375,11 +1377,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">292</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a fatal error message.</p>
@@ -1453,11 +1455,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored logger class</p>
@@ -1493,11 +1495,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">250</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log an informational message.</p>
@@ -1571,11 +1573,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">271</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.271" class="phpdocumentor-element-found-in__source" data-line="271" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Log a warning message.</p>
@@ -1649,11 +1651,11 @@ how this is done.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Save a history snapshot. If $key is given use its value as key. Otherwise
@@ -1708,11 +1710,11 @@ IRequest::getParams() is used.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/HistoryService.php"><a href="files/service-historyservice.html"><abbr title="Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Service/HistoryService.php"><a href="files/lib-service-historyservice.html"><abbr title="lib/Service/HistoryService.php">HistoryService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">125</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Service/HistoryService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/lib/Service/HistoryService.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add a history snapshot. If $key is given use its value as key. Otherwise
@@ -1762,11 +1764,11 @@ if $data[self::HASH_KEY] is present use it as key. Otherwise do nothing.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored appConmtainer instance.</p>
@@ -1802,11 +1804,11 @@ if $data[self::HASH_KEY] is present use it as key. Otherwise do nothing.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/LoggerTrait.php"><a href="files/lib-toolkit-traits-loggertrait.html"><abbr title="lib/Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/Toolkit/Traits/LoggerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/lib/Toolkit/Traits/LoggerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
@@ -1849,11 +1851,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/SessionTrait.php"><a href="files/traits-sessiontrait.html"><abbr title="Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/SessionTrait.php"><a href="files/lib-traits-sessiontrait.html"><abbr title="lib/Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/Traits/SessionTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/Traits/SessionTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Mangle the name in order to avoid conflicts in the PHP session data.</p>
@@ -1903,11 +1905,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/SessionTrait.php"><a href="files/traits-sessiontrait.html"><abbr title="Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/SessionTrait.php"><a href="files/lib-traits-sessiontrait.html"><abbr title="lib/Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Traits/SessionTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/lib/Traits/SessionTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the given key is present in the session data.</p>
@@ -1955,11 +1957,11 @@ understands those.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/SessionTrait.php"><a href="files/traits-sessiontrait.html"><abbr title="Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/SessionTrait.php"><a href="files/lib-traits-sessiontrait.html"><abbr title="lib/Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/Traits/SessionTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/lib/Traits/SessionTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch something from the session-data. It is completely left open
@@ -2017,11 +2019,11 @@ available. Defaults to @c false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/SessionTrait.php"><a href="files/traits-sessiontrait.html"><abbr title="Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/SessionTrait.php"><a href="files/lib-traits-sessiontrait.html"><abbr title="lib/Traits/SessionTrait.php">SessionTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/Traits/SessionTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-HistoryService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Traits/SessionTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Store something in the session-data. It is completely left open
@@ -2068,7 +2070,7 @@ interface points to the PHP session (except for, ahem, tweaks).</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/Service/HistoryService.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/Service/HistoryService.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>
@@ -2177,11 +2179,11 @@ interface points to the PHP session (except for, ahem, tweaks).</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDED_KEYS">EXCLUDED_KEYS</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_FRONTEND_URL_PATH_KEY">FRONTEND_URL_PATH_KEY</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_HASH_KEY">HASH_KEY</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_SESSION_HISTORY_KEY">SESSION_HISTORY_KEY</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_SESSION_LAST_URL_PATH_KEY">SESSION_LAST_URL_PATH_KEY</a></li>
-                                                    <li class=""><a href="classes/OCA-CAFEVDB-Service-HistoryService.html#constant_EXCLUDE_KEYS">EXCLUDE_KEYS</a></li>
                                             </ul>
                 </li>
             

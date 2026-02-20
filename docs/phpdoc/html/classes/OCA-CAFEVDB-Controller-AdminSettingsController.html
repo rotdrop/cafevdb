@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -124,11 +127,11 @@
 </div>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">AJAX end-points for admin setttings.</p>
@@ -138,6 +141,17 @@
 
 
     
+            <section class="phpdocumentor-attributes">
+            <h5 class="phpdocumentor-elements__header" id="attributes">
+                Attributes <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#attributes" class="headerlink"><i class="fas fa-link"></i></a>
+
+            </h5>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\Spatie\TypeScriptTransformer\Attributes\TypeScript">TypeScript</abbr>]
+    </dt>
+    </dl>
+                    </section>
     
 <h3 id="toc">
     Table of Contents
@@ -160,7 +174,14 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_DELEGATABLE_POST_REQUESTS">DELEGATABLE_POST_REQUESTS</a>
     <span>
-        &nbsp;= [\OCA\CAFEVDB\Settings\Admin::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY, \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY, \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . \OCA\CAFEVDB\Settings\Admin::EMAIL_VERIFICATION_SUFFIX, \OCA\CAFEVDB\Settings\Admin::WIKI_NAME_SPACE_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_ACCOUNTS_TREE_DATA_KEY, \OCA\CAFEVDB\Service\FontService::DEFAULT_OFFICE_FONT_CONFIG, self::POST_REQUEST_FONT_CACHE]                            </span>
+        &nbsp;= \OCA\CAFEVDB\Settings\Admin::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . \OCA\CAFEVDB\Settings\Admin::EMAIL_VERIFICATION_SUFFIX . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::WIKI_NAME_SPACE_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_ACCOUNTS_TREE_DATA_KEY . &#039;|&#039; . \OCA\CAFEVDB\Service\FontService::DEFAULT_OFFICE_FONT_CONFIG . &#039;|&#039; . self::POST_REQUEST_FONT_CACHE                            </span>
+</dt>
+<dd>Part of a &quot;requirements&quot; attribute paramter.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_END_POINT">END_POINT</a>
+    <span>
+        &nbsp;= &#039;settings/admin&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -871,6 +892,13 @@ dedicated sub-admin group.</dd>
 flags.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil">sleepUntil()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Finally this is a wrapper around time_sleep_until()</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup">subAdminGroup()</a>
     <span>
                                 &nbsp;: null|<abbr title="\OCP\IGroup">IGroup</abbr>    </span>
@@ -1009,11 +1037,43 @@ transformations.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Part of a &quot;requirements&quot; attribute paramter.</p>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">DELEGATABLE_POST_REQUESTS</span>
+    = <span class="phpdocumentor-signature__default-value">\OCA\CAFEVDB\Settings\Admin::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . \OCA\CAFEVDB\Settings\Admin::EMAIL_VERIFICATION_SUFFIX . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::WIKI_NAME_SPACE_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY . &#039;|&#039; . \OCA\CAFEVDB\Settings\Admin::GNU_CASH_ACCOUNTS_TREE_DATA_KEY . &#039;|&#039; . \OCA\CAFEVDB\Service\FontService::DEFAULT_OFFICE_FONT_CONFIG . &#039;|&#039; . self::POST_REQUEST_FONT_CACHE</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_END_POINT">
+        END_POINT
+        <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_END_POINT" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1021,8 +1081,8 @@ transformations.</dd>
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">DELEGATABLE_POST_REQUESTS</span>
-    = <span class="phpdocumentor-signature__default-value">[\OCA\CAFEVDB\Settings\Admin::HAVE_CLOUD_USER_BACKEND_CONFIG_KEY, \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY, \OCA\CAFEVDB\Settings\Admin::PROBLEM_REPORT_EMAIL_RECIPIENT_KEY . \OCA\CAFEVDB\Settings\Admin::EMAIL_VERIFICATION_SUFFIX, \OCA\CAFEVDB\Settings\Admin::WIKI_NAME_SPACE_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_INSTRUMENT_INSURANCE_BALANCING_ACCOUNT_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_PARTICIPANT_RECEIVABLES_ACCOUNT_KEY, \OCA\CAFEVDB\Settings\Admin::GNU_CASH_ACCOUNTS_TREE_DATA_KEY, \OCA\CAFEVDB\Service\FontService::DEFAULT_OFFICE_FONT_CONFIG, self::POST_REQUEST_FONT_CACHE]</span>
+    <span class="phpdocumentor-signature__name">END_POINT</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;settings/admin&#039;</span>
 </code>
 
 
@@ -1040,11 +1100,11 @@ transformations.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1071,11 +1131,11 @@ transformations.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1102,11 +1162,11 @@ transformations.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1133,11 +1193,11 @@ transformations.</dd>
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1180,11 +1240,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -1218,11 +1278,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1256,11 +1316,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1294,11 +1354,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1332,11 +1392,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1370,11 +1430,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">85</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1408,11 +1468,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1446,11 +1506,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1489,11 +1549,11 @@ transformations.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -1576,11 +1636,11 @@ transformations.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service of the embedding cloud
@@ -1617,11 +1677,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service for convenience.</p>
@@ -1657,11 +1717,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1005</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -1707,11 +1767,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1017</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -1757,11 +1817,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">577</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1824,11 +1884,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the value for the given key.</p>
@@ -1872,11 +1932,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">969</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1938,11 +1998,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">979</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1992,11 +2052,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1047</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -2056,11 +2116,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">390</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Would rather belong to the EncryptionService.</p>
@@ -2108,11 +2168,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -2153,6 +2213,17 @@ container.</p>
     </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;GET&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/&#039; . self::END_POINT . &#039;/{parameter}&#039;
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<a href="classes/OCA-CAFEVDB-Attributes-NoGroupMemberRequired.html"><abbr title="\OCA\CAFEVDB\Attributes\NoGroupMemberRequired">NoGroupMemberRequired</abbr></a>]
     </dt>
     </dl>
@@ -2176,11 +2247,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">352</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get a possibly encrypted config value.</p>
@@ -2244,11 +2315,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">816</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2287,11 +2358,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2326,11 +2397,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1031</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -2383,11 +2454,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">179</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -2442,6 +2513,20 @@ container.</p>
             </h5>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/&#039; . self::END_POINT . &#039;/{parameter}&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $requirements: [&#039;parameter&#039; =&gt; &#039;^(?!&#039; . self::DELEGATABLE_POST_REQUESTS . &#039;).*$&#039;]
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<a href="classes/OCA-CAFEVDB-Attributes-NoGroupMemberRequired.html"><abbr title="\OCA\CAFEVDB\Attributes\NoGroupMemberRequired">NoGroupMemberRequired</abbr></a>]
     </dt>
     </dl>
@@ -2465,11 +2550,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">196</span>
+    <span class="phpdocumentor-element-found-in__line">209</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.209" class="phpdocumentor-element-found-in__source" data-line="209" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -2543,6 +2628,20 @@ container.</p>
     </dl>
                             <dl class="phpdocumentor-argument-list">
     <dt class="phpdocumentor-argument-list__entry">
+        #[<abbr title="\OCP\AppFramework\Http\Attribute\FrontpageRoute">FrontpageRoute</abbr>]
+    </dt>
+        <dd class="phpdocumentor-argument-list__entry">
+        $verb: &#039;POST&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $url: &#039;/&#039; . self::END_POINT . &#039;/{parameter}&#039;
+    </dd>
+        <dd class="phpdocumentor-argument-list__entry">
+        $requirements: [&#039;parameter&#039; =&gt; &#039;(&#039; . AdminSettingsController::DELEGATABLE_POST_REQUESTS . &#039;)&#039;]
+    </dd>
+    </dl>
+                            <dl class="phpdocumentor-argument-list">
+    <dt class="phpdocumentor-argument-list__entry">
         #[<a href="classes/OCA-CAFEVDB-Attributes-NoGroupMemberRequired.html"><abbr title="\OCA\CAFEVDB\Attributes\NoGroupMemberRequired">NoGroupMemberRequired</abbr></a>]
     </dt>
     </dl>
@@ -2566,11 +2665,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2641,11 +2740,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">993</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -2698,11 +2797,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2737,11 +2836,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2776,11 +2875,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2815,11 +2914,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">927</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.927" class="phpdocumentor-element-found-in__source" data-line="927" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.927" class="phpdocumentor-element-found-in__source" data-line="927" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2854,11 +2953,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2893,11 +2992,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2932,11 +3031,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">336</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2987,11 +3086,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1164</span>
+    <span class="phpdocumentor-element-found-in__line">1174</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1164" class="phpdocumentor-element-found-in__source" data-line="1164" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1174" class="phpdocumentor-element-found-in__source" data-line="1174" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3026,11 +3125,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">120</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -3095,11 +3194,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -3153,11 +3252,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">853</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.853" class="phpdocumentor-element-found-in__source" data-line="853" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.853" class="phpdocumentor-element-found-in__source" data-line="853" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3192,11 +3291,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">313</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3247,11 +3346,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">252</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -3295,11 +3394,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">212</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3351,11 +3450,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dependency injection of $className.</p>
@@ -3397,11 +3496,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">303</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3452,11 +3551,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -3530,11 +3629,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3569,11 +3668,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">871</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3640,11 +3739,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">900</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3718,11 +3817,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -3784,11 +3883,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1110</span>
+    <span class="phpdocumentor-element-found-in__line">1120</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1110" class="phpdocumentor-element-found-in__source" data-line="1110" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1120" class="phpdocumentor-element-found-in__source" data-line="1120" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3823,11 +3922,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">264</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3862,11 +3961,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">226</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -3919,11 +4018,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">699</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.699" class="phpdocumentor-element-found-in__source" data-line="699" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.699" class="phpdocumentor-element-found-in__source" data-line="699" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3962,11 +4061,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">588</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4001,11 +4100,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">594</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4040,11 +4139,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">828</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -4090,11 +4189,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">650</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.650" class="phpdocumentor-element-found-in__source" data-line="650" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.650" class="phpdocumentor-element-found-in__source" data-line="650" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the full path to the document templates folder.</p>
@@ -4158,11 +4257,11 @@ dirname part of the path.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">775</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4202,11 +4301,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">606</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.606" class="phpdocumentor-element-found-in__source" data-line="606" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.606" class="phpdocumentor-element-found-in__source" data-line="606" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4241,11 +4340,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">600</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4280,11 +4379,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">691</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4323,11 +4422,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4366,11 +4465,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">530</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all the sub-admins of the given or the configured orchestra group.</p>
@@ -4418,11 +4517,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">789</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4462,11 +4561,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">937</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4511,11 +4610,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">921</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.921" class="phpdocumentor-element-found-in__source" data-line="921" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.921" class="phpdocumentor-element-found-in__source" data-line="921" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -4561,11 +4660,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4604,11 +4703,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">802</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4647,11 +4746,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">731</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.731" class="phpdocumentor-element-found-in__source" data-line="731" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.731" class="phpdocumentor-element-found-in__source" data-line="731" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4690,11 +4789,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">683</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4733,11 +4832,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">249</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -4798,11 +4897,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">612</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4837,11 +4936,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">625</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create the full-path for the sub-folder corresponding to the given config
@@ -4888,11 +4987,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1182</span>
+    <span class="phpdocumentor-element-found-in__line">1192</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1182" class="phpdocumentor-element-found-in__source" data-line="1182" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1192" class="phpdocumentor-element-found-in__source" data-line="1192" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -4941,11 +5040,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1196</span>
+    <span class="phpdocumentor-element-found-in__line">1206</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1196" class="phpdocumentor-element-found-in__source" data-line="1196" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1206" class="phpdocumentor-element-found-in__source" data-line="1206" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -4998,11 +5097,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1210</span>
+    <span class="phpdocumentor-element-found-in__line">1220</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1210" class="phpdocumentor-element-found-in__source" data-line="1210" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1220" class="phpdocumentor-element-found-in__source" data-line="1220" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -5055,11 +5154,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1224</span>
+    <span class="phpdocumentor-element-found-in__line">1234</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1224" class="phpdocumentor-element-found-in__source" data-line="1224" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1234" class="phpdocumentor-element-found-in__source" data-line="1234" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -5112,11 +5211,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">747</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5155,11 +5254,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">761</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5199,11 +5298,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1104</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5242,11 +5341,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">840</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.840" class="phpdocumentor-element-found-in__source" data-line="840" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.840" class="phpdocumentor-element-found-in__source" data-line="840" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -5292,11 +5391,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5331,11 +5430,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5396,11 +5495,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5449,11 +5548,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5500,11 +5599,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">474</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5543,11 +5642,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5582,11 +5681,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">220</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -5671,11 +5770,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1065</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -5742,11 +5841,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">506</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5802,11 +5901,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">563</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check if the currently logged in or given user-id belongs to the
@@ -5853,11 +5952,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">518</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5913,11 +6012,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5952,11 +6051,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">947</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6001,11 +6100,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">957</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6050,11 +6149,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -6123,11 +6222,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6170,11 +6269,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -6227,11 +6326,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user.</p>
@@ -6281,11 +6380,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">420</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user id.</p>
@@ -6337,11 +6436,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">200</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6402,11 +6501,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6441,11 +6540,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">455</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6484,11 +6583,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1237</span>
+    <span class="phpdocumentor-element-found-in__line">1247</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1237" class="phpdocumentor-element-found-in__source" data-line="1237" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1247" class="phpdocumentor-element-found-in__source" data-line="1247" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -6529,17 +6628,67 @@ flags.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_sleepUntil">
+        sleepUntil()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1114</span>
+
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1114" class="phpdocumentor-element-found-in__source" data-line="1114" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Finally this is a wrapper around time_sleep_until()</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">sleepUntil</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">float&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timestamp</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timestamp</span>
+                : <span class="phpdocumentor-argument-list__argument__type">float</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_subAdminGroup">
         subAdminGroup()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">550</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the dedicated admin-group if it exists.</p>
@@ -6575,11 +6724,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">540</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.540" class="phpdocumentor-element-found-in__source" data-line="540" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.540" class="phpdocumentor-element-found-in__source" data-line="540" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the id of the dedicated admin-group which contains all sub-admins</p>
@@ -6615,11 +6764,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6654,11 +6803,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">449</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fake execution with other user-id. Note that this function will
@@ -6722,11 +6871,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -6816,11 +6965,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1080</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1080" class="phpdocumentor-element-found-in__source" data-line="1080" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1080" class="phpdocumentor-element-found-in__source" data-line="1080" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigConstants::formatTimeStamp() with the current date and time.</p>
@@ -6873,11 +7022,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1146</span>
+    <span class="phpdocumentor-element-found-in__line">1156</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1146" class="phpdocumentor-element-found-in__source" data-line="1146" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1156" class="phpdocumentor-element-found-in__source" data-line="1156" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6912,11 +7061,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1123</span>
+    <span class="phpdocumentor-element-found-in__line">1133</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.1133" class="phpdocumentor-element-found-in__source" data-line="1133" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -6963,11 +7112,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7002,11 +7151,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">402</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7053,11 +7202,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7092,11 +7241,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7131,11 +7280,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ResponseTrait.php"><a href="files/toolkit-traits-responsetrait.html"><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Toolkit/Traits/ResponseTrait.php"><a href="files/lib-toolkit-traits-responsetrait.html"><abbr title="lib/Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">163</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/Toolkit/Traits/ResponseTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/lib/Toolkit/Traits/ResponseTrait.php.txt"></a>
     </aside>
 
     
@@ -7220,11 +7369,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">326</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7285,11 +7434,11 @@ be verified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">527</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.527" class="phpdocumentor-element-found-in__source" data-line="527" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Font cache maintenance.</p>
@@ -7335,11 +7484,11 @@ be verified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">481</span>
+    <span class="phpdocumentor-element-found-in__line">499</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.481" class="phpdocumentor-element-found-in__source" data-line="481" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.499" class="phpdocumentor-element-found-in__source" data-line="499" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Grant access to wiki-namespace</p>
@@ -7388,11 +7537,11 @@ be verified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">219</span>
+    <span class="phpdocumentor-element-found-in__line">237</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
     
@@ -7470,11 +7619,11 @@ be verified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Controller/AdminSettingsController.php"><a href="files/controller-adminsettingscontroller.html"><abbr title="Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Controller/AdminSettingsController.php"><a href="files/lib-controller-adminsettingscontroller.html"><abbr title="lib/Controller/AdminSettingsController.php">AdminSettingsController.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">496</span>
+    <span class="phpdocumentor-element-found-in__line">514</span>
 
-            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/Controller/AdminSettingsController.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#source-view.514" class="phpdocumentor-element-found-in__source" data-line="514" data-modal="source-view" data-src="files/lib/Controller/AdminSettingsController.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Revoke access to wiki-namespace</p>
@@ -7517,7 +7666,7 @@ be verified.</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/Controller/AdminSettingsController.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/Controller/AdminSettingsController.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>
@@ -7627,6 +7776,7 @@ be verified.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_DELEGATABLE_POST_REQUESTS">DELEGATABLE_POST_REQUESTS</a></li>
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_END_POINT">END_POINT</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_FONT_CACHE_PURGE">FONT_CACHE_PURGE</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_FONT_CACHE_RESCAN">FONT_CACHE_RESCAN</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Controller-AdminSettingsController.html#constant_FONT_CACHE_UPDATE">FONT_CACHE_UPDATE</a></li>
@@ -7747,6 +7897,7 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shareOwner">shareOwner()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shareOwnerId">shareOwnerId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shouldDebug">shouldDebug()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil">sleepUntil()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup">subAdminGroup()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroupId">subAdminGroupId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminManager">subAdminManager()</a></li>

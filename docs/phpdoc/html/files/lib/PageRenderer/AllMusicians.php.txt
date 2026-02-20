@@ -1,0 +1,118 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\PageRenderer;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCP\IRequest;
+
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\MusicianService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ToolTipsService;
+
+/**Table generator for Musicians table. */
+#[TSAttributes\TypeScript]
+class AllMusicians extends Musicians
+{
+  public const TEMPLATE = EnumTemplate::ALL_MUSICIANS->value;
+
+  /** {@inheritdoc} */
+  public function __construct(
+    ConfigService $configService,
+    EntityManager $entityManager,
+    IRequest $request,
+    PHPMyEdit $phpMyEdit,
+    PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
+    //
+    ContactsService $contactsService,
+    GeoCodingService $geoCodingService,
+    InstrumentInsuranceService $insuranceService,
+    MailingListsService $listsService,
+    MusicianService $musicianService,
+    PhoneNumberService $phoneNumberService,
+  ) {
+    parent::__construct(
+      configService: $configService,
+      entityManager: $entityManager,
+      request: $request,
+      pme: $phpMyEdit,
+      pageNavigation: $pageNavigation,
+      toolTipsService: $toolTipsService,
+      //
+      contactsService: $contactsService,
+      geoCodingService: $geoCodingService,
+      insuranceService: $insuranceService,
+      listsService: $listsService,
+      musicianService: $musicianService,
+      phoneNumberService: $phoneNumberService,
+    );
+  }
+
+  /** {@inheritdoc} */
+  public function shortTitle(): string
+  {
+    return parent::commonShortTitle() ?? $this->l->t('Overview over all registered musicians');
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems(): array
+  {
+    return [
+      AllMusicians::navigationItem(),
+      Projects::navigationItem(),
+      InstrumentInsurances::navigationItem(),
+      SepaBankAccounts::navigationItem(),
+      Instruments::navigationItem(),
+      InstrumentFamilies::navigationItem(),
+      Blog::navigationItem(),
+    ];
+  }
+
+  /** {@inheritdoc} */
+  public function render(bool $execute = true):void
+  {
+    ['opts' => $opts] = parent::generatePMEOptions();
+
+    $export = $this->pageNavigation->tableExportButton();
+    $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
+
+    $opts = $this->mergeDefaultOptions($opts);
+
+    if ($execute) {
+      $this->execute($opts);
+    } else {
+      $this->pme->setOptions($opts);
+    }
+  }
+}

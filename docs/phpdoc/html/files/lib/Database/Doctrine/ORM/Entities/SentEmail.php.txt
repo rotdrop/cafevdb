@@ -1,0 +1,550 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * SentEmail
+ */
+#[ORM\Table(name: DatabaseTables::SENT_EMAILS_TABLE)]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SentEmailEntityListener::class])]
+class SentEmail
+{
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\CreatedAtEntity;
+
+  #[ORM\Column(type: 'string', length: 256, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[ORM\Id]
+  private string $messageId;
+
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sentEmail', fetch: 'EXTRA_LAZY')]
+  private ?Project $project;
+
+  #[Gedmo\Blameable(on: 'create')]
+  #[ORM\Column(nullable: true)]
+  protected ?string $createdBy = null;
+
+  #[ORM\Column(type: 'text', length: 0, nullable: false)]
+  private string $bulkRecipients;
+
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(
+    fields: ['bulkRecipients'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
+  private string $bulkRecipientsHash;
+
+  #[ORM\Column(type: 'text', nullable: true)]
+  private ?string $cc = null;
+
+  #[ORM\Column(type: 'text', nullable: true)]
+  private ?string $bcc = null;
+
+  #[ORM\Column(type: 'text', nullable: false)]
+  private string $subject;
+
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(
+    fields: ['subject'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
+  private string $subjectHash;
+
+  #[ORM\Column(type: 'text', length: 0, nullable: false)]
+  private string $htmlBody;
+
+  /**
+   * @var string
+   */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true, 'collation' => 'ascii_bin'])]
+  #[Gedmo\Slug(
+    fields: ['htmlBody'],
+    updatable: true,
+    unique: false,
+  )]
+  #[Gedmo\SlugHandler(
+    class: CAFEVDB\Listeners\Sluggable\HashHandler::class,
+    options: [ 'algorithm' => 'md5' ],
+  )]
+  private string $htmlBodyHash;
+
+  #[ORM\JoinColumn(name: 'reference_id', referencedColumnName: 'message_id')]
+  #[ORM\ManyToOne(targetEntity: SentEmail::class, inversedBy: 'referencedBy', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  private ?SentEmail $referencing = null;
+
+  /**
+   * @var Collection<string, SentEmail>
+   */
+  #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'referencing', indexBy: 'message_id', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['bulkRecipients' => 'ASC'])]
+  private Collection $referencedBy;
+
+  #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'preNotificationEmails')]
+  private ?SepaBulkTransaction $sepaBulkTransaction = null;
+
+  #[ORM\OneToOne(targetEntity: CompositePayment::class, mappedBy: 'preNotificationEmail')]
+  private ?CompositePayment $compositePayment = null;
+
+  #[ORM\OneToOne(targetEntity: DonationReceipt::class, mappedBy: 'notificationMessage')]
+  private ?DonationReceipt $donationReceipt = null;
+
+  #[ORM\OneToOne(targetEntity: Invoice::class, mappedBy: 'notificationEmail')]
+  private ?Invoice $invoice = null;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
+    $this->arrayCTOR();
+    $this->referencedBy = new ArrayCollection;
+  }
+  // phpcs:enable
+
+  /**
+   * Sets messageId.
+   *
+   * @param string $messageId
+   *
+   * @return SentEmail $this
+   */
+  public function setMessageId(string $messageId):SentEmail
+  {
+    $this->messageId = $messageId;
+
+    return $this;
+  }
+
+  /**
+   * Returns messageId.
+   *
+   * @return string
+   */
+  public function getMessageId():string
+  {
+    return $this->messageId;
+  }
+
+  /**
+   * Sets createdBy.
+   *
+   * @param string $createdBy
+   *
+   * @return SentEmail $this
+   */
+  public function setCreatedBy(string $createdBy):SentEmail
+  {
+    $this->createdBy = $createdBy;
+
+    return $this;
+  }
+
+  /**
+   * Returns createdBy.
+   *
+   * @return string
+   */
+  public function getCreatedBy():string
+  {
+    return $this->createdBy;
+  }
+
+  /**
+   * Sets bulkRecipients.
+   *
+   * @param string $bulkRecipients
+   *
+   * @return SentEmail $this
+   */
+  public function setBulkRecipients(string $bulkRecipients):SentEmail
+  {
+    $this->bulkRecipients = $bulkRecipients;
+
+    return $this;
+  }
+
+  /**
+   * Returns bulkRecipients.
+   *
+   * @return string
+   */
+  public function getBulkRecipients():string
+  {
+    return $this->bulkRecipients;
+  }
+
+  /**
+   * Sets bulkRecipientsHash.
+   *
+   * @param string $bulkRecipientsHash
+   *
+   * @return SentEmail $this
+   */
+  public function setBulkRecipientsHash(string $bulkRecipientsHash):SentEmail
+  {
+    $this->bulkRecipientsHash = $bulkRecipientsHash;
+
+    return $this;
+  }
+
+  /**
+   * Returns bulkRecipientsHash.
+   *
+   * @return string
+   */
+  public function getBulkRecipientsHash():string
+  {
+    return $this->bulkRecipientsHash;
+  }
+
+  /**
+   * Sets htmlBody.
+   *
+   * @param string $htmlBody
+   *
+   * @return SentEmail $this
+   */
+  public function setHtmlBody(string $htmlBody):SentEmail
+  {
+    $this->htmlBody = $htmlBody;
+
+    return $this;
+  }
+
+  /**
+   * Returns htmlBody.
+   *
+   * @return string
+   */
+  public function getHtmlBody():string
+  {
+    return $this->htmlBody;
+  }
+
+  /**
+   * Sets htmlBodyHash.
+   *
+   * @param string $htmlBodyHash
+   *
+   * @return SentEmail $this
+   */
+  public function setHtmlBodyHash(string $htmlBodyHash):SentEmail
+  {
+    $this->htmlBodyHash = $htmlBodyHash;
+
+    return $this;
+  }
+
+  /**
+   * Returns htmlBodyHash.
+   *
+   * @return string
+   */
+  public function getHtmlBodyHash():string
+  {
+    return $this->htmlBodyHash;
+  }
+
+  /**
+   * Sets subject.
+   *
+   * @param string $subject
+   *
+   * @return SentEmail $this
+   */
+  public function setSubject(string $subject):SentEmail
+  {
+    $this->subject = $subject;
+
+    return $this;
+  }
+
+  /**
+   * Returns subject.
+   *
+   * @return string
+   */
+  public function getSubject():string
+  {
+    return $this->subject;
+  }
+
+  /**
+   * Sets subjectHash.
+   *
+   * @param string $subjectHash
+   *
+   * @return SentEmail $this
+   */
+  public function setSubjectHash(string $subjectHash):SentEmail
+  {
+    $this->subjectHash = $subjectHash;
+
+    return $this;
+  }
+
+  /**
+   * Returns subjectHash.
+   *
+   * @return string
+   */
+  public function getSubjectHash():string
+  {
+    return $this->subjectHash;
+  }
+
+  /**
+   * Sets cc.
+   *
+   * @param null|string $cc
+   *
+   * @return SentEmail $this
+   */
+  public function setCc(?string $cc):SentEmail
+  {
+    $this->cc = $cc;
+
+    return $this;
+  }
+
+  /**
+   * Returns cc.
+   *
+   * @return null|string
+   */
+  public function getCc():?string
+  {
+    return $this->cc;
+  }
+
+  /**
+   * Sets bcc.
+   *
+   * @param null|string $bcc
+   *
+   * @return SentEmail $this
+   */
+  public function setBcc(?string $bcc):SentEmail
+  {
+    $this->bcc = $bcc;
+
+    return $this;
+  }
+
+  /**
+   * Returns bcc.
+   *
+   * @return null|string
+   */
+  public function getBcc():?string
+  {
+    return $this->bcc;
+  }
+
+  /**
+   * Sets referencing.
+   *
+   * @param null|SentEmail $referencing
+   *
+   * @return SentEmail $this
+   */
+  public function setReferencing(?SentEmail $referencing):SentEmail
+  {
+    $this->referencing = $referencing;
+
+    return $this;
+  }
+
+  /**
+   * Returns referencing.
+   *
+   * @return SentEmail|null
+   */
+  public function getReferencing():?SentEmail
+  {
+    return $this->referencing;
+  }
+
+  /**
+   * Sets referencedBy.
+   *
+   * @param Collection $referencedBy
+   *
+   * @return SentEmail $this
+   */
+  public function setReferencedBy(Collection $referencedBy):SentEmail
+  {
+    $this->referencedBy = $referencedBy;
+
+    return $this;
+  }
+
+  /**
+   * Returns referencedBy.
+   *
+   * @return Collection
+   */
+  public function getReferencedBy():Collection
+  {
+    return $this->referencedBy;
+  }
+
+  /**
+   * Sets project.
+   *
+   * @param ?Project $project
+   *
+   * @return SentEmail $this
+   */
+  public function setProject(?Project $project): SentEmail
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Returns project.
+   *
+   * @return Project
+   */
+  public function getProject(): ?Project
+  {
+    return $this->project;
+  }
+
+  /**
+   * Sets sepaBulkTransaction.
+   *
+   * @param SepaBulkTransaction $sepaBulkTransaction
+   *
+   * @return SentEmail $this
+   */
+  public function setSepaBulkTransaction(SepaBulkTransaction $sepaBulkTransaction):SentEmail
+  {
+    $this->sepaBulkTransaction = $sepaBulkTransaction;
+
+    return $this;
+  }
+
+  /**
+   * Returns sepaBulkTransactions.
+   *
+   * @return SepaBulkTransaction
+   */
+  public function getSepaBulkTransaction():SepaBulkTransaction
+  {
+    return $this->sepaBulkTransaction;
+  }
+
+  /**
+   * Sets $compositePayment
+   *
+   * @param CompositePayment $compositePayment
+   *
+   * @return SentEmail $this
+   */
+  public function setCompositePayment(CompositePayment $compositePayment):SentEmail
+  {
+    $this->compositePayment = $compositePayment;
+
+    return $this;
+  }
+
+  /**
+   * Returns compositePayments.
+   *
+   * @return CompositePayment
+   */
+  public function getCompositePayment():CompositePayment
+  {
+    return $this->compositePayment;
+  }
+
+  /**
+   * Sets $donationReceipt
+   *
+   * @param DonationReceipt $donationReceipt
+   *
+   * @return SentEmail $this
+   */
+  public function setDonationReceipt(DonationReceipt $donationReceipt):SentEmail
+  {
+    $this->donationReceipt = $donationReceipt;
+
+    return $this;
+  }
+
+  /**
+   * Returns donationReceipts.
+   *
+   * @return DonationReceipt
+   */
+  public function getDonationReceipt():DonationReceipt
+  {
+    return $this->donationReceipt;
+  }
+
+  /**
+   * Sets $invoice
+   *
+   * @param Invoice $invoice
+   *
+   * @return SentEmail $this
+   */
+  public function setInvoice(Invoice $invoice):SentEmail
+  {
+    $this->invoice = $invoice;
+
+    return $this;
+  }
+
+  /**
+   * Returns invoices.
+   *
+   * @return Invoice
+   */
+  public function getInvoice():Invoice
+  {
+    return $this->invoice;
+  }
+}

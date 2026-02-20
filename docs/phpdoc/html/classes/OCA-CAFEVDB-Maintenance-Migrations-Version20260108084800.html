@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -103,7 +106,7 @@
     Version20260108084800
 
         <span class="phpdocumentor-element__extends">
-        extends <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration">AbstractMigration</abbr></a>
+        extends <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration">AbstractStructuralMigration</abbr></a>
     </span>
     
             <div class="phpdocumentor-element__package">
@@ -124,11 +127,11 @@
 </div>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Maintenance/Migrations/Version20260108084800.php"><a href="files/maintenance-migrations-version20260108084800.html"><abbr title="Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Maintenance/Migrations/Version20260108084800.php"><a href="files/lib-maintenance-migrations-version20260108084800.html"><abbr title="lib/Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">35</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/lib/Maintenance/Migrations/Version20260108084800.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Auto-generated Migration: Please modify to your needs!</p>
@@ -151,6 +154,19 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html#constant_TRANSACTIONAL">TRANSACTIONAL</a>
+    <span>
+        &nbsp;= false                            </span>
+</dt>
+
+    </dl>
 
 
 <h4 id="toc-properties">
@@ -159,6 +175,12 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_appContainer">$appContainer</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_entityManager">$entityManager</a>
     <span>
@@ -200,7 +222,7 @@
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_isTransactional">isTransactional()</a>
+    <a class="" href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#method_isTransactional">isTransactional()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
@@ -218,6 +240,44 @@
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -protected ">
+    <h4 class="phpdocumentor-element__name" id="constant_TRANSACTIONAL">
+        TRANSACTIONAL
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html#constant_TRANSACTIONAL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractStructuralMigration.php"><a href="files/lib-database-doctrine-migrations-abstractstructuralmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractStructuralMigration.php">AbstractStructuralMigration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">34</span>
+
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.34" class="phpdocumentor-element-found-in__source" data-line="34" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractStructuralMigration.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">TRANSACTIONAL</span>
+    = <span class="phpdocumentor-signature__default-value">false</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -233,6 +293,44 @@
             -protected
                                                                     "
 >
+    <h4 class="phpdocumentor-element__name" id="property_appContainer">
+        $appContainer
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_appContainer" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/lib-database-doctrine-migrations-abstractmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">52</span>
+
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">protected</span>
+            <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+    <span class="phpdocumentor-signature__name">$appContainer</span>
+    </code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                                    "
+>
     <h4 class="phpdocumentor-element__name" id="property_entityManager">
         $entityManager
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_entityManager" class="headerlink"><i class="fas fa-link"></i></a>
@@ -241,11 +339,11 @@
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/database-doctrine-migrations-abstractmigration.html"><abbr title="Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/lib-database-doctrine-migrations-abstractmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
     </aside>
 
     
@@ -279,11 +377,11 @@
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/database-doctrine-migrations-abstractmigration.html"><abbr title="Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/lib-database-doctrine-migrations-abstractmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
     </aside>
 
     
@@ -322,17 +420,17 @@
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/database-doctrine-migrations-abstractmigration.html"><abbr title="Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/lib-database-doctrine-migrations-abstractmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -343,6 +441,13 @@
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$entityManager</span>
                 : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$appContainer</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -374,11 +479,11 @@
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Maintenance/Migrations/Version20260108084800.php"><a href="files/maintenance-migrations-version20260108084800.html"><abbr title="Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Maintenance/Migrations/Version20260108084800.php"><a href="files/lib-maintenance-migrations-version20260108084800.html"><abbr title="lib/Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/Maintenance/Migrations/Version20260108084800.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -420,11 +525,11 @@
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Maintenance/Migrations/Version20260108084800.php"><a href="files/maintenance-migrations-version20260108084800.html"><abbr title="Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Maintenance/Migrations/Version20260108084800.php"><a href="files/lib-maintenance-migrations-version20260108084800.html"><abbr title="lib/Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/lib/Maintenance/Migrations/Version20260108084800.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -456,15 +561,15 @@
 >
     <h4 class="phpdocumentor-element__name" id="method_isTransactional">
         isTransactional()
-        <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_isTransactional" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#method_isTransactional" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Maintenance/Migrations/Version20260108084800.php"><a href="files/maintenance-migrations-version20260108084800.html"><abbr title="Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Database/Doctrine/Migrations/AbstractMigration.php"><a href="files/lib-database-doctrine-migrations-abstractmigration.html"><abbr title="lib/Database/Doctrine/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/lib/Database/Doctrine/Migrations/AbstractMigration.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -476,10 +581,7 @@
     <div class="phpdocumentor-label-line">
         </div>
     
-        <section class="phpdocumentor-description"><p>This is a structural migration and thus cannot be transactional on
-MariaDB / MySQL.</p>
-</section>
-
+    
     
     
 
@@ -503,11 +605,11 @@ MariaDB / MySQL.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Maintenance/Migrations/Version20260108084800.php"><a href="files/maintenance-migrations-version20260108084800.html"><abbr title="Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Maintenance/Migrations/Version20260108084800.php"><a href="files/lib-maintenance-migrations-version20260108084800.html"><abbr title="lib/Maintenance/Migrations/Version20260108084800.php">Version20260108084800.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
-            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/lib/Maintenance/Migrations/Version20260108084800.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -543,7 +645,7 @@ MariaDB / MySQL.</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/Maintenance/Migrations/Version20260108084800.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/Maintenance/Migrations/Version20260108084800.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>
@@ -644,14 +746,22 @@ MariaDB / MySQL.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html#constant_TRANSACTIONAL">TRANSACTIONAL</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_appContainer">$appContainer</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_entityManager">$entityManager</a></li>
                                                     <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#property_l">$l</a></li>
                                             </ul>
@@ -663,7 +773,7 @@ MariaDB / MySQL.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_down">down()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_getDescription">getDescription()</a></li>
-                                            <li class=""><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_isTransactional">isTransactional()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html#method_isTransactional">isTransactional()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Maintenance-Migrations-Version20260108084800.html#method_up">up()</a></li>
                                     </ul>
             </li>

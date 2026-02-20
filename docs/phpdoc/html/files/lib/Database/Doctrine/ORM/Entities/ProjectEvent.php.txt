@@ -1,0 +1,384 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use DateTimeInterface;
+
+use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+
+/**
+ * ProjectEvents
+ */
+#[ORM\Table(name: 'ProjectEvents')]
+#[ORM\UniqueConstraint(columns: ['project_id', 'calendar_uri', 'event_uid', 'recurrence_id'])]
+#[ORM\UniqueConstraint(columns: ['project_id', 'calendar_id', 'event_uid', 'recurrence_id'])]
+#[ORM\UniqueConstraint(columns: ['project_id', 'calendar_uri', 'event_uri', 'recurrence_id'])]
+#[ORM\UniqueConstraint(columns: ['project_id', 'calendar_id', 'event_uri', 'recurrence_id'])]
+#[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository::class)]
+#[ORM\EntityListeners([\OCA\CAFEVDB\Listener\ProjectEventEntityListener::class])]
+#[ORM\HasLifecycleCallbacks]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted')]
+class ProjectEvent implements \ArrayAccess
+{
+  use CAFEVDB\Traits\ArrayTrait;
+  /**
+   * While it would be tempting to just use the calendar URI and event UID and
+   * perhaps the recurrence id as composite key it turns out that this is
+   * complicated for repeating events: calendar apps may choose to split
+   * existing series into two when changing "this event and future" events and
+   * at that point one needs to match the recurrence ids in order to "find"
+   * the correct new old event. The event will then be part of a new event
+   * series with a new UID.
+   */
+  use CAFEVDB\Traits\AutoIncrementTrait;
+  use CAFEVDB\Traits\DateTimeTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
+  private Project $project;
+
+  #[ORM\Column(type: 'integer', nullable: false)]
+  private int $calendarId;
+
+  #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
+  private string $calendarUri;
+
+  #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['collation' => 'ascii_general_ci'])]
+  private string $eventUid;
+
+  /**
+   * A unique identifier which links RELATED-TO events. This occurs if
+   * recurring event series are split but applying changes to "this and
+   * future" events.
+   */
+  #[ORM\Column(type: 'uuid_binary', nullable: true)]
+  private ?UuidInterface $seriesUid = null;
+
+  #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
+  private string $eventUri;
+
+  /**
+   * The recurrence-id of the event instance as Unix timestamp. Non-recurring
+   * events have an id of 0.
+   */
+  #[ORM\Column(type: 'bigint', nullable: false, options: ['default' => 0])]
+  private int $recurrenceId = 0;
+
+  /**
+   * The SEQUENCE number tied to the event. We always use the highest
+   * sequence, but technically this is part of the id.
+   */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+  private int $sequence = 0;
+
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private Types\EnumVCalendarType $type;
+
+  /**
+   * Linked ProjectParticipantField entities which can be used to record
+   * absence from rehearsals or other calendar events. As calendar events are
+   * possibly repeating or we need a list of linked fields in order to record
+   * the participation for each event instance.
+   */
+  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', cascade: ['persist', 'remove'], orphanRemoval: true)]
+  #[Gedmo\SoftDeleteableCascade(undelete: true)]
+  private ?ProjectParticipantField $absenceField = null;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
+    $this->arrayCTOR();
+  }
+  // phpcs:enable
+
+  /**
+   * Set projectId.
+   *
+   * @param null|Project $project
+   *
+   * @return ProjectEvent
+   */
+  public function setProject($project):ProjectEvent
+  {
+    $this->project = $project;
+
+    return $this;
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project|null
+   */
+  public function getProject():?Project
+  {
+    return $this->project;
+  }
+
+  /**
+   * Set calendarId.
+   *
+   * @param null|int $calendarId
+   *
+   * @return ProjectEvent
+   */
+  public function setCalendarId($calendarId):ProjectEvent
+  {
+    $this->calendarId = $calendarId;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarId.
+   *
+   * @return int
+   */
+  public function getCalendarId()
+  {
+    return $this->calendarId;
+  }
+
+  /**
+   * Set calendarUri.
+   *
+   * @param string $calendarUri
+   *
+   * @return ProjectEvent
+   */
+  public function setCalendarUri(string $calendarUri):ProjectEvent
+  {
+    $this->calendarUri = $calendarUri;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarUri.
+   *
+   * @return string
+   */
+  public function getCalendarUri():string
+  {
+    return $this->calendarUri;
+  }
+
+  /**
+   * Set eventUri.
+   *
+   * @param string|null $eventUri
+   *
+   * @return ProjectEvent
+   */
+  public function setEventUri($eventUri)
+  {
+    $this->eventUri = $eventUri;
+
+    return $this;
+  }
+
+  /**
+   * Get eventUri.
+   *
+   * @return string|null
+   */
+  public function getEventUri()
+  {
+    return $this->eventUri;
+  }
+
+  /**
+   * Set eventUid.
+   *
+   * @param string|null $eventUid
+   *
+   * @return ProjectEvent
+   */
+  public function setEventUid($eventUid):ProjectEvent
+  {
+    $this->eventUid = $eventUid;
+
+    return $this;
+  }
+
+  /**
+   * Get eventUid.
+   *
+   * @return string|null
+   */
+  public function getEventUid():?string
+  {
+    return $this->eventUid;
+  }
+
+  /**
+   * Set seriesUid.
+   *
+   * @param string|null $seriesUid
+   *
+   * @return ProjectEvent
+   */
+  public function setSeriesUid(mixed $seriesUid):ProjectEvent
+  {
+    $seriesUid = Uuid::asUuid($seriesUid);
+
+    $this->seriesUid = $seriesUid;
+
+    return $this;
+  }
+
+  /**
+   * Get seriesUid.
+   *
+   * @return UuidInterface
+   */
+  public function getSeriesUid():?UuidInterface
+  {
+    return $this->seriesUid;
+  }
+
+  /**
+   * Set sequence.
+   *
+   * @param int $sequence
+   *
+   * @return ProjectEvent
+   */
+  public function setSequence(int $sequence):ProjectEvent
+  {
+    $this->sequence = $sequence;
+
+    return $this;
+  }
+
+  /**
+   * Get sequence.
+   *
+   * @return int
+   */
+  public function getSequence():int
+  {
+    return $this->sequence;
+  }
+
+  /**
+   * Set recurrenceId.
+   *
+   * @param mixed $recurrenceId
+   *
+   * @return ProjectEvent
+   */
+  public function setRecurrenceId(mixed $recurrenceId):ProjectEvent
+  {
+    if ($recurrenceId instanceof DateTimeInterface) {
+      $recurrenceId = $recurrenceId->getTimestamp();
+    }
+    $this->recurrenceId = $recurrenceId;
+
+    return $this;
+  }
+
+  /**
+   * Get recurrenceId.
+   *
+   * @return int
+   */
+  public function getRecurrenceId():int
+  {
+    return $this->recurrenceId;
+  }
+
+  /**
+   * Set type.
+   *
+   * @param Types\EnumVCalendarType|null|string $type
+   *
+   * @return ProjectEvent
+   */
+  public function setType(mixed $type = null):ProjectEvent
+  {
+    if ($type === null) {
+      $this->type = $type;
+    } else {
+      $this->type = Types\EnumVCalendarType::get($type);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get type.
+   *
+   * @return Types\EnumVCalendarType|null
+   */
+  public function getType(): ?Types\EnumVCalendarType
+  {
+    return $this->type;
+  }
+
+  /**
+   * Set absenceField.
+   *
+   * @param null|ProjectParticipantField $absenceField
+   *
+   * @return ProjectEvent
+   */
+  public function setAbsenceField(?ProjectParticipantField $absenceField):ProjectEvent
+  {
+    $this->absenceField = $absenceField;
+
+    return $this;
+  }
+
+  /**
+   * Get absenceField.
+   *
+   * @return ProjectParticipantField
+   */
+  public function getAbsenceField():?ProjectParticipantField
+  {
+    return $this->absenceField;
+  }
+
+  /** @return \true iff this is the registration event of the associated project. */
+  public function isRegistrationEvent(): bool
+  {
+    return $this === $this->project?->getRegistrationCalendarEvent();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->eventUri . ':' . $this->recurrenceId . '@' . $this->calendarUri;
+  }
+}

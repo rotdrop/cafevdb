@@ -1,0 +1,118 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\PageRenderer;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+
+/** Blog renderer class, rendering is done through legacy templates.*/
+#[TSAttributes\TypeScript]
+class Blog extends AbstractPageRenderer
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
+  /**
+   * @var string
+   *
+   * The legacy template to load.
+   */
+  public const TEMPLATE = EnumTemplate::BLOG->value;
+
+  /**
+   * @param string $appName
+   *
+   * @param IL10N $l
+   *
+   * @param string $userId
+   *
+   * @param BlogMapper $blogMapper
+   */
+  public function __construct(
+    string $appName,
+    protected IL10N $l,
+    private string $userId,
+    private BlogMapper $blogMapper,
+  ) {
+    parent::__construct($appName);
+  }
+
+  /** {@inheritdoc} */
+  public function shortTitle(): string
+  {
+    return 'blog';
+  }
+
+  /** {@inheritdoc} */
+  public function headerText(): string
+  {
+    return self::templateResponse(
+      'fragments/header-texts/blog',
+      [ 'cssPrefix' => $this->cssPrefix() ],
+      Constants::RENDER_AS_BLANK,
+    )->render();
+  }
+
+  /** {@inheritdoc} */
+  public function navigationItems():array
+  {
+    return [
+      Projects::navigationItem(),
+      AllMusicians::navigationItem(),
+      Instruments::navigationItem(),
+      ProjectParticipantFields::navigationItem(),
+      ProjectInstrumentationNumbers::navigationItem(),
+    ];
+  }
+
+  /** {@inheritdoc} */
+  public function cssClass():string
+  {
+    return 'blog-page';
+  }
+
+  /**
+   * Determine if a new notification is pending, forward to BlogMapper::notificationsPending().
+   *
+   * @return true
+   */
+  public function notificationsPending():bool
+  {
+    return $this->blogMapper->notificationPending($this->userId);
+  }
+
+  /**
+   * Forward to BlogMapper::findThreadDisplay().
+   *
+   * @return array
+   */
+  public function findThreadDisplay():array
+  {
+    return $this->blogMapper->findThreadDisplay();
+  }
+}

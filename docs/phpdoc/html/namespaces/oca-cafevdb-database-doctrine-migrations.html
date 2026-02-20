@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -117,7 +120,10 @@
 
     </h4>
     <dl class="phpdocumentor-table-of-contents">
-                    <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration">AbstractMigration</abbr></a></dt><dd>Abstract base class, currently only pulls in IL10N.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-DependencyFactory.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory">DependencyFactory</abbr></a></dt><dd>Augment the stock dependecy factory partly by NC dependency injection. So
+                    <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractMigration">AbstractMigration</abbr></a></dt><dd>Abstract base class for migrations in order to make the entity manager
+available for transactional migrations. The child class is required to
+define a boolean constant TRANSACTIONAL in order to finalize the
+implementation of self::isTransational().</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractStructuralMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractStructuralMigration">AbstractStructuralMigration</abbr></a></dt><dd>Abstract base class for transactional migrations.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-AbstractTransactionalMigration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\AbstractTransactionalMigration">AbstractTransactionalMigration</abbr></a></dt><dd>Abstract base class for transactional migrations.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Migrations-DependencyFactory.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Migrations\DependencyFactory">DependencyFactory</abbr></a></dt><dd>Augment the stock dependecy factory partly by NC dependency injection. So
 far only the migration instances are affected.</dd>    </dl>
 
 

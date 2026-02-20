@@ -1,0 +1,167 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024-2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Controller;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
+use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
+
+use OCP\AppFramework\Controller;
+use OCP\IRequest;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
+use OCP\AppFramework\Http\DataResponse;
+
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
+
+/** Handle subscription management callbacks */
+#[TSAttributes\TypeScript]
+class MailingListsController extends Controller
+{
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  public const END_POINT = 'mailing-lists';
+
+  public const OPERATION_INVITE = 'invite';
+  const OPERATION_SUBSCRIBE = 'subscribe';
+  const OPERATION_UNSUBSCRIBE = 'unsubscribe';
+  const OPERATION_ACCEPT = 'accept';
+  const OPERATION_REJECT = 'reject';
+  const OPERATION_RELOAD = 'reload';
+  const OPERATIONS = [
+    self::OPERATION_INVITE,
+    self::OPERATION_SUBSCRIBE,
+    self::OPERATION_UNSUBSCRIBE,
+    self::OPERATION_ACCEPT,
+    self::OPERATION_REJECT,
+    self::OPERATION_RELOAD,
+  ];
+
+  /** {@inheritdoc} */
+  public function __construct(
+    string $appName,
+    IRequest $request,
+    protected ConfigService $configService,
+    private MailingListsService $listsService,
+  ) {
+    parent::__construct($appName, $request);
+
+    $this->l = $this->l10n();
+  }
+
+  /**
+   * @param string|EnumMailingListOperation $operation Operation to perform.
+   *
+   * @param string $list List id of FQDN.
+   *
+   * @param string $email Subscription email address.
+   *
+   * @param null|string $displayName Display name on the list.
+   *
+   * @param null|string $role Rold, member vs. moderator vs. owner.
+   *
+   * @return DataResponse
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT. '/{operation}')]
+  public function serviceSwitch(
+    string|EnumMailingListOperation $operation,
+    string $list,
+    string $email,
+    ?string $displayName = null,
+    ?string $role = null,
+  ): DataResponse {
+    $operation = EnumMailingListOperation::get($operation);
+    if ($list == 'announcements') {
+      $list = $this->getConfigValue(ConfigConstants::ANNOUNCEMENTS_MAILING_LIST_KEY);
+    }
+    try {
+      switch ($operation) {
+        case EnumMailingListOperation::INVITE:
+          $this->logInfo('INVITE ' . $list . ' / ' . $email);
+          $this->listsService->invite($list, email: $email, displayName: $displayName);
+          break;
+        case EnumMailingListOperation::SUBSCRIBE:
+          $this->logInfo('SUBSCRIBE ' . $list . ' / ' . $email);
+          $this->listsService->subscribe($list, email: $email, displayName: $displayName, role: $role);
+          break;
+        case EnumMailingListOperation::UNSUBSCRIBE:
+          $this->logInfo('UNSUBSCRIBE ' . $list . ' / ' . $email);
+          $this->listsService->unsubscribe($list, $email);
+          break;
+        case EnumMailingListOperation::ACCEPT:
+          $this->logInfo('ACCEPT SUBSCRIPTION '  . $list  . ' / ' . $email);
+          $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_ACCEPT);
+          break;
+        case EnumMailingListOperation::REJECT:
+          $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
+          $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
+          break;
+        case EnumMailingListOperation::RELOAD:
+          break;
+        default:
+          return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
+      }
+      $status = $this->listsService->getSubscriptionStatus($list, $email);
+    } catch (HttpClientConnectException $e) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('The mailing-list service is unreachable'), 0, $e);
+    }
+
+    return self::dataResponse([
+      'status' =>  $status,
+    ]);
+  }
+
+  /**
+   * Get the status of the queried email-address.
+   *
+   * @param string $listId The list id.
+   *
+   * @param string $email Subscription email address.
+   *
+   * @return DataResponse
+   * ```
+   * [
+   *   'status' => { 'subscribed', 'unsubscribed', 'invited', 'waiting' }
+   * ]
+   * ```
+   */
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/mailing-lists/{listId}/{email}')]
+  public function getStatus(string $listId, string $email):DataResponse
+  {
+    if (empty($listId)) {
+      return self::grumble($this->l->t('List-id must not be empty.'));
+    }
+    if (empty($email)) {
+      return self::grumble($this->l->t('Email-address must not be empty.'));
+    }
+    $status = $this->listsService->getSubscriptionStatus($listId, $email);
+    return self::dataResponse([ 'status' => $status ]);
+  }
+}

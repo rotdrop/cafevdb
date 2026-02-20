@@ -64,20 +64,23 @@
                 <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
                 
             </li>
+                    <li>
+                <a href="namespaces/oca-rotdrop.html" class="">RotDrop</a>
+                
+            </li>
             </ul>
 
                         </section>
                 <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
-    <a href="packages/Application.html" class="">Application</a>
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
 </h4>
 
                         </section>
             
     <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
-                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
@@ -107,11 +110,11 @@
     </h2>
 
         <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/lib-pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Convenience hack which generates an musician entity from the data found in
@@ -465,7 +468,7 @@ entity class.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter">disableFilter()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: bool|null    </span>
 </dt>
 <dd>Disable the given filter. In contrast to the upstream-method does
 not throw an exception if the filter is not enabled.</dd>
@@ -473,7 +476,7 @@ not throw an exception if the filter is not enabled.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a>
     <span>
-                                &nbsp;: bool    </span>
+                                &nbsp;: bool|null    </span>
 </dt>
 <dd>Enable the given filter.</dd>
 
@@ -1027,6 +1030,13 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
 flags.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil">sleepUntil()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Finally this is a wrapper around time_sleep_until()</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup">subAdminGroup()</a>
     <span>
                                 &nbsp;: null|<abbr title="\OCP\IGroup">IGroup</abbr>    </span>
@@ -1136,11 +1146,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1174,11 +1184,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -1212,11 +1222,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -1250,11 +1260,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -1288,11 +1298,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/lib-pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
     </aside>
 
     
@@ -1326,11 +1336,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1364,11 +1374,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/lib-pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">40</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
     </aside>
 
     
@@ -1402,11 +1412,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/lib-pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
     </aside>
 
     
@@ -1440,11 +1450,11 @@ transformations.</dd>
                                             </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1483,11 +1493,11 @@ transformations.</dd>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service of the embedding cloud
@@ -1524,11 +1534,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service for convenience.</p>
@@ -1564,11 +1574,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1005</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1005" class="phpdocumentor-element-found-in__source" data-line="1005" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -1614,11 +1624,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1017</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1017" class="phpdocumentor-element-found-in__source" data-line="1017" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -1664,11 +1674,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">577</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.577" class="phpdocumentor-element-found-in__source" data-line="577" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1731,11 +1741,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the value for the given key.</p>
@@ -1779,11 +1789,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">969</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1845,11 +1855,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">979</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.979" class="phpdocumentor-element-found-in__source" data-line="979" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -1899,11 +1909,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1047</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -1963,11 +1973,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">390</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Would rather belong to the EncryptionService.</p>
@@ -2015,11 +2025,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">352</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get a possibly encrypted config value.</p>
@@ -2083,11 +2093,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">816</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.816" class="phpdocumentor-element-found-in__source" data-line="816" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2126,11 +2136,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2165,11 +2175,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1031</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1031" class="phpdocumentor-element-found-in__source" data-line="1031" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -2222,11 +2232,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2297,11 +2307,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">993</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.993" class="phpdocumentor-element-found-in__source" data-line="993" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -2354,11 +2364,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2393,11 +2403,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2432,11 +2442,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2471,11 +2481,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">927</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.927" class="phpdocumentor-element-found-in__source" data-line="927" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.927" class="phpdocumentor-element-found-in__source" data-line="927" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2510,11 +2520,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2549,11 +2559,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2588,11 +2598,11 @@ container.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">511</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.511" class="phpdocumentor-element-found-in__source" data-line="511" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
@@ -2645,11 +2655,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Clear the cache.</p>
@@ -2681,11 +2691,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">492</span>
+    <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
@@ -2737,11 +2747,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">336</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.336" class="phpdocumentor-element-found-in__source" data-line="336" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -2792,11 +2802,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">372</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.372" class="phpdocumentor-element-found-in__source" data-line="372" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
@@ -2842,11 +2852,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">480</span>
+    <span class="phpdocumentor-element-found-in__line">482</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
@@ -2905,11 +2915,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Creates a Query from a named query.</p>
@@ -2955,11 +2965,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Creates a new Query object.</p>
@@ -3007,11 +3017,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">438</span>
+    <span class="phpdocumentor-element-found-in__line">440</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.438" class="phpdocumentor-element-found-in__source" data-line="438" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.440" class="phpdocumentor-element-found-in__source" data-line="440" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
@@ -3047,11 +3057,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">448</span>
+    <span class="phpdocumentor-element-found-in__line">450</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.450" class="phpdocumentor-element-found-in__source" data-line="450" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
@@ -3087,11 +3097,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">460</span>
+    <span class="phpdocumentor-element-found-in__line">462</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.462" class="phpdocumentor-element-found-in__source" data-line="462" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -3151,11 +3161,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1164</span>
+    <span class="phpdocumentor-element-found-in__line">1174</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1164" class="phpdocumentor-element-found-in__source" data-line="1164" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1174" class="phpdocumentor-element-found-in__source" data-line="1174" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3190,11 +3200,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">853</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.853" class="phpdocumentor-element-found-in__source" data-line="853" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.853" class="phpdocumentor-element-found-in__source" data-line="853" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3229,11 +3239,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">313</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.313" class="phpdocumentor-element-found-in__source" data-line="313" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3284,11 +3294,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">252</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -3332,11 +3342,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">212</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3388,11 +3398,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dependency injection of $className.</p>
@@ -3434,11 +3444,11 @@ entity class.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">413</span>
+    <span class="phpdocumentor-element-found-in__line">415</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Disable the given filter. In contrast to the upstream-method does
@@ -3446,7 +3456,7 @@ not throw an exception if the filter is not enabled.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">disableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">disableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3469,9 +3479,10 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The previous isEnabled() state of the filter.</p>
+                <section class="phpdocumentor-description"><p>The previous isEnabled() state of the filter or \null if
+the filter does not exist.</p>
 </section>
 
             </section>
@@ -3489,18 +3500,18 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">400</span>
+    <span class="phpdocumentor-element-found-in__line">401</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.400" class="phpdocumentor-element-found-in__source" data-line="400" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.401" class="phpdocumentor-element-found-in__source" data-line="401" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable the given filter.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3517,7 +3528,7 @@ not throw an exception if the filter is not enabled.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-argument-list__argument__name">$state</span>
-                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -3530,9 +3541,10 @@ not throw an exception if the filter is not enabled.</p>
     
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The old state of the filter.</p>
+                <section class="phpdocumentor-description"><p>The old state of the filter or \null if the filter does not
+exist.</p>
 </section>
 
             </section>
@@ -3550,11 +3562,11 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">303</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.303" class="phpdocumentor-element-found-in__source" data-line="303" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3605,11 +3617,11 @@ not throw an exception if the filter is not enabled.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -3683,11 +3695,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">258</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.258" class="phpdocumentor-element-found-in__source" data-line="258" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -3722,11 +3734,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">466</span>
+    <span class="phpdocumentor-element-found-in__line">468</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.466" class="phpdocumentor-element-found-in__source" data-line="466" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.468" class="phpdocumentor-element-found-in__source" data-line="468" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -3757,11 +3769,11 @@ key matches our key, then we accept the key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">310</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.310" class="phpdocumentor-element-found-in__source" data-line="310" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -3833,11 +3845,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">293</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
@@ -3887,11 +3899,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">347</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.347" class="phpdocumentor-element-found-in__source" data-line="347" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
@@ -3962,11 +3974,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">329</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.329" class="phpdocumentor-element-found-in__source" data-line="329" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
@@ -4045,11 +4057,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
@@ -4106,11 +4118,11 @@ during the search.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">263</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.263" class="phpdocumentor-element-found-in__source" data-line="263" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
@@ -4192,11 +4204,11 @@ makes use of optimistic locking fails.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">871</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -4263,11 +4275,11 @@ makes use of optimistic locking fails.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">900</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -4341,11 +4353,11 @@ makes use of optimistic locking fails.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1098</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1098" class="phpdocumentor-element-found-in__source" data-line="1098" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -4407,11 +4419,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1110</span>
+    <span class="phpdocumentor-element-found-in__line">1120</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1110" class="phpdocumentor-element-found-in__source" data-line="1110" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1120" class="phpdocumentor-element-found-in__source" data-line="1120" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4446,11 +4458,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">264</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.264" class="phpdocumentor-element-found-in__source" data-line="264" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4485,11 +4497,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">226</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -4542,11 +4554,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">699</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.699" class="phpdocumentor-element-found-in__source" data-line="699" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.699" class="phpdocumentor-element-found-in__source" data-line="699" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4585,11 +4597,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">588</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4624,11 +4636,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">594</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4663,11 +4675,11 @@ using the default time-zone if none is specified.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set and get the given name as the current database target entity.</p>
@@ -4718,11 +4730,11 @@ database entity.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">828</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.828" class="phpdocumentor-element-found-in__source" data-line="828" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -4768,11 +4780,11 @@ database entity.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">650</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.650" class="phpdocumentor-element-found-in__source" data-line="650" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.650" class="phpdocumentor-element-found-in__source" data-line="650" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the full path to the document templates folder.</p>
@@ -4836,11 +4848,11 @@ dirname part of the path.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">775</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4880,11 +4892,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">606</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.606" class="phpdocumentor-element-found-in__source" data-line="606" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.606" class="phpdocumentor-element-found-in__source" data-line="606" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4919,11 +4931,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">600</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -4958,11 +4970,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">691</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5001,11 +5013,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5044,11 +5056,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">530</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.530" class="phpdocumentor-element-found-in__source" data-line="530" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all the sub-admins of the given or the configured orchestra group.</p>
@@ -5096,11 +5108,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/lib-pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch instruments info, @see OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository.</p>
@@ -5136,11 +5148,11 @@ donationreceipts.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">789</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5180,11 +5192,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">937</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.937" class="phpdocumentor-element-found-in__source" data-line="937" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5229,11 +5241,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">921</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.921" class="phpdocumentor-element-found-in__source" data-line="921" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.921" class="phpdocumentor-element-found-in__source" data-line="921" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -5279,11 +5291,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php"><a href="files/lib-pagerenderer-fieldtraits-instrumentstrait.html"><abbr title="lib/PageRenderer/FieldTraits/InstrumentsTrait.php">InstrumentsTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/InstrumentsTrait.php.txt"></a>
     </aside>
 
     
@@ -5337,11 +5349,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5380,11 +5392,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">802</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5423,11 +5435,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">731</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.731" class="phpdocumentor-element-found-in__source" data-line="731" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.731" class="phpdocumentor-element-found-in__source" data-line="731" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5466,11 +5478,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">683</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.683" class="phpdocumentor-element-found-in__source" data-line="683" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5509,11 +5521,11 @@ sent-out invoices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">219</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
@@ -5582,11 +5594,11 @@ without actually loading it, if the entity is not yet loaded.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">612</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.612" class="phpdocumentor-element-found-in__source" data-line="612" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5621,11 +5633,11 @@ without actually loading it, if the entity is not yet loaded.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">625</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.625" class="phpdocumentor-element-found-in__source" data-line="625" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create the full-path for the sub-folder corresponding to the given config
@@ -5672,11 +5684,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1182</span>
+    <span class="phpdocumentor-element-found-in__line">1192</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1182" class="phpdocumentor-element-found-in__source" data-line="1182" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1192" class="phpdocumentor-element-found-in__source" data-line="1192" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -5725,11 +5737,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1196</span>
+    <span class="phpdocumentor-element-found-in__line">1206</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1196" class="phpdocumentor-element-found-in__source" data-line="1196" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1206" class="phpdocumentor-element-found-in__source" data-line="1206" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -5782,11 +5794,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1210</span>
+    <span class="phpdocumentor-element-found-in__line">1220</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1210" class="phpdocumentor-element-found-in__source" data-line="1210" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1220" class="phpdocumentor-element-found-in__source" data-line="1220" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -5839,11 +5851,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1224</span>
+    <span class="phpdocumentor-element-found-in__line">1234</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1224" class="phpdocumentor-element-found-in__source" data-line="1224" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1234" class="phpdocumentor-element-found-in__source" data-line="1234" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -5896,11 +5908,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">747</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5939,11 +5951,11 @@ key.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">761</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -5983,11 +5995,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1104</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1104" class="phpdocumentor-element-found-in__source" data-line="1104" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6026,11 +6038,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">840</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.840" class="phpdocumentor-element-found-in__source" data-line="840" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.840" class="phpdocumentor-element-found-in__source" data-line="840" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -6076,11 +6088,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6115,11 +6127,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6180,11 +6192,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">484</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6233,11 +6245,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6284,11 +6296,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">474</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6327,11 +6339,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6366,11 +6378,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1065</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1065" class="phpdocumentor-element-found-in__source" data-line="1065" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -6437,11 +6449,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">506</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6497,11 +6509,11 @@ exemption notices.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">563</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check if the currently logged in or given user-id belongs to the
@@ -6548,11 +6560,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">518</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6608,11 +6620,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
     
@@ -6660,11 +6672,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
     
@@ -6722,11 +6734,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">113</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compute the key in to the PME $row array for the given column.</p>
@@ -6804,11 +6816,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6843,11 +6855,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">947</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.947" class="phpdocumentor-element-found-in__source" data-line="947" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6892,11 +6904,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">957</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.957" class="phpdocumentor-element-found-in__source" data-line="957" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -6941,11 +6953,11 @@ dedicated sub-admin group.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">428</span>
+    <span class="phpdocumentor-element-found-in__line">430</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.428" class="phpdocumentor-element-found-in__source" data-line="428" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
@@ -6999,11 +7011,11 @@ return a new collection containing these elements.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php"><a href="files/lib-pagerenderer-fieldtraits-musicianfromrowtrait.html"><abbr title="lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php">MusicianFromRowTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fill an instance of Entities\Musician with the data from a legacy
@@ -7082,11 +7094,11 @@ PHPMyEdit query.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
@@ -7158,11 +7170,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">525</span>
+    <span class="phpdocumentor-element-found-in__line">527</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.527" class="phpdocumentor-element-found-in__source" data-line="527" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
     
@@ -7222,11 +7234,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a QueryBuilder instance</p>
@@ -7262,11 +7274,11 @@ this EntityManager as NEW. Do not pass detached entities to the persist operatio
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">66</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
     
@@ -7316,11 +7328,11 @@ lookup table of PHPMyEdit.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
     
@@ -7369,11 +7381,11 @@ lookup table of PHPMyEdit.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php"><a href="files/lib-pagerenderer-fieldtraits-queryfieldtrait.html"><abbr title="lib/PageRenderer/FieldTraits/QueryFieldTrait.php">QueryFieldTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/lib/PageRenderer/FieldTraits/QueryFieldTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Compute the key in to the PME $row array for the given column.</p>
@@ -7424,11 +7436,11 @@ where N is determined by a lookup table of PHPMyEdit.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">385</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
@@ -7479,11 +7491,11 @@ to allow for &quot;-&gt;&quot; chaining.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Removes an entity instance.</p>
@@ -7580,7 +7592,7 @@ or not. This parameter is ignored if $flush is false.</p>
                     <span class="phpdocumentor-tag__name">throws</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Exceptions-DatabaseEntityNotFoundException.html"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityNotFoundException">DatabaseEntityNotFoundException</abbr></a></span>
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Exceptions\DatabaseEntityNotFoundException">DatabaseEntityNotFoundException</abbr></span>
                                                             
                                              
                                     </dd>
@@ -7602,11 +7614,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">274</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.274" class="phpdocumentor-element-found-in__source" data-line="274" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7649,11 +7661,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -7706,11 +7718,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/EntityManagerTrait.php"><a href="files/lib-traits-entitymanagertrait.html"><abbr title="lib/Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/Traits/EntityManagerTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/lib/Traits/EntityManagerTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the given name as the current database target entity.</p>
@@ -7752,11 +7764,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user.</p>
@@ -7806,11 +7818,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">420</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user id.</p>
@@ -7862,11 +7874,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">200</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7927,11 +7939,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -7966,11 +7978,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">455</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.455" class="phpdocumentor-element-found-in__source" data-line="455" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8009,11 +8021,11 @@ or not. This parameter is ignored if $flush is false.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1237</span>
+    <span class="phpdocumentor-element-found-in__line">1247</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1237" class="phpdocumentor-element-found-in__source" data-line="1237" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1247" class="phpdocumentor-element-found-in__source" data-line="1247" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -8054,17 +8066,67 @@ flags.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_sleepUntil">
+        sleepUntil()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1114</span>
+
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1114" class="phpdocumentor-element-found-in__source" data-line="1114" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Finally this is a wrapper around time_sleep_until()</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">sleepUntil</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">float&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timestamp</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$timestamp</span>
+                : <span class="phpdocumentor-argument-list__argument__type">float</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_subAdminGroup">
         subAdminGroup()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">550</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.550" class="phpdocumentor-element-found-in__source" data-line="550" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the dedicated admin-group if it exists.</p>
@@ -8100,11 +8162,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">540</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.540" class="phpdocumentor-element-found-in__source" data-line="540" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.540" class="phpdocumentor-element-found-in__source" data-line="540" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the id of the dedicated admin-group which contains all sub-admins</p>
@@ -8140,11 +8202,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8179,11 +8241,11 @@ flags.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">449</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fake execution with other user-id. Note that this function will
@@ -8247,11 +8309,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">1080</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1080" class="phpdocumentor-element-found-in__source" data-line="1080" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1080" class="phpdocumentor-element-found-in__source" data-line="1080" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigConstants::formatTimeStamp() with the current date and time.</p>
@@ -8304,11 +8366,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1146</span>
+    <span class="phpdocumentor-element-found-in__line">1156</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1146" class="phpdocumentor-element-found-in__source" data-line="1146" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1156" class="phpdocumentor-element-found-in__source" data-line="1156" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8343,11 +8405,11 @@ exception.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1123</span>
+    <span class="phpdocumentor-element-found-in__line">1133</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.1133" class="phpdocumentor-element-found-in__source" data-line="1133" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -8394,11 +8456,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8433,11 +8495,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">402</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8484,11 +8546,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8523,11 +8585,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8562,11 +8624,11 @@ transformations.</p>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="lib/Traits/ConfigTrait.php"><a href="files/lib-traits-configtrait.html"><abbr title="lib/Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
     <span class="phpdocumentor-element-found-in__line">326</span>
 
-            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/Traits/ConfigTrait.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-PageRenderer-FieldTraits-MusicianFromRowTrait.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/lib/Traits/ConfigTrait.php.txt"></a>
     </aside>
 
     
@@ -8621,7 +8683,7 @@ be verified.</p>
     <div class="phpdocumentor-modal-bg" data-exit-button></div>
     <div class="phpdocumentor-modal-container">
         <div class="phpdocumentor-modal-content">
-            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
+            <pre style="max-height: 500px; overflow-y: scroll" data-src="files/lib/PageRenderer/FieldTraits/MusicianFromRowTrait.php.txt" class="language-php line-numbers linkable-line-numbers"></pre>
         </div>
         <button data-exit-button class="phpdocumentor-modal__close">&times;</button>
     </div>
@@ -8867,6 +8929,7 @@ be verified.</p>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shareOwner">shareOwner()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shareOwnerId">shareOwnerId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_shouldDebug">shouldDebug()</a></li>
+                                            <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_sleepUntil">sleepUntil()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroup">subAdminGroup()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminGroupId">subAdminGroupId()</a></li>
                                             <li class=""><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_subAdminManager">subAdminManager()</a></li>

@@ -1,0 +1,90 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2022, 2025, 2026 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\PageRenderer;
+
+use OCA\CAFEVDB\PageRenderer\DTO\SidebarNavigationItem;
+
+/** Page-renderer interface. */
+interface IPageRenderer extends IRenderer
+{
+  /**
+   * Short title for heading.
+   *
+   * @return string
+   */
+  public function shortTitle(): string;
+
+  /**
+   * Header text informations.
+   *
+   * @return string
+   */
+  public function headerText(): string;
+
+  /**
+   * Set table-navigation enable/disable.
+   *
+   * @param bool $enable
+   *
+   * @return void
+   */
+  public function navigation(bool $enable): void;
+
+  /**
+   * Return a list of navigation items:
+   * ```
+   * [ NAV_ITEM0, NAV_ITEM1, ... ]
+   * ```
+   *
+   * @return array<SidebarNavigationItem>
+   */
+  public function navigationItems(): array;
+
+  /**
+   * Return the navigation item for this renderer.
+   *
+   * @return SidebarNavigationItem
+   */
+  public static function navigationItem(?int $projectId = null, ?string $projectName = null): SidebarNavigationItem;
+
+  /**
+   * A bitwise or of the flags defined in the AuthorizationService class. This
+   * is the bitwise 'or' of the cases of the
+   * \OCA\CAFEVDB\Service\AuthorizationService\EnumAppPermissions.
+   *
+   * @return int
+   */
+  public static function requiredPermissions(): int;
+
+  /**
+   * Run underlying table-manager (phpMyEdit for now).
+   *
+   * @param array $options Override options. Otherwise the state
+   * set by render(false) are used.
+   *
+   * @return void
+   */
+  public function execute(array $options = []): void;
+}
