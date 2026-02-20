@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2015, 2020, 2022, 2024-2025 Claus-Justus Heine
+ * @copyright 2011-2015, 2020, 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ class PhoneNumberService
   private $currentRegion = false;
   private $defaultPrefix = false;
   private $defaultRegion = false;
-  private $numberTypes = false;
+  private array $numberTypes = [];
 
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -123,7 +123,7 @@ class PhoneNumberService
    */
   private function translateNumberType(PhoneNumberType $type):string
   {
-    if ($this->numberTypes === false) {
+    if (empty($this->numberTypes)) {
       foreach (PhoneNumberType::cases() as $enum) {
         $name = $enum->name;
         $id = $enum->value;
