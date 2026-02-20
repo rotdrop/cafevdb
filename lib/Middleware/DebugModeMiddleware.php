@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,7 +69,7 @@ class DebugModeMiddleware extends Middleware
       $reportLocation = $this->getConfigValue('cspfailurereporting', null);
       if (empty($this->reportLocation)) {
         $cspFailureToken = $this->getAppValue(ConfigConstants::CSP_FAILURE_TOKEN_KEY);
-        $reportLocation = $this->urlGenerator()->linkToRoute($this->appName().'.csp_violation.post', ['operation' => 'report']);
+        $reportLocation = $this->urlGenerator()->linkToRoute($this->appName().'.cspviolation.post', ['operation' => 'report']);
         $reportLocation .= '?cspFailureToken=' . urlencode($cspFailureToken);
       }
       $csp = $response->getContentSecurityPolicy();
