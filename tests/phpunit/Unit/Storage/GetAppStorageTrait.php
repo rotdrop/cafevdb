@@ -110,7 +110,7 @@ trait GetAppStorageTrait
           if (empty($this->nodes[$folderId]['content'][$nodeName])) {
             throw new NotFoundException;
           }
-          return $this->nodex[$folderId]['content'][$nodeName];
+          return $this->nodes[$folderId]['content'][$nodeName];
         },
       );
       $folder->method('newFile')->willReturnCallback(
@@ -135,7 +135,7 @@ trait GetAppStorageTrait
           $node->method('putContent')->willReturnCallback(
             function($data) use ($nodeId) {
               $this->nodes[$nodeId]['content'] = $data;
-              $this->nodes[$nodeId]['mtime'] = $this->timeFactory->getTime();
+              $this->nodes[$nodeId]['mtime'] = $this->timeFactory->now()->getTimestamp();
             },
           );
           $node->method('getMTime')->willReturnCallback(fn() => $this->nodes[$nodeId]['mtime']);
