@@ -138,6 +138,6 @@ class CryptoControllerTest extends TestCase
     $item = $data[0];
     $this->assertInstanceOf(UnsealedData::class, $item);
     $this->assertInstanceOf(IBANMetaData::class, $item->metaData);
-    $this->assertEqualsCanonicalizing(MockProvider::IBAN_INFO, $item->metaData->jsonSerialize());
+    $this->assertEqualsCanonicalizing(MockProvider::IBAN_INFO[MockProvider::TEST_IBAN], $item->metaData->jsonSerialize());
   }
 }

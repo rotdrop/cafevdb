@@ -678,7 +678,7 @@ class EntityArrayAdapterTest extends TestCase
             },
             {
                 "__DEPTH__": 0,
-                "bankAccountOwner": "Inhaber*in, Konto",
+                "bankAccountOwner": "Inhaber:in, Konto",
                 "bic": "BYLADEM1001",
                 "blz": "12030000",
                 "created": null,
@@ -922,7 +922,7 @@ class EntityArrayAdapterTest extends TestCase
             ],
             "sepaBankAccount": {
                 "__DEPTH__": 0,
-                "bankAccountOwner": "Inhaber*in, Konto",
+                "bankAccountOwner": "Inhaber:in, Konto",
                 "bic": "BYLADEM1001",
                 "blz": "12030000",
                 "created": null,
