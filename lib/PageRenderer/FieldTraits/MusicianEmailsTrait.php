@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCA\CAFEVDB\Controller\MusicianValidationController;
+use OCA\CAFEVDB\Controller\EnumMusicianValidationTopic;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as BaseRenderer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -122,9 +124,9 @@ trait MusicianEmailsTrait
                 'data-placeholder' => $this->l->t('e.g. someone@somewhere.tld'),
                 'data-selectize-options' => [
                   'create' => [
-                    'url' => 'validate/musicians/email',
+                    'url' => MusicianValidationController::END_POINT . '/' . EnumMusicianValidationTopic::EMAIL->value,
                     'post' => [
-                      'failure' => 'error', // vs. message
+                      'failure' => MusicianValidationController::EMAIL_VALIDATION_ON_FAILURE_ERROR,
                     ],
                     'inputField' => $this->pme->cgiDataName('email'),
                   ],
