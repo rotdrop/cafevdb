@@ -119,6 +119,10 @@ trait MockUserStorageTrait
         $file->method('getContent')->willReturn($content);
         $file->method('getType')->willReturn(Node::TYPE_FILE);
         $file->method('getId')->willReturn($node->getId());
+        $file->method('delete')->willReturnCallback(
+          function() use ($path) {
+            unset($this->fileNodes[$path]);
+          });
 
         $this->fileNodes[$path] = $file;
 
