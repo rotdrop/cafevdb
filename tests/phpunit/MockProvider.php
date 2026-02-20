@@ -92,14 +92,17 @@ class MockProvider extends AbstractMockProvider
 
   public const TEST_IBAN = 'DE02700100800030876808';
   public const IBAN_INFO = [
-    'iban' => self::TEST_IBAN,
-    'country' => 'Deutschland (DE)',
-    'bic' => 'PBNKDEFFXXX',
-    'blz' => '70010080',
-    'account' => '0030876808',
-    'bank' => 'Postbank Ndl der Deutsche Bank',
-    'city' => 'München',
+    self::TEST_IBAN => [
+      'iban' => self::TEST_IBAN,
+      'country' => 'Deutschland (DE)',
+      'bic' => 'PBNKDEFFXXX',
+      'blz' => '70010080',
+      'account' => '0030876808',
+      'bank' => 'Postbank Ndl der Deutsche Bank',
+      'city' => 'München',
+    ],
   ];
+  public static array $ibanInfo = self::IBAN_INFO;
 
   /** {@inheritdoc} */
   protected function cloudConfigGet(
@@ -469,27 +472,51 @@ class MockProvider extends AbstractMockProvider
       ->getMock();
 
     $instance->method('getMainAgency')
-      ->with(self::IBAN_INFO['blz'])
-      ->willReturn(new class() {
-        /** @return string */
-        public function getBIC() {
-          return MockProvider::IBAN_INFO['bic'];
-        }
-        /** @return string */
-        public function getName() {
-          return MockProvider::IBAN_INFO['bank'];
-        }
-        /** @return string */
-        public function getCity() {
-          return MockProvider::IBAN_INFO['city'];
-        }
-      });
+      ->willReturnCallback(
+        function(string $blz) {
+          foreach (self::$ibanInfo as $bankInfo) {
+            if ($bankInfo['blz'] == $blz) {
+              return new class($bankInfo) {
+                /** @param array $bankInfo */
+                public function __construct(private array $bankInfo) {
+                }
+                /** @return string */
+                public function getBIC() {
+                  return $this->bankInfo['bic'];
+                }
+                /** @return string */
+                public function getName() {
+                  return $this->bankInfo['bank'];
+                }
+                /** @return string */
+                public function getCity() {
+                  return $this->bankInfo['city'];
+                }
+              };
+            }
+          }
+          return null;
+        });
     $instance->method('isValidBank')
-      ->with(self::IBAN_INFO['blz'])
-      ->willReturn(true);
+      ->willReturnCallback(
+        function(string $blz) {
+          foreach (self::$ibanInfo as $bankInfo) {
+            if ($bankInfo['blz'] == $blz) {
+              return true;
+            }
+          }
+          return false;
+        });
     $instance->method('isValidAccount')
-      ->with(self::IBAN_INFO['account'])
-      ->willReturn(true);
+      ->willReturnCallback(
+        function(string $account) {
+          foreach (self::$ibanInfo as $bankInfo) {
+            if ($bankInfo['account'] == $account) {
+              return true;
+            }
+          }
+          return false;
+        });
 
     $this->instances[$className] = $instance;
 
