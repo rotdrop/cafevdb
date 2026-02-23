@@ -39,7 +39,6 @@ use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
@@ -47,14 +46,12 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 
 /** Validation controller for some personal input fields. */
 #[TSAttributes\TypeScript]
 class MusicianValidationController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const END_POINT = 'validate/musicians';
 
@@ -74,7 +71,6 @@ class MusicianValidationController extends Controller
     private EmailAddressService $emailAddressService,
     private GeoCodingService $geoCodingService,
     private PhoneNumberService $phoneNumberService,
-    protected EntityManager $entityManager,
     protected IL10N $l,
     protected LoggerInterface $logger,
     protected PHPMyEdit $pme,
@@ -250,10 +246,10 @@ class MusicianValidationController extends Controller
               ? []
             : array_values(array_unique($streets));
 
-            return self::dataResponse([
-              'streets' => $streets,
-            ]);
-            break;
+            return new DTO\AutocompleteStreetResponse(
+              streets: $streets,
+            )->response();
+
           case EnumMusicianValidationSubTopic::AUTOCOMPLETE_PLACE:
             // compute auto-comlete for country, city, postal-code in one run
             $locations = $this->geoCodingService->cachedLocations($postalCode, $city, $country);
@@ -290,12 +286,12 @@ class MusicianValidationController extends Controller
             $postalCodes = array_values(array_unique($postalCodes, SORT_LOCALE_STRING));
             $countries = array_values(array_unique($countries));
 
-            return self::dataResponse([
-              'cities' => $cities,
-              'postalCodes' => $postalCodes,
-              'countries' => $countries,
-            ]);
-            break;
+            return new DTO\AutocompletePlaceResponse(
+              cities: $cities,
+              postalCodes: $postalCodes,
+              countries: $countries,
+            )->response();
+
           default:
             throw new Exceptions\EnduserNotificationException(
               $this->l->t('Unsupported auto-complete request for "%s".', $subTopic ?? 'null'),

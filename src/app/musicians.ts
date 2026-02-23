@@ -52,6 +52,8 @@ import debounce from './debounce.ts';
 import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import type {
   AddMusiciansResponse,
+  AutocompletePlaceResponse,
+  AutocompleteStreetResponse,
   DuplicateMusiciansResponse,
   EmailValidationResponse,
   PhoneNumberValidationResponse,
@@ -525,7 +527,7 @@ const contactValidation = function(container?: string|JQuery) {
           console.error('Auto-complete update cancelled');
         }
       })
-      .done(function(data) {
+      .done(function(data?: Partial<AutocompletePlaceResponse>) {
         if (!data || !data.cities || !data.countries || !data.postalCodes) {
           console.error('Auto-complete request does not contain the requested data.', data);
           return;
@@ -556,8 +558,6 @@ const contactValidation = function(container?: string|JQuery) {
           $countryInput.show();
         }
         lockCountry = false;
-
-        Notification.messages(data.message);
       });
 
     console.info('PLACE AUTOCOMPLETE PROMISE', autocompletePlaceRequest);
@@ -586,7 +586,7 @@ const contactValidation = function(container?: string|JQuery) {
           console.error('Auto-complete update cancelled');
         }
       })
-      .done(function(data) {
+      .done(function(data?: Partial<AutocompleteStreetResponse>) {
         if (!data || !data.streets) {
           console.error('Auto-complete request does not contain the requested data.', data);
           return;
@@ -598,8 +598,6 @@ const contactValidation = function(container?: string|JQuery) {
           $street.autocomplete('option', 'source', data.streets);
           const sourceSize = $street.autocomplete('option', 'source').length;
           $street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
-
-          Notification.messages(data.message);
         }
       });
 

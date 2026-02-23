@@ -46,6 +46,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 /** Test aspects of the MusicianValidationController. */
 #[Attributes\CoversClass(TestedController::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AutocompletePlaceResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AutocompleteStreetResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailValidationResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\MessagesResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\PhoneNumberValidationResponse::class)]
@@ -78,6 +80,8 @@ class MusicianValidationControllerTest extends TestCase
 
   private TestedController $controller;
 
+  private GeoCodingService $geoCodingService;
+
   private array $postData = [];
 
   private const DATA_PREFIX = 'HutzliPutzli';
@@ -103,12 +107,17 @@ class MusicianValidationControllerTest extends TestCase
 
     $this->postData[PersistentCGIKeys::DATA_PREFIX] = [ 'musicians' => self::DATA_PREFIX ];
 
+    $this->geoCodingService = $this->getMockBuilder(GeoCodingService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    // just work around PHPUnit't evolving strictness
+    $this->geoCodingService->expects($this->never())->method('updateCountries');
+
     $this->controller = new TestedController(
       appName: $this->mockProvider->appName,
       request: $request,
       emailAddressService: $appContainer->get(EmailAddressService::class),
-      entityManager: $this->createStub(EntityManager::class),
-      geoCodingService: $this->createStub(GeoCodingService::class),
+      geoCodingService: $this->geoCodingService,
       l: $this->mockProvider->getL10N(),
       logger: $this->mockProvider->getLoggerInterface(),
       phoneNumberService: $appContainer->get(PhoneNumberService::class),
@@ -295,5 +304,76 @@ class MusicianValidationControllerTest extends TestCase
     $this->assertNotEmpty($data->fixedLineMeta);
     $this->assertEmpty($data->mobilePhone);
     $this->assertEmpty($data->mobileMeta);
+  }
+
+  private const AUTOCOMPLETE_DATA = [
+    'country' => 'COUNTRY',
+    'city' => 'CITY',
+    'street' => 'STREET',
+    'postal_code' => 'ZIP',
+  ];
+
+  private const AUTOCOMPLETED_STREETS = ['öäü', 'üblub', 'äblah'];
+
+  /** @return void */
+  public function testAutocompleteStreet(): void
+  {
+    $this->geoCodingService
+      ->expects($this->once())
+      ->method('autoCompleteStreet')
+      ->willReturn(self::AUTOCOMPLETED_STREETS);
+    foreach (self::AUTOCOMPLETE_DATA as $key => $value) {
+      $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . $key)] = $value;
+    }
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::AUTOCOMPLETE,
+      subTopic: Controller\EnumMusicianValidationSubTopic::AUTOCOMPLETE_STREET,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\AutocompleteStreetResponse::class, $data);
+    /** @var DTO\AutocompleteStreetResponse $data */
+    $this->assertEqualsCanonicalizing(self::AUTOCOMPLETED_STREETS, $data->streets);
+  }
+
+  private const AUTOCOMPLETED_PLACES = [
+    [
+      'Name' => 'ÜNAME1',
+      'PostalCode' => 'POSTALCODE1',
+      'Country' => 'ÜCOUNTRY1',
+    ],
+    [
+      'Name' => 'ÄNAME2',
+      'PostalCode' => 'POSTALCODE2',
+      'Country' => 'ÄCOUNTRY2',
+    ],
+  ];
+
+  /** @return void */
+  public function testAutocompletePlace(): void
+  {
+    // Just one brief test, this will not cover all code in the controller class ...
+    $this->geoCodingService
+      ->expects($this->atLeastOnce())
+      ->method('cachedLocations')
+      ->willReturn(self::AUTOCOMPLETED_PLACES);
+    foreach (self::AUTOCOMPLETE_DATA as $key => $value) {
+      $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . $key)] = $value;
+    }
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::AUTOCOMPLETE,
+      subTopic: Controller\EnumMusicianValidationSubTopic::AUTOCOMPLETE_PLACE,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\AutocompletePlaceResponse::class, $data);
+    /** @var DTO\AutocompletePlaceResponse $data */
+    $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['Name'], self::AUTOCOMPLETED_PLACES), $data->cities);
+    $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['Country'], self::AUTOCOMPLETED_PLACES), $data->countries);
+    $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['PostalCode'], self::AUTOCOMPLETED_PLACES), $data->postalCodes);
   }
 }
