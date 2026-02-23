@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
   public const DEFAULT_OPTIONS = [
     self::OPTION_HTML => false,
   ];
+  public const DEFAULT_KEY = 'default';
 
   /** @var bool */
   private $debug = false;
@@ -204,9 +205,9 @@ class ToolTipsService implements \ArrayAccess, \Countable
     $keys = explode(self::SUB_KEY_SEP, $key);
     while (\count($keys) > 0) {
       $key = array_shift($keys);
-      $toolTipsData = $toolTipsData[$key] ?? ($toolTipsData['default'] ?? null);
+      $toolTipsData = $toolTipsData[$key] ?? ($toolTipsData[self::DEFAULT_KEY] ?? null);
     }
-    $tip = $toolTipsData['default'] ?? $toolTipsData;
+    $tip = $toolTipsData[self::DEFAULT_KEY] ?? $toolTipsData;
 
     if (!isset($tip['text'])) {
       $tip = null;

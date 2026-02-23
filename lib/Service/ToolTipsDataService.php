@@ -29,6 +29,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Controller\EnumSepaDebitMandateBinding;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -40,6 +41,8 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 class ToolTipsDataService
 {
   public const PME_SHOW_ALL_TEXT = 'Simply blends in all the columns of the table as if all the tabs would be activated at the same time.';
+
+  private const DEFAULT = ToolTipsService::DEFAULT_KEY;
 
   /**
    * Just a shim which injects the content of the data-array into the
@@ -118,7 +121,7 @@ class ToolTipsDataService
         ],
       ],
       'autocomplete' => [
-        'default' => self::t('Type some text to get autocomplete suggestions.'),
+        self::DEFAULT => self::t('Type some text to get autocomplete suggestions.'),
         'require-three' => self::t('Type at least three characters to get autocomplete suggestions.'),
       ],
       'blog' => [
@@ -366,7 +369,7 @@ of this button.'),
             'personal' => self::t('Choose a file to attach from the project\'s per-musician file-attachments.'),
             'upload' => self::t('Upload a file from your local computer as attachment. The file will be removed from the remote-system after the message has been sent.'),
             'toggle-visibility' => [
-              'default' => self::t('Hide or show the select boxes in order to select appropriate attachments.'),
+              self::DEFAULT => self::t('Hide or show the select boxes in order to select appropriate attachments.'),
             ],
             'event-select' => self::t('Select-box with all project-events. You can select events as attachments to your email.'),
             'delete-all-events' => self::t('Clear the list of selected event-attachments. Of course, this does not delete the events from their respective calendar, it just de-selects all events such that no event will be attached to the email.'),
@@ -468,11 +471,11 @@ invited to have a look, but please do not change anything unless you know what y
         ],
 
         'attachment' => [
-          'default' => self::t('Attach a supporting document.'),
+          self::DEFAULT => self::t('Attach a supporting document.'),
           'delete' => self::t('Delete this file attachment. Undelete may be possible using the files-app of the cloud-software.'),
 
           'upload' => [
-            'default' => self::t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
+            self::DEFAULT => self::t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
             'from-client' => self::t('Upload a new attachment from your device.'),
             'from-cloud' => self::t('Select a new attachment from the cloud storage. The selected file will be copied.'),
           ],
@@ -526,7 +529,7 @@ make sure that the musicians are also automatically added to the
           'cloud-account-disabled' => self::t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
 
           'mailing-list' => [
-            'default' => self::t('Musicians are normally invited to the announcements mailing list when they are registered with the orchestra app. The announcements mailing list is a receive-only list for announcing projects, concerts and other things "to the public". It may also be used to forward announcements of other orchestras or off-topic notices if this seems appropriate in a case-to-case manner.'),
+            self::DEFAULT => self::t('Musicians are normally invited to the announcements mailing list when they are registered with the orchestra app. The announcements mailing list is a receive-only list for announcing projects, concerts and other things "to the public". It may also be used to forward announcements of other orchestras or off-topic notices if this seems appropriate in a case-to-case manner.'),
             'actions' => [
               'invite' => self::t('Invite the musician to join the announcements mailing list. The musician will receive an email with explanations and needs to reply to the invitation. On reply the musician will be subscribed to the list without further action.'),
               'subscribe' => self::t('Per-force subscribe the musician to the announcements mailing list. This may contradict privacy regulations, so use this option with care.'),
@@ -564,7 +567,7 @@ in the email form.', options: [ ToolTipsService::OPTION_HTML => true ]),
         ],
         'participants' => [
           'mailing-list' => [
-            'default' => self::t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
+            self::DEFAULT => self::t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
             'operation' => [
               'subscribe' => self::t('Subscribe the participant to the project mailing list. Normally a participant is automatically subscribed to the project mailing list when its participation status is changed from "preliminary" to "confirmed". It is not possible to subscribe non-confirmed participants. The participant will receive a welcome message when after subscribing it.'),
               'unsubscribe' => self::t('Unsubscribe the participant from the mailing list. Normally a participant is automatically unsubscribed when it is deleted from the project or it participation status is change back to "preliminary" after its participation had been confirmed previously.'),
@@ -573,15 +576,15 @@ in the email form.', options: [ ToolTipsService::OPTION_HTML => true ]),
             ],
           ],
           'voice' => [
-            'default' => self::t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
+            self::DEFAULT => self::t('Select the instrument voice. If the desired voice number does not show up in the menu, then select the item with the question mark (e.g. "Violin ?") in order to enter the desired voice with the keyboard.'),
             'define-new' => self::t('Opens an input field in order to let you define an arbitrary new voice. The voice is automatically created if it does not yet exist.'),
           ],
           'section-leader' => [
-            'default' => self::t('Check in order to mark the section leader. If this instrument is sub devided into voices the musician first has to be assigned to a voice before it can be marked as section leader for its configured voice.'),
+            self::DEFAULT => self::t('Check in order to mark the section leader. If this instrument is sub devided into voices the musician first has to be assigned to a voice before it can be marked as section leader for its configured voice.'),
             'view' => self::t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])
           ],
           'registration' => [
-            'default' => self::t(
+            self::DEFAULT => self::t(
               'Set to "%1$s" for participants whose participation is not sure for whatever reason. Set to "%2$s" for participants whose participation is confirmative. "%1$s" may be the result of e.g. doubts of the executive board, missing confirmation of the participant, too many applications, missing signed registration form (if applicable). When the settings is changed from "%1$s" to "%2$s" the person is also subscribed to the project mailing list and an automatic confirmation email is sent out to the person.
 
 This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table and decide later whether they really participate.',
@@ -669,11 +672,11 @@ results may be unexpected.'),
           'display' => [
             'revert-to-default' => self::t('Revert this setting to its default value.'),
             'attachment' => [
-              'default' => self::t('Attach a supporting document to this monetary field.'),
+              self::DEFAULT => self::t('Attach a supporting document to this monetary field.'),
               'delete' => self::t('Delete this file attachment. Undelete may be possible using the file-app of the cloud-software.'),
 
               'upload' => [
-                'default' => self::t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
+                self::DEFAULT => self::t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
                 'from-client' => self::t('Upload a new attachment from your device.'),
                 'from-cloud' => self::t('Select a new attachment from the cloud storage. The selected file will be copied.'),
               ],
@@ -720,31 +723,33 @@ receipt. The letter has to be triple checked, signed manully, sent by
 snail-mail to the payee and a digital copy has to be uploaded to the cloud as
 supporting document.'),
           'project-balance' => [
-            'default' => self::t('Link this payment and the supporting documents of its receivable to the project balance folder.'),
+            self::DEFAULT => self::t('Link this payment and the supporting documents of its receivable to the project balance folder.'),
             'open' => self::t('Open the project balance folder in the files app of the cloud.'),
           ],
         ],
       ],
 
       'participant-field-multiplicity' => [
-        'default' => self::t('Multiplicity of the field, e.g. free-text, single choice, multiple choice etc.'),
+        self::DEFAULT => self::t('Multiplicity of the field, e.g. free-text, yes/no-option, single choice, multiple choice etc.'),
 
-        'groupofpeople' => self::t('Group of people, e.g. to define room-mates.'),
+        FieldMultiplicity::GROUPOFPEOPLE->value => self::t('Group of people, e.g. to define room-mates.'),
 
-        'groupsofpeople' => self::t('Group of people with predefined group-names and a potentially
+        FieldMultiplicity::GROUPSOFPEOPLE->value => self::t('Group of people with predefined group-names and a potentially
 different maximal number of people fitting in the group. For example to define room-mates.'),
 
-        'multiple' => self::t('Multiple choices, excluding each other.'),
+        FieldMultiplicity::MULTIPLE->value => self::t('Multiple choices, excluding each other.'),
 
-        'parallel' => self::t('Multiple choices where, more than one option can be selected.'),
+        FieldMultiplicity::PARALLEL->value => self::t('Multiple choices where, more than one option can be selected.'),
 
-        'single' => self::t('Simple yes-no choice.'),
+        FieldMultiplicity::RECURRING->value => self::t('(Periodically) recurring options like membership- or insurance-fees, or fields with an arbitrary amount of labelled options like reimbursements.'),
 
-        'simple' => self::t('General date field with the respective meaning.'),
+        FieldMultiplicity::SINGLE->value => self::t('Simple yes-no choice.'),
+
+        FieldMultiplicity::SIMPLE->value => self::t('General date field with the respective meaning.'),
       ],
 
       'participant-field-data-type' => [
-        'default' => self::t('Data type of the field, e.g service-fee, text, HTML-text etc.'),
+        self::DEFAULT => self::t('Data type of the field, e.g service-fee, text, HTML-text etc.'),
       ],
 
       'participant-fields-data-options' => [
@@ -757,7 +762,7 @@ happens to come earlier). Inactive buttons will no longer show up in
 the instrumentation table, but inactive items can be "undeleted", just
 but clicking this button again.'),
 
-        'default' => self::t('Table with all admissible values for this multiple choice option.'),
+        self::DEFAULT => self::t('Table with all admissible values for this multiple choice option.'),
         'placeholder' => self::t('In order to add a new option just enter its name here and hit enter or
 just click somewhere else. Further attributes can be changed later (data-base key, label, data, context help)'),
         'key' => self::t('Please enter here a unique short non-nonsense key. You will no longer
@@ -782,7 +787,7 @@ help text in order to inform others what this option is about.'),
         'delete-undelete' => self::t('Delete or undelete the receivable for this musician. The data will only be deleted when hitting the "save"-button of the form. Undelete is only possible until the "save"-button has been clicked.'),
         'regenerate' => self::t('Recompute the values of this particular recurring field. The action will be performed immediately.'),
         'regenerate-all' => [
-          'default' => self::t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
+          self::DEFAULT => self::t('Recompute all receivables for the musician. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
           'everybody' => self::t('Recompute the values of all recurring fields for all participants.'),
           'manually' => self::t('Make sure that at least one new empty input field is available. Note that this will reload the input-form discarding all changes which have not been saved yet.'),
         ],
@@ -790,7 +795,7 @@ help text in order to inform others what this option is about.'),
         'generator-startdate' => self::t('Starting date for the receivable generation. Maybe overridden by the concrete generator framework.'),
         'generator-run' => self::t('Run the value generator. Depending on the generator this might result in new fields or just does nothing if all relevant fields are already there.'),
         'update-strategy' => [
-          'default' => self::t('Select how to handle conflicts with existing data during recomputation of receivables.'),
+          self::DEFAULT => self::t('Select how to handle conflicts with existing data during recomputation of receivables.'),
           'replace' => self::t('During update of receivables just replace any old value by the newly computed value.'),
           'skip' => self::t('During update of receivables skip the update of existing records and record inconsistencies for later processing.'),
           'exception' => self::t('During update of receivables compare with the newly computed value and throw an exception if the values differ. This is the default.'),
@@ -862,16 +867,16 @@ projects cannot be deleted; instead "deleting" them flags them as "Disabled".'),
 
       'mailing-list' => [
         'domain' => [
-          'default' => self::t('Externally visible domains and configuration web-pages.'),
+          self::DEFAULT => self::t('Externally visible domains and configuration web-pages.'),
           'config' => self::t('The base-URL of the public web-pages of the used Mailman3 server. The web-pages give access to personal list configuration settings for list-members as well as access to the list configuration pages for administrators.'),
           'email' => self::t('The email-domain of the mailing lists.'),
         ],
         'restapi' => [
-          'default' => self::t('REST API account for interaction with a Mailman3 server. Should be located on the same server or proxied via SSL.'),
+          self::DEFAULT => self::t('REST API account for interaction with a Mailman3 server. Should be located on the same server or proxied via SSL.'),
         ],
         'generated' => [
           'defaults' => [
-            'default' => self::t('Some settings for generated per-project mailing lists. The detail configuration can be tuned by visiting the list-configuration pages.'),
+            self::DEFAULT => self::t('Some settings for generated per-project mailing lists. The detail configuration can be tuned by visiting the list-configuration pages.'),
             'owner' => self::t('An email address which owns all auto-generated mailing lists. This email will receive notifications by the mailing-list software about necessary administrative tasks.'),
             'moderator' => self::t('An email address which handle moderator-tasks for the mailing lists. List moderation is e.g. necessary for rejecting or accepting posts by non-members or to handle subscription requests.'),
           ],
@@ -925,7 +930,7 @@ row to the current table.'),
         'apply' => self::t('Saves the current values; the current input form will remain active.'),
 
         'bulkcommit' => [
-          'default' => self::t('  Click me to add all selected musicians
+          self::DEFAULT => self::t('  Click me to add all selected musicians
 to the selected project. All selected
 musicians on all pages will be added.'),
 
@@ -949,14 +954,14 @@ musicians.'),
         ],
 
         'cancel' => [
-          'default' => self::t('Stop the current operation. Settings which already have been stored by
+          self::DEFAULT => self::t('Stop the current operation. Settings which already have been stored by
 hitting an "Apply" button are maintained, though. You will be returned
 to the previous view.'),
           'canceldelete' => self::t('Stop the current operation. You will be returned to the previous view.'),
         ],
 
         'change' => [
-          'default' => self::t('Directs you to a form with input fields. From there you can return to
+          self::DEFAULT => self::t('Directs you to a form with input fields. From there you can return to
 this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
 
           'navigation' => [
@@ -986,7 +991,7 @@ und Abbruchmöglichkeit.'),
 
         'debit' => [
           'note' => [
-            'default' => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool "aqbanking-cli". Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+            self::DEFAULT => self::t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool "aqbanking-cli". Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
 
             '+' => self::t('Select all displayed debit-notes for export.'),
 
@@ -1067,7 +1072,7 @@ korrigieren.'),
 
         'filter' => [
           // TRANSLATORS: intentionally contains HTML
-          'default' => self::t('Field for filter/search criteria.
+          self::DEFAULT => self::t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
@@ -1149,14 +1154,14 @@ Suchkriterien zu verstecken.'),
         'pagerows' => self::t('Limits the number of rows per page to the given value. A "∞" means to display all records on one large page.'),
 
         'query' => [
-          'default' => self::t('Klick mich, um die
+          self::DEFAULT => self::t('Klick mich, um die
 aktuellen Suchkriterien anzuwenden. Suchkriterien
 können in den Feldern eingegeben werden.
 Als Platzhalter verwendet man "%%".'),
         ],
 
         'reload' => [
-          'default' => self::t('Refreshes the current view by reloading all data from the data-base.'),
+          self::DEFAULT => self::t('Refreshes the current view by reloading all data from the data-base.'),
           'reloadchange' => self::t('Discards all unsaved data and reloads all fields form the data-base. Settings which already have been stored by hitting an
 "Apply" button are maintained, though.'),
           'reloadcopy' => self::t('Discards all unsaved data and reloads all fields from the data-base. Settings which already have been stored by hitting an
@@ -1164,7 +1169,7 @@ Als Platzhalter verwendet man "%%".'),
         ],
 
         'save' => [
-          'default' => self::t('Saves the current values and returns to the previous view.'),
+          self::DEFAULT => self::t('Saves the current values and returns to the previous view.'),
           'savedelete' => self::t('Deletes the current record and returns to the previous view.'),
         ],
 
@@ -1178,7 +1183,7 @@ Suchkriterien anzuzeigen.'),
         ],
 
         'sort' => [
-          'default' => self::t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
+          self::DEFAULT => self::t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
 
           'rvrt' => self::t('Click me to reverse the sort order by this field!'),
 
@@ -1208,7 +1213,7 @@ always have per-force the project-year attached to their name,
 permanent "pseudo-projects" don\'t, as it does not make any sense.'),
 
         'mailing-list' => [
-          'default' => self::t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
+          self::DEFAULT => self::t('The project mailing list is an optional discussion mailing list open to the project participants. It is preferred by the orchestra-app when sending notifications to the project-participants but is otherwise optional. It can be used by the project participants to communicate to each other without disclosing their email-address to the other project-members.'),
           'dropdown' => self::t('Pull-down menu with interesting mailing-list operations.'),
           'create' => self::t('Create a mailing-list for the project participants. The list is open for posting from members, participants are auto-subscribed if they are accepted as project-participants, the list archives are accessible to members only.'),
           'manage' => self::t('External link to the list configuration page.'),
@@ -1338,7 +1343,7 @@ case for this particular event.'),
           ],
 
           'calendar-app' => [
-            'default' => self::t('Open the respective event instance in the calendar app in another browser window or tab.'),
+            self::DEFAULT => self::t('Open the respective event instance in the calendar app in another browser window or tab.'),
             'single' => self::t('SINGLE Open the respective event instance in the calendar app in another browser window or tab.'),
             'series' => self::t('SERIES Open the respective event instance in the calendar app in another browser window or tab.'),
           ],
@@ -1349,7 +1354,7 @@ case for this particular event.'),
 
 
           'scope' => [
-            //             'default' => self::t('Select the scope of your following operations, whether it shall act on this
+            //             self::DEFAULT => self::t('Select the scope of your following operations, whether it shall act on this
             // single event instance, an event series this event maybe belongs to or a family
             // of related events.'),
             'single' => self::t('Act only on this particular event.'),
@@ -1363,7 +1368,7 @@ the user chooses to alter properties for "this and future events".'),
 
         'all' => [
           'new' => [
-            'default' => self::t('Add a new event for the project. The event is added to the respective
+            self::DEFAULT => self::t('Add a new event for the project. The event is added to the respective
 calendar and will also be visible and editable through the calendar
 app. It is also possible to subscribe to the calendars using a
 suitable CalDAV client from your smartphone, tablet or desktop
@@ -1438,7 +1443,7 @@ and contact the treasurer for further instructions.',
           EnumSepaDebitMandateBinding::ONLY_FOR_PROJECT->value => self::t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
           EnumSepaDebitMandateBinding::FOR_ALL_RECEIVABLES->value => self::t('Use this as a general debit-mandate for all receivables of this person. Note that we accept general debit mandates only for club-members.'),
           'download' => [
-            'default' => self::t('Download the existing signed hard-copy of the debit mandate.'),
+            self::DEFAULT => self::t('Download the existing signed hard-copy of the debit mandate.'),
             'form' => self::t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
           ],
           'upload' => [
@@ -1468,7 +1473,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
       'settings' => [
         'admin' => [
           'user-group' => [
-            'default' => self::t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'),
+            self::DEFAULT => self::t('Add the name of a dedicated user-group for the people allowed to access the orchestra-administration app.'),
             'admins' => self::t('The list of group-admins for the dedicated user-group. You should at least add one group-admin.'),
           ],
           'wiki-name-space' => self::t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.'),
@@ -1505,7 +1510,7 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
             ],
           ],
           EnumPersonalSettingsKey::ENCRYPTION_KEY->value => [
-            'default' => self::t('Optionally parts of the data-base and some configuration settings can be stored encrypted. If you are confronted with error messages about a missing encryption key, then you can re-install the encryption key here (if you know it). In order to authorize the change you have also to enter your login-password in the password-field.'),
+            self::DEFAULT => self::t('Optionally parts of the data-base and some configuration settings can be stored encrypted. If you are confronted with error messages about a missing encryption key, then you can re-install the encryption key here (if you know it). In order to authorize the change you have also to enter your login-password in the password-field.'),
             'own-password' => self::t('Changing the encryption key needs your login-password. Please enter it here before trying to save the changed encryption key.'),
           ],
         ],
@@ -1596,12 +1601,12 @@ yearly insurance fees to the club-members.'),
         'delete' => self::t('Delete this document template from the server'),
 
         'upload' => [
-          'cloud' => [ 'default' => self::t('Choose a template file from the cloud storage.'), ],
-          'client' => [ 'default' => self::t('Upload a document template from your computer or mobile.'), ],
+          'cloud' => [ self::DEFAULT => self::t('Choose a template file from the cloud storage.'), ],
+          'client' => [ self::DEFAULT => self::t('Upload a document template from your computer or mobile.'), ],
         ],
 
         'auto-fill-test' => [
-          'default' => self::t('Test the form-filling features with a test-data-set. The file-format of the generated download remains the same as of the original template.'),
+          self::DEFAULT => self::t('Test the form-filling features with a test-data-set. The file-format of the generated download remains the same as of the original template.'),
           'pdf' => self::t('Test the form-filling features with a test-data-set and convert the generated file to PDF, providing a fillable PDF-form if the original document contains form-elements.'),
           'data' => self::t('Just download the test-data set as JSON data for inspection and for debugging.'),
         ],
