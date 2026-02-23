@@ -183,6 +183,7 @@ class CloudUserConnectorServiceTest extends TestCase
 
     $restrictions = ['NOT EMPTY'];
     $this->appManager
+      ->expects($this->exactly(3))
       ->method('getAppRestriction')
       ->with(CloudUserConnectorService::CLOUD_USER_BACKEND)
       ->willReturnCallback(function() use (&$restrictions) {

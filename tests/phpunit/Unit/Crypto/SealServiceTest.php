@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -113,7 +113,7 @@ class SealServiceTest extends TestCase
     $cloudSymmetricCryptor = new CloudSymmetricCryptor($this->cloudCryptor, self::ENCRYPTION_KEY);
 
     $this->cryptoFactory
-      ->expects($this->atLeastOnce())
+      ->expects($this->exactly(1))
       ->method('getSymmetricCryptor')
       ->willReturn($cloudSymmetricCryptor);
 
@@ -121,11 +121,11 @@ class SealServiceTest extends TestCase
       ->disableOriginalConstructor()
       ->getMock();
     $keyCryptor
-      ->expects($this->atLeastOnce())
+      ->expects($this->exactly(2))
       ->method('encrypt')
       ->willReturn(self::ENCRYPTED_BYTES);
     $keyCryptor
-      ->expects($this->any())
+      ->expects($this->exactly(2))
       ->method('decrypt')
       ->willReturn(self::DATA_BYTES);
 
