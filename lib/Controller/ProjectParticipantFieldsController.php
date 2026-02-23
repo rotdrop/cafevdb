@@ -172,9 +172,9 @@ class ProjectParticipantFieldsController extends Controller
             break;
         }
         break;
-      case EnumParticipantFieldTopic::GENERATOR:
+      case EnumParticipantFieldRequestTopic::GENERATOR:
         switch ($subTopic) {
-          case EnumParticipantFieldSubTopic::DEFINE:
+          case EnumParticipantFieldRequestSubTopic::DEFINE:
             if (empty($data)) {
               new Exceptions\EnduserNotificationException(
                 ($this->l->t('Missing parameters in request "%s".', $topic)),
@@ -233,7 +233,7 @@ class ProjectParticipantFieldsController extends Controller
               availableUpdateStrategies: $updateStrategyChoices,
             )->response();
 
-          case EnumParticipantFieldSubTopic::RUN:
+          case EnumParticipantFieldRequestSubTopic::RUN:
             foreach (['fieldId', 'startDate',] as $parameter) {
               if (empty($data[$parameter])) {
                 new Exceptions\EnduserNotificationException(
@@ -325,9 +325,9 @@ class ProjectParticipantFieldsController extends Controller
             break;
         }
         break;
-      case EnumParticipantFieldTopic::OPTION:
+      case EnumParticipantFieldRequestTopic::OPTION:
         switch ($subTopic) {
-          case EnumParticipantFieldSubTopic::DEFINE:
+          case EnumParticipantFieldRequestSubTopic::DEFINE:
             if (empty($data)) {
               new Exceptions\EnduserNotificationException(
                 ($this->l->t('Missing parameters in request %s', $topic)),
@@ -335,7 +335,7 @@ class ProjectParticipantFieldsController extends Controller
             }
             $default = $data['default'];
             $index = $data['index'];
-            $used  = ($data['used']??null) === 'used';
+            $used  = ($data['used'] ?? null) === 'used';
             $dataOptions = $projectValues['data_options'];
 
             $dataOptions = array_values($dataOptions); // get rid of -1 index
@@ -425,7 +425,7 @@ class ProjectParticipantFieldsController extends Controller
               dataOptionSelectOptions: $options,
             )->response();
 
-          case EnumParticipantFieldSubTopic::REGENERATE:
+          case EnumParticipantFieldRequestSubTopic::REGENERATE:
             // either musicianId or key may be missing
             $missing = [];
             foreach (['fieldId', 'updateStrategy'] as $parameter) {
@@ -437,7 +437,7 @@ class ProjectParticipantFieldsController extends Controller
               $missing += [ 'key', 'musicianId' ];
             }
             if (!empty($missing)) {
-              new Exceptions\EnduserNotificationException(
+              throw new Exceptions\EnduserNotificationException(
                 (
                   $this->l->t('Missing parameters in request "%s/%s": "%s".', [
                     $topic, $subTopic, implode('", "', $missing),
@@ -448,7 +448,7 @@ class ProjectParticipantFieldsController extends Controller
             if (array_search($updateStrategy, ReceivablesGenerator::UPDATE_STRATEGIES) === false) {
               new Exceptions\EnduserNotificationException(
                 (
-                  $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy))),
+                  $this->l->t('Unknown update strategy: "%s".', $this->l->t($updateStrategy ?? 'empty'))),
               );
             }
             $this->logInfo('Update Strategy ' . $updateStrategy);
@@ -546,7 +546,10 @@ class ProjectParticipantFieldsController extends Controller
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
                   'Unable to update receivable "%1$s@%2$s" for the person "%3$s" using the generator "%4$s".', [
-                    $receivable->getLabel(), $field->getName(), $participant->getMusician()->getPublicName(), get_class($generator),
+                    $receivable?->getLabel() ?? $this->l->t('unknown'),
+                    $field->getName(),
+                    $participant?->getMusician()?->getPublicName() ?? $this->l->t('unknown'),
+                    get_class($generator),
                   ]),
                 previous: $t,
                 httpStatusCode: Http::STATUS_INTERNAL_SERVER_ERROR,
@@ -597,7 +600,7 @@ class ProjectParticipantFieldsController extends Controller
       default:
         break;
     }
-    new Exceptions\EnduserNotificationException(
+    throw new Exceptions\EnduserNotificationException(
       ($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ])),
     );
   }

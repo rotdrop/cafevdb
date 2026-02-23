@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Tests\Unit\Controller;
 
 use DateTimeImmutable;
+use Throwable;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,10 +37,14 @@ use OCP\ProjectParticipantFields\IManager as ProjectParticipantFieldsManager;
 
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Controller;
+use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\ManuallyGeneratedReceivablesGenerator;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Tests\MockProvider;
@@ -50,17 +55,20 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
 #[Attributes\CoversClass(Controller\ProjectParticipantFieldsController::class)]
+#[Attributes\CoversClass(ManuallyGeneratedReceivablesGenerator::class)]
+#[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetDefaultValue::class)]
+#[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetResponse::class)]
+#[Attributes\CoversClass(DTO\ReceivablesStatistics::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PlainFileProgressStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\MessagesResponse::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\ParticipantFieldPropertyGetDefaultValue::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\ParticipantFieldPropertyGetResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\SealCryptor::class)]
@@ -98,10 +106,12 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ContactsCardEventListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener::class)]
@@ -125,14 +135,18 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EventsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\AppL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProgressStatusService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\VCalendarService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
@@ -161,6 +175,8 @@ class ProjectParticipantFieldsControllerTest extends TestCase
   private const EXPECTED_ROUTES = [
     'serviceswitch',
   ];
+
+  private const RECEIVABLES_GENERATOR = ManuallyGeneratedReceivablesGenerator::class;
 
   private MockProvider $mockProvider;
 
@@ -211,7 +227,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
       $this->generateProjectParticipant(persist: true, now: $this->now, delete: false);
-      $datum = $this->generateReceivable(persist: true);
+      $datum = $this->generateReceivable(persist: true, generator: self::RECEIVABLES_GENERATOR);
 
       self::$projectId = $this->project->getId();
       self::$musicianId = $this->musician->getId();
@@ -258,7 +274,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
   }
 
   /** @return void */
-  public function testPropertyGet(): void
+  public function testPropertyGetDefaultValue(): void
   {
     $this->postData['fieldId'] = self::$fieldId;
     $this->postData['property'] = Controller\EnumParticipantFieldPropertyGet::DEFAULT_VALUE->value;
@@ -270,10 +286,91 @@ class ProjectParticipantFieldsControllerTest extends TestCase
     /** @var Http\JSONResponse $response */
     $this->assertEquals(Http::STATUS_OK, $response->getStatus());
     $data = $response->getData();
-    $this->assertInstanceOf(Controller\DTO\ParticipantFieldPropertyGetResponse::class, $data);
-    /** @var Controller\DTO\ParticipantFieldPropertyGetResponse $data */
+    $this->assertInstanceOf(DTO\ParticipantFieldPropertyGetResponse::class, $data);
+    /** @var DTO\ParticipantFieldPropertyGetResponse $data */
     $this->assertEquals($this->postData['fieldId'], $data->fieldId);
     $this->assertEquals(Controller\EnumParticipantFieldPropertyGet::get($this->postData['property']), $data->property);
+    $value = $data->value;
+    $this->assertInstanceOf(DTO\ParticipantFieldPropertyGetDefaultValue::class, $value);
+    /** @var DTO\ParticipantFieldPropertyGetDefaultValue $value */
+    $this->assertEquals((string)$this->field->getDefaultValue()->getKey(), $value->key);
+    $this->assertEquals(self::RECEIVABLES_GENERATOR, $value->data);
+  }
+
+  /** @return void */
+  public function testPropertyGetDefaultDeposit(): void
+  {
+    $this->postData['fieldId'] = self::$fieldId;
+    $this->postData['property'] = Controller\EnumParticipantFieldPropertyGet::DEFAULT_DEPOSIT->value;
+    $response = $this->controller->serviceSwitch(
+      Controller\EnumParticipantFieldRequestTopic::PROPERTY->value,
+      Controller\EnumParticipantFieldRequestSubTopic::GET->value,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\ParticipantFieldPropertyGetResponse::class, $data);
+    /** @var DTO\ParticipantFieldPropertyGetResponse $data */
+    $this->assertEquals($this->postData['fieldId'], $data->fieldId);
+    $this->assertEquals(Controller\EnumParticipantFieldPropertyGet::get($this->postData['property']), $data->property);
+    $value = $data->value;
+    $this->assertEquals($this->field->getDefaultValue()->getDeposit(), $value);
+  }
+
+  /** @return void */
+  public function testOptionRegenerate(): void
+  {
+    $data = [
+      'fieldId' => self::$fieldId,
+      'updateStrategy' => ReceivablesGenerator::UPDATE_STRATEGY_REPLACE,
+      // 'progressToken' => XYZ
+    ];
+    try {
+      $this->controller->serviceSwitch(
+        Controller\EnumParticipantFieldRequestTopic::OPTION->value,
+        Controller\EnumParticipantFieldRequestSubTopic::REGENERATE->value,
+        data: $data,
+      );
+    } catch (Throwable $t) {
+      $this->assertInstanceOf(Exceptions\EnduserNotificationException::class, $t);
+    }
+
+    $data['musicianId'] = self::$musicianId;
+    $response = $this->controller->serviceSwitch(
+      Controller\EnumParticipantFieldRequestTopic::OPTION->value,
+      Controller\EnumParticipantFieldRequestSubTopic::REGENERATE->value,
+      data: $data,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\ReceivablesStatistics::class, $data);
+    /** @var DTO\ReceivablesStatistics $data */
+    $this->assertNotEmpty($data->messages);
+    $this->assertEquals(1, $data->added);
+    $this->assertEquals(0, $data->removed);
+    $this->assertEquals(0, $data->changed);
+    $this->assertEquals(0, $data->skipped);
+    $this->assertEquals([$this->musician->getPublicName(firstNameFirst: true)], array_values($data->musicians));
+    $this->assertEquals(1, count($data->receivables));
+  }
+
+  /** @return void */
+  public function testGeneratorBogusSubtopic(): void
+  {
+    try {
+      $this->controller->serviceSwitch(
+        Controller\EnumParticipantFieldRequestTopic::GENERATOR->value,
+        Controller\EnumParticipantFieldRequestSubTopic::REGENERATE->value, // illegal sub-topic
+      );
+    } catch (Throwable $t) {
+      if (!($t instanceof Exceptions\EnduserNotificationException)) {
+        echo 'Unexpected exception ' . get_class($t) . ': ' . $t->getMessage() . PHP_EOL;
+      }
+      $this->assertInstanceOf(Exceptions\EnduserNotificationException::class, $t);
+    }
   }
 
   /**
@@ -282,7 +379,9 @@ class ProjectParticipantFieldsControllerTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testPropertyGet')]
+  #[Attributes\Depends('testOptionRegenerate')]
+  #[Attributes\Depends('testPropertyGetDefaultDeposit')]
+  #[Attributes\Depends('testPropertyGetDefaultValue')]
   #[Attributes\Depends('testRoutesAreDefined')]
   public function testUnapplyMigrations(): void
   {
