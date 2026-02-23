@@ -249,15 +249,13 @@ class SepaDebitMandatesControllerTest extends TestCase
     /** @var TimeFactory $timeFactory */
     $this->timeFactory = $this->getMockBuilder(TimeFactory::class)->getMock();
     $this->timeFactory->method('now')->willReturnCallback(fn() => $this->now);
-    $this->timeFactory->method('sleepUntil')->willReturnCallback(
-      function(float $timestamp) {
-        $diff = $timestamp - $this->now->getTimeStamp();
-        if ($diff > 0) {
-          return time_sleep_until(time() + $diff);
-        }
-        return false;
+    $this->timeFactory->method('sleepUntil')->willReturnCallback(function (float $timestamp) {
+      $diff = $timestamp - $this->now->getTimeStamp();
+      if ($diff > 0) {
+        return time_sleep_until(time() + $diff);
       }
-    );
+      return false;
+    });
 
     $this->timeFactory->expects($this->never())->method('withTimeZone');
     $this->mockProvider->registerClassInstance(TimeFactory::class, $this->timeFactory, global: true);
@@ -305,15 +303,34 @@ class SepaDebitMandatesControllerTest extends TestCase
     restore_error_handler();
   }
 
+  private const INITIAL_FORM_VALUES = [
+    'mandateProjectName' => '',
+    'projectId' => '1',
+    'projectName' => 'TestProject2099',
+    'musicianId' => '1',
+    'musicianName' => 'Musterperson, Max',
+    'bankAccountSequence' => '0',
+    'mandateSequence' => '0',
+    'mandateReference' => '',
+    'mandateNonRecurring' => '0',
+    'writtenMandateId' => '',
+    'memberProjectId' => '0',
+    'bankAccountOwner' => 'Max Musterperson',
+    'bankAccountBLZ' => '',
+    'bankAccountIBAN' => '',
+    'bankAccountBIC' => '',
+    'sepa-validation-toggle' => 'on',
+    'mandateProjectId' => '1',
+    'mandateDate' => '01.01.2099',
+    'mandateLastUsedDate' => '',
+    'uploadPlaceholder' => '',
+    'writtenMandateFileUpload' => '',
+  ];
+
   /** @return void */
   public function testMandateFormBlank(): void
   {
-    $result = $this->controller->mandateForm(
-      musicianId: $this->musician->getId(),
-      projectId: self::$projectId,
-      bankAccountSequence: 0,
-      mandateSequence: 0,
-    );
+    $result = $this->controller->mandateForm(musicianId: $this->musician->getId(), projectId: self::$projectId, bankAccountSequence: 0, mandateSequence: 0);
     $this->assertTrue($result instanceof Http\JSONResponse || $result instanceof Http\DataResponse);
     $data = $result->getData();
     $this->assertInstanceOf(DTO\SepaDebitMandate::class, $data);
@@ -324,7 +341,7 @@ class SepaDebitMandatesControllerTest extends TestCase
     $domDoc->encoding = 'UTF-8';
     $this->assertTrue($domDoc->loadHTML($data->contents, LIBXML_PEDANTIC));
     $formValues = $this->getFormValues($data->contents, '#sepa-debit-mandate-form');
-    // print_r($formValues);
+    $this->assertEquals(self::INITIAL_FORM_VALUES, $formValues);
     $this->assertEquals($this->musician->getPublicName(), $formValues['musicianName']);
     $this->assertEquals($this->musician->getPublicName(firstNameFirst: true), $formValues['bankAccountOwner']);
     $this->assertEquals($this->musician->getId(), $formValues['musicianId']);
@@ -332,7 +349,6 @@ class SepaDebitMandatesControllerTest extends TestCase
     $this->assertEquals($this->project->getName(), $formValues['projectName']);
     $this->assertEquals($this->dateTimeFormatter->formatDate($this->now, 'medium'), $formValues['mandateDate']);
   }
-
 
   /**
    * @return void
@@ -434,7 +450,7 @@ class SepaDebitMandatesControllerTest extends TestCase
       type: 'text/plain',
       size: strlen(self::FILE_DATA),
       original_name: $originalName,
-      upload_max_file_size: (1 << 16),
+      upload_max_file_size: 1 << 16,
       max_human_file_size: '64 kiB',
       meta: null,
       origin: $origin,

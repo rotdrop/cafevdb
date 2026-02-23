@@ -230,7 +230,7 @@ function u(string $arg):int {
               $projectOption = reset($projectOptions); ?>
             <span class="debit-mandate-project">
               <input type="hidden"
-                     class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value ?>
+                     class="mandateProjectId <?= Binding::ONLY_FOR_PROJECT->value ?>"
                      name="mandateProjectId"
                      <?php ($mandateBinding == Binding::FOR_ALL_RECEIVABLES) && u('disabled'); ?>
                      value="<?php p($projectOption['value']); ?>"
