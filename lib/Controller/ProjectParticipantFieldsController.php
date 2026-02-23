@@ -104,12 +104,12 @@ class ProjectParticipantFieldsController extends Controller
   public function serviceSwitch(string $topic, ?string $subTopic, ?array $data = null): Response
   {
     $topic = EnumParticipantFieldRequestTopic::get($topic);
-    $subTopic = $subTopic ? EnumParticipantFieldRequestTopic::get($subTopic) : null;
+    $subTopic = $subTopic ? EnumParticipantFieldRequestSubTopic::get($subTopic) : null;
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
       case EnumParticipantFieldRequestTopic::PROPERTY:
         foreach (['fieldId', 'property'] as $parameter) {
-          if (empty($this->request[$parameter])) {
+          if (empty($this->request->getParam($parameter))) {
             throw new Exceptions\EnduserNotificationException(
               $this->l->t(
                 'Missing parameters in request "%s": "%s".',
@@ -118,7 +118,7 @@ class ProjectParticipantFieldsController extends Controller
           }
         }
         switch ($subTopic) {
-          case EnumParticipantFieldSubTopic::GET:
+          case EnumParticipantFieldRequestSubTopic::GET:
             // fetch the field
             $fieldId = $this->request->getParam('fieldId');
             /** @var Entities\ProjectParticipantField $field */
