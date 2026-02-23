@@ -56,7 +56,7 @@ TINYMCE_VERSION = 7
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
-PHING = $(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
+PHING = $(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
 PHPCS = $(ABSSRCDIR)/vendor/bin/phpcs
 #
 EMACS = $(shell which emacs 2> /dev/null)
@@ -461,13 +461,13 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
 DOXYGEN_HTML = $(DOC_BUILD_DIR)/doxygen/html/
 
 .PHONY: doxygen
-doxygen: pre-php-docs $(DOXYGEN_HTML)/index.html
+doxygen: $(DOXYGEN_HTML)/index.html
 
 $(GH_PAGES_DOXYGEN_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(DOXYGEN_HTML)/index.html
 	mkdir -p $(GH_PAGES_DOXYGEN_HTML)
 	cp -a $(DOXYGEN_HTML)/. $(GH_PAGES_DOXYGEN_HTML)/.
 
-$(DOXYGEN_HTML)/index.html: doc/doxygen/Doxyfile $(APP_BUILD_HASH)
+$(DOXYGEN_HTML)/index.html: doc/doxygen/Doxyfile $(APP_BUILD_HASH) $(MAKEFILE_DEP)
 	rm -rf $(DOXYGEN_HTML)
 	mkdir -p $(DOXYGEN_HTML)
 	cd doc/doxygen && doxygen
@@ -582,7 +582,7 @@ dophpunit: $(PHPUNIT)
 
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
-$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in $(MAKEFILE_DEP)
+$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phing/phing-build.xml.in $(MAKEFILE_DEP)
 	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
 
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
