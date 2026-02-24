@@ -906,8 +906,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
 
       $.post(
         generateAppUrl(
-          ValidationController.END_POINT_VALIDATE_GENERAL,
-          { topic: ValidationController.TOPIC_MONETARY_VALUE },
+          `${ValidationController.END_POINT_VALIDATE_GENERAL}/${ValidationController.TOPIC_MONETARY_VALUE}`,
         ), { value: amount })
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
