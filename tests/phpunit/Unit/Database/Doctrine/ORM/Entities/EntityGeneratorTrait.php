@@ -359,6 +359,7 @@ trait EntityGeneratorTrait
     $projectPayment->setCompositePayment($compositePayment);
 
     $compositePayment->getProjectPayments()->add($projectPayment);
+    $compositePayment->setAmount($compositePayment->sumPaymentsAmount());
     $compositePayment->updateSubject($transliterate);
 
     if ($persist) {

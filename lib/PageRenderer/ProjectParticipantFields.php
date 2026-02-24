@@ -32,7 +32,7 @@ use OCP\IRequest;
 
 use function OCA\CAFEVDB\Common\Functions\strcat as cat;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -1439,7 +1439,7 @@ __EOT__;
               break;
           }
         } elseif ($field === 'deposit') {
-          $value = RationalNumber::create($value)->toDecimal(2);
+          $value = MonetaryNumberType::create($value)->toDecimal();
         }
         $field = self::joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = $value === null ? null : $key . self::JOIN_KEY_SEP . $value;

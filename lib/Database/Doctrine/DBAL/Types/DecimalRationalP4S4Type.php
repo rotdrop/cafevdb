@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Common\DecimalRationalP4S4 as NumberClass;
+
 /**
- * Abstract base class for decimal types
+ * Database type fractions of percentages.
  */
 class DecimalRationalP4S4Type extends AbstractDecimalRationalType
 {
-  protected const PRECISION = 4;
-  protected const SCALE = self::PRECISION;
+  protected const NUMBER_CLASS = NumberClass::class;
 }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,13 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use Throwable;
+
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\AbstractDecimalRational;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\ValueNotConvertible;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\SerializationFailed;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
 
 /**
@@ -34,16 +38,15 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
  */
 abstract class AbstractDecimalRationalType extends Type
 {
-  protected const PRECISION = 10;
-  protected const SCALE = 0;
-  protected const NAME = 'decimal_rational';
+  protected const NUMBER_CLASS = AbstractDecimalRational::class;
+  public const NAME_BASE = 'decimal_rational';
 
   /**
    * {@inheritDoc}
    */
   public function getName()
   {
-    return static::NAME . '_' . static::PRECISION . '_' . static::SCALE;
+    return static::NAME_BASE . '_' . (static::NUMBER_CLASS)::PRECISION . '_' . (static::NUMBER_CLASS)::SCALE;
   }
 
   /**
@@ -53,23 +56,26 @@ abstract class AbstractDecimalRationalType extends Type
    */
   public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
   {
-    $column['precision'] = static::PRECISION;
-    $column['scale'] = static::SCALE;
+    $column['precision'] = (static::NUMBER_CLASS)::PRECISION;
+    $column['scale'] = (static::NUMBER_CLASS)::SCALE;
     return $platform->getDecimalTypeDeclarationSQL($column);
   }
 
   /**
    * {@inheritDoc}
    */
-  public function convertToPHPValue(mixed $value, AbstractPlatform $platform): ?RationalNumber
+  public function convertToPHPValue(mixed $value, AbstractPlatform $platform): ?AbstractDecimalRational
   {
     if ($value === null || $value === '') {
       return null;
     }
-    if ($value instanceof RationalNumber) {
+    if ($value instanceof (static::NUMBER_CLASS)) {
       return $value;
+    } elseif ($value instanceof RationalNumber) {
+      return (static::NUMBER_CLASS)::create($value);
     }
-    return RationalNumber::fromDecimal($value);
+
+    return (static::NUMBER_CLASS)::fromDecimal($value);
   }
 
   /**
@@ -81,7 +87,7 @@ abstract class AbstractDecimalRationalType extends Type
    *
    * @return mixed
    *
-   * @throws ConversionException
+   * @throws SerializationFailed
    */
   public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
   {
@@ -89,21 +95,13 @@ abstract class AbstractDecimalRationalType extends Type
       return null;
     }
     $originalValue = $value;
-    if (!($value instanceof RationalNumber)) {
-      if (is_float($value)) {
-        $value = RationalNumber::fromFloat($value);
-      } elseif (is_int($value)) {
-        $value = RationalNumber::create($value);
-      } elseif (is_string($value)) {
-        $value = RationalNumber::fromDecimal($value);
-      } else {
-        throw ConversionException::conversionFailed($value, static::NAME);
-      }
-    }
     try {
-      return $value->toDecimal(static::SCALE, static::PRECISION);
+      if (!($value instanceof (static::NUMBER_CLASS))) {
+        $value = (static::NUMBER_CLASS)::create($value);
+      }
+      return $value->jsonSerialize();
     } catch (Throwable $t) {
-      throw ConversionException::conversionFailed($originalValue, static::NAME, $t);
+      throw SerializationFailed::new($originalValue, 'decimal', $t->getMessage(), $t);
     }
   }
 }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,31 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Tests\Unit\Common;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as NumberClass;
+use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Database type for whole number percentages.
- */
-class DecimalRationalP2S2Type extends AbstractDecimalRationalType
+use OCA\CAFEVDB\Common\AbstractDecimalRational;
+use OCA\RotDrop\Tests\DeprecationException;
+
+/** Unit-test class. */
+class DecimalRationalTestClass extends AbstractDecimalRational
 {
-  protected const NUMBER_CLASS = NumberClass::class;
+  public const PRECISION = 7;
+  public const SCALE = 4;
+}
+
+/** Test the given number type class */
+#[Attributes\CoversClass(AbstractDecimalRational::class)]
+class DecimalRationalTest extends TestCase
+{
+  use TestDecimalRationalTrait;
+
+  private const NUMBER_CLASS = DecimalRationalTestClass::class;
 }

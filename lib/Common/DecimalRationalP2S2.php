@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Common;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as NumberClass;
+use OutOfBoundsException;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+
+use OCA\CAFEVDB\Constants;
 
 /**
- * Database type for whole number percentages.
+ * Just like RationalNumber, but the jsonSerialize() implementation yields a
+ * decimal number string with the given scale and maximum precision.
  */
-class DecimalRationalP2S2Type extends AbstractDecimalRationalType
+#[TSAttributes\TypeScript]
+#[TSAttributes\LiteralTypeScriptType('string')]
+#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
+class DecimalRationalP2S2 extends AbstractDecimalRational
 {
-  protected const NUMBER_CLASS = NumberClass::class;
+  public const PRECISION = 2;
+  public const SCALE = 2;
 }

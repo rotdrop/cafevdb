@@ -45,7 +45,7 @@ use function OCA\CAFEVDB\Common\Functions\sprintf; // accept backed enums
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
@@ -1147,7 +1147,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
             $header = str_replace('[CSSCLASS]', $cssClass, $header);
             $html .= /* self::DEFAULT_PARTICIPANT_MONETARY_FIELDS_STYLE . */ $header;
 
-            $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
+            $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
             $totalSum['label'] = $this->l->t('Total Amount');
             $totalSum['dueDate'] = null;
 
@@ -1205,7 +1205,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
                         break;
                       case 'deposit':
                         $totals = $fieldData->depositAmount();
-                        $received = RationalNumber::min($totals, $fieldData->amountPaid());
+                        $received = MonetaryNumberType::min($totals, $fieldData->amountPaid());
                         break;
                     }
                     $remaining = $totals->sub($received);
@@ -1573,7 +1573,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
           ];
 
           $replacementKeys = [ 'purpose', 'invoiced', 'totals', 'received', 'remaining' ];
-          $totalSum = array_map(fn(mixed $any) => RationalNumber::zero(), array_fill_keys($replacementKeys, null));
+          $totalSum = array_map(fn(mixed $any) => MonetaryNumberType::zero(), array_fill_keys($replacementKeys, null));
           $totalSum['purpose'] = $this->l->t('Total Amount');
 
           $rowTemplate = $tableTemplate['row'];

@@ -46,14 +46,15 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the DonationReceipts page renderer. */
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
+#[Attributes\CoversClass(PageRenderer\DonationReceipts::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
 #[Attributes\CoversClass(PageRenderer\Registration::class)]
-#[Attributes\CoversClass(PageRenderer\DonationReceipts::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]

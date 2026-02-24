@@ -24,8 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -107,11 +109,10 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private ?string $balancingAccount = null;
 
   /**
-   * @var ?RationalNumber
    * Optional value of a deposit for monetary options.
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
-  private ?RationalNumber $deposit = null;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: true)]
+  private ?MonetaryNumberType $deposit = null;
 
   /**
    * Limit on number of group members for
@@ -337,12 +338,12 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @param null|int|float|string|RationalNumber $deposit
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDataOption
+  public function setDeposit(null|int|float|string|RationalNumber $deposit): self
   {
     if ($deposit !== null) {
-      $deposit = RationalNumber::create($deposit);
+      $deposit = MonetaryNumberType::create($deposit);
     }
     $this->deposit = $deposit;
 
@@ -352,9 +353,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|RationalNumber
+   * @return ?MonetaryNumberType
    */
-  public function getDeposit():?RationalNumber
+  public function getDeposit(): ?MonetaryNumberType
   {
     return $this->deposit ?? null;
   }

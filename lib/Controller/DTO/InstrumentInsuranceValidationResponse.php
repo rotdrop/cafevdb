@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
 
 /**
@@ -44,8 +45,8 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
     public readonly bool $accessory,
     public readonly string $manufacturer,
     public readonly string $constructionYear,
-    public readonly RationalNumber $amount,
-    public readonly RationalNumber $rate,
+    public readonly DecimalRationalMonetary $amount,
+    public readonly DecimalRationalP4S4 $rate,
   ) {
     parent::__construct($messages);
   }
@@ -75,8 +76,8 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
       accessory: $accessory,
       manufacturer: $manufacturer,
       constructionYear: $constructionYear,
-      amount: RationalNumber::create($amount),
-      rate: RationalNumber::create($rate),
+      amount: DecimalRationalMonetary::create($amount),
+      rate: DecimalRationalP4S4::create($rate),
     );
   }
 }

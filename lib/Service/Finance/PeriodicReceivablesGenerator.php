@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ use RuntimeException;
 use DateTimeImmutable;
 
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -50,8 +50,8 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
-  /** @var RationalNumber */
-  protected RationalNumber $amount;
+  /** @var MonetaryNumberType */
+  protected MonetaryNumberType $amount;
 
   /** @var \DateTimeZone */
   private $timeZone;
@@ -70,7 +70,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     parent::__construct($entityManager, $progressStatusService);
     $this->l = $this->l10n();
 
-    $this->amount = RationalNumber::create(1);
+    $this->amount = MonetaryNumberType::create(1);
 
     if (empty($interval)) {
       $interval = new DateInterval('P1D');
@@ -173,7 +173,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     } else {
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $datum = $existingReceivableData->first(); // there is at most one ...
-      $datum->setOptionValue(RationalNumber::create($datum->getOptionValue())->add($this->amount));
+      $datum->setOptionValue(MonetaryNumberType::create($datum->getOptionValue())->add($this->amount));
       $changed = true;
     }
     return [

@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
@@ -42,7 +42,7 @@ class InsuranceRateValidationResponse extends MessagesResponse
   /** {@inheritdoc} */
   public function __construct(
     array $messages,
-    public readonly RationalNumber $rate,
+    public readonly DecimalRationalP4S4 $rate,
     ?DateTimeInterface $date,
     public readonly string $policyNumber,
   ) {
@@ -68,7 +68,7 @@ class InsuranceRateValidationResponse extends MessagesResponse
     return new self(
       messages: $messages,
       date: self::convertToDateTime($date),
-      rate: RationalNumber::create($rate),
+      rate: DecimalRationalP4S4::create($rate),
       policyNumber: $policyNumber,
     );
   }

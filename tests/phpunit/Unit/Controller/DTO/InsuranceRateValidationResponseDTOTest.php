@@ -32,15 +32,18 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\Constants as CoreConstants;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFEVDB\Controller\DTO\InsuranceRateValidationResponse as TestedDTO;
 
 /** Consistency test for ValidatePhoneResponse DTO. */
 #[Attributes\CoversClass(TestedDTO::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 class InsuranceRateValidationResponseDTOTest extends TestCase
 {
   use TestResponseDTOTrait;
+
+  private const TEST_RATE_STRING = '0.0005';
 
   private const DTO_CLASS = TestedDTO::class;
 
@@ -55,9 +58,16 @@ class InsuranceRateValidationResponseDTOTest extends TestCase
   {
     $this->dto = new TestedDTO(
       messages: [ 'A Message' ],
-      rate: RationalNumber::create('0.0005'),
+      rate: RateNumberType::create(self::TEST_RATE_STRING),
       date: new DateTimeImmutable('2099-01-01'),
       policyNumber: 'just a string',
     );
+  }
+
+  /** {@inheritdoc} */
+  public function testSerializedRateRepresentation(): void
+  {
+    $result = $this->dto->jsonSerialize();
+    $this->assertEquals(self::TEST_RATE_STRING, $result['rate']);
   }
 }

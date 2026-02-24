@@ -27,8 +27,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use RuntimeException;
 use Throwable;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -83,8 +85,8 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * options. Supported range is IIIII.DD which is plenty at the time of this
    * writing.
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: true)]
-  private ?RationalNumber $deposit = null;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: true)]
+  private ?MonetaryNumberType $deposit = null;
 
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
@@ -252,13 +254,13 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * @param null|string|RationalNumber $optionValue RationalNumber is only
    * allowed for monetary fields.
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setOptionValue(null|string|RationalNumber $optionValue):ProjectParticipantFieldDatum
+  public function setOptionValue(null|string|RationalNumber $optionValue): self
   {
     if ($optionValue instanceof RationalNumber) {
       $scale = ($this->field->getDataType() == FieldDataType::LIABILITIES || $this->field->getDataType() == FieldDataType::RECEIVABLES)
-        ? 2
+        ? MonetaryNumberType::SCALE
         : -1;
       $this->optionValue = $optionValue->toDecimal($scale);
     } else {
@@ -314,12 +316,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @param null|int|float|string|RationalNumber $deposit
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setDeposit(null|int|float|string|RationalNumber $deposit):ProjectParticipantFieldDatum
+  public function setDeposit(null|int|float|string|RationalNumber $deposit): self
   {
     if ($deposit !== null) {
-      $deposit = RationalNumber::create($deposit);
+      $deposit = MonetaryNumberType::create($deposit);
     }
     $this->deposit = $deposit;
 
@@ -329,9 +331,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get deposit.
    *
-   * @return null|RationalNumber
+   * @return ?MonetaryNumberType
    */
-  public function getDeposit():?RationalNumber
+  public function getDeposit(): ?MonetaryNumberType
   {
     return $this->deposit ?? null;
   }
@@ -460,9 +462,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For FieldDataType::LIABILITIES the amount is negated.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountPayable():RationalNumber
+  public function amountPayable(): MonetaryNumberType
   {
     switch ($this->field->getMultiplicity()) {
       case FieldMultiplicity::SINGLE:
@@ -471,7 +473,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       case FieldMultiplicity::GROUPSOFPEOPLE:
         $storedValue = $this->dataOption->getData();
         try {
-          $value = RationalNumber::fromDecimal($storedValue);
+          $value = MonetaryNumberType::fromDecimal($storedValue);
         } catch (Throwable $t) {
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
@@ -484,7 +486,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         }
         $storedValue = $managementOption->getData();
         try {
-          $value = RationalNumber::fromDecimal($storedValue);
+          $value = MonetaryNumberType::fromDecimal($storedValue);
         } catch (Throwable $t) {
           throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
         }
@@ -492,11 +494,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       case FieldMultiplicity::SIMPLE:
       case FieldMultiplicity::RECURRING:
         if (empty($this->optionValue)) {
-          $value = RationalNumber::zero();
+          $value = MonetaryNumberType::zero();
         } else {
           $storedValue = $this->optionValue;
           try {
-            $value = RationalNumber::fromDecimal($storedValue);
+            $value = MonetaryNumberType::fromDecimal($storedValue);
           } catch (Throwable $t) {
             throw new RuntimeException('Stored value cannot be converted to decimal: "' . $storedValue . '".');
           }
@@ -520,9 +522,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * For FieldDataType::LIABILITIES the amount is negated.
    *
-   * @return null|RationalNumber
+   * @return null|MonetaryNumberType
    */
-  public function depositAmount():?RationalNumber
+  public function depositAmount():?MonetaryNumberType
   {
     $value = null;
     switch ($this->field->getMultiplicity()) {
@@ -561,14 +563,14 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * ProjectParticipantFieldDatum::getField()::getDataType() is
    * 'service-fee'.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountPaid():RationalNumber
+  public function amountPaid(): MonetaryNumberType
   {
     // sum up the values of all related payments
     return $this->payments->reduce(
-      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 
@@ -578,14 +580,14 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if this is a monetary field.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function amountInvoiced():RationalNumber
+  public function amountInvoiced(): MonetaryNumberType
   {
     // sum up the values of all related invoice items
     return $this->invoiceItems->reduce(
-      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 

@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 /** Test aspects of the EntityArrayAdapter */
 #[Attributes\CoversClass(EntityArrayAdapter::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
@@ -78,10 +79,6 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\RepositoryFactory::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityResponse::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
@@ -95,7 +92,13 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
@@ -165,7 +168,7 @@ class EntityArrayAdapterTest extends TestCase
   }
 
   /** @return void */
-  public function testConstrution(): void
+  public function testConstruction(): void
   {
   }
 
@@ -403,7 +406,7 @@ class EntityArrayAdapterTest extends TestCase
     "payments": [
         {
             "__DEPTH__": 0,
-            "amount": {},
+            "amount": "12.23",
             "balanceDocumentsFolder": null,
             "created": null,
             "dateOfReceipt": null,
@@ -541,7 +544,7 @@ class EntityArrayAdapterTest extends TestCase
         "payments": [
             {
                 "__DEPTH__": 0,
-                "amount": {},
+                "amount": "12.23",
                 "balanceDocumentsFolder": null,
                 "created": null,
                 "dateOfReceipt": null,
@@ -709,7 +712,7 @@ class EntityArrayAdapterTest extends TestCase
     "payments": [
         {
             "__DEPTH__": 1,
-            "amount": {},
+            "amount": "12.23",
             "balanceDocumentsFolder": null,
             "created": null,
             "dateOfReceipt": null,
@@ -887,7 +890,7 @@ class EntityArrayAdapterTest extends TestCase
             "projectPayments": [
                 {
                     "__DEPTH__": 0,
-                    "amount": {},
+                    "amount": "12.23",
                     "balanceDocumentsFolder": null,
                     "compositePayment": {
                         "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",

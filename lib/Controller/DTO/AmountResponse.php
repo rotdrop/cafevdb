@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Database\Constants;
 
 /**
  * Base DTO containing messages.
@@ -33,7 +34,7 @@ class AmountResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
 {
   /** {@inheritdoc} */
   public function __construct(
-    public readonly RationalNumber $amount,
+    public readonly MonetaryNumberType $amount,
   ) {
   }
 
@@ -52,7 +53,7 @@ class AmountResponse extends \OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO
     static::initKeys();
     extract(array_intersect_key($data, array_flip(static::$keys[__CLASS__])));
     return new self(
-      amount: RationalNumber::create($amount)->round(2),
+      amount: MonetaryNumberType::create($amount),
     );
   }
 }

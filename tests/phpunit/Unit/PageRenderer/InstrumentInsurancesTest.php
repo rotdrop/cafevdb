@@ -58,6 +58,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]

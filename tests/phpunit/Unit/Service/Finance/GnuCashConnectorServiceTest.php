@@ -49,6 +49,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(Finance\ManuallyGeneratedReceivablesGenerator::class)]
 #[Attributes\CoversClass(Finance\ReceivablesGeneratorFactory::class)]
 #[Attributes\CoversClass(GnuCashConnectorService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\DoNothingProgressStatus::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]

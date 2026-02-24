@@ -28,8 +28,10 @@ use Closure;
 use DateTimeInterface;
 use UnexpectedValueException;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as AppORM;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable as DateTimeImmutable;
@@ -80,8 +82,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
-  private \OCA\CAFEVDB\Common\RationalNumber $amount;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: false, options: ['default' => '0.00'])]
+  private MonetaryNumberType $amount;
 
   #[ORM\Column(type: 'date_immutable', nullable: true)]
   private ?DateTimeImmutable $dateOfReceipt = null;
@@ -207,11 +209,11 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @param int|float|string|RationalNumber $amount
    *
-   * @return ProjectPayment
+   * @return self
    */
-  public function setAmount(int|float|string|RationalNumber $amount):CompositePayment
+  public function setAmount(int|float|string|RationalNumber $amount): self
   {
-    $this->amount = RationalNumber::create($amount);
+    $this->amount = MonetaryNumberType::create($amount);
 
     return $this;
   }
@@ -219,9 +221,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function getAmount():RationalNumber
+  public function getAmount(): MonetaryNumberType
   {
     return $this->amount;
   }
@@ -230,13 +232,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function sumPaymentsAmount():RationalNumber
+  public function sumPaymentsAmount(): MonetaryNumberType
   {
     return $this->projectPayments->reduce(
-      fn(RationalNumber $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, ProjectPayment $payment) => $accumulator->add($payment->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 
@@ -640,28 +642,28 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @return RationalNumber The sum of all contained donation parts.
+   * @return MonetaryNumberType The sum of all contained donation parts.
    */
-  public function getDonationAmount():RationalNumber
+  public function getDonationAmount(): MonetaryNumberType
   {
     return $this->projectPayments->reduce(
-      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      fn(MonetaryNumberType $accumulator, ProjectPayment $payment)
       =>
       $payment->getIsDonation() ? $accumulator->add($payment->getAmount()) : $accumulator,
-      RationalNumber::zero(),
+      MonetaryNumberType::zero(),
     );
   }
 
   /**
-   * @return RationalNumber The sum of all contained non-donation parts.
+   * @return MonetaryNumberType The sum of all contained non-donation parts.
    */
-  public function getNonDonationAmount():RationalNumber
+  public function getNonDonationAmount(): MonetaryNumberType
   {
     return $this->projectPayments->reduce(
-      fn(RationalNumber $accumulator, ProjectPayment $payment)
+      fn(MonetaryNumberType $accumulator, ProjectPayment $payment)
       =>
       $payment->getIsDonation() ? $accumulator : $accumulator->add($payment->getAmount()),
-      RationalNumber::zero(),
+      MonetaryNumberType::zero(),
     );
   }
 

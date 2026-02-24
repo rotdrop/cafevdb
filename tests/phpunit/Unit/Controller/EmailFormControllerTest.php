@@ -83,6 +83,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 #[Attributes\CoversClass(TestedController::class)]
 /** Test the EmailFormController class. */
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Html2Text::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]

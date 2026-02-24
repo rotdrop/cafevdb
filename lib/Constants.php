@@ -35,6 +35,11 @@ class Constants extends TraitsConstants
   const README_NAME = 'README.md';
   const OLD_CONTENT_SEPARATOR = "\n\n----------------------\n\n";
   const RENDER_AS_PARTS = 'parts'; // silly name
+  // Precision for monetary values. This corresponds to the MariaDB type
+  // DECIMAL(7,2), but is also used in non-DB related places. The precision is
+  // the total number of digits, so the range is from [-99999.99, +99999.99].
+  public const MONETARY_PRECISION = 7;
+  public const MONETARY_SCALE = 2;
   // SQL variables in order to grant access to personal data
   const SQL_ROW_ACCESS_TOKEN = 'ROW_ACCESS_TOKEN';
   const SQL_CLOUD_USER_ID = 'CLOUD_USER_ID';

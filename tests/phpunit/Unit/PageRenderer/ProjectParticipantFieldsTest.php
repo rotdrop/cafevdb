@@ -49,7 +49,6 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectPayments page renderer. */
 #[Attributes\CoversClass(PageRenderer\DTO\SidebarNavigationItem::class)]
-#[Attributes\CoversTrait(PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
 #[Attributes\CoversClass(PageRenderer\PME\Config::class)]
 #[Attributes\CoversClass(PageRenderer\ProjectParticipantFields::class)]
 #[Attributes\CoversClass(PageRenderer\Projects::class)]
@@ -58,6 +57,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\CoversTrait(PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use OutOfBoundsException;
 
 use MathPHP\Number\Rational;
@@ -40,7 +41,8 @@ use MathPHP\Number\Rational;
 #[TSAttributes\TypeScript]
 #[TSAttributes\LiteralTypeScriptType('string')]
 #[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
-class RationalNumber extends Rational
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+class RationalNumber extends Rational implements JsonSerializable
 {
   /**
    * @var int
@@ -80,13 +82,13 @@ class RationalNumber extends Rational
    *
    * @param null|int $denominator
    *
-   * @return RationalNumber
+   * @return static
    */
   public static function create(
     null|int|float|string|Rational $integralPartOrAny = null,
     ?int $numerator = null,
     ?int $denominator = null,
-  ):RationalNumber {
+  ): static {
     if (!is_int($integralPartOrAny)) {
       if ($numerator !== null && $denominator !== null) {
         throw new InvalidArgumentException(
@@ -98,16 +100,16 @@ class RationalNumber extends Rational
       if (is_float($integralPartOrAny)) {
         return static::fromFloat($integralPartOrAny);
       } elseif (!empty($integralPartOrAny) && is_string($integralPartOrAny)) {
-        return static::fromDecimal($integralPartOrAny);
-      } elseif ($integralPartOrAny instanceof RationalNumber) {
-        return clone $integralPartOrAny;
+        return str_contains($integralPartOrAny, '/')
+          ? static::fromFractionString($integralPartOrAny)
+          : static::fromDecimal($integralPartOrAny);
       } elseif ($integralPartOrAny instanceof Rational) {
-        return self::fromRational($integralPartOrAny);
+        return static::fromRational($integralPartOrAny);
       } elseif (empty($integralPartOrAny)) {
-        return self::zero();
+        return static::zero();
       }
     }
-    return new RationalNumber($integralPartOrAny, $numerator ?? 0, $denominator ?? 1);
+    return new static($integralPartOrAny, $numerator ?? 0, $denominator ?? 1);
   }
 
   /**
@@ -115,11 +117,11 @@ class RationalNumber extends Rational
    *
    * @param Rational $rational Construct an instance given a base-class instance.
    *
-   * @return RationalNumber
+   * @return static
    */
-  public static function fromRational(Rational $rational):RationalNumber
+  public static function fromRational(Rational $rational): static
   {
-    return new RationalNumber($rational->whole, $rational->numerator, $rational->denominator, true);
+    return new static($rational->whole, $rational->numerator, $rational->denominator, true);
   }
 
   /**
@@ -127,16 +129,16 @@ class RationalNumber extends Rational
    *
    * @param int $precision Number of decimal places after the comma.
    *
-   * @return RationalNumber A new instance modeling the rounded number.
+   * @return static A new instance modeling the rounded number.
    */
-  public function round(int $precision = 0):RationalNumber
+  public function round(int $precision = 0): static
   {
     $rollIn = pow(10, $precision + 1);
     $roundInc = ($this->getWholePart() + $this->getNumerator() < 0) ? -5 : 5;
     $integralPart = $this->getWholePart();
     // this should in principle reduce the chance of overflow ...
     $fractional = $this->sub($integralPart);
-    return new RationalNumber($integralPart, intdiv($fractional->mul($rollIn)->whole + $roundInc, 10), $rollIn / 10);
+    return new static($integralPart, intdiv($fractional->mul($rollIn)->whole + $roundInc, 10), $rollIn / 10);
   }
 
   /**
@@ -176,7 +178,7 @@ class RationalNumber extends Rational
     $abs = $this->abs();
     if ($scale === -1) {
       $result = $abs->whole;
-      $fractionalLimit = self::DECIMAL_DIGITS_MAX - max($abs->numerator > 1 ? strlen($abs->numerator) : 0, ($result == 0 ? 0 : strlen($result)));
+      $fractionalLimit = static::DECIMAL_DIGITS_MAX - max($abs->numerator > 1 ? strlen($abs->numerator) : 0, ($result == 0 ? 0 : strlen($result)));
       $abs = $abs->round($fractionalLimit);
       $abs->subEq($result);
       $fractionalPart = '';
@@ -215,12 +217,12 @@ class RationalNumber extends Rational
    *
    * @param string|int $decimal
    *
-   * @return RationalNumber
+   * @return static
    */
-  public static function fromDecimal(string|int $decimal):RationalNumber
+  public static function fromDecimal(string|int $decimal): static
   {
     if (is_int($decimal)) {
-      return new RationalNumber($decimal, 0, 1);
+      return new static($decimal, 0, 1);
     }
     $matches = [];
     if (!preg_match_all('/^(-)?([1-9]\d*|0?)(?:\.(\d*))?$/', $decimal, $matches)) {
@@ -230,7 +232,62 @@ class RationalNumber extends Rational
     $integralPart = empty($matches[2]) ? 0 : (int)$matches[2][0];
     $numerator = empty($matches[3]) ? 0 : (int)$matches[3][0];
     $denominator = pow(10, strlen($matches[3][0] ?? ''));
-    return new RationalNumber($sign * $integralPart, $sign * $numerator, $denominator);
+    return new static($sign * $integralPart, $sign * $numerator, $denominator);
+  }
+
+  private const SUPER_SCRIPTS = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
+  private const SUB_SCRIPTS = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+
+  /**
+   * Parse a string previously generated by Rational::__toString() or
+   * self::jsonSerialize() back to a number.
+   *
+   * @param string $input
+   *
+   * @return static
+   */
+  public static function fromFractionString(string $input): static
+  {
+    $originalInput = $input;
+    $input = trim($input);
+    $negate = false;
+    if (str_starts_with($input, '-')) {
+      $negate = true;
+      $input = substr($input, 1);
+    }
+    $isInteger = filter_var($input, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+    if (!$isInteger && !str_contains($input, '/')) {
+      throw new InvalidArgumentException("The given string \"{$originalInput}\" does not appear to be a valid fraction.");
+    }
+    // replace super- and subscripts back to ordinary numbers.
+    $from = array_merge(self::SUPER_SCRIPTS, self::SUB_SCRIPTS);
+    $from[] = ' ';
+    $to = array_merge(array_keys(self::SUPER_SCRIPTS), array_keys(self::SUB_SCRIPTS));
+    $to[] = '+';
+    $input = str_replace($from, $to, $input);
+    // now we have at any rate the jsonSerialize() representation.
+    $parts = array_filter(explode('+', $input));
+    $numParts = count($parts);
+    switch ($numParts) {
+      case 2:
+        [$whole, $fraction] = $parts;
+        break;
+      case 1:
+        if (str_contains($parts[0], '/')) {
+          $whole = 0;
+          $fraction = $parts[0];
+        } else {
+          $whole = $parts[0];
+          $fraction = '0/1';
+        }
+        break;
+      default:
+      case 0:
+        throw new InvalidArgumentException("The given string \"{$originalInput}\" does not appear to be a valid fraction.");
+    }
+    [$numerator, $denominator] = explode('/', $fraction);
+    $number = new static((int)$whole, (int)$numerator, (int)$denominator);
+    return $negate ? $number->negate() : $number;
   }
 
   /**
@@ -238,15 +295,15 @@ class RationalNumber extends Rational
    *
    * @param float $value
    *
-   * @return RationalNumber
+   * @return static
    *
    * @bug
    */
-  public static function fromFloat(float $value):RationalNumber
+  public static function fromFloat(float $value): static
   {
     $valueString = sprintf('%.16f', $value);
     // @todo: range checking
-    return self::fromDecimal($valueString);
+    return static::fromDecimal($valueString);
   }
 
   /**
@@ -255,11 +312,11 @@ class RationalNumber extends Rational
    * @param mixed $other An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function assign(mixed $other):RationalNumber
+  public function assign(mixed $other): static
   {
-    $result = self::ensureRationalNumber($other);
+    $result = static::ensureRationalNumber($other);
     $this->whole = $result->whole;
     $this->numerator = $result->numerator;
     $this->denominator = $result->denominator;
@@ -268,33 +325,33 @@ class RationalNumber extends Rational
   }
 
   /** {@inheritdoc} */
-  public function abs():RationalNumber
+  public function abs(): static
   {
-    return self::fromRational(parent::abs());
+    return static::fromRational(parent::abs());
   }
 
   /**
    * Make the current number non-negative in-place.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function absEq():RationalNumber
+  public function absEq(): static
   {
     return $this->assign($this->abs());
   }
 
   /** {@inheritdoc} */
-  public function inverse():RationalNumber
+  public function inverse(): static
   {
-    return self::fromRational(parent::inverse());
+    return static::fromRational(parent::inverse());
   }
 
   /**
    * Shortcut for RationalNumber::invsere().
    *
-   * @return RationalNumber
+   * @return static
    */
-  public function inv():RationalNumber
+  public function inv(): static
   {
     return $this->inverse();
   }
@@ -302,27 +359,27 @@ class RationalNumber extends Rational
   /**
    * Invert the current instance in place.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function invEq():RationalNumber
+  public function invEq(): static
   {
     return $this->assign($this->inv());
   }
 
   /**
-   * @return RationalNumber -$this
+   * @return static -$this
    */
-  public function negate():RationalNumber
+  public function negate(): static
   {
-    return new RationalNumber(-$this->whole, -$this->numerator, $this->denominator, skipNormalization: true);
+    return new static(-$this->whole, -$this->numerator, $this->denominator, skipNormalization: true);
   }
 
   /**
    * Shortcut for RationalNumber::negate().
    *
-   * @return RationalNumber
+   * @return static
    */
-  public function neg():RationalNumber
+  public function neg(): static
   {
     return $this->negate();
   }
@@ -330,17 +387,17 @@ class RationalNumber extends Rational
   /**
    * Negate the current instance in place.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function negEq():RationalNumber
+  public function negEq(): static
   {
     return $this->assign($this->neg());
   }
 
   /** {@inheritdoc} */
-  public function add($r):RationalNumber
+  public function add($r): static
   {
-    return self::fromRational(parent::add(self::ensureRationalNumber($r)));
+    return static::fromRational(parent::add(static::ensureRationalNumber($r)));
   }
 
   /**
@@ -352,17 +409,17 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function addEq(mixed $r):RationalNumber
+  public function addEq(mixed $r): static
   {
     return $this->assign($this->add($r));
   }
 
   /** {@inheritdoc} */
-  public function subtract($r):RationalNumber
+  public function subtract($r): static
   {
-    return self::fromRational(parent::subtract(self::ensureRationalNumber($r)));
+    return static::fromRational(parent::subtract(static::ensureRationalNumber($r)));
   }
 
   /**
@@ -371,9 +428,9 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function sub(mixed $r):RationalNumber
+  public function sub(mixed $r): static
   {
     return $this->subtract($r);
   }
@@ -386,17 +443,17 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function subEq(mixed $r):RationalNumber
+  public function subEq(mixed $r): static
   {
     return $this->assign($this->sub($r));
   }
 
   /** {@inheritdoc} */
-  public function multiply($r):RationalNumber
+  public function multiply($r): static
   {
-    return self::fromRational(parent::multiply(self::ensureRationalNumber($r)));
+    return static::fromRational(parent::multiply(static::ensureRationalNumber($r)));
   }
 
   /**
@@ -405,9 +462,9 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function mul(mixed $r):RationalNumber
+  public function mul(mixed $r): static
   {
     return $this->multiply($r);
   }
@@ -421,17 +478,17 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function mulEq(mixed $r):RationalNumber
+  public function mulEq(mixed $r): static
   {
     return $this->assign($this->mul($r));
   }
 
   /** {@inheritdoc} */
-  public function divide($r):RationalNumber
+  public function divide($r): static
   {
-    return self::fromRational(parent::divide(self::ensureRationalNumber($r)));
+    return static::fromRational(parent::divide(static::ensureRationalNumber($r)));
   }
 
   /**
@@ -440,9 +497,9 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function div(mixed $r):RationalNumber
+  public function div(mixed $r): static
   {
     return $this->divide($r);
   }
@@ -456,37 +513,37 @@ class RationalNumber extends Rational
    * @param mixed $r An instance of RationaNumber or something which can be
    * converted by RationalNumber::create() to a RationalNumber.
    *
-   * @return RationalNumber $this.
+   * @return static $this.
    */
-  public function divEq(mixed $r):RationalNumber
+  public function divEq(mixed $r): static
   {
     return $this->assign($this->div($r));
   }
 
   /** {@inheritdoc} */
-  public function pow(int $exponent):RationalNumber
+  public function pow(int $exponent): static
   {
-    return self::fromRational(parent::pow($exponent));
+    return static::fromRational(parent::pow($exponent));
   }
 
   /** {@inheritdoc} */
-  public static function createZeroValue():RationalNumber
+  public static function createZeroValue(): static
   {
-    return self::fromRational(parent::createZeroValue());
+    return static::fromRational(parent::createZeroValue());
   }
 
   /**
-   * @return RationalNumber Normalized representation of zero.
+   * @return static Normalized representation of zero.
    */
-  public static function zero():RationalNumber
+  public static function zero(): static
   {
-    return new RationalNumber(0);
+    return new static(0);
   }
 
   /** {@inheritdoc} */
   public function equals(mixed $number):bool
   {
-    return parent::equals(self::ensureRationalNumber($number));
+    return parent::equals(static::ensureRationalNumber($number));
   }
 
   /**
@@ -558,12 +615,12 @@ class RationalNumber extends Rational
    *
    * @param mixed $b
    *
-   * @return RationalNumber
+   * @return static
    */
   public static function min(mixed $a, mixed $b): RationalNumber
   {
-    $aNumber = self::ensureRationalNumber($a);
-    return $aNumber->le($b) ? $aNumber : self::ensureRationalNumber($b);
+    $aNumber = static::ensureRationalNumber($a);
+    return $aNumber->le($b) ? $aNumber : static::ensureRationalNumber($b);
   }
 
   /**
@@ -573,12 +630,12 @@ class RationalNumber extends Rational
    *
    * @param mixed $b
    *
-   * @return RationalNumber
+   * @return static
    */
   public static function max(mixed $a, mixed $b): RationalNumber
   {
-    $aNumber = self::ensureRationalNumber($a);
-    $bNumber = self::ensureRationalNumber($b);
+    $aNumber = static::ensureRationalNumber($a);
+    $bNumber = static::ensureRationalNumber($b);
     return $aNumber->ge($bNumber) ? $aNumber : $bNumber;
   }
 
@@ -588,10 +645,29 @@ class RationalNumber extends Rational
    *
    * @param mixed $other
    *
-   * @return RationalNumber
+   * @return static
    */
-  protected static function ensureRationalNumber(mixed $other):RationalNumber
+  protected static function ensureRationalNumber(mixed $other): static
   {
-    return ($other instanceof RationalNumber) ? $other : self::create($other);
+    return ($other instanceof static) ? $other : static::create($other);
+  }
+
+  /**
+   * Return a less fancy string repesentation (-)W+N/D without Unicode super-
+   * and sub-scripts.
+   *
+   * @return string
+   */
+  public function jsonSerialize(): mixed
+  {
+    $sign = $this->sign() == -1 ? '-' : '';
+    $parts = [];
+    if ($this->whole != 0) {
+      $parts[] = (string)\abs($this->whole);
+    }
+    if ($this->numerator != 0) {
+      $parts[] = (string)\abs($this->numerator) . '/' . (string)$this->denominator;
+    }
+    return $sign . implode('+', $parts);
   }
 }

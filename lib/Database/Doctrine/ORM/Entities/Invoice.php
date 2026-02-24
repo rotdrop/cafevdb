@@ -28,8 +28,10 @@ use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
@@ -101,8 +103,8 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * @todo If this is always the sum and thus can be computed, why then this
    * field?
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
-  private RationalNumber $amount;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: false, options: ['default' => '0.00'])]
+  private MonetaryNumberType $amount;
 
   /**
    * This should be set to the date of the actual sending out of the invoice.
@@ -226,11 +228,11 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    *
    * @param int|float|string|RationalNumber $amount
    *
-   * @return ProjectPayment
+   * @return self
    */
-  public function setAmount(int|float|string|RationalNumber $amount):Invoice
+  public function setAmount(int|float|string|RationalNumber $amount): self
   {
-    $this->amount = RationalNumber::create($amount);
+    $this->amount = MonetaryNumberType::create($amount);
 
     return $this;
   }
@@ -238,9 +240,9 @@ class Invoice implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function getAmount():RationalNumber
+  public function getAmount(): MonetaryNumberType
   {
     return $this->amount;
   }
@@ -249,13 +251,13 @@ class Invoice implements \ArrayAccess, \JsonSerializable
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function sumInvoiceItemsAmount():RationalNumber
+  public function sumInvoiceItemsAmount(): MonetaryNumberType
   {
     return $this->invoiceItems->reduce(
-      fn(RationalNumber $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, InvoiceItem $item) => $accumulator->add($item->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 

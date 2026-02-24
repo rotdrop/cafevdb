@@ -46,6 +46,7 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Transliterator;
@@ -978,7 +979,7 @@ class ConfigService
       $locale = $this->getLocale();
     }
     if ($value instanceof RationalNumber) {
-      $value = $value->toDecimal(2);
+      $value = $value->toDecimal(MonetaryNumberType::SCALE);
     }
     $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $result = $fmt->formatCurrency((float)$value, $this->currencyIsoCode());

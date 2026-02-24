@@ -27,8 +27,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use JsonSerializable;
 use ArrayAccess;
 
+use OCA\CAFEVDB\Common\DecimalRationalP2S2 as TaxRateNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalP2S2Type as RateDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
@@ -54,9 +56,6 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
-  public const RATE_PRECISION = 2;
-  public const RATE_SCALE = self::RATE_PRECISION;
-
   #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumTaxType::CORPORATE_INCOME])]
   private Types\EnumTaxType $taxType = Types\EnumTaxType::CORPORATE_INCOME;
 
@@ -65,8 +64,8 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    * exception. This assumes that governments never issue fractional tax rates
    * ... This not the percentage, but the fraction between 0 and 1.
    */
-  #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'default' => '0.00'])]
-  private RationalNumber $rate;
+  #[ORM\Column(type: RateDatabaseType::NAME_BASE . '_' . TaxRateNumberType::PRECISION . '_' . TaxRateNumberType::SCALE, nullable: false, options: ['unsigned' => true, 'default' => '0.00'])]
+  private TaxRateNumberType $rate;
 
   /**
    * Country where this is legally valid.
@@ -133,11 +132,11 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
    *
    * @param int|float|string|RationalNumber $rate
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setRate(int|float|string|RationalNumber $rate):TaxationStatutorySource
+  public function setRate(int|float|string|RationalNumber $rate): self
   {
-    $this->rate = RationalNumber::create($rate);
+    $this->rate = TaxRateNumberType::create($rate);
 
     return $this;
   }
@@ -145,9 +144,9 @@ class TaxationStatutorySource implements JsonSerializable, ArrayAccess
   /**
    * Get rate.
    *
-   * @return RationalNumber
+   * @return TaxRateNumberType
    */
-  public function getRate():RationalNumber
+  public function getRate(): TaxRateNumberType
   {
     return $this->rate;
   }

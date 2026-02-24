@@ -26,7 +26,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
@@ -559,13 +561,13 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * @return RationalNumber The sum of all contained split transactions.
+   * @return MonetaryNumberType The sum of all contained split transactions.
    */
-  public function totals():RationalNumber
+  public function totals(): MonetaryNumberType
   {
     return $this->payments->reduce(
-      fn(RationalNumber $accumulator, CompositePayment $payment) => $accumulator->addEq($payment->getAmount()),
-      RationalNumber::zero(),
+      fn(MonetaryNumberType $accumulator, CompositePayment $payment) => $accumulator->addEq($payment->getAmount()),
+      MonetaryNumberType::zero(),
     );
   }
 

@@ -28,20 +28,30 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\AppFramework\Http;
 use OCP\IRequest;
 use OCP\Validation\IManager as ValidationManager;
 
+use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Controller;
+use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\ValidationController as TestedController;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ValidationController. */
-#[Attributes\CoversClass(Controller\ValidationController::class)]
+#[Attributes\CoversClass(TestedController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AmountResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\FuzzyInputService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
 class ValidationControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
@@ -53,7 +63,7 @@ class ValidationControllerTest extends TestCase
 
   private MockProvider $mockProvider;
 
-  private Controller\ValidationController $controller;
+  private TestedController $controller;
 
   private array $postData = [];
 
@@ -73,9 +83,9 @@ class ValidationControllerTest extends TestCase
     );
 
     // For real tests we will need to mock some methods.
-    $fuzzyInput = $this->createStub(FuzzyInputService::class);
+    $fuzzyInput = $this->mockProvider->getAppContainer()->get(FuzzyInputService::class);
 
-    $this->controller = new Controller\ValidationController(
+    $this->controller = new TestedController(
       appName: $this->mockProvider->appName,
       request: $request,
       configService: $this->mockProvider->getConfigService(),
@@ -87,5 +97,29 @@ class ValidationControllerTest extends TestCase
   public function tearDown(): void
   {
     restore_error_handler();
+  }
+
+  private const MONETARY_INPUT_VALUES = [
+    '13', '0,3335', '1,3', '1,205',
+  ];
+
+  /** @return void */
+  public function testValidateMonetaryValue(): void
+  {
+    foreach (self::MONETARY_INPUT_VALUES as $inputValue) {
+      $response = $this->controller->serviceSwitch(
+        topic: TestedController::TOPIC_MONETARY_VALUE,
+        value: $inputValue,
+      );
+      $this->assertInstanceOf(Http\JSONResponse::class, $response);
+      /** @var Http\JSONResponse $response */
+      $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+      $data = $response->getData();
+      $this->assertInstanceOf(DTO\AmountResponse::class, $data);
+      $rational = RationalNumber::create(str_replace(',', '.', $inputValue))->round(2);
+      $this->assertEquals(true, $rational->equals($data->amount));
+      $jsonData = json_decode(json_encode($data), true);
+      $this->assertEquals(true, $rational->equals(RationalNumber::create($jsonData['amount'])));
+    }
   }
 }

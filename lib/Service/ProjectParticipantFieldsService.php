@@ -31,6 +31,7 @@ use RuntimeException;
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Common;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
@@ -314,11 +315,13 @@ class ProjectParticipantFieldsService
    * ]
    * ```
    */
-  public static function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null):array
-  {
+  public static function participantMonetaryObligations(
+    Entities\Musician $musician,
+    ?Entities\Project $project = null,
+  ): array {
     $obligations = [
-      'sum' => RationalNumber::zero(), // total sum
-      'received' => RationalNumber::zero(), // sum of payments
+      'sum' => MonetaryNumberType::zero(), // total sum
+      'received' => MonetaryNumberType::zero(), // sum of payments
     ];
 
     if (empty($project)) {
@@ -349,7 +352,7 @@ class ProjectParticipantFieldsService
 
   /**
    * Internal function: given a surcharge choice compute the associated amount
-   * of money and return that as RationalNumber. This is used in the legacy
+   * of money and return that as MonetaryNumberType. This is used in the legacy
    * display code in ParticipantTotalFeesTrait.
    *
    * @param string|null $key Key from the participant-fields data table. $key may
@@ -360,18 +363,21 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $participantField Field definition.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):RationalNumber
-  {
+  public function participantFieldSurcharge(
+    ?string $key,
+    ?string $value,
+    Entities\ProjectParticipantField $participantField,
+  ): MonetaryNumberType {
     switch ($participantField->getMultiplicity()) {
       case FieldMultiplicity::SIMPLE:
-        return RationalNumber::create($value);
+        return MonetaryNumberType::create($value);
       case FieldMultiplicity::GROUPOFPEOPLE:
         if (empty($key)) {
           break;
         }
-        return RationalNumber::create($participantField->getManagementOption()->getData());
+        return MonetaryNumberType::create($participantField->getManagementOption()->getData());
       case FieldMultiplicity::SINGLE:
         if (empty($key)) {
           break;
@@ -382,7 +388,7 @@ class ProjectParticipantFieldsService
         if ((string)$dataOption['key'] != $key) {
           $this->logWarn('Stored value "' . $key . '" unequal to stored key "' . $dataOption['key'] . '"');
         }
-        return RationalNumber::create($dataOption['data']);
+        return MonetaryNumberType::create($dataOption['data']);
       case FieldMultiplicity::GROUPSOFPEOPLE:
       case FieldMultiplicity::MULTIPLE:
         if (empty($key)) {
@@ -390,19 +396,19 @@ class ProjectParticipantFieldsService
         }
         foreach ($participantField->getDataOptions() as $dataOption) {
           if ((string)$dataOption['key'] == $key) {
-            return RationalNumber::create($dataOption['data']);
+            return MonetaryNumberType::create($dataOption['data']);
           }
         }
         $this->logError('No data item for multiple choice key "'.$key.'"');
-        return RationalNumber::zero();
+        return MonetaryNumberType::zero();
       case FieldMultiplicity::PARALLEL:
         if (empty($key)) {
           break;
         }
         $keys = Util::explode(',', $key);
         $found = false;
-        /** @var RationalNumber $amount */
-        $amount = RationalNumber::zero();
+        /** @var MonetaryNumberType $amount */
+        $amount = MonetaryNumberType::zero();
         foreach ($participantField->getDataOptions() as $dataOption) {
           if (array_search((string)$dataOption['key'], $keys) !== false) {
             $amount->addEq($dataOption['data']);
@@ -420,7 +426,7 @@ class ProjectParticipantFieldsService
         // $keys = Util::explode(',', $key);
         $values = Util::explodeIndexed($value);
 
-        $amount = RationalNumber::zero();
+        $amount = MonetaryNumberType::zero();
         foreach ($values as $key => $value) {
           if (!empty($value)) {
             $amount->addEq($value);
@@ -428,7 +434,7 @@ class ProjectParticipantFieldsService
         }
         return $amount;
     }
-    return RationalNumber::zero();
+    return MonetaryNumberType::zero();
   }
 
   /**
@@ -584,7 +590,7 @@ class ProjectParticipantFieldsService
    * Return the effective value of the given datum. In particular
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
-   * values to RationalNumber, int to int, boolean to boolean.
+   * values to MonetaryNumberType, int to int, boolean to boolean.
    *
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
@@ -605,9 +611,9 @@ class ProjectParticipantFieldsService
         return Util::convertToDateTime($value);
       case FieldDataType::FLOAT:
       case FieldDataType::RECEIVABLES:
-        return RationalNumber::create($value);
+        return MonetaryNumberType::create($value);
       case FieldDataType::LIABILITIES:
-        return RationalNumber::create($value)->neg();
+        return MonetaryNumberType::create($value)->neg();
       case FieldDataType::INTEGER:
         return intval($value);
       case FieldDataType::CLOUD_FILE:

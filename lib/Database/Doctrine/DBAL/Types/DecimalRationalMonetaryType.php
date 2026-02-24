@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,20 +25,21 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Database\Constants;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary;
 
 /**
  * Abstract base class for decimal types
  */
 class DecimalRationalMonetaryType extends AbstractDecimalRationalType
 {
-  protected const PRECISION = Constants::MONETARY_PRECISION;
-  protected const SCALE = Constants::MONETARY_SCALE;
+  protected const NUMBER_CLASS = DecimalRationalMonetary::class;
+  public const NAME = parent::NAME_BASE . '_monetary';
 
   /**
    * {@inheritDoc}
    */
   public function getName()
   {
-    return static::NAME . '_monetary';
+    return self::NAME;
   }
 }

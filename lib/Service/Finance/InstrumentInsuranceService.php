@@ -29,6 +29,9 @@ use DateTimeImmutable as DateTime;
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Common\DecimalRationalP2S2 as TaxRateNumberType;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4 as InsuranceRateNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -56,11 +59,9 @@ class InstrumentInsuranceService
   private $insurancesRepository;
 
   /**
-   * @var null|RationalNumber
-   *
    * The insurance tax rate.
    */
-  private ?RationalNumber $taxRate = null;
+  private ?TaxRateNumberType $taxRate = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -133,7 +134,7 @@ class InstrumentInsuranceService
     DateTimeInterface $insuranceStart,
     ?DateTimeInterface $insuranceEnd,
     DateTimeInterface $dueDate,
-  ):RationalNumber
+  ): RationalNumber
   {
     $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
@@ -200,9 +201,9 @@ class InstrumentInsuranceService
   /**
    * Fetch the tax rate from the TaxationStatutorySources table.
    *
-   * @return RationalNumber
+   * @return TaxRateNumberType
    */
-  public function getTaxRate():RationalNumber
+  public function getTaxRate(): TaxRateNumberType
   {
     if ($this->taxRate !== null) {
       return $this->taxRate;
@@ -243,14 +244,14 @@ class InstrumentInsuranceService
    * @param null|array $dueInterval Return the minimum and maximum due dates
    * found for the musician.
    *
-   * @return RationalNumber Insurance fees computed.
+   * @return MonetaryNumberType Insurance fees computed.
    */
   public function insuranceFee(
     mixed $musicianOrId,
     null|string|Entities\InsuranceBroker $broker,
     $date = null,
     ?array &$dueInterval = null,
-  ):RationalNumber {
+  ): MonetaryNumberType {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
       $date = new DateTime();
@@ -261,7 +262,7 @@ class InstrumentInsuranceService
 
     $taxFactor = $this->getTaxRate()->add(1);
 
-    $fee = RationalNumber::zero();
+    $fee = MonetaryNumberType::zero();
     /** @var \DateTimeInterface $minDueDate */
     /** @var \DateTimeInterface $maxDueDate */
     $minDueDate = $maxDueDate = null;
@@ -481,7 +482,7 @@ class InstrumentInsuranceService
       if (empty($insuranceOverview['musicians'][$instrumentHolderId])) {
         $insuranceOverview['musicians'][$instrumentHolderId] = [
           'name' => $instrumentHolder->getPublicName(true),
-          'subTotals' => RationalNumber::create(0),
+          'subTotals' => MonetaryNumberType::create(0),
           'items' => [],
         ];
       }
@@ -504,10 +505,10 @@ class InstrumentInsuranceService
       $insuranceOverview['musicians'][$instrumentHolderId]['items'][] = $itemInfo;
     }
 
-    $annual = RationalNumber::zero();
+    $annual = MonetaryNumberType::zero();
     foreach ($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
-      $subTotals = RationalNumber::zero();
+      $subTotals = MonetaryNumberType::zero();
       foreach ($info['items'] as $itemInfo) {
         $subTotals = $subTotals->add($itemInfo['fee']);
       }

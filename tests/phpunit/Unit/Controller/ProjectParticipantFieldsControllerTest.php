@@ -379,6 +379,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
    *
    * @return void
    */
+  #[Attributes\Depends('testGeneratorBogusSubtopic')]
   #[Attributes\Depends('testOptionRegenerate')]
   #[Attributes\Depends('testPropertyGetDefaultDeposit')]
   #[Attributes\Depends('testPropertyGetDefaultValue')]

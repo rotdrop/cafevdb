@@ -30,11 +30,12 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Controller\DTO\AmountResponse as TestedDTO;
 
 /** Consistency test for ValidatePhoneResponse DTO. */
 #[Attributes\CoversClass(TestedDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 class AmountResponseDTOTest extends TestCase
 {
@@ -44,6 +45,8 @@ class AmountResponseDTOTest extends TestCase
 
   private TestedDTO $dto;
 
+  private MonetaryNumberType $number;
+
   /**
    * {@inheritdoc}
    *
@@ -51,8 +54,16 @@ class AmountResponseDTOTest extends TestCase
    */
   public function setup(): void
   {
+    $this->number = MonetaryNumberType::create(1, 1, 3);
     $this->dto = new TestedDTO(
-      amount: RationalNumber::create(1, 1, 3)->round(2),
+      amount: $this->number,
     );
+  }
+
+    /** {@inheritdoc} */
+  public function testSerializedAmountRepresentation(): void
+  {
+    $result = $this->dto->jsonSerialize();
+    $this->assertEquals('1.33', $result['amount']);
   }
 }

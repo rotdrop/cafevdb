@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Controller\DTO\ParticipantFieldPropertyGetDefaultValue as DefaultValue;
 use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet as EnumPropertyGet;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM;
@@ -40,7 +40,7 @@ class ParticipantFieldPropertyGetResponse extends MessagesResponse
     array $messages,
     public readonly int $fieldId,
     public readonly EnumPropertyGet $property,
-    public readonly null|DefaultValue|RationalNumber $value,
+    public readonly null|DefaultValue|MonetaryNumberType $value,
   ) {
     parent::__construct($messages);
   }

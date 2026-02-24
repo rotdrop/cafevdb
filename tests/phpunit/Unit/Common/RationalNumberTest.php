@@ -47,7 +47,11 @@ class RationalNumberTest extends TestCase
     parent::setup();
   }
 
-  const DECIMALS = [
+  private const SUPERSCRIPTS = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
+
+  private const SUBSCRIPTS = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+
+  private const DECIMALS = [
     '.1234' => '⁶¹⁷/₅₀₀₀',
     '-.1234' => '-⁶¹⁷/₅₀₀₀',
     '0.1234' => '⁶¹⁷/₅₀₀₀',
@@ -104,6 +108,41 @@ class RationalNumberTest extends TestCase
     foreach ($outOfBoundsRationals as $ctorArgs) {
       $this->expectException(OutOfBoundsException::class);
       (new RationalNumber(...$ctorArgs))->toDecimal(4, 4);
+    }
+  }
+
+  /**
+   * Test less fancy jsonSerialize() implementation which returns a non-Unicode string.
+   *
+   * @return void
+   */
+  public function testJsonSerialize(): void
+  {
+    $from = array_merge(self::SUPERSCRIPTS, self::SUBSCRIPTS, [' ']);
+    $to = array_merge(array_keys(self::SUBSCRIPTS), array_keys(self::SUBSCRIPTS), ['+']);
+    $jsonDecimals = array_map(fn(string $fancy) => str_replace($from, $to, $fancy), self::DECIMALS);
+
+    foreach ($jsonDecimals as $decimal => $rationalAsString) {
+      $number = RationalNumber::fromDecimal($decimal);
+      $this->assertEquals($rationalAsString, $number->jsonSerialize());
+    }
+  }
+
+  /**
+   * Test back conversion from __toString() or jsonSerialize(). Both are
+   * lossless, so a back conversion makes perfect sense.
+   *
+   * @return void
+   */
+  public function testFromFractionString(): void
+  {
+    foreach (self::DECIMALS as $decimal => $rationalAsString) {
+      $fromDecimal = RationalNumber::fromDecimal($decimal);
+      $fromFractionString = RationalNumber::fromFractionString($rationalAsString);
+      $this->assertEquals($fromDecimal, $fromFractionString);
+      $jsonString = $fromDecimal->jsonSerialize();
+      $fromJsonString = RationalNumber::fromFractionString($jsonString);
+      $this->assertEquals($fromFractionString, $fromJsonString);
     }
   }
 

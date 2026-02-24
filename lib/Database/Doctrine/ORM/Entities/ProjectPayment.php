@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
@@ -46,8 +48,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * Project payments are actually also expenses in which case the sign of the
    * payment is negative. Receptions are positive.
    */
-  #[ORM\Column(type: 'decimal_rational_monetary', nullable: false, options: ['default' => '0.00'])]
-  private RationalNumber $amount;
+  #[ORM\Column(type: MonetaryDatabaseType::NAME, nullable: false, options: ['default' => '0.00'])]
+  private MonetaryNumberType $amount;
 
   /**
    * Flags the payment as a donation. The supporting document of the
@@ -212,9 +214,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectPayment
    */
-  public function setAmount(int|float|string|RationalNumber $amount):ProjectPayment
+  public function setAmount(int|float|string|RationalNumber $amount): self
   {
-    $this->amount = RationalNumber::create($amount);
+    $this->amount = MonetaryNumberType::create($amount);
 
     return $this;
   }
@@ -222,9 +224,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get amount.
    *
-   * @return RationalNumber
+   * @return MonetaryNumberType
    */
-  public function getAmount():RationalNumber
+  public function getAmount(): MonetaryNumberType
   {
     return $this->amount;
   }

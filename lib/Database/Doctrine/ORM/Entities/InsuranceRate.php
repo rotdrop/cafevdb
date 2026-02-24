@@ -27,7 +27,9 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
@@ -49,9 +51,6 @@ class InsuranceRate implements \ArrayAccess
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\DateTimeTrait;
 
-  public const RATE_PRECISION = 4;
-  public const RATE_SCALE = self::RATE_PRECISION;
-
   #[CJH\ForeignKey(
     targetEntity: 'InsuranceBroker',
     referencedColumnName: 'short_name',
@@ -66,8 +65,8 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\Id]
   private Types\EnumGeographicalScope $geographicalScope;
 
-  #[ORM\Column(type: 'decimal_rational_' . self::RATE_PRECISION . '_' . self::RATE_SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
-  private RationalNumber $rate;
+  #[ORM\Column(type: RateDatabaseType::NAME_BASE . '_' . RateNumberType::PRECISION . '_' . RateNumberType::SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
+  private RateNumberType $rate;
 
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'start of the yearly insurance period'])]
   private DateTimeImmutable $dueDate;
@@ -141,11 +140,11 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param int|float|string|RationalNumber $rate
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setRate(int|float|string|RationalNumber $rate):InsuranceRate
+  public function setRate(int|float|string|RationalNumber $rate): self
   {
-    $this->rate = RationalNumber::create($rate);
+    $this->rate = RateNumberType::create($rate);
 
     return $this;
   }
@@ -153,9 +152,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get rate.
    *
-   * @return null|RationalNumber
+   * @return ?RateNumberType
    */
-  public function getRate():?RationalNumber
+  public function getRate(): ?RateNumberType
   {
     return $this->rate ?? null;
   }

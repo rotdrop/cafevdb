@@ -31,7 +31,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -317,11 +317,11 @@ class GnuCashConnectorService
           $accountData['payments'],
         ),
       );
-      /** @var RationalNumber $subTotals */
+      /** @var MonetaryNumberType $subTotals */
       $subTotals = array_reduce(
         $accountData['payments'],
-        fn(RationalNumber $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
-        RationalNumber::zero(),
+        fn(MonetaryNumberType $carry, Entities\ProjectPayment $payment) => $carry->add($payment->getAmount()),
+        MonetaryNumberType::zero(),
       );
       $transactionId = md5($receivableAccount);
       $data[] = [
@@ -357,7 +357,7 @@ class GnuCashConnectorService
             }
           }
         }
-        /** @var RationalNumber $amount */
+        /** @var MonetaryNumberType $amount */
         $data[] = [
           'transactionId' => $transactionId,
           'date' => '',

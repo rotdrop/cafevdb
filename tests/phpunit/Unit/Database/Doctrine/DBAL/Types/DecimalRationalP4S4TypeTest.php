@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as NumberClass;
+use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Database type for whole number percentages.
- */
-class DecimalRationalP2S2Type extends AbstractDecimalRationalType
+use OCA\CAFEVDB\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Common\DecimalRationalP4S4 as NumberType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalP4S4Type as DatabaseType;
+
+/** Test some aspects of quasi-fixed-point numbers. */
+#[Attributes\CoversClass(DatabaseType::class)]
+#[Attributes\CoversClass(AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+class DecimalRationalP4S4TypeTest extends TestCase
 {
-  protected const NUMBER_CLASS = NumberClass::class;
+  use TestDecimalRationalTypeTrait;
+
+  private const NUMBER_CLASS = NumberType::class;
+  private const DATABASE_TYPE_CLASS = DatabaseType::class;
 }

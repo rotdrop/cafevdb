@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -468,7 +468,7 @@ class SepaBulkTransactionService
   public function generateProjectPayments(Entities\ProjectParticipant $participant, array $receivableOptions, ?\DateTimeInterface $transactionDueDate = null):Entities\CompositePayment
   {
     $payments = new ArrayCollection();
-    $totalAmount = RationalNumber::zero();
+    $totalAmount = MonetaryNumberType::zero();
     $project = $participant->getProject();
     $musician = $participant->getMusician();
 
@@ -498,7 +498,7 @@ class SepaBulkTransactionService
       foreach ($receivableOption->getMusicianFieldData($musician) as $receivable) {
         $paidAmount = $receivable->amountPaid();
         $payableAmount = $receivable->amountPayable();
-        $depositAmount = $receivable->depositAmount() ?? RationalNumber::zero();
+        $depositAmount = $receivable->depositAmount() ?? MonetaryNumberType::zero();
         if ($payableAmount->sign() * $depositAmount->sign() < 0) {
           throw new RuntimeException(
             $this->l->t(
