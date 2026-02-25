@@ -1831,7 +1831,7 @@ WHERE pp.project_id = $this->projectId",
               $groupMemberFdd['display|LFVD'] = array_merge(
                 $groupMemberFdd['display'],
                 [
-                  'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
+                  'prefix' => '<span class="allowed-option money group service-fee flex-container flex-baseline"><span class="allowed-option-name money clip-long-text group">',
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $tableName) {
                     $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = empty($selectedKey) ? '' : ' selected';
