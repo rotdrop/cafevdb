@@ -3239,9 +3239,12 @@ EOT;
 			$readonly = $this->disabledTag($k); // || count($vals) == 0;
 			$mandatory = $this->mandatory($k);
 			$selected = $row[self::QUERY_FIELD . $k] ?? null;
-			if ($selected === null) {
-				$selected = $this->fdd[$k]['default'] ?? null;
-			}
+			// Default value should not be applied but just when
+			// displaying the add dialog.
+			//
+			// if ($selected === null) {
+			// 	$selected = $this->fdd[$k]['default'] ?? null;
+			// }
 			$strip_tags = true;
 
 			$attributes = $this->htmlAttributes($operation, $k, $row);
@@ -5899,12 +5902,18 @@ EOT;
 						// echo "<!-- ".$fn." -->\n";
 					}
 				}
-				if  ($this->col_has_checkboxes($k) ||
-					 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
-					if  (empty($fn)) {
-						$fn = @$this->fdd[$k]['default'];
-					}
-				}
+				// The default value has been installed by
+				// display_add_record(), if $fn now is empty then this
+				// is the user's choice or an empty default value. In
+				// either case the default value MUST NOT be set
+				// again.
+				//
+				// if  ($this->col_has_checkboxes($k) ||
+				// 	 ($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
+				// 	if  (empty($fn)) {
+				// 		$fn = @$this->fdd[$k]['default'];
+				// 	}
+				// }
 				foreach (array_keys($this->key) as $key) {
 					if ($fd == $key) {
 						$key_col_val[$key] = $fn;
@@ -6066,8 +6075,10 @@ EOT;
 			if ($this->col_has_checkboxes($k) ||
 				($this->col_has_radio_buttons($k) && $this->col_has_multiple_select($k))) {
 				$checks[$fd] = true;
-				$defaults[$fd] = @$this->fdd[$k]['default'];
-				//error_log('checkbox: '.$fd.' value '.$fn);
+				// Defaults have been installed initially and MUST NOT
+				// be enforced after user interaction.
+				//
+				// $defaults[$fd] = @$this->fdd[$k]['default'];
 			}
 			// Don't include disabled fields into newvals, but
 			// keep for reference in oldvals. Keep readonly-fields in newvals
@@ -6116,9 +6127,11 @@ EOT;
 					}
 				}
 			} else if (!empty($checks[$fd]) && empty($value)) {
-				if (intval($value) !== intval($oldvals[$fd])) {
-					// checkboxes, empty means unchecked, but the DB
-					// may as well store nothing or 0.
+				// So $value is empty. $oldvals[$fd] is a database value which may
+				// - contain a non-empty string, i.e. a non trivial checkbox value
+				// - something equivalent to a boolean value
+				$oldAsBoolean = filter_var($oldvals[$fd], FILTER_VALIDATE_BOOL, ['flags' => FILTER_NULL_ON_FAILURE]);
+				if ($oldAsBoolean === null || $oldAsBoolean === true) {
 					$changed[] = $fd;
 					$newvals[$fd] = $defaults[$fd];
 				}

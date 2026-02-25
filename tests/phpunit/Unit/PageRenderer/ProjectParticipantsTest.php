@@ -115,6 +115,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\HashHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\InvoiceNumberHandler::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable\LoginNameSlugHandler::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable\Encryption::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy::class)]
@@ -146,6 +147,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260207000624::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\CalDavService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\CloudUserConnectorService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ContactsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\DoctrineMigrationsService::class)]
@@ -212,6 +214,8 @@ class ProjectParticipantsTest extends TestCase
 
   private static int $projectInstrumentId;
 
+  private static int $yesNoFieldId;
+
   private DateTimeImmutable $now;
 
   /** {@inheritdoc} */
@@ -239,6 +243,8 @@ class ProjectParticipantsTest extends TestCase
       self::$musicianId = $this->musician->getId();
       $this->generateInstruments(persist: true);
       $this->generateReceivable(persist: true, generator: DoNothingReceivablesGenerator::class);
+      $yesNoField = $this->generateYesNoField(persist: true);
+      self::$yesNoFieldId = $yesNoField->getId();
       $projectInstrument = $this->participant->getProjectInstruments()->first();
       self::$projectInstrumentId = $projectInstrument->getInstrument()->getId();
       self::$migrationsApplied = true;
@@ -415,8 +421,8 @@ class ProjectParticipantsTest extends TestCase
     'dataPrefix' => [
       'musicians' => 'Musicians:',
     ],
-    'participationStatusFddIndex' => '36',
-    'instrumentsFddIndex' => '29',
+    'participationStatusFddIndex' => '38',
+    'instrumentsFddIndex' => '31',
     'PME_sys_mtable' => 'ProjectParticipants',
     'PME_sys_mkey' => [
       'project_id' => 'int',
@@ -475,17 +481,17 @@ class ProjectParticipantsTest extends TestCase
       '12.23',
       '',
     ],
-    'PME_data_ProjectParticipantFieldsData@1:option_key' =>
-    array (
+    'PME_data_ProjectParticipantFieldsData@1:option_key' => [
       0 => '2b826186-ef29-11f0-a81f-27218343fe72',
       1 => '00000000-0000-0000-0000-000000000000',
-    ),
-    'recurringReceivablesUpdateStrategy' =>
-    array (
+    ],
+    'recurringReceivablesUpdateStrategy' => [
       1 => 'exception',
-    ),
+    ],
     'PME_data_ProjectParticipantFieldsData@1:deleted' => '',
     'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '00000000-0000-0000-0000-000000000000:,2b826186-ef29-11f0-a81f-27218343fe72:',
+    'PME_data_ProjectParticipantFieldsData@2:option_value' => '',
+    'PME_data_ProjectParticipantFieldsData@2:deleted' => '',
     'PME_data_MusicianEmailAddresses@all:address' => ['john.doe@nowhere.tld'],
     'PME_data_Musicians:email' => 'john.doe@nowhere.tld',
     'PME_data_Musicians:mobile_phone' => '0815',
@@ -679,6 +685,118 @@ class ProjectParticipantsTest extends TestCase
     $this->testRenderUpdateApply();
   }
 
+  // non-participant field checkboxes.
+  private const CHECKBOX_VALUES = [
+    'PME_data_ProjectInstruments:section_leader' => ['1-1:1'],
+    'PME_data_Musicians:cloud_account_deactivated' => ['1'],
+    'PME_data_Musicians:cloud_account_disabled' => ['1'],
+  ];
+
+  /**
+   * Uncheck the three standard check-boxes and check them again in a
+   * following test. Additionally, an unchecked "paritcipant field" will be
+   * checked here and unchecked again in the following test.
+   *
+   * This test exists as an unchecked checkbox simply does not
+   * contribute to the form-data s.t. the receiving handler has to identify
+   * missing checkbox values as boolean false.
+   *
+   * @return void
+   */
+  #[Attributes\Depends('testRenderUpdateApplyRemoveInstrument')]
+  public function testRenderUpdateApplyToggleCheckBoxes(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    /** @var Entities\ProjectParticipantField $yesNoField */
+    $yesNoField = $this->entityManager->find(Entities\ProjectParticipantField::class, self::$yesNoFieldId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    $this->postData = self::RENDER_UPDATE_FORM_VALUES;
+    $yesNoName = "PME_data_ProjectParticipantFieldsData@{$yesNoField->getId()}:option_key";
+    $yesNoKey = (string)$yesNoField->getSelectableOptions()->first()->getKey();
+
+    // toggle all checkboxes.
+    $expectedFormValues = self::RENDER_UPDATE_FORM_VALUES;
+    $checkBoxValues = array_merge(self::CHECKBOX_VALUES, [ $yesNoName => [ $yesNoKey ] ]);
+    foreach ($checkBoxValues as $key => $value) {
+      if (!empty($this->postData[$key])) {
+        unset($this->postData[$key]);
+        unset($expectedFormValues[$key]);
+      } else {
+        $this->postData[$key] = $value;
+        $expectedFormValues[$key] = $value;
+      }
+    }
+    $this->postData[$this->phpMyEdit->cgiSysName('morechange')] = 'Apply';
+
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      throw new Exception($t->getMessage(), previous: $t);
+    } finally {
+      ob_end_clean();
+    }
+    // echo $html . PHP_EOL;
+    $formValues = $this->getFormValues($html);
+    $this->assertEquals($expectedFormValues, $formValues);
+  }
+
+  /**
+   * Check a yes-no option.
+   *
+   * @return void
+   */
+  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxes')]
+  public function testRenderUpdateApplyToggleCheckBoxesAgain(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    /** @var Entities\ProjectParticipantField $yesNoField */
+    $yesNoField = $this->entityManager->find(Entities\ProjectParticipantField::class, self::$yesNoFieldId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    $this->postData = self::RENDER_UPDATE_FORM_VALUES;
+    $yesNoName = "PME_data_ProjectParticipantFieldsData@{$yesNoField->getId()}:option_key";
+    $yesNoKey = (string)$yesNoField->getSelectableOptions()->first()->getKey();
+
+    // toggle all checkboxes (again).
+    $expectedFormValues = self::RENDER_UPDATE_FORM_VALUES;
+    $checkBoxValues = array_merge(self::CHECKBOX_VALUES, [ $yesNoName => [ $yesNoKey ] ]);
+    foreach ($checkBoxValues as $key => $value) {
+      if (!empty($this->postData[$key])) {
+        $this->postData[$key] = $value;
+        $expectedFormValues[$key] = $value;
+      } else {
+        unset($this->postData[$key]);
+        unset($expectedFormValues[$key]);
+      }
+    }
+    $this->postData[$this->phpMyEdit->cgiSysName('morechange')] = 'Apply';
+    $this->postData[$this->phpMyEdit->cgiSysName('morechange')] = 'Apply';
+
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      throw new Exception($t->getMessage(), previous: $t);
+    } finally {
+      ob_end_clean();
+    }
+    // echo $html . PHP_EOL;
+    $formValues = $this->getFormValues($html);
+    $this->assertEquals($expectedFormValues, $formValues);
+  }
+
   /**
    * This is quas a tearDownAfterClass() but we need some mocked / stubbed
    * classes for the entity-manager.
@@ -691,7 +809,9 @@ class ProjectParticipantsTest extends TestCase
   #[Attributes\Depends('testRenderUpdateApply')]
   #[Attributes\Depends('testRenderUpdateApplyAddInstrument')]
   #[Attributes\Depends('testRenderUpdateApplyAddVoice')]
+  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxes')]
   #[Attributes\Depends('testRenderUpdateApplyRemoveInstrument')]
+  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxesAgain')]
   #[Attributes\Depends('testRenderView')]
   public function testUnapplyMigrations(): void
   {

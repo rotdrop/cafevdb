@@ -251,10 +251,66 @@ trait EntityGeneratorTrait
     }
   }
 
+  private const YES_NO_FIELD_OPTION_KEY = 'a0512a1e-4a69-44ec-b38e-e6756ce05aa3';
+
+  /**
+   * Generate a checkbox field. Background is the handling of missing data on
+   * form submit, where unchecked checkboxes simply do not contribute to the
+   * data set.
+   *
+   * @param bool $persist
+   *
+   * @return Entities\ProjectParticipantField
+   */
+  protected function generateYesNoField(bool $persist = false): Entities\ProjectParticipantField
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    $field = new Entities\ProjectParticipantField()
+      ->setId($persist ? null : self::FAKED_ENTITY_ID)
+      ->setProject($this->project)
+      ->setDataType(Types\EnumParticipantFieldDataType::LIABILITIES)
+      ->setMultiplicity(
+        Types\EnumParticipantFieldMultiplicity::SINGLE,
+      )
+      ->setDueDate('2099-01-01')
+      ->setName('Yes/No Field')
+      ->setParticipationContext(Types\EnumParticipationContext::PARTICIPANTS)
+      ;
+
+    $option = new Entities\ProjectParticipantFieldDataOption()
+      ->setField($field)
+      ->setKey(self::YES_NO_FIELD_OPTION_KEY)
+      ->setLabel($field->getName())
+      ->setData('50.00')
+      ;
+
+    $field
+      ->getDataOptions()
+      ->set($option->getKey(), $option);
+
+    if ($persist) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->persist($field);
+        $this->entityManager->persist($option);
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        if ($this->entityManager->isTransactionActive()) {
+          $this->entityManager->rollBack();
+        }
+        throw $t;
+      }
+    }
+
+    return $field;
+  }
+
+
   /**
    * @param bool $persist Optionally persist the generated entities, defaults to \false.
    *
-   * @param string $generatorClass Receivables generator, defaults to
+   * @param string $generator Receivables generator, defaults to
    * ManuallyGeneratedReceivablesGenerator::class.
    *
    * @return Entities\ProjectParticipantFieldDatum
