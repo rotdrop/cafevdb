@@ -93,6 +93,10 @@ $.fn.extend({
         console.debug('Try to set containment');
         // @ts-expect-error 2554
         $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content, #app-content-vue');
+        if (this.dialog('option', 'position')) {
+          // @ts-expect-error 2554
+          $.fn.dialog.call(this, 'widget').position(this.dialog('option', 'position'));
+        }
       }
     } else {
       console.debug('CAFEVDB DIALOG FORWARD', { first, second, third });

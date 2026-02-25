@@ -28,6 +28,7 @@ import {
   handleError as ajaxHandleError,
   validateResponse as ajaxValidateResponse,
 } from './ajax.ts';
+import actual from 'actual';
 import pageBusyIcon from './busy-icon.ts';
 import * as Dialogs from './dialogs.ts';
 import { personalRecordDialog as participantRecordDialog } from './project-participants.ts';
@@ -216,11 +217,11 @@ function emailTabResize($dialogWidget: JQuery, $panelHolder: JQuery) {
   const titleOffset = ($dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)!
                        + $dialogWidget.find('.ui-tabs-nav').outerHeight(true)!);
   const panelHeight = $panelHolder.outerHeight(true)!;
-  const panelOffset = panelHeight - $panelHolder.height()!;
+  // const panelOffset = panelHeight - $panelHolder.height()!;
   const dialogHeight = $dialogWidget.height()!;
   // alert('outer: '+panelHeight+' dialog '+dialogHeight);
   if (panelHeight > dialogHeight - titleOffset) {
-    $panelHolder.css('max-height', (dialogHeight - titleOffset - panelOffset) + 'px');
+    $panelHolder.css('max-height', (dialogHeight - titleOffset /* - panelOffset */) + 'px');
   }
   // if ($panelHolder.get(0).scrollHeight > $panelHolder.outerHeight(true)) {
   //   $panelHolder.css('padding-right', '2.4em');
@@ -714,6 +715,7 @@ const emailFormRecipientsHandlers = (
     .off('resize.' + appName)
     .on('resize.' + appName, function() {
       emailTabResize($dialogHolder.dialog('widget'), $panelHolder);
+      return false;
     });
 
   return false;
@@ -739,7 +741,7 @@ const emailFormCompositionHandlers = (
   $panelHolder: JQuery,
 ) => {
 
-  console.trace('COMPOSITION HANDLERS CALLED');
+  // console.trace('COMPOSITION HANDLERS CALLED');
 
   const $formData = $form.find('fieldset.form-data');
   const $projectId = $formData.find('input[name="projectId"]');
@@ -1716,7 +1718,7 @@ const emailFormCompositionHandlers = (
   $templateEmailsSelector
     .off('change')
     .on('change', function(_event: JQuery.EventBase) {
-      console.info('CHANGE', this);
+      // console.info('CHANGE', this);
       const $this = $(this);
 
       if ($this.val() && $this.val() !== $this.data('ignoreChange')) {
@@ -2368,6 +2370,7 @@ const emailFormCompositionHandlers = (
     if (eventData && eventData.position === 'bottom') {
       $panelHolder.scrollTop($panelHolder.prop('scrollHeight'));
     }
+    return false;
   });
 };
 
@@ -2466,7 +2469,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
 
       const position = {
         my: 'center top',
-        at: 'center bottom+50',
+        at: 'center bottom',
         of: '#header',
       };
 
@@ -2613,8 +2616,27 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           emailTabResize($dialogWidget, $recipientsPanel);
 
           $dialogHolder.dialog('moveToTop');
-          $dialogWidget.position(position);
-
+          const viewportHeight = actual('height', 'px');
+          const widgetHeight = $dialogWidget.outerHeight()!;
+          const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
+          if (difference > 0) {
+            position.at = `center bottom+${difference}`;
+            $dialogHolder.dialog('option', 'position', position);
+          }
+          $dialogWidget
+            .off('resize.' + appName)
+            .on('resize.' + appName, function() {
+              const widgetOffset = $dialogWidget.offset();
+              const viewportHeight = actual('height', 'px');
+              const widgetHeight = $dialogWidget.outerHeight()!;
+              const overflow = widgetHeight + widgetOffset!.top - viewportHeight;
+              if (overflow > 0) {
+                const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
+                position.at = `center bottom+${difference}`;
+                $dialogHolder.dialog('option', 'position', position);
+              }
+              return false;
+            });
           promiseCallback(true);
         },
         close() {
