@@ -37,7 +37,7 @@ table.pme-main td.pme-value.sepa-bank-accounts {
 
   td.operations input.operation {
     background-repeat:no-repeat;
-    background-size: 24px 24px;
+    background-size: #{$iconSize} #{$iconSize};
     background-position: center;
     width:28px;
     height:28px;
@@ -65,7 +65,7 @@ table.pme-main td.pme-value.sepa-bank-accounts {
     background-origin:content-box;
     background-repeat:no-repeat;
     background-position-x:-31px;
-    background-size: 24px 24px;
+    background-size: #{$iconSize} #{$iconSize};
     clear:unset;
     padding-left:34px;
   }
@@ -94,7 +94,7 @@ table.pme-main td.pme-value.sepa-bank-accounts div.display-options {
     display:inline-block; /* dropdown does not work well otherwise */
     input.regenerate-receivables {
       background-image:url('../img/actions/compute-red.svg');
-      background-size:24px;
+      background-size: #{$iconSize};
       background-position: 4px center;
       padding-left:32px;
       &.busy {

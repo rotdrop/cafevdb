@@ -314,7 +314,7 @@ form.pme-form {
     width: 34px;
     height: 34px;
     min-height: unset;
-    background-size: 24px 24px;
+    background-size: #{$iconSize} #{$iconSize};
     margin: 0px;
   }
 }
@@ -357,7 +357,7 @@ tr.pme-navigation {
     }
 
     .chosen-search-input {
-      height: 24px!important;
+      height: #{$tableRowHeight}!important;
       min-height:unset;
     }
   }
@@ -602,7 +602,7 @@ hr.pme-hr {
   background-image:url('../img/reload.svg');
   background-repeat:no-repeat;
   background-position: center center;
-  background-size:24px 24px;
+  background-size:#{$iconSize} #{$iconSize};
   width:28px;
   height:28px;
   vertical-align:middle;
@@ -751,9 +751,9 @@ td.pme-navigation {
         }
       }
       div.pme-check {
-        width:24px;
-        height:24px;
-        background-size: 24px 24px;
+        width:#{$tableRowHeight};
+        height:#{$tableRowHeight};
+        background-size: #{$iconSize} #{$iconSize};
         cursor:pointer;
         vertical-align:middle;
 
@@ -1081,12 +1081,12 @@ form.pme- {
           min-height: unset;
           min-width: unset;
           padding: unset;
-          width: 24px;
-          height: 24px;
+          width: #{$tableRowHeight};
+          height: #{$tableRowHeight};
           margin: 0 3px 0 0;
           background-position: center;
           background-repeat: no-repeat;
-          background-size: 24px;
+          background-size: #{$iconSize};
           background-image:url('../../../core/img/actions/triangle-s.svg');
         }
       }
@@ -1142,14 +1142,14 @@ table.pme-main {
   td.pme-cell.restrict-height {
     .pme-cell-wrapper {
       display:block;
-      max-height:24px;
+      max-height:#{$tableRowHeight};
       overflow:hidden;
     }
 
     /* Restrict height of buttons in list view */
     .pme-cell-wrapper input {
-      min-height:24px;
-      max-height:24px;
+      min-height:#{$tableRowHeight};
+      max-height:#{$tableRowHeight};
       margin-top:0;
       margin-bottom:0;
       padding-top:0;
@@ -1160,13 +1160,13 @@ table.pme-main {
   td.pme-cell.squeeze-subsequent-lines {
     .pme-cell-wrapper {
       display:block;
-      max-height:24px;
+      max-height:#{$tableRowHeight};
       overflow:hidden;
     }
 
     .pme-cell-squeezer:not(.one-liner) {
       display:inline-block;
-      max-height:24px;
+      max-height:#{$tableRowHeight};
       line-height:8px;
       font-size:66.67%;
       /* position:relative; why? */
@@ -1194,7 +1194,7 @@ table.pme-main {
     .pme-cell-wrapper {
       line-height:100%;
       display:block; /* ?? or inline-block */
-      max-height:24px;
+      max-height:#{$tableRowHeight};
 
       &.halfed-sized {
 	max-height:48px;
@@ -1303,8 +1303,8 @@ table.pme-main {
   label.pme-filter-negate-label span {
     display:inline-block;
     text-indent:-10000px;
-    width:24px;
-    height:24px;
+    width:#{$tableRowHeight};
+    height:#{$tableRowHeight};
     position:relative;
     background:url(../img/dont.svg);
     cursor:pointer;
@@ -1400,7 +1400,7 @@ table.pme-main {
       color:inherit;
     }
     &.button-use-icon {
-      background-size:24px;
+      background-size:#{$iconSize};
       background-position: center;
       background-repeat:  no-repeat;
       text-indent: -99999px;

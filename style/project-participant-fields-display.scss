@@ -172,7 +172,7 @@ form.pme-form.project-participant-fields-display {
 
   input[type=button].display-postfix {
     background-repeat:no-repeat;
-    background-size: 24px 24px;
+    background-size: #{$iconSize} #{$iconSize};
     vertical-align:middle;
     margin-right:1em;
 
@@ -305,7 +305,7 @@ form.pme-form.project-participant-fields-display {
   &.pme-list {
     td.pme-value, td.pme-cell {
       div.allowed-option-wrapper {
-        max-height:24px; /* hard restriction on table row height */
+        max-height: #{$tableRowHeight}; /* hard restriction on table row height */
         /* line-height:12px; */
         line-height:7px;
         font-size:66.67%;
@@ -339,8 +339,8 @@ form.pme-form.project-participant-fields-display {
           background-repeat:no-repeat;
           background-size: 20px 20px;
           background-position: center;
-          width:24px;
-          height:24px;
+          width: #{$iconSize};
+          height: #{$iconSize};
           min-height:unset;
           margin:0;
           vertical-align:middle;
@@ -364,8 +364,8 @@ form.pme-form.project-participant-fields-display {
         .documents {
           .action-menu-toggle {
             min-height:0;
-            width:34px;
-            height:34px;
+            width: var(--default-clickable-area);
+            height: var(--default-clickable-area);
           }
           .dropdown-content {
             .menu-item {
@@ -450,7 +450,7 @@ form.pme-form.project-participant-fields-display {
             margin-right:unset;
             /*background-image:url('../img/reload-solid.svg');*/
             background-image:url('../img/actions/compute-red.svg');
-            background-size: 24px 24px;
+            background-size: #{$iconSize} #{$iconSize};
             background-position: 2px center;
             background-repeat:no-repeat;
             padding-left:32px;
@@ -463,10 +463,10 @@ form.pme-form.project-participant-fields-display {
           }
           input.operation {
             background-repeat:no-repeat;
-            background-size: 24px 24px;
+            background-size: #{$iconSize} #{$iconSize};
             background-position: center;
-            width:28px;
-            height:28px;
+            width: var(--default-clickable-area);
+            height: var(--default-clickable-area);
             vertical-align:middle;
             /* margin-right:0.5em; */
             &.regenerate {
@@ -537,6 +537,9 @@ form.pme-form.project-participant-fields-display {
             label.lock-unlock.left-of-input.position-right {
               right:0;
               margin-right:4px;
+              & + input {
+                padding-right: #{$iconSize + 4px};
+              }
             }
             input:not([type=checkbox]) {
               width:100%;
@@ -586,7 +589,7 @@ form.pme-form.project-participant-fields-display {
       .operation {
         display:inline-block;
         background-repeat:no-repeat;
-        background-size: 24px 24px;
+        background-size: #{$iconSize} #{$iconSize};
         background-position: center;
         width:28px;
         height:28px;

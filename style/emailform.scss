@@ -73,7 +73,7 @@ $showSelectableCssClass: show-selectable;
        */
 
       padding:0;
-      background-color:#F2F8FF;
+      background-color: #F2F8FF;
 
       .ui-tabs-nav {
         margin-bottom: 0;
@@ -668,7 +668,7 @@ $showSelectableCssClass: show-selectable;
               button {
                 display: flex;
                 align-items: center;
-                background-color:#C6DEFF;
+                background-color: #C6DEFF;
                 // vertical-align:middle;
                 height:34px;
                 min-height: 34px;
@@ -681,7 +681,7 @@ $showSelectableCssClass: show-selectable;
                 }
                 &.upload {
                   img {
-                    width:24px;
+                    width: #{$iconSize};
                   }
                 }
                 &.cloud {
@@ -694,17 +694,17 @@ $showSelectableCssClass: show-selectable;
                   padding:0px;
                   img {
                     vertical-align:top;
-                    height:24px;
+                    height: #{$iconSize};
                   }
                 }
                 &.personal {
                   img {
-                    width:24px;
+                    width: #{$iconSize};
                   }
                 }
                 &.visibility-toggle {
                   img {
-                    width:24px;
+                    width: #{$iconSize};
                   }
                 }
               }
@@ -741,7 +741,7 @@ $showSelectableCssClass: show-selectable;
                   input[type=submit], input[type=button] {
                     float:left;
                     background-repeat:no-repeat;
-                    background-size: 24px 24px;
+                    background-size: #{$iconSize} #{$iconSize};
                     background-position: center;
                     width:34px;
                     height:34px;
@@ -803,7 +803,7 @@ $showSelectableCssClass: show-selectable;
           td.stored-messages-storage input.submit,
           td.email-from input[type=button] {
             background-repeat:no-repeat;
-            background-size: 24px 24px;
+            background-size: #{$iconSize} #{$iconSize};
             background-position: center;
             width: var(--default-clickable-area);
             height: var(--default-clickable-area);
@@ -873,7 +873,7 @@ $showSelectableCssClass: show-selectable;
           }
 
           .chosen-container .chosen-default {
-            color:#000;
+            color: #000;
             font-weight:bold;
           }
 
@@ -891,7 +891,7 @@ $showSelectableCssClass: show-selectable;
 
             &.input input.address-book-emails {
               background-image:url('../img/contacts-dark.svg');
-              /*  background-color:#000;*/
+              /*  background-color: #000;*/
               float:right;
               &.#{$loadingCssClass} {
                 background-image:url('../../../core/img/loading.gif');
@@ -986,12 +986,12 @@ $showSelectableCssClass: show-selectable;
                 background-image: var(--icon-settings-dark);
                 background-repeat: no-repeat;
                 background-position: center;
-                width: 24px;
-                height: 24px;
-                min-height: 24px;
-                min-width: 24px;
-                max-height: 24px;
-                max-width: 24px;
+                width: #{$iconSize};
+                height: #{$iconSize};
+                min-height: #{$iconSize};
+                min-width: #{$iconSize};
+                max-height: #{$iconSize};
+                max-width: #{$iconSize};
                 padding: 0;
               }
               &, *:not(input) {

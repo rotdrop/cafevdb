@@ -30,6 +30,7 @@
 @use 'sass:meta';
 @use './about.scss' as *;
 @use './flex.scss' as *;
+@use './variables' as *;
 
 @mixin personalSettings($appNameTag) {
 
@@ -168,7 +169,7 @@
         $button-distance: 0.5em;
 
         background-repeat:no-repeat;
-        background-size: 24px 24px;
+        background-size: #{$iconSize} #{$iconSize};
         background-position: center;
         width:28px;
         height:28px;
@@ -215,7 +216,7 @@
     a.sharedfolder-view {
       display:inline-block;
       background-repeat:no-repeat;
-      background-size: 24px 24px;
+      background-size: #{$iconSize} #{$iconSize};
       background-position: center;
       width:28px;
       min-height:34px;
@@ -314,7 +315,7 @@
             background-image:url('../img/reload-solid.svg');
             background-position:center center;
             background-repeat:no-repeat;
-            background-size:24px 24px;
+            background-size:#{$iconSize} #{$iconSize};
             font-size:0;
             &.busy {
               background-image:url('../../../core/img/loading.gif');
