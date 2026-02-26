@@ -33,7 +33,9 @@ use OCP\AppFramework\Http;
 
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Controller\DTO;
+use OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse\DuplicateMusician;
 use OCA\CAFEVDB\Controller\MusicianValidationController as TestedController;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
@@ -45,31 +47,56 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the MusicianValidationController. */
 #[Attributes\CoversClass(TestedController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AutocompletePlaceResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AutocompleteStreetResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\DuplicateMusiciansResponse\DuplicateMusician::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\EmailValidationResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\MessagesResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\PhoneNumberValidationResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianEmailAddress::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBankAccount::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EmailAddressService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\EncryptionService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\InstrumentationService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\DTO\AbstractResponseDTO::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\AutoIncrementTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\CreatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\DateTimeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UpdatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\ConfigTrait::class)]
 class MusicianValidationControllerTest extends TestCase
 {
   use TestRoutesAreDefinedTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\MockEntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\CamelCaseToDashesTrait;
 
   private const CONTROLLER_CLASS = TestedController::class;
   private const EXPECTED_ROUTES = [
@@ -89,7 +116,13 @@ class MusicianValidationControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
+    $this->generateProjectParticipant(persist: false);
+    $this->getEntityManagerMock();
+    $this->entityManager->expects($this->never())->method('recryptEncryptedProperties');
+    $this->getMusiciansRepositoryMock();
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
@@ -117,6 +150,7 @@ class MusicianValidationControllerTest extends TestCase
       appName: $this->mockProvider->appName,
       request: $request,
       emailAddressService: $appContainer->get(EmailAddressService::class),
+      entityManager: $this->entityManager,
       geoCodingService: $this->geoCodingService,
       l: $this->mockProvider->getL10N(),
       logger: $this->mockProvider->getLoggerInterface(),
@@ -375,5 +409,143 @@ class MusicianValidationControllerTest extends TestCase
     $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['Name'], self::AUTOCOMPLETED_PLACES), $data->cities);
     $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['Country'], self::AUTOCOMPLETED_PLACES), $data->countries);
     $this->assertEqualsCanonicalizing(array_map(fn($item) => $item['PostalCode'], self::AUTOCOMPLETED_PLACES), $data->postalCodes);
+  }
+
+  private const CONFLICT_KEYS = [
+    'sur_name',
+    'first_name',
+    'email',
+    'fixed_line_phone',
+    'mobile_phone',
+    'street',
+    'street_number',
+    'postal_code',
+    'city',
+    'country',
+  ];
+
+  /** @return void */
+  public function testFindDuplicateMusician(): void
+  {
+    $this->entityManager->expects($this->exactly(1))->method('getRepository')->with(Entities\Musician::class);
+    $this->forcedRepositoryResults[Entities\Musician::class]['findBy'] = [$this->musician];
+    foreach (self::CONFLICT_KEYS as $key) {
+      $method = 'get' . self::dashesToCamelCase($key, capitalizeFirstCharacter: true);
+      $value = $this->musician->{$method}() ?? null;
+      if (!empty($value)) {
+        $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . $key)] = $value;
+      }
+    }
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::DUPLICATES,
+      subTopic: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\DuplicateMusiciansResponse::class, $data);
+    /** @var DTO\DuplicateMusiciansResponse $data */
+    $this->assertNotEmpty($data->messages);
+    $this->assertNotEmpty($data->duplicates);
+    /** @var DuplicateMusician $duplicate */
+    foreach ($data->duplicates as $duplicate) {
+      $this->assertNotEmpty($duplicate->reasons);
+      $this->assertLessThanOrEqual(1.0, $duplicate->duplicatesProbability);
+      $this->assertGreaterThan(0.0, $duplicate->duplicatesProbability);
+      // don't fiddle with the EntityArrayAdapter here
+    }
+  }
+
+  /** @return void */
+  public function testFindProbablyDuplicateMusician(): void
+  {
+    $this->entityManager->expects($this->exactly(1))->method('getRepository')->with(Entities\Musician::class);
+    $this->forcedRepositoryResults[Entities\Musician::class]['findBy'] = [$this->musician];
+    foreach (self::CONFLICT_KEYS as $key) {
+      $method = 'get' . self::dashesToCamelCase($key, capitalizeFirstCharacter: true);
+      $value = $this->musician->{$method}() ?? null;
+      if (!empty($value)) {
+        $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . $key)] = $value;
+      }
+    }
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'sur_name')] = $this->musician->getSurName() . ' der Jüngere';
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'first_name')] = $this->musician->getFirstName() . ' Maria';
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::DUPLICATES,
+      subTopic: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\DuplicateMusiciansResponse::class, $data);
+    /** @var DTO\DuplicateMusiciansResponse $data */
+    $this->assertNotEmpty($data->messages);
+    $this->assertNotEmpty($data->duplicates);
+    /** @var DuplicateMusician $duplicate */
+    foreach ($data->duplicates as $duplicate) {
+      $this->assertNotEmpty($duplicate->reasons);
+      $this->assertLessThan(1.0, $duplicate->duplicatesProbability);
+      $this->assertGreaterThan(0.0, $duplicate->duplicatesProbability);
+      // don't fiddle with the EntityArrayAdapter here
+    }
+  }
+
+  /** @return void */
+  public function testDoNotFindDuplicateMusician(): void
+  {
+    $this->entityManager->expects($this->exactly(1))->method('getRepository')->with(Entities\Musician::class);
+    $this->forcedRepositoryResults[Entities\Musician::class]['findBy'] = [$this->musician];
+    foreach (self::CONFLICT_KEYS as $key) {
+      $method = 'get' . self::dashesToCamelCase($key, capitalizeFirstCharacter: true);
+      $value = $this->musician->{$method}() ?? null;
+      if (!empty($value)) {
+        $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . $key)] = $value;
+      }
+    }
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'sur_name')] = $this->musician->getSurName() . ' der Jüngere';
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'first_name')] = $this->musician->getFirstName() . ' Maria';
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'street')] = 'Another street name';
+    // Perhaps should refine the validation controller, it tests with "or"
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'fixed_line_phone')] = '0123';
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'mobile_phone')] = '0123';
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'email')] = 'something@else.tld';
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::DUPLICATES,
+      subTopic: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\DuplicateMusiciansResponse::class, $data);
+    /** @var DTO\DuplicateMusiciansResponse $data */
+    $this->assertEmpty($data->messages);
+    $this->assertEmpty($data->duplicates);
+  }
+
+  /** @return void */
+  public function testDoNotFindMusicianForDuplicatesCheck(): void
+  {
+    $this->entityManager->expects($this->exactly(1))->method('getRepository')->with(Entities\Musician::class);
+    $this->forcedRepositoryResults[Entities\Musician::class]['findBy'] = [];
+    $this->postData[$this->pme->cgiDataName(self::DATA_PREFIX . 'sur_name')] = $this->musician->getSurName() . ' der Jüngere';
+    $response = $this->controller->validate(
+      topic: Controller\EnumMusicianValidationTopic::DUPLICATES,
+      subTopic: null,
+    );
+    $this->assertInstanceOf(Http\JSONResponse::class, $response);
+    /** @var Http\JSONResponse $response */
+    $this->assertEquals(Http::STATUS_OK, $response->getStatus());
+
+    $data = $response->getData();
+    $this->assertInstanceOf(DTO\DuplicateMusiciansResponse::class, $data);
+    /** @var DTO\DuplicateMusiciansResponse $data */
+    $this->assertEmpty($data->messages);
+    $this->assertEmpty($data->duplicates);
   }
 }

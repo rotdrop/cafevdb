@@ -35,13 +35,13 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCA\RotDrop\Tests\DatabaseProvider;
-
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
-use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
+use OCA\RotDrop\Tests\DatabaseProvider;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EntityArrayAdapter */
 #[Attributes\CoversClass(EntityArrayAdapter::class)]
@@ -126,6 +126,9 @@ class EntityArrayAdapterTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    error_reporting(E_ALL);
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
 
@@ -165,6 +168,7 @@ class EntityArrayAdapterTest extends TestCase
     foreach ($this->musician->getEmailAddresses() as $emailAddress) {
       $this->entityManager->detach($emailAddress);
     }
+    restore_error_handler();
   }
 
   /** @return void */

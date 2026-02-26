@@ -39,6 +39,7 @@ use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\PersistentCGIKeys;
@@ -52,6 +53,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 class MusicianValidationController extends Controller
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const END_POINT = 'validate/musicians';
 
@@ -71,6 +73,7 @@ class MusicianValidationController extends Controller
     private EmailAddressService $emailAddressService,
     private GeoCodingService $geoCodingService,
     private PhoneNumberService $phoneNumberService,
+    protected EntityManager $entityManager,
     protected IL10N $l,
     protected LoggerInterface $logger,
     protected PHPMyEdit $pme,
@@ -444,7 +447,7 @@ class MusicianValidationController extends Controller
             $commsMatch && $reasons[] = $this->l->t('communication');
             $addressMatch && $reasons[] = $this->l->t('address');
 
-            $duplicates[$musicianId] = new DTO\DuplicateMusician(
+            $duplicates[$musicianId] = new DTO\DuplicateMusiciansResponse\DuplicateMusician(
               duplicatesProbability: $duplicatesProbability,
               reasons: $reasons,
               musician: $musician,

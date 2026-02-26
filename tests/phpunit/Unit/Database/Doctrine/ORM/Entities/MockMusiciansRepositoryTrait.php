@@ -39,6 +39,8 @@ trait MockMusiciansRepositoryTrait
   use Database\MockEntityManagerTrait;
   use EntityGeneratorTrait;
 
+  private array $forcedRepositoryResults = [];
+
   /** @return EntityRepository */
   public function getMusiciansRepositoryMock(): EntityRepository
   {
@@ -48,12 +50,17 @@ trait MockMusiciansRepositoryTrait
 
     $this->entities[Entities\Project::class] = new ArrayCollection;
     $this->entities[Entities\Project::class]->set($this->project->getId(), $this->project);
+    $this->entities[Entities\Musician::class] = new ArrayCollection;
+    $this->entities[Entities\Musician::class]->set($this->musician->getId(), $this->musician);
 
     $repository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
     $repository->method('findBy')->willReturnCallback(
       function(array $criteria, ?array $orderBy = null) {
+        if (!empty($this->forcedRepositoryResults[Entities\Musician::class]['findBy'])) {
+          return $this->forcedRepositoryResults[Entities\Musician::class]['findBy'];
+        }
         $indexById = false;
         foreach (($orderBy ?? []) as $field => $direction) {
           switch ($direction) {

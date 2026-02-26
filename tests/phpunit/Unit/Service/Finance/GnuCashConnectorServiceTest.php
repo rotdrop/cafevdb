@@ -114,6 +114,7 @@ class GnuCashConnectorServiceTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
     $this->generateProjectParticipant(persist: false);
