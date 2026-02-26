@@ -773,34 +773,36 @@ otherwise answer "no" (but please do not do this). If you react in a positive ma
 you will be redirected to a web form in order to bring
 the personal data of the respective musician up-to-date.`),
           t(appName, 'Avoid Possible Duplicate?'),
-          function(answer) {
-            cleanup();
-            Notification.hide();
-            if (!answer) {
-              onCheckPassed();
-              return;
-            }
-            const $mainContainer = $($container.data('ambientContainer'));
-            const $mainForm = $mainContainer.find<HTMLFormElement>(PHPMyEdit.formSelector);
-            $container.dialog('close');
-            if (numDuplicates === 1) {
-              const projectId = +($mainForm.find<HTMLInputElement>('input[name="ProjectId"]').val() ?? -1);
-              const projectName = $mainForm.find<HTMLInputElement>('input[name="ProjectName"]').val();
-              ProjectParticipants.personalRecordDialog(
-                ids[0], {
-                  template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
-                  initialValue: 'View',
-                  projectId,
-                  projectName,
-                  [pmeSys('cur_tab')]: 1,
-                });
-            } else {
-              ProjectParticipants.loadMusicians($mainForm, ids);
-            }
-          },
-          true, // modal
-          true, // html
-        );
+          {
+            callback(answer) {
+              cleanup();
+              Notification.hide();
+              if (!answer) {
+                onCheckPassed();
+                return;
+              }
+              const $mainContainer = $($container.data('ambientContainer'));
+              const $mainForm = $mainContainer.find<HTMLFormElement>(PHPMyEdit.formSelector);
+              $container.dialog('close');
+              if (numDuplicates === 1) {
+                const projectId = +($mainForm.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val() ?? -1);
+                const projectName = $mainForm.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`).val();
+                ProjectParticipants.personalRecordDialog(
+                  ids[0], {
+                    template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
+                    initialValue: 'View',
+                    projectId,
+                    projectName,
+                    [pmeSys('cur_tab')]: 1,
+                  });
+              } else {
+                ProjectParticipants.loadMusicians($mainForm, ids);
+              }
+            },
+            modal: true,
+            allowHtml: true,
+            dialogClasses: 'maximize-width',
+          });
       }
     }); // done callback
 

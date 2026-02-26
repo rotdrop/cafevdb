@@ -68,6 +68,7 @@ import {
   END_POINT_VALIDATE_INSTRUMENTS,
 } from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
 import type { EnumValidateInstrumentsContext } from '../../build/ts-types/php-modules/Controller.ts';
+import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
 // import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
 // import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
@@ -341,7 +342,7 @@ const loadMusicians = (
     // Check whether form contains an input element for a
     // ProjectId. If its value is positive, switch to project mode,
     // otherwise assume all-musicians mode.
-    const projectId = ($form.find('input[name="projectId"]').val() as string|undefined) ?? 0;
+    const projectId = ($form.find(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val() as string|undefined) ?? 0;
     projectMode = +projectId > 0;
   }
   const template = projectMode ? addMusiciansTemplate : allMusiciansTemplate;
