@@ -418,9 +418,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * @param ProjectParticipant $participant
    *
-   * @return null|ProjectParticipantFieldDatum
+   * @return ?self
    */
-  public static function fromDefaultValue(ProjectParticipantField $field, ProjectParticipant $participant):?ProjectParticipantFieldDatum
+  public static function fromDefaultValue(ProjectParticipantField $field, ProjectParticipant $participant): ?self
   {
     $defaultValue = $field->getDefaultValue();
     if ($defaultValue === null) {
@@ -447,6 +447,51 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       default:
         break;
     }
+    // Perform some validation and check whether the resulting field value makes sense.
+    $effectiveValue = $datum->getEffectiveValue();
+    switch ($field->getDataType()) {
+      case FieldDataType::BOOLEAN:
+        $valid = null !== filter_var($effectiveValue, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+        break;
+      case FieldDataType::INTEGER:
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_INT);
+        break;
+      case FieldDataType::DB_FILE:
+        // database id must be >= 1
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        break;
+      case FieldDataType::DATE:
+        // fallthrough
+      case FieldDataType::DATETIME:
+        try {
+          new DateTimeImmutable($effectiveValue);
+          $valid = true;
+        } catch (Throwable) {
+          // empty
+        }
+        break;
+      case FieldDataType::FLOAT:
+        $valid = false !== filter_var($effectiveValue, FILTER_VALIDATE_FLOAT);
+        break;
+      // string types
+      case FieldDataType::CLOUD_FILE:
+      case FieldDataType::CLOUD_FOLDER:
+      case FieldDataType::TEXT:
+      case FieldDataType::HTML:
+        $valid = is_string($effectiveValue);
+        break;
+      case FieldDataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
+        $valid = null !== MonetaryNumberType::create($effectiveValue);
+        break;
+      default:
+        // not reached, but a safeguard for future changes
+        null;
+    }
+    if (!$valid) {
+      return null;
+    }
+
     $field->getFieldData()->add($datum);
     $defaultValue->getFieldData()->set($participant->getMusician()->getId(), $datum);
 
