@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2024, 2025 Claus-Justus Heine
+ * @copyright 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -125,7 +125,7 @@ class CloudAccountsService
    *
    * @throws Throwable
    */
-  public function addUserToBackend(IUser $user, string|UserInterface $newBackend)
+  public function addUserToBackend(IUser $user, string|UserInterface $newBackend): bool
   {
     if (is_string($newBackend)) {
       $newBackend = array_filter(
@@ -152,9 +152,9 @@ class CloudAccountsService
       return true;
     }
 
-    $email = $user->getEMailAddress() ?? '';
+    $email = $user->getSystemEMailAddress() ?? null;
 
-    if ($email === '') {
+    if (empty($email)) {
       // This also means that the setup is somehow totally broken ...
       $this->logError('User "' . $userId . '" does not have an email.');
       return false;
@@ -173,7 +173,7 @@ class CloudAccountsService
 
     $newUser = $this->doAddUserToBackend(
       userId: $userId,
-      UserInterface: $newBackend,
+      backend: $newBackend,
       displayName: $displayName,
       email: $email,
       quota: $quota,
@@ -263,7 +263,7 @@ class CloudAccountsService
         }
       }
 
-      $newUser->setEMailAddress($email);
+      $newUser->setSystemEMailAddress($email);
       if ($this->cloudConfig->getAppValue('core', 'newUser.sendEmail', 'yes') === 'yes') {
         try {
           $emailTemplate = $this->newUserMailHelper->generateTemplate($newUser, $generatePasswordResetToken);
