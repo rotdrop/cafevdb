@@ -30,7 +30,7 @@
     >
       <template #description>
         <div class="global-actions-container flex-container flex-center">
-          <NcActions v-tooltip="hints['projectevents:all:new']"
+          <NcActions v-tooltip.left="hints['projectevents:all:new']"
                      :type="actionButtonType"
                      class="new-event-menu fc-event"
                      data-is-new="yes"
@@ -42,7 +42,7 @@
             </template>
             <NcActionRouter v-for="(item, uri) in routerEventAdd"
                             :key="uri"
-                            v-tooltip="hints['projectevents:all:new:' + uri]"
+                            v-tooltip.left="hints['projectevents:all:new:' + uri]"
                             :to="item.location"
                             :exact="true"
                             :close-after-click="true"
