@@ -493,7 +493,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         break;
       default:
         // not reached, but a safeguard for future changes
-        null;
+        return null;
     }
     if (!$valid) {
       return null;
