@@ -190,6 +190,7 @@ class ProjectParticipantEntityListener
             if ($datum === null) {
               continue;
             }
+            $entity->addParticipantFieldDatum($datum);
             $this->entityManager->persist($datum);
             $needFlush = true;
           }

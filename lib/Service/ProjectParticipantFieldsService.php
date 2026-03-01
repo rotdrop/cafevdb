@@ -1198,6 +1198,7 @@ class ProjectParticipantFieldsService
             if ($datum === null) {
               continue;
             }
+            $participant->addParticipantFieldDatum($datum);
             $this->entityManager->persist($datum);
             $needFlush = true;
           }
