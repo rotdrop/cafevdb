@@ -155,11 +155,13 @@ trait SetupCalendarBackendTrait
       ): void {
         $rowData = self::$calendarObjects["{$calendarId}-{$objectUri}"];
         unset(self::$calendarObjects["{$calendarId}-{$objectUri}"]);
+        $objectRow = new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
+          ->invoke($this->calDavBackend, $rowData);
         $event = new CalendarObjectDeletedEvent(
           $calendarId,
           $this->calDavBackend->getCalendarById($calendarId),
           [],
-          $rowData,
+          $objectRow,
         );
         \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
       },
@@ -222,11 +224,13 @@ trait SetupCalendarBackendTrait
         ];
         self::$calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
         $etag = null;
+        $objectRow = new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
+          ->invoke($this->calDavBackend, $rowData);
         $event = new CalendarObjectCreatedEvent(
           $calendarId,
           $this->calDavBackend->getCalendarById($calendarId),
           [],
-          $rowData,
+          $objectRow,
           $etag,
         );
         \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
@@ -301,11 +305,13 @@ trait SetupCalendarBackendTrait
         );
         self::$calendarObjects["{$calendarId}-{$objectUri}"] = $rowData;
         $etag = null;
+        $objectRow = new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
+          ->invoke($this->calDavBackend, $rowData);
         $event = new CalendarObjectUpdatedEvent(
           $calendarId,
           $this->calDavBackend->getCalendarById($calendarId),
           [],
-          $rowData,
+          $objectRow,
           $etag,
         );
         \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
