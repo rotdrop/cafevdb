@@ -771,17 +771,10 @@ class EntityManager extends AbstractEntityManager
     $translatableListener->setDefaultTranslationValue(null);
     $evm->addEventSubscriber($translatableListener);
 
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
-    );
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-      $localeCode
-    );
-    $config->setDefaultQueryHint(
-      \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
-      1 // fallback to default values in case if record is not translated
+    Gedmo\Translatable\Query\TreeWalker\TranslationWalker::configure(
+      configuration: $config,
+      translatableLocale: $localeCode,
+      translationFallback: true,
     );
 
     // handle extra foreign key constraints
