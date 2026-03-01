@@ -129,6 +129,8 @@ class EntityArrayAdapterTest extends TestCase
     error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
+    self::$uuidIndex = 0;
+
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
 
@@ -278,7 +280,15 @@ class EntityArrayAdapterTest extends TestCase
         "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
         "entityClassName": "Musician"
     },
-    "participantFieldsData": [],
+    "participantFieldsData": {
+        "entityClassName": "ProjectParticipantFieldDatum",
+        "entities": {
+            "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                "entityClassName": null
+            }
+        }
+    },
     "participationStatus": "regular",
     "payments": {
         "entityClassName": "CompositePayment",
@@ -364,8 +374,8 @@ class EntityArrayAdapterTest extends TestCase
         "projectParticipantFieldsData": {
             "entityClassName": "ProjectParticipantFieldDatum",
             "entities": {
-                "2b826186-ef29-11f0-a81f-27218343fe72": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                     "entityClassName": null
                 }
             }
@@ -405,7 +415,40 @@ class EntityArrayAdapterTest extends TestCase
         "userPassphrase": null,
         "uuid": "00000000-0000-0000-0000-000000000000"
     },
-    "participantFieldsData": [],
+    "participantFieldsData": {
+        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+            "__DEPTH__": 0,
+            "created": null,
+            "dataOption": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                "entityClassName": "ProjectParticipantFieldDataOption"
+            },
+            "deleted": null,
+            "deposit": null,
+            "field": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                "entityClassName": "ProjectParticipantField"
+            },
+            "invoiceItems": [],
+            "musician": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                "entityClassName": "Musician"
+            },
+            "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+            "optionValue": "12.23",
+            "payments": [],
+            "project": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                "entityClassName": "Project"
+            },
+            "projectParticipant": {
+                "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
+                "entityClassName": "ProjectParticipant"
+            },
+            "supportingDocument": null,
+            "updated": null
+        }
+    },
     "participationStatus": "regular",
     "payments": [
         {
@@ -493,7 +536,7 @@ class EntityArrayAdapterTest extends TestCase
     "registration": false,
     "updated": "2024-01-01T00:00:00.000000Z"
 }',
-    2 => '{
+      2 => '{
     "__DEPTH__": 2,
     "created": "2024-01-01T00:00:00.000000Z",
     "databaseDocuments": null,
@@ -598,11 +641,11 @@ class EntityArrayAdapterTest extends TestCase
         "projectApplications": [],
         "projectInstruments": [],
         "projectParticipantFieldsData": {
-            "2b826186-ef29-11f0-a81f-27218343fe72": {
+            "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
                 "__DEPTH__": 0,
                 "created": null,
                 "dataOption": {
-                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                     "entityClassName": "ProjectParticipantFieldDataOption"
                 },
                 "deleted": null,
@@ -616,7 +659,7 @@ class EntityArrayAdapterTest extends TestCase
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "optionKey": "2b826186-ef29-11f0-a81f-27218343fe72",
+                "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                 "optionValue": "12.23",
                 "payments": [],
                 "project": {
@@ -642,7 +685,15 @@ class EntityArrayAdapterTest extends TestCase
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "participantFieldsData": [],
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
                 "participationStatus": "regular",
                 "payments": {
                     "entityClassName": "CompositePayment",
@@ -711,7 +762,275 @@ class EntityArrayAdapterTest extends TestCase
         "userPassphrase": null,
         "uuid": "00000000-0000-0000-0000-000000000000"
     },
-    "participantFieldsData": [],
+    "participantFieldsData": {
+        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+            "__DEPTH__": 1,
+            "created": null,
+            "dataOption": {
+                "__DEPTH__": 0,
+                "balancingAccount": null,
+                "created": null,
+                "data": null,
+                "deleted": null,
+                "deposit": null,
+                "field": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                    "entityClassName": "ProjectParticipantField"
+                },
+                "fieldData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "' . self::FAKED_ENTITY_ID . '": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "invoiceItems": [],
+                "key": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                "label": "ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
+                "limit": null,
+                "payments": [],
+                "tooltip": null,
+                "updated": null
+            },
+            "deleted": null,
+            "deposit": null,
+            "field": {
+                "__DEPTH__": 0,
+                "balancingAccount": null,
+                "dataOptions": {
+                    "entityClassName": "ProjectParticipantFieldDataOption",
+                    "entities": {
+                        "00000000-0000-0000-0000-000000000000": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':00000000-0000-0000-0000-000000000000",
+                            "entityClassName": null
+                        },
+                        "027db41d-4f5b-45be-a956-c70095dab48d": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d",
+                            "entityClassName": null
+                        },
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "dataType": "liabilities",
+                "defaultValue": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':027db41d-4f5b-45be-a956-c70095dab48d",
+                    "entityClassName": "ProjectParticipantFieldDataOption"
+                },
+                "deleted": null,
+                "depositDueDate": null,
+                "displayOrder": null,
+                "dueDate": "2099-01-01T00:00:00.000000Z",
+                "encrypted": false,
+                "fieldData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": [
+                        {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    ]
+                },
+                "id": ' . self::FAKED_ENTITY_ID . ',
+                "multiplicity": "recurring",
+                "name": "Forderungen",
+                "participantAccess": "none",
+                "participationContext": "unrestricted",
+                "project": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                    "entityClassName": "Project"
+                },
+                "projectEvent": null,
+                "tab": null,
+                "tooltip": null
+            },
+            "invoiceItems": [],
+            "musician": {
+                "__DEPTH__": 0,
+                "addressBookUri": null,
+                "addressSupplement": "Igloo 13",
+                "birthday": "2024-01-01T00:00:00.000000Z",
+                "city": "Nirgends",
+                "cloudAccountDeactivated": null,
+                "cloudAccountDisabled": true,
+                "country": "AQ",
+                "created": "2024-01-01T00:00:00.000000Z",
+                "defaultParticipationStatus": "regular",
+                "deleted": "2024-01-01T00:00:00.000000Z",
+                "displayName": "Musterperson, Max",
+                "email": "john.doe@nowhere.tld",
+                "emailAddresses": {
+                    "entityClassName": "MusicianEmailAddress",
+                    "entities": {
+                        "john.doe@nowhere.tld": {
+                            "flatIdentifier": "john.doe@nowhere.tld:' . self::FAKED_ENTITY_ID . '",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "encryptedFiles": [],
+                "firstName": "Max",
+                "fixedLinePhone": "4711",
+                "gender": "male",
+                "genderAssumed": true,
+                "id": ' . self::FAKED_ENTITY_ID . ',
+                "instrumentInsurances": [],
+                "instruments": [],
+                "invoices": [],
+                "jobTitle": null,
+                "labelledPOBox": "",
+                "language": null,
+                "mobile": "0815",
+                "mobilePhone": "0815",
+                "name": "Max Musterperson",
+                "nickName": null,
+                "numberAndStreet": "42 Unauffindbarweg",
+                "organization": null,
+                "originatedInvoices": [],
+                "payableInsurances": [],
+                "payments": {
+                    "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                            "entityClassName": null
+                        }
+                    ]
+                },
+                "personalPublicName": "Max Musterperson",
+                "phone": "4711",
+                "poBox": null,
+                "postalCode": "Z-7",
+                "projectApplications": [],
+                "projectInstruments": [],
+                "projectParticipantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "projectParticipation": {
+                    "entityClassName": "ProjectParticipant",
+                    "entities": {
+                        "' . self::FAKED_ENTITY_ID . '": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "publicName": "Musterperson, Max",
+                "remarks": null,
+                "rowAccessToken": null,
+                "sepaBankAccounts": {
+                    "entityClassName": "SepaBankAccount",
+                    "entities": [
+                        {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':1",
+                            "entityClassName": null
+                        },
+                        {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2",
+                            "entityClassName": null
+                        }
+                    ]
+                },
+                "sepaDebitMandates": [],
+                "street": "Unauffindbarweg",
+                "streetAndNumber": "Unauffindbarweg 42",
+                "streetNumber": "42",
+                "surName": "Musterperson",
+                "updated": "2024-01-01T00:00:00.000000Z",
+                "userIdSlug": "lieschen.mueller",
+                "userPassphrase": null,
+                "uuid": "00000000-0000-0000-0000-000000000000"
+            },
+            "optionKey": "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+            "optionValue": "12.23",
+            "payments": [],
+            "project": {
+                "__DEPTH__": 0,
+                "applications": [],
+                "calendarEvents": [],
+                "compositePayments": [],
+                "created": null,
+                "deleted": null,
+                "financialBalanceDocumentsStorage": null,
+                "id": ' . self::FAKED_ENTITY_ID . ',
+                "instrumentationNumbers": [],
+                "invoices": [],
+                "mailingListId": null,
+                "name": "TestProject2099",
+                "participantFields": [],
+                "participantFieldsData": [],
+                "participantInstruments": [],
+                "participants": {
+                    "entityClassName": "ProjectParticipant",
+                    "entities": {
+                        "' . self::FAKED_ENTITY_ID . '": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . '",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "payments": [],
+                "registrationCalendarEvent": null,
+                "registrationDeadline": null,
+                "registrationStartDate": null,
+                "sentEmail": [],
+                "sepaDebitMandates": [],
+                "type": "temporary",
+                "updated": null,
+                "webPages": [],
+                "year": 2099
+            },
+            "projectParticipant": {
+                "__DEPTH__": 0,
+                "created": "2024-01-01T00:00:00.000000Z",
+                "databaseDocuments": null,
+                "deleted": null,
+                "invoices": [],
+                "musician": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                    "entityClassName": "Musician"
+                },
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
+                "participationStatus": "regular",
+                "payments": {
+                    "entityClassName": "CompositePayment",
+                    "entities": [
+                        {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                            "entityClassName": null
+                        }
+                    ]
+                },
+                "project": {
+                    "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
+                    "entityClassName": "Project"
+                },
+                "projectInstruments": [],
+                "registration": false,
+                "updated": "2024-01-01T00:00:00.000000Z"
+            },
+            "supportingDocument": null,
+            "updated": null
+        }
+    },
     "participationStatus": "regular",
     "payments": [
         {
@@ -783,8 +1102,8 @@ class EntityArrayAdapterTest extends TestCase
                 "projectParticipantFieldsData": {
                     "entityClassName": "ProjectParticipantFieldDatum",
                     "entities": {
-                        "2b826186-ef29-11f0-a81f-27218343fe72": {
-                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                             "entityClassName": null
                         }
                     }
@@ -872,7 +1191,15 @@ class EntityArrayAdapterTest extends TestCase
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "participantFieldsData": [],
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
                 "participationStatus": "regular",
                 "payments": {
                     "entityClassName": "CompositePayment",
@@ -916,11 +1243,11 @@ class EntityArrayAdapterTest extends TestCase
                         "entityClassName": "ProjectParticipant"
                     },
                     "receivable": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                         "entityClassName": "ProjectParticipantFieldDatum"
                     },
                     "receivableOption": {
-                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':2b826186-ef29-11f0-a81f-27218343fe72",
+                        "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
                         "entityClassName": "ProjectParticipantFieldDataOption"
                     },
                     "subject": "Forderungen: ReNr RE25\/01354 Aktenzeichen 25-01258 \u00dcml\u00e4\u00fcte\u00df",
@@ -1004,7 +1331,15 @@ class EntityArrayAdapterTest extends TestCase
                     "flatIdentifier": "' . self::FAKED_ENTITY_ID . '",
                     "entityClassName": "Musician"
                 },
-                "participantFieldsData": [],
+                "participantFieldsData": {
+                    "entityClassName": "ProjectParticipantFieldDatum",
+                    "entities": {
+                        "0c1eca68-bc3b-4d65-b80e-588ffbe0ca86": {
+                            "flatIdentifier": "' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':' . self::FAKED_ENTITY_ID . ':0c1eca68-bc3b-4d65-b80e-588ffbe0ca86",
+                            "entityClassName": null
+                        }
+                    }
+                },
                 "participationStatus": "regular",
                 "payments": {
                     "entityClassName": "CompositePayment",

@@ -132,6 +132,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -242,7 +243,7 @@ class ProjectAssociatesTest extends TestCase
         instrumentNames: Entities\ProjectInstrument::NON_INSTRUMENTS,
         voices: 0,
       );
-      $this->generateReceivable(persist: true, generator: DoNothingReceivablesGenerator::class);
+      $this->generateReceivable(persist: true, generatorClass: DoNothingReceivablesGenerator::class);
       $projectInstrument = $this->participant->getProjectInstruments()->first();
       self::$projectInstrumentId = $projectInstrument->getInstrument()->getId();
 
@@ -477,23 +478,19 @@ class ProjectAssociatesTest extends TestCase
     'PME_data_Musicians:cloud_account_disabled' => ['1'],
     'PME_data_ProjectParticipantFieldsDataOptions@1:label' => [
       'ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
-      '__generator__',
+      'Voreinstellung',
     ],
     'PME_data_ProjectParticipantFieldsData@1:option_value' => [
       '12.23',
-      '',
+      '1234',
     ],
-    'PME_data_ProjectParticipantFieldsData@1:option_key' =>
-    array (
-      0 => '2b826186-ef29-11f0-a81f-27218343fe72',
-      1 => '00000000-0000-0000-0000-000000000000',
-    ),
-    'recurringReceivablesUpdateStrategy' =>
-    array (
-      1 => 'exception',
-    ),
+    'PME_data_ProjectParticipantFieldsData@1:option_key' => [
+      '0c1eca68-bc3b-4d65-b80e-588ffbe0ca86',
+      '027db41d-4f5b-45be-a956-c70095dab48d',
+    ],
+    'recurringReceivablesUpdateStrategy' => [ 1 => 'exception' ],
     'PME_data_ProjectParticipantFieldsData@1:deleted' => '',
-    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '00000000-0000-0000-0000-000000000000:,2b826186-ef29-11f0-a81f-27218343fe72:',
+    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '027db41d-4f5b-45be-a956-c70095dab48d:,0c1eca68-bc3b-4d65-b80e-588ffbe0ca86:',
     'PME_data_MusicianEmailAddresses@all:address' => ['john.doe@nowhere.tld'],
     'PME_data_Musicians:email' => 'john.doe@nowhere.tld',
     'PME_data_Musicians:mobile_phone' => '0815',

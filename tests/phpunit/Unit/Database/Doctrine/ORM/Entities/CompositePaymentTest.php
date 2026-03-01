@@ -108,6 +108,8 @@ class CompositePaymentTest extends TestCase
       eventsService: $eventsService,
       rolesService: $organizationalRolesService,
     );
+
+    self::$uuidIndex = 0;
   }
 
   /** @return void */

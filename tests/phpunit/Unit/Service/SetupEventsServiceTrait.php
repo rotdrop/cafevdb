@@ -129,7 +129,15 @@ trait SetupEventsServiceTrait
           return [];
           // }
         } else {
-          if (!isset($criteria['project']) || ($criteria['type'] ?? VCalendarType::VEVENT) != VCalendarType::VEVENT) {
+          if (!empty($criteria['eventUri'])) {
+            $eventUri = $criteria['eventUri'];
+            return array_values(
+              array_filter(
+                $this->project->getCalendarEvents()->toArray(),
+                fn(Entities\ProjectEvent $projectEvent) => $projectEvent->getEventUri() == $eventUri,
+              ),
+            );
+          } elseif (!isset($criteria['project']) || ($criteria['type'] ?? VCalendarType::VEVENT) != VCalendarType::VEVENT) {
             throw new UnexpectedValueException('Can only fake search for VEVENT given a project or project-id: ' . print_r($criteria, true));
           }
           $projectOrId = $criteria['project'];

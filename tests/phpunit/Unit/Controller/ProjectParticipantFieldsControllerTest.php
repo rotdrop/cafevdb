@@ -55,10 +55,10 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
 #[Attributes\CoversClass(Controller\ProjectParticipantFieldsController::class)]
-#[Attributes\CoversClass(ManuallyGeneratedReceivablesGenerator::class)]
 #[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetDefaultValue::class)]
 #[Attributes\CoversClass(DTO\ParticipantFieldPropertyGetResponse::class)]
 #[Attributes\CoversClass(DTO\ReceivablesStatistics::class)]
+#[Attributes\CoversClass(ManuallyGeneratedReceivablesGenerator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
@@ -118,6 +118,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
@@ -227,7 +228,7 @@ class ProjectParticipantFieldsControllerTest extends TestCase
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
       $this->generateProjectParticipant(persist: true, now: $this->now, delete: false);
-      $datum = $this->generateReceivable(persist: true, generator: self::RECEIVABLES_GENERATOR);
+      $datum = $this->generateReceivable(persist: true, generatorClass: self::RECEIVABLES_GENERATOR);
 
       self::$projectId = $this->project->getId();
       self::$musicianId = $this->musician->getId();
@@ -293,8 +294,9 @@ class ProjectParticipantFieldsControllerTest extends TestCase
     $value = $data->value;
     $this->assertInstanceOf(DTO\ParticipantFieldPropertyGetDefaultValue::class, $value);
     /** @var DTO\ParticipantFieldPropertyGetDefaultValue $value */
-    $this->assertEquals((string)$this->field->getDefaultValue()->getKey(), $value->key);
-    $this->assertEquals(self::RECEIVABLES_GENERATOR, $value->data);
+    $default = $this->field->getDefaultValue();
+    $this->assertEquals((string)$default->getKey(), $value->key);
+    $this->assertEquals($default->getData(), $value->data);
   }
 
   /** @return void */

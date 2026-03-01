@@ -34,12 +34,13 @@ use OCA\RotDrop\Tests\DatabaseProvider;
 use OCA\RotDrop\Tests\EnumDatabasePurpose;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /**
  * Misuse the PHPUnit framework to generate test-data for the members
@@ -162,6 +163,19 @@ class ArtifactsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
+
+  /** {@inheritdoc} */
+  public function setup(): void
+  {
+    error_reporting(E_ALL);
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
+  }
 
   /** @return void */
   public function testArtifacts(): void
