@@ -3504,7 +3504,9 @@ Whatever.',
 
       if ($participationContext == ParticipationContext::UNRESTRICTED
           || $participationContext == $thisParticipantsContext) {
-          $this->remove($participant, true); // this should be soft-delete
+        if (!$participant->isDeleted()) {
+          $this->remove($participant, flush: true); // this should be soft-delete
+        }
       } else {
         $this->logInfo('Not removing, participant still in use in context "' . $participant->getParticipationContext() . '".');
       }
@@ -3513,13 +3515,16 @@ Whatever.',
 
         // For now rather cascade manually. Could also use ORM, of course ...
         /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-        foreach ($participant->getParticipantFieldsData() as $fieldDatum) {
-          $this->remove($fieldDatum, true);
+        $fieldsData = $participant->getParticipantFieldsData();
+        foreach ($fieldsData as $fieldDatum) {
           if ($fieldDatum->unused()) {
-            $this->remove($fieldDatum, true);
+            $participant->removeParticipantFieldDatum($fieldDatum);
+            $this->remove($fieldDatum, flush: true, hard: true);
+          } else {
+            $this->remove($fieldDatum, flush: true);
           }
         }
-        $this->remove($participant, true); // this should be hard-delete
+        $this->remove($participant, flush: true); // this should be hard-delete
 
         $this->entityManager->registerPreCommitAction(
           new Common\UndoableFolderRemove(

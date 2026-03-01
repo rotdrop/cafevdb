@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\ManuallyGeneratedReceivablesGenerator;
+use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
@@ -66,7 +67,20 @@ trait EntityGeneratorTrait
   protected const MUSICIAN_BANK_ACCOUNT = '0000202051';
   protected const MUSICIAN_BANK_ACCOUNT_OWNER = 'Inhaber:in, Konto';
 
-  protected const RECEIVABLE_OPTION_KEY = '2b826186-ef29-11f0-a81f-27218343fe72';
+  private const PARTICIPANT_FIELD_OPION_KEYS = [
+    '027db41d-4f5b-45be-a956-c70095dab48d',
+    '0c1eca68-bc3b-4d65-b80e-588ffbe0ca86',
+    '191c7a77-2ca0-4eab-8194-04ca8fd1bc92',
+    '1e012572-e78e-4531-afa7-b3a8a74b8202',
+    '2b826186-ef29-11f0-a81f-27218343fe72',
+    '3a03af10-15a5-11f1-964e-99778aaed210',
+    '3f487cae-5324-4891-ae7a-a8dd9c409bbc',
+    '72160bf3-f533-4fe2-ac53-3e0eef344390',
+    'a0184b0f-d11d-428c-bc85-0ed228dc4ecf',
+    'a073db1b-fe3f-40aa-ad53-9c82a309351f',
+  ];
+
+  private static $uuidIndex = 0;
 
   private EntityManager $entityManager;
 
@@ -158,7 +172,13 @@ trait EntityGeneratorTrait
       // The real database has the standard instruments already available by
       // means of a setup migration.
       // $this->entityManager->enableLogging();
-      $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => $instrumentNames], ['sortOrder' => 'ASC']);
+      $biL10n = $this->appContainer->get(BiDirectionalL10N::class);
+      // be a little bit sloppy here and allow translated as well as untranslated names.
+      $criteriaNames = array_merge(
+        $instrumentNames,
+        array_map(fn(string $name) => $biL10n->t($name), $instrumentNames),
+      );
+      $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => $criteriaNames], ['sortOrder' => 'ASC']);
       $untranslatedNames = array_map(fn($arg) => $arg->getUntranslatedName(), $instruments);
       $this->assertEquals($instrumentNames, $untranslatedNames);
     } else {
@@ -194,14 +214,17 @@ trait EntityGeneratorTrait
     $musicianInstruments = [];
     /** @var Entities\Instrument $instrument */
     foreach ($instruments as $instrument) {
-      $musicianInstrument = new Entities\MusicianInstrument()
-        ->setInstrument($instrument)
-        ->setMusician($this->musician);
+      $musicianInstrument = $this->musician->getInstruments()->get($instrument->getId());
+      if (empty($musicianInstrument)) {
+        $musicianInstrument = new Entities\MusicianInstrument()
+          ->setInstrument($instrument)
+          ->setMusician($this->musician);
+        if ($persist) {
+          $this->entityManager->persist($musicianInstrument);
+        }
+      }
       $this->assertEquals($instrument, $musicianInstrument->getInstrument());
       $this->assertEquals($this->musician, $musicianInstrument->getMusician());
-      if ($persist) {
-        $this->entityManager->persist($musicianInstrument);
-      }
       $musicianInstruments[] = $musicianInstrument;
     }
 
@@ -209,17 +232,25 @@ trait EntityGeneratorTrait
     $musicianInstrument = $musicianInstruments[0];
     $voicedInstrument = $musicianInstrument->getInstrument();
     $instrumentationNumbers = [];
+    $numbersCollection = $this->project->getInstrumentationNumbers();
     for ($voice = 0; $voice <= $voices; ++$voice) {
-      $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
-        $this->project,
-        $voicedInstrument,
-        $voice,
-      )
-        ->setQuantity($voice);
-      $this->project->getInstrumentationNumbers()->add($instrumentationNumber);
-      if ($persist) {
-        $this->entityManager->persist($instrumentationNumber);
+      $instrumentationNumber = $numbersCollection->findFirst(
+        fn($key, Entities\ProjectInstrumentationNumber $number)
+        =>
+        $number->getVoice() == $voice && $number->getInstrument()->getId() == $voicedInstrument->getId(),
+      );
+      if (empty($instrumentationNumber)) {
+        $instrumentationNumber = new Entities\ProjectInstrumentationNumber(
+          $this->project,
+          $voicedInstrument,
+          $voice,
+        );
+        $this->project->getInstrumentationNumbers()->add($instrumentationNumber);
+        if ($persist) {
+          $this->entityManager->persist($instrumentationNumber);
+        }
       }
+      $instrumentationNumber->setQuantity($voice);
       $instrumentationNumbers[] = $instrumentationNumber;
     }
 
@@ -251,7 +282,11 @@ trait EntityGeneratorTrait
     }
   }
 
-  private const YES_NO_FIELD_OPTION_KEY = 'a0512a1e-4a69-44ec-b38e-e6756ce05aa3';
+  /** @return string */
+  private static function getUuid(): string
+  {
+    return self::PARTICIPANT_FIELD_OPION_KEYS[self::$uuidIndex++];
+  }
 
   /**
    * Generate a checkbox field. Background is the handling of missing data on
@@ -279,7 +314,7 @@ trait EntityGeneratorTrait
 
     $option = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
-      ->setKey(self::YES_NO_FIELD_OPTION_KEY)
+      ->setKey(self::getUuid())
       ->setLabel($field->getName())
       ->setData('50.00')
       ;
@@ -317,7 +352,7 @@ trait EntityGeneratorTrait
    */
   protected function generateReceivable(
     bool $persist = false,
-    string $generator = ManuallyGeneratedReceivablesGenerator::class,
+    string $generatorClass = ManuallyGeneratedReceivablesGenerator::class,
   ): Entities\ProjectParticipantFieldDatum {
     if (!empty($this->entities[Entities\ProjectParticipantFieldDatum::class])) {
       return $this->entities[Entities\ProjectParticipantFieldDatum::class];
@@ -336,27 +371,33 @@ trait EntityGeneratorTrait
     $generator = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
       ->setKey(Entities\ProjectParticipantFieldDataOption::GENERATOR_KEY)
-      ->setLabel(
-        Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL,
-      )
-      ->setData($generator)
+      ->setLabel(Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL)
+      ->setData($generatorClass)
+      ;
+    $default = new Entities\ProjectParticipantFieldDataOption()
+      ->setField($field)
+      ->setKey(self::getUuid())
+      ->setLabel('Default Value')
+      ->setData('1234')
       ;
     $field
-      ->setDefaultValue($generator)
-      ->getDataOptions()
-      ->set($generator->getKey(), $generator);
+      ->addDataOption($generator)
+      ->addDataOption($default)
+      ;
+    $field->setDefaultValue($default);
+
     $option = new Entities\ProjectParticipantFieldDataOption()
       ->setField($field)
-      ->setKey(Uuid::asUuid(self::RECEIVABLE_OPTION_KEY))
+      ->setKey(self::getUuid())
       ->setLabel('ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß');
-    $field->getDataOptions()->set($option->getKey(), $option);
+    $field->addDataOption($option);
     $datum = new Entities\ProjectParticipantFieldDatum()
       ->setDataOption($option)
       ->setProjectParticipant($this->participant)
       ->setOptionValue(RationalNumber::fromDecimal('12.23'));
     $option->getFieldData()->set($this->musician->getId(), $datum);
     $field->getFieldData()->add($datum);
-    $this->musician->getProjectParticipantFieldsData()->set($datum->getOptionKey()->getBytes(), $datum);
+    $this->participant->addParticipantFieldDatum($datum);
 
     $this->entities[Entities\ProjectParticipantFieldDatum::class] = $datum;
 

@@ -69,16 +69,22 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(PageRenderer\Util\Navigation::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEditTimer::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
+#[Attributes\CoversClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Toolkit\Response\PreRenderedTemplateResponse::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\FinanceModeNavigationItemTrait::class)]
 #[Attributes\CoversTrait(PageRenderer\FieldTraits\ProjectModeNavigationItemTrait::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractFileSystemUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableFileSystemNodeRemove::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableFolderRemove::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
@@ -126,6 +132,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EntityManagerBoundEvent::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\MusicianEmailEvent::class)]
@@ -136,7 +143,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\MusicianInstrumentEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectInstrumentEntityListener::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000001::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000003::class)]
@@ -162,8 +169,6 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\MusicianService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\PhoneNumberService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectParticipantFieldsService::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Service\ProjectService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsDataService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
@@ -192,10 +197,11 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class ProjectParticipantsTest extends TestCase
 {
-  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
-  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use GetFormValuesTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
   // use \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\PHPUnit\VerifyDeprecations;
 
   private PageRenderer\ProjectParticipants $renderer;
@@ -221,6 +227,7 @@ class ProjectParticipantsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
     \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
 
@@ -242,12 +249,24 @@ class ProjectParticipantsTest extends TestCase
       self::$projectId = $this->project->getId();
       self::$musicianId = $this->musician->getId();
       $this->generateInstruments(persist: true);
-      $this->generateReceivable(persist: true, generator: DoNothingReceivablesGenerator::class);
+      $this->generateReceivable(persist: true, generatorClass: DoNothingReceivablesGenerator::class);
       $yesNoField = $this->generateYesNoField(persist: true);
       self::$yesNoFieldId = $yesNoField->getId();
       $projectInstrument = $this->participant->getProjectInstruments()->first();
       self::$projectInstrumentId = $projectInstrument->getInstrument()->getId();
       self::$migrationsApplied = true;
+    } else {
+      $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
+
+      $this->project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+      $this->musician = $this->entityManager->find(Entities\Musician::class, self::$musicianId);
+      $participant = $this->musician->getProjectParticipantOf($this->project);
+      if ($participant) {
+        $this->participant = $participant;
+      }
+      $this->assertNotNull($this->project);
+      $this->assertNotNull($this->musician);
+      // $this->assertNotNUll($this->participant); might have been deleted by a test
     }
 
     $this->request = $this->mockProvider->getRequest();
@@ -255,20 +274,19 @@ class ProjectParticipantsTest extends TestCase
       return $this->postData[$key] ?? $default;
     });
 
-    $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
-
     $appContainer = $this->mockProvider->getAppContainer();
     $configService = $this->mockProvider->getConfigService();
     $participantFieldsService = $appContainer->get(ProjectParticipantFieldsService::class);
 
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
-    $userStorage = $this->createStub(UserStorage::class);
+    $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $projectService = new ProjectService(
       configService: $configService,
       entityManager: $this->entityManager,
-      userStorage: $userStorage,
+      userStorage: $this->userStorage,
       participantFieldsService: $participantFieldsService,
       musicianService: $appContainer->get(MusicianService::class),
       eventDispatcher: $this->mockProvider->getEventDispatcher(),
@@ -293,7 +311,7 @@ class ProjectParticipantsTest extends TestCase
       phoneNumberService: $appContainer->get(PhoneNumberService::class),
       participantFieldsService: $participantFieldsService,
       projectService: $projectService,
-      userStorage: $userStorage,
+      userStorage: $this->userStorage,
     );
   }
 
@@ -342,12 +360,8 @@ class ProjectParticipantsTest extends TestCase
   #[Attributes\Depends('testApplyMigrations')]
   public function testRenderView(): void
   {
-    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
-    /** @var Entities\Project $project */
-    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
     // testing the test-suite
-    $this->assertEquals(1, $project->getParticipants()->count());
-    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    $this->assertEquals(1, $this->project->getParticipants()->count());
     //
     $substitutions = [
       '@PROJECT_ID@' => self::$projectId,
@@ -475,21 +489,21 @@ class ProjectParticipantsTest extends TestCase
     'PME_data_Musicians:cloud_account_disabled' => ['1'],
     'PME_data_ProjectParticipantFieldsDataOptions@1:label' => [
       'ReNr RE25/01354 Aktenzeichen 25-01258 Ümläüteß',
-      '__generator__',
+      'Voreinstellung',
     ],
     'PME_data_ProjectParticipantFieldsData@1:option_value' => [
       '12.23',
-      '',
+      '1234',
     ],
     'PME_data_ProjectParticipantFieldsData@1:option_key' => [
-      0 => '2b826186-ef29-11f0-a81f-27218343fe72',
-      1 => '00000000-0000-0000-0000-000000000000',
+      '0c1eca68-bc3b-4d65-b80e-588ffbe0ca86',
+      '027db41d-4f5b-45be-a956-c70095dab48d',
     ],
     'recurringReceivablesUpdateStrategy' => [
       1 => 'exception',
     ],
     'PME_data_ProjectParticipantFieldsData@1:deleted' => '',
-    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '00000000-0000-0000-0000-000000000000:,2b826186-ef29-11f0-a81f-27218343fe72:',
+    'PME_data_ProjectParticipantFieldsData@1:supporting_document_id' => '027db41d-4f5b-45be-a956-c70095dab48d:,0c1eca68-bc3b-4d65-b80e-588ffbe0ca86:',
     'PME_data_ProjectParticipantFieldsData@2:option_value' => '',
     'PME_data_ProjectParticipantFieldsData@2:deleted' => '',
     'PME_data_MusicianEmailAddresses@all:address' => ['john.doe@nowhere.tld'],
@@ -560,8 +574,11 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
+  #[Attributes\Depends('testRenderDelete')]
+  #[Attributes\Depends('testRenderList')]
   #[Attributes\Depends('testRenderUpdate')]
-  public function testRenderUpdateApply(): void
+  #[Attributes\Depends('testRenderView')]
+  public function testRenderApplyUpdate(): void
   {
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
@@ -601,8 +618,8 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testRenderUpdateApply')]
-  public function testRenderUpdateApplyAddInstrument(): void
+  #[Attributes\Depends('testRenderApplyUpdate')]
+  public function testRenderApplyUpdateAddInstrument(): void
   {
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
@@ -636,8 +653,8 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testRenderUpdateApplyAddInstrument')]
-  public function testRenderUpdateApplyAddVoice(): void
+  #[Attributes\Depends('testRenderApplyUpdateAddInstrument')]
+  public function testRenderApplyUpdateAddVoice(): void
   {
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
@@ -679,10 +696,10 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testRenderUpdateApplyAddVoice')]
-  public function testRenderUpdateApplyRemoveInstrument(): void
+  #[Attributes\Depends('testRenderApplyUpdateAddVoice')]
+  public function testRenderApplyUpdateRemoveInstrument(): void
   {
-    $this->testRenderUpdateApply();
+    $this->testRenderApplyUpdate();
   }
 
   // non-participant field checkboxes.
@@ -703,8 +720,8 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testRenderUpdateApplyRemoveInstrument')]
-  public function testRenderUpdateApplyToggleCheckBoxes(): void
+  #[Attributes\Depends('testRenderApplyUpdateRemoveInstrument')]
+  public function testRenderApplyUpdateToggleCheckBoxes(): void
   {
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
@@ -752,8 +769,8 @@ class ProjectParticipantsTest extends TestCase
    *
    * @return void
    */
-  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxes')]
-  public function testRenderUpdateApplyToggleCheckBoxesAgain(): void
+  #[Attributes\Depends('testRenderApplyUpdateToggleCheckBoxes')]
+  public function testRenderApplyUpdateToggleCheckBoxesAgain(): void
   {
     $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
     /** @var Entities\Project $project */
@@ -781,7 +798,6 @@ class ProjectParticipantsTest extends TestCase
       }
     }
     $this->postData[$this->phpMyEdit->cgiSysName('morechange')] = 'Apply';
-    $this->postData[$this->phpMyEdit->cgiSysName('morechange')] = 'Apply';
 
     ob_start();
     try {
@@ -797,21 +813,82 @@ class ProjectParticipantsTest extends TestCase
     $this->assertEquals($expectedFormValues, $formValues);
   }
 
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testRenderApplyUpdateToggleCheckBoxesAgain')]
+  public function testRenderApplyDelete(): void
+  {
+    $this->assertNotNull($this->entityManager->find(Entities\Project::class, self::$projectId));
+    /** @var Entities\Project $project */
+    $project = $this->entityManager->find(Entities\Project::class, self::$projectId);
+    // testing the test-suite
+    $this->assertEquals(1, $project->getParticipants()->count());
+    $this->assertNotNull($this->entityManager->find(Entities\Musician::class, self::$musicianId));
+    //
+    $this->postData = self::RENDER_UPDATE_FORM_VALUES;
+
+    $this->postData[$this->phpMyEdit->cgiSysName('op_name')] = 'delete';
+    $this->postData[$this->phpMyEdit->cgiSysName('savedelete')] = 'Löschen';
+
+    ob_start();
+    try {
+      $this->renderer->render(execute: true);
+      $html = ob_get_contents();
+    } catch (Throwable $t) {
+      throw new Exception($t->getMessage(), previous: $t);
+    } finally {
+      ob_end_clean();
+    }
+    $domDoc = new DOMDocument('1.0', 'UTF-8');
+    $domDoc->encoding = 'UTF-8';
+    $domDoc->loadHTML($html, LIBXML_PEDANTIC);
+
+    $this->assertEquals(0, $project->getParticipants()->count());
+  }
+
+  /** {@inheritdoc} */
+  #[Attributes\Depends('testRenderApplyDelete')]
+  public function testRenderApplyDeleteSoftDeleted(): void
+  {
+    $this->participant = (new Entities\ProjectParticipant)
+      ->setMusician($this->musician)
+      ->setProject($this->project)
+      ->setCreated($this->now)
+      ->setUpdated($this->now);
+    $this->musician->getProjectParticipation()->set($this->project->getId(), $this->participant);
+    $this->project->getParticipants()->set($this->musician->getId(), $this->participant);
+    $this->entityManager->beginTransaction();
+    $this->entityManager->flush();
+    $this->entityManager->commit();
+    // no need to roll back in the test ...
+    $this->generateInstruments(persist: true);
+    $this->generateReceivable(persist: true, generatorClass: DoNothingReceivablesGenerator::class);
+
+    $this->participant->setDeleted($this->now);
+    $this->entityManager->beginTransaction();
+    $this->entityManager->flush();
+    $this->entityManager->commit();
+
+    // $this->entityManager->enableLogging();
+    $this->testRenderApplyDelete();
+  }
+
   /**
    * This is quas a tearDownAfterClass() but we need some mocked / stubbed
    * classes for the entity-manager.
    *
    * @return void
    */
+  #[Attributes\Depends('testRenderApplyDelete')]
+  #[Attributes\Depends('testRenderApplyDeleteSoftDeleted')]
+  #[Attributes\Depends('testRenderApplyUpdate')]
+  #[Attributes\Depends('testRenderApplyUpdateAddInstrument')]
+  #[Attributes\Depends('testRenderApplyUpdateAddVoice')]
+  #[Attributes\Depends('testRenderApplyUpdateRemoveInstrument')]
+  #[Attributes\Depends('testRenderApplyUpdateToggleCheckBoxes')]
+  #[Attributes\Depends('testRenderApplyUpdateToggleCheckBoxesAgain')]
   #[Attributes\Depends('testRenderDelete')]
   #[Attributes\Depends('testRenderList')]
   #[Attributes\Depends('testRenderUpdate')]
-  #[Attributes\Depends('testRenderUpdateApply')]
-  #[Attributes\Depends('testRenderUpdateApplyAddInstrument')]
-  #[Attributes\Depends('testRenderUpdateApplyAddVoice')]
-  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxes')]
-  #[Attributes\Depends('testRenderUpdateApplyRemoveInstrument')]
-  #[Attributes\Depends('testRenderUpdateApplyToggleCheckBoxesAgain')]
   #[Attributes\Depends('testRenderView')]
   public function testUnapplyMigrations(): void
   {
