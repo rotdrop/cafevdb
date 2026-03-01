@@ -62,15 +62,15 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private ProjectParticipantField $field;
+  private ?ProjectParticipantField $field;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private Project $project;
+  private ?Project $project;
 
   #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
-  private Musician $musician;
+  private ?Musician $musician;
 
   #[ORM\Column(type: 'uuid_binary')]
   #[ORM\Id]
@@ -91,12 +91,12 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
   #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
-  private ProjectParticipantFieldDataOption $dataOption;
+  private ?ProjectParticipantFieldDataOption $dataOption;
 
   #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
   #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
-  private ProjectParticipant $projectParticipant;
+  private ?ProjectParticipant $projectParticipant;
 
   /**
    * @var Collection<ProjectPayment>
@@ -127,11 +127,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int|null|Project $project
+   * @param ?Project $project
    *
-   * @return ProjectParticipantProjectsData
+   * @return self
    */
-  public function setProject($project):ProjectParticipantFieldDatum
+  public function setProject(?Project $project): self
   {
     $this->project = $project;
 
@@ -141,9 +141,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return Project
+   * @return ?Project
    */
-  public function getProject():Project
+  public function getProject(): ?Project
   {
     return $this->project;
   }
@@ -151,11 +151,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int|null|Musician $musician
+   * @param ?Musician $musician
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setMusician($musician):ProjectParticipantFieldDatum
+  public function setMusician(?Musician $musician): self
   {
     $this->musician = $musician;
 
@@ -165,25 +165,29 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician
+   * @return ?Musician
    */
-  public function getMusician():Musician
+  public function getMusician(): ?Musician
   {
-    return $this->musician;
+    return $this->musician ?? null;
   }
 
   /**
    * Set projectParticipant.
    *
-   * @param ProjectParticipant $projectParticipant
+   * @param ?ProjectParticipant $projectParticipant
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setProjectParticipant(ProjectParticipant $projectParticipant):ProjectParticipantFieldDatum
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant): self
   {
     $this->projectParticipant = $projectParticipant;
-    $this->musician = $projectParticipant->getMusician();
-    $this->project = $projectParticipant->getProject();
+    $this->musician = $projectParticipant?->getMusician();
+    $this->project = $projectParticipant?->getProject();
+    if ($projectParticipant === null) {
+      $this->field = null;
+      $this->dataOption = null;
+    }
 
     return $this;
   }
@@ -191,21 +195,21 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get projectParticipant.
    *
-   * @return ProjectParticipant
+   * @return ?ProjectParticipant
    */
-  public function getProjectParticipant():ProjectParticipant
+  public function getProjectParticipant(): ?ProjectParticipant
   {
-    return $this->projectParticipant;
+    return $this->projectParticipant ?? null;
   }
 
   /**
    * Set field.
    *
-   * @param int|null|ProjectParticipantField $field
+   * @param ProjectParticipantField $field
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setField($field):ProjectParticipantFieldDatum
+  public function setField(?ProjectParticipantField $field): self
   {
     $this->field = $field;
 
@@ -215,25 +219,27 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get field.
    *
-   * @return ProjectParticipantField
+   * @return ?ProjectParticipantField
    */
-  public function getField():ProjectParticipantField
+  public function getField(): ?ProjectParticipantField
   {
-    return $this->field;
+    return $this->field ?? null;
   }
 
   /**
    * Set dataOption.
    *
-   * @param ProjectParticipantFieldDataOption $dataOption
+   * @param ?ProjectParticipantFieldDataOption $dataOption
    *
-   * @return ProjectParticipantFieldDatum
+   * @return self
    */
-  public function setDataOption(ProjectParticipantFieldDataOption $dataOption):ProjectParticipantFieldDatum
+  public function setDataOption(?ProjectParticipantFieldDataOption $dataOption): self
   {
     $this->dataOption = $dataOption;
-    $this->field = $dataOption->getField();
-    $this->optionKey = $dataOption->getKey();
+    if ($dataOption) {
+      $this->field = $dataOption->getField();
+      $this->optionKey = $dataOption->getKey();
+    }
 
     return $this;
   }
@@ -241,11 +247,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get dataOption.
    *
-   * @return ProjectParticipantFieldDataOption
+   * @return ?ProjectParticipantFieldDataOption
    */
-  public function getDataOption():ProjectParticipantFieldDataOption
+  public function getDataOption(): ?ProjectParticipantFieldDataOption
   {
-    return $this->dataOption;
+    return $this->dataOption ?? null;
   }
 
   /**
@@ -439,6 +445,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       ->setProjectParticipant($participant)
       ->setDataOption($defaultValue);
     switch ($field->getMultiplicity()) {
+      case FieldMultiplicity::RECURRING:
       case FieldMultiplicity::SIMPLE:
         // value is stored in the the data item
         $datum->setOptionValue($defaultValue->getData());

@@ -73,7 +73,14 @@ class ProjectParticipant implements \ArrayAccess
    *
    * Link to extra fields data
    */
-  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(
+    targetEntity: ProjectParticipantFieldDatum::class,
+    indexBy: 'option_key',
+    mappedBy: 'projectParticipant',
+    cascade: ['all'],
+    fetch: 'EXTRA_LAZY',
+    orphanRemoval: true,
+  )]
   private Collection $participantFieldsData;
 
   /**
@@ -366,6 +373,41 @@ class ProjectParticipant implements \ArrayAccess
   public function getParticipantFieldsData():Collection
   {
     return $this->participantFieldsData;
+  }
+
+  /**
+   * Add the give datum to the fields-data collection.
+   *
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addParticipantFieldDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    $this->participantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
+    $this->musician->addProjectParticipantFieldDatum($datum);
+
+    return $this;
+  }
+
+  /**
+   * Remove the data item corresponding to the given option key.
+   *
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function removeParticipantFieldDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    if ($this->participantFieldsData->indexOf($datum) !== false) {
+      $this->participantFieldsData->removeElement($datum);
+      $this->project->getParticipantFieldsData()->removeElement($datum);
+      $this->musician->getProjectParticipantFieldsData()->removeElement($datum);
+      $datum->getDataOption()->getFieldData()->removeElement($datum);
+      $datum->setProjectParticipant(null);
+    }
+
+    return $this;
   }
 
   /**

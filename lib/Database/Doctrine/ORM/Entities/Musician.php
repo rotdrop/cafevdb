@@ -1173,6 +1173,20 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Add the give datum to the fields-data collection.
+   *
+   * @param ProjectParticipantFieldDatum $datum
+   *
+   * @return self
+   */
+  public function addProjectParticipantFieldDatum(ProjectParticipantFieldDatum $datum): self
+  {
+    $this->projectParticipantFieldsData->set($datum->getOptionKey()->getBytes(), $datum);
+
+    return $this;
+  }
+
+  /**
    * Get one specific participant-field datum indexed by its key
    *
    * @param mixed $key Everything which can be converted to an UUID by

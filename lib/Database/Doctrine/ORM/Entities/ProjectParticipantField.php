@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use InvalidArgumentException;
+
 use DateTimeInterface;
 
 use OCA\CAFEVDB\Common\Uuid;
@@ -176,7 +178,6 @@ class ProjectParticipantField implements \ArrayAccess
     }
     $this->dataOptions = new ArrayCollection();
     $this->dataType = FieldDataType::TEXT;
-    $this->defaultValue = null;
     $this->fieldData = new ArrayCollection();
     $this->participantAccess = Types\EnumAccessPermission::NONE;
     $this->participationContext = ParticipationContext::UNRESTRICTED;
@@ -240,9 +241,9 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @param Collection $dataOptions
    *
-   * @return ProjectParticipantField
+   * @return self
    */
-  public function setDataOptions(Collection $dataOptions):ProjectParticipantField
+  public function setDataOptions(Collection $dataOptions): self
   {
     $this->dataOptions = $dataOptions;
 
@@ -254,9 +255,23 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getDataOptions():Collection
+  public function getDataOptions(): ?Collection
   {
     return $this->dataOptions;
+  }
+
+  /**
+   * Add a new option.
+   *
+   * @param ProjectParticipantFieldDataOption $option
+   *
+   * @return self
+   */
+  public function addDataOption(ProjectParticipantFieldDataOption $option): self
+  {
+    $this->dataOptions->set($option->getKey(), $option);
+
+    return $this;
   }
 
   /**
@@ -578,12 +593,16 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set defaultValue.
    *
-   * @param null|ProjectParticipantFieldDataOption $defaultValue
+   * @param ?ProjectParticipantFieldDataOption $defaultValue
    *
    * @return ProjectParticipantField
    */
-  public function setDefaultValue($defaultValue):ProjectParticipantField
+  public function setDefaultValue(?ProjectParticipantFieldDataOption $defaultValue): self
   {
+    if ((string)$defaultValue?->getKey() == ProjectParticipantFieldDataOption::GENERATOR_KEY) {
+      throw new InvalidArgumentException('The generator option must not be assigned as default value.');
+    }
+
     $this->defaultValue = $defaultValue;
 
     return $this;
@@ -592,9 +611,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get defaultValue.
    *
-   * @return null|ProjectParticipantFieldDataOption
+   * @return ?ProjectParticipantFieldDataOption
    */
-  public function getDefaultValue():?ProjectParticipantFieldDataOption
+  public function getDefaultValue(): ?ProjectParticipantFieldDataOption
   {
     return $this->defaultValue;
   }
