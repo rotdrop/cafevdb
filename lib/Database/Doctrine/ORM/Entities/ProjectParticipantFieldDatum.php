@@ -474,7 +474,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
           new DateTimeImmutable($effectiveValue);
           $valid = true;
         } catch (Throwable) {
-          // empty
+          $valid = false;
         }
         break;
       case FieldDataType::FLOAT:
