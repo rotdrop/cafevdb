@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Listener;
 
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
@@ -69,7 +69,7 @@ class MusicianEntityListener
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
   ) {
   }

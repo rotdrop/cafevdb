@@ -29,7 +29,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
@@ -61,7 +61,7 @@ class CryptoController extends Controller
     string $appName,
     IRequest $request,
     protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
   ) {

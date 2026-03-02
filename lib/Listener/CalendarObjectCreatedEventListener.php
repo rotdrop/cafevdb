@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Calendar\Events\CalendarObjectCreatedEvent;
 use OCP\Calendar\Events\CalendarObjectRestoredEvent;
 use OCP\EventDispatcher\Event;
@@ -48,7 +48,7 @@ class CalendarObjectCreatedEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

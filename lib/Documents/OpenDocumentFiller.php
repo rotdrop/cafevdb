@@ -31,7 +31,7 @@ use DateTimeInterface;
 use clsTinyButStrong as OpenDocumentFillerBackend;
 use Symfony\Component\Process\ExecutableFinder;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\File;
 use OCP\Files\IMimeTypeDetector;
 
@@ -74,7 +74,7 @@ class OpenDocumentFiller
     private UserStorage $userStorage,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     $this->appContainer->get(\clsOpenTBS::class); // ??
     ob_start();

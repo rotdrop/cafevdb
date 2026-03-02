@@ -30,7 +30,7 @@ use Throwable;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use Psr\Log\LogLevel;
@@ -47,7 +47,7 @@ class LoadAdditionalScriptsEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     $this->logger = $this->appContainer->get(ILogger::class);
   }

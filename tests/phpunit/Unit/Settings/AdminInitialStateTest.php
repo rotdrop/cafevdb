@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Settings\AdminInitialState;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 use Psr\Log\LoggerInterface;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Test the initial state DTO of the admin settings.

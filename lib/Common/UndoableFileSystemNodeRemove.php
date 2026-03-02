@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use Closure;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\Files;
@@ -73,7 +73,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer):void
+  public function initialize(ContainerInterface $appContainer):void
   {
     parent::initialize($appContainer);
   }

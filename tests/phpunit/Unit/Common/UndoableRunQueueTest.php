@@ -31,7 +31,7 @@ use UnexpectedValueException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Service\Finance;
 use NumberFormatter;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -69,7 +69,7 @@ class GnuCashConnectorService
     private EntityManager $entityManager,
     private FinanceService $financeService,
     private UserStorage $userStorage,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
   ) {

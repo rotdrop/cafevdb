@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Command;
 
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\IUserSession;
@@ -57,7 +57,7 @@ use OCA\CAFEVDB\Traits\ConfigTrait;
  * @var IL10N $l
  * @var IUserManager $userManager
  * @var IUserSession $userSession
- * @var IAppContainer $appContainer
+ * @var ContainerInterface $appContainer
  *
  * @todo Remove variable doc when ac-php supports constructor property
  * promotion.
@@ -75,7 +75,7 @@ class RecurringReceivables extends Command
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
   ) {
     parent::__construct();

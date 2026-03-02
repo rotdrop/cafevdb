@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 
 use Sabre\VObject;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\IDateTimeFormatter;

@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace OCA\CAFEVDB\Database\Doctrine\Migrations;
 
 use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\AbstractMigration as DoctrineAbstractMigration;
@@ -43,13 +43,13 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
   /**
    * @param EntityManager $entityManager
    *
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param IL10N $l
    */
   public function __construct(
     protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
   ) {
   }

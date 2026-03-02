@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
@@ -97,7 +97,7 @@ class ContactsServiceTest extends TestCase
 
   private MockProvider $mockProvider;
 
-  private IAppContainer $appContainer;
+  private ContainerInterface $appContainer;
 
   private IAvatarManager $avatarManager;
 

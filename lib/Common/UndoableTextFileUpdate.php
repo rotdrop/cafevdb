@@ -28,7 +28,7 @@ use DateTime;
 use Exception;
 use Closure;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
@@ -90,7 +90,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer):void
+  public function initialize(ContainerInterface $appContainer):void
   {
     parent::initialize($appContainer);
     $this->dateTimeFormatter = $appContainer->get(IDateTimeFormatter::class);

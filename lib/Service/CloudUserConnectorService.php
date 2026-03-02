@@ -28,7 +28,7 @@ use ReflectionClass;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\App\IAppManager;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -211,7 +211,7 @@ WHERE m.email IS NOT NULL AND m.email <> ""
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     private IL10N $l,
     private IConfig $cloudConfig,

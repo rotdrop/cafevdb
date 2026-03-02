@@ -36,7 +36,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
 use OCP\IRequest;
@@ -92,7 +92,7 @@ class EmailFormController extends Controller
     private PHPMyEdit $pme,
     private PageNavigation $pageNavigation,
     protected ConfigService $configService,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();

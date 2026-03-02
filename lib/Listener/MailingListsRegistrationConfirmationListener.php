@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ProjectService;
@@ -48,7 +48,7 @@ class MailingListsRegistrationConfirmationListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

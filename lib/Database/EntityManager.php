@@ -30,13 +30,13 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
@@ -229,8 +229,8 @@ class EntityManager extends AbstractEntityManager
     private EncryptionService $encryptionService,
     private IL10N $l,
     private IRequest $request,
-    protected IAppContainer $appContainer,
-    protected ILogger $logger,
+    protected ContainerInterface $appContainer,
+    protected LoggerInterface $logger,
     protected string $appName,
     protected IConfig $cloudConfig,
   ) {
@@ -645,7 +645,7 @@ class EntityManager extends AbstractEntityManager
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
       /** {@inheritdoc} */
       public function __construct(
-        private IAppContainer $appContainer,
+        private ContainerInterface $appContainer,
       ) {
       }
 

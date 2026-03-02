@@ -38,7 +38,7 @@ use Pimple\Container as InnerContainer;
 use OC\Session\Memory as MemorySession;
 use OC\AppFramework\Utility\SimpleContainer;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Calendar\Events\CalendarObjectCreatedEvent;

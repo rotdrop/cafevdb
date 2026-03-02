@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use Throwable;
 
 use OCP\Accounts\IAccountManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\BeforeUserAddedEvent;
@@ -57,7 +57,7 @@ class GroupMembershipListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Command;
 
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Services\IAppConfig;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
@@ -53,7 +53,7 @@ class SanitizeFilenames extends FilesSanitizeFilenames
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,

@@ -34,7 +34,7 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use OCP\IConfig;
 use OCP\IUserSession;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Notification\INotification;
 use OCP\Notification\IManager as NotificationManager;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -66,13 +66,13 @@ class AsymmetricKeyService
   private static $keyPairs = [];
 
   /**
-   * @todo We might want to use the \OCP\IAppContainer instead and only fetch
+   * @todo We might want to use the \OCP\ContainerInterface instead and only fetch
    * the needed service-classes on demand.
    */
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     private IUserSession $userSession,
     private ICredentialsStore $credentialsStore,
     private IConfig $cloudConfig,

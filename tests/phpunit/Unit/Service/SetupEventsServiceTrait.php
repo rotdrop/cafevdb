@@ -32,7 +32,7 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\IDateTimeFormatter;
@@ -79,7 +79,7 @@ trait SetupEventsServiceTrait
 
   private ProjectService $projectService;
 
-  private IAppContainer $appContainer;
+  private ContainerInterface $appContainer;
 
   private EntityManager $entityManager;
 

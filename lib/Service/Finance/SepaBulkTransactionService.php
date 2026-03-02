@@ -31,7 +31,7 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -144,7 +144,7 @@ class SepaBulkTransactionService
     protected EntityManager $entityManager,
     private FinanceService $financeService,
     private EventsService $eventsService,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {

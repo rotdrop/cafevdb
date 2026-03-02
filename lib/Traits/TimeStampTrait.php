@@ -29,7 +29,7 @@ use DateTimeInterface;
 use DateTimeImmutable;
 
 use OCP\IDateTimeZone;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /** Generate a time-stamp strings. */
 trait TimeStampTrait
@@ -37,8 +37,8 @@ trait TimeStampTrait
   /** @var IDateTimeZone */
   protected IDateTimeZone $dateTimeZone;
 
-  /** @var IAppContainer */
-  protected IAppContainer $appContainer;
+  /** @var ContainerInterface */
+  protected ContainerInterface $appContainer;
 
   /**
    * Get the current timezone

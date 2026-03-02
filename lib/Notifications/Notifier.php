@@ -30,7 +30,7 @@ use InvalidArgumentException;
 use OCP\Notification\INotification;
 use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
@@ -51,7 +51,7 @@ class Notifier implements \OCP\Notification\INotifier
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected L10NFactory $l10nFactory,
     protected IURLGenerator $urlGenerator,
     protected ILogger $logger,

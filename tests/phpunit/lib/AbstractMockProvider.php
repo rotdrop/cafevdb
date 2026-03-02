@@ -45,6 +45,7 @@ use OCP\ISession;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\L10N\IFactory as L10NFactory;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 use OCA\RotDrop\Tests\Logger;
@@ -63,7 +64,7 @@ abstract class AbstractMockProvider
 
   private ReflectionMethod $createStubMethod;
 
-  protected static IAppContainer $appContainer;
+  protected static ContainerInterface $appContainer;
 
   private static array $mockedServices;
 
@@ -254,7 +255,7 @@ abstract class AbstractMockProvider
   private function registerServices(): void
   {
     self::$mockedServices = self::$mockedServices ?? static::getMockedServices();
-    self::$appContainer = $this->app->get(IAppContainer::class);
+    self::$appContainer = $this->app->get(ContainerInterface::class);
     self::$appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
     \OC::$server->registerService(LoggerInterface::class, fn() => $this->logger);
     $appContainers = new ReflectionProperty(\OC\ServerContainer::class, 'appContainers')->getValue(\OC::$server);
@@ -596,11 +597,11 @@ abstract class AbstractMockProvider
   }
 
   /**
-   * @return IAppContainer
+   * @return ContainerInterface
    */
-  public function getAppContainer(): IAppContainer
+  public function getAppContainer(): ContainerInterface
   {
-    $className = IAppContainer::class;
+    $className = ContainerInterface::class;
 
     if ($this->instances[$className] ?? null) {
       return $this->instances[$className];

@@ -29,7 +29,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 use OCP\ITempManager;
 use Psr\Log\LoggerInterface as ILogger;
@@ -55,7 +55,7 @@ class PmeTableController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ConfigService $configService,
     private HistoryService $historyService,
     private ProjectService $projectService,

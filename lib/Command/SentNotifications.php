@@ -30,7 +30,7 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -87,7 +87,7 @@ class SentNotifications extends Command
   /** {@inheritdoc} */
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
     protected IMAPService $imapService,

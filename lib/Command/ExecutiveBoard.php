@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use OCP\Accounts\IAccountManager;
 use OCP\Accounts\IAccountProperty;
 use OCP\Accounts\PropertyDoesNotExistException;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Authentication\TwoFactorAuth\IActivatableByAdmin as ITFAActivatableByAdmin;
 use OCP\Authentication\TwoFactorAuth\IProvider as ITFAProvider;
 use OCP\Authentication\TwoFactorAuth\IRegistry as ITFARegistry;
@@ -101,7 +101,7 @@ class ExecutiveBoard extends Command
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }

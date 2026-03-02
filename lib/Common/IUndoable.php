@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Simplistic do-undo interface in order to be stacked into a
@@ -59,11 +59,11 @@ interface IUndoable
    * Lazy initialization in order to have a more lightweight constructor for
    * the actions and to inject the app-container if it is needed.
    *
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @return void
    */
-  public function initialize(IAppContainer $appContainer): void;
+  public function initialize(ContainerInterface $appContainer): void;
 
   /**
    * Lower sort-orders are executed first.

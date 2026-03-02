@@ -31,7 +31,7 @@ use Throwable;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\AppFramework\OCS;
 use OCP\AppFramework\OCSController;
 use OCP\IL10N;
@@ -70,7 +70,7 @@ class EncryptionController extends OCSController
   public function __construct(
     $appName,
     IRequest $request,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     private AsymmetricKeyService $keyService,
     protected ILogger $logger,
     protected IL10N $l,

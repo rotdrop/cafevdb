@@ -38,7 +38,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 
 use OCA\BAV\Service\BAV as BankAccountValidator;
@@ -120,7 +120,7 @@ class PersonalSettingsController extends Controller
     private WebPagesRPC $webPagesRPC,
     private WikiRPC $wikiRPC,
     protected ConfigService $configService,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct($appName, $request);
     $this->l = $this->l10N();

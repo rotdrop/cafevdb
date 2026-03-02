@@ -35,7 +35,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IInitialStateService;
 use OCP\IRequest;
 use OCP\Util;
@@ -73,7 +73,7 @@ class VueAppController extends Controller
     protected ToolTipsService $toolTipsService,
     protected IInitialState $initialState,
     protected IInitialStateService $initialStateService,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct($appName, $request);
 

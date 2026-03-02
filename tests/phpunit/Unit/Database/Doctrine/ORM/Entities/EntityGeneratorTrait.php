@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common\RationalNumber;
 use OCA\CAFEVDB\Common\TimeFactory;
@@ -90,7 +90,7 @@ trait EntityGeneratorTrait
 
   private array $entities = [];
 
-  private IAppContainer $appContainer;
+  private ContainerInterface $appContainer;
 
   /**
    * @param bool $persist

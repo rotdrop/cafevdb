@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\IRootFolder;
 use OC\FilesMetadata\FilesMetadataManager;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -46,7 +46,7 @@ class FilesScan extends \OCA\Files\Command\Scan
    * @param IL10N $l Needed by AuthenticatedCommandTrait.
    * @param IUserManager $userManager Trait and parent.
    * @param IUserSession $userSession Trait.
-   * @param IAppContainer $appContainer Trait.
+   * @param ContainerInterface $appContainer Trait.
    * @param IRootFolder $rootFolder Parent.
    * @param FilesMetadataManager $filesMetadataManager Parent.
    * @param IEventDispatcher $eventDispatcher Parent.
@@ -57,7 +57,7 @@ class FilesScan extends \OCA\Files\Command\Scan
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     IRootFolder $rootFolder,
     FilesMetadataManager $filesMetadataManager,
     IEventDispatcher $eventDispatcher,

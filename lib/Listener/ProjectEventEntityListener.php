@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -67,7 +67,7 @@ class ProjectEventEntityListener
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
   ) {
   }

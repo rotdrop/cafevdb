@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Traits;
 
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IInitialStateService;
 use OCP\IL10N;
 
@@ -67,8 +67,8 @@ trait InitialStateTrait
   /** @var ConfigService */
   protected ConfigService $configService;
 
-  /** @var IAppContainer */
-  protected IAppContainer $appContainer;
+  /** @var ContainerInterface */
+  protected ContainerInterface $appContainer;
 
   /**
    * @param string $userId

@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
@@ -80,7 +80,7 @@ class ProjectParticipantEntityListener
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected EntityManager $entityManager,
   ) {
   }

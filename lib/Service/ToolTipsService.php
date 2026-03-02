@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Service;
 use Closure;
 use RuntimeException;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
@@ -63,7 +63,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
   /** {@inheritdoc} */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected ILogger $logger,
   ) {

@@ -30,7 +30,7 @@ use DateTimeZone;
 
 use Behat\Transliterator\Transliterator;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\App\IAppManager;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
@@ -108,8 +108,8 @@ trait ConfigTrait
     return $this->configService->logger();
   }
 
-  /** @return IAppContainer */
-  protected function appContainer():IAppContainer
+  /** @return ContainerInterface */
+  protected function appContainer():ContainerInterface
   {
     return $this->configService->getAppContainer();
   }

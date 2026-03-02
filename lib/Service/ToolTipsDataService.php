@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -216,8 +216,8 @@ where PAYMENT_ID is the numeric database id of the asociated payment, PERSON is 
                     array_values(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::toArray()),
                   ),
                 ),
-                fn(IL10N $l, IAppContainer $appContainer) => $appContainer->get('appName'),
-                function(IL10N $l, IAppContainer $appContainer) {
+                fn(IL10N $l, ContainerInterface $appContainer) => $appContainer->get('appName'),
+                function(IL10N $l, ContainerInterface $appContainer) {
                   $appName = $appContainer->get('appName');
                   // GOAL:
                   // https://dev3.home.claus-justus-heine.de/apps/cafevdb/?template=project-payments
@@ -251,8 +251,8 @@ where `TAX_TYPE` is one of `%1$s`.
 ',
             [
               fn(IL10N $l) => implode('", "', \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::getL10NValues($l)),
-              fn(IL10N $l, IAppContainer $appContainer) => $appContainer->get('appName'),
-              function(IL10N $l, IAppContainer $appContainer) {
+              fn(IL10N $l, ContainerInterface $appContainer) => $appContainer->get('appName'),
+              function(IL10N $l, ContainerInterface $appContainer) {
                 $appName = $appContainer->get('appName');
                 // GOAL:
                 // https://dev3.home.claus-justus-heine.de/apps/cafevdb/?template=tax-exemption-notices
@@ -282,8 +282,8 @@ YYYYMMDD-HHMMSS-TRANSACTIONTYPE-PROJECTNAME-aqbanking.csv
 where `TRANSACTIONTYPE` is one of `banktransfer` or `debitnote`.
 ',
             [
-              fn(IL10N $l, IAppContainer $appContainer) => $appContainer->get('appName'),
-              function(IL10N $l, IAppContainer $appContainer) {
+              fn(IL10N $l, ContainerInterface $appContainer) => $appContainer->get('appName'),
+              function(IL10N $l, ContainerInterface $appContainer) {
                 $appName = $appContainer->get('appName');
                 // GOAL:
                 // https://dev3.home.claus-justus-heine.de/apps/cafevdb/?template=tax-exemption-notices

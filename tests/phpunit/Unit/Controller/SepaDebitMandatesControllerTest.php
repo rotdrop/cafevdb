@@ -33,7 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Http;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IDateTimeFormatter;
 use OCP\ITempManager;
 
@@ -222,7 +222,7 @@ class SepaDebitMandatesControllerTest extends TestCase
 
   private TimeFactory $timeFactory;
 
-  private IAppContainer $appContainer;
+  private ContainerInterface $appContainer;
 
   private IDateTimeFormatter $dateTimeFormatter;
 

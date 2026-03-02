@@ -34,7 +34,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OC\AppFramework\Utility\QueryNotFoundException;
@@ -85,7 +85,7 @@ class LegacyPageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     private AssetService $assetService,
     protected ConfigService $configService,
     protected HistoryService $historyService,

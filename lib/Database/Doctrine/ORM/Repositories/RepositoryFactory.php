@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use Psr\Log\LoggerInterface;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository as DerivedEntityRepository;
 use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
@@ -54,7 +54,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
 
   /** {@inheritdoc} */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected LoggerInterface $logger,
   ) {
   }

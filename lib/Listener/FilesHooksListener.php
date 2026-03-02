@@ -30,7 +30,7 @@ use Throwable;
 use Psr\Log\LoggerInterface as ILogger;
 use Psr\Log\LogLevel;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\EventDispatcher\Event;
@@ -88,11 +88,11 @@ class FilesHooksListener implements IEventListener
   private $initialStateEmitted = false;
 
   /**
-   * @param IAppContainer $appContainer The only argument in order to have a
+   * @param ContainerInterface $appContainer The only argument in order to have a
    * small CTOR footprint.
    */
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
 

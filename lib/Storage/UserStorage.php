@@ -36,7 +36,7 @@ use OCP\IUserSession;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IURLGenerator;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\File;
@@ -75,7 +75,7 @@ class UserStorage
   /** {@inheritdoc} */
   public function __construct(
     IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IRootFolder $rootFolder,
     protected ILogger $logger,
     protected IL10N $l,

@@ -30,7 +30,7 @@ use NumberFormatter;
 use RuntimeException;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
 use OCP\IDateTimeFormatter;
@@ -140,14 +140,14 @@ class ConfigService
    */
   public function __construct(
     protected string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {
   }
 
-  /** @return IAppContainer */
-  public function getAppContainer():IAppContainer
+  /** @return ContainerInterface */
+  public function getAppContainer():ContainerInterface
   {
     return $this->appContainer;
   }

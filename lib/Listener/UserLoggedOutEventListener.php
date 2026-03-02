@@ -30,7 +30,7 @@ use OCP\EventDispatcher\IEventListener;
 // use OCP\IGroupManager;
 // use Psr\Log\LoggerInterface as ILogger;
 // use OCP\IL10N;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 /**
  * Perform necessary tasks at logout time.
@@ -46,7 +46,7 @@ class UserLoggedOutEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
   }
   // phpcs:enable

@@ -24,19 +24,19 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\Security\ICrypto;
 
 /** Factory using the Nextcloud crypto routines as backend. */
 class CloudCryptoFactory implements CryptoFactoryInterface
 {
   /**
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param ICrypto $crypto
    */
   public function __construct(
-    private IAppContainer $appContainer,
+    private ContainerInterface $appContainer,
     private ICrypto $crypto,
   ) {
   }

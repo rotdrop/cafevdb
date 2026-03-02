@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\DescriptorHelper;
@@ -47,7 +47,7 @@ class HelloWorld extends Command
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     parent::__construct();
   }
