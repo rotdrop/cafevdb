@@ -42,12 +42,13 @@ use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Listener\ContactsCardEventListener;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /** Contacts handling. */
 class ContactsService
@@ -56,11 +57,11 @@ class ContactsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const VCARD_VERSION = '4.0';
+  private const VCARD_VERSION = '4.0';
 
-  const AVATAR_SIZE = 256;
+  private const AVATAR_SIZE = 256;
 
-  const TYPED_PROPERTIES = [
+  private const TYPED_PROPERTIES = [
     'URL',
     'GEO',
     'CLOUD',
@@ -73,6 +74,14 @@ class ContactsService
     'LANG',
     'X-ADDRESSBOOKSERVER-MEMBER',
   ];
+
+  /**
+   * In order not to "spoil" the member ship of contact groups the business
+   * contacts of a project get the project-name with this suffix attached as
+   * category, e.g. ManagementBoardContacts, or Requiem1984Contacts. The
+   * suffix will be translated to the orchestra locale.
+   */
+  public const ASSOCIATES_SUFFIX = 'contacts';
 
   /** @var array<string, IAddressBook> */
   private array $addressBooksByUri = [];
@@ -114,7 +123,7 @@ class ContactsService
    * uri is tweak to match the NC-style "..._shared_by_..." uri.
    *
    * @param null|string $uri A string in the form PRINCIPAL_URI/ADDRESS_BOOK_URI,
-   * e.g. cameratashareholder/general
+   * e.g. cameratashareholder/general.
    *
    * @return null|IAddressBook
    */
@@ -240,6 +249,9 @@ class ContactsService
   }
 
   /**
+   * A clone of OCA\DAV\CardDAV\AddressBookImpl::vCard2Array() but for the
+   * handling of PHOTO data.
+   *
    * @param null|string $cardUri
    *
    * @param VCard $vCard
@@ -271,7 +283,7 @@ class ContactsService
         $type = $this->getTypeFromProperty($property);
         if ($withTypes) {
           $result[$property->name][] = [
-            'type' => strtoupper($type),
+            'type' => $type,
             'value' => $property->getValue()
           ];
         } else {
@@ -363,7 +375,7 @@ class ContactsService
     array $cardData,
     bool $preferWork = true,
     bool $keepExisting = false,
-  ):?Entities\Musician {
+  ): ?Entities\Musician {
 
     if ($entity === null) {
       $keepExisting = false;
@@ -628,7 +640,7 @@ class ContactsService
           $this->remove($musicianInstrument); // soft if in use
           if ($musicianInstrument->unused()) {
             $this->remove($musicianInstrument);
-            $entity->getInstruments()->remove($musicianInstrument);
+            $entity->getInstruments()->remove($musicianInstrument->getInstrument()->getId());
           }
         }
       }
@@ -642,7 +654,7 @@ class ContactsService
             $entity->setGender(EnumGender::MALE);
             break;
           case 'F':
-            $entity->setGener(EnumGender::FEMALE);
+            $entity->setGender(EnumGender::FEMALE);
             break;
           case 'O':
             $entity->setGender(EnumGender::DIVERSE);
@@ -685,9 +697,22 @@ class ContactsService
     foreach ($musician->getInstruments() as $musicianInstrument) {
       $categories[] = $musicianInstrument->getName();
     }
+    $associatesSuffix = $this->l->t(self::ASSOCIATES_SUFFIX);
     /** @var Entities\ProjectParticipant $participant */
     foreach ($musician->getProjectParticipation() as $participant) {
-      $categories[] = $participant->getProject()->getName();
+      $projectName = $participant->getProject()->getName();
+      switch ($participant->getParticipationContext()) {
+        case EnumParticipationContext::ASSOCIATES:
+          $categories[] = $projectName . $associatesSuffix;
+          break;
+        case EnumParticipationContext::PARTICIPANTS:
+          $categories[] = $projectName;
+          break;
+        case EnumParticipationContext::UNRESTRICTED:
+          $categories[] = $projectName;
+          $categories[] = $projectName . $associatesSuffix;
+          break;
+      }
     }
     $prodid = '-//CAF e.V.//NONSGML ' . $this->appName() . ' ' . $this->appVersion() . '//EN';
 
@@ -831,7 +856,7 @@ class ContactsService
 
   /**
    * Merge a musician entity into an existing contact. The result can be fed
-   * in to IAddressBook::createOrUpdate(). The URI component of $target is
+   * into IAddressBook::createOrUpdate(). The URI component of $target is
    * preserved. If the musician is (soft-)deleted, then the link to the
    * address-book is removed.
    *
@@ -853,14 +878,19 @@ class ContactsService
 
     $instrumentCategories = $this->getDatabaseRepository(Entities\Instrument::class)->findNames();
     $projectCategories = $this->getDatabaseRepository(Entities\Project::class)->findNames();
-    $targetCategories = array_diff(
-      explode(',', $target['CATEGORIES']),
-      $instrumentCategories,
-      $projectCategories,
-      [ $this->appName() ],
-    );
+    // Remove all categories which are set by us
+    $targetCategories = array_diff(explode(',', $target['CATEGORIES']), $instrumentCategories, [$this->appName89]);
+    // Remove all categories starting whith a project name.
+    foreach ($projectCategories as $projectName) {
+      foreach ($targetCategories as $index => $category) {
+        if (str_starts_with($category, $projectName)) {
+          unset($targetCategories[$index]);
+        }
+      }
+    }
 
     if ($musician->getDeleted() !== null) {
+      echo 'DELETED' . PHP_EOL;
       // unlink the contact and remove all app-categories
       sort($targetCategories);
       $target['CATEGORIES'] = implode(',', $targetCategories);
@@ -1026,7 +1056,7 @@ class ContactsService
    *
    * @param Entities\Musician $musician
    *
-   * @param null|string $addressBookUri If given use this instead of $musician->getAddressBookUri()
+   * @param null|string $addressBookUri If given use this instead of $musician->getAddressBookUri().
    *
    * @return null|array
    */

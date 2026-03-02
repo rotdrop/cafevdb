@@ -30,10 +30,15 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
+use OCA\CAFEVDB\Tests\Unit\Database;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /** Provide a mock for the instruments repository. */
 trait MockInstrumentsRepositoryTrait
 {
+  use Database\MockEntityManagerTrait;
+  use EntityGeneratorTrait;
+
   private const DESCRIBE_ALL_RESULT = [
     'families' => [
       'Saiten,Streicher',
@@ -185,6 +190,9 @@ trait MockInstrumentsRepositoryTrait
   /** @return InstrumentsRepository */
   public function getInstrumentsRepositoryMock(): InstrumentsRepository
   {
+    if (!($this->musician ?? null)) {
+      $this->generateProjectParticipant(persist: false);
+    }
     $describeAllResult = self::DESCRIBE_ALL_RESULT;
     if ($this->musician instanceof Entities\Musician) {
       // add missing Instruments
@@ -201,8 +209,48 @@ trait MockInstrumentsRepositoryTrait
     $instrumentsRepository = $this->getMockBuilder(InstrumentsRepository::class)
       ->disableOriginalConstructor()
       ->getMock();
+    $instrumentsRepository->method('findNames')->willReturn(array_values(self::DESCRIBE_ALL_RESULT['byName']));
     $instrumentsRepository->method('describeAll')->willReturn($describeAllResult);
+    $instrumentsRepository->method('findBy')->willReturnCallback(
+      function(array $criteria, ?array $orderBy = []) {
+        $names = $criteria['name'] ?? null;
+        if ($names) {
+          if (is_string($names)) {
+            $names = [$names];
+          }
+          $found = array_intersect(self::DESCRIBE_ALL_RESULT['byId'], $names);
+          $result = [];
+          foreach ($found as $id => $name) {
+            $instrument = $this->entities[Entities\Instrument::class][$id] ?? null;
+            if ($instrument === null) {
+              $instrument = new Entities\Instrument()
+                ->setId($id)
+                ->setName($name)
+                ;
+              $this->entities[Entities\Instrument::class][$id] = $instrument;
+            }
+            if (($orderBy['name'] ?? null) == 'INDEX'){
+              $result[$name] = $instrument;
+            } else {
+              $result[] = $instrument;
+            }
+          }
+          return $result;
+        }
+        return null;
+      });
+    if (!isset($this->entities[Entities\Instrument::class])) {
+      $this->entities[Entities\Instrument::class] = new ArrayCollection;
+    }
+    $instrumentsRepository->method('find')->willReturnCallback(
+      function(int|array $id) {
+        $id = is_array($id) ? $id['id'] : $id;
+        return $this->entities[Entities\Instrument::class]->get($id);
+      }
+    );
     $instrumentsRepository->expects($this->never())->method('createQueryBuilder');
+
+    $this->entityRepositories[Entities\Instrument::class] = $instrumentsRepository;
 
     return $instrumentsRepository;
   }

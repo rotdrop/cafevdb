@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -299,8 +299,18 @@ class ContactsCardEventListener implements IEventListener
           /** @var VCard $vCard */
           $vCard = VObject\Reader::read($cardData['carddata']);
           $categories = VCalendarService::getCategories($vCard);
-          $projectCategories = $this->getDatabaseRepository(Entities\Project::class)->findNames();
-          $projectCategories = array_intersect($categories, $projectCategories);
+          $projectNames = $this->getDatabaseRepository(Entities\Project::class)->findNames();
+          $projectCategories = [];
+          foreach ($projectNames as $projectName) {
+            foreach ($categories as $key => $category) {
+              if (str_starts_with($category, $projectName)) {
+                $projectCategories[] = $projectName;
+                unset($categories[$key]);
+                continue 2;
+              }
+            }
+          }
+          sort($projectCategories);
           $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUUID((string)$vCard->UID);
           if ($musician === null) {
             if (in_array($appName, $categories)) {
@@ -317,6 +327,10 @@ class ContactsCardEventListener implements IEventListener
               $this->flush();
 
               if (!empty($projectCategories)) {
+                // we actually may change parts of the contact, so clear the etag
+                $this->logDebug('CLEARING ETAG');
+                $event->clearEtag();
+
                 /** @var ProjectService $projectService */
                 $projectService = $this->appContainer->get(ProjectService::class);
                 foreach ($projectCategories as $projectName) {
@@ -333,6 +347,7 @@ class ContactsCardEventListener implements IEventListener
                 }
               }
             }
+            $mergeBack = true;
           } else {
             $this->logInfo('FOUND MUSICIAN WITH ID ' . $musician->getId());
             if (in_array($appName, $categories)) {
@@ -390,24 +405,7 @@ class ContactsCardEventListener implements IEventListener
                 }
               }
 
-              if ($keepExisting) {
-                $addressBook = $contactsService->addressBookByUri($addressBookUri);
-                if (!empty($addressBook)) {
-                  $contactCard = $contactsService->findMusicianContact($musician);
-                  if (empty($contactCard)) {
-                    $this->logError(
-                      'Broken address-book link for musician "' . $musician->getPublicName(). '"'
-                      . ', addressbook "' . $musician->getAddressBookUri() . '"'
-                      . ', uuid "' . $musician->getUuid() . '".',
-                    );
-                  } else {
-                    $newCard = $contactsService->mergeMusician($contactCard, $musician);
-                    $addressBook->createOrUpdate($newCard);
-                  }
-                } else {
-                  $this->logError('CANNOT FIND ADDRESSBOOK ' . $addressBookUri);
-                }
-              } else {
+              if (!$keepExisting) {
                 $excessProjects = array_diff(array_keys($musicianProjects), $projectCategories);
                 if (!empty($excessProjects)) {
                 /** @var ProjectService $projectService */
@@ -419,7 +417,9 @@ class ContactsCardEventListener implements IEventListener
                 }
               }
 
+              $mergeBack = true;
             } else {
+              $mergeBack = false;
               // Arguably we should perhaps delete the musician. We do not,
               // but instead set its address-book uri to NULL.
               $uri = $musician->getAddressBookUri();
@@ -428,6 +428,28 @@ class ContactsCardEventListener implements IEventListener
               // @todo: change the UUID?
             }
           }
+
+          if ($mergeBack) {
+            // Merge the musician entity back into the adddress-book in
+            // order to pick up category normalization etc.
+            $addressBook = $contactsService->addressBookByUri($addressBookUri);
+            if (!empty($addressBook)) {
+              $contactCard = $contactsService->findMusicianContact($musician);
+              if (empty($contactCard)) {
+                $this->logError(
+                  'Broken address-book link for musician "' . $musician->getPublicName(). '"'
+                  . ', addressbook "' . $musician->getAddressBookUri() . '"'
+                  . ', uuid "' . $musician->getUuid() . '".',
+                );
+              } else {
+                $newCard = $contactsService->mergeMusician($contactCard, $musician);
+                $addressBook->createOrUpdate($newCard);
+              }
+            } else {
+              $this->logError('CANNOT FIND ADDRESSBOOK ' . $addressBookUri);
+            }
+          }
+
           $this->flush();
           $this->entityManager->commit();
           $this->alreadyHandled[$addressBookUri][$cardUri] = false;

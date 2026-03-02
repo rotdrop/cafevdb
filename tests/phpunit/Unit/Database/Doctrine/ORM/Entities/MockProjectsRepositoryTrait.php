@@ -67,7 +67,6 @@ trait MockProjectsRepositoryTrait
       ->disableOriginalConstructor()
       ->onlyMethods($wantedMethods)
       ->getMock();
-    $repository->method('findNames')->willReturn([]);
     $repository->method('find')->willReturnCallback(function(mixed $id) {
       if (is_array($id)) {
         $id = $id['id'];
@@ -81,6 +80,19 @@ trait MockProjectsRepositoryTrait
       }
       return null;
     });
+    $repository->method('findNames')->willReturnCallback(
+      fn() => array_values(
+        array_unique(
+          array_merge(
+            array_map(
+              fn(Entities\Project $entity) => $entity->getName(),
+              $this->entities[Entities\Project::class]?->toArray(),
+            ),
+            [$this->project->getName()],
+          )
+        )
+      ),
+    );
     $repository->method('findBy')->willReturnCallback(
       function(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null) {
         foreach ($criteria as $criterium) {

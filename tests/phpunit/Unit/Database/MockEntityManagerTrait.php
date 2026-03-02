@@ -64,8 +64,9 @@ trait MockEntityManagerTrait
       function(string $className) {
         $repository = $this->entityRepositories[$className] ?? null;
         if ($repository == null) {
+          echo 'NEW REPO FOR ' . $className . PHP_EOL;
           $repository = $this->getMockBuilder(EntityRepository::class)
-          ->disableOriginalConstructor()
+            ->disableOriginalConstructor()
             ->getMock();
           $this->entityRepositories[$className] = $repository;
         } else {
