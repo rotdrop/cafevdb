@@ -184,7 +184,9 @@ class GroupMembershipListener implements IEventListener
                 // the person must not remain a member of the executive board
                 /** @var ProjectService $projectService */
                 $projectService = $this->appContainer->get(ProjectService::class);
-                $projectService->deleteProjectParticipant($boardMember);
+                if (!$boardMember->isDeleted()) {
+                  $projectService->deleteProjectParticipant($boardMember);
+                }
               }
               // @todo
               // We could also remove the user from the orchestra backend, but ...
