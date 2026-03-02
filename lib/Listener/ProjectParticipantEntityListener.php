@@ -297,11 +297,12 @@ class ProjectParticipantEntityListener
     $user = $userManager->get($userId);
 
     $closureArguments = compact([
-      'userId',
-      'user',
+      'groupManager',
       'managementGroup',
       'orchestraGroup',
-      'groupManager',
+      'remove',
+      'user',
+      'userId',
       'userManager',
     ]);
 
