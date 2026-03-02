@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2026-02-24 00:42+0100\n"
+"POT-Creation-Date: 2026-03-02 11:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1518,7 +1518,7 @@ msgid "Unknown request: `%s'."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1077
-#: src/app/email.ts:2225
+#: src/app/email.ts:2227
 msgid "Form Input"
 msgstr ""
 
@@ -1685,8 +1685,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2552
 #: lib/PageRenderer/Projects.php:815
 #: lib/PageRenderer/Projects.php:823
-#: lib/Service/Finance/InstrumentInsuranceService.php:618
-#: lib/Service/Finance/InstrumentInsuranceService.php:622
+#: lib/Service/Finance/InstrumentInsuranceService.php:619
+#: lib/Service/Finance/InstrumentInsuranceService.php:623
 #: lib/Service/PhoneNumberService.php:155
 #: lib/Service/PhoneNumberService.php:306
 #: src/app/ajax.ts:43
@@ -1811,64 +1811,64 @@ msgstr[1] ""
 msgid "Also still pending: \"%1$s\"."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:154
+#: lib/Controller/MusicianValidationController.php:157
 #: lib/Controller/PersonalSettingsController.php:629
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:167
+#: lib/Controller/MusicianValidationController.php:170
 #, php-format
 msgid ""
 "This (%s) is a fixed line phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:176
+#: lib/Controller/MusicianValidationController.php:179
 #, php-format
 msgid "This (%s) is a mobile phone number, injecting it in the correct column."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:185
+#: lib/Controller/MusicianValidationController.php:188
 msgid ""
 "Mobile and fixed line numbers appear to be interchanged, switching input "
 "fields."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:190
+#: lib/Controller/MusicianValidationController.php:193
 #, php-format
 msgid "The phone number %s does not appear to be a mobile phone number. "
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:208
+#: lib/Controller/MusicianValidationController.php:211
 msgid "Submitted email is empty"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:297
+#: lib/Controller/MusicianValidationController.php:300
 #, php-format
 msgid "Unsupported auto-complete request for \"%s\"."
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:439
+#: lib/Controller/MusicianValidationController.php:442
 msgid "full name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:441
+#: lib/Controller/MusicianValidationController.php:444
 msgid "first name"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:442
+#: lib/Controller/MusicianValidationController.php:445
 msgid "surname"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:444
+#: lib/Controller/MusicianValidationController.php:447
 msgid "communication"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:445
+#: lib/Controller/MusicianValidationController.php:448
 msgid "address"
 msgstr ""
 
-#: lib/Controller/MusicianValidationController.php:457
+#: lib/Controller/MusicianValidationController.php:460
 #, php-format
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr ""
@@ -4079,7 +4079,7 @@ msgstr ""
 msgid "Key-storage mismatch: %1$s / %2$s"
 msgstr ""
 
-#: lib/Database/Doctrine/ORM/Entities/Musician.php:1657
+#: lib/Database/Doctrine/ORM/Entities/Musician.php:1671
 #: lib/PageRenderer/Musicians.php:799
 #: lib/PageRenderer/ProjectParticipants.php:1246
 msgid "P.O. Box"
@@ -4137,39 +4137,39 @@ msgstr ""
 msgid "Unable to register types with DBAL."
 msgstr ""
 
-#: lib/Database/EntityManager.php:965
+#: lib/Database/EntityManager.php:958
 msgid ""
 "There is no active database transaction, cannot register pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:974
-#: lib/Database/EntityManager.php:1026
-#: lib/Database/EntityManager.php:1243
+#: lib/Database/EntityManager.php:967
+#: lib/Database/EntityManager.php:1019
+#: lib/Database/EntityManager.php:1236
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:991
+#: lib/Database/EntityManager.php:984
 msgid ""
 "There is no active database transaction, cannot execute pre-commit actions."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1199
+#: lib/Database/EntityManager.php:1192
 msgid "The connection is marked for rollback only."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1427
+#: lib/Database/EntityManager.php:1420
 #, php-format
 msgid "Unexpected locale settings \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1516
+#: lib/Database/EntityManager.php:1509
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
 msgstr ""
 
-#: lib/Database/EntityManager.php:1542
+#: lib/Database/EntityManager.php:1535
 msgid "EntityManager is not connected to database."
 msgstr ""
 
@@ -4203,7 +4203,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:657
-#: src/app/email.ts:1643
+#: src/app/email.ts:1645
 msgid "Unknown Template"
 msgstr ""
 
@@ -4961,7 +4961,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:110
-#: src/app/email.ts:2229
+#: src/app/email.ts:2231
 msgid "Accept"
 msgstr ""
 
@@ -5113,7 +5113,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:348
 #: lib/PageRenderer/ProjectPayments.php:580
 #: lib/PageRenderer/SepaBulkTransactions.php:370
-#: specialVueFakeDummyForL10nScript.js:6846
+#: specialVueFakeDummyForL10nScript.js:6841
 msgid "Project"
 msgstr ""
 
@@ -5255,9 +5255,9 @@ msgstr ""
 #. TRANSLATORS src/views/FilesTab.vue:77
 #: lib/PageRenderer/Export/PMETableSpreadsheetExporter.php:95
 #: lib/Service/CloudUserConnectorService.php:451
-#: specialVueFakeDummyForL10nScript.js:1634
-#: specialVueFakeDummyForL10nScript.js:6830
-#: specialVueFakeDummyForL10nScript.js:6842
+#: specialVueFakeDummyForL10nScript.js:1629
+#: specialVueFakeDummyForL10nScript.js:6825
+#: specialVueFakeDummyForL10nScript.js:6837
 msgid "Musicians"
 msgstr ""
 
@@ -5314,9 +5314,9 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:808
 #: lib/PageRenderer/ProjectParticipantFields.php:1043
 #: lib/PageRenderer/ProjectParticipantFields.php:1634
-#: lib/Service/ProjectParticipantFieldsService.php:669
-#: specialVueFakeDummyForL10nScript.js:1137
-#: specialVueFakeDummyForL10nScript.js:1163
+#: lib/Service/ProjectParticipantFieldsService.php:675
+#: specialVueFakeDummyForL10nScript.js:1132
+#: specialVueFakeDummyForL10nScript.js:1158
 #: src/toolkit/util/settings-sync.ts:173
 #: src/toolkit/util/settings-sync.ts:196
 msgid "true"
@@ -5327,7 +5327,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:808
 #: lib/PageRenderer/ProjectParticipantFields.php:1044
 #: lib/PageRenderer/ProjectParticipantFields.php:1634
-#: lib/Service/ProjectParticipantFieldsService.php:669
+#: lib/Service/ProjectParticipantFieldsService.php:675
 #: templates/pme-table.php:56
 msgid "false"
 msgstr ""
@@ -5647,7 +5647,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/LegacyPageActionsMenu.vue:46
 #: lib/PageRenderer/InstrumentInsurances.php:224
-#: specialVueFakeDummyForL10nScript.js:2688
+#: specialVueFakeDummyForL10nScript.js:2683
 msgid "Overview"
 msgstr ""
 
@@ -5786,13 +5786,13 @@ msgstr ""
 #: lib/PageRenderer/InsuranceBrokers.php:170
 #: lib/PageRenderer/ProjectAssociates.php:426
 #: lib/PageRenderer/ProjectParticipants.php:491
-#: specialVueFakeDummyForL10nScript.js:6490
+#: specialVueFakeDummyForL10nScript.js:6485
 msgid "Name"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:63
 #: lib/PageRenderer/InsuranceBrokers.php:178
-#: specialVueFakeDummyForL10nScript.js:6496
+#: specialVueFakeDummyForL10nScript.js:6491
 msgid "Address"
 msgstr ""
 
@@ -6194,7 +6194,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:931
 #: lib/PageRenderer/ProjectAssociates.php:1082
 #: lib/PageRenderer/ProjectParticipants.php:1351
-#: src/app/email.ts:2228
+#: src/app/email.ts:2230
 #: templates/emailform/part.emailform.composer.php:230
 #: templates/emailform/part.emailform.composer.php:250
 msgid "Address Book"
@@ -6204,8 +6204,8 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectEventsListing.vue:83
 #: lib/PageRenderer/PME/Config.php:66
 #: lib/PageRenderer/PMETableViewBase.php:578
-#: specialVueFakeDummyForL10nScript.js:4028
-#: specialVueFakeDummyForL10nScript.js:5033
+#: specialVueFakeDummyForL10nScript.js:4023
+#: specialVueFakeDummyForL10nScript.js:5028
 msgid "Em@il"
 msgstr ""
 
@@ -6217,7 +6217,7 @@ msgstr[1] ""
 
 #. TRANSLATORS src/components/LegacyQueryLog.vue:25
 #: lib/PageRenderer/PMETableViewBase.php:328
-#: specialVueFakeDummyForL10nScript.js:2747
+#: specialVueFakeDummyForL10nScript.js:2742
 msgid "Query Log"
 msgstr ""
 
@@ -6429,7 +6429,7 @@ msgstr ""
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:46
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:122
 #: lib/Service/ToolTipsDataService.php:1556
-#: specialVueFakeDummyForL10nScript.js:4018
+#: specialVueFakeDummyForL10nScript.js:4013
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -6500,7 +6500,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:204
 #: lib/PageRenderer/ProjectParticipantFields.php:291
-#: specialVueFakeDummyForL10nScript.js:1632
+#: specialVueFakeDummyForL10nScript.js:1627
 msgid "Access Control"
 msgstr ""
 
@@ -6841,14 +6841,14 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:57
 #: lib/PageRenderer/Projects.php:891
-#: specialVueFakeDummyForL10nScript.js:4020
+#: specialVueFakeDummyForL10nScript.js:4015
 msgid "Participant Fields"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:36
 #: lib/PageRenderer/Projects.php:954
 #: lib/Service/ToolTipsDataService.php:1558
-#: specialVueFakeDummyForL10nScript.js:4016
+#: specialVueFakeDummyForL10nScript.js:4011
 msgid "Participants"
 msgstr ""
 
@@ -6875,7 +6875,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:276
 #: lib/PageRenderer/Projects.php:1123
-#: specialVueFakeDummyForL10nScript.js:5061
+#: specialVueFakeDummyForL10nScript.js:5056
 msgid "edit"
 msgstr ""
 
@@ -7088,7 +7088,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:94
 #: lib/PageRenderer/SepaBulkTransactions.php:611
-#: specialVueFakeDummyForL10nScript.js:6834
+#: specialVueFakeDummyForL10nScript.js:6829
 #: templates/emailform/form.php:37
 #: templates/emailform/part.emailform.composer.php:182
 msgid "Recipients"
@@ -7568,7 +7568,7 @@ msgid "%1$s column names differ from expected column-names."
 msgstr ""
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:82
-#: lib/Service/Finance/InstrumentInsuranceService.php:545
+#: lib/Service/Finance/InstrumentInsuranceService.php:546
 #: :-1
 #, php-format
 msgid "insurance"
@@ -7652,26 +7652,26 @@ msgstr ""
 msgid "Unknonw update strategy: \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:213
+#: lib/Service/Finance/InstrumentInsuranceService.php:214
 msgid ""
 "Unable to determine the insurance tax rate. Please populate the "
 "TaxationStatutorySources table with appropriate items."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:217
+#: lib/Service/Finance/InstrumentInsuranceService.php:218
 msgid ""
 "More than one possible insurance tax rate found. Please check the "
 "TaxationStatutorySources table."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:570
+#: lib/Service/Finance/InstrumentInsuranceService.php:571
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
 "Templates\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:613
+#: lib/Service/Finance/InstrumentInsuranceService.php:614
 msgid "Jane"
 msgstr ""
 
@@ -8048,7 +8048,7 @@ msgid "Personal Comments by %s"
 msgstr ""
 
 #: lib/Service/ProblemReportService.php:235
-#: specialVueFakeDummyForL10nScript.js:2114
+#: specialVueFakeDummyForL10nScript.js:2109
 msgid "System Error Report"
 msgstr ""
 
@@ -8099,107 +8099,107 @@ msgstr ""
 msgid "Unable to send problem report by email to \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:169
+#: lib/Service/ProjectParticipantFieldsService.php:170
 #, php-format
 msgid "Generator \"%s\" does not appear to be valid PHP class name."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:236
+#: lib/Service/ProjectParticipantFieldsService.php:237
 msgid "One-time Receivables"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:280
+#: lib/Service/ProjectParticipantFieldsService.php:281
 #, php-format
 msgid "Recurring \"%s\""
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:757
-#: lib/Service/ProjectParticipantFieldsService.php:802
+#: lib/Service/ProjectParticipantFieldsService.php:763
+#: lib/Service/ProjectParticipantFieldsService.php:808
 #, php-format
 msgid "Option index -1 should not be present here, options: %s"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:769
+#: lib/Service/ProjectParticipantFieldsService.php:775
 #, php-format
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:837
-#: lib/Service/ProjectParticipantFieldsService.php:859
+#: lib/Service/ProjectParticipantFieldsService.php:843
+#: lib/Service/ProjectParticipantFieldsService.php:865
 #, php-format
 msgid "Field \"%s\" is not a group of participants field."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:930
+#: lib/Service/ProjectParticipantFieldsService.php:936
 #, php-format
 msgid "Only \"field\" collections can be filtered, not instances of \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:971
-#: lib/Service/ProjectParticipantFieldsService.php:1025
+#: lib/Service/ProjectParticipantFieldsService.php:977
+#: lib/Service/ProjectParticipantFieldsService.php:1031
 msgid "Prototype"
 msgstr ""
 
 #. TRANSLATORS: Column heading in table (capital first character)
-#: lib/Service/ProjectParticipantFieldsService.php:973
-#: lib/Service/ProjectParticipantFieldsService.php:1026
-#: lib/Service/ProjectParticipantFieldsService.php:1057
+#: lib/Service/ProjectParticipantFieldsService.php:979
+#: lib/Service/ProjectParticipantFieldsService.php:1032
+#: lib/Service/ProjectParticipantFieldsService.php:1063
 msgid "Absence"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:998
+#: lib/Service/ProjectParticipantFieldsService.php:1004
 msgid "absent"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:998
+#: lib/Service/ProjectParticipantFieldsService.php:1004
 msgid "This person will not participate in this event."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:999
+#: lib/Service/ProjectParticipantFieldsService.php:1005
 msgid "contacted"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:999
+#: lib/Service/ProjectParticipantFieldsService.php:1005
 msgid ""
 "This person has been asked to confirm the participation but did not yet "
 "answer."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1000
+#: lib/Service/ProjectParticipantFieldsService.php:1006
 msgid "tentative"
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1000
+#: lib/Service/ProjectParticipantFieldsService.php:1006
 msgid "This person does not yet know whether a participation is possible."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1133
+#: lib/Service/ProjectParticipantFieldsService.php:1139
 #, php-format
 msgid "Unable to find participant field for id \"%s\""
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1488
+#: lib/Service/ProjectParticipantFieldsService.php:1495
 #, php-format
 msgid ""
 "Changing the multiplicity from \"%1$s\" to \"%2$s\" is not possible as the "
 "new multiplicity does not support the field data-type \"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1505
+#: lib/Service/ProjectParticipantFieldsService.php:1512
 #, php-format
 msgid ""
 "The field is already in use, therefore the multiplicity may no longer be "
 "changed from \"%1$s\" to \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1513
+#: lib/Service/ProjectParticipantFieldsService.php:1520
 #, php-format
 msgid ""
 "The field is already in use, therefore the multiplicity may only be changed "
 "from \"%1$s\" to \"%2$s\", but not to \"%3$s\"."
 msgstr ""
 
-#: lib/Service/ProjectParticipantFieldsService.php:1528
+#: lib/Service/ProjectParticipantFieldsService.php:1535
 #, php-format
 msgid ""
 "The field is already in use, therefore changing the multiplicity from "
@@ -8409,7 +8409,7 @@ msgstr ""
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3542
+#: lib/Service/ProjectService.php:3547
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -9051,13 +9051,13 @@ msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:141
 #: lib/Service/ToolTipsDataService.php:442
-#: specialVueFakeDummyForL10nScript.js:2243
+#: specialVueFakeDummyForL10nScript.js:2238
 msgid "Cancel the problem report."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:152
 #: lib/Service/ToolTipsDataService.php:443
-#: specialVueFakeDummyForL10nScript.js:2245
+#: specialVueFakeDummyForL10nScript.js:2240
 msgid "Submit the problem report."
 msgstr ""
 
@@ -11597,7 +11597,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:272
 #: lib/Settings/PersonalForm.php:310
-#: specialVueFakeDummyForL10nScript.js:1656
+#: specialVueFakeDummyForL10nScript.js:1651
 msgid "Finance"
 msgstr ""
 
@@ -12116,7 +12116,7 @@ msgid "Orchestra Management Application"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:93
-#: specialVueFakeDummyForL10nScript.js:2001
+#: specialVueFakeDummyForL10nScript.js:1996
 msgid "Top-Level Error"
 msgstr ""
 
@@ -12146,7 +12146,7 @@ msgstr ""
 
 #. TRANSLATORS src/CAFeVDB.vue:27
 #: specialVueFakeDummyForL10nScript.js:549
-#: specialVueFakeDummyForL10nScript.js:1765
+#: specialVueFakeDummyForL10nScript.js:1760
 #: src/router/routes.ts:42
 #: src/stores/history.ts:377
 msgid "Home"
@@ -12281,7 +12281,7 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:33
 #. TRANSLATORS src/views/FilesTab.vue:155
 #: specialVueFakeDummyForL10nScript.js:715
-#: specialVueFakeDummyForL10nScript.js:6850
+#: specialVueFakeDummyForL10nScript.js:6845
 #: templates/settings/share-settings.php:109
 msgid "Contacts"
 msgstr ""
@@ -12289,37 +12289,37 @@ msgstr ""
 #. TRANSLATORS src/components/AddContactsToProject.vue:34
 #. TRANSLATORS src/views/FilesTab.vue:156
 #: specialVueFakeDummyForL10nScript.js:717
-#: specialVueFakeDummyForL10nScript.js:6852
+#: specialVueFakeDummyForL10nScript.js:6847
 msgid "e.g. Bilbo Baggins"
 msgstr ""
 
 #. TRANSLATORS src/components/AddContactsToProject.vue:46
 #. TRANSLATORS src/views/FilesTab.vue:168
 #: specialVueFakeDummyForL10nScript.js:719
-#: specialVueFakeDummyForL10nScript.js:6854
+#: specialVueFakeDummyForL10nScript.js:6849
 msgid "Address-Books"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1009
+#: specialVueFakeDummyForL10nScript.js:1004
 msgid "{current} of {totals}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1061
+#: specialVueFakeDummyForL10nScript.js:1056
 msgid "accessible"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1070
+#: specialVueFakeDummyForL10nScript.js:1065
 msgid "inaccessible"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1095
-#: specialVueFakeDummyForL10nScript.js:1155
-#: specialVueFakeDummyForL10nScript.js:1312
-#: specialVueFakeDummyForL10nScript.js:1337
-#: specialVueFakeDummyForL10nScript.js:1404
-#: specialVueFakeDummyForL10nScript.js:1473
-#: specialVueFakeDummyForL10nScript.js:1528
-#: specialVueFakeDummyForL10nScript.js:6785
+#: specialVueFakeDummyForL10nScript.js:1090
+#: specialVueFakeDummyForL10nScript.js:1150
+#: specialVueFakeDummyForL10nScript.js:1307
+#: specialVueFakeDummyForL10nScript.js:1332
+#: specialVueFakeDummyForL10nScript.js:1399
+#: specialVueFakeDummyForL10nScript.js:1468
+#: specialVueFakeDummyForL10nScript.js:1523
+#: specialVueFakeDummyForL10nScript.js:6780
 #: src/toolkit/util/settings-sync.ts:66
 #: src/toolkit/util/settings-sync.ts:107
 #: src/toolkit/util/settings-sync.ts:186
@@ -12327,267 +12327,267 @@ msgstr ""
 msgid "reason unknown"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1100
+#: specialVueFakeDummyForL10nScript.js:1095
 msgid "Could not fetch the value for \"{key}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1118
-#: src/app/project-participants.ts:946
+#: specialVueFakeDummyForL10nScript.js:1113
+#: src/app/project-participants.ts:947
 #: src/app/projects.ts:540
 #: src/app/sepa-debit-mandate.ts:938
 #: src/toolkit/util/settings-sync.ts:261
 msgid "Confirmation Required"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1124
+#: specialVueFakeDummyForL10nScript.js:1119
 #: src/toolkit/util/settings-sync.ts:267
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1139
+#: specialVueFakeDummyForL10nScript.js:1134
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1141
+#: specialVueFakeDummyForL10nScript.js:1136
 msgid "Value for \"{settingsKey}\" has been erased."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1164
+#: specialVueFakeDummyForL10nScript.js:1159
 msgid "Could not set \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1166
+#: specialVueFakeDummyForL10nScript.js:1161
 msgid "Could not set \"{settingsKey}\": {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1274
+#: specialVueFakeDummyForL10nScript.js:1269
 msgid "Synchronizing user backends not yet implemented."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1305
+#: specialVueFakeDummyForL10nScript.js:1300
 msgid "Successfully handled recryption request for {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1320
+#: specialVueFakeDummyForL10nScript.js:1315
 msgid "Could not resolve the recryption request for {userId}: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1330
+#: specialVueFakeDummyForL10nScript.js:1325
 msgid "Successfully deleted recryption request for {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1345
+#: specialVueFakeDummyForL10nScript.js:1340
 msgid "Could not delete the recryption request for {userId}: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1378
+#: specialVueFakeDummyForL10nScript.js:1373
 msgid "No musicians selected, doing nothing."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1396
-#: specialVueFakeDummyForL10nScript.js:1464
+#: specialVueFakeDummyForL10nScript.js:1391
+#: specialVueFakeDummyForL10nScript.js:1459
 msgid "Processed user-id {userId}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1398
-#: specialVueFakeDummyForL10nScript.js:1466
+#: specialVueFakeDummyForL10nScript.js:1393
+#: specialVueFakeDummyForL10nScript.js:1461
 msgid "{failedUsers} users have failed."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1413
-#: specialVueFakeDummyForL10nScript.js:1482
+#: specialVueFakeDummyForL10nScript.js:1408
+#: specialVueFakeDummyForL10nScript.js:1477
 msgid "Unable to handle access action: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1420
-#: specialVueFakeDummyForL10nScript.js:1489
+#: specialVueFakeDummyForL10nScript.js:1415
+#: specialVueFakeDummyForL10nScript.js:1484
 msgid "Failed after {numUsers} users have been processed successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1422
-#: specialVueFakeDummyForL10nScript.js:1428
-#: specialVueFakeDummyForL10nScript.js:1491
-#: specialVueFakeDummyForL10nScript.js:1497
+#: specialVueFakeDummyForL10nScript.js:1417
+#: specialVueFakeDummyForL10nScript.js:1423
+#: specialVueFakeDummyForL10nScript.js:1486
+#: specialVueFakeDummyForL10nScript.js:1492
 msgid "{failedUsers} were processed unsuccessfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1424
-#: specialVueFakeDummyForL10nScript.js:1493
+#: specialVueFakeDummyForL10nScript.js:1419
+#: specialVueFakeDummyForL10nScript.js:1488
 msgid "{remainingUsers} remain unprocessed."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1426
-#: specialVueFakeDummyForL10nScript.js:1495
+#: specialVueFakeDummyForL10nScript.js:1421
+#: specialVueFakeDummyForL10nScript.js:1490
 msgid "{numUsers} users have been processed successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1518
+#: specialVueFakeDummyForL10nScript.js:1513
 msgid "Font cache operation {operation} completed successfully."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1533
+#: specialVueFakeDummyForL10nScript.js:1528
 msgid ""
 "Could not perform the requested font-cache operation \"{operation}\": "
 "{message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1563
+#: specialVueFakeDummyForL10nScript.js:1558
 msgid "Choose the CSV file with the GnuCash accounts tree"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:1592
+#: specialVueFakeDummyForL10nScript.js:1587
 msgid "Camerata DB"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:34
-#: specialVueFakeDummyForL10nScript.js:1594
+#: specialVueFakeDummyForL10nScript.js:1589
 msgid "User and group backend"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:50
-#: specialVueFakeDummyForL10nScript.js:1596
+#: specialVueFakeDummyForL10nScript.js:1591
 msgid "Sychronize User Backends"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:57
-#: specialVueFakeDummyForL10nScript.js:1598
+#: specialVueFakeDummyForL10nScript.js:1593
 msgid "User Group"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:67
-#: specialVueFakeDummyForL10nScript.js:1600
+#: specialVueFakeDummyForL10nScript.js:1595
 msgid "User Group Admins"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:107
-#: specialVueFakeDummyForL10nScript.js:1602
+#: specialVueFakeDummyForL10nScript.js:1597
 msgid "Create Group"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:121
 #. TRANSLATORS src/components/AdminSettings.vue:127
-#: specialVueFakeDummyForL10nScript.js:1604
-#: specialVueFakeDummyForL10nScript.js:1606
+#: specialVueFakeDummyForL10nScript.js:1599
+#: specialVueFakeDummyForL10nScript.js:1601
 msgid "Wiki Name-Space"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:134
-#: specialVueFakeDummyForL10nScript.js:1608
+#: specialVueFakeDummyForL10nScript.js:1603
 msgid "Configure User Backend"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:142
-#: specialVueFakeDummyForL10nScript.js:1610
+#: specialVueFakeDummyForL10nScript.js:1605
 msgid "Autoconfigure \"{cloudUserBackend}\" app"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:151
-#: specialVueFakeDummyForL10nScript.js:1612
+#: specialVueFakeDummyForL10nScript.js:1607
 msgid "Recryption Requests"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:163
-#: specialVueFakeDummyForL10nScript.js:1614
-#: specialVueFakeDummyForL10nScript.js:1626
+#: specialVueFakeDummyForL10nScript.js:1609
+#: specialVueFakeDummyForL10nScript.js:1621
 msgid "recrypt"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:166
-#: specialVueFakeDummyForL10nScript.js:1616
-#: specialVueFakeDummyForL10nScript.js:1628
+#: specialVueFakeDummyForL10nScript.js:1611
+#: specialVueFakeDummyForL10nScript.js:1623
 #: templates/fragments/mailing-lists/announcements-list-controls.php:84
 msgid "reject"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:173
-#: specialVueFakeDummyForL10nScript.js:1618
+#: specialVueFakeDummyForL10nScript.js:1613
 msgid "organizer"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:175
-#: specialVueFakeDummyForL10nScript.js:1620
+#: specialVueFakeDummyForL10nScript.js:1615
 msgid "group-admin"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:185
-#: specialVueFakeDummyForL10nScript.js:1622
+#: specialVueFakeDummyForL10nScript.js:1617
 msgid "mark/unmark all."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:187
-#: specialVueFakeDummyForL10nScript.js:1624
+#: specialVueFakeDummyForL10nScript.js:1619
 msgid "With the marked requests perform the following action:"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:199
-#: specialVueFakeDummyForL10nScript.js:1630
+#: specialVueFakeDummyForL10nScript.js:1625
 msgid "No recryption requests are pending."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:209
 #. TRANSLATORS src/views/FilesTab.vue:134
-#: specialVueFakeDummyForL10nScript.js:1636
-#: specialVueFakeDummyForL10nScript.js:6844
+#: specialVueFakeDummyForL10nScript.js:1631
+#: specialVueFakeDummyForL10nScript.js:6839
 msgid "e.g. Jane Doe"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:220
-#: specialVueFakeDummyForL10nScript.js:1638
+#: specialVueFakeDummyForL10nScript.js:1633
 msgid "Restrict User Selection to Project"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:221
 #. TRANSLATORS src/views/FilesTab.vue:145
-#: specialVueFakeDummyForL10nScript.js:1640
-#: specialVueFakeDummyForL10nScript.js:6848
+#: specialVueFakeDummyForL10nScript.js:1635
+#: specialVueFakeDummyForL10nScript.js:6843
 msgid "e.g. Auvergne2019"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:232
-#: specialVueFakeDummyForL10nScript.js:1642
+#: specialVueFakeDummyForL10nScript.js:1637
 msgid "include disabled accounts"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:241
-#: specialVueFakeDummyForL10nScript.js:1644
+#: specialVueFakeDummyForL10nScript.js:1639
 msgid "include deactivated accounts"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:248
-#: specialVueFakeDummyForL10nScript.js:1646
+#: specialVueFakeDummyForL10nScript.js:1641
 msgid "Remove the status feedback from the last action."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:251
-#: specialVueFakeDummyForL10nScript.js:1648
+#: specialVueFakeDummyForL10nScript.js:1643
 msgid "Ok"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:260
-#: specialVueFakeDummyForL10nScript.js:1650
+#: specialVueFakeDummyForL10nScript.js:1645
 msgid "With the selected musicians perform the following action:"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:264
-#: specialVueFakeDummyForL10nScript.js:1652
+#: specialVueFakeDummyForL10nScript.js:1647
 msgid "deny access"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:267
-#: specialVueFakeDummyForL10nScript.js:1654
+#: specialVueFakeDummyForL10nScript.js:1649
 msgid "grant access"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:275
 #. TRANSLATORS src/components/AdminSettings.vue:281
-#: specialVueFakeDummyForL10nScript.js:1658
-#: specialVueFakeDummyForL10nScript.js:1660
+#: specialVueFakeDummyForL10nScript.js:1653
+#: specialVueFakeDummyForL10nScript.js:1655
 msgid "GnuCash Participant Receivables Account"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:282
-#: specialVueFakeDummyForL10nScript.js:1662
+#: specialVueFakeDummyForL10nScript.js:1657
 msgid ""
 "e.g. &quot;assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}"
 "&quot;."
@@ -12595,734 +12595,734 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:287
 #. TRANSLATORS src/components/AdminSettings.vue:293
-#: specialVueFakeDummyForL10nScript.js:1664
-#: specialVueFakeDummyForL10nScript.js:1666
+#: specialVueFakeDummyForL10nScript.js:1659
+#: specialVueFakeDummyForL10nScript.js:1661
 msgid "GnuCash Instrument Insurances Balancing Account"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:294
-#: specialVueFakeDummyForL10nScript.js:1668
+#: specialVueFakeDummyForL10nScript.js:1663
 msgid ""
 "e.g. &quot;outside-capital:escrow-accounts:insurances:receivables:{BROKER}"
 "&quot;."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:299
-#: specialVueFakeDummyForL10nScript.js:1670
+#: specialVueFakeDummyForL10nScript.js:1665
 msgid "GnuCash Accounts Tree"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:305
-#: specialVueFakeDummyForL10nScript.js:1672
+#: specialVueFakeDummyForL10nScript.js:1667
 msgid "GnuCash Accounts Tree (CSV export)"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:306
-#: specialVueFakeDummyForL10nScript.js:1674
+#: specialVueFakeDummyForL10nScript.js:1669
 msgid "e.g. &quot;{sharedFolder}/finance/ledger/accounts.csv&quot;."
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:312
-#: specialVueFakeDummyForL10nScript.js:1676
+#: specialVueFakeDummyForL10nScript.js:1671
 msgid "choose"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:326
-#: specialVueFakeDummyForL10nScript.js:1678
+#: specialVueFakeDummyForL10nScript.js:1673
 msgid "Configure Office Fonts for Office Exports"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:329
-#: specialVueFakeDummyForL10nScript.js:1680
+#: specialVueFakeDummyForL10nScript.js:1675
 msgid "Font Data Folder"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:350
-#: specialVueFakeDummyForL10nScript.js:1682
+#: specialVueFakeDummyForL10nScript.js:1677
 msgid "Default Font"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:355
-#: specialVueFakeDummyForL10nScript.js:1684
+#: specialVueFakeDummyForL10nScript.js:1679
 msgid "Update Font Data"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:358
-#: specialVueFakeDummyForL10nScript.js:1686
+#: specialVueFakeDummyForL10nScript.js:1681
 msgid "Rescan Font Data"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:361
-#: specialVueFakeDummyForL10nScript.js:1688
+#: specialVueFakeDummyForL10nScript.js:1683
 msgid "Purge Font Data"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:368
-#: specialVueFakeDummyForL10nScript.js:1690
+#: specialVueFakeDummyForL10nScript.js:1685
 msgid "Configure Problem Report Handling"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:374
-#: specialVueFakeDummyForL10nScript.js:1692
+#: specialVueFakeDummyForL10nScript.js:1687
 msgid "Problem Report Email Recipient"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:399
-#: specialVueFakeDummyForL10nScript.js:1694
+#: specialVueFakeDummyForL10nScript.js:1689
 msgid "Email Verification Code"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:417
-#: specialVueFakeDummyForL10nScript.js:1696
+#: specialVueFakeDummyForL10nScript.js:1691
 msgid "resend verification code"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:425
-#: specialVueFakeDummyForL10nScript.js:1698
+#: specialVueFakeDummyForL10nScript.js:1693
 msgid "cancel verification"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:439
-#: specialVueFakeDummyForL10nScript.js:1700
+#: specialVueFakeDummyForL10nScript.js:1695
 msgid "Enable Vue DevTools Support"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:442
-#: specialVueFakeDummyForL10nScript.js:1702
+#: specialVueFakeDummyForL10nScript.js:1697
 msgid "Check to enable Vue Devtools support (also needs unsafe-eval CSP)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1750
+#: specialVueFakeDummyForL10nScript.js:1745
 msgid "Manage Saved Web-Browser History"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1882
+#: specialVueFakeDummyForL10nScript.js:1877
 msgid "No data coulde be found."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:42
-#: specialVueFakeDummyForL10nScript.js:1886
+#: specialVueFakeDummyForL10nScript.js:1881
 msgid "Reload History States"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:62
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:133
-#: specialVueFakeDummyForL10nScript.js:1888
-#: specialVueFakeDummyForL10nScript.js:1900
+#: specialVueFakeDummyForL10nScript.js:1883
+#: specialVueFakeDummyForL10nScript.js:1895
 msgid "Active page when the history was saved."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:68
 #. TRANSLATORS src/components/ProjectEventsListing.vue:149
-#: specialVueFakeDummyForL10nScript.js:1890
-#: specialVueFakeDummyForL10nScript.js:5045
+#: specialVueFakeDummyForL10nScript.js:1885
+#: specialVueFakeDummyForL10nScript.js:5040
 msgid "Toggle Details"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:85
-#: specialVueFakeDummyForL10nScript.js:1892
+#: specialVueFakeDummyForL10nScript.js:1887
 msgid "Push History"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:94
-#: specialVueFakeDummyForL10nScript.js:1894
+#: specialVueFakeDummyForL10nScript.js:1889
 msgid "Replace History"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:103
-#: specialVueFakeDummyForL10nScript.js:1896
+#: specialVueFakeDummyForL10nScript.js:1891
 msgid "Append to Current"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:109
-#: specialVueFakeDummyForL10nScript.js:1898
+#: specialVueFakeDummyForL10nScript.js:1893
 #: src/app/sepa-debit-mandate.ts:715
 #: templates/blog/blogthreads.php:99
 msgid "Delete"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:142
-#: specialVueFakeDummyForL10nScript.js:1902
+#: specialVueFakeDummyForL10nScript.js:1897
 msgid "Show the raw data submitted to the server (expert use)."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:149
-#: specialVueFakeDummyForL10nScript.js:1904
+#: specialVueFakeDummyForL10nScript.js:1899
 msgid "Data-Record"
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:78
-#: specialVueFakeDummyForL10nScript.js:1906
+#: specialVueFakeDummyForL10nScript.js:1901
 msgid ""
 "Push the listed items after the current view and navigate to the last active "
 "view of the saved history."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:87
-#: specialVueFakeDummyForL10nScript.js:1908
+#: specialVueFakeDummyForL10nScript.js:1903
 msgid ""
 "Replace the current browser history by the listed items and navigate to the "
 "last active view of the saved history."
 msgstr ""
 
 #. TRANSLATORS src/components/BrowserHistoryModal.vue:96
-#: specialVueFakeDummyForL10nScript.js:1910
+#: specialVueFakeDummyForL10nScript.js:1905
 msgid ""
 "Append the listed items at the end of the current browser history and "
 "navigate to the last active view of the saved history."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1981
-#: specialVueFakeDummyForL10nScript.js:2290
+#: specialVueFakeDummyForL10nScript.js:1976
+#: specialVueFakeDummyForL10nScript.js:2285
 msgid "close details view"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2097
+#: specialVueFakeDummyForL10nScript.js:2092
 msgid "Personal Comments by {user}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2098
+#: specialVueFakeDummyForL10nScript.js:2093
 msgid "No comment."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2107
+#: specialVueFakeDummyForL10nScript.js:2102
 msgid "Data Record"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:133
-#: specialVueFakeDummyForL10nScript.js:2111
-#: specialVueFakeDummyForL10nScript.js:2241
+#: specialVueFakeDummyForL10nScript.js:2106
+#: specialVueFakeDummyForL10nScript.js:2236
 msgid "Problem Report"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2115
+#: specialVueFakeDummyForL10nScript.js:2110
 msgid "You cannot change this part of the report."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2148
+#: specialVueFakeDummyForL10nScript.js:2143
 msgid ""
 "Your comment has already been submitted with the following notification: "
 "{notification}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2160
+#: specialVueFakeDummyForL10nScript.js:2155
 msgid "Your problem-report has been submitted."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2175
-#: specialVueFakeDummyForL10nScript.js:2454
+#: specialVueFakeDummyForL10nScript.js:2170
+#: specialVueFakeDummyForL10nScript.js:2449
 #: src/app/file-download.ts:47
 #: templates/emailform/part.emailform.statuspage.php:362
 msgid "unknown error"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2177
+#: specialVueFakeDummyForL10nScript.js:2172
 msgid "Could not submit the problem report: \"{errorString}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:44
-#: specialVueFakeDummyForL10nScript.js:2217
+#: specialVueFakeDummyForL10nScript.js:2212
 msgid "Error Details"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:61
 #. TRANSLATORS src/components/HtmlErrorModal.vue:38
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:17
-#: specialVueFakeDummyForL10nScript.js:2219
-#: specialVueFakeDummyForL10nScript.js:2356
-#: specialVueFakeDummyForL10nScript.js:3665
+#: specialVueFakeDummyForL10nScript.js:2214
+#: specialVueFakeDummyForL10nScript.js:2351
+#: specialVueFakeDummyForL10nScript.js:3660
 msgid "report error"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:72
-#: specialVueFakeDummyForL10nScript.js:2221
+#: specialVueFakeDummyForL10nScript.js:2216
 msgid "show details"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:79
-#: specialVueFakeDummyForL10nScript.js:2223
+#: specialVueFakeDummyForL10nScript.js:2218
 #: src/toolkit/util/dialog-alert.ts:39
 #: templates/fragments/projects/project-mailing-list.php:95
 msgid "close"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:87
-#: specialVueFakeDummyForL10nScript.js:2225
+#: specialVueFakeDummyForL10nScript.js:2220
 msgid "go to previous page"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:95
-#: specialVueFakeDummyForL10nScript.js:2227
+#: specialVueFakeDummyForL10nScript.js:2222
 msgid "try to reload"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:106
-#: specialVueFakeDummyForL10nScript.js:2229
+#: specialVueFakeDummyForL10nScript.js:2224
 msgid "AXIOS ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:110
-#: specialVueFakeDummyForL10nScript.js:2231
+#: specialVueFakeDummyForL10nScript.js:2226
 msgid "AXIOS ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:114
-#: specialVueFakeDummyForL10nScript.js:2233
+#: specialVueFakeDummyForL10nScript.js:2228
 msgid "FRONTEND ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:118
-#: specialVueFakeDummyForL10nScript.js:2235
+#: specialVueFakeDummyForL10nScript.js:2230
 msgid "jQuery AJAX ERROR WITH RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:122
-#: specialVueFakeDummyForL10nScript.js:2237
+#: specialVueFakeDummyForL10nScript.js:2232
 msgid "jQuery AJAX ERROR WITHOUT RESPONSE DATA"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:125
-#: specialVueFakeDummyForL10nScript.js:2239
+#: specialVueFakeDummyForL10nScript.js:2234
 msgid "UNKNOWN ERROR"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:163
-#: specialVueFakeDummyForL10nScript.js:2247
+#: specialVueFakeDummyForL10nScript.js:2242
 msgid "Modify the comment of the problem report."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:174
-#: specialVueFakeDummyForL10nScript.js:2249
+#: specialVueFakeDummyForL10nScript.js:2244
 msgid "Close the problem report page."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:183
-#: specialVueFakeDummyForL10nScript.js:2251
+#: specialVueFakeDummyForL10nScript.js:2246
 msgid "Optional Comment"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:185
-#: specialVueFakeDummyForL10nScript.js:2253
+#: specialVueFakeDummyForL10nScript.js:2248
 msgid "You can optionally add comments. Markdown is supported."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:186
-#: specialVueFakeDummyForL10nScript.js:2255
+#: specialVueFakeDummyForL10nScript.js:2250
 msgid "manual"
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:187
-#: specialVueFakeDummyForL10nScript.js:2257
+#: specialVueFakeDummyForL10nScript.js:2252
 msgid "A preview of the error report is shown below."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:194
-#: specialVueFakeDummyForL10nScript.js:2259
+#: specialVueFakeDummyForL10nScript.js:2254
 msgid "Please add your personal notes here."
 msgstr ""
 
 #. TRANSLATORS src/components/ErrorPage.vue:196
-#: specialVueFakeDummyForL10nScript.js:2261
+#: specialVueFakeDummyForL10nScript.js:2256
 msgid "Preview"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2287
+#: specialVueFakeDummyForL10nScript.js:2282
 msgid "Sorry, an Error Occurred"
 msgstr ""
 
 #. TRANSLATORS src/components/HtmlErrorModal.vue:32
-#: specialVueFakeDummyForL10nScript.js:2354
+#: specialVueFakeDummyForL10nScript.js:2349
 msgid "An Error Occurred"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2458
+#: specialVueFakeDummyForL10nScript.js:2453
 msgid ""
 "Unable to download the invoice with invoice-number {invoiceNumber}: {error}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2459
+#: specialVueFakeDummyForL10nScript.js:2454
 msgid ""
 "Unable to download the mail-merge substituions for invoice-number "
 "{invoiceNumber}: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:2481
+#: specialVueFakeDummyForL10nScript.js:2476
 msgid "Download Standard Invoice"
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:2483
+#: specialVueFakeDummyForL10nScript.js:2478
 msgid "Email Standard Invoice"
 msgstr ""
 
 #. TRANSLATORS src/components/InvoiceActionsMenu.vue:55
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:78
-#: specialVueFakeDummyForL10nScript.js:2485
-#: specialVueFakeDummyForL10nScript.js:5208
+#: specialVueFakeDummyForL10nScript.js:2480
+#: specialVueFakeDummyForL10nScript.js:5203
 msgid "Download Substitution Data"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2792
+#: specialVueFakeDummyForL10nScript.js:2787
 msgid "Query has been copied to the clipboard."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2795
+#: specialVueFakeDummyForL10nScript.js:2790
 msgid "Failed copying query to the clipboard: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:36
-#: specialVueFakeDummyForL10nScript.js:2801
+#: specialVueFakeDummyForL10nScript.js:2796
 msgid "Legacy Sql Query Log"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:48
-#: specialVueFakeDummyForL10nScript.js:2803
+#: specialVueFakeDummyForL10nScript.js:2798
 msgid "SQL Query"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyQueryLogModal.vue:55
-#: specialVueFakeDummyForL10nScript.js:2805
-#: specialVueFakeDummyForL10nScript.js:2807
+#: specialVueFakeDummyForL10nScript.js:2800
+#: specialVueFakeDummyForL10nScript.js:2802
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3013
-#: specialVueFakeDummyForL10nScript.js:4334
+#: specialVueFakeDummyForL10nScript.js:3008
+#: specialVueFakeDummyForL10nScript.js:4329
 #: src/app/user-manual.ts:73
 msgid "User Manual: {section}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3073
+#: specialVueFakeDummyForL10nScript.js:3068
 msgid "Error updating legacy route from {template} to {newTemplate}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3163
+#: specialVueFakeDummyForL10nScript.js:3158
 msgid "Error loading view \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3268
+#: specialVueFakeDummyForL10nScript.js:3263
 msgid "Error synchronizing history state for template \"{template}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3374
+#: specialVueFakeDummyForL10nScript.js:3369
 msgid "An error occured during communication with the server."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:28
-#: specialVueFakeDummyForL10nScript.js:3413
+#: specialVueFakeDummyForL10nScript.js:3408
 msgid "Navigate to the previous view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:39
-#: specialVueFakeDummyForL10nScript.js:3415
+#: specialVueFakeDummyForL10nScript.js:3410
 msgid "Reload the current view."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:49
-#: specialVueFakeDummyForL10nScript.js:3417
+#: specialVueFakeDummyForL10nScript.js:3412
 msgid "Navigate to the next view in the browser history stack."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:59
-#: specialVueFakeDummyForL10nScript.js:3419
+#: specialVueFakeDummyForL10nScript.js:3414
 msgid "Go to the start page of the app."
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:76
-#: specialVueFakeDummyForL10nScript.js:3421
+#: specialVueFakeDummyForL10nScript.js:3416
 msgid "Tooltips"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:82
 #. TRANSLATORS src/components/ProjectEventsListing.vue:107
-#: specialVueFakeDummyForL10nScript.js:3423
-#: specialVueFakeDummyForL10nScript.js:5037
+#: specialVueFakeDummyForL10nScript.js:3418
+#: specialVueFakeDummyForL10nScript.js:5032
 msgid "Manual (other tab or window)"
 msgstr ""
 
 #. TRANSLATORS src/components/LegacyWrapper.vue:87
 #. TRANSLATORS src/components/ProjectEventsListing.vue:115
-#: specialVueFakeDummyForL10nScript.js:3425
-#: specialVueFakeDummyForL10nScript.js:5039
+#: specialVueFakeDummyForL10nScript.js:3420
+#: specialVueFakeDummyForL10nScript.js:5034
 #: templates/emailform/form.php:63
 msgid "Manual (popup)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3622
-#: specialVueFakeDummyForL10nScript.js:3631
+#: specialVueFakeDummyForL10nScript.js:3617
+#: specialVueFakeDummyForL10nScript.js:3626
 msgid "Log entry successfully copied"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:37
-#: specialVueFakeDummyForL10nScript.js:3667
+#: specialVueFakeDummyForL10nScript.js:3662
 msgid "Level"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:39
-#: specialVueFakeDummyForL10nScript.js:3669
+#: specialVueFakeDummyForL10nScript.js:3664
 msgid "App"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:41
-#: specialVueFakeDummyForL10nScript.js:3671
+#: specialVueFakeDummyForL10nScript.js:3666
 msgid "No app in context"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:43
-#: specialVueFakeDummyForL10nScript.js:3673
+#: specialVueFakeDummyForL10nScript.js:3668
 msgid "Time"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:46
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:50
-#: specialVueFakeDummyForL10nScript.js:3675
-#: specialVueFakeDummyForL10nScript.js:3677
+#: specialVueFakeDummyForL10nScript.js:3670
+#: specialVueFakeDummyForL10nScript.js:3672
 msgid "Copy raw entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:52
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:56
-#: specialVueFakeDummyForL10nScript.js:3679
-#: specialVueFakeDummyForL10nScript.js:3681
+#: specialVueFakeDummyForL10nScript.js:3674
+#: specialVueFakeDummyForL10nScript.js:3676
 msgid "Copy formatted entry"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:62
-#: specialVueFakeDummyForL10nScript.js:3683
+#: specialVueFakeDummyForL10nScript.js:3678
 msgid "Hide exception details"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3683
+#: specialVueFakeDummyForL10nScript.js:3678
 msgid "View exception details"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/LogDetailsModal.vue:73
-#: specialVueFakeDummyForL10nScript.js:3685
+#: specialVueFakeDummyForL10nScript.js:3680
 msgid "Raw log entry"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3715
+#: specialVueFakeDummyForL10nScript.js:3710
 msgid "Caused by {exception}"
 msgstr ""
 
 #. TRANSLATORS src/components/LogEntry/exception/TraceLine.vue:10
-#: specialVueFakeDummyForL10nScript.js:3764
+#: specialVueFakeDummyForL10nScript.js:3759
 msgid "Line {line}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3975
+#: specialVueFakeDummyForL10nScript.js:3970
 msgid "Project Wiki for {projectName}"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:69
-#: specialVueFakeDummyForL10nScript.js:4022
+#: specialVueFakeDummyForL10nScript.js:4017
 msgid "Project Files"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:80
-#: specialVueFakeDummyForL10nScript.js:4024
+#: specialVueFakeDummyForL10nScript.js:4019
 msgid "Project Notes"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:91
-#: specialVueFakeDummyForL10nScript.js:4026
+#: specialVueFakeDummyForL10nScript.js:4021
 msgid "Events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:114
-#: specialVueFakeDummyForL10nScript.js:4030
+#: specialVueFakeDummyForL10nScript.js:4025
 msgid "Business Contacts / Associates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:125
-#: specialVueFakeDummyForL10nScript.js:4032
+#: specialVueFakeDummyForL10nScript.js:4027
 msgid "Debit Mandates"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:136
-#: specialVueFakeDummyForL10nScript.js:4034
+#: specialVueFakeDummyForL10nScript.js:4029
 msgid "Payments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:147
-#: specialVueFakeDummyForL10nScript.js:4036
+#: specialVueFakeDummyForL10nScript.js:4031
 msgid "Invoices"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectActionsMenu.vue:157
-#: specialVueFakeDummyForL10nScript.js:4038
+#: specialVueFakeDummyForL10nScript.js:4033
 msgid "Financial Balance"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4334
+#: specialVueFakeDummyForL10nScript.js:4329
 #: templates/emailform/part.emailform.composer.php:335
 msgid "Project Events"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4572
+#: specialVueFakeDummyForL10nScript.js:4567
 msgid "{startDate}, until {endTime}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4724
+#: specialVueFakeDummyForL10nScript.js:4719
 msgid "Unable to export selected events."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4835
+#: specialVueFakeDummyForL10nScript.js:4830
 msgid "Unable to modify the absence field."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4878
+#: specialVueFakeDummyForL10nScript.js:4873
 msgid "Unable to detach events from the project."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4955
+#: specialVueFakeDummyForL10nScript.js:4950
 msgid "Unable to delete events."
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:26
-#: specialVueFakeDummyForL10nScript.js:5023
+#: specialVueFakeDummyForL10nScript.js:5018
 msgid "{name} - Appointments"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5023
+#: specialVueFakeDummyForL10nScript.js:5018
 msgid "Appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:37
-#: specialVueFakeDummyForL10nScript.js:5025
+#: specialVueFakeDummyForL10nScript.js:5020
 msgid "create a new appointment"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:58
-#: specialVueFakeDummyForL10nScript.js:5027
+#: specialVueFakeDummyForL10nScript.js:5022
 msgid "mark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:67
-#: specialVueFakeDummyForL10nScript.js:5029
+#: specialVueFakeDummyForL10nScript.js:5024
 msgid "unmark all events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:76
-#: specialVueFakeDummyForL10nScript.js:5031
+#: specialVueFakeDummyForL10nScript.js:5026
 msgid "open email editor"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:86
-#: specialVueFakeDummyForL10nScript.js:5035
+#: specialVueFakeDummyForL10nScript.js:5030
 msgid "export events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:121
-#: specialVueFakeDummyForL10nScript.js:5041
+#: specialVueFakeDummyForL10nScript.js:5036
 msgid "reload the project appointments"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:134
-#: specialVueFakeDummyForL10nScript.js:5043
+#: specialVueFakeDummyForL10nScript.js:5038
 msgid "no events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:165
-#: specialVueFakeDummyForL10nScript.js:5047
+#: specialVueFakeDummyForL10nScript.js:5042
 msgid "select a year"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:182
-#: specialVueFakeDummyForL10nScript.js:5049
+#: specialVueFakeDummyForL10nScript.js:5044
 msgid "detached"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:218
-#: specialVueFakeDummyForL10nScript.js:5051
+#: specialVueFakeDummyForL10nScript.js:5046
 msgid "act only on this event"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:228
-#: specialVueFakeDummyForL10nScript.js:5053
+#: specialVueFakeDummyForL10nScript.js:5048
 msgid "act on the event series"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:238
-#: specialVueFakeDummyForL10nScript.js:5055
+#: specialVueFakeDummyForL10nScript.js:5050
 msgid "act on all related events"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:251
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
-#: specialVueFakeDummyForL10nScript.js:5057
+#: specialVueFakeDummyForL10nScript.js:5052
 #: lib/Service/EventsService.php:1270
 #, php-format
 msgid "record absence"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:265
-#: specialVueFakeDummyForL10nScript.js:5059
+#: specialVueFakeDummyForL10nScript.js:5054
 msgid "mark for download / em@il"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:287
-#: specialVueFakeDummyForL10nScript.js:5063
-#: specialVueFakeDummyForL10nScript.js:5065
+#: specialVueFakeDummyForL10nScript.js:5058
+#: specialVueFakeDummyForL10nScript.js:5060
 msgid "open in calendar-app"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:308
-#: specialVueFakeDummyForL10nScript.js:5067
+#: specialVueFakeDummyForL10nScript.js:5062
 #: templates/fragments/projects/project-mailing-list.php:113
 msgid "delete"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:319
-#: specialVueFakeDummyForL10nScript.js:5069
+#: specialVueFakeDummyForL10nScript.js:5064
 msgid "detach from project"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectEventsListing.vue:330
-#: specialVueFakeDummyForL10nScript.js:5071
+#: specialVueFakeDummyForL10nScript.js:5066
 msgid "reattach to project"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5155
-#: specialVueFakeDummyForL10nScript.js:5161
+#: specialVueFakeDummyForL10nScript.js:5150
+#: specialVueFakeDummyForL10nScript.js:5156
 msgid "Sending receipts by email is not yet supported."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5186
+#: specialVueFakeDummyForL10nScript.js:5181
 msgid ""
 "Unable to download the receipt for the payment with id {paymentId}: {error}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5187
+#: specialVueFakeDummyForL10nScript.js:5182
 msgid ""
 "Unable to download the mail-merge substituions for the payment with id "
 "{paymentId}: {error}."
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:34
-#: specialVueFakeDummyForL10nScript.js:5200
+#: specialVueFakeDummyForL10nScript.js:5195
 msgid "Download Donation Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:5202
+#: specialVueFakeDummyForL10nScript.js:5197
 msgid "Email Donation Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:56
-#: specialVueFakeDummyForL10nScript.js:5204
+#: specialVueFakeDummyForL10nScript.js:5199
 msgid "Download Standard Receipt"
 msgstr ""
 
 #. TRANSLATORS src/components/ProjectPaymentActionsMenu.vue:67
-#: specialVueFakeDummyForL10nScript.js:5206
+#: specialVueFakeDummyForL10nScript.js:5201
 msgid "Email Standard Receipt"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5460
-#: specialVueFakeDummyForL10nScript.js:5786
+#: specialVueFakeDummyForL10nScript.js:5455
+#: specialVueFakeDummyForL10nScript.js:5781
 msgid "** everybody **"
 msgstr ""
 
@@ -13331,149 +13331,149 @@ msgstr ""
 #. TRANSLATORS src/components/SelectProjects.vue:44
 #. TRANSLATORS src/components/SettingsSelectGroup.vue:47
 #. TRANSLATORS src/components/SettingsSelectUsers.vue:60
-#: specialVueFakeDummyForL10nScript.js:5589
-#: specialVueFakeDummyForL10nScript.js:5591
-#: specialVueFakeDummyForL10nScript.js:5593
-#: specialVueFakeDummyForL10nScript.js:5595
-#: specialVueFakeDummyForL10nScript.js:5877
-#: specialVueFakeDummyForL10nScript.js:5879
-#: specialVueFakeDummyForL10nScript.js:5881
-#: specialVueFakeDummyForL10nScript.js:5883
-#: specialVueFakeDummyForL10nScript.js:6038
-#: specialVueFakeDummyForL10nScript.js:6042
-#: specialVueFakeDummyForL10nScript.js:6044
-#: specialVueFakeDummyForL10nScript.js:6254
-#: specialVueFakeDummyForL10nScript.js:6256
-#: specialVueFakeDummyForL10nScript.js:6258
-#: specialVueFakeDummyForL10nScript.js:6260
-#: specialVueFakeDummyForL10nScript.js:6362
-#: specialVueFakeDummyForL10nScript.js:6364
-#: specialVueFakeDummyForL10nScript.js:6366
-#: specialVueFakeDummyForL10nScript.js:6368
+#: specialVueFakeDummyForL10nScript.js:5584
+#: specialVueFakeDummyForL10nScript.js:5586
+#: specialVueFakeDummyForL10nScript.js:5588
+#: specialVueFakeDummyForL10nScript.js:5590
+#: specialVueFakeDummyForL10nScript.js:5872
+#: specialVueFakeDummyForL10nScript.js:5874
+#: specialVueFakeDummyForL10nScript.js:5876
+#: specialVueFakeDummyForL10nScript.js:5878
+#: specialVueFakeDummyForL10nScript.js:6033
+#: specialVueFakeDummyForL10nScript.js:6037
+#: specialVueFakeDummyForL10nScript.js:6039
+#: specialVueFakeDummyForL10nScript.js:6249
+#: specialVueFakeDummyForL10nScript.js:6251
+#: specialVueFakeDummyForL10nScript.js:6253
+#: specialVueFakeDummyForL10nScript.js:6255
+#: specialVueFakeDummyForL10nScript.js:6357
+#: specialVueFakeDummyForL10nScript.js:6359
+#: specialVueFakeDummyForL10nScript.js:6361
+#: specialVueFakeDummyForL10nScript.js:6363
 msgid "undefined"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5977
+#: specialVueFakeDummyForL10nScript.js:5972
 msgid "Permanent"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6122
+#: specialVueFakeDummyForL10nScript.js:6117
 msgid ""
 "Unable to export the bank import-data for the bulktransaction with id "
 "\"{entityId}\"."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6158
+#: specialVueFakeDummyForL10nScript.js:6153
 msgid ""
 "Unable to export the balancing items for the bulktransaction with id "
 "\"{entityId}\"."
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:35
-#: specialVueFakeDummyForL10nScript.js:6167
+#: specialVueFakeDummyForL10nScript.js:6162
 msgid "Bank Transaction Data"
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:45
-#: specialVueFakeDummyForL10nScript.js:6169
+#: specialVueFakeDummyForL10nScript.js:6164
 msgid "Email Pre-Notification"
 msgstr ""
 
 #. TRANSLATORS src/components/SepaBulkTransactionActionsMenu.vue:55
-#: specialVueFakeDummyForL10nScript.js:6171
+#: specialVueFakeDummyForL10nScript.js:6166
 msgid "GnuCash Balance Data"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:43
-#: specialVueFakeDummyForL10nScript.js:6492
+#: specialVueFakeDummyForL10nScript.js:6487
 #: templates/settings.php:70
 msgid "Email"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:51
-#: specialVueFakeDummyForL10nScript.js:6494
+#: specialVueFakeDummyForL10nScript.js:6489
 msgid "Phone"
 msgstr ""
 
 #. TRANSLATORS src/components/oc-template/MusicianAddressViewTemplate.vue:79
-#: specialVueFakeDummyForL10nScript.js:6498
+#: specialVueFakeDummyForL10nScript.js:6493
 msgid "Probability"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6623
+#: specialVueFakeDummyForL10nScript.js:6618
 msgid "Required."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6767
+#: specialVueFakeDummyForL10nScript.js:6762
 msgid "File download failed for {fileName}."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6803
+#: specialVueFakeDummyForL10nScript.js:6798
 msgid "no response received from {ajaxUrl}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6807
+#: specialVueFakeDummyForL10nScript.js:6802
 msgid "Could not perform mail-merge: {message}"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:31
-#: specialVueFakeDummyForL10nScript.js:6814
+#: specialVueFakeDummyForL10nScript.js:6809
 msgid "Mail merge operations"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:40
-#: specialVueFakeDummyForL10nScript.js:6816
+#: specialVueFakeDummyForL10nScript.js:6811
 msgid "Download Merged Document"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:43
-#: specialVueFakeDummyForL10nScript.js:6818
+#: specialVueFakeDummyForL10nScript.js:6813
 msgid "download locally"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:48
-#: specialVueFakeDummyForL10nScript.js:6820
+#: specialVueFakeDummyForL10nScript.js:6815
 msgid "Merge Document into Cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:54
-#: specialVueFakeDummyForL10nScript.js:6822
+#: specialVueFakeDummyForL10nScript.js:6817
 msgid "save to cloud"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:59
-#: specialVueFakeDummyForL10nScript.js:6824
+#: specialVueFakeDummyForL10nScript.js:6819
 msgid "Download Replacement Data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:65
-#: specialVueFakeDummyForL10nScript.js:6826
+#: specialVueFakeDummyForL10nScript.js:6821
 msgid "download data"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:72
-#: specialVueFakeDummyForL10nScript.js:6828
+#: specialVueFakeDummyForL10nScript.js:6823
 #: templates/emailform/part.emailform.composer.php:145
 msgid "Sender"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:80
-#: specialVueFakeDummyForL10nScript.js:6832
+#: specialVueFakeDummyForL10nScript.js:6827
 msgid "e.g. John Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:106
-#: specialVueFakeDummyForL10nScript.js:6836
+#: specialVueFakeDummyForL10nScript.js:6831
 msgid "Musician's Datebase"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:115
-#: specialVueFakeDummyForL10nScript.js:6838
+#: specialVueFakeDummyForL10nScript.js:6833
 msgid "Addressbooks"
 msgstr ""
 
 #. TRANSLATORS src/views/FilesTab.vue:126
-#: specialVueFakeDummyForL10nScript.js:6840
+#: specialVueFakeDummyForL10nScript.js:6835
 msgid "Enter Address"
 msgstr ""
 
@@ -13501,9 +13501,9 @@ msgstr ""
 #: src/app/blog.ts:388
 #: src/app/cloud-file-picker-dialog.ts:81
 #: src/app/cloud-file-picker-dialog.ts:109
-#: src/app/email.ts:189
-#: src/app/email.ts:995
-#: src/app/email.ts:1124
+#: src/app/email.ts:190
+#: src/app/email.ts:997
+#: src/app/email.ts:1126
 #: src/app/project-participant-fields.ts:340
 #: src/app/settings.ts:1374
 #: src/app/settings.ts:1387
@@ -13741,108 +13741,108 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
-#: src/app/email.ts:189
+#: src/app/email.ts:190
 msgid "Not called from main email-form."
 msgstr ""
 
-#: src/app/email.ts:331
+#: src/app/email.ts:332
 msgid "Move all"
 msgstr ""
 
-#: src/app/email.ts:332
+#: src/app/email.ts:333
 msgid "Select all"
 msgstr ""
 
-#: src/app/email.ts:333
+#: src/app/email.ts:334
 msgid "Move selected"
 msgstr ""
 
-#: src/app/email.ts:334
+#: src/app/email.ts:335
 msgid "Remove selected"
 msgstr ""
 
-#: src/app/email.ts:335
 #: src/app/email.ts:336
+#: src/app/email.ts:337
 msgid "Remove all"
 msgstr ""
 
-#: src/app/email.ts:337
+#: src/app/email.ts:338
 msgid "Remaining Recipients"
 msgstr ""
 
-#: src/app/email.ts:338
+#: src/app/email.ts:339
 msgid "Selected Recipients"
 msgstr ""
 
-#: src/app/email.ts:341
+#: src/app/email.ts:342
 msgid "Filtered"
 msgstr ""
 
-#: src/app/email.ts:343
+#: src/app/email.ts:344
 msgid "from"
 msgstr ""
 
-#: src/app/email.ts:345
+#: src/app/email.ts:346
 msgid "Empty list"
 msgstr ""
 
-#: src/app/email.ts:346
+#: src/app/email.ts:347
 msgid "Filter"
 msgstr ""
 
-#: src/app/email.ts:347
+#: src/app/email.ts:348
 msgid "show all"
 msgstr ""
 
-#: src/app/email.ts:354
+#: src/app/email.ts:355
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.ts:795
+#: src/app/email.ts:797
 msgid "Add"
 msgstr ""
 
-#: src/app/email.ts:994
+#: src/app/email.ts:996
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.ts:1040
-#: src/app/email.ts:2458
+#: src/app/email.ts:1042
+#: src/app/email.ts:2461
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.ts:1042
-#: src/app/email.ts:2460
+#: src/app/email.ts:1044
+#: src/app/email.ts:2463
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.ts:1123
+#: src/app/email.ts:1125
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.ts:1190
+#: src/app/email.ts:1192
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.ts:1191
+#: src/app/email.ts:1193
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.ts:1219
+#: src/app/email.ts:1221
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.ts:1257
+#: src/app/email.ts:1259
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.ts:1330
+#: src/app/email.ts:1332
 msgid "Proceed to the email preview"
 msgstr ""
 
-#: src/app/email.ts:1479
+#: src/app/email.ts:1481
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -13850,121 +13850,121 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.ts:1484
+#: src/app/email.ts:1486
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.ts:1548
+#: src/app/email.ts:1550
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.ts:1549
+#: src/app/email.ts:1551
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.ts:1581
+#: src/app/email.ts:1583
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.ts:1583
+#: src/app/email.ts:1585
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.ts:1624
+#: src/app/email.ts:1626
 msgid ""
 "Do you really want to delete the template with the name "
 "\"`{emailTemplateName}\"?"
 msgstr ""
 
-#: src/app/email.ts:1627
+#: src/app/email.ts:1629
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.ts:1641
+#: src/app/email.ts:1643
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.ts:1658
+#: src/app/email.ts:1660
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.ts:1661
+#: src/app/email.ts:1663
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.ts:1687
+#: src/app/email.ts:1689
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.ts:1688
+#: src/app/email.ts:1690
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.ts:1790
+#: src/app/email.ts:1792
 msgid ""
 "Click \"Yes\" to use the selected personal sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1791
+#: src/app/email.ts:1793
 msgid ""
 "Click \"Yes\" to use the selected \"global\" sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1794
+#: src/app/email.ts:1796
 msgid "Remember the sender choice?"
 msgstr ""
 
-#: src/app/email.ts:1810
+#: src/app/email.ts:1812
 msgid "Preference \"{configKey}\" set to \"{senderTag}\"."
 msgstr ""
 
-#: src/app/email.ts:1833
+#: src/app/email.ts:1835
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.ts:1835
+#: src/app/email.ts:1837
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.ts:2015
+#: src/app/email.ts:2017
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.ts:2016
-#: src/app/email.ts:2169
+#: src/app/email.ts:2018
+#: src/app/email.ts:2171
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.ts:2124
+#: src/app/email.ts:2126
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.ts:2168
+#: src/app/email.ts:2170
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.ts:2283
+#: src/app/email.ts:2285
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.ts:2286
+#: src/app/email.ts:2288
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: src/app/email.ts:2499
+#: src/app/email.ts:2502
 msgid "You will be transferred back to the \"edit-message\" view"
 msgstr ""
 
-#: src/app/email.ts:2500
+#: src/app/email.ts:2503
 msgid ""
 "You have clicked on the \"close\"-button while visiting the \"preview\" tab "
 "which normally just would close the email widget. It has been reported that "
@@ -14208,13 +14208,13 @@ msgstr ""
 msgid "Really allow changing the data-type?"
 msgstr ""
 
-#: src/app/project-participants.ts:892
+#: src/app/project-participants.ts:893
 msgid ""
 "Too many group members, allowed are {limit}, you specified {count}.You will "
 "not be able to save this configuration."
 msgstr ""
 
-#: src/app/project-participants.ts:951
+#: src/app/project-participants.ts:952
 #: src/app/projects.ts:545
 msgid "Unconfirmed, doing nothing."
 msgstr ""
@@ -17348,6 +17348,13 @@ msgid ""
 "    </div>\n"
 "  </body>\n"
 "</html>\n"
+msgstr ""
+
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ContactsService::ASSOCIATES_SUFFIX = 'contacts';
+#: lib/Service/ContactsService.php:697
+#, php-format
+msgid "contacts"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
