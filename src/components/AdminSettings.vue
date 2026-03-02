@@ -488,15 +488,10 @@ import {
   showError,
   showInfo,
 } from '@nextcloud/dialogs'
-
 import { appName as appId } from '../config.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
-
 import SelectMusicians from './SelectMusicians.vue'
-import type { Musician } from '../types/address-book.d.ts'
-
 import SelectProjects from './SelectProjects.vue'
-
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import useTooltipsStore from '../stores/tooltips.ts'
@@ -525,6 +520,8 @@ import {
   END_POINT_REVOKE,
   END_POINT_RECRYPT,
 } from '../../build/ts-types/php-modules/Controller/EncryptionController.ts'
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
+import type { Project } from '../stores/app-data.ts'
 
 const IconCancel = IconEmailVerificationFailed
 
@@ -538,9 +535,7 @@ const logger = new Console(COMPONENT_NAME)
  *
  */
 
-type Project = {
-  id: number,
-}
+type Musician = FrontEndEntity<'Musician'>;
 
 type InitialState = AdminInitialState;
 
