@@ -24,12 +24,15 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use ReflectionMethod;
 use Throwable;
 
 use OCA\Settings\Mailer\NewUserMailHelper;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\GroupInterface;
 use OCP\Group\Backend\ICreateGroupBackend;
 use OCP\Group\Backend\IGetDisplayNameBackend;
+use OCP\Group\Backend\ABackend;
 use OCP\Group\Backend\INamedBackend;
 use OCP\Group\Backend\ISetDisplayNameBackend;
 use OCP\Group\ISubAdmin as ISubAdminManager;
@@ -412,6 +415,7 @@ class CloudAccountsService
    */
   public function ensureGroupBackends(IGroup $group, array $requiredBackends = []):array
   {
+    $this->logInfo('TRY ENSURE GROUP BACKENDS');
     if (empty($requiredBackends)) {
       $requiredBackends = [ 'Database' ];
       $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
@@ -429,20 +433,26 @@ class CloudAccountsService
     $displayName = $group->getDisplayName();
     $groupBackendNames = $group->getBackendNames();
     $missingBackends = array_diff($requiredBackends, $groupBackendNames);
+    /** @var ABackend $backend */
     foreach ($this->groupManager->getBackends() as $backend) {
-      if (!($backend instanceof INamedBackend)) {
+      if (!($backend instanceof INamedBackend) || !($backend instanceof GroupInterface)) {
+        $this->logInfo('SKIPPING BACKEND ' . get_class($backend));
         continue;
       }
       $backendName = $backend->getBackendName();
       if (!in_array($backendName, $missingBackends)) {
         continue;
       }
-      if (!($backend instanceof ICreateGroupBackend)) {
+      if (!$backend->implementsActions(GroupInterface::CREATE_GROUP)) {
         $this->logError('Group ' . $gid . ' is missing in backend "' . $backendName . '", but the backend is not able to create groups.');
         $status[$backendName] = false;
         continue;
       }
-      if (!$backend->createGroup($gid)) {
+      if ($backend->groupExists($gid)) {
+        $this->logError('Backend "' . $backendName . '" already provides the group "' . $gid . '", but the cloud group does not reflect this.');
+        $status[$backendName] = false;
+        continue;
+      } elseif (!$backend->createGroup($gid)) {
         $this->logError('Group ' . $gid . ' is missing in backend "' . $backendName . '", but the backend failed to create it.');
         $status[$backendName] = false;
         continue;
@@ -462,7 +472,7 @@ class CloudAccountsService
       // ignore the result, not so important
     }
     if (($this->groupManager instanceof \OC\Group\Manager) && method_exists($this->groupManager, 'clearCaches')) {
-      $this->groupManager->clearCaches();
+      new ReflectionMethod($this->groupManager, 'clearCaches')->invoke($this->groupManager);
     }
     return $status;
   }

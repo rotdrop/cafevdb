@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023-2025 Claus-Justus Heine
+ * @copyright 2023-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,8 +34,9 @@ use OCP\Group\Events\BeforeUserAddedEvent;
 use OCP\Group\Events\UserAddedEvent;
 use OCP\Group\Events\UserRemovedEvent;
 use OCP\IConfig as ICloudConfig;
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\CloudAccountsService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -51,7 +52,6 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 class GroupMembershipListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class, BeforeUserAddedEvent::class ];
 
@@ -79,7 +79,10 @@ class GroupMembershipListener implements IEventListener
     $cloudConfig = $this->appContainer->get(ICloudConfig::class);
     $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigConstants::USER_GROUP_KEY);
 
+    $this->logger = $this->appContainer->get(LoggerInterface::class);
+
     if (empty($orchestraGroupId)) {
+      $this->logInfo('NOT ORCHESTRA GROUP');
       return;
     }
 
@@ -139,6 +142,7 @@ class GroupMembershipListener implements IEventListener
               }
               break;
             case ($event instanceof UserAddedEvent):
+              $cloudAccountsService->ensureGroupBackends($group);
               $cloudAccountsService->promoteGroupMembership($user, $group);
 
               if (empty($boardMember)) {
@@ -154,16 +158,19 @@ class GroupMembershipListener implements IEventListener
                 $emailProperty->setVerified(IAccountManager::VERIFIED);
                 $accountManager->updateAccount($account);
 
+
+                // message tagging on shared email accounts is really really
+                // annoying as it troubles also all other users. Would be nice if
+                // this could be a per-account setting -- or if Dovecot would
+                // maintain message tags on a per user basis in shared folders.
+                $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
+
                 // add it to the database as well
                 $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
-                $this->flush();
+                /** @var EntityManager $entityManager */
+                $entityManager = $this->appContainer->get(EntityManager::class);
+                $entityManager->flush();
               }
-
-              // message tagging on shared email accounts is really really
-              // annoying as it troubles also all other users. Would be nice if
-              // this could be a per-account setting -- or if Dovecot would
-              // maintain message tags on a per user basis in shared folders.
-              $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
               break;
             case ($event instanceof UserRemovedEvent):
               // core already removes the user from all backends
@@ -186,7 +193,6 @@ class GroupMembershipListener implements IEventListener
       } // switch
     } catch (Throwable $t) {
       try {
-        $this->logger = $this->appContainer->get(ILogger::class);
         $this->logException($t, 'Unable to update account for user ' . $user->getUID());
       } catch (Throwable $ignore) {
         // ignore
