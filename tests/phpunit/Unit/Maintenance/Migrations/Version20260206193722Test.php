@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 #[Attributes\UsesClass(MigrationsNamespace\Version20260130130553::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260207000624::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260131090857::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260303085014::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\GenericUndoable::class)]

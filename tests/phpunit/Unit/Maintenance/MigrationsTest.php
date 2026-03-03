@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 #[Attributes\CoversClass(MigrationsNamespace\Version20260131090857::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\CoversClass(MigrationsNamespace\Version20260207000624::class)]
+#[Attributes\CoversClass(MigrationsNamespace\Version20260303085014::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
@@ -110,6 +111,7 @@ class MigrationsTest extends TestCase
 
   /** {@inheritdoc} */
   #[Attributes\Depends('testVersion19700101000002')]
+  #[Attributes\Depends('testVersion20260303085014')]
   public function testInstruments(): void
   {
     $this->getEntityManager();
@@ -133,6 +135,7 @@ class MigrationsTest extends TestCase
 
   /** {@inheritdoc} */
   #[Attributes\Depends('testVersion19700101000002')]
+  #[Attributes\Depends('testVersion20260303085014')]
   public function testFamilies(): void
   {
     $familyInstruments = [];
@@ -247,6 +250,14 @@ class MigrationsTest extends TestCase
 
   /** @return void */
   #[Attributes\Depends('testVersion20260206193722')]
+  public function testVersion20260303085014(): void
+  {
+    $migration = substr(__METHOD__, -14);
+    $this->applyMigrations($migration);
+  }
+
+  /** @return void */
+  #[Attributes\Depends('testVersion20260303085014')]
   public function testUpToLatest(): void
   {
     $this->applyMigrations('latest');

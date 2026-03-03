@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 #[Attributes\UsesClass(MigrationsNamespace\Version20260108115432::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260206193722::class)]
 #[Attributes\UsesClass(MigrationsNamespace\Version20260207000624::class)]
+#[Attributes\UsesClass(MigrationsNamespace\Version20260303085014::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractUndoable::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\ConsoleLogger::class)]

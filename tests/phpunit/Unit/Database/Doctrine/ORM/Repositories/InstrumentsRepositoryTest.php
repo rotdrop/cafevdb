@@ -69,6 +69,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260108115432::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260130130553::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260131090857::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260303085014::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260206193722::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Maintenance\Migrations\Version20260207000624::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]
@@ -158,6 +159,7 @@ class InstrumentsRepositoryTest extends TestCase
 
     // should fail as translations have not yet been flushed.
     $only = reset($result)->getName();
+    echo $only . PHP_EOL;
     $onlyResult = $this->repository->findNonInstruments(only: [$only]);
     $this->assertEquals(0, count($onlyResult));
 
