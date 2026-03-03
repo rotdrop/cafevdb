@@ -33,6 +33,7 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^9.0.0",
     "globalcitizen/php-iban": "^4.0",
+    "graftak/country-code-helper": "^2.0",
     "guzzlehttp/guzzle": "7.9.3",
     "html2text/html2text": "^4.3",
     "jpgraph/jpgraph": "*",
@@ -56,7 +57,7 @@
     "tuqqu/gender-detector": "^0.5.2",
     "guzzlehttp/promises": "2.2.0",
     "guzzlehttp/psr7": "2.7.1",
-    "symfony/translation": "v6.4.30"
+    "symfony/translation": "v6.4.32"
   },
   "provide": {
     "psr/clock": "*",
