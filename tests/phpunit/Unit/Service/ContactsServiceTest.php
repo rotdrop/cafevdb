@@ -149,12 +149,15 @@ class ContactsServiceTest extends TestCase
   {
   }
 
+  private const CARD_UID = 'a073db1b-fe3f-40aa-ad53-9c82a309351f';
+
   // from https://gitlab.com/pwithnall/vcard-test-suite
   private const VCARD_DATA = 'BEGIN:VCARD
 VERSION:3.0
 N:Doe;John;;;
 FN:John Doe
 ORG:Example.com Inc.;
+UID:' . self::CARD_UID . '
 TITLE:Imaginary test person
 EMAIL;type=INTERNET;type=WORK;type=pref:johnDoe@example.org
 TEL;type=WORK;type=pref:+1 617 555 1212
@@ -196,6 +199,7 @@ END:VCARD
 
   private const FLAT_CONTACT_DATA = [
     'URI' => 'uri.vcf',
+    'UID' => self::CARD_UID,
     'VERSION' => '3.0',
     'N' => 'Doe;John;;;',
     'FN' => 'John Doe',
@@ -327,10 +331,13 @@ END:VCARD
       preferWork: true,
       keepExisting: false, // does not matter here
     );
+
     $this->assertEquals(
       EnumParticipationStatus::ASSOCIATED,
       $entity->getDefaultParticipationStatus(),
     );
+
+    $this->assertEquals(self::CARD_UID, (string)$entity->getUuid());
   }
 
   /** @return void */
@@ -347,7 +354,9 @@ END:VCARD
       $this->mockProvider->appName,
       $this->project->getName() . $appL10N->t(TestedService::ASSOCIATES_SUFFIX),
     ];
+
     $vCard = $this->service->export($this->musician);
+
     $this->assertInstanceOf(VCard::class, $vCard);
     $this->assertEqualsCanonicalizing($expectedCategories, $vCard->CATEGORIES->getParts());
   }
@@ -369,7 +378,9 @@ END:VCARD
     $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(['name' => 'Viola']);
     $this->assertEquals(1, count($instruments));
     $this->musician->addInstrument($instruments[0]);
+
     $result = $this->service->mergeMusician($contactData, $this->musician);
+
     $appL10N = $this->appContainer->get(\OCA\CAFEVDB\Service\Registration::APP_L10N);
     $expectedCategories = [
       'ACategoryThatShouldBeKept',

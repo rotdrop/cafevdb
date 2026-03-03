@@ -30,7 +30,7 @@ use UnexpectedValueException;
 use Sabre\VObject;
 use Sabre\VObject\Component\VCard;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use Psr\Log\LoggerInterface;
@@ -97,7 +97,7 @@ class ContactsCardEventListener implements IEventListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     private bool $isCLI,
   ) {
   }
@@ -122,7 +122,7 @@ class ContactsCardEventListener implements IEventListener
   /**
    * @return bool Whether the handler has been entered.
    */
-  public function isActive():bool
+  public function isActive(): bool
   {
     return $this->active;
   }
@@ -343,11 +343,11 @@ class ContactsCardEventListener implements IEventListener
                     $project,
                     $organization ? ParticipationContext::ASSOCIATES : ParticipationContext::PARTICIPANTS,
                   );
-                  $this->logInfo('Add Musician Status ' . print_r($status, true));
+                  // $this->logInfo('Add Musician Status ' . print_r($status, true));
                 }
               }
+              $mergeBack = true;
             }
-            $mergeBack = true;
           } else {
             $this->logInfo('FOUND MUSICIAN WITH ID ' . $musician->getId());
             if (in_array($appName, $categories)) {
@@ -401,7 +401,7 @@ class ContactsCardEventListener implements IEventListener
                     $project,
                     $organization ? ParticipationContext::ASSOCIATES : ParticipationContext::PARTICIPANTS,
                   );
-                  $this->logInfo('Add Musician Status ' . print_r($status, true));
+                  // $this->logInfo('Add Musician Status ' . print_r($status, true));
                 }
               }
 
@@ -432,6 +432,8 @@ class ContactsCardEventListener implements IEventListener
           if ($mergeBack) {
             // Merge the musician entity back into the adddress-book in
             // order to pick up category normalization etc.
+            /** @var ContactsService $contactsService */
+            $contactsService = $this->appContainer->get(ContactsService::class);
             $addressBook = $contactsService->addressBookByUri($addressBookUri);
             if (!empty($addressBook)) {
               $contactCard = $contactsService->findMusicianContact($musician);

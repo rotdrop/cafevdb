@@ -33,6 +33,7 @@
     "ezyang/htmlpurifier": "^4.13.0",
     "giggsey/libphonenumber-for-php": "^9.0.0",
     "globalcitizen/php-iban": "^4.0",
+    "graftak/country-code-helper": "^2.0",
     "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
     "jpgraph/jpgraph": "*",

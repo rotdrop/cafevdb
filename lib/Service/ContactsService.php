@@ -25,18 +25,20 @@
 namespace OCA\CAFEVDB\Service;
 
 use DateTimeImmutable;
+use UnexpectedValueException;
 use Throwable;
-
 
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
+use Graftak\CountryCodeHelper;
+use Graftak\CountryCodeHelper\CountryCodes;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAddressBook;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
 use OCP\Image;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\GenericUndoable;
@@ -100,7 +102,7 @@ class ContactsService
     private Transliterator $transliterator,
     protected ConfigService $configService,
     protected EntityManager $entityManager,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
   ) {
     $this->l = $this->configService->getAppL10n();
   }
@@ -573,6 +575,14 @@ class ContactsService
         $entityValues['city'] = $address[3];
         $entityValues['postalCode'] = $address[5];
         $entityValues['country'] = $address[6];
+        if (strlen($entityValues['country']) > 2) {
+          // we assume that a two letter code is already ISO 3166
+          $iso3166 = CountryCodeHelper::map($entityValues['country'], CountryCodes::ALPHA_2);
+          if (empty($iso3166)) {
+            throw new UnexpectedValueException('Unable to convert the given country "' . $entityValues['country'] . '" to two-letter ISO3166 format.');
+          }
+          $entityValues['country'] = $iso3166;
+        }
 
         $typed = !empty($type);
 
@@ -622,10 +632,10 @@ class ContactsService
       if (!empty($missingInstruments)) {
         $instruments = $instrumentsRepository->findBy(
           [ 'name' => $missingInstruments ],
-          orderBy: [ 'name' => 'INDEX' ],
+          // orderBy: [ 'name' => 'INDEX' ], cannot work with current state of hacked gedmo Translatable
         );
         foreach ($missingInstruments as $instrumentName) {
-          $instrument = $instruments[$instrumentName];
+          $instrument = array_find($instruments, fn(Entities\Instrument $instrument) => $instrument->getName() == $instrumentName);
           if (empty($instrument)) {
             continue;
           }
@@ -879,7 +889,7 @@ class ContactsService
     $instrumentCategories = $this->getDatabaseRepository(Entities\Instrument::class)->findNames();
     $projectCategories = $this->getDatabaseRepository(Entities\Project::class)->findNames();
     // Remove all categories which are set by us
-    $targetCategories = array_diff(explode(',', $target['CATEGORIES']), $instrumentCategories, [$this->appName89]);
+    $targetCategories = array_diff(explode(',', $target['CATEGORIES']), $instrumentCategories, [$this->appName()]);
     // Remove all categories starting whith a project name.
     foreach ($projectCategories as $projectName) {
       foreach ($targetCategories as $index => $category) {
@@ -890,7 +900,6 @@ class ContactsService
     }
 
     if ($musician->getDeleted() !== null) {
-      echo 'DELETED' . PHP_EOL;
       // unlink the contact and remove all app-categories
       sort($targetCategories);
       $target['CATEGORIES'] = implode(',', $targetCategories);
