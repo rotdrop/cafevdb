@@ -54,6 +54,7 @@ class InstrumentFamily implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
   private string $family;
 
+  #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (family) VIRTUAL')]
   private ?string $untranslatedFamily = null;
 
   /** @var Collection<Instrument> */

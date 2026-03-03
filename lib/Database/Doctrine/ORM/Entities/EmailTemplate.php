@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,7 @@ class EmailTemplate implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 128, unique: true, nullable: false)]
   private string $tag;
 
+  #[ORM\Column(type: 'string', length: 128, nullable: true, unique: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (tag) VIRTUAL')]
   private ?string $untranslatedTag = null;
 
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]

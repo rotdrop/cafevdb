@@ -54,6 +54,14 @@ class Instrument implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 128, nullable: false, unique: true)]
   private string $name;
 
+  /**
+   * For MariaDB generated columns must be nullable, otherwise the schema
+   * manager generates bogus results. Note that we leave out "generated" as
+   * Gedmo Translatable will keep the value in sync, just on load we will just
+   * automatically fetch the untranslated value into this trivially generated
+   * field.
+   */
+  #[ORM\Column(type: 'string', length: 128, nullable: true, unique: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (name) VIRTUAL')]
   private ?string $untranslatedName = null;
 
   #[ORM\Column(type: 'integer', nullable: false, options: ['comment' => 'Orchestral Ordering'])]

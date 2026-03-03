@@ -82,6 +82,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * Untranslated variant of self:$label, filled automatically by
    * Gedmo\Translatable
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (label) VIRTUAL')]
   private ?string $untranslatedLabel = null;
 
   /**

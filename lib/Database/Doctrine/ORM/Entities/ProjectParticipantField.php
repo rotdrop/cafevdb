@@ -79,6 +79,7 @@ class ProjectParticipantField implements \ArrayAccess
    * Untranslated variant of self:$name, filled automatically by
    * Gedmo\Translatable
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (name) VIRTUAL')]
   private ?string $untranslatedName = null;
 
   #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
@@ -120,15 +121,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var string
    */
-  #[Gedmo\Translatable(untranslated: 'untranslatedTooltip')]
+  #[Gedmo\Translatable()]
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private ?string $tooltip = null;
-
-  /**
-   * Untranslated variant of self::$tooltip, filled automatically by
-   * Gedmo\Translatable
-   */
-  private ?string $untranslatedTooltip = null;
 
   #[Gedmo\Translatable(untranslated: 'untranslatedTab')]
   #[ORM\Column(type: 'string', length: 256, nullable: true, options: ['comment' => 'Tab to display the field in. If empty, then the project tab is used.'])]
@@ -138,6 +133,7 @@ class ProjectParticipantField implements \ArrayAccess
    * Untranslated variant of self::$tab, filled automatically by
    * Gedmo\Translatable
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true, insertable: false, updatable: false, columnDefinition: 'VARCHAR(128) GENERATED ALWAYS AS (tab) VIRTUAL')]
   private ?string $untranslatedTab = null;
 
   #[ORM\Column(type: 'integer', nullable: true)]
@@ -664,16 +660,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getTooltip()
   {
     return $this->tooltip;
-  }
-
-  /**
-   * Get untranslatedTooltip.
-   *
-   * @return string
-   */
-  public function getUntranslatedTooltip()
-  {
-    return $this->untranslatedTooltip;
   }
 
   /**
