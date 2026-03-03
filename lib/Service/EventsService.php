@@ -487,6 +487,7 @@ class EventsService
           // the siblings are ordered by start data, bail out if this is
           // beyond limit.
           if ($sibling->DTSTART->getDateTime() > $futureLimit) {
+            $this->logInfo('Stopping sibling generation at date ' . $futureLimit->format('Y-m-d'));
             break;
           }
           $recurrenceId = $sibling->{'RECURRENCE-ID'}->getDateTime()->getTimestamp();
@@ -500,11 +501,13 @@ class EventsService
           $eventIterator->next();
         }
       } catch (NoInstancesException $e) {
+        $this->logError('No event instances for "' . $uid . '@' . $calendarId . '".');
         // This event is recurring, but it doesn't have a single
         // instance. We are skipping this event from the output
         // entirely.
         $siblings = [];
       } catch (MaxInstancesExceededException $e) {
+        $this->logError('Maximum number of recurring event siblings exceeded for "' . $uid . '@' . $calendarId . '" after generating ' . count($siblings) . ' siblings.');
         // hopefully happens never, but ... just live with the sequence we
         // have.
       }
