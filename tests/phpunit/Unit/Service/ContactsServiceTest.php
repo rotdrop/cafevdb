@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Tests\Unit\Service;
 
+use UnexpectedValueException;
 use Throwable;
 
 use PHPUnit\Framework\Attributes;
@@ -99,7 +100,20 @@ class ContactsServiceTest extends TestCase
 
   private ContainerInterface $appContainer;
 
+  private GeoCodingService $geoCodingService;
+
   private IAvatarManager $avatarManager;
+
+  private const COUNTRY_NAMES = [
+    'en' => [
+      'AQ' => 'Antarctica',
+      'US' => 'United States',
+    ],
+    'de' => [
+      'AQ' => 'Antarktis',
+      'US' => 'USA',
+    ],
+  ];
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -117,8 +131,24 @@ class ContactsServiceTest extends TestCase
 
     $this->appContainer = $this->mockProvider->getAppContainer();
 
-    $geoCodingService = $this->createStub(GeoCodingService::class);
-    $this->mockProvider->registerClassInstance(GeoCodingService::class, $geoCodingService, global: true);
+    $this->geoCodingService = $this->createStub(GeoCodingService::class);
+    $this->geoCodingService
+      ->method('getCountryISOFromName')
+      ->willReturnCallback(
+        function(string $l10nCountry): ?string {
+          switch ($l10nCountry) {
+            case 'Deutschland':
+            case 'Germany':
+              return 'DE';
+            default:
+              return null;
+          }
+        }
+      );
+    $this->geoCodingService
+      ->method('countryNames')
+      ->willReturnCallback(fn(string $language) => self::COUNTRY_NAMES[$language] ?? []);
+    $this->mockProvider->registerClassInstance(GeoCodingService::class, $this->geoCodingService, global: true);
 
     $this->avatarManager = $this->createStub(IAvatarManager::class);
     $image = $this->createStub(Image::class);
@@ -152,7 +182,21 @@ class ContactsServiceTest extends TestCase
   private const CARD_UID = 'a073db1b-fe3f-40aa-ad53-9c82a309351f';
 
   // from https://gitlab.com/pwithnall/vcard-test-suite
-  private const VCARD_DATA = 'BEGIN:VCARD
+  private const VCARD_DATA = [
+    [
+      'expectations' => [
+        'adr' => [
+          ';;2 Enterprise Avenue;Worktown;NY;01111;USA',
+          ';;3 Acacia Avenue;Hoemtown;MA;02222;USA',
+        ],
+        'adrTyped' => [
+          ['type' => 'WORK', 'value' => ';;2 Enterprise Avenue;Worktown;NY;01111;USA'],
+          ['type' => 'HOME,pref', 'value' => ';;3 Acacia Avenue;Hoemtown;MA;02222;USA'],
+        ],
+        'status' => EnumParticipationStatus::ASSOCIATED,
+        'uuid' => self::CARD_UID,
+      ],
+      'data' => 'BEGIN:VCARD
 VERSION:3.0
 N:Doe;John;;;
 FN:John Doe
@@ -178,23 +222,44 @@ item5.X-ABLabel:_$!<Friend>!$_
 CATEGORIES:Work,Test group
 X-ABUID:5AD380FD-B2DE-4261-BA99-DE1D1DB52FBE\:ABPerson
 END:VCARD
-';
+'
+    ],
+    [
+      'expectations' => [
+        'exception' => UnexpectedValueException::class,
+      ],
+      'data' => 'BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Sabre//Sabre VObject 4.5.6//EN
+UID:6f4999e1-1f05-4842-b7b4-35942c050953
+REV;VALUE=DATE-TIME:20260304T091412Z
+FN:Testkontakt L10N-DE
+NOTE:Das ist eine Notiz.
+ADR;TYPE=HOME:;;Finkenweg 3;Nirgend-Neustadt;Altland;12345;BlahLand
+EMAIL;TYPE=HOME:testkontakt@l10n-de.tld
+TEL;TYPE=HOME,VOICE:+123456789
+GENDER:O
+CATEGORIES:Violine,Mensch
+END:VCARD
+',
+    ],
+  ];
 
   /** @return void */
   public function testFlattenVCard(): void
   {
-    $vCard = VObject\Reader::read(self::VCARD_DATA);
-    $result = $this->service->flattenVCard('uri.vcf', $vCard, withTypes: false);
-    $this->assertEquals([';;2 Enterprise Avenue;Worktown;NY;01111;USA', ';;3 Acacia Avenue;Hoemtown;MA;02222;USA'], $result['ADR']);
-    $result = $this->service->flattenVCard('uri.vcf', $vCard, withTypes: true);
-    $this->assertEquals(
-      [
-        ['type' => 'WORK', 'value' => ';;2 Enterprise Avenue;Worktown;NY;01111;USA'],
-        ['type' => 'HOME,pref', 'value' => ';;3 Acacia Avenue;Hoemtown;MA;02222;USA'],
-      ],
-      $result['ADR'],
-    );
-    // var_export($result);
+    foreach (self::VCARD_DATA as $vCardData) {
+      if ($vCardData['expectations']['exception'] ?? null) {
+        continue;
+      }
+      $vCard = VObject\Reader::read($vCardData['data']);
+
+      $result = $this->service->flattenVCard('uri.vcf', $vCard, withTypes: false);
+      $this->assertEquals($vCardData['expectations']['adr'], $result['ADR']);
+
+      $result = $this->service->flattenVCard('uri.vcf', $vCard, withTypes: true);
+      $this->assertEquals($vCardData['expectations']['adrTyped'], $result['ADR']);
+    }
   }
 
   private const FLAT_CONTACT_DATA = [
@@ -325,19 +390,33 @@ END:VCARD
   /** @return void */
   public function testImportVCard(): void
   {
-    $entity = $this->service->importVCard(
-      entity: null,
-      vCard: VObject\Reader::read(self::VCARD_DATA),
-      preferWork: true,
-      keepExisting: false, // does not matter here
-    );
+    foreach (self::VCARD_DATA as $vCardData) {
+      try {
+        $entity = $this->service->importVCard(
+          entity: null,
+          vCard: VObject\Reader::read($vCardData['data']),
+          preferWork: true,
+          keepExisting: false, // does not matter here
+        );
+      } catch (Throwable $t) {
+        if ($vCardData['expectations']['exception'] ?? null) {
+          $this->assertInstanceOf($vCardData['expectations']['exception'], $t);
+          continue;
+        } else {
+          throw $t;
+        }
+      }
 
-    $this->assertEquals(
-      EnumParticipationStatus::ASSOCIATED,
-      $entity->getDefaultParticipationStatus(),
-    );
+      $this->assertEquals(
+        $vCardData['expectations']['status'],
+        $entity->getDefaultParticipationStatus(),
+      );
 
-    $this->assertEquals(self::CARD_UID, (string)$entity->getUuid());
+      $this->assertEquals(
+        $vCardData['expectations']['uuid'],
+        (string)$entity->getUuid(),
+      );
+    }
   }
 
   /** @return void */
@@ -359,6 +438,13 @@ END:VCARD
 
     $this->assertInstanceOf(VCard::class, $vCard);
     $this->assertEqualsCanonicalizing($expectedCategories, $vCard->CATEGORIES->getParts());
+    // $flatVCard = $this->service->flattenVCard(cardUri: null, vCard: $vCard);
+    // print_r($flatVCard);
+
+    // test L10N country name
+    $addressParts = $vCard->ADR->getParts();
+    $appLanguage = $this->appContainer->get(Service\Registration::APP_LANGUAGE);
+    $this->assertEquals(self::COUNTRY_NAMES[$appLanguage][$this->musician->getCountry()], $addressParts[6]);
   }
 
   /** @return void */

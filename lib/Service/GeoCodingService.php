@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use DateTimeImmutable;
+use Throwable;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -142,7 +143,7 @@ class GeoCodingService
       } else {
         $this->debug($url);
       }
-      $start = hrtime(true);
+      // $start = hrtime(true);
       $ctx = stream_context_create([
         'http'=> [
           'timeout' => 240,
@@ -826,7 +827,7 @@ class GeoCodingService
             $this->persist($entity);
             try {
               $this->flush();
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logError('PostalCodeTranslation ' . $geoPostalCode->getId() . ' target ' . $lang . ' new ' . (int)$isNew . ' but caught exception');
               $this->logException($t);
             }
@@ -861,7 +862,7 @@ class GeoCodingService
               $this->persist($entity);
               try {
                 $this->flush();
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 $this->logError('GeoStateProvince ' . implode('-', [$country, $code, $language]) . ' new ' . (int)$isNew . ' but caught exception');
                 $this->logException($t);
               }
@@ -1063,6 +1064,31 @@ class GeoCodingService
   }
 
   /**
+   * Query the database for the ISO two-letter code given a country name in
+   * any language.
+   *
+   * @param string $l10nCountry For convenience it is allowed to pass a
+   * two-letter code which then will just be returned.
+   *
+   * @return ?string
+   */
+  public function getCountryISOFromName(string $l10nCountry): ?string
+  {
+    $query = $this->queryBuilder()
+      ->select('gc.iso')
+      ->from(GeoCountry::class, 'gc')
+      ->distinct(true)
+      ->where($this->expr()->eq('gc.l10nName', ':l10nCountry'))
+      ->setParameter('l10nCountry', $l10nCountry)
+      ->getQuery();
+    $result = array_values($query->getResult('COLUMN_HYDRATOR'));
+    if (count($result) > 1) {
+      $this->logError('Got more than one code for country "' . $l10nCountry . '": ' . print_r($result, true));
+    }
+    return $result[0] ?? null;
+  }
+
+  /**
    * @param null|string $extraLang Extra language (one) to add if given.
    *
    * @return array The languages supported in the database tables.
@@ -1205,7 +1231,8 @@ class GeoCodingService
   }
 
   /**
-   * @param null|string $country Restrict the names to this country.
+   * @param null|string $country Restrict the names to this country. This is a
+   * two letter ISO country code.
    *
    * @param string $language Language to update, use current user's language if not given.
    *

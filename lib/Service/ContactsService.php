@@ -575,25 +575,48 @@ class ContactsService
         $entityValues['city'] = $address[3];
         $entityValues['postalCode'] = $address[5];
         $entityValues['country'] = $address[6];
-        if (strlen($entityValues['country']) > 2) {
-          // we assume that a two letter code is already ISO 3166
-          $iso3166 = CountryCodeHelper::map($entityValues['country'], CountryCodes::ALPHA_2);
-          if (empty($iso3166)) {
-            throw new UnexpectedValueException('Unable to convert the given country "' . $entityValues['country'] . '" to two-letter ISO3166 format.');
-          }
-          $entityValues['country'] = $iso3166;
-        }
-
         $typed = !empty($type);
 
-        $geoCodingService = $this->geoCodingService();
-        $languages = $geoCodingService->getLanguages(true);
-        foreach ($languages as $language) {
-          $countries = $geoCodingService->countryNames($language);
-          $iso = array_search($entityValues['country'], $countries);
-          if ($iso !== false) {
-            $entityValues['country'] = $iso;
-          }
+        $iso = null;
+        $country = $entityValues['country'] ?? '';
+        $exception = null;
+        switch (strlen($country)) {
+          case 0:
+          case 1:
+            break;
+          case 3:
+            try {
+              $iso = CountryCodeHelper::map($country, CountryCodes::ALPHA_2, CountryCodes::ALPHA_3);
+            } catch (Throwable $t) {
+              $exception = $t;
+              // $this->logException($t, 'Unable to map "' . $country . '" to a two-letter ISO code.');
+            }
+            break;
+          case 2:
+            $iso = $country; // unchecked
+            break;
+          default:
+            $geoCodingService = $this->geoCodingService();
+            $iso = $geoCodingService->getCountryISOFromName($country);
+            if (empty($iso)) {
+              $languages = $geoCodingService->getLanguages(true);
+              foreach ($languages as $language) {
+                $countries = $geoCodingService->countryNames($language);
+                $iso = array_search($country, $countries);
+                if ($iso !== false) {
+                  break;
+                }
+              }
+            }
+            break;
+        }
+        if (!empty($iso)) {
+          $entityValues['country'] = $iso;
+        } elseif (!empty($entityValues['country'])) {
+          throw new UnexpectedValueException(
+            message: 'Unable to convert the given country "' . $entityValues['country'] . '" to a two-letter ISO3166 format.',
+            previous: $exception,
+          );
         }
       }
     } // ADR
@@ -794,7 +817,8 @@ class ContactsService
     if (!empty($musician['updated'])) {
       $vCard->add('REV', gmdate('Ymd\THis\Z', self::convertToDateTime($musician['updated'])->getTimestamp()));
     }
-    $countryNames = $this->geoCodingService()->countryNames('en');
+    $appLanguage = $this->appContainer->get(Registration::APP_LANGUAGE) ?? 'en';
+    $countryNames = $this->geoCodingService()->countryNames($appLanguage);
     if (!isset($countryNames[$musician['country']])) {
       $country = null;
     } else {
@@ -981,12 +1005,16 @@ class ContactsService
    * \false if there is no database transaction active and \true if it was
    * otherwise possible and not redundant to register a pre-commit action.
    */
-  public function registerContactSynchronization(Entities\Musician $musician, ?string $oldAddressBookUri = null): ?bool
-  {
+  public function registerContactSynchronization(
+    Entities\Musician $musician,
+    ?string $oldAddressBookUri = null,
+  ): ?bool {
     if (!empty($this->contactSynchronizations[$musician->getId()])) {
-      return false;
+      $this->logInfo('Contact sync already active for ' . $musician->getPublicName());
+      return null;
     }
     if (!$this->entityManager->isTransactionActive()) {
+      $this->logInfo('Called without active database transaction for ' . $musician->getPublicName());
       return false;
     }
     $this->contactSynchronizations[$musician->getId()] = $musician;
