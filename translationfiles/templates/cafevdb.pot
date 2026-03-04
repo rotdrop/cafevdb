@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2026-03-02 11:54+0100\n"
+"POT-Creation-Date: 2026-03-03 23:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1518,7 +1518,7 @@ msgid "Unknown request: `%s'."
 msgstr ""
 
 #: lib/Controller/EmailFormController.php:1077
-#: src/app/email.ts:2227
+#: src/app/email.ts:2232
 msgid "Form Input"
 msgstr ""
 
@@ -4203,7 +4203,7 @@ msgid "ExampleFormletter"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:657
-#: src/app/email.ts:1645
+#: src/app/email.ts:1650
 msgid "Unknown Template"
 msgstr ""
 
@@ -4594,47 +4594,47 @@ msgstr ""
 msgid "No payment attached to the donation receipt with id %d."
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:998
+#: lib/EmailForm/RecipientsFilter.php:1000
 msgid "project mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1002
+#: lib/EmailForm/RecipientsFilter.php:1004
 msgid "announcements mailing list"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1006
+#: lib/EmailForm/RecipientsFilter.php:1008
 msgid "musician database"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1010
+#: lib/EmailForm/RecipientsFilter.php:1012
 msgid "all known musicians"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1014
+#: lib/EmailForm/RecipientsFilter.php:1016
 msgid "all musicians NOT participating"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1018
+#: lib/EmailForm/RecipientsFilter.php:1020
 msgid "participants (confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1022
+#: lib/EmailForm/RecipientsFilter.php:1024
 msgid "participants (preliminary)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1026
+#: lib/EmailForm/RecipientsFilter.php:1028
 msgid "participants (preliminary and confirmed)"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1030
+#: lib/EmailForm/RecipientsFilter.php:1032
 msgid "all musicians except confirmed participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1034
+#: lib/EmailForm/RecipientsFilter.php:1036
 msgid "all musicians except preliminary participants"
 msgstr ""
 
-#: lib/EmailForm/RecipientsFilter.php:1038
+#: lib/EmailForm/RecipientsFilter.php:1040
 msgid "no one"
 msgstr ""
 
@@ -4961,7 +4961,7 @@ msgid "User Recryption Request for {fancy}"
 msgstr ""
 
 #: lib/Notifications/Notifier.php:110
-#: src/app/email.ts:2231
+#: src/app/email.ts:2236
 msgid "Accept"
 msgstr ""
 
@@ -6194,7 +6194,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:931
 #: lib/PageRenderer/ProjectAssociates.php:1082
 #: lib/PageRenderer/ProjectParticipants.php:1351
-#: src/app/email.ts:2230
+#: src/app/email.ts:2235
 #: templates/emailform/part.emailform.composer.php:230
 #: templates/emailform/part.emailform.composer.php:250
 msgid "Address Book"
@@ -7370,60 +7370,60 @@ msgid ""
 "deleted."
 msgstr ""
 
-#: lib/Service/EventsService.php:866
+#: lib/Service/EventsService.php:869
 #, php-format
 msgid "until %s"
 msgstr ""
 
-#: lib/Service/EventsService.php:932
-#: lib/Service/EventsService.php:1062
+#: lib/Service/EventsService.php:935
+#: lib/Service/EventsService.php:1065
 msgid "Unknown Calendar"
 msgstr ""
 
-#: lib/Service/EventsService.php:947
+#: lib/Service/EventsService.php:950
 msgid "Miscellaneous Calendars"
 msgstr ""
 
-#: lib/Service/EventsService.php:1309
+#: lib/Service/EventsService.php:1312
 #, php-format
 msgid "Unable to ensure the existence of the system tag \"%s\"."
 msgstr ""
 
-#: lib/Service/EventsService.php:1774
-#: lib/Service/EventsService.php:1998
+#: lib/Service/EventsService.php:1777
+#: lib/Service/EventsService.php:2001
 #, php-format
 msgid "Unable to unregister the deleted calendar event with uri \"%s\"."
 msgstr ""
 
-#: lib/Service/EventsService.php:2700
+#: lib/Service/EventsService.php:2703
 #, php-format
 msgid "Found more than one (%d) project registration calendar events."
 msgstr ""
 
-#: lib/Service/EventsService.php:2733
+#: lib/Service/EventsService.php:2736
 msgid "Unsupported argument type."
 msgstr ""
 
-#: lib/Service/EventsService.php:2780
+#: lib/Service/EventsService.php:2783
 #, php-format
 msgid ""
 "The project \"%1$s\" has a registration start date %2$s, but no registration "
 "deadline."
 msgstr ""
 
-#: lib/Service/EventsService.php:2795
+#: lib/Service/EventsService.php:2798
 #, php-format
 msgid "Registration for %s"
 msgstr ""
 
-#: lib/Service/EventsService.php:2801
+#: lib/Service/EventsService.php:2804
 #, php-format
 msgid ""
 "Project registration period for the project \"%1$s\". Participants can apply "
 "for participation using the public url %2$s."
 msgstr ""
 
-#: lib/Service/EventsService.php:2805
+#: lib/Service/EventsService.php:2808
 msgid "CyberSpace"
 msgstr ""
 
@@ -13253,7 +13253,7 @@ msgstr ""
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
 #: specialVueFakeDummyForL10nScript.js:5052
-#: lib/Service/EventsService.php:1270
+#: lib/Service/EventsService.php:1273
 #, php-format
 msgid "record absence"
 msgstr ""
@@ -13501,9 +13501,9 @@ msgstr ""
 #: src/app/blog.ts:388
 #: src/app/cloud-file-picker-dialog.ts:81
 #: src/app/cloud-file-picker-dialog.ts:109
-#: src/app/email.ts:190
-#: src/app/email.ts:997
-#: src/app/email.ts:1126
+#: src/app/email.ts:195
+#: src/app/email.ts:1002
+#: src/app/email.ts:1131
 #: src/app/project-participant-fields.ts:340
 #: src/app/settings.ts:1374
 #: src/app/settings.ts:1387
@@ -13741,108 +13741,108 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
-#: src/app/email.ts:190
+#: src/app/email.ts:195
 msgid "Not called from main email-form."
 msgstr ""
 
-#: src/app/email.ts:332
+#: src/app/email.ts:337
 msgid "Move all"
 msgstr ""
 
-#: src/app/email.ts:333
+#: src/app/email.ts:338
 msgid "Select all"
 msgstr ""
 
-#: src/app/email.ts:334
+#: src/app/email.ts:339
 msgid "Move selected"
 msgstr ""
 
-#: src/app/email.ts:335
+#: src/app/email.ts:340
 msgid "Remove selected"
 msgstr ""
 
-#: src/app/email.ts:336
-#: src/app/email.ts:337
+#: src/app/email.ts:341
+#: src/app/email.ts:342
 msgid "Remove all"
 msgstr ""
 
-#: src/app/email.ts:338
+#: src/app/email.ts:343
 msgid "Remaining Recipients"
 msgstr ""
 
-#: src/app/email.ts:339
+#: src/app/email.ts:344
 msgid "Selected Recipients"
 msgstr ""
 
-#: src/app/email.ts:342
+#: src/app/email.ts:347
 msgid "Filtered"
 msgstr ""
 
-#: src/app/email.ts:344
+#: src/app/email.ts:349
 msgid "from"
 msgstr ""
 
-#: src/app/email.ts:346
+#: src/app/email.ts:351
 msgid "Empty list"
 msgstr ""
 
-#: src/app/email.ts:347
+#: src/app/email.ts:352
 msgid "Filter"
 msgstr ""
 
-#: src/app/email.ts:348
+#: src/app/email.ts:353
 msgid "show all"
 msgstr ""
 
-#: src/app/email.ts:355
+#: src/app/email.ts:360
 msgid "Click on the names to move the respective person to the other box"
 msgstr ""
 
-#: src/app/email.ts:797
+#: src/app/email.ts:802
 msgid "Add"
 msgstr ""
 
-#: src/app/email.ts:996
+#: src/app/email.ts:1001
 msgid "Unknown form element: {formElement}"
 msgstr ""
 
-#: src/app/email.ts:1042
-#: src/app/email.ts:2461
+#: src/app/email.ts:1047
+#: src/app/email.ts:2466
 msgid "Em@il Form for {projectName}"
 msgstr ""
 
-#: src/app/email.ts:1044
-#: src/app/email.ts:2463
+#: src/app/email.ts:1049
+#: src/app/email.ts:2468
 msgid "Em@il Form"
 msgstr ""
 
-#: src/app/email.ts:1125
+#: src/app/email.ts:1130
 msgid "Unknown request: {operation} / {topic}"
 msgstr ""
 
-#: src/app/email.ts:1192
+#: src/app/email.ts:1197
 msgid "Sending message {active} out of {total}"
 msgstr ""
 
-#: src/app/email.ts:1193
+#: src/app/email.ts:1198
 msgid "Message delivery in progress"
 msgstr ""
 
-#: src/app/email.ts:1221
+#: src/app/email.ts:1226
 msgid "Message Delivery Status"
 msgstr ""
 
-#: src/app/email.ts:1259
+#: src/app/email.ts:1264
 msgid ""
 "Email sending is in progress. Leaving the page now will cancel the email "
 "submission."
 msgstr ""
 
-#: src/app/email.ts:1332
+#: src/app/email.ts:1337
 msgid "Proceed to the email preview"
 msgstr ""
 
-#: src/app/email.ts:1481
+#: src/app/email.ts:1486
 msgid ""
 "Do you want to delete the auto-save backup copy of the current message-draft "
 "(id = {id})?<br/>If you answer \"no\" then the current message will be saved "
@@ -13850,121 +13850,121 @@ msgid ""
 "someone else deletes it manually."
 msgstr ""
 
-#: src/app/email.ts:1486
+#: src/app/email.ts:1491
 msgid "Delete Auto-Save Draft?"
 msgstr ""
 
-#: src/app/email.ts:1550
+#: src/app/email.ts:1555
 msgid "Draft-auto-save interval set to {seconds} seconds."
 msgstr ""
 
-#: src/app/email.ts:1551
+#: src/app/email.ts:1556
 msgid "Draft-auto-save switched off"
 msgstr ""
 
-#: src/app/email.ts:1583
+#: src/app/email.ts:1588
 msgid ""
 "A template with the name `{emailTemplateName}' already exists, do you want "
 "to overwrite it?"
 msgstr ""
 
-#: src/app/email.ts:1585
+#: src/app/email.ts:1590
 msgid "Overwrite existing template?"
 msgstr ""
 
-#: src/app/email.ts:1626
+#: src/app/email.ts:1631
 msgid ""
 "Do you really want to delete the template with the name "
 "\"`{emailTemplateName}\"?"
 msgstr ""
 
-#: src/app/email.ts:1629
+#: src/app/email.ts:1634
 msgid "Really Delete Template?"
 msgstr ""
 
-#: src/app/email.ts:1643
+#: src/app/email.ts:1648
 msgid "Cannot delete non-existing template `{emailTemplateName}'"
 msgstr ""
 
-#: src/app/email.ts:1660
+#: src/app/email.ts:1665
 msgid ""
 "Do you really want to delete the backup copy of the current message (id = "
 "{id})?"
 msgstr ""
 
-#: src/app/email.ts:1663
+#: src/app/email.ts:1668
 msgid "Really Delete Draft?"
 msgstr ""
 
-#: src/app/email.ts:1689
+#: src/app/email.ts:1694
 msgid "There are currently no stored draft messages available."
 msgstr ""
 
-#: src/app/email.ts:1690
+#: src/app/email.ts:1695
 msgid "No Drafts Available"
 msgstr ""
 
-#: src/app/email.ts:1792
+#: src/app/email.ts:1797
 msgid ""
 "Click \"Yes\" to use the selected personal sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1793
+#: src/app/email.ts:1798
 msgid ""
 "Click \"Yes\" to use the selected \"global\" sender address \"{sender}\" as "
 "default sender for future email communications."
 msgstr ""
 
-#: src/app/email.ts:1796
+#: src/app/email.ts:1801
 msgid "Remember the sender choice?"
 msgstr ""
 
-#: src/app/email.ts:1812
+#: src/app/email.ts:1817
 msgid "Preference \"{configKey}\" set to \"{senderTag}\"."
 msgstr ""
 
-#: src/app/email.ts:1835
+#: src/app/email.ts:1840
 msgid ""
 "Do you really want to disclose the bulk-message recipients? This may violate "
 "privacy regulations."
 msgstr ""
 
-#: src/app/email.ts:1837
+#: src/app/email.ts:1842
 msgid "Really disclose the recipients?"
 msgstr ""
 
-#: src/app/email.ts:2017
+#: src/app/email.ts:2022
 msgid "Do you really want to delete all event attachments?"
 msgstr ""
 
-#: src/app/email.ts:2018
-#: src/app/email.ts:2171
+#: src/app/email.ts:2023
+#: src/app/email.ts:2176
 msgid "Really Delete Attachments?"
 msgstr ""
 
-#: src/app/email.ts:2126
+#: src/app/email.ts:2131
 msgid "Select Attachment"
 msgstr ""
 
-#: src/app/email.ts:2170
+#: src/app/email.ts:2175
 msgid "Do you really want to delete all file attachments?"
 msgstr ""
 
-#: src/app/email.ts:2285
+#: src/app/email.ts:2290
 msgid "Save Contacts"
 msgstr ""
 
-#: src/app/email.ts:2288
+#: src/app/email.ts:2293
 msgid ""
 "Save the selected supplementary emails to the address-book for later reusal."
 msgstr ""
 
-#: src/app/email.ts:2502
+#: src/app/email.ts:2507
 msgid "You will be transferred back to the \"edit-message\" view"
 msgstr ""
 
-#: src/app/email.ts:2503
+#: src/app/email.ts:2508
 msgid ""
 "You have clicked on the \"close\"-button while visiting the \"preview\" tab "
 "which normally just would close the email widget. It has been reported that "
@@ -17352,14 +17352,14 @@ msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\ContactsService::ASSOCIATES_SUFFIX = 'contacts';
-#: lib/Service/ContactsService.php:697
+#: lib/Service/ContactsService.php:710
 #, php-format
 msgid "contacts"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
 #. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::PROJECT_REGISTRATION_CATEGORY = 'project registration';
-#: lib/Service/EventsService.php:1256
+#: lib/Service/EventsService.php:1259
 #, php-format
 msgid "project registration"
 msgstr ""
@@ -17876,42 +17876,42 @@ msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: ASSOCIATED => associated
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: associated"
 msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: CONDUCTOR => conductor
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: conductor"
 msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: PASSIVE => passive
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: passive"
 msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: REGULAR => regular
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: regular"
 msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: SOLOIST => soloist
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: soloist"
 msgstr ""
 
 #. TRANSLATORS: An enum value of "enum OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus".
 #. TRANSLATORS: TEMPORARY => temporary
-#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:32
+#: lib/Database/Doctrine/DBAL/Types/EnumParticipationStatus.php:35
 #, php-format
 msgid "ENUM_VALUE_PARTICIPATION_STATUS: temporary"
 msgstr ""
