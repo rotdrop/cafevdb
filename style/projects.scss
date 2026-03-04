@@ -22,6 +22,7 @@
  */
 
 @use './variables.scss' as *;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as *;
 
 ##{$appName}-#{$pageTag}-header-box.projects {}
 
@@ -116,10 +117,10 @@
     }
 
     td.pme-cell {
-      &.projects--instrumentation div.cell-wrapper,
-      &.projects--participant-fields div.cell-wrapper,
-      &.projects--instrumentation-voices div.cell-wrapper,
-      &.projects--mailing-list-id div.cell-wrapper {
+      &.projects--instrumentation div.#{$cellWrapperCssClass},
+      &.projects--participant-fields div.#{$cellWrapperCssClass},
+      &.projects--instrumentation-voices div.#{$cellWrapperCssClass},
+      &.projects--mailing-list-id div.#{$cellWrapperCssClass} {
         width:10em;
         max-width:10em;
         /* max-height:1em; */

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -112,11 +112,11 @@ $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
         <?= $l->t('Display #Rows/Page in Tables'); ?>
       </label>
     </div>
-    <div class="wysiwyg-editor settings-control">
+    <div class="<?= CssClasses::WYSIWYG_EDITOR ?> settings-control">
       <select name="wysiwygEditor"
               data-placeholder="<?= $l->t('WYSIWYG Editor'); ?>"
-              class="wysiwyg-editor <?php p($toolTipClass); ?>"
-              id="wysiwyg-editor"
+              class="<?= CssClasses::WYSIWYG_EDITOR ?> <?php p($toolTipClass); ?>"
+              id="<?= CssClasses::WYSIWYG_EDITOR ?>"
               title="<?= $toolTips['wysiwyg-editor']; ?>"
       >
         <?php
@@ -126,7 +126,7 @@ $wysiwygEditor = $_[EnumPersonalSettingsKey::WYSIWYG_EDITOR->value];
         }
         ?>
       </select>
-      <label for="wysiwyg-editor"
+      <label for="<?= CssClasses::WYSIWYG_EDITOR ?>"
              class="<?php p($toolTipClass); ?>"
              title="<?= $wysiwygtitle; ?>">
         <?= $l->t('WYSIWYG Text-Editor'); ?>

@@ -30,6 +30,7 @@
 @use './mixins/flex.scss' as *;
 @use './mixins/wysiwyg-editors.scss' as *;
 @use './variables.scss' as *;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as *;
 
 body {
   overflow:hidden;
@@ -42,7 +43,7 @@ body#body-settings {
 #content.#{$appNameTag}, ##{$appName}-legacy-wrapper {
   @include flexRules;
 
-  textarea.wysiwyg-editor {
+  textarea.#{$wysiwygEditorCssClass} {
     @include wysiwygEditors;
   }
 
@@ -58,7 +59,7 @@ body#body-settings {
     display:flex;
   }
 
-  .one-liner {
+  .#{$oneLinerCssClass} {
     white-space:nowrap;
     &.ellipsis {
       overflow:hidden;

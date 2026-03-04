@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { RESIZE_TARGET } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 import { appName } from '../config.ts';
 import globalState from './globalstate.ts';
 import $ from './jquery.ts';
@@ -56,7 +57,7 @@ const attachWindowResizeHandler = () => {
             function() {
               delete globalState.windowResizeTimeout;
               console.debug('WINDOW TRIGGER RESIZE');
-              $('.resize-target, .ui-dialog-content').trigger('resize.' + appName);
+              $(`.${RESIZE_TARGET}, .ui-dialog-content`).trigger('resize.' + appName);
             }, delay);
           globalState.oldHeight = height;
           globalState.oldWidth = width;

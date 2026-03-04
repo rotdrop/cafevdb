@@ -31,6 +31,7 @@ use chillerlan\QRCode\QRCode;
 use OCP\IRequest;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -198,7 +199,7 @@ abstract class Musicians extends PMETableViewBase
     $opts['tb'] = self::TABLE;
 
     $opts['css']['postfix'] = [
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
     ];
 
     // Number of records to display on the screen
@@ -832,7 +833,7 @@ GROUP BY t.id';
       'select'   => 'D',
       'maxlen'   => 128,
       'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
-      'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
+      'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
       'values2'     => $countries,
       'valueGroups' => $countryGroups,
       'sort'     => true,
@@ -846,13 +847,13 @@ GROUP BY t.id';
       'name'     => strval($this->l->t('Remarks')),
       'select'   => 'T',
       'maxlen'   => 65535,
-      'css'      => [ 'postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
-      'textarea' => ['css' => 'wysiwyg-editor',
+      'css'      => [ 'postfix' => [ 'remarks', 'tooltip-top', CssClasses::SQUEEZE_SUBSEQUENT_LINES, ], ],
+      'textarea' => ['css' => ControllerCssClasses::WYSIWYG_EDITOR,
                      'rows' => 5,
                      'cols' => 50],
       'display|LF' => [
         'popup' => 'data',
-        'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+        'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
         'postfix' => '</div></div>',
       ],
       'escape' => false,
@@ -898,7 +899,7 @@ GROUP BY t.id';
         'escape' => false,
         'nowrap' => true,
         'sort' => true,
-        'css' => [ 'postfix' => [ 'restrict-height', ], ],
+        'css' => [ 'postfix' => [ CssClasses::RESTRICT_HEIGHT, ], ],
         'filter' => [
           'having' => true,
         ],
@@ -915,7 +916,7 @@ GROUP BY t.id';
             'template' => 'instrument-insurance',
             $pme->cgiSysName('qfinstrument_holder_id_idx[]') => $musicianId,
           ];
-          $link = '<div class="pme-cell-wrapper restrict-height musician-instrument-insurance">
+          $link = '<div class="' . CssClasses::PME_CELL_WRAPPER . ' ' . CssClasses::RESTRICT_HEIGHT . ' musician-instrument-insurance">
   <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.vueApp.index', $urlParameters) . '"
      class="musician-instrument-insurance"
      title="' . $tip . '">' . $bval . '</a>

@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use BadFunctionCallException;
+use Exception;
 
 use OCP\IRequest;
 
@@ -511,7 +512,11 @@ WHERE dsf.id IS NOT NULL',
       'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
         $html = '';
         if ($this->isCompositeRow($row, $pme)) {
-          $html = '<input type="hidden" class="expanded-marker" name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']" value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"/>';
+          $html = '<input type="hidden"
+       class="expanded-marker"
+       name="' . PersistentCGIKeys::ENTITY_ROWS_EXPANDED . '[' . $recordId['id'] . ']"
+       value="' . (int)($this->entityRowsExpanded[$recordId['id']] ?? 0) . '"
+/>';
           if ($this->expertMode) {
             $html .= '<span class="cell-wrapper">' . $value . '</span>';
           }
@@ -622,7 +627,7 @@ WHERE dsf.id IS NOT NULL',
       $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'id',
       [
         'name' => $this->l->t('Musician'),
-        'css' => [ 'postfix' => [ 'instrumentation-id', 'allow-empty' ], ],
+        'css' => [ 'postfix' => [ 'instrumentation-id', CssClasses::ALLOW_EMPTY ], ],
         'select' => 'D',
         'input' => 'M',
         'input|C' => 'R',
@@ -718,7 +723,7 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['subject'] = [
       'name' => $this->l->t('Subject'),
-      'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+      'css'  => [ 'postfix' => [ 'subject', CssClasses::SQUEEZE_SUBSEQUENT_LINES, CssClasses::CLIP_LONG_TEXT, ], ],
       'sql|LFVD' => 'REPLACE($main_table.subject, \'; \', \'<br/>\')',
       'input|LFVD' => 'HRM',
       'select' => 'T',
@@ -728,7 +733,7 @@ WHERE dsf.id IS NOT NULL',
       'sort' => true,
       'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
       'textarea|ACP' => [
-        'css' => 'constrained',
+        'css' => CssClasses::CONSTRAINED,
         'rows' => 4,
         'cols' => 35,
       ],
@@ -740,17 +745,17 @@ WHERE dsf.id IS NOT NULL',
         'tab' => [ 'id' => 'booking' ],
         'name' => $this->l->t('Subject'),
         'input'  => 'M',
-        'css'  => [ 'postfix' => [ 'subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+        'css'  => [ 'postfix' => [ 'subject', CssClasses::SQUEEZE_SUBSEQUENT_LINES, CssClasses::CLIP_LONG_TEXT, ], ],
         'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", REPLACE($main_table.subject, \'; \', \'<br/>\'), $join_col_fqn)',
         'sql' => '$join_col_fqn',
         'display|LF' => [
-          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
           'postfix' => '</div></div>',
           'popup' => 'data',
         ],
         'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
         'textarea|ACP' => [
-          'css' => 'constrained',
+          'css' => CssClasses::CONSTRAINED,
           'rows' => 4,
           'cols' => 35,
         ],
@@ -873,7 +878,7 @@ WHERE dsf.id IS NOT NULL',
         'select' => 'M',
         'select|ACP' => 'D',
         'input' => 'M',
-        'css'  => [ 'postfix' => [ 'receivable', 'allow-empty', 'squeeze-subsequent-lines', 'chosen-dropup', ], ],
+        'css'  => [ 'postfix' => [ 'receivable', CssClasses::ALLOW_EMPTY, CssClasses::SQUEEZE_SUBSEQUENT_LINES, 'chosen-dropup', ], ],
         // Pre-computed key for composite-payment row
         'sql' => $this->joinTables[DatabaseTables::PROJECT_PAYMENTS_TABLE].'.receivable_composite_key',
         'values' => [
@@ -938,7 +943,7 @@ WHERE dsf.id IS NOT NULL',
         'display' => [
           'prefixBlah' => function($op, $where, $k, $row, $pme) {
             if ($this->isCompositeRow($row, $pme)) {
-              return '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+              return '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">';
             }
           },
           'postfixBlah' => function($op, $where, $k, $row, $pme) {
@@ -1050,11 +1055,11 @@ WHERE dsf.id IS NOT NULL',
       'tab' => [ 'id' => 'booking' ],
       'css' => [
         'postfix' => [
-          'allow-empty',
+          CssClasses::ALLOW_EMPTY,
           'project-balance-documents',
           'chosen-dropup',
-          'squeeze-subsequent-lines',
-          'clip-long-text',
+          CssClasses::SQUEEZE_SUBSEQUENT_LINES,
+          CssClasses::CLIP_LONG_TEXT,
         ],
       ],
       'input|LF' => 'HR',
@@ -1129,7 +1134,7 @@ WHERE dsf.id IS NOT NULL',
 ></a>';
 
           return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
-            . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+            . '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">';
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
 
@@ -1163,11 +1168,11 @@ WHERE dsf.id IS NOT NULL',
         'tab' => [ 'id' => 'booking' ],
         'css' => [
           'postfix' => [
-            'allow-empty',
+            CssClasses::ALLOW_EMPTY,
             'project-balance-documents',
             'chosen-dropup',
-            'squeeze-subsequent-lines',
-            'clip-long-text',
+            CssClasses::SQUEEZE_SUBSEQUENT_LINES,
+            CssClasses::CLIP_LONG_TEXT,
           ],
         ],
         'select' => 'D',
@@ -1264,7 +1269,7 @@ WHERE dsf.id IS NOT NULL',
 
             if ($this->isCompositeRow($row, $pme)) {
               return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
-                . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
+                . '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">';
             } else {
               return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">';
             }
@@ -1409,7 +1414,7 @@ WHERE dsf.id IS NOT NULL',
       'name' => $this->l->t('Message-ID'),
       'input'  => 'R',
       'options' => 'LFVD',
-      'css'  => [ 'postfix' => [ 'message-id', 'hide-subsequent-lines', ], ],
+      'css'  => [ 'postfix' => [ 'message-id', CssClasses::HIDE_SUBSEQUENT_LINES, ], ],
       'select' => 'T',
       'escape' => true,
       'sort' => true,
@@ -2080,7 +2085,7 @@ WHERE dsf.id IS NOT NULL',
     $rowTag = $row[$this->queryField($this->joinTableMasterFieldName(DatabaseTables::PROJECT_PAYMENTS_TABLE))];
     if (empty($rowTag)) {
       $key = $this->queryField($this->joinTableMasterFieldName(DatabaseTables::PROJECT_PAYMENTS_TABLE));
-      $this->logException(new \Exception('EMPTY ROW TAG, KEY ' . $key . ' ' . print_r($row, true)));
+      $this->logException(new Exception('EMPTY ROW TAG, KEY ' . $key . ' ' . print_r($row, true)));
     }
     return $this->isCompositeRowTag($rowTag);
   }
@@ -2196,7 +2201,7 @@ WHERE dsf.id IS NOT NULL',
           . '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService['project-payments:receivable:document'].'"
    href="'.$downloadLink.'">'
-          . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>'
+          . '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">' . $value . '</div></div>'
           . '</a></span></div>';
       }
     }
@@ -2214,20 +2219,23 @@ WHERE dsf.id IS NOT NULL',
     ]);
     if (empty($fieldDatum)) {
       $this->logError(
-	'Cannot find field-datum for musician '
-      . $musicianId . ' and option-key ' . $optionKey
-      . print_r([
-	'field' => $fieldId,
-	'project' => $projectId,
-	'musician' => $musicianId,
-	'optionKey' => $optionKey,
-      ], true));
+        'Cannot find field-datum for musician '
+        . $musicianId . ' and option-key ' . $optionKey
+        . print_r(
+          [
+            'field' => $fieldId,
+            'project' => $projectId,
+            'musician' => $musicianId,
+            'optionKey' => $optionKey,
+          ],
+          true,
+        ));
 
       return $value;
     }
     $filesAppAnchor = $this->getFilesAppAnchor($fieldDatum->getField(), $fieldDatum->getMusician());
     $fileInfo = $this->projectService->participantFileInfo($fieldDatum);
-    $valueHtml = '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer one-liner">' . $value . '</div></div>';
+    $valueHtml = '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . ' ' . CssClasses::ONE_LINER . '">' . $value . '</div></div>';
 
     if (!empty($fileInfo)) {
       $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['dirEntry']);

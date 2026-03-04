@@ -30,6 +30,7 @@ import $ from './jquery.ts';
 import tinyMCE from 'tinymce';
 import '@tinymce/tinymce-jquery';
 import type { Editor } from 'tinymce';
+import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 declare global {
   interface Window {
@@ -160,7 +161,7 @@ const myConfig = {
     const mceWindow = inst.getWin();
     const $mceContainer = $(inst.getContainer());
     console.debug($mceContainer);
-    const $ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
+    const $ambientContainer = $mceContainer.closest(`.${RESIZE_TARGET}, .ui-dialog-content`);
     // console.info('TINY AMBIENT CONTAINER', $ambientContainer);
 
     mceWindow.globalState = {
@@ -309,7 +310,7 @@ const myGetConfig = function(plusConfig: Record<string, unknown>) {
 const myInit = (lang: string) => {
   myConfig.language = lang;
   const allconfig = myGetConfig({
-    selector: 'textarea.wysiwyg-editor',
+    selector: `textarea.${WYSIWYG_EDITOR}`,
   });
   console.info('WINDOW MCE', { mce: tinyMCE });
   tinyMCE.init(allconfig);

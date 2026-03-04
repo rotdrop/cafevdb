@@ -38,6 +38,7 @@ import {
   END_POINT_EDIT,
 } from '../../build/ts-types/php-modules/Controller/BlogController.ts';
 import { EnumBlogAction } from '../../build/ts-types/php-modules/Controller.ts';
+import { RESIZE_TARGET } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('blog.scss');
 
@@ -74,7 +75,7 @@ const editWindow = function(data: BlogResponse) {
   const $dialogHolder = $('#blogedit');
   $dialogHolder.cafevDialog({
     title: t(appName, 'Edit Blog Entry'),
-    dialogClass: 'blog-edit-dialog custom-close resize-target',
+    dialogClass: `blog-edit-dialog custom-close ${RESIZE_TARGET}`,
     modal: true,
     closeOnEscape: false,
     position: popupPosition,

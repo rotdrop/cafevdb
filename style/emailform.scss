@@ -25,6 +25,7 @@
 @use './mixins/flex.scss' as *;
 @use './mixins/error-dialogs.scss' as *;
 @use './variables.scss' as *;
+@use '../build/scss-variables/EmailForm/EmailFormCssClasses.scss' as *;
 @use '../build/scss-variables/EmailForm/ComposerCssClasses.scss' as *;
 @use '../build/scss-variables/EmailForm/RecipientsFilterCssClasses.scss' as *;
 
@@ -34,6 +35,7 @@ $displayCssClass: display;
 $dropdownOpenCssClass: dropdown-open;
 $editCssClass: edit;
 $showSelectableCssClass: show-selectable;
+$rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
 
 .ui-widget.ui-dialog.emailform.#{$appNameTag} {
   overflow:hidden;
@@ -107,7 +109,7 @@ $showSelectableCssClass: show-selectable;
         }
       } /* ul#emailformtabs */
 
-      form##{$appName}-email-form {
+      form##{$appName}#{$classSeparator}#{$emailFormCssClass} {
 
         &.#{projectModeOffCssClass} {
           fieldset##{$appName}-email-composition-fieldset {
@@ -232,11 +234,11 @@ $showSelectableCssClass: show-selectable;
           overflow-x: hidden;
           padding-bottom: 0px !important;
 
-          div.#{$appName}-row {
+          div.#{$rowClass} {
             width:100%;
           }
 
-          div.#{$appName}-row:not(.flex-container):after {
+          div.#{$rowClass}:not(.flex-container):after {
             content:"";
             display:block;
             height:0;
@@ -1102,7 +1104,7 @@ $showSelectableCssClass: show-selectable;
           text-align:center;
         }
 
-        div.progress.#{$appName}-row {
+        div.progress.#{$rowClass} {
           width:100%;
           height:2em;
           padding: 0.5em;

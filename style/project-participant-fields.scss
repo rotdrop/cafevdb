@@ -38,6 +38,7 @@
 @use "local";
 @use './mixins/wysiwyg-editors.scss' as *;
 @use './variables.scss' as *;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as *;
 
 // Hide selected elements by default, elementShownIf() will then override the visibility again
 @mixin defaultHiddenElement($element, $prefix: "&", $relation: "~") {
@@ -503,7 +504,7 @@
 }
 
 /* tooltip styling for popup=data */
-.tooltip.#{$appNameTag} .pme-cell-wrapper {
+.tooltip.#{$appNameTag} .#{$pmeCellWrapperCssClass} {
   @include dataOptionsTable;
   table.data-options {
     th, td {

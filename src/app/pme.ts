@@ -95,8 +95,9 @@ import {
 } from '../services/async-event-bus.ts';
 import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { loadingCssClass } from 'variables.scss';
-import { DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { ALLOW_EMPTY, DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
 import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
+import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -388,7 +389,7 @@ const tableDialogReplace = <E extends HTMLElement>(
   // remote data/time widgets and other stuff
   pmeUnTweak($container);
   // remove the WYSIWYG editor, if any is attached
-  WysiwygEditor.removeEditor($container.find('textarea.wysiwyg-editor'));
+  WysiwygEditor.removeEditor($container.find(`textarea.${WYSIWYG_EDITOR}`));
 
   pmeDestroyVueComponents($container);
 
@@ -1009,7 +1010,7 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
       })
       .done(function(htmlContent, _historyAction, _post) {
         const containerSel = '#' + containerCSSId;
-        const $dialogHolder = $('<div id="' + containerCSSId + '" class="' + containerCSSId + ' resize-target"></div>');
+        const $dialogHolder = $(`<div id="${containerCSSId}" class="${containerCSSId} ${RESIZE_TARGET}"></div>`);
         $dialogHolder.html(htmlContent);
         $dialogHolder.find('iframe').on('load', function() {
           const $this = $(this);
@@ -1033,7 +1034,7 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
           height: 'auto',
           modal: false, // tableDialogOptions.modalDialog,
           closeOnEscape: false,
-          dialogClass: pmeToken('table-dialog') + ' custom-close resize-target ' + template,
+          dialogClass: `${pmeToken('table-dialog')} custom-close ${RESIZE_TARGET} ${template}`,
           resizable: false,
           dragStart() {
             const $widget = $dialogHolder.dialog('widget');
@@ -1114,7 +1115,7 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
                   pmeDestroyVueComponents(pmeContainer(containerSel));
                   break;
                 case 'dialogOpen':
-                  WysiwygEditor.addEditor($dialogHolder.find('textarea.wysiwyg-editor'/* :enabled' */), function() {
+                  WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`/* :enabled' */), function() {
                     transposeReady(containerSel);
                     pmeQueryLogMenu(containerSel);
                     tableLoadCallback(template, containerSel, parameters, (arg) => {
@@ -1163,7 +1164,7 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
             // remove data/time widgets and other stuff
             pmeUnTweak($dialogHolder);
             // remove the WYSIWYG editor, if any is attached
-            WysiwygEditor.removeEditor($dialogHolder.find('textarea.wysiwyg-editor'));
+            WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
             $dialogHolder.find('iframe').removeAttr('src');
 
@@ -1324,7 +1325,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
       $.fn.cafevTooltip.remove();
 
       pmeUnTweak(container);
-      WysiwygEditor.removeEditor(container.find('textarea.wysiwyg-editor'));
+      WysiwygEditor.removeEditor(container.find(`textarea.${WYSIWYG_EDITOR}`));
       console.info('PME INNER / CONTAINER', pmeInner(container), container);
 
       container.find('iframe').on('load', function() {
@@ -1337,7 +1338,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
 
       pmeInit(selector);
       console.info('AFTER PME INIT');
-      WysiwygEditor.addEditor(container.find('textarea.wysiwyg-editor'), function() {
+      WysiwygEditor.addEditor(container.find(`textarea.${WYSIWYG_EDITOR}`), function() {
         transposeReady(selector);
         pmeQueryLogMenu(selector);
         tableLoadCallback(template, selector, { reason: 'formSubmit' }, function() {});
@@ -1718,10 +1719,10 @@ const installInputChosen = function(containerSel: string|JQuery, onlyClass?: str
       disable_search: self.hasClass('no-search'),
       disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
       no_results_text: noRes,
-      allow_single_deselect: self.hasClass('allow-empty'),
+      allow_single_deselect: self.hasClass(ALLOW_EMPTY),
       single_backstroke_delete: false,
     };
-    if (self.hasClass('allow-empty')) {
+    if (self.hasClass(ALLOW_EMPTY)) {
       chosenOptions.width = (this.offsetWidth + PHPMyEdit.singleDeselectOffset) + 'px';
       if (!self.is(':visible')) {
         self.addClass('chosen-invisible'); // kludge, correct later

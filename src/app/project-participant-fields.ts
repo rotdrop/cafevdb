@@ -56,6 +56,7 @@ import type {
   EnumParticipantFieldRequestTopic,
 } from '../../build/ts-types/php-modules/Controller.ts';
 import { END_POINT } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
+import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('./jquery-readonly.ts');
 require('../legacy/nextcloud/jquery/octemplate.js');
@@ -423,7 +424,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     $container.find('.data-type-html-disabled, .data-type-html-disabled *').prop('disabled', dataType === 'html');
     $container.find('.not-data-type-html-disabled, .not-data-type-html-disabled *').prop('disabled', dataType !== 'html');
 
-    $container.find('.data-type-html-wysiwyg-editor').each(function() {
+    $container.find(`.data-type-html-${WYSIWYG_EDITOR}`).each(function() {
       const $this = $(this);
       if (dataType !== 'html') {
         WysiwygEditor.removeEditor($this);

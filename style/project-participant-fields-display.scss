@@ -65,10 +65,13 @@ form.pme-form.project-participant-fields-display {
   }
 
   span.allowed-option {
-    display:inline-block;
+    // display:inline-block;
+    // text-align:justify;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     width:100%;
     position:relative;
-    text-align:justify;
   }
 
   &:not(.pme-change) {

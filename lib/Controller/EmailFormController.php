@@ -176,20 +176,20 @@ class EmailFormController extends Controller
       'uploadMaxFilesize' => Util::maxUploadSize(),
       'uploadMaxHumanFilesize' => \OCP\Util::humanFileSize(Util::maxUploadSize()),
       'requesttoken' => \OCP\Util::callRegister(), // @todo: check
-      'projectName' => $projectName,
-      'projectId' => $projectId,
+      PersistentCGIKeys::PROJECT_NAME => $projectName,
+      PersistentCGIKeys::PROJECT_ID => $projectId,
       ConfigConstants::WIKI_NAME_SPACE_KEY => $this->getAppValue(ConfigConstants::WIKI_NAME_SPACE_KEY),
-      'bulkTransactionId' => $bulkTransactionId,
+      ComposerCgiKeys::BULK_TRANSACTION_ID => $bulkTransactionId,
       // Provide enough data s.t. a form-reload will bump the user to the
       // form the email-dialog was opened from. Ideally, we intercept the
       // form submit in javascript and simply close the dialog. Most of
       // the stuff below is a simple safe-guard.
       'formData' => [
-        'projectName' => $projectName,
-        'projectId' => $projectId,
-        'template' => $this->request->getParam('template'),
+        PersistentCGIKeys::PROJECT_NAME => $projectName,
+        PersistentCGIKeys::PROJECT_ID => $projectId,
+        PersistentCGIKeys::TEMPLATE => $this->request->getParam('template'),
         // 'renderer' => ???? @todo check
-        'bulkTransactionId' => $bulkTransactionId,
+        ComposerCgiKeys::BULK_TRANSACTION_ID => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(),
         'emailKey' => $this->pme->cgiSysName('mrecs'),
       ],

@@ -25,6 +25,7 @@
 @use 'sass:map';
 @use './variables.scss' as *;
 @use './pme-table-tabs.scss' as *;
+@use '../build/scss-variables/PageRenderer/CssClasses.scss' as *;
 
 /* ie8 doesn't support :checked */
 html:not(.ie8) {
@@ -500,12 +501,12 @@ td.select-hidden select {
 }
 
 form.pme-form {
-  textarea:not(.wysiwyg-editor) {
+  textarea:not(.#{$wysiwygEditorCssClass}) {
     overflow-x:hidden; /* fix FF extra-line bug */
     width:unset;
   }
 
-  textarea.constrained {
+  textarea.#{$constrainedCssClass} {
     resize: none;
   }
 
@@ -1001,7 +1002,7 @@ form.pme-form  {
 
   &:not(.pme-change, .pme-add, .pme-copyadd) {
     td.pme-value {
-      &.clip-long-text, .clip-long-text {
+      &.#{$clipLongTextCssClass}, .#{$clipLongTextCssClass} {
         @include clip-long-text;
       }
     }
@@ -1010,7 +1011,7 @@ form.pme-form  {
     &change, &add, &copyadd {
       td.pme-value {
         &.pme-style-all-views, .pme-style-all-views {
-          &.clip-long-text, .clip-long-text {
+          &.#{$clipLongTextCssClass}, .#{$clipLongTextCssClass} {
             @include clip-long-text;
           }
         }
@@ -1018,10 +1019,10 @@ form.pme-form  {
     }
   }
   td.pme-cell {
-    &.clip-long-text, .clip-long-text, &.musician-instruments {
+    &.#{$clipLongTextCssClass}, .#{$clipLongTextCssClass}, &.musician-instruments {
       @include clip-long-text;
     }
-    span.clip-long-text {
+    span.#{$clipLongTextCssClass} {
       max-height:unset;
       display:inline-block;
       vertical-align:top;
@@ -1139,15 +1140,15 @@ table.pme-main {
     max-width:24ex;
   }
 
-  td.pme-cell.restrict-height {
-    .pme-cell-wrapper {
+  td.pme-cell.#{$restrictHeightCssClass} {
+    .#{$pmeCellWrapperCssClass} {
       display:block;
       max-height:#{$tableRowHeight};
       overflow:hidden;
     }
 
     /* Restrict height of buttons in list view */
-    .pme-cell-wrapper input {
+    .#{$pmeCellWrapperCssClass} input {
       min-height:#{$tableRowHeight};
       max-height:#{$tableRowHeight};
       margin-top:0;
@@ -1157,14 +1158,14 @@ table.pme-main {
     }
   }
 
-  td.pme-cell.squeeze-subsequent-lines {
-    .pme-cell-wrapper {
+  td.pme-cell.#{$squeezeSubsequentLinesCssClass} {
+    .#{$pmeCellWrapperCssClass} {
       display:block;
       max-height:#{$tableRowHeight};
       overflow:hidden;
     }
 
-    .pme-cell-squeezer:not(.one-liner) {
+    .pme-cell-squeezer:not(.#{$oneLinerCssClass}) {
       display:inline-block;
       max-height:#{$tableRowHeight};
       line-height:8px;
@@ -1190,8 +1191,8 @@ table.pme-main {
     }
   }
 
-  td.pme-cell.hide-subsequent-lines {
-    .pme-cell-wrapper {
+  td.pme-cell.#{$hideSubsequentLinesCssClass} {
+    .#{$pmeCellWrapperCssClass} {
       line-height:100%;
       display:block; /* ?? or inline-block */
       max-height:#{$tableRowHeight};
@@ -1566,7 +1567,7 @@ form.pme-form {
     }
 
     /* clear large input field with button */
-    .cell-wrapper input.clear-field {
+    .#{$cellWrapperCssClass} input.clear-field {
       position:absolute;
       min-width:0;
       min-height:0;

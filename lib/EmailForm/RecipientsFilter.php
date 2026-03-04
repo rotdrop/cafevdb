@@ -664,10 +664,12 @@ class RecipientsFilter
       $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
       $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
     }
-    $criteria[] = [ '(|deleted' => null ];
-    $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
+    // $criteria[] = [ '(|deleted' => null ];
+    // $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
 
+    $softDeleteableState = $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     $musicians = $this->musiciansRepository->findBy($criteria, [ 'id' => 'INDEX' ]);
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
     // $this->logInfo('MUSICIANS FOUND ' . count($musicians) . ' CRITERIA ' . print_r($criteria, true));
 

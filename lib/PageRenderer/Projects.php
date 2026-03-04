@@ -199,7 +199,7 @@ class Projects extends PMETableViewBase
     $opts['tb'] = self::TABLE;
 
     $opts['css']['postfix'] = [
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
     ];
     if (!empty($this->project)) {
       $opts['css']['postfix'][] = 'project-type-' . $this->project->getType()->value;
@@ -449,7 +449,7 @@ class Projects extends PMETableViewBase
         'input|A' => 'R',
         'default'  => 0, // keep in sync with ProjectInstrumentationNumbers
         'select'   => 'M',
-        'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', ], ],
+        'css'      => [ 'postfix' => [ CssClasses::ALLOW_EMPTY, 'no-search', ], ],
         'display|LF' => [
           'popup' => 'data',
           'prefix' => '<div class="cell-wrapper">',
@@ -629,7 +629,7 @@ class Projects extends PMETableViewBase
 
           $value = preg_replace('/,(\S)/', ', $1', $value);
           $tooltip = Util::htmlEscape($value);
-          $html .= '<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+          $html .= '<span class="cell-content ' . CssClasses::ONE_LINER . ' ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
 
           return $html;
         },
@@ -853,7 +853,7 @@ class Projects extends PMETableViewBase
     $opts['fdd']['public_download_share'] = [
       'name' => $this->l->t('Public Downloads'),
       'title' => $this->toolTipsService['projectpublicdownloadsfolder'],
-      'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', 'restrict-height', ], ],
+      'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', CssClasses::RESTRICT_HEIGHT, ], ],
       'input' => 'RV',
       'options'  => 'LFCVD', // not in add mode
       'sql' => '$main_table.id', // sql is needed if is to be displayed.
@@ -918,7 +918,7 @@ class Projects extends PMETableViewBase
 />
 </div>',
         ],
-        'css'      => [ 'postfix' => [ 'allow-empty', 'no-search', 'tooltip-top', ], ],
+        'css'      => [ 'postfix' => [ CssClasses::ALLOW_EMPTY, 'no-search', 'tooltip-top', ], ],
         'options'  => 'LFCPVD',
         'input'    => 'R',
         'sql'      => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $join_table.display_order DESC, $join_table.l10n_name ASC)',
@@ -937,7 +937,7 @@ class Projects extends PMETableViewBase
 
           $value = preg_replace('/,(\S)/', ', $1', $value ?? '');
           $tooltip = Util::htmlEscape($value);
-          $html .= '<span class="cell-content one-liner ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
+          $html .= '<span class="cell-content ' . CssClasses::ONE_LINER . ' ellipsis tooltip-top" title="' . $tooltip . '">' . $value . '</span>';
 
           return $html;
         },

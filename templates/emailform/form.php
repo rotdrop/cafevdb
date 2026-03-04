@@ -24,13 +24,15 @@
 
 namespace OCA\CAFEVDB\LegacyTemplates\EmailForm;
 
+use OCA\CAFEVDB\Controller\CssClasses;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\EmailForm\EmailFormCssClasses;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-$rowClass = $appName.'-'.'row';
+$formClass = $appName . CssClasses::CLASS_SEPARATOR . EmailFormCssClasses::EMAIL_FORM;
+$rowClass = $appName . CssClasses::CLASS_SEPARATOR . EmailFormCssClasses::ROW;
 
 ?>
-
 <div id="emailformwrapper">
   <ul id="emailformtabs">
     <li id="emailformrecipients-tab">
@@ -68,15 +70,15 @@ $rowClass = $appName.'-'.'row';
     </li>
   </ul>
   <form method="post"
-        name="<?php p($appName); ?>-email-form"
-        id="<?php p($appName); ?>-email-form"
-        class="<?php p($appName); ?>-email-form<?php ($projectId > 0) && p(' project-mode'); ?>">
-    <fieldset id="<?php p($appName); ?>-email-form-data" class="form-data">
+        name="<?= $formClass ?>"
+        id="<?= $formClass ?>"
+        class="<?= $formClass ?><?php ($projectId > 0) && p(' project-mode'); ?>">
+    <fieldset id="<?= $formClass ?>-data" class="<?= EmailFormCssClasses::FORM_DATA ?>">
       <?php echo PageNavigation::persistentCGI($formData); ?>
     </fieldset>
-    <div id="emailformrecipients" class="resize-target"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>
-    <div id="emailformcomposer" class="resize-target"><?php echo $this->inc('emailform/part.emailform.composer', $_); ?></div>
-    <div id="emailformdebug" class="resize-target"><pre><?php print_r($_POST); ?></pre></div>
+    <div id="emailformrecipients" class="<?= CssClasses::RESIZE_TARGET ?>"><?php echo $this->inc('emailform/part.emailform.recipients', $_); ?></div>
+    <div id="emailformcomposer" class="<?= CssClasses::RESIZE_TARGET ?>"><?php echo $this->inc('emailform/part.emailform.composer', $_); ?></div>
+    <div id="emailformdebug" class="<?= CssClasses::RESIZE_TARGET ?>"><pre><?php print_r($_POST); ?></pre></div>
   </form>
 
   <!-- Upload support via blueimp. FIXME: is this still up-to-date? Probably got this from OC4 -->

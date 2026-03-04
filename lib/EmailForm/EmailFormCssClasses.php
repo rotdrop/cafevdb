@@ -22,29 +22,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\PageRenderer;
+namespace OCA\CAFEVDB\EmailForm;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 /** CSS classes shared between the legacy templates, scss and typescript. */
 #[TSAttributes\TypeScript]
-class CssClasses
+class EmailFormCssClasses
 {
-  public const ACCEPT_GENDER_DETECTION = 'accept-gender-detection';
-  public const ALLOW_EMPTY = 'allow-empty';
-  public const AMOUNT_CHECK_FAILURE = 'amount-check-failure';
-  public const CELL_WRAPPER = 'cell-wrapper';
-  public const CLIP_LONG_TEXT = 'clip-long-text';
-  public const CONSTRAINED = 'constrained';
-  public const CSS_PREFIX_POSTFIX = 'page';
-  public const DIRECT_CHANGE = 'direct-change';
-  public const HIDE_SUBSEQUENT_LINES = 'hide-subsequent-lines';
-  public const ONE_LINER = 'one-liner';
-  public const PME_CELL_SQUEEZER = 'pme-cell-squeezer';
-  public const PME_CELL_WRAPPER = 'pme-cell-wrapper';
-  public const PROJECT_PARTICIPANT_FIELDS_DISPLAY = 'project-participant-fields-display';
-  public const RESTRICT_HEIGHT = 'restrict-height';
-  public const REVERT_TO_DEFAULT = 'revert-to-default';
-  public const SHOW_HIDE_DISABLED = 'show-hide-disabled';
-  public const SQUEEZE_SUBSEQUENT_LINES = 'squeeze-subsequent-lines';
+  public const FORM_DATA = 'form-data';
+  public const EMAIL_FORM = 'email-form';
+  public const ROW = 'row';
 }

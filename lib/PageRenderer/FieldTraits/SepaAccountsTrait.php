@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer\CssClasses;
 use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as ParentClass;
@@ -228,7 +229,7 @@ trait SepaAccountsTrait
             // subsequent lines gets squeezed but somehow their overflow
             // still enters at least partly into the calculation of the
             // height of the table cell.
-            'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+            'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
             'postfix' => '</div></div>',
             'attributes' => [
               'data-' . DataConstants::DATA_META_DATA => 'iban',
@@ -247,8 +248,8 @@ trait SepaAccountsTrait
             ],
           ],
           'values2glue' => '<br/>',
-          'css' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', ], ],
-          'css|LF' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', DataConstants::CLASS_LAZY_DECRYPTION, DataConstants::CLASS_META_DATA_POPUP, ] ],
+          'css' => [ 'postfix' => [ 'iban', CssClasses::SQUEEZE_SUBSEQUENT_LINES, ], ],
+          'css|LF' => [ 'postfix' => [ 'iban', CssClasses::SQUEEZE_SUBSEQUENT_LINES, DataConstants::CLASS_LAZY_DECRYPTION, DataConstants::CLASS_META_DATA_POPUP, ] ],
         ]);
       if (!empty($projectId)) {
         $fdd[$ibanName]['values|LF'] = $fdd[$ibanName]['values'];

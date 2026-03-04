@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\LegacyTemplates\EmailForm\Composer;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\CssClasses;
 use OCA\CAFEVDB\EmailForm\Composer;
 use OCA\CAFEVDB\EmailForm\ComposerCgiKeys;
 use OCA\CAFEVDB\EmailForm\ComposerCssClasses;
@@ -291,7 +292,7 @@ if (!function_exists(__NAMESPACE__ . '\\e')) {
     <tr>
       <td class="body caption"><?php echo $l->t('Message-Body'); ?></td>
       <td colspan="2" class="messagetext">
-        <textarea class="wysiwyg-editor external-documents"
+        <textarea class="<?= CssClasses::WYSIWYG_EDITOR ?> external-documents"
                   name="<?= Composer::POST_TAG ?>[<?= ComposerCgiKeys::MESSAGE_TEXT ?>]"
                   cols="60"
                   rows="20"

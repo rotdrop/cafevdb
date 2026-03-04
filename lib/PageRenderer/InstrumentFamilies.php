@@ -145,7 +145,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts['css']['postfix'] = [
       'direct-change',
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
     ];
 
     // Number of records to display on the screen

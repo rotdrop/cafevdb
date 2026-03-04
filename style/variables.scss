@@ -68,6 +68,8 @@ $pageTag: PageRenderer.$cssPrefixPostfixCssClass;
 $hideOnlyChildCssClass: Controller.$hideOnlyChildCssClass;
 $hideDisabledCssClass: "hide-disabled";
 $showDisabledCssClass: "show-disabled";
+$classSeparator: Controller.$classSeparatorCssClass;
+$wysiwygEditorCssClass: Controller.$wysiwygEditorCssClass;
 
 :export {
   appName: $appName;

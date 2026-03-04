@@ -55,6 +55,7 @@ import {
   EnumParticipantFieldRequestTopic,
   EnumParticipantFieldRequestSubTopic,
 } from '../../build/ts-types/php-modules/Controller.ts';
+import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -161,7 +162,7 @@ const participantOptionHandlers = (
             }
             if (fieldProperty === 'defaultValue') {
               const value = data.value as ParticipantFieldPropertyGetDefaultValue;
-              if ($inputElement.hasClass('wysiwyg-editor')) {
+              if ($inputElement.hasClass(WYSIWYG_EDITOR)) {
                 WysiwygEditor.updateEditor($inputElement, value.data ?? '');
               } else if (isJQuerySelect($inputElement)) {
                 selectedValues($inputElement, value.key);
@@ -207,7 +208,7 @@ const participantOptionHandlers = (
     .on('change', function(this: HTMLInputElement) {
       const $this = $(this);
       $this.closest('table').toggleClass('hide-empty-values', !$this.prop('checked'));
-      $this.closest('.resize-target').trigger('resize');
+      $this.closest(`.${RESIZE_TARGET}`).trigger('resize');
       return false;
     });
 

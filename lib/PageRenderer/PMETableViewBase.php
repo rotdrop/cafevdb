@@ -576,7 +576,7 @@ abstract class PMETableViewBase extends AbstractPageRenderer
     $fdd = [
       'email' => [
         'name' => $this->l->t('Em@il'),
-        'css|LF'   => [ 'postfix' => [ 'email', 'clip-long-text', 'short-width', ], ],
+        'css|LF'   => [ 'postfix' => [ 'email', CssClasses::CLIP_LONG_TEXT, 'short-width', ], ],
         'css'      => [ 'postfix' => [ 'email', ], ],
         'URL'      => 'mailto:$link?$key',
         'URLdisp'  => '$value',

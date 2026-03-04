@@ -42,6 +42,7 @@ import setRestoreHistory from './settings/restore-history.ts';
 import setShowDisabled from './settings/show-disabled.ts';
 import setTooltipsMode from './settings/tooltips.ts';
 import { hiddenCssClass, appNameTag } from 'variables.scss';
+import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('nav-area-settings.scss');
 
@@ -78,7 +79,7 @@ const documentReady = function() {
       });
     });
 
-    ($container.find('select.wysiwyg-editor') as JQSelect).each(function() {
+    ($container.find(`select.${WYSIWYG_EDITOR}`) as JQSelect).each(function() {
       const self = $(this);
       if (chosenActive(self)) {
         console.debug('destroy chosen', self);
@@ -205,7 +206,7 @@ const documentReady = function() {
     return false;
   });
 
-  container.on('change', 'select.wysiwyg-editor', function() {
+  container.on('change', `select.${WYSIWYG_EDITOR}`, function() {
     const $this = $(this);
     const value = $this.val() as string;
     $.post(setPersonalUrl('wysiwygEditor'), { value })
@@ -218,7 +219,7 @@ const documentReady = function() {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
-    ($('.personal-settings select.wysiwyg-editor') as JQuery<HTMLSelectElement>).each(function() {
+    ($(`.personal-settings select.${WYSIWYG_EDITOR}`) as JQuery<HTMLSelectElement>).each(function() {
       if (this !== $this[0]) {
         selectedValues($(this), selectedValues($this) as string);
       }

@@ -212,7 +212,7 @@ class TaxExemptionNotices extends PMETableViewBase
     list(, $fieldName) = $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::TAXATION_STATUTORY_SOURCES_TABLE, 'id', [
         'name' => $this->l->t('Context'),
-        'css'      => [ 'postfix' => [ 'taxation-statutoryx-sources', 'squeeze-subsequent-lines', 'clip-long-text',  ], ],
+        'css'      => [ 'postfix' => [ 'taxation-statutoryx-sources', CssClasses::SQUEEZE_SUBSEQUENT_LINES, CssClasses::CLIP_LONG_TEXT,  ], ],
         'display|LVFD' => [ 'popup' => 'data' ],
         'sort' => true,
         'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
@@ -231,7 +231,7 @@ class TaxExemptionNotices extends PMETableViewBase
         ],
         'values2glue' => ',<br/>',
         'display|LF' => [
-          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . '"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
           'postfix' => '</div></div>',
           'popup' => 'data',
         ],
@@ -335,7 +335,7 @@ class TaxExemptionNotices extends PMETableViewBase
 
     $opts['fdd']['beneficiary_purpose'] = [
       'name'     => $this->l->t('Beneficiary Purpose'),
-      'css'      => [ 'postfix' => [ 'beneficiary-purpose', 'squeeze-subsequent-lines', ], ],
+      'css'      => [ 'postfix' => [ 'beneficiary-purpose', CssClasses::SQUEEZE_SUBSEQUENT_LINES, ], ],
       'select'   => 'T',
       'maxlen'   => 512,
       'sql|LFVD' => 'REPLACE($join_col_fqn, "\n", "<br/>")',
@@ -346,7 +346,7 @@ class TaxExemptionNotices extends PMETableViewBase
       ],
       'display|LFVD' => [
         'popup' => 'data',
-        'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+        'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
         'postfix' => '</div></div>',
       ],
       'escape'   => false,
@@ -419,7 +419,7 @@ class TaxExemptionNotices extends PMETableViewBase
         return '<div class="flex-container">
 '
           . $filesAppLink
-          . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
+          . '<a class="download-link ajax-download tooltip-auto inline-block ' . CssClasses::CLIP_LONG_TEXT . '"
    title="' . $this->toolTipsService['page-renderer:tax-exemption-notices:written-notice'] . '"
    href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';

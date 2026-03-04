@@ -79,7 +79,13 @@ import type {
   EmailWebFormResponse,
   ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { ComposerCgiKeys, EnumPostTag, RecipientsFilterCgiKeys, type EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+import {
+  ComposerCgiKeys,
+  EmailFormCssClasses,
+  EnumPostTag,
+  RecipientsFilterCgiKeys,
+  type EnumFromTag,
+} from '../../build/ts-types/php-modules/EmailForm.ts';
 // eslint-disable-next -line n/no-missing-import
 import {
   disabledCssClass,
@@ -121,6 +127,8 @@ import {
   END_POINT_RECIPIENTS,
 } from '../../build/ts-types/php-modules/Controller/EmailFormController.ts';
 import { EnumAttachmentOrigin } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
+import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 
 require('cafevdb-selectize.scss');
 
@@ -435,7 +443,7 @@ const emailFormRecipientsHandlers = (
         },
       });
     } else {
-      post += '&' + $form.find('fieldset.form-data').serialize();
+      post += '&' + $form.find(`fieldset.${EmailFormCssClasses.FORM_DATA}`).serialize();
       const $element = $(event.target);
       if ($element.is(':button')) {
         post += '&' + $.param($element);
@@ -695,9 +703,9 @@ const emailFormRecipientsHandlers = (
       const musicianId = $this.data('musicianId');
       const isParticipant = $this.data('isParticipant');
 
-      const $formData = $form.find<HTMLFieldSetElement>('fieldset.form-data');
-      const projectId = +($formData.find<HTMLInputElement>('input[name="projectId"]').val() ?? -1);
-      const projectName = $formData.find<HTMLInputElement>('input[name="projectName"]').val()!;
+      const $formData = $form.find<HTMLFieldSetElement>(`fieldset.${EmailFormCssClasses.FORM_DATA}`);
+      const projectId = +($formData.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val() ?? -1);
+      const projectName = $formData.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`).val()!;
 
       participantRecordDialog(
         musicianId, {
@@ -743,10 +751,10 @@ const emailFormCompositionHandlers = (
 
   // console.trace('COMPOSITION HANDLERS CALLED');
 
-  const $formData = $form.find('fieldset.form-data');
-  const $projectId = $formData.find('input[name="projectId"]');
-  const $projectName = $formData.find('input[name="projectName"]');
-  const $bulkTransactionId = $formData.find('input[name="bulkTransactionId"]');
+  const $formData = $form.find(`fieldset.${EmailFormCssClasses.FORM_DATA}`);
+  const $projectId = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`);
+  const $projectName = $formData.find(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`);
+  const $bulkTransactionId = $formData.find(`input[name="${ComposerCgiKeys.BULK_TRANSACTION_ID}"]`);
   const $debugOutput = $form.find('#emailformdebug');
   const $templateEmailsSelector = $fieldset.find('select.template.email-message-selector') as JQuery<HTMLSelectElement>;
   const $draftEmailsSelector = $fieldset.find('select.draft.email-message-selector') as JQuery<HTMLSelectElement>;
@@ -763,7 +771,7 @@ const emailFormCompositionHandlers = (
   const $dialogWidget = $dialogHolder.dialog('widget');
   const $composerPanel = $('#emailformcomposer');
 
-  WysiwygEditor.addEditor($dialogHolder.find('textarea.wysiwyg-editor'));
+  WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
   const messageSelectorSelectizeOptions: Selectize.IOptions = {
     onBeforeDropdownOpen(_$dropdown: JQuery) {
@@ -887,7 +895,7 @@ const emailFormCompositionHandlers = (
       } else {
         // Serialize almost everything and submit it
         post = $fieldset.serialize();
-        post += '&' + $form.find('fieldset.form-data').serialize();
+        post += '&' + $form.find(`fieldset.${EmailFormCssClasses.FORM_DATA}`).serialize();
       }
       const $this = $(this);
       if ($this.is(':button') || $this.is(':submit')) {
@@ -946,7 +954,7 @@ const emailFormCompositionHandlers = (
               case Email.topicUnspecific:
                 // replace the entire tab.
                 $.fn.cafevTooltip.remove();
-                WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
+                WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
                 $panelHolder.html(requestData.elementData! as string);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
@@ -1025,7 +1033,7 @@ const emailFormCompositionHandlers = (
                 $.fn.cafevTooltip.remove();
 
                 // replace the entire composer tab
-                WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
+                WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
                 $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
@@ -1062,7 +1070,7 @@ const emailFormCompositionHandlers = (
                 $.fn.cafevTooltip.remove();
 
                 // replace the entire composer tab
-                WysiwygEditor.removeEditor($panelHolder.find('textarea.wysiwyg-editor'));
+                WysiwygEditor.removeEditor($panelHolder.find(`textarea.${WYSIWYG_EDITOR}`));
                 $panelHolder.html(requestData.composerForm!);
                 $fieldset = $panelHolder.find('fieldset.email-composition.page');
                 emailFormCompositionHandlers($fieldset, $form, $dialogHolder, $panelHolder);
@@ -2487,10 +2495,10 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           DialogUtils.toBackButton($dialogHolder);
           DialogUtils.fullScreenButton($dialogHolder, function(_mode, when) {
             if (when === 'before') {
-              WysiwygEditor.removeEditor($dialogHolder.find('textarea.wysiwyg-editor'));
+              WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
             }
             if (when === 'after') {
-              WysiwygEditor.addEditor($dialogHolder.find('textarea.wysiwyg-editor'));
+              WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
             }
           });
           DialogUtils.customCloseButton($dialogHolder, function(event, _container) {
@@ -2650,7 +2658,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           Email.autoSaveDelete = function() {};
 
           $.fn.cafevTooltip.remove();
-          WysiwygEditor.removeEditor($dialogHolder.find('textarea.wysiwyg-editor'));
+          WysiwygEditor.removeEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
           // $dialogHolder.dialog('close');
           $dialogHolder.dialog('destroy').remove();
 

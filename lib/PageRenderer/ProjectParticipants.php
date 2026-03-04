@@ -34,6 +34,7 @@ use function OCA\CAFEVDB\Common\Functions\strcat;
 use function OCA\CAFEVDB\Common\Functions\sprintf;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationStatus as ParticipationStatus;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -623,7 +624,7 @@ GROUP BY t.id';
         'sort'    => true,
         'options'  => 'LFAVCPD',
         'input|LF' => $this->pmeBare ? 'R' : 'HR', // handy for export
-        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', 'allow-empty' ], ],
+        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', CssClasses::ALLOW_EMPTY ], ],
         'values2' => Types\EnumGender::getL10NValues($this->l),
         'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
         'display|LF' => [
@@ -743,7 +744,7 @@ GROUP BY t.id';
         'select'   => 'M',
         'css'      => [
           'postfix' => [
-            'allow-empty',
+            CssClasses::ALLOW_EMPTY,
             'no-search',
             'instrument-voice',
             'select-wide',
@@ -1280,7 +1281,7 @@ GROUP BY t.id';
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => $this->getConfigValue(ConfigConstants::STREET_ADDRESS_COUNTRY),
-        'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', 'allow-empty', ], ],
+        'css'      => [ 'postfix' => [ 'musician-address', 'country', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
         'values2'     => $countries,
         'valueGroups' => $countryGroups,
       ]);
@@ -1295,15 +1296,15 @@ GROUP BY t.id';
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('General Remarks'),
         'maxlen'   => 65535,
-        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', 'maximize' ], ],
+        'css'      => ['postfix' => [ 'remarks', 'tooltip-top', CssClasses::SQUEEZE_SUBSEQUENT_LINES, 'maximize' ], ],
         'textarea' => [
-          'css' => 'wysiwyg-editor',
+          'css' => ControllerCssClasses::WYSIWYG_EDITOR,
           'rows' => 5,
           'cols' => 66,
         ],
         'display|LF' => [
           'popup' => 'data',
-          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="' . CssClasses::PME_CELL_SQUEEZER . '">',
           'postfix' => '</div></div>',
         ],
         'escape' => false,
@@ -1335,7 +1336,7 @@ GROUP BY t.id';
       [
         'tab'      => ['id' => 'musician'],
         'name'     => $this->l->t('Language'),
-        'css'      => [ 'postfix' => [ 'musician-language', 'chosen-dropup', 'allow-empty', ], ],
+        'css'      => [ 'postfix' => [ 'musician-language', 'chosen-dropup', CssClasses::ALLOW_EMPTY, ], ],
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => 'Deutschland',
@@ -1392,7 +1393,7 @@ GROUP BY t.id';
         'tab'      => [ 'id' => 'miscinfo' ],
         'name'     => 'UUID',
         'options'  => 'LFAVCPDR',
-        'css'      => [ 'postfix' => [ 'musician-uuid', 'clip-long-text', 'tiny-width', ], ],
+        'css'      => [ 'postfix' => [ 'musician-uuid', CssClasses::CLIP_LONG_TEXT, 'tiny-width', ], ],
         'sql'      => 'BIN2UUID($join_col_fqn)',
         'display|LVF' => ['popup' => 'data'],
         'sqlw'     => 'UUID2BIN($val_qas)',

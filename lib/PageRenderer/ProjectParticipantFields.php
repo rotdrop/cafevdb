@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
@@ -235,7 +236,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['tb'] = self::TABLE;
 
     $opts['css']['postfix'] = [
-      'show-hide-disabled',
+      CssClasses::SHOW_HIDE_DISABLED,
     ];
 
     $opts['cgi']['persist'] = [
@@ -569,7 +570,7 @@ class ProjectParticipantFields extends PMETableViewBase
           'not-multiplicty-parallel-hidden',
           'not-multiplicty-multiple-hidden',
           'not-multiplicty-recurring-hidden',
-          'hide-subsequent-lines',
+          CssClasses::HIDE_SUBSEQUENT_LINES,
         ],
       ],
       'css' => [
@@ -756,7 +757,7 @@ __EOT__;
       'css' => [
         'postfix' => [
           'default-single-value',
-          'squeeze-subsequent-lines', // for html
+          CssClasses::SQUEEZE_SUBSEQUENT_LINES, // for html
           'default-hidden',
           'not-multiplicity-simple-hidden',
           'not-multiplicity-single-hidden',
@@ -836,7 +837,7 @@ __EOT__;
             }
         }
         $cssClass = ($dataType != FieldDataType::HTML && $dataType != FieldDataType::TEXT) ? ' align-right' : '';
-        $html = '<span class="pme-cell-wrapper'.$cssClass.'">';
+        $html = '<span class="' . CssClasses::PME_CELL_WRAPPER . ''.$cssClass.'">';
         $html .= ($dataType == FieldDataType::HTML)
           ? '<span class="pme-cell-squeezer">'.$value.'</span>'
           : $value;
@@ -860,7 +861,7 @@ __EOT__;
           'data-type-cloud-file-hidden',
           'not-multiplicity-multiple-hidden',
           'not-multiplicity-parallel-hidden',
-          'allow-empty',
+          CssClasses::ALLOW_EMPTY,
         ],
       ],
       'select' => 'D', // @todo should be multi for "parallel".
@@ -932,7 +933,14 @@ __EOT__;
       [
         'tab'      => [ 'id' => 'display' ],
         'name' => $this->l->t('Tooltip'),
-        'css' => [ 'postfix' => [ 'participant-field-tooltip', 'squeeze-subsequent-lines', 'hide-subsequent-lines', 'wysiwyg-editor', ], ],
+        'css' => [
+          'postfix' => [
+            'participant-field-tooltip',
+            CssClasses::SQUEEZE_SUBSEQUENT_LINES,
+            CssClasses::HIDE_SUBSEQUENT_LINES,
+            ControllerCssClasses::WYSIWYG_EDITOR,
+          ],
+        ],
         'select' => 'T',
         'textarea' => [ 'rows' => 5,
                         'cols' => 28 ],
@@ -942,7 +950,7 @@ __EOT__;
         'escape' => false,
         'display|LF' => [
           'popup' => 'data',
-          'prefix' => '<div class="pme-cell-wrapper half-line-width"><div class="pme-cell-squeezer">',
+          'prefix' => '<div class="' . CssClasses::PME_CELL_WRAPPER . ' half-line-width"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
         ],
         'tooltip' => $this->toolTipsService['participant-fields-tooltip'],
@@ -964,7 +972,7 @@ __EOT__;
 
     $opts['fdd']['tab'] = [
       'name' => $this->l->t('Table Tab'),
-      'css' => [ 'postfix' => [ 'tab', 'allow-empty', ], ],
+      'css' => [ 'postfix' => [ 'tab', CssClasses::ALLOW_EMPTY, ], ],
       'select' => 'D',
       'sql' => '$join_col_fqn',
       'values' => [
@@ -1008,7 +1016,7 @@ __EOT__;
 
     $opts['fdd']['participation_context'] = [
       'name' => $this->l->t('Context'),
-      'css' => [ 'postfix' => [ 'participation-context', 'allow-empty' ], ],
+      'css' => [ 'postfix' => [ 'participation-context', CssClasses::ALLOW_EMPTY ], ],
       'select' => 'O',
       'values2' => Types\EnumParticipationContext::getL10NValues($this->l),
       'default' => Types\EnumParticipationContext::UNRESTRICTED->value,
@@ -1654,7 +1662,7 @@ __EOT__;
           }
       }
     }
-    $html = '<div class="pme-cell-wrapper quarter-sized">';
+    $html = '<div class="' . CssClasses::PME_CELL_WRAPPER . ' quarter-sized">';
     if ($op === 'add' || $op === 'change') {
       // controls for showing soft-deleted options or normally
       // unneeded inputs
@@ -2013,9 +2021,11 @@ __EOT__;
         'not-data-type-html-hidden',
         'not-data-type-html-disabled',
       ]));
+    $wysiwyg = ControllerCssClasses::WYSIWYG_EDITOR;
+    $cellWrapper = CssClasses::PME_CELL_WRAPPER;
     $html  .=<<<__EOT__
-<span class="{$cssClass} pme-cell-wrapper">
-  <textarea class="pme-input data-options-{$multiplicityVariant} data-type-html-wysiwyg-editor"
+<span class="{$cssClass} {$cellWrapper}">
+  <textarea class="pme-input data-options-{$multiplicityVariant} data-type-html-{$wysiwyg}"
             name="{$name}[{$key}][{$field}]"
             {$htmlDisabled['textarea']}
             title="{$tip}"

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,10 @@ namespace OCA\CAFEVDB;
 // phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect
 // phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.Indent
 
-use OCA\CAFEVDB\Controller\PersonalSettingsController;
-use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Controller\CssClasses;
+use OCA\CAFEVDB\Controller\EnumSimpleSettingsKey;
+use OCA\CAFEVDB\Controller\PersonalSettingsController;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 
 if (!empty($_[ConfigConstants::EMAIL_TEST_NAME_KEY])) {
@@ -303,7 +304,7 @@ foreach (PersonalSettingsController::EMAIL_PROTO as $proto) {
                 . ' The idea is to give the recipients information why they receive the message'
                 . ' and how they can prevent further messages if they consider such messages as spam.')); ?></legend>
         <div class="bulk-email-privacy-notice container">
-          <textarea class="<?= $privacyNoticeKey ?> bulk-email-privacy-notice wysiwyg"
+          <textarea class="<?= $privacyNoticeKey ?> bulk-email-privacy-notice <?= CssClasses::WYSIWYG_EDITOR ?>"
                     name="<?= $privacyNoticeKey ?>"
                     id="<?= $privacyNoticeKey ?>"
                     cols="60"

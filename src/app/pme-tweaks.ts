@@ -26,10 +26,12 @@ import $ from './jquery.ts';
 import { emailFormPopup } from './email.ts';
 import pageBusyIcon from './busy-icon.ts';
 import { token as pmeToken, sys as PMEsys } from './pme-selectors.ts';
-
 // const qs = require('qs');
 // require('qs/lib/index.js');
 import { parse as qsParse } from 'qs';
+import { EnumPostTag as EmailPostTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+import { PARTICIPATION_STATUS_FILTER } from '../../build/ts-types/php-modules/EmailForm/RecipientsFilterCgiKeys.ts';
+import { EnumParticipationStatus } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 
 require('./jquery-datetimepicker.ts');
 
@@ -89,6 +91,7 @@ const pmeTweaks = function($container?: JQuery) {
     return $(this).text().trim().indexOf('-') === 0;
   }).addClass('negative');
 
+  // Email-popup after clicking on global email button
   $(globalState.PHPMyEdit.defaultSelector + ' input.email.' + pmeToken('misc') + '.' + pmeToken('commit'))
     .off('click')
     .on('click', function(/* this: HTMLInputElement */) {
@@ -113,11 +116,10 @@ const pmeTweaks = function($container?: JQuery) {
       return false;
     }
     let post = form.serialize();
-    post += '&' + PMEsys('mrecs') + '[]=' + JSON.stringify(params[recordKey]);
-    post += '&emailRecipients[MemberStatusFilter][0]=regular';
-    post += '&emailRecipients[MemberStatusFilter][1]=passive';
-    post += '&emailRecipients[MemberStatusFilter][2]=soloist';
-    post += '&emailRecipients[MemberStatusFilter][3]=conductor';
+    post += `&${PMEsys('mrecs')}[]=${JSON.stringify(params[recordKey])}`;
+    for (const status of Object.values(EnumParticipationStatus)) {
+      post += `&${EmailPostTag.RECIPIENTS_FILTER}[${PARTICIPATION_STATUS_FILTER}][]=${status}`;
+    }
 
     pageBusyIcon(true);
     emailFormPopup(post, true, true, () => pageBusyIcon(false));

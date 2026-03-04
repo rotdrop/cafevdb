@@ -36,6 +36,7 @@ use function OCA\CAFEVDB\Common\Functions\strcat as cat;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Controller\CssClasses as ControllerCssClasses;
 use OCA\CAFEVDB\Controller\DownloadsController;
 use OCA\CAFEVDB\Controller\EnumFileStorageBackend;
 use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet;
@@ -301,12 +302,12 @@ trait ParticipantFieldsTrait
               break;
             case FieldDataType::HTML:
               $fdd['textarea'] = [
-                'css' => 'wysiwyg-editor',
+                'css' => ControllerCssClasses::WYSIWYG_EDITOR,
                 'rows' => 5,
                 'cols' => 50,
               ];
-              $fdd['css']['postfix'][] = 'hide-subsequent-lines';
-              $fdd['css']['postfix'][] = 'clip-long-text';
+              $fdd['css']['postfix'][] = CssClasses::HIDE_SUBSEQUENT_LINES;
+              $fdd['css']['postfix'][] = CssClasses::CLIP_LONG_TEXT;
               $fdd['display|LF'] = [ 'popup' => 'data' ];
               $fdd['escape'] = false;
               break;
@@ -463,7 +464,7 @@ trait ParticipantFieldsTrait
    href="'.$downloadLink.'">' . $html . '</a>';
 
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-                  $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
+                  $html = '<div class="' . CssClasses::PME_CELL_WRAPPER . ' flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
 
                   return $html;
                 };
@@ -1221,10 +1222,12 @@ trait ParticipantFieldsTrait
                   'postfix' => '</spans></div>',
                 ];
                 if ($fieldMultiplicity == FieldMultiplicity::PARALLEL) {
-                  $keyFdd['css']['postfix'][] = 'set hide-subsequent-lines';
+                  $keyFdd['css']['postfix'][] = 'set';
+                  $keyFdd['css']['postfix'][] = CssClasses::HIDE_SUBSEQUENT_LINES;
                   $keyFdd['select'] = 'M';
                 } else {
-                  $keyFdd['css']['postfix'][] = 'enum allow-empty';
+                  $keyFdd['css']['postfix'][] = 'enum';
+                  $keyFdd['css']['postfix'][] = CssClasses::ALLOW_EMPTY;
                   $keyFdd['select'] = 'D';
                 }
                 $keyFdd['css']['postfix'][] = cat($fieldDataType);
@@ -1268,7 +1271,7 @@ trait ParticipantFieldsTrait
               $fdd['css']['postfix'][] = cat('data-type-', $fieldDataType);
               $fdd['css']['postfix'][] = cat('multiplicity-', $fieldMultiplicity);
               $fdd['css']['postfix'][] = 'recurring-generator-' . $generatorSlug;
-              $fdd['css']['postfix'][] = 'restrict-height';
+              $fdd['css']['postfix'][] = CssClasses::RESTRICT_HEIGHT;
               unset($fdd['mask']);
               $fdd['select'] = 'M';
               $fdd['values'] = array_merge(
@@ -1540,7 +1543,7 @@ trait ParticipantFieldsTrait
 
                   if ($hasSupportingDocuments) {
                     $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
-                    $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
+                    $html = '<div class="' . CssClasses::PME_CELL_WRAPPER . ' flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
                   }
 
                   return $html;
@@ -1831,7 +1834,7 @@ WHERE pp.project_id = $this->projectId",
               $groupMemberFdd['display|LFVD'] = array_merge(
                 $groupMemberFdd['display'],
                 [
-                  'prefix' => '<span class="allowed-option money group service-fee flex-container flex-baseline"><span class="allowed-option-name money clip-long-text group">',
+                  'prefix' => '<span class="allowed-option money group service-fee flex-container flex-baseline"><span class="allowed-option-name money ' . CssClasses::CLIP_LONG_TEXT . ' group">',
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $tableName) {
                     $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = empty($selectedKey) ? '' : ' selected';
@@ -2057,7 +2060,7 @@ WHERE pp.project_id = $this->projectId",
                 ],
               ]);
 
-            $groupMemberFdd['css']['postfix'][] = 'clip-long-text';
+            $groupMemberFdd['css']['postfix'][] = CssClasses::CLIP_LONG_TEXT;
             $groupMemberFdd['css|LFVD']['postfix'] = $groupMemberFdd['css']['postfix'];
             $groupMemberFdd['css|LFVD']['postfix'][] = 'view';
 
