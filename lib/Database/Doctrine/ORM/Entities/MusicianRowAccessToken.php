@@ -45,7 +45,7 @@ class MusicianRowAccessToken implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
-  const HASH_LENGTH = 512;
+  public const HASH_LENGTH = 512;
 
   #[ORM\OneToOne(targetEntity: Musician::class, inversedBy: 'rowAccessToken', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
