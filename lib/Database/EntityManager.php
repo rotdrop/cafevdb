@@ -461,8 +461,9 @@ class EntityManager extends AbstractEntityManager
     return true;
   }
 
-  private const DBAL_TYPES = [
-    Types\UuidType::class => 'uuid_binary',
+  protected const DBAL_TYPES = [
+    ...parent::DBAL_TYPES,
+    // Types\UuidType::class => 'uuid_binary',
     Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
     Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
     Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
@@ -474,25 +475,15 @@ class EntityManager extends AbstractEntityManager
    *
    * @return void
    */
-  private function registerTypes():void
+  protected function registerTypes(): void
   {
     if ($this->typesBound) {
       return;
     }
 
-    $connection = $this->entityManager->getConnection();
+    parent::registerTypes();
+
     try {
-      $platform = $connection->getDatabasePlatform();
-      foreach (self::DBAL_TYPES as $phpType => $sqlType) {
-        $instance = new $phpType;
-        $typeName = $instance->getName();
-        if (!Type::hasType($typeName)) {
-          Type::addType($typeName, $phpType);
-        }
-        if (!empty($sqlType)) {
-          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
-        }
-      }
       // Override datetime stuff
       Type::overrideType('date', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('date_immutable', \OCA\CAFEVDB\Wrapped\Carbon\Doctrine\DateTimeImmutableType::class);

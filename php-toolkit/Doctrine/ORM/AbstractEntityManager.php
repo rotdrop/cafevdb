@@ -22,10 +22,14 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+
+use OCA\RotDrop\Toolkit\Exceptions;
+use OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
 /**
  * Abstract base class with functionality needed by the classes in
@@ -43,6 +47,10 @@ abstract class AbstractEntityManager extends EntityManagerDecorator implements S
     self::SOFT_DELETEABLE_FILTER => SoftDeleteableFilter::class,
   ];
 
+  protected const DBAL_TYPES = [
+    Types\UuidType::class => Types\UuidType::NAME,
+  ];
+
   /**
    * Add a basic set of filters to ensure consistent naming.
    *
@@ -53,10 +61,10 @@ abstract class AbstractEntityManager extends EntityManagerDecorator implements S
    */
   protected function filterConfiguration(Configuration $configuration): array
   {
-    foreach (self::BASE_FILTER_SET as $name => $className) {
+    foreach (static::BASE_FILTER_SET as $name => $className) {
       $configuration->addFilter($name, $className);
     }
-    return self::BASE_FILTER_SET;
+    return static::BASE_FILTER_SET;
   }
 
   /**
@@ -94,5 +102,32 @@ abstract class AbstractEntityManager extends EntityManagerDecorator implements S
   public function getWrappedObject(): EntityManagerInterface
   {
     return $this->wrapped;
+  }
+
+  /**
+   * Register the needed additional DBAL types.
+   *
+   * @return void
+   */
+  protected function registerTypes():void
+  {
+    $connection = $this->getWrappedObject()->getConnection();
+    try {
+      $platform = $connection->getDatabasePlatform();
+      foreach (static::DBAL_TYPES as $phpType => $sqlType) {
+        $instance = new $phpType;
+        $typeName = $instance->getName();
+        if (!Type::hasType($typeName)) {
+          Type::addType($typeName, $phpType);
+        } else {
+          Type::overrideType($typeName, $phpType);
+        }
+        if (!empty($sqlType)) {
+          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
+        }
+      }
+    } catch (Throwable $t) {
+      throw new Exceptions\DatabaseException($this->l->t('Unable to register types with DBAL.'), previous: $t);
+    }
   }
 }

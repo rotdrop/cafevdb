@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,12 +20,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine\UuidBinaryType;
-use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Doctrine\UuidBinaryType;
+use Ramsey\Uuid\UuidInterface;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * Like UuidBinaryType, but implement a more allowing
@@ -35,6 +33,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class UuidType extends UuidBinaryType
 {
+  public const NAME = 'uuid_binary';
+
   /** {@inheritdoc} */
   public function convertToPHPValue($value, AbstractPlatform $platform): ?UuidInterface
   {
