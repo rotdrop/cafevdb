@@ -32,7 +32,6 @@ use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
-// use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
 use OCA\CAFEVDB\Wrapped\Firehed\DbalLogger\QueryLogger;
 
 /** DBAL logger implementation which logs to the cloud log. */
