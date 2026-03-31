@@ -24,9 +24,9 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Common;
 
-use OCA\CAFEVDB\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test quasi-fixed-point numbers. */

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Database\Constants;
 
 /**

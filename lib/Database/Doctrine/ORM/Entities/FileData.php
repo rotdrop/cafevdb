@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2022, 2024, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'FileData')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
-#[ORM\DiscriminatorMap(['generic' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\DiscriminatorMap([
+  EnumFileType::GENERIC->value => 'FileData',
+  EnumFileType::IMAGE->value => 'ImageFileData',
+  EnumFileType::ENCRYPTED->value => 'EncryptedFileData',
+])]
 #[ORM\Entity]
 #[Gedmo\Loggable(enabled: false)]
 #[ORM\HasLifecycleCallbacks]

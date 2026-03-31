@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Common;
 
-use OCA\CAFEVDB\Common\DecimalRationalP4S4 as NumberClass;
+use OutOfBoundsException;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+
+use OCA\RotDrop\Toolkit\Constants;
 
 /**
- * Database type fractions of percentages.
+ * Just like RationalNumber, but the jsonSerialize() implementation yields a
+ * decimal number string with two digits after the separator.
  */
-class DecimalRationalP4S4Type extends AbstractDecimalRationalType
+#[TSAttributes\TypeScript]
+#[TSAttributes\LiteralTypeScriptType('string')]
+#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
+class DecimalRationalMonetary extends AbstractDecimalRational
 {
-  protected const NUMBER_CLASS = NumberClass::class;
+  public const PRECISION = Constants::MONETARY_PRECISION;
+  public const SCALE = Constants::MONETARY_SCALE;
 }

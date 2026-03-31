@@ -30,7 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Crypto;

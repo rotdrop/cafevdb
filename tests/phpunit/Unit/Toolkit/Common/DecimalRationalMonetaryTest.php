@@ -24,13 +24,13 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Common;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as NumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as NumberType;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the given number type class */

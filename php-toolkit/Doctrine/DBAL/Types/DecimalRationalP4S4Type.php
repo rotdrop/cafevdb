@@ -1,8 +1,6 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -20,24 +18,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use PHPUnit\Framework\Attributes;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4 as NumberClass;
 
-use OCA\CAFEVDB\Common\DecimalRationalP4S4 as NumberType;
-use OCA\RotDrop\Tests\DeprecationException;
-
-/** Test the given number type class */
-#[Attributes\CoversClass(NumberType::class)]
-class DecimalRationalP4S4Test extends TestCase
+/**
+ * Database type fractions of percentages.
+ */
+class DecimalRationalP4S4Type extends AbstractDecimalRationalType
 {
-  use TestDecimalRationalTrait;
-
-  private const NUMBER_CLASS = NumberType::class;
+  protected const NUMBER_CLASS = NumberClass::class;
 }

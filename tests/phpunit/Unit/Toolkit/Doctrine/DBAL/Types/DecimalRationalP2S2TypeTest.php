@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,26 +20,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Common;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\DBAL\Types;
 
-use OutOfBoundsException;
+use PHPUnit\Framework\Attributes;
+use PHPUnit\Framework\TestCase;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
-use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP2S2 as NumberType;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP2S2Type as DatabaseType;
 
-use OCA\CAFEVDB\Constants;
-
-/**
- * Just like RationalNumber, but the jsonSerialize() implementation yields a
- * decimal number string with the given scale and maximum precision.
- */
-#[TSAttributes\TypeScript]
-#[TSAttributes\LiteralTypeScriptType('string')]
-#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
-class DecimalRationalP4S4 extends AbstractDecimalRational
+/** Test some aspects of quasi-fixed-point numbers. */
+#[Attributes\CoversClass(DatabaseType::class)]
+#[Attributes\CoversClass(AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+class DecimalRationalP2S2TypeTest extends TestCase
 {
-  public const PRECISION = 4;
-  public const SCALE = 4;
+  use TestDecimalRationalTypeTrait;
+
+  private const NUMBER_CLASS = NumberType::class;
+  private const DATABASE_TYPE_CLASS = DatabaseType::class;
 }

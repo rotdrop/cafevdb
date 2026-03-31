@@ -1,8 +1,6 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
@@ -20,31 +18,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use PHPUnit\Framework\Attributes;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary;
 
-use OCA\CAFEVDB\Common\AbstractDecimalRational;
-use OCA\RotDrop\Tests\DeprecationException;
-
-/** Unit-test class. */
-class DecimalRationalTestClass extends AbstractDecimalRational
+/**
+ * Abstract base class for decimal types
+ */
+class DecimalRationalMonetaryType extends AbstractDecimalRationalType
 {
-  public const PRECISION = 7;
-  public const SCALE = 4;
-}
+  protected const NUMBER_CLASS = DecimalRationalMonetary::class;
+  public const NAME = parent::NAME_BASE . '_monetary';
 
-/** Test the given number type class */
-#[Attributes\CoversClass(AbstractDecimalRational::class)]
-class DecimalRationalTest extends TestCase
-{
-  use TestDecimalRationalTrait;
-
-  private const NUMBER_CLASS = DecimalRationalTestClass::class;
+  /**
+   * {@inheritDoc}
+   */
+  public function getName()
+  {
+    return self::NAME;
+  }
 }

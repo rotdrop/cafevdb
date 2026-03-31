@@ -48,7 +48,11 @@ abstract class AbstractEntityManager extends EntityManagerDecorator implements S
   ];
 
   protected const DBAL_TYPES = [
-    Types\UuidType::class => Types\UuidType::NAME,
+    Types\UuidType::class => null,
+    Types\DecimalRationalP2S2Type::class => null,
+    Types\DecimalRationalP4S4Type::class => null,
+    Types\DecimalRationalMonetaryType::class => null,
+    Types\ArrayType::class => null,
   ];
 
   /**
@@ -115,6 +119,9 @@ abstract class AbstractEntityManager extends EntityManagerDecorator implements S
     try {
       $platform = $connection->getDatabasePlatform();
       foreach (static::DBAL_TYPES as $phpType => $sqlType) {
+        if (empty($sqlType) && method_exists($phpType, 'getName')) {
+          $sqlType = new $phpType()->getName();
+        }
         $instance = new $phpType;
         $typeName = $instance->getName();
         if (!Type::hasType($typeName)) {

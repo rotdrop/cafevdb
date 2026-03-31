@@ -27,12 +27,6 @@
 
 ini_set('display_errors', 'stderr');
 
-/*-****************************************************************************
- *
- * Inject NC app setup
- *
- */
-
 $appDir = realpath(__DIR__) . '/..';
 define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
 
@@ -57,15 +51,12 @@ try {
   true,
 );
 
-use OCA\CAFEVDB\Common\ConsoleOutput;
+use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 // store output of different transformers in different files
 
-$excludes = [
-  // obsolete
-  // 'lib/Database/Doctrine/ORM/Proxies',
-];
+$excludes = [];
 
 $scopedNamespaces = [
   \Doctrine::class,
@@ -84,7 +75,7 @@ try {
     input: new \Symfony\Component\Console\Input\ArgvInput,
     output: \OCP\Server::get(ConsoleOutput::class),
   );
-} catch (\Throwable $t) {
+} catch (Throwable $t) {
   fwrite(STDERR, 'Dependency injection not set up: ' . $t->getMessage() . PHP_EOL . print_r($t->getTrace(), true) . PHP_EOL);
   exit(1);
 }

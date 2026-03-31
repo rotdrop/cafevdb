@@ -24,12 +24,11 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Common\AbstractDecimalRational;
-use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Database\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType;
+use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\SerializationFailed;

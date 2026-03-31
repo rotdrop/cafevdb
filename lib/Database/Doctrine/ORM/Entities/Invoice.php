@@ -28,10 +28,10 @@ use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType as MonetaryDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;

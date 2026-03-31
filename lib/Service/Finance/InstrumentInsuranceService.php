@@ -28,10 +28,10 @@ use DateTimeZone;
 use DateTimeImmutable as DateTime;
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as TaxRateNumberType;
-use OCA\CAFEVDB\Common\DecimalRationalP4S4 as InsuranceRateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP2S2 as TaxRateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as InsuranceRateNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

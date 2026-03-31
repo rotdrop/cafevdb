@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Common;
+namespace OCA\RotDrop\Toolkit\Common;
 
-use Symfony\Component\Console;
+use OutOfBoundsException;
 
-/** Just kind of a wrapper for a singleton console output through the app-container. */
-class ConsoleOutput extends Console\Output\ConsoleOutput
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+
+use OCA\RotDrop\Toolkit\Constants;
+
+/**
+ * Just like RationalNumber, but the jsonSerialize() implementation yields a
+ * decimal number string with the given scale and maximum precision.
+ */
+#[TSAttributes\TypeScript]
+#[TSAttributes\LiteralTypeScriptType('string')]
+#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
+class DecimalRationalP4S4 extends AbstractDecimalRational
 {
+  public const PRECISION = 4;
+  public const SCALE = 4;
 }

@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,9 +20,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as NumberClass;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalP2S2 as NumberClass;
 
 /**
  * Database type for whole number percentages.

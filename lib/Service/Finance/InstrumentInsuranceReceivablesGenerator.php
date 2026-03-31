@@ -28,7 +28,7 @@ use DateTimeImmutable as DateTime;
 use RuntimeException;
 use UnexpectedValueException;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

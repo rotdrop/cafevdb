@@ -1,11 +1,9 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025, 2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,16 +20,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
 use Throwable;
 
-use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\AbstractDecimalRational;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\ValueNotConvertible;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\SerializationFailed;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
+use Doctrine\DBAL\Types\Exception\SerializationFailed;
+use Doctrine\DBAL\Types\Type;
+
+use OCA\RotDrop\Toolkit\Common\RationalNumber;
+use OCA\RotDrop\Toolkit\Common\AbstractDecimalRational;
 
 /**
  * Abstract base class for decimal types

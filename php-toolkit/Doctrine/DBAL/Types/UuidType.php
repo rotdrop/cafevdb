@@ -35,6 +35,12 @@ class UuidType extends UuidBinaryType
 {
   public const NAME = 'uuid_binary';
 
+  /** @return string */
+  public function getName(): string
+  {
+    return self::NAME;
+  }
+
   /** {@inheritdoc} */
   public function convertToPHPValue($value, AbstractPlatform $platform): ?UuidInterface
   {

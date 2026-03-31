@@ -35,7 +35,6 @@ use OCP\IL10N;
 use OCA\RotDrop\Tests\DatabaseProvider;
 
 use OCA\CAFEVDB\Common\ConsoleLogger;
-use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\Database\Doctrine\Migrations;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
@@ -44,6 +43,7 @@ use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Service\MigrationsServiceInterface;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 
 /** Setup code for testing migrations. */

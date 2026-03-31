@@ -24,20 +24,23 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Common;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Doctrine\DBAL\Types;
 
 use PHPUnit\Framework\Attributes;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as NumberType;
-use OCA\RotDrop\Tests\DeprecationException;
+use OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as NumberType;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as DatabaseType;
 
-/** Test the given number type class */
-#[Attributes\CoversClass(NumberType::class)]
-class DecimalRationalP2S2Test extends TestCase
+/** Test some aspects of quasi-fixed-point numbers. */
+#[Attributes\CoversClass(DatabaseType::class)]
+#[Attributes\CoversClass(AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+class DecimalRationalP4S4TypeTest extends TestCase
 {
-  use TestDecimalRationalTrait;
+  use TestDecimalRationalTypeTrait;
 
   private const NUMBER_CLASS = NumberType::class;
+  private const DATABASE_TYPE_CLASS = DatabaseType::class;
 }

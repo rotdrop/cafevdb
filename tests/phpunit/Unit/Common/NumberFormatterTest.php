@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 
 use OCA\CAFEVDB\Common\NumberFormatter;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the NumberFormatter class. */

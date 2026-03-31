@@ -46,8 +46,8 @@ use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Security\ISecureRandom;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Transliterator;
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;

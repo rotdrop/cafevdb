@@ -461,15 +461,6 @@ class EntityManager extends AbstractEntityManager
     return true;
   }
 
-  protected const DBAL_TYPES = [
-    ...parent::DBAL_TYPES,
-    // Types\UuidType::class => 'uuid_binary',
-    Types\DecimalRationalP2S2Type::class => 'decimal_rational_2_2',
-    Types\DecimalRationalP4S4Type::class => 'decimal_rational_4_4',
-    Types\DecimalRationalMonetaryType::class => 'decimal_rational_monetary',
-    Types\ArrayType::class => 'array',
-  ];
-
   /**
    * Register the needed additional DBAL types.
    *

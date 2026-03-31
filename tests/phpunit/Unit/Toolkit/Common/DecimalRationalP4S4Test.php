@@ -24,30 +24,20 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
  */
 
-namespace OCA\CAFEVDB\Tests\Unit\Database\Doctrine\DBAL\Types;
+namespace OCA\CAFEVDB\Tests\Unit\Toolkit\Common;
 
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-use OCA\CAFEVDB\Common\AbstractDecimalRational;
-use OCA\CAFEVDB\Common\DecimalRationalMonetary;
-use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Database\Constants;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType as DatabaseType;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Exception\SerializationFailed;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as NumberType;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test the given number type class */
-#[Attributes\CoversClass(DatabaseType::class)]
-#[Attributes\CoversClass(AbstractDecimalRational::class)]
-#[Attributes\UsesClass(RationalNumber::class)]
-class DecimalRationalMonetaryTypeTest extends TestCase
+#[Attributes\CoversClass(NumberType::class)]
+class DecimalRationalP4S4Test extends TestCase
 {
-  use TestDecimalRationalTypeTrait;
+  use TestDecimalRationalTrait;
 
-  private const NUMBER_CLASS = DecimalRationalMonetary::class;
-  private const DATABASE_TYPE_CLASS = DatabaseType::class;
+  private const NUMBER_CLASS = NumberType::class;
 }

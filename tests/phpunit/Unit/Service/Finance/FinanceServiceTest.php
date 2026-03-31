@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 #[Attributes\CoversClass(FinanceService::class)]
 #[Attributes\CoversClass(VCalendarService::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Transliterator::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]

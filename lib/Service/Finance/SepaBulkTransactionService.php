@@ -35,7 +35,7 @@ use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

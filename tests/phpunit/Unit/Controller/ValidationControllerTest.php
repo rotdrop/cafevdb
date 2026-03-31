@@ -32,7 +32,7 @@ use OCP\AppFramework\Http;
 use OCP\IRequest;
 use OCP\Validation\IManager as ValidationManager;
 
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Controller\DTO;
 use OCA\CAFEVDB\Controller\ValidationController as TestedController;
@@ -42,8 +42,8 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ValidationController. */
 #[Attributes\CoversClass(TestedController::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Controller\DTO\AmountResponse::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ConfigService::class)]

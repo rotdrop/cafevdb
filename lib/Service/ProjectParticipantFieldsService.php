@@ -31,8 +31,8 @@ use RuntimeException;
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Common;
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;

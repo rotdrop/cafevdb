@@ -27,10 +27,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use JsonSerializable;
 use ArrayAccess;
 
-use OCA\CAFEVDB\Common\DecimalRationalP2S2 as TaxRateNumberType;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP2S2 as TaxRateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalP2S2Type as RateDatabaseType;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP2S2Type as RateDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;

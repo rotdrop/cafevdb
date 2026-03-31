@@ -29,6 +29,7 @@ use NumberToWords\NumberToWords;
 use NumberToWords\CurrencyTransformer\CurrencyTransformer;
 use NumberToWords\NumberTransformer\NumberTransformer;
 
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 
 /**
  * A wrapper around https://github.com/kwn/number-to-words to make it even

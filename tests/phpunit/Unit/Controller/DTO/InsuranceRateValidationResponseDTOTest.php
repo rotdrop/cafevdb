@@ -32,13 +32,13 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\Constants as CoreConstants;
 
-use OCA\CAFEVDB\Common\DecimalRationalP4S4 as RateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFEVDB\Controller\DTO\InsuranceRateValidationResponse as TestedDTO;
 
 /** Consistency test for ValidatePhoneResponse DTO. */
 #[Attributes\CoversClass(TestedDTO::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\RationalNumber::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Common\AbstractDecimalRational::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\RationalNumber::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Common\AbstractDecimalRational::class)]
 class InsuranceRateValidationResponseDTOTest extends TestCase
 {
   use TestResponseDTOTrait;

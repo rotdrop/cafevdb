@@ -45,7 +45,7 @@ use function OCA\CAFEVDB\Common\Functions\sprintf; // accept backed enums
 
 use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
 use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Constants;

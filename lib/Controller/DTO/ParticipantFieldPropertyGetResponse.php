@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller\DTO;
 
-use OCA\CAFEVDB\Common\DecimalRationalMonetary as MonetaryNumberType;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Controller\DTO\ParticipantFieldPropertyGetDefaultValue as DefaultValue;
 use OCA\CAFEVDB\Controller\EnumParticipantFieldPropertyGet as EnumPropertyGet;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM;

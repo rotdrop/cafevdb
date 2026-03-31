@@ -39,7 +39,11 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 #[ORM\UniqueConstraint(columns: ['parent_id', 'name'])]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: DirEntryType::class)]
-#[ORM\DiscriminatorMap(['generic' => 'DatabaseStorageDirEntry', 'file' => 'DatabaseStorageFile', 'folder' => 'DatabaseStorageFolder'])]
+#[ORM\DiscriminatorMap([
+  DirEntryType::GENERIC->value => 'DatabaseStorageDirEntry',
+  DirEntryType::FILE->value => 'DatabaseStorageFile',
+  DirEntryType::FOLDER->value => 'DatabaseStorageFolder',
+])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class DatabaseStorageDirEntry implements \ArrayAccess

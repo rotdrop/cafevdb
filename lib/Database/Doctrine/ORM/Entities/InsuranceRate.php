@@ -26,10 +26,10 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\RationalNumber;
-use OCA\CAFEVDB\Common\DecimalRationalP4S4 as RateNumberType;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
+use OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
@@ -61,7 +61,7 @@ class InsuranceRate implements \ArrayAccess
   #[ORM\Id]
   private InsuranceBroker $broker;
 
-  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false, options: ['default' => Types\EnumGeographicalScope::GERMANY])]
   #[ORM\Id]
   private Types\EnumGeographicalScope $geographicalScope;
 

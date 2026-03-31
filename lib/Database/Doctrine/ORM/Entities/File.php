@@ -48,7 +48,11 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Index(columns: ['file_name'])]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
-#[ORM\DiscriminatorMap(['generic' => 'File', 'encrypted' => 'EncryptedFile', 'image' => 'Image'])]
+#[ORM\DiscriminatorMap([
+  EnumFileType::GENERIC->value => 'File',
+  EnumFileType::ENCRYPTED->value => 'EncryptedFile',
+  EnumFileType::IMAGE->value => 'Image',
+])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class File implements \ArrayAccess

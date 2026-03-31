@@ -810,7 +810,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumParticipationStatus
    */
-  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
+  public function getDefaultParticipationStatus(): Types\EnumParticipationStatus
   {
     return $this->defaultParticipationStatus;
   }

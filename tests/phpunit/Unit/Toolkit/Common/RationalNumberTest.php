@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 
 use MathPHP\Number\Rational;
-use OCA\CAFEVDB\Common\RationalNumber;
+use OCA\CAFEVDB\Toolkit\Common\RationalNumber;
 
 /** Test the RationalNumber class. */
 #[Attributes\CoversClass(RationalNumber::class)]

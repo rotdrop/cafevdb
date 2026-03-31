@@ -36,7 +36,6 @@ use OCP\IL10N;
 use OCA\RotDrop\Tests\DatabaseProvider;
 
 use OCA\CAFEVDB\Common\ConsoleLogger;
-use OCA\CAFEVDB\Common\ConsoleOutput;
 use OCA\CAFEVDB\Database\Doctrine\Migrations;
 use OCA\CAFEVDB\Database\Doctrine\Migrations\EnumMigrationDirection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
@@ -44,6 +43,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 
 /** Test aspects of the DoctrineMigrationsService class. */
@@ -69,9 +69,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\ArrayType::class)]
-#[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\DeprecationLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\InstrumentFamily::class)]
@@ -92,6 +89,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\BiDirectionalL10N::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\ExecutableFinder::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]

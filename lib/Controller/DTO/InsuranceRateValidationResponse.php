@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Controller\DTO;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Common\DecimalRationalP4S4;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalP4S4;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 
 /**
