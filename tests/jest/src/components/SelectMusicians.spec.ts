@@ -34,7 +34,7 @@ import { expect, jest } from '@jest/globals';
 import { Tooltip } from '@nextcloud/vue';
 // import useAppDataStore from '@/src/stores/app-data.ts';
 import useErrorHandler from '@/src/stores/error-handler.ts';
-import type { AppError } from '@/src/types/errors.ts';
+import type { AppError } from '@/src/toolkit/types/errors.ts';
 
 setLoggerSilent(true);
 
