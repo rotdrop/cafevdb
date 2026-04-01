@@ -35,7 +35,6 @@ use Psr\Container\ContainerInterface;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -44,8 +43,10 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService\EnumExportFormat;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
+use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -66,34 +67,29 @@ class SepaBulkTransactionService
    * Update: our preferred client banking tool seemingly has this hard-coded
    * to 2 days. Mmmh.
    */
-  const DEBIT_NOTE_SUBMISSION_DEADLINE = 2;
+  public const DEBIT_NOTE_SUBMISSION_DEADLINE = 2;
+
+  // fancy, just to have some reminders and a deadline on the task-list
+  public const BANK_TRANSFER_SUBMISSION_DEADLINE = 1;
 
   /**
    * @var int
    *
    * Allow for that many extra working days.
    */
-  const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
+  public const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
 
-  const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
-  const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
+  public const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
+  public const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
 
-  // fancy, just to have some reminders and a deadline on the task-list
-  const BANK_TRANSFER_SUBMISSION_DEADLINE = 1;
-
-  const TRANSACTION_TYPES = [
-    self::TRANSACTION_TYPE_BANK_TRANSFER,
-    self::TRANSACTION_TYPE_DEBIT_NOTE,
-  ];
-
-  const SUBMISSION_EVENT = 'submissionEvent';
-  const SUBMISSION_TASK = 'submisisonTask';
-  const DUE_EVENT = 'dueEvent';
-  const PRE_NOTIFICATION_EVENT = 'preNotificationEvent';
-  const PRE_NOTIFICATION_TASK = 'preNotificationTask';
+  private const SUBMISSION_EVENT = 'submissionEvent';
+  private const SUBMISSION_TASK = 'submisisonTask';
+  private const DUE_EVENT = 'dueEvent';
+  private const PRE_NOTIFICATION_EVENT = 'preNotificationEvent';
+  private const PRE_NOTIFICATION_TASK = 'preNotificationTask';
 
   /** @var array Calendar event types. */
-  const CALENDAR_EVENTS = [
+  private const CALENDAR_EVENTS = [
     self::SUBMISSION_EVENT,
     self::SUBMISSION_TASK,
     self::DUE_EVENT,
@@ -106,32 +102,32 @@ class SepaBulkTransactionService
    *
    * Alert one day before at 9:00.
    */
-  const BULK_TRANSACTION_REMINDER_SECONDS = - 15 * 60 * 60; /* alert one day in advance at */
+  public const BULK_TRANSACTION_REMINDER_SECONDS = - 15 * 60 * 60; /* alert one day in advance at */
 
   /**
    * @var int
    *
    * Alert early two days before at 9:00,.
    */
-  const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
+  public const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
 
   /** @var string Export format AqBanking. */
-  const EXPORT_AQBANKING = 'aqbanking';
+  const EXPORT_AQBANKING = EnumExportFormat::AQBANKING->value;
 
   /** @var string Export format GnuCash e.g. for balancing items. */
-  const EXPORT_GNU_CASH = 'gnucash';
+  const EXPORT_GNU_CASH = EnumExportFormat::GNU_CASH->value;
 
   /** @var array All supported exporters. */
-  const EXPORTERS = [
+  public const EXPORTERS = [
     self::EXPORT_AQBANKING,
   ];
 
-  const BALANCING_ITEMS_EXPORTERS = [
+  public const BALANCING_ITEMS_EXPORTERS = [
     self::EXPORT_GNU_CASH,
   ];
 
-  const EXPORT_SERVICE_ALIAS = 'export:bank-bulk-transaction:';
-  const EXPORT_BALANCING_ITEMS_SERVICE_ALIAS = self::EXPORT_SERVICE_ALIAS . 'balancing-items:';
+  public const EXPORT_SERVICE_ALIAS = 'export:bank-bulk-transaction:';
+  public const EXPORT_BALANCING_ITEMS_SERVICE_ALIAS = self::EXPORT_SERVICE_ALIAS . 'balancing-items:';
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -778,17 +774,15 @@ class SepaBulkTransactionService
    *
    * @param null|Entities\Project $project Project the transaction belongs to.
    *
-   * @param null|string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
+   * @param string $format Format of the export file, defaults to self::EXPORT_AQBANKING.
    *
    * @return null|Entities\DatabaseStorageFile The generated export set.
    */
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project = null,
-    null|string $format = null,
-  ):?Entities\DatabaseStorageFile {
-    $format = $format ?? self::EXPORT_AQBANKING;
-
+    string $format = self::EXPORT_AQBANKING,
+  ): ?Entities\DatabaseStorageFile {
     // as a safe-guard regenerate the subject in order to catch changes in
     // linked supporting documents.
     $this->updateBulkTransaction($bulkTransaction, flush: true);
@@ -889,7 +883,7 @@ class SepaBulkTransactionService
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction
    *
-   * @param null|string $format Format of the export file, defaults to self::EXPORT_GNU_CASH.
+   * @param string $format Format of the export file, defaults to self::EXPORT_GNU_CASH.
    *
    * @return null|Entities\DatabaseStorageFile The generated export set.
    *
@@ -897,10 +891,8 @@ class SepaBulkTransactionService
    */
   public function generateBalancingItems(
     Entities\SepaBulkTransaction $bulkTransaction,
-    ?string $format = null,
-  ):?Entities\DatabaseStorageFile {
-    $format = $format ?? self::EXPORT_GNU_CASH;
-
+    string $format = self::EXPORT_GNU_CASH,
+  ): ?Entities\DatabaseStorageFile {
     $exportDocument = null;
     $balancingItemsData = $bulkTransaction->getBalancingItemsData();
     /** @var Entities\DatabaseStorageFile $exportDocument */

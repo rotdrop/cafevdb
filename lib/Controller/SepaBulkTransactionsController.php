@@ -59,8 +59,6 @@ class SepaBulkTransactionsController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const END_POINT = 'finance/sepa/bulk-transactions';
-  public const TOPIC_CREATE = 'create';
-  public const TOPIC_EXPORTT = 'export';
 
   protected const TRANSACTION_TYPE_DEBIT_NOTE = SepaBulkTransactionService::TRANSACTION_TYPE_DEBIT_NOTE;
   protected const TRANSACTION_TYPE_BANK_TRANSFER = SepaBulkTransactionService::TRANSACTION_TYPE_BANK_TRANSFER;
@@ -71,9 +69,6 @@ class SepaBulkTransactionsController extends Controller
 
   protected const ALARM_FROM_START = FinanceService::VALARM_FROM_START;
   protected const ALARM_FROM_END = FinanceService::VALARM_FROM_END;
-
-  protected const EXPORT_PURPOSE_BANK_IMPORT = 'bank-import';
-  protected const EXPORT_PUPROSE_BALANCING_ITEMS = 'balancing-items';
 
   /** {@inheritdoc} */
   public function __construct(
@@ -92,7 +87,7 @@ class SepaBulkTransactionsController extends Controller
   }
 
   /**
-   * @param string $topic What to do.
+   * @param string|EnumSepaBulkTransactionsTopic $topic What to do.
    *
    * @param int $projectId Entity id.
    *
@@ -109,14 +104,15 @@ class SepaBulkTransactionsController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::END_POINT . '/{topic}')]
   public function serviceSwitch(
-    string $topic,
+    string|EnumSepaBulkTransactionsTopic $topic,
     int $projectId = 0,
     array $sepaBulkTransactions = [],
     ?string $sepaDueDeadline = null,
     int $bulkTransactionId = 0,
-  ):Response {
+  ): Response {
+    $topic = SepaBulkTransactionsTopic::get($topic);
     switch ($topic) {
-      case 'create':
+      case self::TOPIC_CREATE:
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
         // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
         $bankAccountRecords = $this->request->getParam($this->pme->cgiSysName('mrecs'), []);
@@ -131,19 +127,14 @@ class SepaBulkTransactionsController extends Controller
           $bankAccountRecords,
           $sepaBulkTransactions,
           $sepaDueDeadline);
-      case 'export':
+      case self::TOPIC_EXPORT:
         return $this->exportBulkTransaction(
           $bulkTransactionId,
           $projectId,
           purpose: $this->request->getParam('purpose', null),
           format: $this->request->getParam('format', null),
         );
-      default:
-        break;
     }
-    throw new Exceptions\EnduserNotificationException(
-      $this->l->t('Unknown Request: "%s".', $topic),
-    );
   }
 
   /**
@@ -173,7 +164,7 @@ class SepaBulkTransactionsController extends Controller
     array $bankAccountRecords,
     array $bulkTransactions = [],
     mixed $dueDeadline = null,
-  ):DataResponse {
+  ): DataResponse {
     /** @var Entities\Project $project */
     $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
     if (empty($project)) {
@@ -917,7 +908,7 @@ class SepaBulkTransactionsController extends Controller
    *
    * @param int $projectId Project endity id.
    *
-   * @param null|string $purpose
+   * @param null|string|EnumSepaBulkTransactionsExportPuropose $purpose
    *
    * @param null|string $format Export format, e.g. 'gnucash' or 'aqbanking'
    *
@@ -928,8 +919,7 @@ class SepaBulkTransactionsController extends Controller
     int $projectId = 0,
     ?string $purpose = null,
     ?string $format = null,
-  ):Response {
-    $purpose = $purpose ?? self::EXPORT_PURPOSE_BANK_IMPORT;
+  ): Response {
     $id = filter_var($bulkTransactionId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     if ($id === false) {
       throw new Exceptions\EnduserNotificationException($this->l->t('Submitted value "%s" is not a positive integer.', $bulkTransactionId));
@@ -950,15 +940,16 @@ class SepaBulkTransactionsController extends Controller
     }
 
     try {
+      $purpose = EnumSepaBulkTransactionsExportPurpose::get($purpose ?? EnumSepaBulkTransactionsExportPurpose::BANK_IMPORT);
       switch ($purpose) {
-        case self::EXPORT_PURPOSE_BANK_IMPORT:
+        case EnumSepaBulkTransactionsExportPurpose::BANK_IMPORT:
           $exportFile = $this->bulkTransactionService->generateTransactionData($bulkTransaction, $project, $format);
           break;
-        case self::EXPORT_PUPROSE_BALANCING_ITEMS:
+        case EnumSepaBulkTransactionsExportPurpose::BALANCING_ITEMS:
           $exportFile = $this->bulkTransactionService->generateBalancingItems($bulkTransaction, $format);
           break;
         default:
-          throw new InvalidArgumentException($this->l->t('Unknown export purpose: "%s".', $purpose));
+          throw new InvalidArgumentException($this->l->t('Unknown export purpose: "%s".', $purpose->value));
           break;
       }
     } catch (Throwable $t) {

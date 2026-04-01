@@ -79,6 +79,8 @@ import { AppError } from '../toolkit/types/errors.ts'
 import { ref } from 'vue'
 import * as BusEvents from '../event-bus-events.ts'
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import { END_POINT } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts'
+import { EnumSepaBulkTransactionsExportPurpose, EnumSepaBulkTransactionsTopic } from '../../build/ts-types/php-modules/Controller.ts'
 
 const errorHandlerProvider = useErrorHandlerStore()
 
@@ -130,10 +132,11 @@ const handleTransactionDataDownload = async () => {
     bulkTransactionId: props.entityId,
     projectId: props.projectId,
     projectName: props.projectName,
-    purpose: 'bank-import',
+    purpose: EnumSepaBulkTransactionsExportPurpose.BANK_IMPORT,
+    format: 'aqbanking',
   }
   try {
-    await axiosFileDownload('finance/sepa/bulk-transactions/export', post)
+    await axiosFileDownload(`${END_POINT}/${EnumSepaBulkTransactionsTopic.EXPORT}`, post)
     asyncEmit(BusEvents.POP_BUSY_STATE)
   } catch (error) {
     asyncEmit(BusEvents.POP_BUSY_STATE)
@@ -165,7 +168,7 @@ const handleGnuCashBalanceDownload = async () => {
     bulkTransactionId: props.entityId,
     projectId: props.projectId,
     projectName: props.projectName,
-    purpose: 'balancing-items',
+    purpose: EnumSepaBulkTransactionsExportPurpose.BALANCING_ITEMS,
     format: 'gnucash',
   }
   try {

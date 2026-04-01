@@ -77,6 +77,7 @@ import type {
 import {
   CssClasses,
   EnumFileUploadMode,
+  EnumSepaBulkTransactionsTopic,
   EnumSepaDebitMandateBinding,
   type EnumSepaDebitMandateRevocationAction,
   type EnumSepaDebitMandateValidationParam,
@@ -101,7 +102,7 @@ import {
 } from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
-import { END_POINT as bulkTransactionsEndPoint, TOPIC_CREATE as bulkTransactionCreate } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
+import { END_POINT as bulkTransactionsEndPoint } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import {
   HAVE_WRITTEN_MANDATE,
@@ -1342,7 +1343,7 @@ const mandateExportHandler = function<Element extends HTMLFormElement, Event ext
   };
 
   const formPost = form.serialize();
-  $.post(generateAppUrl(`${bulkTransactionsEndPoint}/${bulkTransactionCreate}`), formPost)
+  $.post(generateAppUrl(`${bulkTransactionsEndPoint}/${EnumSepaBulkTransactionsTopic.CREATE}`), formPost)
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, clearBusyState);
     })

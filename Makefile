@@ -145,11 +145,13 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 
 all: help
 
+#@private
 pre-build: php-scoper-install app-toolkit-stamp
 #	git submodule update --init
 #	$(OCC) maintenance:mode --on
 .PHONY: pre-build
 
+#@private
 post-build:
 #	$(OCC) maintenance:mode --off
 	chmod g+rw $(ABSSRCDIR)/../../config/config.php
@@ -576,7 +578,7 @@ dophpunit: $(PHPUNIT)
  -c phpunit.xml\
  --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
  --log-junit $(PHPUNIT_JUNIT_LOG)\
- --display-all-issues
+ --display-all-issues --stop-on-failure --stop-on-error
 #	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: dophpunit
 
