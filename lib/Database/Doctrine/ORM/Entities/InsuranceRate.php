@@ -91,9 +91,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param null|int|InsuranceBroker $broker
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setBroker(mixed $broker):InsuranceRate
+  public function setBroker(mixed $broker): self
   {
     $this->broker = $broker;
 
@@ -103,9 +103,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get broker.
    *
-   * @return string
+   * @return InsuranceBroker
    */
-  public function getBroker():InsuranceBroker
+  public function getBroker(): InsuranceBroker
   {
     return $this->broker;
   }
@@ -115,9 +115,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string|Types\EnumGeographicalScope $geographicalScope
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setGeographicalScope(string|EnumGeographicalScope $geographicalScope): InsuranceRate
+  public function setGeographicalScope(string|EnumGeographicalScope $geographicalScope): self
   {
     $geographicalScope = EnumGeographicalScope::get($geographicalScope);
     $this->geographicalScope = $geographicalScope;
@@ -128,9 +128,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get geographicalScope.
    *
-   * @return array
+   * @return Types\EnumGeographicalScope
    */
-  public function getGeographicalScope():Types\EnumGeographicalScope
+  public function getGeographicalScope(): Types\EnumGeographicalScope
   {
     return $this->geographicalScope;
   }
@@ -164,9 +164,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param null|string|DateTimeInterface $dueDate
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setDueDate($dueDate):InsuranceRate
+  public function setDueDate($dueDate): self
   {
     $this->dueDate = self::convertToDateTime($dueDate);
     return $this;
@@ -177,7 +177,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return DateTimeInterface
    */
-  public function getDueDate():?DateTimeInterface
+  public function getDueDate(): ?DateTimeInterface
   {
     return $this->dueDate;
   }
@@ -187,9 +187,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param string $policyNumber
    *
-   * @return InsuranceRate
+   * @return self
    */
-  public function setPolicyNumber(?string $policyNumber):InsuranceRate
+  public function setPolicyNumber(?string $policyNumber): self
   {
     $this->policyNumber = $policyNumber;
 
@@ -211,9 +211,9 @@ class InsuranceRate implements \ArrayAccess
    *
    * @param ArrayCollection $instrumentInsurances
    *
-   * @return InsuranceBroker
+   * @return self
    */
-  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceRate
+  public function setInstrumentInsurances(Collection $instrumentInsurances): self
   {
     $this->instrumentInsurances = $instrumentInsurances;
 
@@ -223,9 +223,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get instrumentInsurances.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
-  public function getInstrumentInsurances():Collection
+  public function getInstrumentInsurances(): Collection
   {
     return $this->instrumentInsurances;
   }
