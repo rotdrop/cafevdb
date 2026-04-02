@@ -344,14 +344,13 @@ class GnuCashConnectorService
           if ($field->getMultiplicity() == FieldMultiplicity::RECURRING) {
             $generatorOption = $field->getManagementOption();
             $class = $generatorOption->getData();
-            echo $class . PHP_EOL;
             try {
               $generator = $this->appContainer->get($class);
               if (method_exists($generator, 'generateLegacyBalancingAccount')) {
                 $balancingAccount = $generator->generateLegacyBalancingAccount($receivable);
               }
             } catch (Throwable $t) {
-              echo $t->getMessage() . PHP_EOL;
+              // echo $t->getMessage() . PHP_EOL;
               // ignore
               $balancingAccount = '';
             }
