@@ -227,9 +227,9 @@ class ProjectParticipantsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
     error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
-    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
 
     $this->generateCalendarBackend();
 

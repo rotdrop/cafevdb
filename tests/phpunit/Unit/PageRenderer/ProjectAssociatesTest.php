@@ -213,8 +213,9 @@ class ProjectAssociatesTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
     \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
+    error_reporting(E_ALL);
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
     $countInstruments = count(\OCA\CAFEVDB\Maintenance\Migrations\Version19700101000002::INSTRUMENTS);
     foreach (Entities\ProjectInstrument::NON_INSTRUMENTS as $nonInstrumentName) {
