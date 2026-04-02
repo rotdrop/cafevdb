@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
@@ -110,9 +111,9 @@ class SepaBulkTransactionsController extends Controller
     ?string $sepaDueDeadline = null,
     int $bulkTransactionId = 0,
   ): Response {
-    $topic = SepaBulkTransactionsTopic::get($topic);
+    $topic = EnumSepaBulkTransactionsTopic::get($topic);
     switch ($topic) {
-      case self::TOPIC_CREATE:
+      case EnumSepaBulkTransactionsTopic::CREATE:
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
         // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
         $bankAccountRecords = $this->request->getParam($this->pme->cgiSysName(PHPMyEdit::MRECS_KEY), []);
@@ -127,7 +128,7 @@ class SepaBulkTransactionsController extends Controller
           $bankAccountRecords,
           $sepaBulkTransactions,
           $sepaDueDeadline);
-      case self::TOPIC_EXPORT:
+      case EnumSepaBulkTransactionsTopic::EXPORT:
         return $this->exportBulkTransaction(
           $bulkTransactionId,
           $projectId,
@@ -187,7 +188,7 @@ class SepaBulkTransactionsController extends Controller
       $accountId = json_decode($accountRecord, true);
       $musicianId = $accountId['musician_id'];
       $sequence = $accountId['sequence'];
-      $mandateSequence = $accountId[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::SEPA_DEBIT_MANDATES_TABLE)];
+      $mandateSequence = $accountId[PMETableViewBase::joinTableMasterFieldName(DatabaseTables::SEPA_DEBIT_MANDATES_TABLE)];
 
       /** @var Entities\SepaBankAccount $account */
       $account = $accountsRepository->find([
