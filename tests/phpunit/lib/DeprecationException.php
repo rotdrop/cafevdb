@@ -80,8 +80,8 @@ class DeprecationException extends \Exception
           if ($excludeFromCore) {
             $backTrace = debug_backtrace(limit: $excludeFromCore);
             foreach ($backTrace as $frame) {
-              $blah .= ' ' . $frame['class'] ?? 'NO CLASS';
-              if ($frame['class'] && str_starts_with($frame['class'], 'OC\\')) {
+              $blah .= ' ' . ($frame['class'] ?? 'NO CLASS');
+              if (str_starts_with($blah, 'OC\\')) {
                 return;
               }
             }
