@@ -28,20 +28,27 @@
 
 import * as PHPMyEdit from './pme-state.ts';
 import $, { jq, isJQuery } from './jquery.ts';
+import {
+  OPERATION_CHANGE,
+  OPERATION_COPY_ADD,
+  OPERATION_DELETE,
+  OPERATION_LIST,
+  OPERATION_VIEW,
+} from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.prefix;
 const PMEPrefix = PHPMyEdit.ucPrefix;
 
 const pmeFormViewSuffixes = [
-  'list',
-  'view',
-  'delete',
+  OPERATION_LIST,
+  OPERATION_VIEW,
+  OPERATION_DELETE,
 ];
 
 const pmeFormEditSuffixes = [
-  'change',
-  'copyadd',
+  OPERATION_CHANGE,
+  OPERATION_COPY_ADD,
 ];
 
 /**

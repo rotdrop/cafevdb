@@ -115,7 +115,7 @@ class SepaBulkTransactionsController extends Controller
       case self::TOPIC_CREATE:
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));
         // PME_sys_mrecs[] = "{\"musician_id\":\"1\",\"sequence\":\"1\"}"
-        $bankAccountRecords = $this->request->getParam($this->pme->cgiSysName('mrecs'), []);
+        $bankAccountRecords = $this->request->getParam($this->pme->cgiSysName(PHPMyEdit::MRECS_KEY), []);
         if (!empty($sepaDueDeadline)) {
           // kludgy, but should work
           $sepaDueDeadline = (new DateTimeImmutable)

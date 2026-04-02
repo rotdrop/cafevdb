@@ -135,6 +135,8 @@ class PhpMyEdit
 	const CGI_DATA_KEY = 'data';
 	const CGI_OPERATION_KEY = 'operation';
 
+	const MRECS_KEY = 'mrecs';
+
 	// Class variables {{{
 
 	// Database handling
@@ -487,14 +489,13 @@ class PhpMyEdit
 		echo $this->htmlHiddenSys('mtable', $this->tb);
 		if (count($this->key) == 0) {
 			echo $this->htmlHiddenSys('mkey', '');
-			echo $this->htmlHiddenSys('mkeytype', '');
 		} else {
 			foreach ($this->key as $key => $key_type) {
 				echo $this->htmlHiddenSys('mkey['.$key.']', $key_type);
 			}
 		}
 		foreach ($this->mrecs as $mrec) {
-			echo $this->htmlHiddenSys('mrecs[]', $mrec);
+			echo $this->htmlHiddenSys(self::MRECS_KEY . '[]', $mrec);
 		}
 	}
 
@@ -5411,7 +5412,7 @@ EOT;
 			count($this->sfn)			  > 0 && $qstrparts[] = $this->get_sfn_cgi_vars();
 			strlen($this->cgi['persist']) > 0 && $qstrparts[] = $this->cgi['persist'];
 			foreach ($this->mrecs as $key => $value) {
-				$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs['.$key.']='.$value;
+				$qstrparts[] = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY . '[' . $key . ']=' . $value;
 			}
 			$qpview		 = $qstrparts;
 			$qpcopy		 = $qstrparts;
@@ -5625,7 +5626,7 @@ EOT;
 					if ($this->nav_custom_multi()) {
 						$css	  = $this->getCSSclass([ $this->misccss, 'check' ], null, null, $this->misccss2);
 						$misccss  = $this->getCSSclass('misc');
-						$namebase = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs';
+						$namebase = $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY;
 						$name	  = $namebase.'[]';
 						$ttip	  = $this->fetchToolTip($css, $name);
 
@@ -7386,7 +7387,7 @@ EOT;
 		if (!@is_array($opts['cgi']['persist'])) {
 			$opts['cgi']['persist'] = array();
 		}
-		$this->mrecs = $this->get_sys_cgi_var('mrecs', array());
+		$this->mrecs = $this->get_sys_cgi_var(self::MRECS_KEY, array());
 		$this->mrecs = array_values(array_unique($this->mrecs));
 
 		foreach ($opts['cgi']['persist'] as $key => $val) {
@@ -7394,7 +7395,7 @@ EOT;
 				// We need to handle sys_mrecs in a special way: never
 				// use absolute indices, because this kills the
 				// information submitted by the user (checkboxes)
-				if ($key == $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY].'mrecs') {
+				if ($key == $this->cgi[self::CGI_PREFIX_KEY][self::CGI_SYS_KEY] . self::MRECS_KEY) {
 					foreach ($val as $key2 => $val2) {
 						$this->cgi['persist'] .= '&'.rawurlencode($key)
 							.'[]='.rawurlencode($val2);

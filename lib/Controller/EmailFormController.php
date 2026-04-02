@@ -191,7 +191,7 @@ class EmailFormController extends Controller
         // 'renderer' => ???? @todo check
         ComposerCgiKeys::BULK_TRANSACTION_ID => $bulkTransactionId,
         'requesttoken' => \OCP\Util::callRegister(),
-        'emailKey' => $this->pme->cgiSysName('mrecs'),
+        'emailKey' => $this->pme->cgiSysName(PHPMyEdit::MRECS_KEY),
       ],
       // Needed for the editor
       self::EMAIL_TEMPLATE_NAME => $composer->currentEmailTemplate(),

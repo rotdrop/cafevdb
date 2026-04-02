@@ -262,7 +262,7 @@ class RecipientsFilter
     }
 
     // See wether we were passed specific variables ...
-    $this->emailKey  = $this->pme->cgiSysName('mrecs');
+    $this->emailKey  = $this->pme->cgiSysName(PHPMyEdit::MRECS_KEY);
     $this->mkeyKey   = $this->pme->cgiSysName('mkey');
     $this->mtabKey   = $this->pme->cgiSysName('mtable');
     $this->emailRecs = []; // avoid null

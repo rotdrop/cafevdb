@@ -32,6 +32,7 @@ import { parse as qsParse } from 'qs';
 import { EnumPostTag as EmailPostTag } from '../../build/ts-types/php-modules/EmailForm.ts';
 import { PARTICIPATION_STATUS_FILTER } from '../../build/ts-types/php-modules/EmailForm/RecipientsFilterCgiKeys.ts';
 import { EnumParticipationStatus } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { MRECS_KEY } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 
 require('./jquery-datetimepicker.ts');
 
@@ -116,7 +117,7 @@ const pmeTweaks = function($container?: JQuery) {
       return false;
     }
     let post = form.serialize();
-    post += `&${PMEsys('mrecs')}[]=${JSON.stringify(params[recordKey])}`;
+    post += `&${PMEsys(MRECS_KEY)}[]=${JSON.stringify(params[recordKey])}`;
     for (const status of Object.values(EnumParticipationStatus)) {
       post += `&${EmailPostTag.RECIPIENTS_FILTER}[${PARTICIPATION_STATUS_FILTER}][]=${status}`;
     }
