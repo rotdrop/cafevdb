@@ -49,7 +49,7 @@ import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { ParticipantFieldPropertyGetDefaultValue, ParticipantFieldPropertyGetResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { type EnumParticipantFieldPropertyGet } from '../../build/ts-types/php-modules/Controller.ts';
 import { REVERT_TO_DEFAULT } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import type { RationalNumber } from '../../build/ts-types/php-modules/Common.ts';
+import type { RationalNumber } from '../../build/ts-types/php-modules/Toolkit/Common.ts';
 import { END_POINT as participantFieldsEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
 import {
   EnumParticipantFieldRequestTopic,
