@@ -163,6 +163,7 @@ class EmailFormControllerTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockEmailTemplatesRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockInstrumentsRepositoryTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\MockMusiciansRepositoryTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
@@ -248,17 +249,7 @@ class EmailFormControllerTest extends TestCase
     $this->request->method('getServerHost')->willReturn('cloud.tld');
     $mockProvider->registerClassInstance(IRequest::class, $this->request, global: true);
 
-    /** @var PHPMyEdit $pme */
-    $this->pme = $this->createStub(PHPMyEdit::class);
-    $pmeOptions = new PMEOptions([]);
-    foreach ([PHPMyEdit::CGI_SYS_KEY, PHPMyEdit::CGI_DATA_KEY, PHPMyEdit::CGI_OPERATION_KEY] as $key) {
-      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][$key] = $pmeOptions['cgi'][PHPMyEdit::CGI_PREFIX_KEY][$key];
-    }
-    $this->pme->method('cgiSysName')->willReturnCallback(
-      fn(string $suffix = ''): string
-      =>
-      $this->pme->cgi[PHPMyEdit::CGI_PREFIX_KEY][PHPMyEdit::CGI_SYS_KEY] . $suffix,
-    );
+    $this->getPHPMyEditStub();
 
     /** @var ProjectParticipantFieldsService $projectParticipantFieldsService */
     $projectParticipantFieldsService = $this->createStub(Service\ProjectParticipantFieldsService::class);
