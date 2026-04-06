@@ -660,9 +660,15 @@ class RecipientsFilter
     }
     if ($this->projectId <= 0) {
       $criteria[] = [ '!defaultParticipationStatus' => $this->participationStatusBlackList() ];
-    } elseif (($this->userBase & self::MUSICIANS_EXCEPT_PROJECT) == 0) {
-      $criteria[] = [ 'projectParticipation.project' => $this->projectId ];
+    } else {
+      $criteria[] = [ '(|' => true ];
+      $criteria[] = [ '(&projectParticipation.project' => $this->projectId ];
       $criteria[] = [ '!projectParticipation.participationStatus' => $this->participationStatusBlackList() ];
+      $criteria[] = [ ')' => true ];
+      $criteria[] = [ '(&!projectParticipation.project' => $this->projectId ];
+      $criteria[] = [ '!defaultParticipationStatus' => $this->participationStatusBlackList() ];
+      $criteria[] = [ ')' => true ];
+      $criteria[] = [ ')' => true ];
     }
     // $criteria[] = [ '(|deleted' => null ];
     // $criteria[] = [ '>=deleted' => new DateTimeImmutable() ];
