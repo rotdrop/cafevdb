@@ -62,6 +62,7 @@ trait MockProjectsRepositoryTrait
       'findById',
       'findByIdOrName',
       'findOneBy',
+      'shortDescription',
     ]);
     $repository = $this->getMockBuilder(EntityRepository::class)
       ->disableOriginalConstructor()

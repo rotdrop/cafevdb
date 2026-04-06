@@ -92,20 +92,21 @@ class ProjectsController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_VALIDATE . '/{topic}')]
-  public function validate(string $topic):DataResponse
+  public function validate(string|EnumProjectValidationTopic $topic): DataResponse|JSONResponse
   {
+    $topic = EnumProjectValidationTopic::get($topic);
     $projectValues = $this->getPrefixParams($this->pme->cgiDataName());
     switch ($topic) {
-      case 'name':
+      case EnumProjectValidationTopic::NAME:
         $required = [
-          'year' => $this->l->t("project-year"),
-          'name' => $this->l->t("project-name"),
-          'type'  => $this->l->t("project-kind"),
+          'year' => $this->l->t('project-year'),
+          'name' => $this->l->t('project-name'),
+          'type'  => $this->l->t('project-kind'),
         ];
         foreach ($required as $key => $subject) {
           if (empty($projectValues[$key])) {
             throw new Exceptions\EnduserNotificationException(
-              $this->l->t("The %s must not be empty.", [$subject]),
+              $this->l->t('The "%s" value must not be empty.', [$subject]),
             );
           }
         }
@@ -118,8 +119,8 @@ class ProjectsController extends Controller
 
         $messages = [];
         switch ($control) {
-          case "submit":
-          case "name":
+          case 'submit':
+          case 'name':
             // No whitespace, s.v.p., and CamelCase
             $origName = $projectName;
 
@@ -136,40 +137,40 @@ class ProjectsController extends Controller
             // Get the year from the name, if set
             if (preg_match('/^(.*\D)?(\d{4})$/', $projectName, $matches) == 1) {
               $projectName = $matches[1];
-              if ($control != "submit" && $attachYear) {
+              if ($control != 'submit' && $attachYear) {
                 // the year-control wins when submitting the form
                 $projectYear = $matches[2];
               }
-              if ($projectName == "") {
+              if ($projectName == '') {
                 throw new Exceptions\EnduserNotificationException(
-                  $this->l->t("The project-name must not only consist of the year-number."),
+                  $this->l->t('The project-name must not only consist of the year-number.'),
                 );
               }
-            } elseif ($projectName == "") {
+            } elseif ($projectName == '') {
               throw new Exceptions\EnduserNotificationException(
-                $this->l->t("No project-name given."),
+                $this->l->t('No project-name given.'),
               );
             }
             if (mb_strlen($projectName) > Renderer::NAME_LENGTH_MAX) {
               throw new Exceptions\EnduserNotificationException(
                 $this->l->t(
-                  "The project-name is too long, ".
-                  "please use something less than %d characters ".
-                  "(excluding the attached year). Thanks",
+                  'The project-name is too long, '.
+                  'please use something less than %d characters '.
+                  '(excluding the attached year). Thanks',
                   [ Renderer::NAME_LENGTH_MAX ]
                 ),
               );
             }
             // fallthrough
-          case "year":
-            if ($projectYear == "") {
+          case 'year':
+            if ($projectYear == '') {
               throw new Exceptions\EnduserNotificationException(
-                $this->l->t("No project-year given."),
+                $this->l->t('No project-year given.'),
               );
             }
             if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
               throw new Exceptions\EnduserNotificationException(
-                $this->l->t("The project-year has to consist of four digits, e.g. ``1984''."),
+                $this->l->t('The project-year has to consist of four digits, e.g. "1984".'),
               );
             }
 
@@ -179,7 +180,7 @@ class ProjectsController extends Controller
             if ($attachYear) {
               $projectName = $strippedName . $projectYear;
               if ($projectName != $origName) {
-                $messages[] = $this->l->t("The year %s has been appended to the project-slug %s.", [ $projectYear, $strippedName ]);
+                $messages[] = $this->l->t('The year %s has been appended to the project-slug %s.', [ $projectYear, $strippedName ]);
               }
             }
             // Project name may be empty at this point. Why not
@@ -427,7 +428,7 @@ class ProjectsController extends Controller
   ];
 
   /**
-   * Return the "event matrix", project events sorted by category with extra
+   * Return the 'event matrix', project events sorted by category with extra
    * information.
    */
   public const GET_EVENT_MATRIX = 'event-matrix';
@@ -451,8 +452,11 @@ class ProjectsController extends Controller
       'subTopic' => ''
     ],
   )]
-  public function get(int $projectId, string $topic = '', string $subTopic = ''): DataResponse|JSONResponse
-  {
+  public function get(
+    int $projectId,
+    string $topic = '',
+    string $subTopic = '',
+  ): DataResponse|JSONResponse {
     if (!($projectId > 0)) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t('Project-ids must be strictly positive: "%d".', $projectId),
@@ -537,13 +541,18 @@ class ProjectsController extends Controller
     ],
     requirements: ['projectId' => '^\d+$'],
   )]
-  public function post(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
-  {
+  public function post(
+    int $projectId,
+    string $topic = '',
+    string $subTopic = '',
+  ): DataResponse|JSONResponse {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     $project = $projectService->findById($projectId);
     if (empty($project)) {
-      return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t('Unable to find project with id "%d".', $projectId),
+      );
     }
     switch ($topic) {
       case self::GET_PROJECT_SHARE:
@@ -557,13 +566,17 @@ class ProjectsController extends Controller
               ]);
             return DTO\DownloadsShareResponse::fromArray($data)->response();
           default:
-            return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));
+            throw new Exceptions\EnduserNotificationException(
+              $this->l->t('Unknown share type "%s".', $subTopic),
+            );
         }
         break;
       default:
         break;
     }
-    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+    throw new Exceptions\EnduserNotificationException(
+      $this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]),
+    );
   }
 
   /**
@@ -587,8 +600,11 @@ class ProjectsController extends Controller
     ],
     requirements: ['projectId' => '^\d+$'],
   )]
-  public function delete(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
-  {
+  public function delete(
+    int $projectId,
+    string $topic = '',
+    string $subTopic = '',
+  ): DataResponse|JSONResponse {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     $project = $projectService->findById($projectId);
@@ -647,8 +663,11 @@ class ProjectsController extends Controller
     ],
     requirements: ['projectId' => '^\d+$'],
   )]
-  public function patch(int $projectId, string $topic = '', string $subTopic = ''):DataResponse
-  {
+  public function patch(
+    int $projectId,
+    string $topic = '',
+    string $subTopic = '',
+  ): DataResponse|JSONResponse {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     $project = $projectService->findById($projectId);

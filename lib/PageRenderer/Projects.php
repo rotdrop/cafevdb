@@ -65,7 +65,7 @@ class Projects extends PMETableViewBase
   public const TABLE = DatabaseTables::PROJECTS_TABLE;
 
   protected const ENTITY = Entities\Project::class;
-  protected const NAME_LENGTH_MAX = 20;
+  public const NAME_LENGTH_MAX = 20; // used in the ProjectsController
 
   protected const NUM_VOICES_MIN = 2;
   protected const NUM_VOICES_EXTRA = 1;
