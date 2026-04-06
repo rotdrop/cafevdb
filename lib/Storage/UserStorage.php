@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2026, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -372,7 +372,7 @@ class UserStorage
       $flags,
     ) {
       if (!empty($excludeRegexp) && preg_match($excludeRegexp, $sourceNode->getName())) {
-        $this->logInfo('EXCLUDE HIT FOR PATTERN ' . $excludeRegexp);
+        $this->logDebug('EXCLUDE HIT FOR PATTERN "' . $excludeRegexp . '" given filename "' . $sourceNode->getName() . '".');
         return false;
       }
 
