@@ -543,7 +543,8 @@ class ProjectParticipant implements \ArrayAccess
     // in principle this should just have hacked it, but continue ...
     if ($this->getNonInstruments()->isEmpty() && !$this->getRealInstruments()->isEmpty()) {
       // this is in principle a bug: the participation status should have been
-      // set to 'associated' by other parts of the code.
+      // set to something different from 'associated' by other parts of the
+      // code.
       return true;
     }
     return false;
