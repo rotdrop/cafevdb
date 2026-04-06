@@ -176,7 +176,13 @@ class ProjectsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    error_reporting(E_ALL);
+    DeprecationException::throwOnDeprecations(
+      exclude: '/'
+      . 'OCP\\\\IConfig\\:\\:(get|set|delete)AppValue'
+      . '|' . 'OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch'
+      . '/',
+    );
 
     $this->generateCalendarBackend();
 
