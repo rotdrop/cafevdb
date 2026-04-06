@@ -3508,7 +3508,11 @@ Whatever.',
           $this->remove($participant, flush: true); // this should be soft-delete
         }
       } else {
-        $this->logInfo('Not removing, participant still in use in context "' . $participant->getParticipationContext() . '".');
+        $this->logInfo('Not removing, participant still in use in context "' . $participant->getParticipationContext()->value . '".');
+        if ($participationContext == ParticipationContext::PARTICIPANTS) {
+          // adjust the participation context to 'associated'
+          $participant->setParticipationStatus(ParticipationStatus::ASSOCIATED);
+        }
       }
       if ($participant->unused($participationContext)) {
         $this->logInfo('Project participant ' . $participant->getPublicName() . ' is unused, issuing hard-delete');
@@ -3540,6 +3544,7 @@ Whatever.',
           new Common\GenericUndoable(fn() => $this->ensureMailingListUnsubscription($participant)),
         );
       }
+      $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
       $this->logException($t);
