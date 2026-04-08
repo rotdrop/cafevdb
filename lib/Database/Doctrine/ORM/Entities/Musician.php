@@ -616,7 +616,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function setBirthday(string|int|\DateTimeInterface $birthday):Musician
+  public function setBirthday(null|string|int|\DateTimeInterface $birthday):Musician
   {
     $this->birthday = self::convertToDateTime($birthday);
 
