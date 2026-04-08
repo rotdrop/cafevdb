@@ -195,15 +195,15 @@ class MusicianService
   protected function impersonateMusician(Entities\Musician $musician):void
   {
     $financialArtifacts = ProjectParticipantFieldsService::participantMonetaryObligations($musician);
-    if ($financialArtifacts['sum'] !== $financialArtifacts['received']) {
+    if (!$financialArtifacts['sum']->eq($financialArtifacts['received'])) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t(
-          'Musician "%1$s" cannot be removed because there are unbalanced financial obligations totals/payed/remaining = %$2d/%3d/%3d.'
+          'Musician "%1$s" cannot be removed because there are unbalanced financial obligations totals/payed/remaining = %2$s/%3$s/%4$s.'
           . ' A negative remaining amount means the musician still needs to be refund by the orchestra.', [
             $musician->getPublicName(),
-            $financialArtifacts['sum'],
-            $financialArtifacts['received'],
-            $financialArtifacts['sum'] - $financialArtifacts['received'],
+            $financialArtifacts['sum']->toDecimal(),
+            $financialArtifacts['received']->toDecimal(),
+            $financialArtifacts['sum']->sub($financialArtifacts['received'])->toDecimal(),
           ]
         )
       );
