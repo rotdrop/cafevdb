@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
+use OCA\CAFEVDB\Controller\CssClasses;
 
 $deselectInvisibleMiscRecs = $_[EnumPersonalSettingsKey::DESELECT_INVISIBLE_MISC_RECS->value];
 $diretChange = $_[EnumPersonalSettingsKey::DIRECT_CHANGE->value];
