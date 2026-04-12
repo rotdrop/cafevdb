@@ -420,8 +420,7 @@ class SepaBulkTransactionsController extends Controller
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables, $dueDateEstimate);
       if ($compositePayment->getAmount()->eq(0)) {
-        $this->logInfo('AMOUNT IS 0 ' . $participant->getPublicName());
-        // @todo Check whether this should be communicated to the musician anyway
+        $this->logDebug('AMOUNT IS 0 ' . $participant->getPublicName());
         continue;
       }
       $compositePayment->setSepaBankAccount($bankAccounts[$musicianId]);
