@@ -1391,7 +1391,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return $this->nickName;
   }
 
-
   /**
    * Get the cooked display-name, taking nick-name into account and
    * just using $displayName if that set.
@@ -1428,6 +1427,28 @@ class Musician implements \ArrayAccess, \JsonSerializable
       return $this->surName;
     }
     return $this->surName . ', ' . $firstName;
+  }
+
+  /**
+   * Compose a description including organization and job-title. If the person
+   * does not represent an organization then fall back to getPublicName().
+   *
+   * @param bool $firstNameFirst If true return "FIRSTNAME LASTNAME" rather
+   * than "LASTNAME, FIRSTNAME".
+   *
+   * @return string
+   */
+  public function getFunctionalName(bool $firstNameFirst = false):string
+  {
+    $publicName = $this->getPublicName($firstNameFirst);
+    if (empty($this->organization)) {
+      return $publicName;
+    }
+    $result = $this->organization;
+    if (!empty($this->jobTitle)) {
+      $publicName = $this->jobTitle . ', ';
+    }
+    return $this->organization . ' (' . $publicName . ')';
   }
 
   /**

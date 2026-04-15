@@ -406,7 +406,7 @@ FROM ".DatabaseTables::COMPOSITE_PAYMENTS_TABLE." __t2",
           'column' => 'id',
           'join' => '$join_col_fqn = '.$this->joinTables[DatabaseTables::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
           'description' => [
-            'columns' => [ '$table.id', static::musicianPublicNameSql() ],
+            'columns' => [ '$table.id', static::musicianFunctionalNameSql(firstNameFirst: true) ],
             'divs' => [ ': ' ],
             'ifnull' => [ false, false ],
             'cast' => [ 'CHAR', false ],
@@ -645,7 +645,7 @@ FROM ".DatabaseTables::COMPOSITE_PAYMENTS_TABLE." __t2",
           if ($this->isBulkTransactionRow($row, $pme)) {
             return str_replace(',', '<br/>', Util::htmlEscape($value));
           }
-          $html = $pme->cellDisplay($this->joinQueryFieldIndex(static::SENT_EMAILS_TABLE, 'message_id'), $row);
+          $html = $pme->cellDisplay($this->joinQueryFieldIndex(DatabaseTables::SENT_EMAILS_TABLE, 'message_id'), $row);
           return empty($html) ? Util::htmlEscape($value) : $html;
         },
       ]);

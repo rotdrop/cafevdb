@@ -417,7 +417,7 @@ GROUP BY t.id';
       $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'job_title',
       [
         'name'     => $this->l->t('Job-Title'),
-        'tab'      => [ 'id' => 'musician' ],
+        'tab'      => [ 'id' => 'tab-all' ],
         'maxlen'   => 384,
       ]);
 
@@ -708,6 +708,7 @@ GROUP BY t.id';
     $fdd = [
       'name' => $this->l->t('Possible Roles'),
       'tab'  => [ 'id' => [ 'musician', 'instrumentation' ] ],
+      'options'  => 'AVCPD',
       'css'  => [
         'postfix' => [
           'musician-instruments',
@@ -753,6 +754,7 @@ GROUP BY t.id';
     $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::MUSICIAN_INSTRUMENTS_TABLE, 'deleted', [
         'name'    => $this->l->t('Disabled Roles'),
+        'options'  => 'AVCPD',
         'tab'     => [ 'id' => [ 'musician', 'instrumentation' ] ],
         'css'     => [ 'postfix' => [ 'selectize', 'no-chosen', ], ],
         'sql'     => 'GROUP_CONCAT(DISTINCT IF($join_col_fqn IS NULL, NULL, $join_table.instrument_id))',

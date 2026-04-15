@@ -696,7 +696,7 @@ class SepaBulkTransactionsController extends Controller
               foreach ($bulkTransaction->getPayments() as $payment) {
                 $description .= "\n"
                   . $this->l->t('%1$s pays %2$s.', [
-                    $payment->getMusician()->getPublicName(firstNameFirst: false),
+                    $payment->getMusician()->getFunctionalName(firstNameFirst: false),
                     $this->moneyValue($payment->getAmount())
                   ]);
               }
@@ -708,7 +708,7 @@ class SepaBulkTransactionsController extends Controller
               foreach ($bulkTransaction->getPayments() as $payment) {
                 $description .= "\n"
                   . $this->l->t('%1$s receives %2$s.', [
-                    $payment->getMusician()->getPublicName(firstNameFirst: false),
+                    $payment->getMusician()->getFunctionalName(firstNameFirst: false),
                     $this->moneyValue($payment->getAmount()->neg())
                   ]);
               }

@@ -626,7 +626,7 @@ WHERE dsf.id IS NOT NULL',
     $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'id',
       [
-        'name' => $this->l->t('Musician'),
+        'name' => $this->l->t('Opposite Party'),
         'css' => [ 'postfix' => [ 'instrumentation-id', CssClasses::ALLOW_EMPTY ], ],
         'select' => 'D',
         'input' => 'M',
@@ -636,7 +636,7 @@ WHERE dsf.id IS NOT NULL',
         'default|C' => $this->musicianId,
         'values' => [
           'description' => [
-            'columns' => [ static::musicianPublicNameSql() ],
+            'columns' => [ static::musicianFunctionalNameSql(firstNameFirst: true) ],
             'divs' => [],
             'ifnull' => [ false, false ],
             'cast' => [ false ],
