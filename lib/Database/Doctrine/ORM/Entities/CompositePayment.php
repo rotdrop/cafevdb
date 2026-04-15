@@ -789,7 +789,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
           $result = '';
           $prevIsWord = true;
           foreach ($words as $word) {
-            $word = preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $word);
+            // Difficult, sequences of 4 digits may as well form part of important booking ids.
+            // $word = preg_replace('/(?<![0-9])[0-9]{2}([0-9]{2})(?![0-9])/', '\1', $word);
             if (preg_match('/^[a-zA-Z-_]+$/', $word)) {
               $word = Util::dashesToCamelCase($word, capitalizeFirstCharacter: true, dashes: '-_');
               if (!$prevIsWord) {
@@ -808,7 +809,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       );
       $prefix = $parts[0];
       if (count($parts) < 2 || $oldPrefix != $prefix) {
-        $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+        $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, array_unique($postfix));
         if (strlen($purpose) > 0) {
           $purpose .= self::SUBJECT_GROUP_SEPARATOR;
         }
@@ -826,7 +827,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       }
     }
     if (!empty($postfix)) {
-      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
+      $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, array_unique($postfix));
     }
     $purpose = $transliterate(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
 
