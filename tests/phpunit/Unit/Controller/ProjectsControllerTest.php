@@ -378,6 +378,7 @@ class ProjectsControllerTest extends TestCase
   /** @return void */
   public function testPostFailures(): void
   {
+    $this->entityManager->expects($this->never())->method('getRepository')->with(Entities\Project::class);
     try {
       $this->projectsController->post(
         projectId: 12345,
