@@ -6134,7 +6134,7 @@ EOT;
 				$oldAsBoolean = filter_var($oldvals[$fd], FILTER_VALIDATE_BOOL, ['flags' => FILTER_NULL_ON_FAILURE]);
 				if ($oldAsBoolean === null || $oldAsBoolean === true) {
 					$changed[] = $fd;
-					$newvals[$fd] = $defaults[$fd];
+					$newvals[$fd] = null;
 				}
 			} else if ($value != $oldvals[$fd]) {
 				$fdn = $this->fdn[$fd]; // $fdn == field number
