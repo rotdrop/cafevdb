@@ -33,6 +33,8 @@ use Psr\Container\ContainerInterface;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 /**
@@ -97,15 +99,21 @@ class ProjectParticipantFieldEntityListener
     }
 
     $field = 'dataType';
-    $changeSet = $this->getTranslationChangeSet($entity, $event, $field);
-    if ($changeSet) {
-      $this->getFieldsService()->handleChangeFieldType($entity, $changeSet[0], $changeSet[1]);
+    if ($event->hasChangedField($field)) {
+      $this->getFieldsService()->handleChangeFieldType(
+        $entity,
+        DataType::get($event->getOldValue($field)),
+        DataType::get($event->getNewValue($field)),
+      );
     }
 
     $field = 'multiplicity';
-    $changeSet = $this->getTranslationChangeSet($entity, $event, $field);
-    if ($changeSet) {
-      $this->getFieldsService()->handleChangeFieldMultiplicity($entity, $changeSet[0], $changeSet[1]);
+    if ($event->hasChangedField($field)) {
+      $this->getFieldsService()->handleChangeFieldMultiplicity(
+        $entity,
+        Multiplicity::get($event->getOldValue($field)),
+        Multiplicity::get($event->getNewValue($field)),
+      );
     }
   }
 
