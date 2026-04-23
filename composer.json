@@ -51,6 +51,7 @@
     "setasign/fpdf": "*",
     "spatie/temporary-directory": "^1.3",
     "mll-lab/str_putcsv": "^1.2",
+    "smhg/sepa-qr-data": "^3.0",
     "symfony/var-dumper": "*",
     "tecnickcom/tcpdf": "^6.3",
     "tinybutstrong/opentbs": "dev-production/cafevdb",
