@@ -3887,7 +3887,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
     }
     $options = [
       ClientRequestOptions::HEADERS => [
-        'User-Agent' => 'Orgacloud/1.0',
+        'User-Agent' => 'Mozilla/5.0  (X11; Linux x86_64; rv:150.0)',//  Gecko/20100101 Firefox/150.0', // 'Orgacloud/1.0',
         'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       ],
       ClientRequestOptions::HTTP_ERRORS => false,
@@ -3906,7 +3906,7 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
       return null;
     }
     if ($response->getStatusCode() != Http::STATUS_OK) {
-      $this->logInfo('REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
+      $this->logInfo('STATUS CODE: "' . $response->getStatusCode() . '" REQUEST HEADERS ' . $url . ' ' . print_r($response->getHeaders(), true));
     }
     return $response->getStatusCode();
   }
