@@ -39,7 +39,7 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
     array $messages,
     public readonly int $instrumentHolder,
     public readonly int $billToParty,
-    public readonly int $brokerSelect,
+    public readonly string $brokerSelect,
     public readonly EnumGeographicalScope $scopeSelect,
     public readonly string $insuredItem,
     public readonly bool $accessory,
@@ -68,8 +68,8 @@ class InstrumentInsuranceValidationResponse extends MessagesResponse
 
     return new self(
       messages: $messages,
-      instrumentHoder: $instrumentHolder,
-      bilToParty: $billToParty,
+      instrumentHolder: $instrumentHolder,
+      billToParty: $billToParty,
       brokerSelect: $brokerSelect,
       scopeSelect: EnumGeographicalScope::get($scopeSelect),
       insuredItem: $insuredItem,
