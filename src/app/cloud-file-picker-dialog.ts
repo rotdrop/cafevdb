@@ -163,22 +163,11 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
             { escapeFunction: (x) => x },
           );
 
-          let uploadMode: EnumFileUploadMode = EnumFileUploadMode.COPY;
-          $('body')
-            .off('change', 'input.cloud-file-system-operations-input')
-            .on('change', 'input.cloud-file-system-operations-input', function(_event) {
-              uploadMode = $(this).val() as EnumFileUploadMode;
-              console.info('UPLOAD MODE', uploadMode);
-            });
-          $('body')
-            .on('open', '#oc-dialog-0-content', function(event) {
-              console.info('DIALOG OPENED', event);
-            });
-
           confirmDialog(
             $fileSystemOps.html(),
             t(appName, 'Select File System Operation'), {
               callback(answer) {
+                const uploadMode = $('input.cloud-file-system-operations-input:checked').val();
                 console.info('UPLOAD MODE', uploadMode);
                 if (answer) {
                   performUpload(uploadMode);
