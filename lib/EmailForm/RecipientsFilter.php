@@ -1485,7 +1485,7 @@ class RecipientsFilter
 
     $remainingListMembers = array_diff($listMembers, array_keys($recipientsByEmail));
     if (!empty($remainingListMembers)) {
-      $this->logInfo('EXCESS MEMBERS ' . print_r($remainingListMembers, true));
+      $this->logInfo('EXCESS MEMBERS ON THE MAILING LIST ' . print_r($remainingListMembers, true));
       // It is ok if there are more members on the list, as intentionally this
       // should be mailing list traffic.  return false;
     }
