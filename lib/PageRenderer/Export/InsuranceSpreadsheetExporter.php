@@ -80,9 +80,9 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = self::INPUT_INDEX_MANUFACTURER + 1;
   protected const INPUT_INDEX_INSURED_AMOUNT = self::INPUT_INDEX_YEAR_OF_CONSTRUCTION + 1;
   protected const INPUT_INDEX_INSURANCE_RATE = self::INPUT_INDEX_INSURED_AMOUNT + 1;
-  protected const INPUT_INDEX_DUE_DATE = self::INPUT_INDEX_INSURANCE_RATE + 1;
-  protected const INPUT_INDEX_INSURANCE_FEES = self::INPUT_INDEX_DUE_DATE + 1;
-  protected const INPUT_INDEX_INSURANCE_START = self::INPUT_INDEX_INSURANCE_FEES + 1;
+  protected const INPUT_INDEX_INSURANCE_FEES = self::INPUT_INDEX_INSURANCE_RATE + 1;
+  protected const INPUT_INDEX_DUE_DATE = self::INPUT_INDEX_INSURANCE_FEES + 1;
+  protected const INPUT_INDEX_INSURANCE_START = self::INPUT_INDEX_DUE_DATE + 1;
   protected const INPUT_INDEX_INSURANCE_END = self::INPUT_INDEX_INSURANCE_START + 1;
 
   /** @var array */
