@@ -328,7 +328,7 @@ class InstrumentInsuranceService
     $entities = $this->getDatabaseRepository(Entities\InsuranceRate::class)->findAll();
     /** @var Entities\InsuranceRate $entity */
     foreach ($entities as $entity) {
-      $scope = (string)$entity->getGeographicalScope();
+      $scope = $entity->getGeographicalScope()->value;
       if ($translate) {
         $scope = $this->l->t($scope);
       }
