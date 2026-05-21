@@ -69,10 +69,10 @@ class InsuranceRate implements \ArrayAccess
   private RateNumberType $rate;
 
   #[ORM\Column(type: 'date_immutable', nullable: true, options: ['comment' => 'start of the yearly insurance period'])]
-  private DateTimeImmutable $dueDate;
+  private ?DateTimeImmutable $dueDate = null;
 
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  private ?string $policyNumber;
+  private ?string $policyNumber = null;
 
   /** @var Collection<InstrumentInsurance> */
   #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
