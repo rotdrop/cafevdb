@@ -44,8 +44,6 @@ const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
 const vendorOriginalTitleAttribute = 'data-bs-original-title' as const;
 const appTitleKey = `${appName}Title` as const;
 const appTitleAttribute = `data-${appName}-title` as const;
-const elementLockAttribute = `data-${appName}-tooltip-lock` as const;
-const elementTimestampAttribute = `data-${appName}-tooltip-timestamp` as const;
 
 const toolTipJobInitialTimeOut = 100; // ms
 const toolTipJobRunnerTimeOut = 0; // ms
@@ -102,8 +100,6 @@ const resetStatistics = () => {
   statistics.processed = 0;
   statistics.pending = 0;
   statistics.pendingMax = 0;
-  statistics.dropped.duplicates = 0;
-  statistics.dropped.locked = 0;
 };
 
 let backGroundPromise = Promise.resolve<TooltipsStatistics>(statistics);
@@ -125,7 +121,7 @@ const rejectBackgroundPromise = function() {
   backGroundPromise = Promise.resolve<TooltipsStatistics>({ ...statistics });
 };
 
-const unregisterBackgroundJob = function() {
+const tryFinishBackgroundJob = function() {
   if (--statistics.pending === 0) {
     console.debug('TOOLTIPS WORKQUEUE FINISHED', { statistics: { ...statistics } });
     if (backGroundResolve) {
@@ -139,51 +135,11 @@ const unregisterBackgroundJob = function() {
   }
 };
 
-/**
- * A debug helper in order not to apply tooltips twice. The side
- * effect is that tooltips cannot be changed.
- *
- * @param $element TBD.
- *
- * @param timestamp TBD.
- *
- * @todo This should no longer be necessary, if anything then we
- * should just record statistics about doubly applied tooltips.
- */
-const markElement = function($element: JQuery, timestamp?: number) {
-  if (timestamp) {
-    if ($element.attr(elementTimestampAttribute) !== undefined) {
-      ++statistics.dropped.duplicates;
-      return false;
-    }
-    $element.attr(elementTimestampAttribute, timestamp);
-  }
-  return true;
-};
-
-/**
- * Disable applying new tooltips while the element has not yet been
- * processed, but has already been pushed to the work-queue.
- *
- * @param $element TBD.
- *
- * @todo Is this lock really necessary?
- */
-const lockElement = function($element: JQuery) {
-  if ($element.attr(elementLockAttribute) !== undefined) {
-    ++statistics.dropped.locked;
-    return false;
-  }
-  $element.attr(elementLockAttribute, '');
+/** For fun track the maximum number of pending tooltip requests. */
+const logPending = function() {
   if (++statistics.pending > statistics.pendingMax) {
     statistics.pendingMax = statistics.pending;
   }
-  return true;
-};
-
-const unlockElement = function($element: JQuery) {
-  unregisterBackgroundJob();
-  $element.removeAttr(elementLockAttribute);
 };
 
 const toolTipsWorkQueue: {
@@ -207,7 +163,7 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
     switch (cssClass) {
       case 'tooltip-off':
         $this.cafevTooltip('disable');
-        unlockElement($this);
+        tryFinishBackgroundJob();
         return;
       case 'tooltip-bottom':
         selfOptions.placement = 'bottom';
@@ -271,7 +227,7 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
 </div>`;
   }
   $this.tooltip(selfOptions);
-  unlockElement($this);
+  tryFinishBackgroundJob();
   jobChunkSize = jobChunkSize || 0;
   for (let i = 0; i < jobChunkSize - 1; i++) {
     const job = toolTipsWorkQueue.pop();
@@ -316,13 +272,8 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
     //
     // @todo This has to be reworked, tooltips just take too much time.
     $this.each(function() {
+      logPending();
       const $element = $(this);
-      if (!markElement($element, optionsForAll.timestamp)) {
-        return;
-      }
-      if (!lockElement($element)) {
-        return;
-      }
       if (statistics.pending === 1) {
         console.debug('TOOLTIP KICK OFF', { ...statistics });
         console.time(consoleTimerTag);
