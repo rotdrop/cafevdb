@@ -21,11 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use './variables.scss' as *;
+
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/border-radius';
+@import 'bootstrap/scss/mixins/deprecate';
+@import 'bootstrap/scss/mixins/reset-text';
+@import 'bootstrap/scss/vendor/rfs';
+@import 'bootstrap/scss/tooltip';
+
 $tooltipWideCssClass: tooltip-wide;
 $tooltipVeryWideCssClass: tooltip-verywide;
 $tooltipMostWideCssClass: tooltip-mostwide;
 
 div[role="tooltip"].tooltip {
+
+  padding: 0 !important; // undo style from core tooltip
 
   & > .empty, .tooltip-hidden, .operation, .action {
     display:none;
