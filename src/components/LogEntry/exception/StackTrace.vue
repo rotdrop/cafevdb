@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import type { ITraceLine } from '@nextcloud/app-logreader/src/interfaces/index.ts'
+
 import TraceLine from './TraceLine.vue'
 
 const props = defineProps<{

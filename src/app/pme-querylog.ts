@@ -26,11 +26,11 @@
  * PME table epxort.
  */
 
-import $ from './jquery.js';
 import { appPrefix } from '../config.ts';
-import { LEGACY_QUERY_LOG } from '../mountable-component-names.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { LEGACY_QUERY_LOG } from '../mountable-component-names.ts';
 import { awaitEmit } from '../services/async-event-bus.ts';
+import $ from './jquery.js';
 
 const vueQueryLogKey = 'vueQueryLog';
 

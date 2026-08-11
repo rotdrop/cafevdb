@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,12 +19,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Console from '../util/console.ts';
 import type {
-  NavigationGuardNext,
-  Route,
-  RouteConfig,
+  RouteRecordRaw,
 } from 'vue-router';
+
+import Console from '../util/console.ts';
 
 const COMPONENT_NAME = 'AddContactsToProjectRoute';
 const logger = new Console(COMPONENT_NAME);
@@ -35,12 +34,12 @@ const AddContactsToProject = async () => {
 
 export const ADD_CONTACTS_TO_PROJECT_NAME = 'AddContactsToProject';
 
-const addContactsToProjectsRoute: RouteConfig = {
+const addContactsToProjectsRoute: RouteRecordRaw = {
   path: 'add-contacts/:addContactsProjectName',
   name: ADD_CONTACTS_TO_PROJECT_NAME,
   component: AddContactsToProject,
-  props: route => ({ projectName: route.params.addContactsProjectName }),
-  beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
+  props: (route) => ({ projectName: route.params.addContactsProjectName }),
+  beforeEnter: (to, from) => {
     logger.info('BEFORE ADD CONTACTS TO PROJECT ENTER', {
       to,
       from,
@@ -50,12 +49,10 @@ const addContactsToProjectsRoute: RouteConfig = {
       const target = {
         name: to.name!,
         params: to.params,
-        query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
+        query: { ...to.query || {}, hash: from.query.hash },
         replace: to.transition === 'replace',
       };
-      next(target);
-    } else {
-      next();
+      return target;
     }
   },
 };

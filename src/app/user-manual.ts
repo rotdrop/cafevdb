@@ -21,14 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
-import { appName, appPrefix } from '../config.ts';
+import { translate as t } from '@nextcloud/l10n';
 import * as ncRouter from '@nextcloud/router';
-import wikiPopup from './wiki-popup.ts';
+import { appName, appPrefix } from '../config.ts';
 import { WIKI_POPUP } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import $ from './jquery.js';
 import { classSelector as pmeClassSelector } from './pme-selectors.ts';
-import { translate as t } from '@nextcloud/l10n';
+import wikiPopup from './wiki-popup.ts';
 
 // listen to requests from the Vue wrapper application, the idea is
 // not to have to load all the code twice, or not to have to change
@@ -89,6 +89,6 @@ const handleUserManualMenu = function($container: JQuery) {
 };
 
 export {
-  userManualMenuHandler as menuHandler,
   handleUserManualMenu as handleMenu,
+  userManualMenuHandler as menuHandler,
 };

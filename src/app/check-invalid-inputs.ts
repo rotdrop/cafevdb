@@ -21,13 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { isJQuerySelect } from './jquery.ts';
+import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import * as Dialogs from './dialogs.ts';
-import { widget as selectWidget } from './select-utils.ts';
+import $, { isJQuerySelect } from './jquery.ts';
 import { token as pmeToken } from './pme-selectors.ts';
-import { translate as t } from '@nextcloud/l10n';
+import { widget as selectWidget } from './select-utils.ts';
 
 const defaultOptions = {
   cleanup() {},
@@ -54,7 +54,7 @@ type Options = typeof defaultOptions;
  * @param userOptions Options with components 'cleanup',
  * 'labelCallback', 'afterDialog' and 'timeout'.
  *
- * @returns true iff no error is found.
+ * @return true iff no error is found.
  */
 function checkInvalidInputs($container: JQuery, userOptions?: Partial<Options>) {
 
@@ -117,7 +117,8 @@ function checkInvalidInputs($container: JQuery, userOptions?: Partial<Options>) 
               }
               cleanup();
             }
-          });
+          },
+        );
         if (afterDialog) {
           $tooltipInput.cafevTooltip('show');
         }
@@ -171,7 +172,8 @@ function checkInvalidInputs($container: JQuery, userOptions?: Partial<Options>) 
     t(appName, 'Missing Input Data'),
     () => highlightInvalid(true),
     true,
-    true);
+    true,
+  );
   return false;
 }
 

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -17,11 +17,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import moment from '@nextcloud/moment';
 import { getCanonicalLocale } from '@nextcloud/l10n';
+import moment from '@nextcloud/moment';
 
 const formatDate = (date: number|string|Date, flavour?: string) => {
   if (+date === parseInt('' + date, 10)) {

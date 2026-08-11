@@ -26,10 +26,10 @@
  * PME table epxort.
  */
 
-import $ from './jquery.ts';
+import { translate as t } from '@nextcloud/l10n';
 import { appName, appPrefix } from '../config.ts';
 import fileDownload from './file-download.ts';
-import { translate as t } from '@nextcloud/l10n';
+import $ from './jquery.ts';
 import * as SelectUtils from './select-utils.ts';
 
 /**
@@ -48,14 +48,17 @@ const handleTableExportMenu = function($select: JQuery<HTMLSelectElement>) {
 
   fileDownload(
     'page/pme/export',
-    post, {
+    post,
+    {
       errorMessage(url, _data) {
         return t(
           appName,
           'Unable to download table in format "{format}" from "{url}": ',
-          { format: exportFormat, url });
+          { format: exportFormat, url },
+        );
       },
-    });
+    },
+  );
 
   // Cheating. In principle we mis-use this as a simple pull-down
   // menu, so let the text remain at its default value. Make sure to

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from '../app/globalstate.ts';
+import type { AsyncNextcloudEvents, EventArg, EventHandler } from '@rotdrop/async-nextcloud-event-bus';
+
 import { SimpleBus } from '@rotdrop/async-nextcloud-event-bus';
-import type { AsyncNextcloudEvents, EventHandler, EventArg } from '@rotdrop/async-nextcloud-event-bus';
+import globalState from '../app/globalstate.ts';
 
 if (!globalState.eventBus) {
   globalState.eventBus = new SimpleBus();
@@ -67,7 +68,6 @@ export function unsubscribe<K extends keyof AsyncNextcloudEvents>(
 export function emit<K extends keyof AsyncNextcloudEvents>(
   name: K,
   ...event: EventArg<AsyncNextcloudEvents, K>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) {
   return bus.emit(name, ...event);
 }
@@ -82,23 +82,22 @@ export const isOne = (x: any): x is 1 => x === 1;
  *
  * @param count Default 1, how many items to expect at least.
  *
- * @returns Data items of just the first data item if count === 1.
- *
+ * @return Data items of just the first data item if count === 1.
  */
 export const getEmitResult = async <
   K extends keyof AsyncNextcloudEvents,
   N extends number = 1,
 >(
-  result: ReturnType<typeof emit<K> >|Awaited<ReturnType<typeof emit<K> > >,
+  result: ReturnType<typeof emit<K>>|Awaited<ReturnType<typeof emit<K>>>,
   count?: N,
-) : Promise<N extends 1 ? AsyncNextcloudEvents[K]['res'] : AsyncNextcloudEvents[K]['res'][]> => {
+): Promise<N extends 1 ? AsyncNextcloudEvents[K]['res'] : AsyncNextcloudEvents[K]['res'][]> => {
   const awaitedResult = await result;
-  const values = awaitedResult.filter(item => item.status === 'fulfilled').map(item => item.value);
+  const values = awaitedResult.filter((item) => item.status === 'fulfilled').map((item) => item.value);
 
   if (values.length < (count ?? 1)) {
     throw new Error('Not enough fulfilled data items in Promise.allSettled() result.');
   }
-  // @ts-expect-error 2322
+  // @ts-expect-error 2322 Return type deduction mismatch, unclear why.
   return isOne(count ?? 1) ? values[0] : values;
 };
 

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from '../app/globalstate.ts';
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
+import globalState from '../app/globalstate.ts';
 
 /**
  * @param path Wiki path as string array.

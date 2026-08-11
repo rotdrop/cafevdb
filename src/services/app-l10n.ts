@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import globalState from '../app/globalstate.ts';
 import {
   getLanguage,
   loadTranslations,
@@ -31,9 +29,11 @@ import {
   translate,
   translatePlural,
 } from '@nextcloud/l10n';
-import { subscribe as asyncSubscribe } from './async-event-bus.ts';
+import globalState from '../app/globalstate.ts';
+import { appName } from '../config.ts';
 import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
 import logger from '../logger.ts';
+import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 
 type TranslationOptions = Exclude<Parameters<typeof translatePlural>[5], undefined>;
 type TranslationVariables<T extends string> = Exclude<Parameters<typeof translate<T>>[2], undefined>;
@@ -92,8 +92,8 @@ if (!globalState.initialized) {
 }
 
 export const appTranslate = <T extends string>(
-  text: Parameters<typeof translate<T> >[1],
-  placeholdersOrNumber?: Parameters<typeof translate<T> >[2],
+  text: Parameters<typeof translate<T>>[1],
+  placeholdersOrNumber?: Parameters<typeof translate<T>>[2],
   options?: TranslationOptions,
 ) => {
   options = { ...options, bundle: appBundle };

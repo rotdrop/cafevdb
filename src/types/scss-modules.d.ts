@@ -23,8 +23,9 @@
 
 // declare module '*.scss';
 declare module 'variables.scss' {
-  import { type AppName } from '../config.ts';
-  import { type CSS_PREFIX_POSTFIX } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+  import type { CSS_PREFIX_POSTFIX } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+  import type { AppName } from '../config.ts';
+
   export const appName: AppName;
   export const appNameTag: `app-${AppName}`;
   export const pageTag: CSS_PREFIX_POSTFIX;
@@ -56,3 +57,16 @@ declare module 'tooltips.scss' {
   export const tooltipVeryWideCssClass = 'tooltip-verywide';
   export const tooltipMostWideCssClass = 'tooltip-mostwide';
 }
+
+declare module 'cafevdb-selectize.scss';
+declare module 'config-check.scss';
+declare module 'donation-receipts.scss';
+declare module 'emailform.scss';
+declare module 'invoices.scss';
+declare module 'mobile.scss';
+declare module 'musicians.scss';
+declare module 'oc-fixes.scss';
+declare module 'personal-settings-popup.scss';
+declare module 'project-participant-fields-display.scss';
+declare module 'selectize/dist/css/selectize.bootstrap.css';
+declare module 'sepa-bank-accounts.scss';

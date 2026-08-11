@@ -21,36 +21,39 @@
  -->
 <template>
   <!-- eslint-disable vue/no-v-text-v-html-on-component, vue/no-v-html -->
-  <component :is="'script'"
+  <component :is="'script' /* intentionally literal */"
              id="cloudFileSystemOperations"
-             ref="outer"
              type="text/html"
              v-html="template"
   />
 </template>
+
 <script lang="ts" setup>
-import { appName } from '../../config.ts'
+import type { TemplateFileUploadMode } from './oc-template-parameters.d.ts'
+
 import { translate as t } from '@nextcloud/l10n'
 import { computed } from 'vue'
-import useTooltipsStore from '../../stores/tooltips.ts'
 import { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts'
-import type { TemplateFileUploadMode } from './oc-template-parameters.d.ts'
+import { appName } from '../../config.ts'
+import useTooltipsStore from '../../stores/tooltips.ts'
 import Console from '../../toolkit/util/console.ts'
 
 const logger = new Console('CloudFileSystemOperations')
 
 const tooltipsProvider = useTooltipsStore()
-tooltipsProvider.provideTooltips(Object.values(EnumFileUploadMode).map(mode => 'cloud-file-system-operations:' + mode))
+tooltipsProvider.provideTooltips(Object.values(EnumFileUploadMode).map((mode) => 'cloud-file-system-operations:' + mode))
 const hints = tooltipsProvider.tooltipsData
 
-const modeData = computed<Record<TemplateFileUploadMode, { name: string, hint: string }> >(() => {
-  logger.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
-  const result = {}
-  for (const mode of Object.values(EnumFileUploadMode).filter(value => value !== EnumFileUploadMode.TEST)) {
-    result[mode] = { name: t(appName, mode), hint: hints[`cloud-file-system-operations:${mode}`] }
-  }
-  return result
-})
+const modeData = computed<Partial<Record<TemplateFileUploadMode, { name: string, hint: string }>>>(
+  () => {
+    logger.info('UPDATE MODEDATE', { hints, currentHints: { ...hints } })
+    const result = {}
+    for (const mode of Object.values(EnumFileUploadMode).filter((value) => value !== EnumFileUploadMode.TEST)) {
+      result[mode] = { name: t(appName, mode), hint: hints[`cloud-file-system-operations:${mode}`] }
+    }
+    return result
+  },
+)
 
 const inputHtml = (mode: string, modeData: { name: string, hint: string }) => {
   logger.info('CALL INPUT HTML', { mode, modeData: { ...modeData } })

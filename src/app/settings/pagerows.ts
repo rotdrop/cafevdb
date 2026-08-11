@@ -21,20 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { SET_PAGE_ROWS } from '../../event-bus-events.ts';
+import { subscribe } from '../../services/async-event-bus.ts';
+import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-import * as Ajax from './../ajax.ts';
 import * as Notification from './../notification.ts';
 import { selected as selectedValues } from './../select-utils.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_PAGE_ROWS } from '../../event-bus-events.ts';
+import { setPersonalUrl } from './../settings-urls.ts';
 
-require('../../legacy/nextcloud/jquery/requesttoken.js');
-
-subscribe(SET_PAGE_ROWS, (event) => {
-  return setter(event?.value, event?.showMessage, event?.$control);
-});
+import '../../legacy/nextcloud/jquery/requesttoken.js';
 
 /**
  * @param value Value to store and propagate to all selects.
@@ -63,8 +59,11 @@ const setter = (value: number, showMessage?: typeof Notification.messages, $cont
         await Ajax.handleError(xhr, status, errorThrown);
         // console.error(data);
         reject(xhr);
-      }),
-  );
+      }));
 };
+
+subscribe(SET_PAGE_ROWS, (event) => {
+  return setter(event?.value, event?.showMessage, event?.$control);
+});
 
 export default setter;

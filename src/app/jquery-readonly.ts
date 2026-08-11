@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { isJQuerySelect } from './jquery.ts';
-import { refreshWidgetProperties, widget as selectWidget, isVanilla as isSelectVanilla } from './select-utils.ts';
 import generateId from './generate-id.ts';
+import $, { isJQuerySelect } from './jquery.ts';
+import { isVanilla as isSelectVanilla, refreshWidgetProperties, widget as selectWidget } from './select-utils.ts';
 
 require('jquery-readonly.scss');
 
@@ -31,7 +31,6 @@ const topDataKey = '__jquery_readonly__';
 const placeholderCssClass = '__jquery-readonly-placeholder__';
 const elementReadonlyClass = '__jquery-readonly-active__';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 // type VanillaPropertyFunction = (propertyName: string, propertyValue?: boolean) => any;
 type VanillaPropertyFunction = typeof $.fn.prop;
 const vanillaProp: VanillaPropertyFunction = $.fn.prop;
@@ -48,11 +47,11 @@ type ValueType =
   | undefined;
 
 interface ReadOnlyData {
-  mutationObserver?: MutationObserver,
-  readonlyState?: boolean,
-  readonlyPlaceholder?: JQuery,
-  optionPlaceholdersInitialized?: boolean,
-  readonlyRestoreDisabled?: boolean,
+  mutationObserver?: MutationObserver;
+  readonlyState?: boolean;
+  readonlyPlaceholder?: JQuery;
+  optionPlaceholdersInitialized?: boolean;
+  readonlyRestoreDisabled?: boolean;
 }
 
 const data = <T extends HTMLElement>($arg: JQuery<T>) => {
@@ -70,7 +69,7 @@ const overrideProp: VanillaPropertyFunction = function<T extends HTMLElement>(
   propertyValue?: ValueType,
 ) {
   const value: undefined|boolean = propertyValue as undefined|boolean;
-  // eslint-disable-next-line
+
   if (this.length === 0) {
     switch (arguments.length) {
       case 1:
@@ -164,6 +163,13 @@ const overrideProp: VanillaPropertyFunction = function<T extends HTMLElement>(
 
 $.fn.prop = overrideProp;
 
+/**
+ * @param $element TBD.
+ * @param name TBD.
+ * @param value TBD.
+ * @param $pivotElement TBD.
+ * @param remove TBD.
+ */
 function generatePlaceHolder($element: JQuery, name: string, value: string, $pivotElement?: JQuery, remove?: boolean) {
   $pivotElement = $pivotElement || $element;
   let id = $element[0].id;
@@ -172,7 +178,7 @@ function generatePlaceHolder($element: JQuery, name: string, value: string, $piv
     id = $element[0].id;
   }
   if (remove || remove === undefined) {
-    $pivotElement.parent().find('input[name="' + name + '"] [value="' + value + '"]' + '.' + placeholderCssClass).remove();
+    $pivotElement.parent().find(`input[name="${name}"] [value="${value}"].${placeholderCssClass}`).remove();
   }
   const idClass = 'for-id-' + id;
   const $placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + ' ' + idClass + '"/>');

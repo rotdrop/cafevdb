@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import objectHash from 'object-hash/index.js'; // avoid using the browserified version
-import { walk, deepCopy } from 'walkjs';
-import Console from './console.ts';
-import type { NormalOption } from 'object-hash';
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus';
+import type { NormalOption } from 'object-hash';
+
+import objectHash from 'object-hash/index.js'; // avoid using the browserified version
+import { deepCopy, walk } from 'walkjs';
+import Console from './console.ts';
 
 const COMPONENT_NAME = 'legacyPostData';
 
@@ -88,7 +89,7 @@ const EMPTY_VALUE_KEYS = [
  *
  * @param postData Data-record from the post-request.
  */
-export const generatePostHash = (postData: TemplatePostData):string => {
+export const generatePostHash = (postData: TemplatePostData): string => {
   const options: NormalOptionsExt = {
     unorderedArrays: true, // sort arrays
     exclude: (key, value, level) =>
@@ -121,8 +122,7 @@ export const sanitizeTemplateParamsOld = (params: TemplatePostData) => Object.fr
       && value !== null
       && value !== undefined
       && ('' + value) !== ''
-      && (!EMPTY_VALUE_KEYS.includes(key) || +(value as string) !== 0)
-    ,
+      && (!EMPTY_VALUE_KEYS.includes(key) || +(value as string) !== 0),
   ),
 );
 
@@ -142,9 +142,9 @@ export const sanitizeTemplateParams = (params: TemplatePostData) => {
         switch (nodeType) {
           case 'value':
             del = node.val === null
-               || node.val === undefined
-               || ('' + node.val) === ''
-               || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0);
+              || node.val === undefined
+              || ('' + node.val) === ''
+              || (EMPTY_VALUE_KEYS.includes(node.key as string) && +(node.val as string) === 0);
             break;
           case 'array':
             del = node.val.length === 0;

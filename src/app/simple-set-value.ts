@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import { setAppUrl } from './settings-urls.ts';
 import * as Ajax from './ajax.ts';
+import $ from './jquery.ts';
 import * as Notification from './notification.ts';
+import { setAppUrl } from './settings-urls.ts';
 
 export type EventType = JQuery.BlurEvent['type']
  | JQuery.ClickEvent['type']
@@ -33,21 +33,21 @@ export type EventType = JQuery.BlurEvent['type']
 export type DefaultValueType<T extends HTMLElement = HTMLElement> = undefined|(T extends HTMLInputElement ? string : null|boolean|number|string|string[]|Record<string, unknown>);
 
 export interface GetValueResult<T extends HTMLElement = HTMLElement, Value = DefaultValueType<T>> {
-  name: string,
-  value: Value,
+  name: string;
+  value: Value;
 }
 
-export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value> > {
+export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value>> {
   /**
    * Setup function called before placing the AJAX call. If false is
    * returned the AJAX call will not be placed and the cleanup
    * function is called.
    */
-  setup: (this: Element) => false|void,
-  success: (this: Element, $element: JQuery<Element>, data: Data, value: Value, $msg: JQuery) => void,
-  fail: (this: Element, xhr: JQuery.jqXHR, textStatus: string, errorThrown: string) => void,
-  cleanup: (this: Element) => void,
-  getValue: (this: Element, $element: JQuery<Element>, $msg: JQuery) => undefined|GetValueResult<Element, Value>,
+  setup: (this: Element) => false|void;
+  success: (this: Element, $element: JQuery<Element>, data: Data, value: Value, $msg: JQuery) => void;
+  fail: (this: Element, xhr: JQuery.jqXHR, textStatus: string, errorThrown: string) => void;
+  cleanup: (this: Element) => void;
+  getValue: (this: Element, $element: JQuery<Element>, $msg: JQuery) => undefined|GetValueResult<Element, Value>;
 }
 
 /**
@@ -64,11 +64,11 @@ export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value 
  *    'cleanup', 'getValue', each pointing to a function performing
  *    the respective task.
  */
-const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value> >(
+const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value>>(
   $element: JQuery<Element>,
   eventType: EventType,
   $msgElement?: JQuery,
-  userCallbacks?: Partial<UserCallbacks<Element, Value, Data> >|Pick<UserCallbacks<Element, Value, Data>, 'success'>,
+  userCallbacks?: Partial<UserCallbacks<Element, Value, Data>>|Pick<UserCallbacks<Element, Value, Data>, 'success'>,
 ) => {
   const defaultCallbacks: UserCallbacks<Element, Value, Data> = {
     setup() {},
@@ -77,7 +77,7 @@ const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value 
       Ajax.handleError(xhr, textStatus, errorThrown);
     },
     cleanup() {},
-    // @ts-expect-error 2322
+    // @ts-expect-error 2322 TO COMPLICATED
     getValue($self, _$msgElement) {
       return {
         name: $self.attr('name')!,
@@ -127,8 +127,8 @@ const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value 
   });
 };
 
-export interface SimpleSetCallbacks<Element extends HTMLElement = HTMLElement, Data = Record<string, unknown> > extends Omit<UserCallbacks<Element, unknown, Data>, 'getValue'|'success'> {
-  success: (this: Element, $element: JQuery<Element>, data: Data, $msg: JQuery) => void,
+export interface SimpleSetCallbacks<Element extends HTMLElement = HTMLElement, Data = Record<string, unknown>> extends Omit<UserCallbacks<Element, unknown, Data>, 'getValue'|'success'> {
+  success: (this: Element, $element: JQuery<Element>, data: Data, $msg: JQuery) => void;
 }
 
 /**
@@ -146,7 +146,7 @@ const simpleSetHandler = <Element extends HTMLElement = HTMLElement>(
   $element: JQuery<Element>,
   eventType: EventType,
   $msgElement?: JQuery,
-  userCallbacks?: Partial<SimpleSetCallbacks<Element> >|SimpleSetCallbacks<Element>['success'],
+  userCallbacks?: Partial<SimpleSetCallbacks<Element>>|SimpleSetCallbacks<Element>['success'],
 ) => {
   const defaultCallbacks: SimpleSetCallbacks<Element> = {
     setup() {},

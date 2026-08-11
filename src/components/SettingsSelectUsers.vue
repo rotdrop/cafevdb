@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -37,15 +37,14 @@
                           :reduce="reduceUser"
                           label="displayname"
                           :options="usersArray"
-                          :options-limit="100"
+                          :optionsLimit="100"
                           :placeholder="label"
-                          :input-label="label"
+                          :inputLabel="label"
                           :loading="isLoading"
                           :multiple="true"
-                          :close-on-select="false"
+                          :closeOnSelect="false"
                           :disabled="disabled"
-                          :user-select="true"
-                          v-on="$listeners"
+                          :userSelect="true"
                           @search="findUsers"
   >
     <!--
@@ -56,7 +55,7 @@
     <template #option="option">
       <NcListItemIcon v-tooltip="userInfoPopup(option)"
                       v-bind="toListItemProps(option)"
-                      :avatar-size="24"
+                      :avatarSize="24"
                       :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
                       :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
@@ -64,7 +63,7 @@
     <template #selected-option="option">
       <NcListItemIcon v-tooltip="userInfoPopup(option)"
                       v-bind="toListItemProps(option)"
-                      :avatar-size="24"
+                      :avatarSize="24"
                       :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
                       :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
@@ -73,36 +72,44 @@
 </template>
 
 <script setup lang="ts">
-import { appName } from '../config.ts'
+import type { NcSelect } from '@nextcloud/vue'
+import type { CloudUser } from '../stores/cloud-users-groups.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import { NcListItemIcon } from '@nextcloud/vue'
+import { storeToRefs } from 'pinia'
 import {
   computed,
   ref,
   watch,
 } from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import { NcListItemIcon } from '@nextcloud/vue'
-import type { NcSelect } from '@nextcloud/vue'
+import { appName } from '../config.ts'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
 import { userInfoPopup } from '../util/user-info-popup.ts'
-import type { CloudUser } from '../stores/cloud-users-groups.ts'
-import { storeToRefs } from 'pinia'
 
 type ValueObject = CloudUser | { id: string, displayname: string, email?: string }
 
 const props = withDefaults(
   defineProps<{
-    label: string,
-    value?: string[],
-    disabled?: boolean,
-    loading?: boolean,
-    loadingIndicator?: boolean,
-  }>(), {
+    label: string
+    value?: string[]
+    disabled?: boolean
+    loading?: boolean
+    loadingIndicator?: boolean
+  }>(),
+  {
     value: () => [],
     disabled: false,
     loading: false,
+    // eslint-disable-next-line vue/no-boolean-default
     loadingIndicator: true,
   },
 )
+
+const emit = defineEmits([
+  'error',
+])
 
 const store = useCloudUsersGroupsStore()
 const { users } = storeToRefs(store)
@@ -113,23 +120,10 @@ const ajaxLoading = ref(false)
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
 const usersArray = computed(() => Object.values(users.value))
 
-watch(() => props.value, async (newValue) => {
-  if (ajaxLoading.value) {
-    return
-  }
-  if (newValue.length === 0) {
-    inputValObjects.value = []
-    return
-  }
-  ajaxLoading.value = true
-  for (const userId of newValue) {
-    if (!users.value[userId]) {
-      await findUsers(userId)
-    }
-  }
-  inputValObjects.value = await getValueObjects()
-  ajaxLoading.value = false
-})
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
+const getUser = (userId: string) => store.getUser(userId, errorHandler)
+const findUsers = (query: string) => store.findUsers(query, errorHandler)
 
 const reduceUser = (user: ValueObject) => user.id
 const getUserObject = async (userId: string): Promise<ValueObject> => {
@@ -151,6 +145,24 @@ const getValueObjects = async () => {
   return result.map((user) => user.id)
 }
 
+watch(() => props.value, async (newValue) => {
+  if (ajaxLoading.value) {
+    return
+  }
+  if (newValue.length === 0) {
+    inputValObjects.value = []
+    return
+  }
+  ajaxLoading.value = true
+  for (const userId of newValue) {
+    if (!users.value[userId]) {
+      await findUsers(userId)
+    }
+  }
+  inputValObjects.value = await getValueObjects()
+  ajaxLoading.value = false
+})
+
 const toListItemProps = (user: ValueObject) => {
   return {
     displayName: user.displayname,
@@ -159,15 +171,6 @@ const toListItemProps = (user: ValueObject) => {
     subname: user.email || undefined,
   }
 }
-
-const emit = defineEmits([
-  'error',
-])
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
-const getUser = (userId: string) => store.getUser(userId, errorHandler)
-const findUsers = (query: string) => store.findUsers(query, errorHandler)
 
 const select = ref<null|typeof SelectWithSubmitButton>(null)
 const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))

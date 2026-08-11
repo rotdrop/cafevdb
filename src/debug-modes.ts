@@ -21,7 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.ts';
 import { translate as t } from '@nextcloud/l10n';
 import {
   // DEBUG_ALL,
@@ -38,6 +37,7 @@ import {
   DEBUG_TOOLTIPS,
   DEBUG_VUE,
 } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import { appName } from './config.ts';
 
 export {
   DEBUG_ALL,

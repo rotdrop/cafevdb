@@ -21,21 +21,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
+import type { App, Component } from 'vue';
+
 import { translate as t } from '@nextcloud/l10n';
-import Vue from 'vue';
+import { createApp } from 'vue';
+import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
-import type { VueConstructor } from 'vue/types/vue';
 import { AppError } from '../toolkit/types/errors.ts';
+import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 
-const vueConstructors: Record<string, VueConstructor> = {};
+const vueComponents: Record<string, Component> = {};
 
-export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
+export const provideMountableComponents = <T extends App>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, async (event) => {
-    if (!vueConstructors[event.name as string]) {
-      let vueComponent: VueConstructor;
+    if (!vueComponents[event.name as string]) {
+      let vueComponent: Component;
       switch (event.name) {
         case MountableComponents.DOKU_WIKI_WRAPPER:
           vueComponent = (await import('@rotdrop/nextcloud-app-dokuwiki/src/DokuWikiWrapper.vue')).default;
@@ -58,14 +59,12 @@ export const provideMountableComponents = <T extends Vue>(vueApp: T) => {
         default:
           throw new AppError(event, t(appName, 'Unknown mountable component: "{name}".', event));
       }
-      // generate the constructor
-      vueConstructors[event.name] = Vue.extend(vueComponent);
+      vueComponents[event.name] = vueComponent;
+      vueApp.component(event.name, vueComponent);
     }
     // obtain a new instance
-    const instance = new vueConstructors[event.name]({
-      parent: vueApp,
-      propsData: event.propsData,
-    });
+    const instance = createApp(vueComponents[event.name], event.propsData);
+    Object.assign(instance._context, vueApp);
     return instance;
   });
 };

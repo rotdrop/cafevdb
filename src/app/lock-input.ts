@@ -1,3 +1,6 @@
+import { translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+import generateId from './generate-id.ts';
 /**
  * Orchestra member, musicion and project management application.
  *
@@ -24,12 +27,9 @@
  * @file
  *
  * Collect some jQuery tweaks in this file.
- *
  */
 import $ from './jquery.ts';
-import { appName } from '../config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import generateId from './generate-id.ts';
+
 import { disabledCssClass } from 'variables.scss';
 
 const dataLockUnlockId = `${appName}LockUnlockId` as const;
@@ -46,10 +46,10 @@ $('body').on('change', 'input[type="checkbox"].' + appName + '-lock-input-widget
 });
 
 interface Options {
-  position: 'bottom'|'middle'|'top',
-  locked: boolean,
-  hardLocked: boolean,
-  cssClass?: string,
+  position: 'bottom'|'middle'|'top';
+  locked: boolean;
+  hardLocked: boolean;
+  cssClass?: string;
 }
 
 type Commands = 'disable'|'enable'|'lock'|'hardlock'|'destroy'|'checkbox'|'label'|'options';
@@ -66,7 +66,7 @@ $.fn.lockUnlock = function(argument?: Commands|Partial<Options>, value?: null|un
     argument = (argument || {}) as Partial<Options>;
     const options: Options = { ...defaultOptions, ...(argument ?? {}) };
     options.locked = options.locked || options.hardLocked;
-    let cssClass = appName + '-lock-input-widget' + ' lock-unlock' + ' checkbox';
+    let cssClass = `${appName}-lock-input-widget lock-unlock checkbox`;
     if (options.cssClass) {
       cssClass += ' ' + cssClass;
     }

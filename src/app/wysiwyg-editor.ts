@@ -21,12 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq } from './jquery.ts';
-import { globalState } from './cafevdb.ts';
 import type { RawEditorOptions } from 'tinymce';
 
+import { globalState } from './cafevdb.ts';
+import $, { jq } from './jquery.ts';
+
 /**
- * Add a WYSIWYG editor to the element specified by @a selector.
+ * Add a WYSIWYG editor to the element specified by selector.
  *
  * @param selector TBD.
  *
@@ -57,7 +58,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                 const $editorElement = $(editorElement);
                 return ClassicEditor
                   .create(editorElement)
-                  .then(editorInstance => {
+                  .then((editorInstance) => {
                     $editorElement.data('ckeditorInstance', editorInstance);
                     editorInstance.ui.focusTracker.on('change:isFocused', (_evt: unknown, _name: unknown, isFocused: boolean) => {
                       if (!isFocused) {
@@ -112,7 +113,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                 $editorElement.data('mceDeferred', mceDeferred);
                 const elementConfig: RawEditorOptions =
                   $editorElement.hasClass('external-documents')
-                  // eslint-disable-next-line camelcase
+
                     ? { relative_urls: false, convert_urls: false }
                     : {};
                 if (!$editorElement.is('textarea')) {
@@ -122,17 +123,18 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                   elementConfig.readonly = true; // does not seem to work ..
                 }
                 $editorElement.tinymce({ ...mceConfig, ...elementConfig });
-                const mceDeferredTimer = setTimeout(function() { mceDeferred.reject('timeout'); }, mceDeferredTimeout);
+                const mceDeferredTimer = setTimeout(() => mceDeferred.reject('timeout'), mceDeferredTimeout);
                 $editorElement.data('mceDeferredTimer', mceDeferredTimer);
                 return mceDeferred.then(
-                  id => {
+                  // @ts-expect-error 2769 TYPE OF DONE-FILTER INCORRECTLY DEDUCTED TO NULL
+                  (id: string) => {
                     $editorElement.next().css('height', '');
                     $editorElement.removeData('mceDeferredTimer');
                     clearTimeout(mceDeferredTimer);
                     console.debug('MCE deferred resolved for id ' + id);
                     return id;
                   },
-                  // @ts-expect-error 2769
+                  // _@ts-expect-error 2769
                   function(error: string) {
                     switch (error) {
                       case 'timeout':
@@ -149,7 +151,8 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
                         clearTimeout(mceDeferredTimer);
                         break;
                     }
-                  });
+                  },
+                );
               }).get(),
             )
             .then(function(...args) {
@@ -166,7 +169,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
 };
 
 /**
- * Remove a WYSIWYG editor from the element specified by @a selector.
+ * Remove a WYSIWYG editor from the element specified by selector.
  *
  * @param selector TBD.
  */
@@ -237,7 +240,7 @@ const updateEditor = function(selector: string|JQuery, contents: string) {
  * Generate a "snapshot", meaning an undo-level, for instance after
  * replacing all data by loading email templates and stuff.
  *
- * @param {string} selector TBD.
+ * @param selector TBD.
  */
 const snapshotEditor = function(selector: string|JQuery) {
   const $editorElements = jq(selector);
@@ -264,9 +267,9 @@ const snapshotEditor = function(selector: string|JQuery) {
 };
 
 export {
-  globalState,
   addEditor,
+  globalState,
   removeEditor,
-  updateEditor,
   snapshotEditor,
+  updateEditor,
 };

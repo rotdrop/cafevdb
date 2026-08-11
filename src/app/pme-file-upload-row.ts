@@ -21,31 +21,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import { appName } from '../config.ts';
+import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+
 import { getRequestToken } from '@nextcloud/auth';
-import * as Ajax from './ajax.ts';
-import * as Dialogs from './dialogs.ts';
-import * as FileUpload from './file-upload.ts';
-import * as Notification from './notification.ts';
-import { formSelector as pmeFormSelector } from './pme-selectors.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { translate as t } from '@nextcloud/l10n';
 import md5 from 'blueimp-md5';
+import {
+  END_POINT_FILES,
+  FILE_ACTION_DELETE,
+  FILE_ACTION_UPLOAD,
+  BASE_PATH as projectParticipantsBasePath,
+} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
+import { appName } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
 // or: const md5 = require('blueimp-md5');
 // but NOT: import { md5 } from 'blueimp-md5';
 import setAppBusyIndicators from './busy-indicators.ts';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
-import { translate as t } from '@nextcloud/l10n';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import * as Dialogs from './dialogs.ts';
+import * as FileUpload from './file-upload.ts';
+import $ from './jquery.ts';
+import * as Notification from './notification.ts';
+import { formSelector as pmeFormSelector } from './pme-selectors.ts';
+
 import { disabledCssClass } from 'variables.scss';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import {
-  BASE_PATH as projectParticipantsBasePath,
-  END_POINT_FILES,
-  FILE_ACTION_DELETE,
-  FILE_ACTION_UPLOAD,
-} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
 
 const defaultUploadUrls = {
   upload: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_UPLOAD}`,
@@ -255,36 +257,6 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
       subDir,
       fileName,
     };
-    const failHandler: Parameters<JQuery.jqXHR['fail']>[0] = function(xhr, status, errorThrown) {
-      $.fn.cafevTooltip.remove();
-      const data = Ajax.failData(xhr, status, errorThrown);
-      console.debug('FAIL DATA', data);
-      if (data.confirmation) {
-        const { question, override, title } = data.confirmation;
-        const text = [...data.messages];
-        text.push(question);
-        Dialogs.confirm(
-          text.join('<br/>'),
-          title || t(appName, 'Confirmation Required!'),
-          {
-            callback(answer) {
-              if (answer) { // try again with force parameter
-                postData[override] = true;
-                $.post(
-                  generateAppUrl(uploadUrls.delete),
-                  postData)
-                  .fail(failHandler)
-                  .done(doneHandler);
-              }
-            },
-            modal: true,
-            allowHtml: true,
-          },
-        );
-      } else {
-        Ajax.handleError(xhr, status, errorThrown, cleanup);
-      }
-    };
     const doneHandler: Parameters<JQuery.jqXHR['done']>[0] = function(data: ResponseData<MessagesResponse>) {
       $.fn.cafevTooltip.remove();
       if (!Ajax.validateResponse(data, ['messages'], cleanup)) {
@@ -321,10 +293,42 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
               return undefined;
             }
             return v;
-          }));
+          },
+        ));
       }
       Notification.messages(data.messages);
       cleanup();
+    };
+    const failHandler: Parameters<JQuery.jqXHR['fail']>[0] = function(xhr, status, errorThrown) {
+      $.fn.cafevTooltip.remove();
+      const data = Ajax.failData(xhr, status, errorThrown);
+      console.debug('FAIL DATA', data);
+      if (data.confirmation) {
+        const { question, override, title } = data.confirmation;
+        const text = [...data.messages];
+        text.push(question);
+        Dialogs.confirm(
+          text.join('<br/>'),
+          title || t(appName, 'Confirmation Required!'),
+          {
+            callback(answer) {
+              if (answer) { // try again with force parameter
+                postData[override] = true;
+                $.post(
+                  generateAppUrl(uploadUrls.delete),
+                  postData,
+                )
+                  .fail(failHandler)
+                  .done(doneHandler);
+              }
+            },
+            modal: true,
+            allowHtml: true,
+          },
+        );
+      } else {
+        Ajax.handleError(xhr, status, errorThrown, cleanup);
+      }
     };
 
     $.post(generateAppUrl(uploadUrls.delete), postData)

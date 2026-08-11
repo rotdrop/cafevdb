@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'"
+  <component :is="'script' /* intentionally literal */"
              id="fileUploadTemplate"
              ref="outer"
              type="text/template"
@@ -47,6 +47,7 @@
     </div>
   </component>
 </template>
+
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 defineProps({
@@ -62,5 +63,7 @@ defineProps({
 
 const inner = ref<null|HTMLElement>(null)
 const outer = ref<null|HTMLScriptElement>(null)
-onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
+onMounted(() => {
+  outer.value!.innerHTML = inner.value!.outerHTML
+})
 </script>

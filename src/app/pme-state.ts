@@ -26,13 +26,14 @@
  * General PME table stuff, popup-handling.
  */
 
-import globalState from './globalstate.ts';
-import { initialState, appName } from './config.ts';
 import type { PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
-import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
-import { type TemplateRenderer } from './template-renderer.ts';
 import type { EnumTemplate } from '../../build/ts-types/php-modules/PageRenderer.ts';
+import type { TemplateRenderer } from './template-renderer.ts';
+
+import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import { appName, initialState } from './config.ts';
+import globalState from './globalstate.ts';
 
 export type PageTemplateValue = `${EnumTemplate}`;
 
@@ -64,7 +65,7 @@ export type TriggerData = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reject?: (arg: RejectTuple) => Promise<any>;
   setup?: boolean;
-  postOpen?: ($dialogHolder: JQuery) => void
+  postOpen?: ($dialogHolder: JQuery) => void;
 };
 
 export type TableDialogCallbackData<S extends PageTemplateValue = PageTemplateValue> = {
@@ -81,40 +82,40 @@ export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> =
     selector: string,
     parameters: TableDialogCallbackData,
     resizeCB: () => void,
-  ):void,
-  context?: unknown,
-}
+  ): void;
+  context?: unknown;
+};
 
 export interface PHPMyEditState extends PMEInitialState {
-  directChange: boolean,
-  filterSelectPlaceholder: string,
-  filterSelectNoResult: string,
-  selectChosen: boolean,
-  filterSelectChosenTitle: string,
-  inputSelectPlaceholder: string,
-  inputSelectNoResult: string,
-  inputSelectChosenTitle: string,
-  pmePrefix: string,
-  singleDeselectOffset: number,
-  defaultSelector: string,
+  directChange: boolean;
+  filterSelectPlaceholder: string;
+  filterSelectNoResult: string;
+  selectChosen: boolean;
+  filterSelectChosenTitle: string;
+  inputSelectPlaceholder: string;
+  inputSelectNoResult: string;
+  inputSelectChosenTitle: string;
+  pmePrefix: string;
+  singleDeselectOffset: number;
+  defaultSelector: string;
 
   /* actual volatile state variables */
-  tableLoadCallbacks: Record<string, TableLoadCallback>,
-  openDialogs: Record<string, boolean>,
+  tableLoadCallbacks: Record<string, TableLoadCallback>;
+  openDialogs: Record<string, boolean>;
 
-  stopped: boolean,
+  stopped: boolean;
 
-  pageRowsDefault: number,
-  deselectInvisibleMiscRecs: boolean,
-  showDisabled: boolean,
-  initialFilterVisibility: boolean,
+  pageRowsDefault: number;
+  deselectInvisibleMiscRecs: boolean;
+  showDisabled: boolean;
+  initialFilterVisibility: boolean;
 
-  initialized?: boolean,
+  initialized?: boolean;
 
-  emit: boolean,
+  emit: boolean;
 
-  restoreHistory?: boolean,
-  dialogCSSId: string,
+  restoreHistory?: boolean;
+  dialogCSSId: string;
 }
 
 const PHPMyEditDefault = {
@@ -147,13 +148,14 @@ const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initiali
 
 const PHPMyEdit: PHPMyEditState = Object.assign(
   globalState.PHPMyEdit,
-  Object.assign(
-    {},
-    PHPMyEditDefault,
-    initialState.PHPMyEdit,
-    globalState.PHPMyEdit, // safe-guard against accidental multipled execution
-    { initialized: true },
-  ));
+  {
+
+    ...PHPMyEditDefault,
+    ...initialState.PHPMyEdit,
+    ...globalState.PHPMyEdit, // safe-guard against accidental multipled execution
+    initialized: true,
+  },
+);
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
 
@@ -167,11 +169,11 @@ const PMEPrefix = pmePrefix.toUpperCase();
 const pmeOpenDialogs = PHPMyEdit.openDialogs;
 
 export {
-  globalState,
   appName,
-  PHPMyEdit,
   pmeDefaultSelector as defaultSelector,
+  globalState,
+  pmeOpenDialogs as openDialogs,
+  PHPMyEdit,
   pmePrefix as prefix,
   PMEPrefix as ucPrefix,
-  pmeOpenDialogs as openDialogs,
 };

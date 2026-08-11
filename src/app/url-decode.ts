@@ -23,10 +23,11 @@
 
 /**
  * Decode an url-encoded query string.
+ *
  * @param str The query string.
  *
  *
- * @returns The decoded query string.
+ * @return The decoded query string.
  *
  * @see {@link https://locutus.io/php/url/urlencode/}
  */
@@ -37,7 +38,8 @@ const urlDecode = function<T extends string>(str: T) {
         // PHP tolerates poorly formed escape sequences
         return '%25';
       })
-      .replace(/\+/g, '%20'));
+      .replace(/\+/g, '%20'),
+  );
 };
 
 /**
@@ -45,7 +47,7 @@ const urlDecode = function<T extends string>(str: T) {
  *
  * @param str The query string.
  *
- * @returns The encoded query string.
+ * @return The encoded query string.
  *
  * @see {@link https://locutus.io/php/url/urlencode/}
  */
@@ -61,6 +63,6 @@ const urlEncode = function<T extends string>(str: T) {
 };
 
 export {
-  urlEncode,
   urlDecode,
+  urlEncode,
 };

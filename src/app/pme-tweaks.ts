@@ -21,20 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.ts';
-import $ from './jquery.ts';
-import { emailFormPopup } from './email.ts';
-import pageBusyIcon from './busy-icon.ts';
-import { token as pmeToken, sys as PMEsys } from './pme-selectors.ts';
 // const qs = require('qs');
 // require('qs/lib/index.js');
 import { parse as qsParse } from 'qs';
+import { EnumParticipationStatus } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import { EnumPostTag as EmailPostTag } from '../../build/ts-types/php-modules/EmailForm.ts';
 import { PARTICIPATION_STATUS_FILTER } from '../../build/ts-types/php-modules/EmailForm/RecipientsFilterCgiKeys.ts';
-import { EnumParticipationStatus } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import { MRECS_KEY } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import pageBusyIcon from './busy-icon.ts';
+import { emailFormPopup } from './email.ts';
+import { globalState } from './globals.ts';
+import $ from './jquery.ts';
+import { sys as PMEsys, token as pmeToken } from './pme-selectors.ts';
 
-require('./jquery-datetimepicker.ts');
+import './jquery-datetimepicker.ts';
 
 /**
  * Cleanup-function to call before replacing HTML content

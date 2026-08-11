@@ -20,18 +20,15 @@
  -
  -->
 <template>
-  <NcContent :app-name="appId">
+  <NcContent :appName="appId">
     <NcAppNavigation>
       <template #list>
         <NcAppNavigationItem :to="{ name: 'home' }"
                              :name="t(appId, 'Home')"
-                             exact
                              @click="showSidebar = false"
-                             @onTransitionComplete="onTransitionComplete"
-                             @onTransitionError="onTransitionError"
         >
           <template #icon>
-            <IconPageTemplate page-template="home" />
+            <IconPageTemplate pageTemplate="home" />
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-if="projectMode"
@@ -40,7 +37,7 @@
                              @click="openProjectOverview"
         >
           <template #icon>
-            <IconPageTemplate page-template="project-overview" />
+            <IconPageTemplate pageTemplate="project-overview" />
           </template>
         </NcAppNavigationItem>
         <NcAppNavigationItem v-for="item in authorizedNavigationItems"
@@ -54,39 +51,36 @@
                              }"
                              :class="{ 'finance-item': (item.permissions & PERMISSION_FINANCE) }"
                              :name="item.name"
-                             exact
                              @click="showSidebar = false"
-                             @onTransitionComplete="onTransitionComplete"
-                             @onTransitionError="onTransitionError"
         >
           <template #icon>
-            <IconPageTemplate :page-template="item.template" />
+            <IconPageTemplate :pageTemplate="item.template" />
           </template>
         </NcAppNavigationItem>
       </template>
       <template #footer>
-        <NcAppNavigationSettings :exclude-click-outside-selectors="[
+        <NcAppNavigationSettings :excludeClickOutsideSelectors="[
           '#appsettings_popup *',
           '.vs__dropdown-menu',
           '.v-popper--theme-dropdown',
         ]"
         >
-          <NcCheckboxRadioSwitch v-tooltip="hints['show-tool-tips']"
-                                 :checked.sync="toolTipsEnabled"
+          <NcCheckboxRadioSwitch v-model="toolTipsEnabled"
+                                 v-tooltip="hints['show-tool-tips']"
           >
             {{ t(appId, 'Tool-Tips') }}
           </NcCheckboxRadioSwitch>
-          <NcActions :menu-name="t(appName, 'Web Browser History')"
+          <NcActions :menuName="t(appName, 'Web Browser History')"
                      class="web-browser-history-menu"
           >
             <NcActionCheckbox v-model="globalState.restoreHistory"
                               v-tooltip="hints['restore-history']"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
             >
               {{ t(appId, 'Restore Last View') }}
             </NcActionCheckbox>
             <NcActionButton :disabled="historyHasBeenSaved"
-                            :close-after-click="true"
+                            :closeAfterClick="true"
                             @click="history.saveHistoryData"
             >
               <template #icon>
@@ -96,7 +90,7 @@
               {{ t(appName, 'Save Web Browser History') }}
             </NcActionButton>
             <NcActionButton :disabled="history.savedHistoryStates.length === 0"
-                            :close-after-click="true"
+                            :closeAfterClick="true"
                             @click="showBrowserHistoryModal = true"
             >
               <template #icon>
@@ -105,24 +99,24 @@
               {{ t(appName, 'Manage Saved History') }}
             </NcActionButton>
           </NcActions>
-          <NcCheckboxRadioSwitch v-tooltip="hints['filter-visibility']"
-                                 :checked.sync="globalState.PHPMyEdit.initialFilterVisibility"
+          <NcCheckboxRadioSwitch v-model="globalState.PHPMyEdit.initialFilterVisibility"
+                                 v-tooltip="hints['filter-visibility']"
           >
             {{ t(appId, 'Filter-Controls') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['direct-change']"
-                                 :checked.sync="globalState.PHPMyEdit.directChange"
+          <NcCheckboxRadioSwitch v-model="globalState.PHPMyEdit.directChange"
+                                 v-tooltip="hints['direct-change']"
           >
             {{ t(appId, 'Quick Change-Dialog') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['deselect-invisible-misc-recs']"
-                                 :checked.sync="globalState.PHPMyEdit.deselectInvisibleMiscRecs"
+          <NcCheckboxRadioSwitch v-model="globalState.PHPMyEdit.deselectInvisibleMiscRecs"
+                                 v-tooltip="hints['deselect-invisible-misc-recs']"
           >
             {{ t(appId, 'Deselect Invisible') }}
           </NcCheckboxRadioSwitch>
           <SelectWithSubmitButton v-model="globalState.PHPMyEdit.pageRowsDefault"
-                                  input-id="page-rows-select"
-                                  :input-label="t(appId, '#Rows/Page in Tables')"
+                                  inputId="page-rows-select"
+                                  :inputLabel="t(appId, '#Rows/Page in Tables')"
                                   :tooltip="hints['table-rows-per-page']"
                                   :required="true"
                                   :clearable="false"
@@ -130,7 +124,7 @@
                                   :multiple="false"
                                   :loading="false"
                                   :disabled="false"
-                                  :submit-button="false"
+                                  :submitButton="false"
           >
             <template #option="option">
               <NcEllipsisedOption :name="makePageRowsLabel(option)" />
@@ -140,26 +134,26 @@
             </template>
           </SelectWithSubmitButton>
           <NcCheckboxRadioSwitch v-if="financeAllowed"
+                                 v-model="globalState.financeMode"
                                  v-tooltip="hints['finance-mode']"
-                                 :checked.sync="globalState.financeMode"
           >
             {{ t(appId, 'Finance-Mode') }}
           </NcCheckboxRadioSwitch>
-          <NcCheckboxRadioSwitch v-tooltip="hints['expert-mode']"
-                                 :checked.sync="globalState.expertMode"
+          <NcCheckboxRadioSwitch v-model="globalState.expertMode"
+                                 v-tooltip="hints['expert-mode']"
           >
             {{ t(appId, 'Expert-Mode') }}
           </NcCheckboxRadioSwitch>
           <NcCheckboxRadioSwitch v-if="globalState.expertMode"
+                                 v-model="globalState.PHPMyEdit.showDisabled"
                                  v-tooltip="hints['show-disabled']"
-                                 :checked.sync="globalState.PHPMyEdit.showDisabled"
           >
             {{ t(appId, 'Show Disabled Data-Sets') }}
           </NcCheckboxRadioSwitch>
           <SelectWithSubmitButton v-if="globalState.expertMode"
                                   v-model="debugModes"
-                                  input-id="debug-modes-select"
-                                  :input-label="t(appId, 'Debug')"
+                                  inputId="debug-modes-select"
+                                  :inputLabel="t(appId, 'Debug')"
                                   :tooltip="hints['debug-mode']"
                                   :required="false"
                                   :clearable="true"
@@ -167,7 +161,7 @@
                                   :multiple="true"
                                   :loading="false"
                                   :disabled="false"
-                                  :submit-button="false"
+                                  :submitButton="false"
           />
           <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugMode & DEBUG_QUERY)"
                                      :value="globalState.debugQuerySqlFilter"
@@ -176,7 +170,7 @@
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
                                      @submit="(filter) => { globalState.debugQuerySqlFilter = filter; } "
           />
-          <NcActions :force-name="true" :inline="1" :class="{ loading: appSettingsLoading }">
+          <NcActions :forceName="true" :inline="1" :class="{ loading: appSettingsLoading }">
             <NcActionLink v-tooltip="hints['further-settings']"
                           :class="{ loading: appSettingsLoading }"
                           :name="t(appId, 'Further Settings')"
@@ -195,25 +189,9 @@
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }">
       <RouterView v-show="!loading"
-                  :loading.sync="loading"
-                  @view-details="handleDetailsRequest"
+                  v-model:loading="loading"
+                  @viewDetails="handleDetailsRequest"
       />
-      <NcEmptyContent v-if="isRoot">
-        <template #name>
-          <h2>{{ t(appId, '{orchestraName} Orchestra Management App', { orchestraName, }) }}</h2>
-        </template>
-        <template #icon>
-          <DynamicSvgIcon :size="64" :data="icon" :title="orchestraName + ' logo'" />
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <!-- <span class="app-icon" v-html="icon" /> -->
-        </template>
-        <template #description>
-          <span>
-            {{ t(appId, 'Please click on the ☰-button in order to open the navigation menu.') }}
-            {{ t(appId, 'Please click on your avatar or initials (top-right) for logout and configuration options.') }}
-          </span>
-        </template>
-      </NcEmptyContent>
       <div v-if="!!appError" class="flex-container flex-justify-center">
         <ErrorPageModal :show="!!appError"
                         :error="appError"
@@ -227,8 +205,8 @@
       </div>
     </NcAppContent>
     <NcAppSidebar v-show="showSidebar"
-                  :name="'Hello World'"
-                  :loading.sync="loading"
+                  v-model:loading="loading"
+                  name="Hello World"
                   @close="showSidebar = false"
     >
       <NcAppSidebarTab id="I-am-a-tab" name="I am a Tab!" />
@@ -247,95 +225,92 @@
       <!-- defeat auto-focus attempts -->
       <input id="focusstealer" type="checkbox" class="focusstealer">
     </form>
-    <ImageUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
-    <FileUploadTemplate :upload-max-file-size="uploadMaxFileSize" :upload-max-human-file-size="uploadMaxHumanFileSize" />
+    <ImageUploadTemplate :uploadMaxFileSize="uploadMaxFileSize" :uploadMaxHumanFileSize="uploadMaxHumanFileSize" />
+    <FileUploadTemplate :uploadMaxFileSize="uploadMaxFileSize" :uploadMaxHumanFileSize="uploadMaxHumanFileSize" />
     <CloudFileSystemOperations />
     <ProgressWrapperTemplate />
     <MusicianAddressViewTemplate />
   </NcContent>
 </template>
+
 <script setup lang="ts">
-import { appName as appId, appName } from './config.ts'
-import globalState from './app/globalstate.ts'
+import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
+import type { AxiosResponse } from 'axios'
+import type {
+  ConfigCheckResponse,
+  SidebarNavigationItem as NavigationItem,
+} from '../build/ts-types/php-modules/Controller/DTO.ts'
+
+import axios from '@nextcloud/axios'
+import { formatFileSize } from '@nextcloud/files'
+import { translate as t } from '@nextcloud/l10n'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
-  NcActions,
   NcActionButton,
   NcActionCheckbox,
   NcActionLink,
-  NcAppSidebar,
-  NcAppSidebarTab,
-  NcContent,
+  NcActions,
   NcAppContent,
   NcAppNavigation,
   NcAppNavigationItem,
   NcAppNavigationSettings,
+  NcAppSidebar,
+  NcAppSidebarTab,
   NcCheckboxRadioSwitch,
+  NcContent,
   NcEllipsisedOption,
-  NcEmptyContent,
 } from '@nextcloud/vue'
+import md5 from 'blueimp-md5'
+import { options as tooltipOptions } from 'floating-vue'
+import { storeToRefs } from 'pinia'
+import {
+  computed,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
+import TextFieldWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
+import IconAppSettings from 'vue-material-design-icons/Cogs.vue'
+import IconHistorySave from 'vue-material-design-icons/ContentSave.vue'
+import IconHistorySaved from 'vue-material-design-icons/ContentSaveCheck.vue'
+import IconHistoryManage from 'vue-material-design-icons/History.vue'
 import BrowserHistoryModal from './components/BrowserHistoryModal.vue'
 import ErrorPageModal from './components/ErrorPageModal.vue'
-import { translate as t } from '@nextcloud/l10n'
+import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
+import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
+import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
+import MusicianAddressViewTemplate from './components/oc-template/MusicianAddressViewTemplate.vue'
+import ProgressWrapperTemplate from './components/oc-template/ProgressWrapperTemplate.vue'
+import IconPageTemplate from './components/PageTemplateIcon.vue'
+import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/Controller/ConfigCheckController.ts'
+import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
+import globalState from './app/globalstate.ts'
+import { authorized, PERMISSION_FINANCE } from './authorization.ts'
+import { appName as appId, appName } from './config.ts'
+import allDebugOptions, { DEBUG_QUERY, DEBUG_VUE } from './debug-modes.ts'
+import * as BusEvents from './event-bus-events.ts'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from './services/async-event-bus.ts'
+import { closeNavigation } from './services/navigation.ts'
 import useAppDataStore from './stores/app-data.ts'
-import useHistoryStore from './stores/history.ts'
 import useErrorHandlerStore from './stores/error-handler.ts'
+import useHistoryStore from './stores/history.ts'
 import useTooltipsStore from './stores/tooltips.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
 // import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
 // import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
-import IconAppSettings from 'vue-material-design-icons/Cogs.vue'
-import IconHistoryManage from 'vue-material-design-icons/History.vue'
-import IconHistorySave from 'vue-material-design-icons/ContentSave.vue'
-import IconHistorySaved from 'vue-material-design-icons/ContentSaveCheck.vue'
-import IconPageTemplate from './components/PageTemplateIcon.vue'
-import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import TextFieldWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
-import ImageUploadTemplate from './components/oc-template/ImageUploadTemplate.vue'
-import FileUploadTemplate from './components/oc-template/FileUploadTemplate.vue'
-import CloudFileSystemOperations from './components/oc-template/CloudFileSystemOperations.vue'
-import ProgressWrapperTemplate from './components/oc-template/ProgressWrapperTemplate.vue'
-import MusicianAddressViewTemplate from './components/oc-template/MusicianAddressViewTemplate.vue'
-import axios from '@nextcloud/axios'
-import generateAppUrl from './toolkit/util/generate-url.ts'
-import { storeToRefs } from 'pinia'
-import { authorized, PERMISSION_FINANCE } from './authorization.ts'
-import allDebugOptions, { DEBUG_VUE, DEBUG_QUERY } from './debug-modes.ts'
-import { vueDevTools } from './toolkit/util/vue-devtools.ts'
-import { formatFileSize } from '@nextcloud/files'
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from './services/async-event-bus.ts'
-import type { SetterEvents, SetterEventValue } from '@rotdrop/async-nextcloud-event-bus'
-import { closeNavigation } from './services/navigation.ts'
-import * as BusEvents from './event-bus-events.ts'
-import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
-import appIcon from '../img/cafevdb.svg?raw'
-import getInitialState from './toolkit/util/initial-state.ts'
-import { useRoute, useRouter } from 'vue-router/composables'
-import type { AxiosResponse } from 'axios'
-import {
-  ref,
-  computed,
-  watch,
-  nextTick,
-  onMounted,
-  reactive,
-  set as vueSet,
-  del as vueDel,
-} from 'vue'
-import Console from './util/console.ts'
 import { AppError } from './toolkit/types/errors.ts'
-import { options as tooltipOptions } from 'floating-vue'
-import md5 from 'blueimp-md5'
-import type {
-  ConfigCheckResponse,
-  SidebarNavigationItem as NavigationItem,
-} from '../build/ts-types/php-modules/Controller/DTO.ts'
-import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/Controller/ConfigCheckController.ts'
-import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
+import generateAppUrl from './toolkit/util/generate-url.ts'
+import getInitialState from './toolkit/util/initial-state.ts'
+import { vueDevTools } from './toolkit/util/vue-devtools.ts'
+import Console from './util/console.ts'
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
@@ -356,8 +331,8 @@ errorHandlerProvider.pushHandler(errorHandler)
 const initialState = getInitialState({ section: 'CAFEVDB' })
 
 type DebugOption = {
-  value: number,
-  label: string,
+  value: number
+  label: string
 }
 
 const appData = useAppDataStore()
@@ -370,7 +345,6 @@ const {
 
 // TRANSLATORS: unknown orchestra name placeholder
 const orchestraName = ref(initialState?.orchestra || t(appId, '[UNKNOWN]'))
-const icon = ref(appIcon)
 
 const loading = ref(true)
 const isMounted = ref(false)
@@ -408,10 +382,6 @@ const sidebarTitle = ref('')
 
 const router = useRouter()
 const route = useRoute()
-
-const isRoot = computed(() => {
-  return route.path === '/'
-})
 
 const projectMode = computed(() => appData.projectMode)
 const debugOptions = computed(() => {
@@ -531,7 +501,8 @@ const updateNavigationItems = async () => {
   logger.debug('URL', url)
   try {
     const response: AxiosResponse<{ navigation: NavigationItem[] }> = await axios.post(
-      url, {
+      url,
+      {
         projectId: currentProjectId.value,
         projectName: route.params.projectName || currentProjectName.value,
       },
@@ -590,12 +561,12 @@ const redirectToLastUrlPath = ref(false)
 const reactifyGlobalState = function() {
   logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
   for (const [key, value] of Object.entries(globalState)) {
-    vueDel(globalState, key)
-    vueSet(globalState, key, value)
+    delete globalState[key]
+    globalState[key] = value
   }
   for (const [key, value] of Object.entries(globalState.PHPMyEdit)) {
-    vueDel(globalState.PHPMyEdit, key)
-    vueSet(globalState.PHPMyEdit, key, value)
+    delete globalState.PHPMyEdit[key]
+    globalState.PHPMyEdit[key] = value
   }
   // reactive(globalState) this alone does not seem to work ...
   logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
@@ -605,13 +576,19 @@ const reactifyGlobalState = function() {
   // update refs through watchers which in effect is just the same.
 
   orchestraName.value = globalState.orchestra
-  watch(() => globalState.orchestra, (value) => { orchestraName.value = value })
+  watch(() => globalState.orchestra, (value) => {
+    orchestraName.value = value
+  })
 
   uploadMaxFileSize.value = globalState.uploadMaxFileSize || 0
-  watch(() => globalState.uploadMaxFileSize, (value) => { uploadMaxFileSize.value = value || 0 })
+  watch(() => globalState.uploadMaxFileSize, (value) => {
+    uploadMaxFileSize.value = value || 0
+  })
 
   userPermissions.value = globalState.userPermissions
-  watch(() => globalState.userPermissions, (value) => { userPermissions.value = value })
+  watch(() => globalState.userPermissions, (value) => {
+    userPermissions.value = value
+  })
 
   updateDebugModes(globalState.debugMode)
 
@@ -718,13 +695,15 @@ watch(
       configCheck()
     }
     triggerNavigationUpdate.value = true
-  })
+  },
+)
 watch(
   currentProjectId,
   (...args) => {
     logger.debug('CURRENT PROJECT ID CHANGED', ...args)
     triggerNavigationUpdate.value = true
-  })
+  },
+)
 watch(
   triggerNavigationUpdate,
   async (value, oldValue) => {
@@ -735,7 +714,8 @@ watch(
         await updateNavigationItems()
       }
     }
-  })
+  },
+)
 
 router.beforeEach((to, from, next) => {
   logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
@@ -749,13 +729,13 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
-router.afterEach((to, from) => {
+router.afterEach((to, from, _failure) => {
   logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', {
     to,
     from,
     windowHistory: window?.history?.state,
   })
-  pageTemplate.value = to.params?.template || 'home'
+  pageTemplate.value = (to.params?.template as undefined|string) || 'home'
   history.finishHistoryAction(to, from)
   // @todo: parse the query parameters, e.g.
   //
@@ -779,9 +759,6 @@ router.onReady(() => {
   }
 })
 
-const onTransitionComplete = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
-const onTransitionError = (...args: unknown[]) => { logger.debug('ON TRANSITION COMPLETE', { ...args }) }
-
 onMounted(() => {
   logger.debug('ON MOUNTED INITIAL HISTORY', {
     currentRoute: { ...router.currentRoute },
@@ -801,11 +778,12 @@ onMounted(() => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
-#app-settings::v-deep {
+#app-settings {
   max-height: 60%;
   flex-shrink: 10;
-  #app-settings__content {
+  :deep(#app-settings__content) {
     max-height: 100%;
     .web-browser-history-menu {
       button {
@@ -821,17 +799,17 @@ onMounted(() => {
     }
   }
 }
-.app-navigation-entry-wrapper.finance-item::v-deep .app-navigation-entry:not(:hover) {
+.app-navigation-entry-wrapper.finance-item :deep(.app-navigation-entry:not(:hover)) {
   background-color: lightyellow;
 }
-.app-navigation-entry.disabled::v-deep {
+.app-navigation-entry.disabled :deep() {
   opacity: 0.5;
   &, & * {
     cursor: default !important;
     pointer-events: none;
   }
 }
-.empty-content::v-deep {
+.empty-content :deep() {
   h2 ~ p {
     text-align: center;
     width: 72ex;

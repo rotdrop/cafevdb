@@ -21,21 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UnsealedData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+
+import { translate as t } from '@nextcloud/l10n';
+import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/CryptoController.ts';
+import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { appName } from '../config.ts';
-import { options as getOptions, refreshWidget } from './select-utils.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import $ from './jquery.ts';
 import {
-  classSelector as pmeClassSelector,
   cellSelector as pmeCellSelector,
+  classSelector as pmeClassSelector,
   inputSelector as pmeInputSelector,
   queryInfoSelector as pmeQueryInfoSelector,
 } from './pme-selectors.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import $ from './jquery.ts';
-import { translate as t } from '@nextcloud/l10n';
-import type { UnsealedData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { options as getOptions, refreshWidget } from './select-utils.ts';
+
 import { tooltipWideCssClass } from 'tooltips.scss';
-import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/CryptoController.ts';
 
 const cryptoCache: Record<string, UnsealedData> = {};
 
@@ -124,7 +126,7 @@ const getDataPMEValues = ($element: JQuery) => {
   }
   try {
     return JSON.parse(data);
-  } catch (e) {
+  } catch {
     console.error('PARSING PME VALUES FAILED DURING LAZY DECRYPTION', { $element, data });
     return undefined;
   }
@@ -211,14 +213,14 @@ const replaceEncryptionPlaceholder = function(
 };
 
 interface BatchJob {
-  cryptoHash: string,
-  sealedData: string,
+  cryptoHash: string;
+  sealedData: string;
 }
 
 /**
  * Background-fetch for encrypted PME fields, batch AJAX calls.
  *
- * @param {jQuery} $container TBD.
+ * @param $container TBD.
  */
 const lazyBatchDecryptValues = function($container: JQuery) {
   // replace any remaining, also run if the cache is just used as is.
@@ -227,7 +229,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       .find(`[data-${DataConstants.DATA_CRYPTO_HASH}].encryption-placeholder`)
       .each(function() { replaceElementEncryptionPlaceholder($(this)); });
   });
-  const batchJobs: Record<string, Record<string, BatchJob> > = {};
+  const batchJobs: Record<string, Record<string, BatchJob>> = {};
   const batchOptions = {};
   const batchInputs = {};
   const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption') as JQuery<HTMLSelectElement>;
@@ -297,10 +299,12 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       const timer = setTimeout(() => {
         const url = generateAppUrl(controllerEndPoint);
         const ajaxPromise = $.post(
-          url, {
+          url,
+          {
             sealedData: valuesChunk.map((job) => job.sealedData),
             metaData,
-          })
+          },
+        )
           .fail(function(xhr, textStatus, errorThrown) {
             console.info('DECRYPTION FAILED', valuesChunk, xhr, textStatus, errorThrown);
             decreaseDecryptionJobCount(valuesChunk.length);
@@ -339,8 +343,8 @@ const lazyBatchDecryptValues = function($container: JQuery) {
 export default lazyBatchDecryptValues;
 
 export {
-  lazyBatchDecryptValues as lazyDecrypt,
   decryptionJobCount as jobCount,
+  lazyBatchDecryptValues as lazyDecrypt,
   decryptionPromise as promise,
   rejectDecryptionPromise as reject,
 };

@@ -24,17 +24,16 @@
  * @file
  *
  * Collect some jQuery tweaks in this file.
- *
  */
 
+import * as CAFEVDB from './cafevdb.ts';
 import { appPrefix } from './config.ts';
 import $ from './jquery.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import './jquery-cafevdb-tooltips.ts';
-import { appNameTag } from 'variables.scss';
 
-require('jquery-ui/ui/widgets/dialog');
-require('jquery-ui/ui/widgets/resizable');
+import './jquery-cafevdb-tooltips.ts';
+import 'jquery-ui/ui/widgets/dialog';
+import 'jquery-ui/ui/widgets/resizable';
+import { appNameTag } from 'variables.scss';
 
 console.log('jquery-extensions');
 
@@ -87,20 +86,20 @@ $.fn.extend({
         CAFEVDB.snapperClose();
       }
       console.debug('will open dialog');
-      // @ts-expect-error 2554
+      // @ts-expect-error 2554 TS confusion, too many overloads?
       $.fn.dialog.call(this, parameters);
       if (this.dialog('option', 'draggable')) {
         console.debug('Try to set containment');
-        // @ts-expect-error 2554
+        // @ts-expect-error 2554 TS confusion, too many overloads?
         $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content, #app-content-vue');
         if (this.dialog('option', 'position')) {
-          // @ts-expect-error 2554
+          // @ts-expect-error 2554 TS confusion, too many overloads?
           $.fn.dialog.call(this, 'widget').position(this.dialog('option', 'position'));
         }
       }
     } else {
       console.debug('CAFEVDB DIALOG FORWARD', { first, second, third });
-      // @ts-expect-error 2322
+      // @ts-expect-error 2322 TS confusion, too many overloads?
       return $.fn.dialog.apply(this, [first, second, third]);
     }
     return this;

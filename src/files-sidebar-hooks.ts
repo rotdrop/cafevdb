@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.ts';
-import getInitialState from './toolkit/util/initial-state.ts';
-import { generateFilePath } from '@nextcloud/router';
-import { getRequestToken } from '@nextcloud/auth';
-import { translate as t } from '@nextcloud/l10n';
-import logoSvg from '../img/cafevdb.svg?raw';
-import type { LegacyFileInfo } from '@nextcloud/files';
+import type { ISidebarContext } from '@nextcloud/files';
 import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
 
-// eslint-disable-next-line camelcase
-__webpack_nonce__ = btoa(getRequestToken() || '');
+import { FileType, registerSidebarTab } from '@nextcloud/files';
+import { translate as t } from '@nextcloud/l10n';
+import { defineAsyncComponent, defineCustomElement } from 'vue';
+import logoSvg from '../img/cafevdb.svg?raw';
+import { appName } from './config.ts';
+import getInitialState from './toolkit/util/initial-state.ts';
 
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', '');
+import './webpack-setup.ts';
 
-interface FilesTab extends Vue {
-  update(fileInfo: LegacyFileInfo): Promise<unknown>,
-}
-
-const OCA = window.OCA;
-
-let TabInstance: undefined|FilesTab;
-
-if (!OCA.CAFEVDB) {
-  OCA.CAFEVDB = {};
-}
+const sidebarTabTag = `${appName}-mailmerge-files-sidebar-tab` as const;
 
 const initialState = getInitialState<FilesInitialState>({ section: 'files' });
 
@@ -63,59 +50,37 @@ const validTemplatePath = function<T extends string>(path: T) {
   return initialState && path.startsWith(initialState.sharing.files.folders.templates);
 };
 
-const enableTemplateActions = function(fileInfo: LegacyFileInfo) {
+const enableTemplateActions = function(context: ISidebarContext) {
 
-  if (fileInfo && fileInfo.isDirectory()) {
+  const node = context.node;
+
+  if (node.type === FileType.Folder) {
     return false;
   }
 
-  if (!acceptableMimeType(fileInfo.mimetype)) {
+  if (!acceptableMimeType(node.mime)) {
     return false;
   }
 
-  if (!validTemplatePath(fileInfo.path)) {
+  if (!validTemplatePath(node.path)) {
     return false;
   }
-
-  OCA.CAFEVDB.fileInfo = fileInfo;
 
   return true; // TODO depend on subdir etc.
 };
 
-window.addEventListener('DOMContentLoaded', () => {
+if (window.customElements.get(sidebarTabTag) === undefined) {
+  window.customElements.define(
+    sidebarTabTag,
+    defineCustomElement(defineAsyncComponent(() => import('./views/FilesTab.vue')), { shadowRoot: false }),
+  );
 
-  /**
-   * Register a new tab in the sidebar
-   */
-  if (OCA.Files && OCA.Files.Sidebar) {
-    OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
-      id: appName + '-mailmerge',
-      name: t(appName, 'MailMerge'),
-      iconSvg: logoSvg,
-      enabled: enableTemplateActions,
-      async mount<VueType extends Vue>(el: HTMLElement, fileInfo: LegacyFileInfo, context: VueType) {
-        const FilesTabAsset = (await import('./files-tab.ts'));
-        const factory = FilesTabAsset.default;
-
-        if (TabInstance) {
-          TabInstance.$destroy();
-        }
-
-        TabInstance = factory(context);
-
-        // Only mount after we hahve all the info we need
-        await TabInstance.update(fileInfo);
-        TabInstance.$mount(el);
-      },
-      update(fileInfo: LegacyFileInfo) {
-        TabInstance!.update(fileInfo);
-      },
-      destroy() {
-        if (TabInstance !== undefined) {
-          TabInstance.$destroy();
-        }
-        TabInstance = undefined;
-      },
-    }));
-  }
-});
+  registerSidebarTab({
+    id: `${appName}-mailmerge`,
+    displayName: t(appName, 'MailMerge'),
+    order: 50,
+    iconSvgInline: logoSvg,
+    tagName: sidebarTabTag,
+    enabled: enableTemplateActions,
+  });
+}

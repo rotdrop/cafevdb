@@ -24,19 +24,18 @@
 <template>
   <NcModal v-if="htmlString"
            ref="modal"
-           :close-on-click-outside="false"
+           :closeOnClickOutside="false"
            :show="open"
            size="large"
-           :has-previous="false"
-           :has-next="false"
+           :hasPrevious="false"
+           :hasNext="false"
            :name="t(appName, 'An Error Occurred')"
            container="#body-user"
            @update:show="emit('update:open', false)"
   >
     <template #actions>
-      <NcActionButton ref="modalActionsReportError"
-                      :name="t(appName, 'report error')"
-                      close-after-click
+      <NcActionButton :name="t(appName, 'report error')"
+                      closeAfterClick
                       @click="handleReportError"
       >
         <template #icon>
@@ -44,7 +43,7 @@
         </template>
       </NcActionButton>
       <NcActionButton :name="closeDetailsLabel"
-                      close-after-click
+                      closeAfterClick
                       @click="emit('update:open', false)"
       >
         <template #icon>
@@ -65,8 +64,8 @@
     </template>
   </NcModal>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
@@ -75,6 +74,7 @@ import {
 import { onMounted, ref, watch } from 'vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
+import { appName } from '../config.ts'
 
 // import Console from '../util/console.ts'
 
@@ -82,20 +82,20 @@ import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vu
 // const logger = new Console(COMPONENT_NAME)
 
 const props = defineProps<{
-  open: boolean,
-  caption: string,
-  htmlString: string,
-  closeDetailsLabel: string,
+  open: boolean
+  caption: string
+  htmlString: string
+  closeDetailsLabel: string
 }>()
 
 const emit = defineEmits([
   'update:open',
-  'problem-report:show',
+  'problemReport:show',
 ])
 
 const handleReportError = () => {
   emit('update:open', false)
-  emit('problem-report:show', true)
+  emit('problemReport:show', true)
 }
 
 const modal = ref<Vue|null>(null)
@@ -108,7 +108,7 @@ const openMenu = () => {
   }
 }
 
-watch(() => props.open, value => {
+watch(() => props.open, (value) => {
   if (value) {
     openMenu()
   }
@@ -121,6 +121,7 @@ onMounted(() => {
 })
 
 </script>
+
 <style lang="scss">
 @use '../../style/mixins/flex.scss';
 @include flex.flexRules;

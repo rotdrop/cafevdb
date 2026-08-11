@@ -28,7 +28,7 @@ const pmeAutocomplete = function($input: JQuery<HTMLInputElement>) {
   if (autocompleteData) {
     $input
       .autocomplete({
-        source: autocompleteData.map(x => String(x)),
+        source: autocompleteData.map((x) => String(x)),
         minLength: 0,
         open(event, _ui) {
           const $input = $(event.target);

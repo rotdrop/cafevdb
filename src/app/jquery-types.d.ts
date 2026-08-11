@@ -25,8 +25,8 @@
 // import { type RawEditorOptions, type Editor } from 'tinymce';
 
 type TooltipOptions = Tooltip.Options & {
-  cssclass: string[],
-  timestamp?: number,
+  cssclass: string[];
+  timestamp?: number;
 };
 
 type TooltipMethods =
@@ -41,10 +41,10 @@ type TooltipMethods =
   | 'dispose';
 
 interface LockUnlockOptions {
-  position: 'bottom'|'middle'|'top',
-  locked: boolean,
-  hardLocked: boolean,
-  cssClass?: string,
+  position: 'bottom'|'middle'|'top';
+  locked: boolean;
+  hardLocked: boolean;
+  cssClass?: string;
 }
 type LockUnlockCommands = 'disable'|'enable'|'lock'|'hardlock'|'destroy'|'checkbox'|'label'|'options';
 
@@ -57,24 +57,24 @@ type HTMLFormElement = HTMLButtonElement
   | HTMLTextAreaElement;
 
 interface JQuery<TElement = HTMLElement> {
-  cafevDialog: JQuery<TElement>['dialog'],
+  cafevDialog: JQuery<TElement>['dialog'];
   cafevTooltip: {
-    (config?: |Partial<TooltipOptions>|TooltipMethods): JQuery<TElement>,
-    enable: () => void,
-    disable: () => void,
-    remove: () => void,
-    hide: () => void,
-  },
-  tooltip: Tooltip.jQueryInterface,
-  hasVerticalScrollbar: () => boolean,
-  elements: () => [number, TElement][],
-  fileupload(options: Record<string, unknown>|'option', option?: string, value?: unknown): JQuery<TElement>,
-  iFrameResize(options: iframeResizer.IFrameOptions): JQuery<TElement>,
-  datetimepicker(argument: 'destroy'|Record<string, unknown>, ...rest: unknown): JQuery<TElement>,
-  readonly(state?: boolean|string): JQuery<TElement>,
-  lockUnlock(argument?: LockUnlockCommands|Partial<LockUnlockOptions>, value?: null|undefined|boolean|string): JQuery<TElement>,
-  octemplate<T extends Record<string, unknown> >(vars: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>,
-  avatar(user: string, size: number): void,
+    (config?: |Partial<TooltipOptions>|TooltipMethods): JQuery<TElement>;
+    enable: () => void;
+    disable: () => void;
+    remove: () => void;
+    hide: () => void;
+  };
+  tooltip: Tooltip.jQueryInterface;
+  hasVerticalScrollbar: () => boolean;
+  elements: () => [number, TElement][];
+  fileupload(options: Record<string, unknown>|'option', option?: string, value?: unknown): JQuery<TElement>;
+  iFrameResize(options: iframeResizer.IFrameOptions): JQuery<TElement>;
+  datetimepicker(argument: 'destroy'|Record<string, unknown>, ...rest: unknown): JQuery<TElement>;
+  readonly(state?: boolean|string): JQuery<TElement>;
+  lockUnlock(argument?: LockUnlockCommands|Partial<LockUnlockOptions>, value?: null|undefined|boolean|string): JQuery<TElement>;
+  octemplate<T extends Record<string, unknown>>(vars: T, options?: { escapeFunction?: (x: string) => string }): JQuery<HTMLElement>;
+  avatar(user: string, size: number): void;
   bootstrapDualListbox(arg: Record<string, unknown>|'refresh', value?: boolean): void;
   tinymce(): undefined|Editor;
   tinymce(options: RawEditorOptions): Promise<Editor[]>;
@@ -82,61 +82,61 @@ interface JQuery<TElement = HTMLElement> {
 
 interface JQueryStatic {
   datetimepicker: {
-    setLocale(locale: string): void,
-  },
+    setLocale(locale: string): void;
+  };
 }
 
 declare namespace Chosen {
   interface Options {
-    title_attributes?: string[],
+    title_attributes?: string[];
   }
 }
 
 declare namespace JQueryUI {
   interface ButtonOptions {
-    icons?: never,
-    text?: string, // just the "text" attribute of the button element
-    html?: string, // just the "html" attribute of the button element
-    icon?: string,
-    iconPosition?: 'beginning'|'end'|'top'|'bottom',
-    showLabel?: boolean, // ... but will just do nothin
-    showText?: boolean, // ... from the docu, but is also an no-op
-    label?: string,
-    click?: (event?: JQuery.TriggeredEvent) => void,
+    icons?: never;
+    text?: string; // just the "text" attribute of the button element
+    html?: string; // just the "html" attribute of the button element
+    icon?: string;
+    iconPosition?: 'beginning'|'end'|'top'|'bottom';
+    showLabel?: boolean; // ... but will just do nothin
+    showText?: boolean; // ... from the docu, but is also an no-op
+    label?: string;
+    click?: (event?: JQuery.TriggeredEvent) => void;
     // aditional HTML attributes
-    [key: string]: string|unknown,
+    [key: string]: string|unknown;
   }
   interface WidgetCommonProperties {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    _super(...args: unknown[]): any,
+    _super(...args: unknown[]): any;
   }
   interface Progressbar {
-    _percentage(): number,
-    valueDiv: JQuery<HTMLDivElement>,
+    _percentage(): number;
+    valueDiv: JQuery<HTMLDivElement>;
   }
 }
 
 declare namespace Selectize {
   interface SelectizeControl<T = string, U = { input: string }> {
-    items: T[],
-    options: Record<string|number, U>,
-    $wrapper: JQuery,
-    $input: JQuery,
-    optgroups: Record<string, unknown>,
-    registerOptionGroup(arg: { $order: number, label: string, value: string, disable: boolean }): void,
+    items: T[];
+    options: Record<string|number, U>;
+    $wrapper: JQuery;
+    $input: JQuery;
+    optgroups: Record<string, unknown>;
+    registerOptionGroup(arg: { $order: number; label: string; value: string; disable: boolean }): void;
   }
   interface IOptions<T = string, U = { input: string }> {
-    inputClass?: string,
+    inputClass?: string;
     //
-    onBeforeDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void,
-    onDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void,
-    onDropdownClose?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void,
-    onChange?: (this: SelectizeControl<T, U>, value: T) => void,
-    onClear?: (this: SelectizeControl<T, U>) => void,
-    onOptionsRefresh?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void,
-    onOptionAdd?: (this: SelectizeControl<T, U>, value: T, data: U) => void,
-    onInitialize?: (this: SelectizeControl<T, U>) => void,
-    create?: boolean|((this: SelectizeControl<T, U>, input: T, setterCallback: (arg: false|U) => void) => void),
+    onBeforeDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+    onDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+    onDropdownClose?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+    onChange?: (this: SelectizeControl<T, U>, value: T) => void;
+    onClear?: (this: SelectizeControl<T, U>) => void;
+    onOptionsRefresh?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+    onOptionAdd?: (this: SelectizeControl<T, U>, value: T, data: U) => void;
+    onInitialize?: (this: SelectizeControl<T, U>) => void;
+    create?: boolean|((this: SelectizeControl<T, U>, input: T, setterCallback: (arg: false|U) => void) => void);
   }
 }
 

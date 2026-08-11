@@ -21,27 +21,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type {
+  Calendar,
+  CalendarObjectsStore,
+  CalendarsStore,
+  FetchedTimeRangesStore,
+  PrincipalsStore,
+  SettingsStore,
+} from '@nextcloud/app-calendar';
+
 import { mapDavCollectionToCalendar } from '@nextcloud/app-calendar/src/models/calendar.js';
+import { findAllCalendars, initializeClientForUserView } from '@nextcloud/app-calendar/src/services/caldavService.js';
+import getTimeZoneManager from '@nextcloud/app-calendar/src/services/timezoneDataProviderService.js';
+import useCalendarObjectsStore from '@nextcloud/app-calendar/src/store/calendarObjects.js';
 import useCalendarsStore from '@nextcloud/app-calendar/src/store/calendars.js';
+import useFechtedTimeRanges from '@nextcloud/app-calendar/src/store/fetchedTimeRanges.js';
 import usePrincipalsStore from '@nextcloud/app-calendar/src/store/principals.js';
 import useSettingsStore from '@nextcloud/app-calendar/src/store/settings.js';
-import useFechtedTimeRanges from '@nextcloud/app-calendar/src/store/fetchedTimeRanges.js';
-import useCalendarObjectsStore from '@nextcloud/app-calendar/src/store/calendarObjects.js';
-import { findAllCalendars, initializeClientForUserView } from '@nextcloud/app-calendar/src/services/caldavService.js';
 import loadMomentLocalization from '@nextcloud/app-calendar/src/utils/moment.js';
-import getTimeZoneManager from '@nextcloud/app-calendar/src/services/timezoneDataProviderService.js';
 import Console from '../util/console.ts';
 // the used eslint + packages is far too old -- will change after NC has moved to Vue3
-// eslint-disable-next-line n/no-missing-import
-import type { Calendar, CalendarObjectsStore, CalendarsStore, FetchedTimeRangesStore, PrincipalsStore, SettingsStore } from '@nextcloud/app-calendar';
 
 const logger = new Console('calendarSetup');
 
 type CalendarSyncHandlerArg = {
-  calendarObjectsStore: CalendarObjectsStore,
-  calendarsStore: CalendarsStore,
-  fetchedTimeRangesStore: FetchedTimeRangesStore,
-  principalsStore: PrincipalsStore,
+  calendarObjectsStore: CalendarObjectsStore;
+  calendarsStore: CalendarsStore;
+  fetchedTimeRangesStore: FetchedTimeRangesStore;
+  principalsStore: PrincipalsStore;
 };
 
 export let backgroundSyncJob: NodeJS.Timeout|undefined;
@@ -95,7 +102,9 @@ const calendarStoreSetup = async () => {
   const calendarsStore: CalendarsStore = useCalendarsStore();
   const principalsStore: PrincipalsStore = usePrincipalsStore();
   const settingsStore: SettingsStore = useSettingsStore();
-  loadMomentLocalization().then((locale: string) => { settingsStore.setMomentLocale({ locale }); });
+  loadMomentLocalization().then((locale: string) => {
+    settingsStore.setMomentLocale({ locale });
+  });
 
   if (calendarsStore.initialCalendarsLoaded) {
     logger.debug('INITIAL CALENDARS ALREADY LOADED');

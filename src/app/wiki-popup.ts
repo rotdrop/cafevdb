@@ -21,14 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
-import { appName } from '../config.ts';
-import { toBackButton as dialogToBackButton } from './dialog-utils.ts';
-import modalizer from './modalizer.ts';
-import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
-import { GET_VUE_COMPONENT, WIKI_POPUP } from '../event-bus-events.ts';
-import { awaitEmit } from '../services/async-event-bus.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+import type { WIKI_POPUP } from '../event-bus-events.ts';
+
+import { appName } from '../config.ts';
+import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
+import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
+import { awaitEmit } from '../services/async-event-bus.ts';
+import { toBackButton as dialogToBackButton } from './dialog-utils.ts';
+import $ from './jquery.js';
+import modalizer from './modalizer.ts';
 
 require('dokuwiki-jquery-popup.scss');
 
@@ -45,10 +47,10 @@ require('dokuwiki-jquery-popup.scss');
 
 let dokuWikiWrapper: undefined|Vue & {
   _props: {
-    wikiPage: string,
-    fullScreen?: boolean,
-  },
-  wikiIFrame: HTMLIFrameElement,
+    wikiPage: string;
+    fullScreen?: boolean;
+  };
+  wikiIFrame: HTMLIFrameElement;
 };
 
 let wikiContentHeight = -1;

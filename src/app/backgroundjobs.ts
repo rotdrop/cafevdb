@@ -22,12 +22,12 @@
  */
 
 import { getCurrentUser } from '@nextcloud/auth';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
 import axios from '@nextcloud/axios';
-import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
 import { END_POINT } from '../../build/ts-types/php-modules/Controller/BackgroundJobController.ts';
+import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
+import '../legacy/nextcloud/jquery/requesttoken.js';
 
 const cloudUser = getCurrentUser();
 

@@ -21,17 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import $ from './jquery.ts';
 import { loadState } from '@nextcloud/initial-state';
+import { appName } from '../config.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import $ from './jquery.ts';
+
 import '@iframe-resizer/jquery';
 
 let scriptUrl: string;
 
 interface Asset {
-  hash: string,
-  asset: string,
+  hash: string;
+  asset: string;
 }
 
 /**

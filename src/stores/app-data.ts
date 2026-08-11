@@ -21,44 +21,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { AxiosResponse } from 'axios';
+import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
+import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import type { EntityReference } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
+import type { ErrorContext, ErrorHandler } from '../toolkit/types/errors.ts';
+import type { AnyPromise } from '../types/promise.d.ts';
+
+import axios from '@nextcloud/axios';
+import { translate as t } from '@nextcloud/l10n';
 import { defineStore } from 'pinia';
-import globalState from '../app/globalstate.ts';
 import {
-  set as vueSet,
-  // del as vueDelete,
+  computed,
   reactive,
   ref,
-  computed,
   watch,
 } from 'vue';
-import axios from '@nextcloud/axios';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import type { AxiosResponse } from 'axios';
 import {
-  PUSH_BUSY_STATE,
+  GET_EVENT_MATRIX,
+  GET_PROJECT_FOLDER,
+  BASE_PATH as projectsEndPoint,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
+import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
+import globalState from '../app/globalstate.ts';
+import { appName } from '../config.ts';
+import {
   POP_BUSY_STATE,
+  PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
 } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
-import Console from '../util/console.ts';
 import { AppError } from '../toolkit/types/errors.ts';
-import type { ErrorContext, ErrorHandler } from '../toolkit/types/errors.ts';
-import { appName } from '../config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import useErrorHandler from './error-handler.ts';
-import type { AnyPromise } from '../types/promise.d.ts';
-import type { EventMatrixEvent, EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts';
-import type { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import Console from '../util/console.ts';
 import useDatabaseEntities from './database-entities.ts';
-import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
-import type { EntityReference } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
-import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
-import type { ProjectFoldersResponse as ProjectFolders } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import {
-  BASE_PATH as projectsEndPoint,
-  GET_PROJECT_FOLDER,
-  GET_EVENT_MATRIX,
-} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
+import useErrorHandler from './error-handler.ts';
 
 export { type EventMatrixEvent };
 
@@ -81,15 +80,15 @@ export type CalendarUris = keyof typeof CALENDARS;
 export type ProjectEventMatrix = Record<number, EventMatrixRow>;
 
 export interface Project extends FrontEndEntity<'Project'> {
-  wikiPage: string,
-  folders?: ProjectFolders,
-  eventMatrix?: ProjectEventMatrix,
+  wikiPage: string;
+  folders?: ProjectFolders;
+  eventMatrix?: ProjectEventMatrix;
   getFolders: (
     errorHandler?: ErrorHandler,
-  ) => Promise<undefined | ProjectFolders>,
+  ) => Promise<undefined | ProjectFolders>;
   getEventMatrix: (
     errorHandler?: ErrorHandler,
-  ) => Promise<undefined | ProjectEventMatrix>,
+  ) => Promise<undefined | ProjectEventMatrix>;
 }
 
 export default defineStore(storeId, () => {
@@ -208,7 +207,7 @@ export default defineStore(storeId, () => {
     try {
       const response: AxiosResponse<ProjectEventMatrix> = await axios.get(url);
       logger.debug('FETCH EVENT MATRIX RESPONSE', response);
-      vueSet(state.projectEvents, projectId, response.data);
+      state.projectEvents[projectId] = response.data;
       return response.data;
     } catch (e) {
       stateHandleError(
@@ -229,7 +228,7 @@ export default defineStore(storeId, () => {
     try {
       const response: AxiosResponse<ProjectFolders> = await axios.get(url);
       logger.debug('FETCH PROJECT FOLDERS RESPONSE', response);
-      vueSet(state.projectFolders, projectId, response.data);
+      state.projectFolders[projectId] = response.data;
       return response.data;
     } catch (e) {
       stateHandleError(
@@ -252,7 +251,7 @@ export default defineStore(storeId, () => {
       entityClassName: 'Project',
       flatIdentifier: projectId,
     };
-    const proxyHandler: ProxyHandler<EntityReference<'Project'> > = {
+    const proxyHandler: ProxyHandler<EntityReference<'Project'>> = {
       get: (entityReference, field, _receiver) => {
         switch (field) {
           case 'wikiPage': {
@@ -301,7 +300,7 @@ export default defineStore(storeId, () => {
       },
       ownKeys: (entityReference) => {
         const project = databaseEntities.find('Project', projectId)!;
-        return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project), ...Reflect.ownKeys(entityReference).filter(key => key === '__ob__' || key === '__v_skip')];
+        return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project), ...Reflect.ownKeys(entityReference).filter((key) => key === '__ob__' || key === '__v_skip')];
       },
       set: (entityReference, field, value) => {
         if (field === '__ob__' || field === '__v_skip') {
@@ -343,18 +342,24 @@ export default defineStore(storeId, () => {
         return true;
       },
     };
-    const stateProject = new Proxy<EntityReference<'Project'> >(
+    const stateProject = new Proxy<EntityReference<'Project'>>(
       projectReference,
       proxyHandler,
     ) as unknown as Project;
-    vueSet(state.projects, projectId, stateProject);
-    vueSet(state.projectsByName, project.name, stateProject);
+    state.projects[projectId] = stateProject;
+    state.projectsByName[project.name] = stateProject;
     return state.projects[projectId];
   };
-  const stateFindProject = async (
+
+  /**
+   * @param projectId TBD.
+   *
+   * @param errorHandler TBD.
+   */
+  async function stateFindProject(
     projectId: number,
     errorHandler?: ErrorHandler,
-  ) => {
+  ) {
     try {
       const data = await databaseEntities.fetch({
         entityName: 'Project',
@@ -371,7 +376,8 @@ export default defineStore(storeId, () => {
       );
       return undefined;
     }
-  };
+  }
+
   const stateSearchProjects = async (
     query: string,
     errorHandler?: ErrorHandler,
@@ -383,10 +389,16 @@ export default defineStore(storeId, () => {
     ));
     return result;
   };
-  const stateDoSearchProjects = async (
+
+  /**
+   * @param query TBD.
+   *
+   * @param errorHandler TBD.
+   */
+  async function stateDoSearchProjects(
     query: string,
     errorHandler?: ErrorHandler,
-  ) => {
+  ) {
     query = query.replace(/\*/g, '%');
     if (!query.match('%')) {
       if (!query.startsWith('^')) {
@@ -416,7 +428,7 @@ export default defineStore(storeId, () => {
       stateHandleError(e, { action: 'searchProjects', query }, errorHandler);
       return undefined;
     }
-  };
+  }
 
   /*
    * END OF DATA FETCHING FUNCTIONS.
@@ -424,8 +436,9 @@ export default defineStore(storeId, () => {
    ****************************************************************************/
 
   const projects = computed(() => state.projects);
-  watch(projects, (value, oldValue) =>
-    logger.info('PROJECTS WATCHER', value, oldValue),
+  watch(
+    projects,
+    (value, oldValue) => logger.info('PROJECTS WATCHER', value, oldValue),
   );
 
   const getProject = async (
@@ -460,7 +473,7 @@ export default defineStore(storeId, () => {
       return currentProject.value;
     }
     if (projectKey) {
-      return getProject(projectKey, handler).then(project => {
+      return getProject(projectKey, handler).then((project) => {
         currentProject.value = project;
         return Promise.resolve(currentProject.value);
       });

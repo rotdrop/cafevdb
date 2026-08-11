@@ -19,21 +19,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import type { RouterOptions, Route } from 'vue-router';
-import { generateUrl } from '@nextcloud/router';
-import appRoutes from './routes.ts';
-import Router, { isNavigationFailure, NavigationFailureType } from 'vue-router';
-import Console from '../util/console.ts';
+import type {
+  // RouteLocationRaw,
+  RouterOptions,
+} from 'vue-router';
 
-const COMPONENT_NAME = 'app-router';
-const logger = new Console(COMPONENT_NAME);
+import { generateUrl } from '@nextcloud/router';
+import {
+  createRouter,
+  createWebHistory,
+  // ErrorTypes,
+  // isNavigationFailure,
+} from 'vue-router';
+import { appName } from '../config.ts';
+// import Console from '../util/console.ts';
+import appRoutes from './routes.ts';
+
+// const COMPONENT_NAME = 'app-router';
+// const logger = new Console(COMPONENT_NAME);
 
 const base = generateUrl('/apps/' + appName);
 
 const options: RouterOptions = {
-  mode: 'history',
-  base,
+  history: createWebHistory(base),
   linkActiveClass: 'active',
   routes: appRoutes,
   scrollBehavior(to, _from, savedPosition) {
@@ -49,26 +57,26 @@ const options: RouterOptions = {
   // Disable throwing errors on redirection. We use this to
   // re-"mis"-use the calendar-app editor widgets which otherwise would
   // lead to an unhandled promise error.
-  navigationPromiseFactory(arg) {
-    const { promise, resolve, reject } = Promise.withResolvers<Route>();
+  // navigationPromiseFactory(arg) {
+  //   const { promise, resolve, reject } = Promise.withResolvers<RouteLocationRaw>();
 
-    arg(resolve, (error) => {
-      logger.debug('NAVIGATION PROMISE REJECT', { error });
-      if (isNavigationFailure(error, NavigationFailureType.redirected)) {
-        logger.debug('Catch and ignore redirection navigation error', { error });
-        resolve(error.to);
-      // } else if (isNavigationFailure(error, NavigationFailureType.aborted)
-      //            && error.to.path.endsWith('--never--')) {
-      //   resolve(error.from);
-      } else {
-        reject(error);
-      }
-    });
+  //   arg(resolve, (error) => {
+  //     logger.debug('NAVIGATION PROMISE REJECT', { error });
+  //     if (isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)) {
+  //       logger.debug('Catch and ignore redirection navigation error', { error });
+  //       resolve(error.to);
+  //     // } else if (isNavigationFailure(error, NavigationFailureType.aborted)
+  //     //            && error.to.path.endsWith('--never--')) {
+  //     //   resolve(error.from);
+  //     } else {
+  //       reject(error);
+  //     }
+  //   });
 
-    return promise;
-  },
+  //   return promise;
+  // },
 };
 
-const router = new Router(options);
+const router = createRouter(options);
 
 export default router;

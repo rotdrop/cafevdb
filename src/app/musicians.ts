@@ -21,35 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq } from './jquery.ts';
-import { appName, appPrefix } from '../config.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Page from './page.ts';
-import * as Ajax from './ajax.ts';
-import * as Dialogs from './dialogs.ts';
-import * as ProjectParticipants from './project-participants.ts';
-import * as PHPMyEdit from './pme.ts';
-import * as Notification from './notification.ts';
-import { selected as selectedValues } from './select-utils.ts';
-import { rec as pmeRec } from './pme-record-id.ts';
-import {
-  token as pmeToken,
-  data as pmeData,
-  sys as pmeSys,
-  classSelectors as pmeClassSelectors,
-  valueSelector as pmeValueSelector,
-  classSelector as pmeClassSelector,
-} from './pme-selectors.ts';
-import pageBusyIcon from './busy-icon.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
-import debounce from './debounce.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import type {
   AddMusiciansResponse,
   AutocompletePlaceResponse,
@@ -58,37 +29,68 @@ import type {
   EmailValidationResponse,
   PhoneNumberValidationResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { disabledCssClass } from 'variables.scss';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import * as PersistentCGIKeys from '../../build/ts-types/php-modules/PageRenderer/PersistentCGIKeys.ts';
-import { ACCEPT_GENDER_DETECTION } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
-import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
-import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import {
-  BASE_PATH as projectParticipantsBasePath,
-  END_POINT_ADD_MUSICIANS,
-} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
-import {
-  END_POINT as validationEndPoint,
-} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
-import {
-  END_POINT as mailingListsEndPoint,
-} from '../../build/ts-types/php-modules/Controller/MailingListsController.ts';
+
+import { translatePlural as n, translate as t } from '@nextcloud/l10n';
 import {
   EnumMusicianValidationSubTopic,
   EnumMusicianValidationTopic,
   // EnumMailingListOperation,
 } from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  END_POINT as mailingListsEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MailingListsController.ts';
+import {
+  END_POINT as validationEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
+import {
+  END_POINT_ADD_MUSICIANS,
+  BASE_PATH as projectParticipantsBasePath,
+} from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
+import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import { ACCEPT_GENDER_DETECTION } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import * as PersistentCGIKeys from '../../build/ts-types/php-modules/PageRenderer/PersistentCGIKeys.ts';
+import { appName, appPrefix } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import debounce from './debounce.ts';
+import * as Dialogs from './dialogs.ts';
+import $, { jq } from './jquery.ts';
+import {
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import * as Notification from './notification.ts';
+import * as Page from './page.ts';
+import { rec as pmeRec } from './pme-record-id.ts';
+import {
+  classSelector as pmeClassSelector,
+  classSelectors as pmeClassSelectors,
+  data as pmeData,
+  sys as pmeSys,
+  token as pmeToken,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as ProjectParticipants from './project-participants.ts';
+import { selected as selectedValues } from './select-utils.ts';
 
-require('../legacy/nextcloud/jquery/octemplate.js');
-require('jquery-ui/ui/widgets/autocomplete');
+import 'jquery-ui/ui/widgets/autocomplete';
+import '../legacy/nextcloud/jquery/octemplate.js';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
-require('sepa-bank-accounts.scss');
-require('musicians.scss');
+import 'musicians.scss';
+import 'sepa-bank-accounts.scss';
+import { disabledCssClass } from 'variables.scss';
 
-const CANCELLED_STATUS = 'cancelled';
-type ErrorTextStatus = JQuery.Ajax.ErrorTextStatus|typeof CANCELLED_STATUS;
+type CANCELLED_STATUS = 'cancelled';
+type ErrorTextStatus = JQuery.Ajax.ErrorTextStatus|CANCELLED_STATUS;
 
 const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
 const selectedOptionsKey = '_m_selectedOptions';
@@ -98,9 +100,9 @@ type ExclusiveParticipationContext = EnumParticipationContext.ASSOCIATES|EnumPar
 /**
  * Add several musicians.
  *
- * @param {jQuery} $form TBD.
+ * @param $form TBD.
  *
- * @param {object} post TBD.
+ * @param post TBD.
  */
 const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.PlainObject) => {
   const projectId = +$form.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val()!;
@@ -129,7 +131,8 @@ const addMusicians = ($form: JQuery<HTMLFormElement>, post?: string|JQuery.Plain
         // open single person change dialog
         const musicianId = data.musicians[0];
         ProjectParticipants.personalRecordDialog(
-          musicianId, {
+          musicianId,
+          {
             projectId,
             projectName,
             initialValue: 'Change',
@@ -177,8 +180,7 @@ const contactValidation = function(container?: string|JQuery) {
   // "read-only" forms do not need contact validation handlers
   if ($form.hasClass(pmeToken('list'))
       || $form.hasClass(pmeToken('view'))
-      || $form.hasClass(pmeToken('delete'))
-  ) {
+      || $form.hasClass(pmeToken('delete'))) {
     return;
   }
 
@@ -221,20 +223,23 @@ const contactValidation = function(container?: string|JQuery) {
 
       $.post(
         generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.PHONE}`),
-        post)
+        post,
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
         .done(function(data: ResponseData<PhoneNumberValidationResponse>) {
           if (!Ajax.validateResponse(
-            data, [
+            data,
+            [
               'messages',
               'mobilePhone',
               'mobileMeta',
               'fixedLinePhone',
               'fixedLineMeta',
             ],
-            cleanup)) {
+            cleanup,
+          )) {
             return false;
           }
           // inject the sanitized value into their proper input fields
@@ -257,7 +262,10 @@ const contactValidation = function(container?: string|JQuery) {
               function() {
                 phones.prop('disabled', false);
                 submitDefer.resolve();
-              }, true, true);
+              },
+              true,
+              true,
+            );
             Dialogs.debugPopup(data);
           } else {
             phones.prop('disabled', false);
@@ -300,7 +308,8 @@ const contactValidation = function(container?: string|JQuery) {
 
       $.post(
         generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.EMAIL}`),
-        post)
+        post,
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
@@ -314,7 +323,10 @@ const contactValidation = function(container?: string|JQuery) {
             Dialogs.alert(
               data.messages.join('<br>'),
               t(appName, 'Email Validation'),
-              cleanup, true, true);
+              cleanup,
+              true,
+              true,
+            );
             Dialogs.debugPopup(data);
           } else {
             cleanup();
@@ -519,7 +531,8 @@ const contactValidation = function(container?: string|JQuery) {
     console.info('INITIATE PLACE AUTOCOMPLETE');
     autocompletePlaceRequest = $.post(
       generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.AUTOCOMPLETE}/${EnumMusicianValidationSubTopic.AUTOCOMPLETE_PLACE}`),
-      post)
+      post,
+    )
       .fail(function(xhr, status: ErrorTextStatus, errorThrown) {
         if (status !== 'cancelled') {
           console.error('Auto-complete update failed', xhr, status, errorThrown);
@@ -578,7 +591,8 @@ const contactValidation = function(container?: string|JQuery) {
     console.info('INITIATE STREET AUTOCOMPLETE');
     autocompleteStreetRequest = $.post(
       generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.AUTOCOMPLETE}/${EnumMusicianValidationSubTopic.AUTOCOMPLETE_STREET}`),
-      post)
+      post,
+    )
       .fail(function(xhr, status: ErrorTextStatus, errorThrown) {
         if (status !== 'cancelled') {
           console.error('Auto-complete update failed', xhr, status, errorThrown);
@@ -675,7 +689,8 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
 
   $.post(
     generateAppUrl(`${validationEndPoint}/${EnumMusicianValidationTopic.DUPLICATES}`),
-    post)
+    post,
+  )
     .fail(function(xhr, status, errorThrown) {
       Ajax.handleError(xhr, status, errorThrown, cleanup);
     })
@@ -687,7 +702,7 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
       Notification.messages(data.messages);
 
       const duplicates = data.duplicates ?? {};
-      const ids = Object.keys(duplicates).map(x => +x);
+      const ids = Object.keys(duplicates).map((x) => +x);
       const numDuplicates = ids.length;
       if (numDuplicates === 0) {
         cleanup();
@@ -728,7 +743,9 @@ const checkForDuplicateMusicians = ($container: JQuery, onCheckPassed: () => voi
             + n(
               appName,
               'The following musician matches exactly your input:',
-              'The following musicians match exactly your input:', numDuplicates)
+              'The following musicians match exactly your input:',
+              numDuplicates,
+            )
             + $musicianViews.html()
             + t(appName, `When you click the 'OK'-button or close this alert-window
 you will be redirected to the existing musician's data in order to inspect the sitution
@@ -745,13 +762,15 @@ entry.`),
               const projectId = +($mainForm.find<HTMLInputElement>('input[name="projectId"]').val() ?? -1);
               const projectName = $mainForm.find<HTMLInputElement>('input[name="projectName"]').val();
               ProjectParticipants.personalRecordDialog(
-                ids[0], {
+                ids[0],
+                {
                   template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
                   initialValue: 'View',
                   projectId,
                   projectName,
                   [pmeSys('cur_tab')]: 1,
-                });
+                },
+              );
             } else {
               ProjectParticipants.loadMusicians($mainForm, maxIds);
             }
@@ -766,7 +785,9 @@ entry.`),
             + n(
               appName,
               'The following musician matches your input:',
-              'The following musicians match also your input:', numDuplicates)
+              'The following musicians match also your input:',
+              numDuplicates,
+            )
             + $musicianViews.html()
             + t(appName, `Please answer "YES" in order not to add a new musician,
 otherwise answer "no" (but please do not do this). If you react in a positive manner
@@ -788,13 +809,15 @@ the personal data of the respective musician up-to-date.`),
                 const projectId = +($mainForm.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_ID}"]`).val() ?? -1);
                 const projectName = $mainForm.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`).val();
                 ProjectParticipants.personalRecordDialog(
-                  ids[0], {
+                  ids[0],
+                  {
                     template: projectId > 0 ? addMusiciansTemplate : allMusiciansTemplate,
                     initialValue: 'View',
                     projectId,
                     projectName,
                     [pmeSys('cur_tab')]: 1,
-                  });
+                  },
+                );
               } else {
                 ProjectParticipants.loadMusicians($mainForm, ids);
               }
@@ -802,7 +825,8 @@ the personal data of the respective musician up-to-date.`),
             modal: true,
             allowHtml: true,
             dialogClasses: 'maximize-width',
-          });
+          },
+        );
       }
     }); // done callback
 
@@ -897,7 +921,7 @@ const ready = function(container?: string|JQuery) {
       .off('click', submitSel)
       .on('click', submitSel, function() {
         const $this = $(this);
-        if (novalidateSubmits.findIndex(submit => $this.attr('name')!.indexOf(submit) >= 0) < 0) {
+        if (novalidateSubmits.findIndex((submit) => $this.attr('name')!.indexOf(submit) >= 0) < 0) {
           checkForDuplicateMusicians($container, function() {
             $form.off('click', submitSel);
             $this.trigger('click');
@@ -970,7 +994,7 @@ const documentReady = function() {
 };
 
 export {
-  ready,
-  documentReady,
   contactValidation,
+  documentReady,
+  ready,
 };

@@ -40,6 +40,7 @@
     ],
     "traceResolution": false,
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
+    "rootDir": "./",
     "outDir": "./dist/",
     "target": "ESNext",
     "module": "esnext",
@@ -53,7 +54,8 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false
   },
   "vueCompilerOptions": {
     "target": 2.7

@@ -21,23 +21,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { appPrefix } from '../../config.ts';
+import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
+import { subscribe } from '../../services/async-event-bus.ts';
+import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
-import './../jquery-cafevdb-tooltips.ts';
-import { appPrefix } from '../../config.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-import * as Ajax from './../ajax.ts';
-import * as PHPMyEdit from './../pme-selectors.ts';
 import * as Notification from './../notification.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_EXPERT_MODE } from '../../event-bus-events.ts';
+import * as PHPMyEdit from './../pme-selectors.ts';
+import { setPersonalUrl } from './../settings-urls.ts';
+
+import './../jquery-cafevdb-tooltips.ts';
+import '../../legacy/nextcloud/jquery/requesttoken.js';
 import { hiddenCssClass } from 'variables.scss';
-
-require('../../legacy/nextcloud/jquery/requesttoken.js');
-
-subscribe(SET_EXPERT_MODE, (event) => {
-  return setter(event?.value, event?.showMessage, event?.$control);
-});
 
 /**
  * @param value Value to set.
@@ -71,8 +67,11 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
       .fail(async function(xhr, status, errorThrown) {
         await Ajax.handleError(xhr, status, errorThrown);
         reject(xhr);
-      }),
-  );
+      }));
 };
+
+subscribe(SET_EXPERT_MODE, (event) => {
+  return setter(event?.value, event?.showMessage, event?.$control);
+});
 
 export default setter;

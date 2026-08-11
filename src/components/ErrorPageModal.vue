@@ -23,52 +23,53 @@
  -->
 <template>
   <NcModal ref="modal"
-           :close-on-click-outside="false"
-           :has-next="false"
-           :has-previous="false"
-           :label-id="errorPageHeadingId"
+           :closeOnClickOutside="false"
+           :hasNext="false"
+           :hasPrevious="false"
+           :labelId="errorPageHeadingId"
            size="large"
            container="#body-user"
            v-bind="$attrs"
-           v-on="$listeners"
   >
     <template #default>
       <h2 :id="errorPageHeadingId" class="error-page-heading">
         {{ heading }}
       </h2>
       <ErrorPage :error="error"
-                 :initial-view="initialView"
-                 :no-summary="noSummary"
-                 :close-details-label="closeDetailsLabel"
+                 :initialView="initialView"
+                 :noSummary="noSummary"
+                 :closeDetailsLabel="closeDetailsLabel"
                  @close="modal && modal.close()"
       />
     </template>
   </NcModal>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
+import type { AxiosError } from 'axios'
+import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
+
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcModal,
 } from '@nextcloud/vue'
+import { v4 as uuidv4 } from 'uuid'
 import {
   ref,
 } from 'vue'
 import ErrorPage from './ErrorPage.vue'
-import { v4 as uuidv4 } from 'uuid'
-import type { AxiosError } from 'axios'
-import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
+import { appName } from '../config.ts'
 // import Console from '../util/console.ts'
 
 // const COMPONENT_NAME = 'ErrorPageModal'
 // const logger = new Console(COMPONENT_NAME)
 
 withDefaults(defineProps<{
-  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
-  heading?: string,
-  initialView?: 'summary'|'details'|'report',
-  noSummary?: boolean,
-  closeDetailsLabel?: string,
+  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>
+  heading?: string
+  initialView?: 'summary'|'details'|'report'
+  noSummary?: boolean
+  closeDetailsLabel?: string
 }>(), {
   heading: t(appName, 'Sorry, an Error Occurred'),
   initialView: 'summary',
@@ -80,6 +81,7 @@ const errorPageHeadingId = ref<string>(uuidv4())
 const modal = ref<null|typeof NcModal>(null)
 
 </script>
+
 <style scoped lang="scss">
 .error-page-heading {
   margin-left: 6px;

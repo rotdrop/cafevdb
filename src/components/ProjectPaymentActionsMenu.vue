@@ -22,18 +22,18 @@
  -->
 <template>
   <LegacyPageActionsMenu ref="actions"
-                         :menu-caption="menuCaption"
-                         :enable-overview-item="enableOverviewItem"
-                         :entity-id="entityId"
-                         :project-id="projectId"
-                         :project-name="projectName"
+                         :menuCaption="menuCaption"
+                         :enableOverviewItem="enableOverviewItem"
+                         :entityId="entityId"
+                         :projectId="projectId"
+                         :projectName="projectName"
                          :template="template"
   >
     <template #actions>
       <NcActionButton v-tooltip="tooltips['project-payment-action:donation-receipt:download']"
                       :name="t(appName, 'Download Donation Receipt')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       :disabled="!isDonation"
                       @click="handleDonationReceiptDownload"
       >
@@ -44,7 +44,7 @@
       <NcActionButton v-tooltip="tooltips['project-payment-action:donation-receipt:email']"
                       :name="t(appName, 'Email Donation Receipt')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       :disabled="true || !isDonation"
                       @click="handleDonationReceiptEmail"
       >
@@ -55,7 +55,7 @@
       <NcActionButton v-tooltip="tooltips['project-payment-action:standard-receipt:download']"
                       :name="t(appName, 'Download Standard Receipt')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       :disabled="isDonation"
                       @click="handleStandardReceiptDownload"
       >
@@ -66,7 +66,7 @@
       <NcActionButton v-tooltip="tooltips['project-payment-action:standard-receipt:email']"
                       :name="t(appName, 'Email Standard Receipt')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       :disabled="isDonation"
                       @click="handleStandardReceiptEmail"
       >
@@ -77,7 +77,7 @@
       <NcActionButton v-tooltip="tooltips['project-payment-action:payment:download-data']"
                       :name="t(appName, 'Download Substitution Data')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleSubstitutionDataDownload"
       >
         <template #icon>
@@ -87,51 +87,59 @@
     </template>
   </LegacyPageActionsMenu>
 </template>
+
 <script setup lang="ts">
-import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
-import { NcActionButton } from '@nextcloud/vue'
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import IconDonationReceiptDownload from 'vue-material-design-icons/ReceiptTextPlusOutline.vue'
-import IconDonationReceiptEmail from 'vue-material-design-icons/ReceiptTextSendOutline.vue'
-import IconStandardReceiptDownload from 'vue-material-design-icons/ReceiptOutline.vue'
-import IconStandardReceiptEmail from 'vue-material-design-icons/ReceiptSendOutline.vue'
-import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
-import { emit as asyncEmit } from '../services/async-event-bus.ts'
-import useTooltipsStore from '../stores/tooltips.ts'
-import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
-import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../toolkit/types/errors.ts'
-import { computed, ref } from 'vue'
-import * as BusEvents from '../event-bus-events.ts'
-import { PROJECT_PAYMENT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import type { MailMergePayload, MailMergeOperation } from '../types/ajax/mail-merge.ts'
-import { MailMergeDownload, MailMergeDataset } from '../types/ajax/mail-merge.ts'
+// import type { ComponentProps } from '../mountable-component-names.ts'
+import type { MailMergeOperation, MailMergePayload } from '../types/ajax/mail-merge.ts'
+
 import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import { NcActionButton } from '@nextcloud/vue'
+import { computed, ref } from 'vue'
+import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
+import IconStandardReceiptDownload from 'vue-material-design-icons/ReceiptOutline.vue'
+import IconStandardReceiptEmail from 'vue-material-design-icons/ReceiptSendOutline.vue'
+import IconDonationReceiptDownload from 'vue-material-design-icons/ReceiptTextPlusOutline.vue'
+import IconDonationReceiptEmail from 'vue-material-design-icons/ReceiptTextSendOutline.vue'
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import { appName } from '../config.ts'
+import * as BusEvents from '../event-bus-events.ts'
+import { PROJECT_PAYMENT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import { emit as asyncEmit } from '../services/async-event-bus.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
+import { AppError } from '../toolkit/types/errors.ts'
+import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
+import { MailMergeDataset, MailMergeDownload } from '../types/ajax/mail-merge.ts'
+
+const props = withDefaults(defineProps<{
+  // eslint-disable-next-line vue/no-unused-properties
+  amount?: number
+  entityId: number
+  // eslint-disable-next-line vue/no-unused-properties
+  currencyCode?: string
+  // eslint-disable-next-line vue/no-unused-properties
+  debitorId: number
+  // eslint-disable-next-line vue/no-unused-properties
+  debitorName: string
+  enableOverviewItem?: boolean
+  isDonation: boolean
+  menuCaption?: string
+  projectId: number
+  projectName: string
+  template: string
+}>(), {
+  amount: undefined,
+  currencyCode: undefined,
+  // eslint-disable-next-line vue/no-boolean-default
+  enableOverviewItem: true,
+  menuCaption: undefined,
+})
 
 const errorHandlerProvider = useErrorHandlerStore()
 
 const errorHandler = errorHandlerProvider.getHandler()
-
-const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  amount?: number,
-  entityId: number,
-  currencyCode?: string,
-  debitorId: number,
-  debitorName: string,
-  enableOverviewItem?: boolean,
-  isDonation: boolean,
-  menuCaption?: string,
-  projectId: number,
-  projectName: string,
-  template: string,
-}>(), {
-  amount: undefined,
-  currencyCode: undefined,
-  enableOverviewItem: true,
-  menuCaption: undefined,
-})
 
 // data
 const cssClass = computed(() => appName + '-project-payment-actions')
@@ -152,10 +160,14 @@ const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
-  actions.value && actions.value.closeMenu()
+  if (actions.value) {
+    actions.value.closeMenu()
+  }
 }
 const openMenu = (x?: number, y?: number) => {
-  actions.value && actions.value.openMenu(x, y)
+  if (actions.value) {
+    actions.value.openMenu(x, y)
+  }
 }
 
 // we need to expose some methods in order to allow legacy code to
@@ -182,10 +194,15 @@ const handleSubstitutionDataDownload = () => {
   return handleMailMergeDownload('standardReceipt', MailMergeDataset)
 }
 
-const handleMailMergeDownload = async (
+/**
+ * @param templateName TBD.
+ *
+ * @param operation TBD.
+ */
+async function handleMailMergeDownload(
   templateName: string,
   operation: MailMergeOperation = MailMergeDownload,
-) => {
+) {
   asyncEmit(BusEvents.PUSH_BUSY_STATE)
   const postData: MailMergePayload = {
     senderId: getCurrentUser()?.uid,
@@ -212,8 +229,8 @@ const handleMailMergeDownload = async (
     )
   }
 }
-
 </script>
+
 <style lang="scss" scoped>
   // empty
 </style>

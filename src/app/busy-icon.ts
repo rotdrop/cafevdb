@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { emit } from '../services/async-event-bus.ts';
 import { SET_BUSY_FLAG } from '../event-bus-events.ts';
+import { emit } from '../services/async-event-bus.ts';
 
 const busyIcon = function(on?: boolean) {
   emit(SET_BUSY_FLAG, { value: !!on });

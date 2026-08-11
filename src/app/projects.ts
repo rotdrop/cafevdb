@@ -21,101 +21,66 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from './globalstate.ts';
-import { appName } from '../config.ts';
-import $, { jq } from './jquery.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import textareaResize from './textarea-resize.ts';
-import { translate as t } from '@nextcloud/l10n';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
-import * as Page from './page.ts';
-import { templateRenderer } from './template-renderer.ts';
-import pageBusyIcon from './busy-icon.ts';
-import * as Dialogs from './dialogs.ts';
-import * as Notification from './notification.ts';
-import * as Email from './email.ts';
-import {
-  data as pmeData,
-  sys as pmeSys,
-  classSelector as pmeClassSelector,
-  formSelector as pmeFormSelector,
-  inputSelector as pmeInputSelector,
-  idSelector as pmeIdSelector,
-} from './pme-selectors.ts';
-import * as PHPMyEdit from './pme.ts';
-import * as SelectUtils from './select-utils.ts';
-import setBusyIndicators from './busy-indicators.ts';
-import iFrameResize from './iframe-resize.ts';
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from '../services/async-event-bus.ts';
-import * as BusEvents from '../event-bus-events.ts';
-import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
-import actionMenu from './vue-action-menu.ts';
-import { replaceOptions as replaceSelectOptions } from './select-utils.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Projects.ts';
-import { TEMPLATE as projectInstrumentationNumbersTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectInstrumentationNumbers.ts';
-import { TEMPLATE as projectParticipantsFieldTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipantFields.ts';
-import {
-  BASE_PATH,
-  END_POINT_CHANGE_INSTRUMENTAION,
-  END_POINT_VALIDATE,
-  END_POINT_MAILING_LISTS,
-} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
-import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+import type { EnumProjectWebPagesAction } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   ChangeProjectInstrumentationResponse,
   DownloadsShareResponse,
   ProjectValidationResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { END_POINT as webPagesEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectWebPagesController.ts';
-import {
-  type EnumProjectWebPagesAction,
-  EnumProjectValidationTopic,
-} from '../../build/ts-types/php-modules/Controller.ts';
 import type { ProjectWebPage } from '../../build/ts-types/php-modules/PageRenderer/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+
+import { translate as t } from '@nextcloud/l10n';
+import {
+  EnumProjectValidationTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  BASE_PATH,
+  END_POINT_CHANGE_INSTRUMENTAION,
+  END_POINT_MAILING_LISTS,
+  END_POINT_VALIDATE,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
+import { END_POINT as webPagesEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectWebPagesController.ts';
+import { TEMPLATE as projectInstrumentationNumbersTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectInstrumentationNumbers.ts';
+import { TEMPLATE as projectParticipantsFieldTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipantFields.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Projects.ts';
+import { appName } from '../config.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '../services/async-event-bus.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import setBusyIndicators from './busy-indicators.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import * as Dialogs from './dialogs.ts';
+import * as Email from './email.ts';
+import globalState from './globalstate.ts';
+import iFrameResize from './iframe-resize.ts';
+import $, { jq } from './jquery.ts';
+import * as Notification from './notification.ts';
+import * as Page from './page.ts';
+import {
+  classSelector as pmeClassSelector,
+  data as pmeData,
+  formSelector as pmeFormSelector,
+  idSelector as pmeIdSelector,
+  inputSelector as pmeInputSelector,
+  sys as pmeSys,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as SelectUtils from './select-utils.ts';
+import { replaceOptions as replaceSelectOptions } from './select-utils.ts';
+import { templateRenderer } from './template-renderer.ts';
+import textareaResize from './textarea-resize.ts';
+import actionMenu from './vue-action-menu.ts';
 
 require('projects.scss');
-
-asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
-  if (event.template !== template) {
-    return;
-  }
-  console.info('EVENT', event);
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await projectViewPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
-
-asyncSubscribe(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, async (event) => {
-  console.info('EVENT', event);
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await instrumentationNumbersPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
-
-asyncSubscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
-  console.info('EVENT', event);
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await participantFieldsPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
-
-asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
-  console.info('EVENT', event);
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  const post = {
-    projectId: event.projectId,
-    projectName: event.projectName,
-    ...(event.post || {}),
-  };
-  await emailPopup(post, event.reopen);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
 
 /**
  * Generate a popup-dialog for project related email.
@@ -268,7 +233,8 @@ const pmeFormInit = (containerSel: string|JQuery) => {
   const $form = $container.find(pmeFormSelector);
   const submitSel = PHPMyEdit.classSelectors(
     'input',
-    ['save', 'apply', 'more']);
+    ['save', 'apply', 'more'],
+  );
 
   if ($form.find(submitSel).length > 0) {
     const nameSelector = 'input.projectname';
@@ -439,7 +405,8 @@ const pmeFormInit = (containerSel: string|JQuery) => {
       const projectId = $form.find('input[name="projectId"]').val();
       setBusyIndicators(true, $container, false);
       $.post(
-        generateAppUrl(`${BASE_PATH}/${projectId}/share/downloads`))
+        generateAppUrl(`${BASE_PATH}/${projectId}/share/downloads`),
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, function() {
             setBusyIndicators(false, $container, false);
@@ -525,11 +492,13 @@ const pmeFormInit = (containerSel: string|JQuery) => {
 
     const post = (force: boolean) => {
       return $.post(
-        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LISTS}/${operation}`), {
+        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LISTS}/${operation}`),
+        {
           operation,
           projectId,
           force,
-        })
+        },
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
         })
@@ -545,7 +514,8 @@ const pmeFormInit = (containerSel: string|JQuery) => {
                   Notification.showTemporary(t(appName, 'Unconfirmed, doing nothing.'));
                 }
               },
-              true);
+              true,
+            );
           } else {
             Notification.messages(data.message);
             if (data.status !== 'unchanged') {
@@ -578,7 +548,7 @@ type ProjectWebPageRequest = {
  * Place an ajax call for public web-page management, create,
  * delete, attach articles.
  *
- *  @param {object} post The data array with action and information.
+ *  @param post The data array with action and information.
  *
  *  Supported post packages:
  *
@@ -681,7 +651,8 @@ const projectWebPageTabHandler = function(event: JQuery.Event, ui: JQueryUI.Tabs
             projectId,
           }, $container);
         },
-        true);
+        true,
+      );
       return false;
     case 'cmsarticle-tab-deletepage':
       event.stopImmediatePropagation();
@@ -707,7 +678,8 @@ const projectWebPageTabHandler = function(event: JQuery.Event, ui: JQueryUI.Tabs
             projectId,
           }, $container);
         },
-        true);
+        true,
+      );
       return false;
     default:
       return true;
@@ -1216,6 +1188,42 @@ const tableLoadCallback: TableLoadCallback<typeof template>['callback'] = functi
   return false; // table load callback
 };
 
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  console.info('EVENT', event);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await projectViewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+asyncSubscribe(BusEvents.PROJECT_INSTRUMENTATION_NUMBERS_POPUP, async (event) => {
+  console.info('EVENT', event);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await instrumentationNumbersPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+asyncSubscribe(BusEvents.PROJECT_PARTICIPANT_FIELDS_POPUP, async (event) => {
+  console.info('EVENT', event);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await participantFieldsPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
+asyncSubscribe(BusEvents.EMAIL_POPUP, async (event) => {
+  console.info('EVENT', event);
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  const post = {
+    projectId: event.projectId,
+    projectName: event.projectName,
+    ...(event.post || {}),
+  };
+  await emailPopup(post, event.reopen);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
 const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(template, {
@@ -1235,6 +1243,6 @@ const documentReady = function() {
 
 export {
   documentReady,
-  projectViewPopup,
   instrumentationNumbersPopup,
+  projectViewPopup,
 };

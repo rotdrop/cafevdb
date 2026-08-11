@@ -23,29 +23,30 @@
 <template>
   <div class="container">
     <NcActions v-if="positioned"
-               :force-menu="true"
-               :manual-open="true"
+               :forceMenu="true"
+               :manualOpen="true"
                @click="moveToAnchor"
     >
       <NcActionSeparator v-show="false" />
     </NcActions>
     <NcActions ref="actions"
+               v-model:open="open"
                :class="[{ positioned }, cssClass]"
-               :force-menu="true"
-               force-semantic-type="menu"
-               :open.sync="open"
+               :forceMenu="true"
+               forceSemanticType="menu"
                @opened="handleOpenedEvent"
                @closed="handleClosedEvent"
     >
       <NcActionCaption v-if="showMenuCaption"
-                       :class="[cssClass, 'menu-caption']"
+                       class="menu-caption"
+                       :class="[cssClass]"
                        :name="menuCaption"
       />
       <NcActionSeparator v-if="showMenuCaption" class="menu-caption" />
       <NcActionButton v-if="enableOverviewItem"
                       :name="t(appName, 'Overview')"
                       :class="[cssClass]"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="openOverview"
       >
         <template #icon>
@@ -57,19 +58,15 @@
     </NcActions>
   </div>
 </template>
+
 <script setup lang="ts">
+import { translate as t } from '@nextcloud/l10n'
 import {
-  NcActions,
   NcActionButton,
   NcActionCaption,
+  NcActions,
   NcActionSeparator,
 } from '@nextcloud/vue'
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
-import { PAGE_TEMPLATE_ACTION_MENU } from '../event-bus-events.ts'
-import { closeNavigation } from '../services/navigation.ts'
 import {
   computed,
   nextTick,
@@ -77,39 +74,45 @@ import {
   ref,
   watch,
 } from 'vue'
+import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
+import { appName } from '../config.ts'
+import { PAGE_TEMPLATE_ACTION_MENU } from '../event-bus-events.ts'
 import * as BusEvents from '../event-bus-events.ts'
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
+import { closeNavigation } from '../services/navigation.ts'
 import Console from '../util/console.ts'
+
+const props = withDefaults(defineProps<{
+  enableOverviewItem?: boolean
+  entityId: number
+  menuCaption?: string
+  projectId?: number
+  projectName?: string
+  template: string
+}>(), {
+  // eslint-disable-next-line vue/no-boolean-default
+  enableOverviewItem: true,
+  menuCaption: undefined,
+  projectId: undefined,
+  projectName: undefined,
+})
 
 const COMPONENT_NAME = 'LegacyPageActionsMenu'
 
 const logger = new Console(COMPONENT_NAME)
 
 type NcButtonType = {
-  ref?: string,
-  $el: HTMLElement,
+  ref?: string
+  $el: HTMLElement
 }
 type NcActionsType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  closeMenu(returnFocus?: boolean):Promise<any>,
+  closeMenu(returnFocus?: boolean): Promise<any>
   $refs: {
-    popover: { $refs: { popover: { $refs: { reference: HTMLElement, } } } },
-    triggerButton: NcButtonType,
-  },
+    popover: { $refs: { popover: { $refs: { reference: HTMLElement } } } }
+    triggerButton: NcButtonType
+  }
 }
-
-const props = withDefaults(defineProps<{
-  enableOverviewItem?: boolean,
-  entityId: number,
-  menuCaption?: string,
-  projectId?: number,
-  projectName?: string,
-  template: string,
-}>(), {
-  enableOverviewItem: true,
-  menuCaption: undefined,
-  projectId: undefined,
-  projectName: undefined,
-})
 
 // data
 const open = ref(false)
@@ -146,21 +149,22 @@ const setPosition = (x?: number, y?: number) => {
 
     positioned.value = true
   } else if (positioned.value) {
-        referenceElement.value!.style.position = ''
+    referenceElement.value!.style.position = ''
     referenceElement.value!.style.left = ''
     referenceElement.value!.style.top = ''
 
     positioned.value = false
   }
 }
+
 let ignoreClosedEvent = false
-const handleClosedEvent = () => {
-  if (ignoreClosedEvent) {
-    ignoreClosedEvent = false
-  } else {
-    closeMenu()
-  }
+
+const nextFrame = () => {
+  return new Promise((resolve) => requestAnimationFrame(() => {
+    requestAnimationFrame(resolve)
+  }))
 }
+
 const closeMenu = async () => {
   logger.debug('-> closeMenu()')
   if (open.value) {
@@ -179,16 +183,22 @@ const closeMenu = async () => {
   setPosition()
   logger.debug('<- closeMenu()')
 }
-const nextFrame = () => {
-  return new Promise(resolve => requestAnimationFrame(() => {
-    requestAnimationFrame(resolve)
-  }))
+
+const handleClosedEvent = () => {
+  if (ignoreClosedEvent) {
+    ignoreClosedEvent = false
+  } else {
+    closeMenu()
+  }
 }
+
 const openedPromise = Promise.withResolvers()
 openedPromise.resolve()
+
 const handleOpenedEvent = () => {
   openedPromise.resolve()
 }
+
 const openMenu = async (x?: number, y?: number) => {
   logger.debug('-> openMenu()', x, y, positioned.value)
   if (!open.value) {
@@ -203,6 +213,7 @@ const openMenu = async (x?: number, y?: number) => {
   await openedPromise.promise
   logger.debug('<- openMenu()', x, y, positioned.value)
 }
+
 const moveToAnchor = async (event?: MouseEvent) => {
   if (!open.value || !positioned.value) {
     return
@@ -258,6 +269,7 @@ onMounted(() => {
 })
 
 </script>
+
 <style lang="scss" scoped>
 @use '../../style/variables.scss' as *;
 .container {
@@ -267,7 +279,7 @@ onMounted(() => {
     height: 28px;
   }
   .action-item.action-item--open.positioned {
-    &, ::v-deep * {
+    &, :deep(*) {
       width: 0 !important;
       height: 0 !important;
       min-width: 0 !important;

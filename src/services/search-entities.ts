@@ -22,9 +22,10 @@
  */
 
 import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { SearchArguments, search as searchRepository } from '../toolkit/services/entity-repository.ts';
+
 import { SEARCH_DATABASE_ENTITIES } from '../event-bus-events.ts';
 import { emit as asyncEmit, getEmitResult } from './async-event-bus.ts';
-import type { search as searchRepository, SearchArguments } from '../toolkit/services/entity-repository.ts';
 
 /**
  * Search for entities of the given name. In order to separate "new"
@@ -60,10 +61,14 @@ const search = async <
   offset = 0 as O,
 }: SearchArguments<N, D, L, O>) => {
   const result = asyncEmit(SEARCH_DATABASE_ENTITIES, {
-    entityName, findBy, depth, limit, offset,
+    entityName,
+    findBy,
+    depth,
+    limit,
+    offset,
   });
 
-  return await getEmitResult<typeof SEARCH_DATABASE_ENTITIES>(result) as Awaited<ReturnType<typeof searchRepository<N, D, L, O> > >;
+  return await getEmitResult<typeof SEARCH_DATABASE_ENTITIES>(result) as Awaited<ReturnType<typeof searchRepository<N, D, L, O>>>;
 };
 
 export default search;

@@ -21,42 +21,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.ts';
-import $ from './jquery.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Notification from './notification.ts';
-import * as Ajax from './ajax.ts';
-import * as Page from './page.ts';
-import { templateFromRenderer, templateRenderer } from './template-renderer.ts';
-import * as SepaDebitMandate from './sepa-debit-mandate.js';
-import * as PHPMyEdit from './pme.ts';
-import * as SelectUtils from './select-utils.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import fileDownload from './file-download.ts';
-import pmeExportMenu from './pme-export.ts';
-import pmeAutocomplete from './pme-autocomplete.ts';
-import {
-  formSelector as pmeFormSelector,
-  inputClassSelector as pmeInputClassSelector,
-  classSelectors as pmeClassSelectors,
-  valueSelector as pmeValueSelector,
-} from './pme-selectors.ts';
-import type { EnumGeographicalScope } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import { TEMPLATE as instrumentInsurancesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InstrumentInsurances.ts';
-import { TEMPLATE as insuranceRatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceRates.ts';
-import { TEMPLATE as insuranceBrokersTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceBrokers.ts';
 import type {
   InstrumentInsuranceValidationResponse,
   InsuranceBrokerValidationResponse,
   InsuranceRateValidationResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { EnumGeographicalScope } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+
 import {
   BASE_PATH as controllerBasePath,
   END_POINT_VALIDATE,
 } from '../../build/ts-types/php-modules/Controller/InstrumentInsuranceController.ts';
+import { TEMPLATE as instrumentInsurancesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InstrumentInsurances.ts';
+import { TEMPLATE as insuranceBrokersTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceBrokers.ts';
+import { TEMPLATE as insuranceRatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/InsuranceRates.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import fileDownload from './file-download.ts';
+import { globalState } from './globals.ts';
+import $ from './jquery.ts';
+import * as Notification from './notification.ts';
+import * as Page from './page.ts';
+import pmeAutocomplete from './pme-autocomplete.ts';
+import pmeExportMenu from './pme-export.ts';
+import {
+  classSelectors as pmeClassSelectors,
+  formSelector as pmeFormSelector,
+  inputClassSelector as pmeInputClassSelector,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as SelectUtils from './select-utils.ts';
+import * as SepaDebitMandate from './sepa-debit-mandate.js';
+import { templateFromRenderer, templateRenderer } from './template-renderer.ts';
 
-require('jquery-ui/ui/widgets/autocomplete');
+import 'jquery-ui/ui/widgets/autocomplete';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('instrument-insurances.scss');
@@ -66,19 +68,19 @@ type InsuranceTemplate = typeof instrumentInsurancesTemplate
   | typeof insuranceRatesTemplate;
 
 type InsuranceValidationResponse = {
-  [instrumentInsurancesTemplate]: InstrumentInsuranceValidationResponse,
-  [insuranceBrokersTemplate]: InsuranceBrokerValidationResponse,
-  [insuranceRatesTemplate]: InsuranceRateValidationResponse,
+  [instrumentInsurancesTemplate]: InstrumentInsuranceValidationResponse;
+  [insuranceBrokersTemplate]: InsuranceBrokerValidationResponse;
+  [insuranceRatesTemplate]: InsuranceRateValidationResponse;
 };
 
 const lang = $('html').attr('lang');
 
 type UpdateInsuranceFeeArg = {
-  $scopeSelect: JQuery<HTMLSelectElement>,
-  $brokerSelect: JQuery<HTMLSelectElement>,
-  $insuranceAmount: JQuery<HTMLInputElement>,
-  $insuranceRate: JQuery<HTMLInputElement>,
-  $insuranceFee: JQuery<HTMLInputElement>,
+  $scopeSelect: JQuery<HTMLSelectElement>;
+  $brokerSelect: JQuery<HTMLSelectElement>;
+  $insuranceAmount: JQuery<HTMLInputElement>;
+  $insuranceRate: JQuery<HTMLInputElement>;
+  $insuranceFee: JQuery<HTMLInputElement>;
 };
 
 type RateMeta = {
@@ -105,7 +107,7 @@ const updateInsuranceFee = ({
     return false;
   }
   const rates = $broker.data('data') as RateMeta[];
-  const rateMeta = rates.find(rate => rate.geographicalScope === scope);
+  const rateMeta = rates.find((rate) => rate.geographicalScope === scope);
   if (!rateMeta) {
     return false;
   }
@@ -118,10 +120,12 @@ const updateInsuranceFee = ({
 
   $insuranceFee.html(
     new Intl.NumberFormat(
-      lang, {
+      lang,
+      {
         style: 'currency',
         currency: $insuranceFee.data('currencyCode'),
-      })
+      },
+    )
       .format(
         +$insuranceAmount.val()! * rate * (1.0 + $insuranceFee.data('taxRate')),
       ),
@@ -142,7 +146,7 @@ const enableScopeOptions = (
   }
   $scopeSelect.find('option').each(function() {
     const $option = $(this);
-    $option.prop('disabled', rates.find(rate => rate.geographicalScope === $option.val()) === undefined);
+    $option.prop('disabled', rates.find((rate) => rate.geographicalScope === $option.val()) === undefined);
   });
   $scopeSelect.trigger('change'); // update insurance fees
   SelectUtils.refreshWidget($scopeSelect);
@@ -218,7 +222,8 @@ const pmeFormInit = <T extends InsuranceTemplate>(containerSel: string, template
             if (!Ajax.validateResponse(
               data,
               Object.keys(textInputs) as (keyof InsuranceValidationResponse[typeof template])[],
-              validateUnlock)) {
+              validateUnlock,
+            )) {
               for (const key in textInputs) {
                 textInputs[key].val(oldValues[key]);
               }

@@ -23,21 +23,23 @@
 
 /* eslint camelcase: ["error", {properties: "never"}] */
 
-import { appName } from '../config.ts';
+import type { Editor } from 'tinymce';
+
 import { getLanguage } from '@nextcloud/l10n';
 import { getAppRootUrl } from '@nextcloud/router';
-import $ from './jquery.ts';
 import tinyMCE from 'tinymce';
-import '@tinymce/tinymce-jquery';
-import type { Editor } from 'tinymce';
 import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { appName } from '../config.ts';
+import $ from './jquery.ts';
+
+import '@tinymce/tinymce-jquery';
 
 declare global {
   interface Window {
     globalState: {
-      oldWidth: [number, number],
-      oldHeight: [number, number],
-      resizeTimeout?: NodeJS.Timeout,
+      oldWidth: [number, number];
+      oldHeight: [number, number];
+      resizeTimeout?: NodeJS.Timeout;
     };
   }
 }
@@ -61,7 +63,9 @@ const replaceImageSource = (editor: Editor, src: string, id: string) => {
       const ctype = response.headers.get('content-type');
       const u8Buf = new Uint8Array(body);
       let latinBuf = '';
-      u8Buf.forEach(function(byte) { latinBuf += String.fromCharCode(byte); });
+      u8Buf.forEach(function(byte) {
+        latinBuf += String.fromCharCode(byte);
+      });
       if (ctype && latinBuf) {
         url = 'data:' + ctype + ';base64,' + btoa(latinBuf);
         $(editor.getBody()).find('img[data-img-id="' + id + '"]').attr({
@@ -137,7 +141,7 @@ const myConfig = {
 
         // Replace the 'src' with data: URI after the image has been loaded
         // This way if we fetch the image again the browser will fetch it from cache
-        // @ts-expect-error 2322
+        // @ts-expect-error 2322 THIS TYPE DEDUCTION ERROR
         this.onload = function(this: HTMLImageElement) {
           // @todo
           // eslint-disable-next-line prefer-rest-params
@@ -190,7 +194,9 @@ const myConfig = {
             function() {
               myGlobalState.resizeTimeout = undefined;
               $ambientContainer.trigger('resize.' + appName);
-            }, 50);
+            },
+            50,
+          );
           myGlobalState.oldWidth[1] = myGlobalState.oldWidth[0];
           myGlobalState.oldHeight[1] = myGlobalState.oldHeight[0];
           myGlobalState.oldWidth[0] = width;
@@ -323,7 +329,7 @@ $(function() {
 export {
   // myPostProcessCallback as postProcessCallback,
   myConfig as config,
-  mySmallConfig as smallConfig,
-  myInit as init,
   myGetConfig as getConfig,
+  myInit as init,
+  mySmallConfig as smallConfig,
 };

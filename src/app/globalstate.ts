@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,11 @@
  */
 /** @file just provide the globalState object */
 
-import type { PHPMyEditState } from './pme-state.ts';
-import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
 import type { showMessage } from '@nextcloud/dialogs';
+import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
 import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 import type { CAFEVDBInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { PHPMyEditState } from './pme-state.ts';
 
 type Toastify = ReturnType<typeof showMessage>;
 
@@ -34,54 +34,54 @@ type Toastify = ReturnType<typeof showMessage>;
 export type ReadyCallback = () => Promise<any>;
 
 export interface GlobalState extends CAFEVDBInitialState {
-  appName: string,
-  PHPMyEdit: PHPMyEditState,
-  vueMode?: boolean,
-  eventBus?: EventBus,
-  orchestra: string,
-  wikiNameSpace: string,
-  toolTipsEnabled: boolean,
-  userPermissions: number,
-  uploadMaxFileSize: number,
-  [EnumPersonalSettingsKey.FINANCE_MODE]: boolean,
-  [EnumPersonalSettingsKey.DEBUG_MODE]: number,
-  [EnumPersonalSettingsKey.DEBUG_QUERY_SQL_FILTER]: string,
-  [EnumPersonalSettingsKey.EXPERT_MODE]: boolean,
-  [EnumPersonalSettingsKey.RESTORE_HISTORY]: boolean,
+  appName: string;
+  PHPMyEdit: PHPMyEditState;
+  vueMode?: boolean;
+  eventBus?: EventBus;
+  orchestra: string;
+  wikiNameSpace: string;
+  toolTipsEnabled: boolean;
+  userPermissions: number;
+  uploadMaxFileSize: number;
+  [EnumPersonalSettingsKey.FINANCE_MODE]: boolean;
+  [EnumPersonalSettingsKey.DEBUG_MODE]: number;
+  [EnumPersonalSettingsKey.DEBUG_QUERY_SQL_FILTER]: string;
+  [EnumPersonalSettingsKey.EXPERT_MODE]: boolean;
+  [EnumPersonalSettingsKey.RESTORE_HISTORY]: boolean;
 
-  currencyCode: string,
-  currencySymbol: string,
-  locale: string,
-  cloudLanguage: string,
-  serverRoot: string,
+  currencyCode: string;
+  currencySymbol: string;
+  locale: string;
+  cloudLanguage: string;
+  serverRoot: string;
 
-  initialized?: boolean,
+  initialized?: boolean;
 
-  wysiwygEditor: string,
+  wysiwygEditor: string;
 
-  creditsTimer?: NodeJS.Timeout,
+  creditsTimer?: NodeJS.Timeout;
 
-  Notification?: { toasts: Toastify[] },
+  Notification?: { toasts: Toastify[] };
 
-  oldWidth?: number,
-  oldHeight?: number,
+  oldWidth?: number;
+  oldHeight?: number;
 
-  nonce: null|string,
-  initialNonce: null|string,
+  nonce: null|string;
+  initialNonce: null|string;
 
-  language: string,
+  language: string;
 
-  windowResizeTimeout?: NodeJS.Timeout,
+  windowResizeTimeout?: NodeJS.Timeout;
 
-  readyCallbacks: ReadyCallback[],
+  readyCallbacks: ReadyCallback[];
 
-  subscribe: Record<string, boolean>,
+  subscribe: Record<string, boolean>;
 
-  sharedFolder: string,
+  sharedFolder: string;
 }
 
 declare global {
-  // eslint-disable-next-line no-var
+
   var CAFEVDB: GlobalState;
 }
 
@@ -94,7 +94,7 @@ declare global {
  * attach the global state to the window object and do a minimal
  * initialization here.
  */
-// @ts-expect-error 2322
+// @ts-expect-error 2322 Missing properties are initialized later.
 const globalState: GlobalState = globalThis.CAFEVDB = (globalThis.CAFEVDB as GlobalState|undefined) ?? { PHPMyEdit: {} };
 
 export default globalState;

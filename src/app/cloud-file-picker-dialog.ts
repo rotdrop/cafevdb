@@ -21,35 +21,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
-import { appName } from '../config.ts';
-import * as Ajax from './ajax.ts';
-import {
-  YES_NO_BUTTONS,
-  alert as alertDialog,
-  confirm as confirmDialog,
-  filePicker as filePickerDialog,
-} from './dialogs.ts';
-import * as Notification from './notification.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import { parse as pathParse } from './path.ts';
+import type { UploadFileData, UploadModeTest } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+
 import { translate as t } from '@nextcloud/l10n';
 import escapeHtml from 'escape-html';
 import { EnumFileUploadMode } from '../../build/ts-types/php-modules/Controller.ts';
-import type { UploadFileData, UploadModeTest } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import { appName } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import {
+  alert as alertDialog,
+  confirm as confirmDialog,
+  filePicker as filePickerDialog,
+  YES_NO_BUTTONS,
+} from './dialogs.ts';
+import $ from './jquery.js';
+import * as Notification from './notification.ts';
+import { parse as pathParse } from './path.ts';
+
 import { tooltipWideCssClass } from 'tooltips.scss';
 
 export interface CloudFilePickerParameters {
-  setup?: () => void,
-  cleanup?: () => void,
-  handlePickedFiles?: (files: UploadFileData[], paths: string[], cleanup: () => void) => void,
-  filePickerCaption?: string,
-  stashUrl?: string,
-  multiple?: boolean,
-  modal?: boolean,
-  initialCloudFolder?: string,
-  allowDirectories?: boolean,
+  setup?: () => void;
+  cleanup?: () => void;
+  handlePickedFiles?: (files: UploadFileData[], paths: string[], cleanup: () => void) => void;
+  filePickerCaption?: string;
+  stashUrl?: string;
+  multiple?: boolean;
+  modal?: boolean;
+  initialCloudFolder?: string;
+  allowDirectories?: boolean;
 }
 
 const defaultOptions: Required<CloudFilePickerParameters> = {
@@ -116,10 +118,10 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
           };
 
           const uploadFiles: ReturnType<typeof pathParse>[] = [];
-          const allUploadModes = Object.values(EnumFileUploadMode).filter(value => value !== EnumFileUploadMode.TEST);
+          const allUploadModes = Object.values(EnumFileUploadMode).filter((value) => value !== EnumFileUploadMode.TEST);
           let uploadModes = allUploadModes;
           for (const uploadInfo of data) {
-            uploadModes = uploadModes.filter(value => uploadInfo.availableUploadModes.includes(value));
+            uploadModes = uploadModes.filter((value) => uploadInfo.availableUploadModes.includes(value));
             uploadFiles.push(pathParse(uploadInfo.originalName));
           }
           const templateParameters: TemplateParameters['cloudFileSystemOperations'] = {
@@ -136,7 +138,8 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
   <span class="separator">/</span>
   <span class="basename">${base}</span>
   </span>`;
-              }).join(''),
+              },
+            ).join(''),
             widgetCssClass: 'cloud-file-system-operations',
             widgetRadioName: 'cloudFileSystemOperations',
           };
@@ -165,7 +168,8 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
 
           confirmDialog(
             $fileSystemOps.html(),
-            t(appName, 'Select File System Operation'), {
+            t(appName, 'Select File System Operation'),
+            {
               callback(answer) {
                 const uploadMode = $('input.cloud-file-system-operations-input:checked').val();
                 console.info('UPLOAD MODE', uploadMode);

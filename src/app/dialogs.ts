@@ -25,14 +25,17 @@
  * OC dialogs.
  */
 
-import $ from './jquery.js';
-import { appName } from '../config.ts';
-import { DialogBuilder, DialogSeverity, getFilePickerBuilder } from '@nextcloud/dialogs';
-import type { IDialogButton } from '@nextcloud/dialogs';
-import { type Node, FileType } from '@nextcloud/files';
+import type { IDialogButton, IFilePickerButton } from '@nextcloud/dialogs';
+import type { INode } from '@nextcloud/files';
+
+import { DialogBuilder, getFilePickerBuilder } from '@nextcloud/dialogs';
+import { FileType } from '@nextcloud/files';
 import { translate as t } from '@nextcloud/l10n';
 import { basename } from 'path';
+import { appName } from '../config.ts';
 import { hasProperty } from '../toolkit/types/type-traits.ts';
+import $ from './jquery.js';
+
 import { appNameTag } from 'variables.scss';
 
 require('dialogs.scss');
@@ -46,16 +49,15 @@ export const DIALOG_TYPE_NOTICE = 'notice';
 export const DIALOG_TYPE_INFO = 'info';
 export type LegacyDialogType = typeof DIALOG_TYPE_ALERT | typeof DIALOG_TYPE_INFO | typeof DIALOG_TYPE_NOTICE;
 
-interface LegacyCallback { (result: boolean): void, _clicked?: boolean }
+interface LegacyCallback { (result: boolean): void; _clicked?: boolean }
 const isLegacyCallback = (arg: unknown): arg is LegacyCallback => typeof arg === 'function';
 interface LegacyButtonInfo {
-  confirm?: string,
-  cancel?: string,
-  type: LegacyButtonType,
+  confirm?: string;
+  cancel?: string;
+  type: LegacyButtonType;
 }
 const isLegacyButtonInfo = (buttons: unknown): buttons is LegacyButtonInfo => !!buttons && typeof buttons === 'object';
 
-/* eslint-disable n/no-callback-literal */
 const getLegacyButtons = (buttons: LegacyButtonType|LegacyButtonInfo|undefined, callback: LegacyCallback) => {
   const buttonList: IDialogButton[] = [];
 
@@ -71,7 +73,7 @@ const getLegacyButtons = (buttons: LegacyButtonType|LegacyButtonInfo|undefined, 
       });
       buttonList.push({
         label: (buttons as undefined|LegacyButtonInfo)?.confirm ?? t('core', 'Yes'),
-        type: 'primary',
+        variant: 'primary',
         callback: () => {
           callback._clicked = true;
           callback(true);
@@ -81,7 +83,7 @@ const getLegacyButtons = (buttons: LegacyButtonType|LegacyButtonInfo|undefined, 
     case OK_BUTTONS:
       buttonList.push({
         label: (buttons as undefined|LegacyButtonInfo)?.confirm ?? t('core', 'OK'),
-        type: 'primary',
+        variant: 'primary',
         callback: () => {
           callback._clicked = true;
           callback(true);
@@ -96,14 +98,14 @@ const getLegacyButtons = (buttons: LegacyButtonType|LegacyButtonInfo|undefined, 
 };
 
 export interface LegacyMessageParameters {
-  content: string,
-  title: string,
-  dialogType: LegacyDialogType,
-  buttons?: LegacyButtonType|LegacyButtonInfo,
-  callback: LegacyCallback,
-  modal: boolean,
-  allowHtml: boolean,
-  dialogClasses?: string|string[],
+  content: string;
+  title: string;
+  dialogType: LegacyDialogType;
+  buttons?: LegacyButtonType|LegacyButtonInfo;
+  callback: LegacyCallback;
+  modal: boolean;
+  allowHtml: boolean;
+  dialogClasses?: string|string[];
 }
 export type LegacyDialogParameters = Omit<LegacyMessageParameters, 'dialogType'>;
 const isLegacyMessageParameters = <T extends Partial<LegacyDialogParameters> = LegacyMessageParameters>(arg: unknown): arg is T =>
@@ -139,10 +141,10 @@ const message = ({
 
   switch (dialogType) {
     case DIALOG_TYPE_ALERT:
-      builder.setSeverity(DialogSeverity.Warning);
+      builder.setSeverity('warning');
       break;
     case DIALOG_TYPE_NOTICE:
-      builder.setSeverity(DialogSeverity.Info);
+      builder.setSeverity('info');
       break;
     default:
       break;
@@ -202,7 +204,7 @@ const notice = (content: string|AlertInfoOptions, title?: string, callback?: Leg
 
 /**
  * Confirm Callback.
- * @callback ConfirmCallback
+ *
  * @param {boolean} decision TBD.
  */
 
@@ -224,7 +226,7 @@ const confirm = (content: string, title: string, options?: LegacyCallback|Legacy
     modal: false,
     allowHtml: false,
     default: CONFIRM_DEFAULT_CONFIRM,
-  } as Required<Pick<LegacyConfirmOptions, 'callback'|'modal'|'allowHtml'|'default'> >;
+  } as Required<Pick<LegacyConfirmOptions, 'callback'|'modal'|'allowHtml'|'default'>>;
   if (isLegacyCallback(options)) {
     options = {
       callback: options,
@@ -267,8 +269,7 @@ const confirm = (content: string, title: string, options?: LegacyCallback|Legacy
           $cancelButton.addClass('primary');
         }
       });
-    }),
-  );
+    }));
 };
 
 /**
@@ -278,7 +279,6 @@ const confirm = (content: string, title: string, options?: LegacyCallback|Legacy
  * @param data TBD.
  *
  * @param callback TBD.
- *
  */
 const debugPopup = (data: unknown, callback?: () => void) => {
   if (hasProperty('debug', data)) {
@@ -296,15 +296,15 @@ const debugPopup = (data: unknown, callback?: () => void) => {
 };
 
 export interface LegacyFilePickerParameters {
-  title: string,
-  callback: (paths: string|string[]) => void,
-  multiple?: boolean,
-  modal?: boolean, // unused
-  allowDirectories?: boolean,
-  startPath?: string,
+  title: string;
+  callback: (paths: string|string[]) => void;
+  multiple?: boolean;
+  modal?: boolean; // unused
+  allowDirectories?: boolean;
+  startPath?: string;
 }
 
-const getNodePath = (node: Node) => {
+const getNodePath = (node: INode) => {
   const root = node?.root || '';
   let path = node?.path || '';
   // TODO: Fix this in @nextcloud/files
@@ -322,13 +322,13 @@ const filePicker = (options: LegacyFilePickerParameters) => {
     const target = node?.displayname || node?.basename || basename(path);
 
     const isDirectory = nodes.length === 0
-      || nodes.reduce((result: boolean, node: Node) => result || node.type === FileType.Folder, false);
-    const result = [{
+      || nodes.reduce((result: boolean, node: INode) => result || node.type === FileType.Folder, false);
+    const result: IFilePickerButton[] = [{
       callback: options.multiple
-        ? (nodes: Node[]) => options.callback(nodes.map(getNodePath))
-        : (nodes: Node[]) => options.callback(getNodePath(nodes[0])),
+        ? (nodes) => options.callback(nodes.map(getNodePath))
+        : (nodes) => options.callback(getNodePath(nodes[0])),
       label: node && !options.multiple ? t('core', 'Choose {file}', { file: target }) : t('core', 'Choose'),
-      type: 'primary' as const,
+      variant: 'primary' as const,
       disabled: !options.allowDirectories && isDirectory,
     }];
     console.info('BUTTON FACTORY', { result, nodes, path, isDirectory, options });

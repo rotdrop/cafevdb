@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2023, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import type { CloudUser, CloudGroup } from '../stores/cloud-users-groups.ts';
+import type { CloudGroup, CloudUser } from '../stores/cloud-users-groups.ts';
 
-export type UserOption = CloudUser | (Pick<CloudUser, 'id'|'displayname'> & Pick<Partial<CloudUser>, 'email'|'backend'>)
+import { translatePlural as n, translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+
+export type UserOption = CloudUser | (Pick<CloudUser, 'id'|'displayname'> & Pick<Partial<CloudUser>, 'email'|'backend'>);
 
 export const userInfoPopup = (userOption: UserOption) => {
   let name = userOption.displayname || userOption.id;
@@ -50,7 +51,7 @@ export const userInfoPopup = (userOption: UserOption) => {
   };
 };
 
-export type GroupOption = CloudGroup | (Pick<CloudGroup, 'id'|'displayname'> & Pick<Partial<CloudGroup>, 'backends'|'usercount'>)
+export type GroupOption = CloudGroup | (Pick<CloudGroup, 'id'|'displayname'> & Pick<Partial<CloudGroup>, 'backends'|'usercount'>);
 
 export const groupInfoPopup = (groupOption: GroupOption) => {
   let name = groupOption.displayname || groupOption.id;

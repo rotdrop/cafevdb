@@ -21,28 +21,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import { appName } from '../config.ts';
-import { unfocus } from './cafevdb.ts';
 import { translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+import { APP_SETTINGS_POPUP, POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bus-events.ts';
+import { emit, subscribe } from '../services/async-event-bus.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
-import { subscribe, emit } from '../services/async-event-bus.ts';
-import { APP_SETTINGS_POPUP, PUSH_BUSY_STATE, POP_BUSY_STATE } from '../event-bus-events.ts';
+import { unfocus } from './cafevdb.ts';
+import $ from './jquery.ts';
+
+import '../legacy/nextcloud/jquery/requesttoken.js';
+import 'personal-settings-popup.scss';
 import { hiddenCssClass, loadingCssClass } from 'variables.scss';
 
-require('../legacy/nextcloud/jquery/requesttoken.js');
-require('personal-settings-popup.scss');
-
-subscribe(APP_SETTINGS_POPUP, async (event) => {
-  console.info('EVENT', event);
-  emit(PUSH_BUSY_STATE);
-  await appSettingsPopup(event).finally(() => emit(POP_BUSY_STATE));
-});
-
 export interface Callbacks {
-  done: <T extends HTMLElement>(this: T) => void,
-  fail: <T extends HTMLElement>(this: T, xhr: JQueryXHR, status: string, errorThrown: string) => void,
-  always: <T extends HTMLElement>(this: T) => void,
+  done: <T extends HTMLElement>(this: T) => void;
+  fail: <T extends HTMLElement>(this: T, xhr: JQueryXHR, status: string, errorThrown: string) => void;
+  always: <T extends HTMLElement>(this: T) => void;
 }
 
 /**
@@ -57,7 +51,7 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
     fail() {},
     always() {},
   };
-  callbacks = Object.assign({}, defaultCallbacks, callbacks);
+  callbacks = { ...defaultCallbacks, ...callbacks };
   const $popup = $('#appsettings_popup');
 
   console.info('POPUP ELEMENT', $popup);
@@ -99,6 +93,12 @@ export const appSettingsPopup = async function(callbacks: Partial<Callbacks>) {
     }
   });
 };
+
+subscribe(APP_SETTINGS_POPUP, async (event) => {
+  console.info('EVENT', event);
+  emit(PUSH_BUSY_STATE);
+  await appSettingsPopup(event).finally(() => emit(POP_BUSY_STATE));
+});
 
 const documentReady = function() {
 

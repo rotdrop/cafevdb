@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,11 @@
  * @file
  *
  * Collect some jQuery tweaks in this file.
- *
  */
 
 import $ from './jquery.ts';
 
-require('jquery-ui/ui/widgets/progressbar');
+import 'jquery-ui/ui/widgets/progressbar';
 
 type Progressbar = JQueryUI.Progressbar & JQueryUI.WidgetCommonProperties;
 

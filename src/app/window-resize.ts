@@ -58,7 +58,9 @@ const attachWindowResizeHandler = () => {
               delete globalState.windowResizeTimeout;
               console.debug('WINDOW TRIGGER RESIZE');
               $(`.${RESIZE_TARGET}, .ui-dialog-content`).trigger('resize.' + appName);
-            }, delay);
+            },
+            delay,
+          );
           globalState.oldHeight = height;
           globalState.oldWidth = width;
         }

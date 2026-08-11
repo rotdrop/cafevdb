@@ -21,20 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
+import { subscribe } from '../../services/async-event-bus.ts';
+import * as Ajax from './../ajax.ts';
+import { toolTipsOnOff } from './../cafevdb.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
-import { toolTipsOnOff } from './../cafevdb.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-import * as Ajax from './../ajax.ts';
 import * as Notification from './../notification.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
+import { setPersonalUrl } from './../settings-urls.ts';
 
-require('../../legacy/nextcloud/jquery/requesttoken.js');
-
-subscribe(SET_TOOLTIPS_MODE, (event) => {
-  return setter(event?.value, event?.showMessage, event?.$control);
-});
+import '../../legacy/nextcloud/jquery/requesttoken.js';
 
 /**
  * @param value Value to set.
@@ -64,8 +60,11 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, $con
       .fail(async function(xhr, status, errorThrown) {
         await Ajax.handleError(xhr, status, errorThrown);
         reject(xhr);
-      }),
-  );
+      }));
 };
+
+subscribe(SET_TOOLTIPS_MODE, (event) => {
+  return setter(event?.value, event?.showMessage, event?.$control);
+});
 
 export default setter;

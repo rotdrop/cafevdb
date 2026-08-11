@@ -12,23 +12,23 @@
     </div>
     <StackTrace v-if="props.isExpanded" :trace="props.exception.Trace" class="exception__trace" />
     <LogException v-if="props.isExpanded && props.exception.Previous"
-                  :is-expanded="props.isExpanded"
-                  :is-previous="true"
+                  :isExpanded="props.isExpanded"
+                  :isPrevious="true"
                   :exception="props.exception.Previous"
     />
   </span>
 </template>
+
 <script setup lang="ts">
 import type { IException } from '@nextcloud/app-logreader/src/interfaces/index.ts'
 
-import { computed } from 'vue'
 import { translate as t } from '@nextcloud/l10n'
-
+import { computed } from 'vue'
 import StackTrace from './StackTrace.vue'
 
 const props = withDefaults(defineProps<{
-  isPrevious?: boolean,
-  isExpanded?: boolean,
+  isPrevious?: boolean
+  isExpanded?: boolean
   exception: IException
 }>(), {
   isExpanded: false,

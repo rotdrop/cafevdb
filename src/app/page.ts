@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +21,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import './jquery-cafevdb-tooltips.ts';
-import * as Notification from './notification.ts';
-import modalizer from './modalizer.ts';
-import { parse as qsParse, stringify as qsStringify } from 'qs';
-import pageBusyIcon from './busy-icon.ts';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
-import { LEGACY_PAGE_LOAD, LEGACY_PAGE_CLEANUP } from '../event-bus-events.ts';
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus';
+
+import { parse as qsParse } from 'qs';
+import { LEGACY_PAGE_CLEANUP, LEGACY_PAGE_LOAD } from '../event-bus-events.ts';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import pageBusyIcon from './busy-icon.ts';
+import $ from './jquery.ts';
+import modalizer from './modalizer.ts';
+import * as Notification from './notification.ts';
+
+import './jquery-cafevdb-tooltips.ts';
 
 const pageCleanup = () => {
   // Remove pending dialog when moving away from the page
@@ -65,7 +67,6 @@ const loadPage = async function(post: string|TemplatePostData, keepHistory: bool
     postObject = qsParse(post, { allowSparse: true });
   } else {
     postObject = post;
-    post = qsStringify(postObject);
   }
 
   modalizer(true);
@@ -98,6 +99,6 @@ const documentReady = function() {
 };
 
 export {
-  loadPage,
   documentReady,
+  loadPage,
 };

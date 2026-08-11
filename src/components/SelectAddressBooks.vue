@@ -26,81 +26,87 @@ y<!--
                           v-model="inputValObjects"
                           :options="addressBooksArray"
                           label="displayName"
-                          :options-limit="100"
+                          :optionsLimit="100"
                           :placeholder="placeholder || label"
-                          :input-label="label"
+                          :inputLabel="label"
                           :loading="isLoading"
                           :multiple="multiple"
                           :clearable="clearable"
-                          :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
-                          :submit-button="submitButton"
-                          :reset-action="resetAction"
-                          :reset-state="initialValObjects"
-                          v-on="$listeners"
+                          :clearAction="(!clearable && clearAction) || (multiple && clearAction)"
+                          :submitButton="submitButton"
+                          :resetAction="resetAction"
+                          :resetState="initialValObjects"
   />
 </template>
+
 <script setup lang="ts">
+import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import type { AddressBook } from '../types/address-book.d.ts'
+
+import axios from '@nextcloud/axios'
 import {
   computed,
   onBeforeMount,
   ref,
-  set as vueSet,
 } from 'vue'
-import axios from '@nextcloud/axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
-import getInitialState from '../toolkit/util/initial-state.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import type { AddressBook } from '../types/address-book.d.ts'
-import Console from '../util/console.ts'
-import type { FilesInitialState as InitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts'
 import {
   BASE_PATH as contactsBasePath,
   END_POINT_ADDRESS_BOOKS,
 } from '../../build/ts-types/php-modules/Controller/ContactsController.ts'
-
-const COMPONENT_NAME = 'SelectAddressBooks'
-const logger = new Console(COMPONENT_NAME)
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import getInitialState from '../toolkit/util/initial-state.ts'
+import Console from '../util/console.ts'
 
 const props = withDefaults(
   defineProps<{
-    multiple: boolean,
-    label: string,
-    value?: number|string|AddressBook|AddressBook[],
-    placeholder?: string,
-    loading?: boolean,
-    loadingIndicator?: boolean,
-    clearable?: boolean,
-    clearAction?: boolean,
-    resetAction?: boolean,
-    submitButton?: boolean,
-    noUndefined?: boolean,
-  }>(), {
+    multiple?: boolean
+    label: string
+    value?: number|string|AddressBook|AddressBook[]
+    placeholder?: string
+    loading?: boolean
+    loadingIndicator?: boolean
+    clearable?: boolean
+    clearAction?: boolean
+    resetAction?: boolean
+    submitButton?: boolean
+    noUndefined?: boolean
+  }>(),
+  {
+    // eslint-disable-next-line vue/no-boolean-default
     multiple: true,
     value: () => [],
     placeholder: undefined,
     loading: false,
+    // eslint-disable-next-line vue/no-boolean-default
     loadingIndicator: true,
+    // eslint-disable-next-line vue/no-boolean-default
     clearable: true,
+    // eslint-disable-next-line vue/no-boolean-default
     clearAction: true,
+    // eslint-disable-next-line vue/no-boolean-default
     resetAction: true,
     submitButton: false,
     noUndefined: false,
   },
 )
 
+const emit = defineEmits([
+  'error',
+  'input',
+  'update:addressBooks',
+])
+
+const COMPONENT_NAME = 'SelectAddressBooks'
+const logger = new Console(COMPONENT_NAME)
+
 const inputValObjects = ref<undefined | AddressBook | AddressBook[]>(undefined)
 const initialValObjects = ref<AddressBook | AddressBook[]>([])
-const addressBooks = ref<Record<string, AddressBook> >({})
+const addressBooks = ref<Record<string, AddressBook>>({})
 const ajaxLoading = ref(true)
 
 const addressBooksArray = computed(() => Object.values(addressBooks.value))
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
-
-const emit = defineEmits([
-  'error',
-  'input',
-  'update:address-books',
-])
 
 onBeforeMount(async () => {
   const initialState = getInitialState<InitialState>({ section: 'files' })
@@ -111,7 +117,7 @@ onBeforeMount(async () => {
     await provideAddressBooks()
     // logger.info('ADDRESSBOOKS FROM AJAX', addressBooks.value)
   }
-  emit('update:address-books', addressBooks.value)
+  emit('update:addressBooks', addressBooks.value)
   if (Array.isArray(props.value) && props.value.length === 0) {
     // pre-select all non-system address-books if no initial value is provided
     inputValObjects.value = Object.values(addressBooks.value).filter((book) => !book.isSystemAddressBook)
@@ -129,12 +135,14 @@ onBeforeMount(async () => {
 
 const select = ref(null)
 
-const emitInput = (value: undefined|AddressBook|AddressBook[]) => {
+/** @param value TBD. */
+function emitInput(value: undefined|AddressBook|AddressBook[]) {
   logger.info('EMIT INPUT', value)
   emit('input', value)
 }
 
-const getValueObject = (noUndefined: boolean) => {
+/** @param noUndefined TBD. */
+function getValueObject(noUndefined: boolean) {
   const value = Array.isArray(props.value) ? props.value : (props.value || props.value === 0 ? [props.value] : [])
   let everybody = false
   let result = value.filter((addressBook) => !!addressBook).map(
@@ -164,11 +172,12 @@ const getValueObject = (noUndefined: boolean) => {
   return props.multiple ? result : (result.length > 0) ? result[0] : undefined
 }
 
-const provideAddressBooks = async () => {
+/** TBD. */
+async function provideAddressBooks() {
   try {
     const response = await axios.get(generateAppUrl(`${contactsBasePath}/${END_POINT_ADDRESS_BOOKS}`))
-    for (const [key, book] of Object.entries(response.data)) {
-      vueSet(addressBooks.value, key, book)
+    for (const [key, book] of Object.entries(response.data) as [string, AddressBook][]) {
+      addressBooks.value[key] = book
     }
     // logger.info('ADDRESSBOOKS', addressBooks.value)
   } catch (error) {

@@ -21,20 +21,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ComponentProps } from '../mountable-component-names.ts';
+
+import {
+  GET_VUE_COMPONENT,
+  PAGE_TEMPLATE_ACTION_MENU,
+} from '../event-bus-events.ts';
+import {
+  emit as asyncEmit,
+  awaitEmit,
+} from '../services/async-event-bus.ts';
 import $ from './jquery.js';
 import {
   formSelector as pmeFormSelector,
   token as pmeToken,
 } from './pme-selectors.ts';
-import {
-  emit as asyncEmit,
-  awaitEmit,
-} from '../services/async-event-bus.ts';
-import {
-  PAGE_TEMPLATE_ACTION_MENU,
-  GET_VUE_COMPONENT,
-} from '../event-bus-events.ts';
-import type { ComponentProps } from '../mountable-component-names.ts';
 
 const actionMenu = async function<K extends keyof ComponentProps>(
   $container: JQuery,

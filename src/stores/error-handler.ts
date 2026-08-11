@@ -21,10 +21,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import Console from '../util/console.ts';
 import type { AppError, ErrorHandler } from '../toolkit/types/errors.ts';
+
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
+import Console from '../util/console.ts';
 
 const storeId = 'error-handler';
 
@@ -36,7 +37,9 @@ export default defineStore(storeId, () => {
 
   const errorHandlerStack = ref<ErrorHandler[]>([]);
 
-  const defaultHandler = <E extends AppError>(error: E) => { throw error; };
+  const defaultHandler = <E extends AppError>(error: E) => {
+    throw error;
+  };
 
   const errorHandler = computed<ErrorHandler>(
     () => errorHandlerStack.value?.[errorHandlerStack.value.length - 1] || defaultHandler,

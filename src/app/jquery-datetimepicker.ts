@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,16 +22,20 @@
  */
 
 import { appName } from '../config.ts';
-import $, { jq } from './jquery.ts';
 import { globalState } from './globals.ts';
+import $, { jq } from './jquery.ts';
 
+/**
+ * @param r TBD.
+ */
 function importAll(r: webpack.Context) {
   r.keys().forEach(r);
 }
 
-require('jquery-ui/ui/widgets/datepicker');
+import 'jquery-ui/ui/widgets/datepicker';
 importAll(require.context('jquery-ui/ui/i18n/', true, /datepicker-.*\.js$/));
-require('jquery-datetimepicker/build/jquery.datetimepicker.full.js');
+import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
 
 // Override jquery-ui datepicker a little bit. Note that the
@@ -39,20 +43,26 @@ require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
 // in its definition, so do it the hard way.
 const jQueryUiDatePicker = $.fn.datepicker;
 const onselectDatePickerReason = appName + ' datepicker onselect';
-const datePickerInterceptEvents = ['focusout', 'blur'].map(x => x + '.' + appName).join(' ');
+const datePickerInterceptEvents = ['focusout', 'blur'].map((x) => x + '.' + appName).join(' ');
 const datePickerOldValue = `${appName}OldValue` as const;
 
 type DatePickerOptions = JQueryUI.DatepickerOptions;
 
-// @ts-expect-error 2322
+// @ts-expect-error 2322 I DO NOT CARE.
 $.fn.datepicker = function(options?: string|DatePickerOptions, ...rest: unknown[]) {
   const $this = $(this); // maybe a collection
 
-  $this.each(function() { const $this = $(this); $this.data(datePickerOldValue, $this.val() ?? null); });
+  $this.each(function() {
+    const $this = $(this);
+    $this.data(datePickerOldValue, $this.val() ?? null);
+  });
 
   if (options === 'destroy') {
     $this.off(datePickerInterceptEvents);
-    $this.each(function() { const $this = $(this); $this.removeData(datePickerOldValue); });
+    $this.each(function() {
+      const $this = $(this);
+      $this.removeData(datePickerOldValue);
+    });
   } else if ((typeof options === 'object' && options !== null) || options === undefined) {
     $this
       .off(datePickerInterceptEvents)
@@ -71,7 +81,8 @@ $.fn.datepicker = function(options?: string|DatePickerOptions, ...rest: unknown[
           if (value !== oldValue) {
             console.debug(
               'Trigger change after date-picker blur-event old / new '
-                + value + ' / ' + oldValue);
+                + value + ' / ' + oldValue,
+            );
             $eventTarget.data()[datePickerOldValue] = value;
             $eventTarget.trigger('change');
           }
@@ -80,7 +91,7 @@ $.fn.datepicker = function(options?: string|DatePickerOptions, ...rest: unknown[
     console.debug('Attached jQuery-UI datepicker short-coming blur event.');
   }
   if (options !== undefined) {
-    // @ts-expect-error 2556
+    // @ts-expect-error 2556 I DO NOT CARE.
     return jQueryUiDatePicker.call(this, options, ...rest);
   } else {
     return jQueryUiDatePicker.apply(this);
@@ -89,7 +100,8 @@ $.fn.datepicker = function(options?: string|DatePickerOptions, ...rest: unknown[
 
 const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
 Object.assign(
-  datePickerDefaults, {
+  datePickerDefaults,
+  {
     beforeShow(inputElement: string|HTMLElement|JQuery) {
       const $inputElement = jq(inputElement);
       if ($inputElement.prop('readonly')) {

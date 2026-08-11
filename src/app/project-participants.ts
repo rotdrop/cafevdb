@@ -21,45 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq } from './jquery.ts';
-import { appName, appPrefix } from './config.ts';
-import { translate as t } from '@nextcloud/l10n';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
-import * as Page from './page.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as Musicians from './musicians.js';
-import * as Notification from './notification.ts';
-import * as Dialogs from './dialogs.ts';
-import * as SepaDebitMandate from './sepa-debit-mandate.js';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import participantFieldsHandlers from './project-participant-fields-display.ts';
-import { instrumentationNumbersPopup } from './projects.ts';
-import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.ts';
-import * as PHPMyEdit from './pme.ts';
-import * as SelectUtils from './select-utils.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import pmeExportMenu from './pme-export.ts';
-import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
-import {
-  sys as pmeSys,
-  formSelector as pmeFormSelector,
-  classSelector as pmeClassSelector,
-  token as pmeToken,
-} from './pme-selectors.ts';
-import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { EnumValidateInstrumentsContext } from '../../build/ts-types/php-modules/Controller.ts';
 import type { MailingListSubscriptionsResponse, MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
-import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
-import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
-import { TEMPLATE as projectAssociatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectAssociates.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+
+import { translate as t } from '@nextcloud/l10n';
 import {
   BASE_PATH,
   // END_POINT_ADD_MUSICIANS,
@@ -67,12 +34,46 @@ import {
   END_POINT_MAILING_LIST,
   END_POINT_VALIDATE_INSTRUMENTS,
 } from '../../build/ts-types/php-modules/Controller/ProjectParticipantsController.ts';
-import type { EnumValidateInstrumentsContext } from '../../build/ts-types/php-modules/Controller.ts';
+import { EnumParticipationContext } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
+import { TEMPLATE as addMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AddMusicians.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as projectAssociatesTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectAssociates.ts';
+import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import { appName, appPrefix } from './config.ts';
+import * as Dialogs from './dialogs.ts';
+import $, { jq } from './jquery.ts';
+import {
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import * as Musicians from './musicians.js';
+import * as Notification from './notification.ts';
+import * as Page from './page.ts';
+import pmeExportMenu from './pme-export.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import { rec as pmeRec, recordValue as pmeRecordValue } from './pme-record-id.ts';
+import {
+  classSelector as pmeClassSelector,
+  formSelector as pmeFormSelector,
+  sys as pmeSys,
+  token as pmeToken,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import participantFieldsHandlers from './project-participant-fields-display.ts';
+import { instrumentationNumbersPopup } from './projects.ts';
+import * as SelectUtils from './select-utils.ts';
+import * as SepaDebitMandate from './sepa-debit-mandate.js';
+import { templateRenderer } from './template-renderer.ts';
 // import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
 // import { emit as asyncEmit } from '../services/async-event-bus.ts';
 
-require('../legacy/nextcloud/jquery/octemplate.js');
+import '../legacy/nextcloud/jquery/octemplate.js';
 require('project-participant-fields-display.scss');
 require('project-participants.scss');
 
@@ -103,7 +104,7 @@ let participationContext: EnumParticipationContext;
  */
 const personalRecordDialog = <S extends PersonalRecordTemplate>(
   recordOrNumber: number|Record<string, number>,
-  options: Partial<Omit<TableDialogOptions<S>, 'template'> > & Pick<TableDialogOptions<S>, 'template'>,
+  options: Partial<Omit<TableDialogOptions<S>, 'template'>> & Pick<TableDialogOptions<S>, 'template'>,
 ) => {
   if (typeof options.initialValue === 'undefined') {
     options.initialValue = 'View';
@@ -148,7 +149,7 @@ const personalRecordDialog = <S extends PersonalRecordTemplate>(
       break;
     case projectAssociatesTemplate:
     case projectParticipantsTemplate:
-      // eslint-disable-next-line camelcase
+
       record = { musician_id: record.musicianId, project_id: options.projectId! };
       break;
     default:
@@ -167,7 +168,7 @@ const personalRecordDialog = <S extends PersonalRecordTemplate>(
 export type ValidateInstrumentChoicesOptions = {
   $container: JQuery;
   $selectElement: JQuery<HTMLSelectElement>;
-  validationContext: EnumValidateInstrumentsContext,
+  validationContext: EnumValidateInstrumentsContext;
   participationContext: EnumParticipationContext;
   done(data?: unknown): void;
   fail(data: string|Partial<MessagesResponse>): void;
@@ -258,7 +259,7 @@ const loadPMETable = ($form: JQuery<HTMLFormElement>, formData: Record<string, u
 /**
  * Pseudo-submit an underlying PME-form with tweaked form data, like
  * loadPMETable(), but restrict the display to the ids passed in the
- * flat array @a ids.
+ * flat array ids.
  *
  * @param $form A form with additional input data which is
  * submitted as well. Submit buttons are omitted.
@@ -274,7 +275,7 @@ const loadPMETable = ($form: JQuery<HTMLFormElement>, formData: Record<string, u
  * The form is submitted with an empty pseudo-submit button.
  *
  * @param ids An array containing the ids that will be
- * displayed. If ids is empty or contains an entry @c -1 then no filtering will
+ * displayed. If ids is empty or contains an entry -1 then no filtering will
  * take place.
  */
 const loadPMETableFiltered = (
@@ -328,9 +329,9 @@ const loadPMETableFiltered = (
  * displayed. If ids is empty or contains an entry -1 then no filtering will
  * take place.
  *
- * @param [projectMode] @c true, @c false, @c null or omitted.
- * If @c null or not present, then @a form will be searched for an input element with
- * name @c ProjectId, if present and its value is positive, the main musisians table is
+ * @param [projectMode] true, false, null or omitted.
+ * If null or not present, then form will be searched for an input element with
+ * name ProjectId, if present and its value is positive, the main musisians table is
  * loaded in project mode, allowing for adding new participants to the respective project.
  */
 const loadMusicians = (
@@ -362,7 +363,7 @@ const loadMusicians = (
  * Load the table of all musicians in the "add musician to project"
  * perspective. The underlying Musicians PHP class will take care of
  * constructing a suitable filter restricting the initial view to
- * all musicians @b not yet registered for the project.
+ * all musicians not yet registered for the project.
  *
  * @param $form The current PME form.
  */
@@ -375,11 +376,11 @@ const loadAddMusicians = ($form: JQuery<HTMLFormElement>) => {
  *
  * @param $form The current PME form.
  *
- * @param {Array} [musicians] Optional. An array of musician ids. The
+ * @param [musicians] Optional. An array of musician ids. The
  * table view will be restricted to these ids by constructing a
  * suitable filter expression.
  *
- * @param {Function} [afterLoadCallback] An optional callback executed after
+ * @param [afterLoadCallback] An optional callback executed after
  * the PME table has been loaded.
  */
 const loadProjectParticipants = async (
@@ -439,8 +440,7 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
 
   if ($form.hasClass(pmeToken('list'))
       || $form.hasClass(pmeToken('view'))
-      || $form.hasClass(pmeToken('delete'))
-  ) {
+      || $form.hasClass(pmeToken('delete'))) {
     console.debug('PP SKIP READY IN READONLY VIEW');
     return;
   }
@@ -823,7 +823,7 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
     let curSelected = ($self.val() as string[]) || [];
     const prevSelected = $self.data(selectedOptionsKey);
 
-    const added = curSelected.filter(x => prevSelected.indexOf(x) < 0);
+    const added = curSelected.filter((x) => prevSelected.indexOf(x) < 0);
     // const removed = prevSelected.filter(x => curSelected.indexOf(x) < 0);
 
     const musicianSelectedCur = curSelected.indexOf(String(musicianId)) >= 0;
@@ -889,10 +889,8 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
     const limit = groupId ? $self.data('groups')[groupId].limit : -1;
     if (limit > 0 && curSelected.length > limit) {
       Notification.showTemporary(
-        t(appName,
-          'Too many group members, allowed are {limit}, you specified {count}.'
-          + 'You will not be able to save this configuration.',
-          { limit, count: curSelected.length }),
+        t(appName, 'Too many group members, allowed are {limit}, you specified {count}.'
+          + 'You will not be able to save this configuration.', { limit, count: curSelected.length }),
         { isHTML: true, timeout: 30 },
       );
       console.log('exceeding limit');
@@ -916,7 +914,9 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
     }
     triggerData = triggerData || { setup: false };
 
-    let cleanup = () => { $this.removeClass('busy').closest('.dropdown-container').removeClass('busy'); };
+    let cleanup = () => {
+      $this.removeClass('busy').closest('.dropdown-container').removeClass('busy');
+    };
     let onFail = (xhr: JQuery.jqXHR, status: string, errorThrown: string) => {
       Ajax.handleError(xhr, status, errorThrown, cleanup);
     };
@@ -931,11 +931,13 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
 
     const post = function(force: boolean) {
       $.post(
-        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LIST}/${operation}`), {
+        generateAppUrl(`${BASE_PATH}/${END_POINT_MAILING_LIST}/${operation}`),
+        {
           projectId,
           musicianId,
           force,
-        })
+        },
+      )
         .fail(onFail)
         .done(function(data: ResponseData<MailingListSubscriptionsResponse>) {
           if (!Ajax.validateResponse(data, ['status'], cleanup)) {
@@ -944,7 +946,8 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
           if (data.status === 'unconfirmed') {
             Dialogs.confirm(
               data.feedback!,
-              t(appName, 'Confirmation Required'), {
+              t(appName, 'Confirmation Required'),
+              {
                 callback(answer) {
                   if (answer) {
                     post(true); // will call cleanup
@@ -954,7 +957,8 @@ const ready = function(selector?: string, dialogParameters?: TableDialogCallback
                 },
                 modal: true,
                 default: 'cancel',
-              });
+              },
+            );
           } else {
             if (!triggerData.setup) {
               Notification.messages(data.messages);
@@ -1095,8 +1099,8 @@ const documentReady = function() {
 
 export {
   documentReady,
+  loadMusicians,
   loadProjectParticipants,
   personalRecordDialog,
-  loadMusicians,
   validateInstrumentChoices,
 };

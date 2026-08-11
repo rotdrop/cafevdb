@@ -21,50 +21,49 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue, { nextTick as vueNextTick } from 'vue';
-import { appName } from './config.ts';
-import getInitialState from './toolkit/util/initial-state.ts';
-import { basename } from 'path';
-import dialogAlert from './toolkit/util/dialog-alert.ts';
-import { getCurrentUser } from '@nextcloud/auth';
-import { generateFilePath } from '@nextcloud/router';
-import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
-import { emit, subscribe } from '@nextcloud/event-bus';
-import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
-import {
-  FileAction,
-  FileType,
-  Folder,
-  Node,
-  Permission,
-  View,
-  addNewFileMenuEntry,
-  getFileActions,
-  getNewFileMenuEntries,
-  registerFileAction,
-} from '@nextcloud/files';
-import type { NewMenuEntry } from '@nextcloud/files';
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import axios from '@nextcloud/axios';
-import logoSvg from '../img/cafevdb.svg?raw';
+import type { IFolder, INode, NewMenuEntry } from '@nextcloud/files';
 import type { FilesInitialState, UploadFileData } from '../build/ts-types/php-modules/Controller/DTO.ts';
-import Console from './util/console.ts';
-import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import type {
   MailMergePayload,
   MailMergeResponse,
 } from './types/ajax/mail-merge.ts';
-import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
-import { vueDevTools } from './toolkit/util/vue-devtools.ts';
+
+import { getCurrentUser } from '@nextcloud/auth';
+import axios from '@nextcloud/axios';
+import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
+import { emit, subscribe } from '@nextcloud/event-bus';
+import {
+  addNewFileMenuEntry,
+  FileType,
+  Folder,
+  getFileActions,
+  getNewFileMenuEntries,
+  Permission,
+  registerFileAction,
+} from '@nextcloud/files';
+import { translate as t } from '@nextcloud/l10n';
+import { basename } from 'path';
+import { nextTick as vueNextTick } from 'vue';
 import { EnumAddDocumentConflictAction, EnumFileUploadMode, EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
-import { END_POINT as mailMergeEndPoint } from '../build/ts-types/php-modules/Controller/MailMergeController.ts';
 import {
   DOCUMENT_ACTION_UPLOAD,
-  END_POINT as uploadEndPoint,
   FINANCE_TOPIC_INVOICES,
   SECTION_FINANCE,
+  END_POINT as uploadEndPoint,
 } from '../build/ts-types/php-modules/Controller/DocumentStorageUploadController.ts';
+import { END_POINT as mailMergeEndPoint } from '../build/ts-types/php-modules/Controller/MailMergeController.ts';
 import { END_POINT_PAGE } from '../build/ts-types/php-modules/Controller/VueAppController.ts';
+import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import logoSvg from '../img/cafevdb.svg?raw';
+import { appName } from './config.ts';
+import dialogAlert from './toolkit/util/dialog-alert.ts';
+import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
+import getInitialState from './toolkit/util/initial-state.ts';
+import { vueDevTools } from './toolkit/util/vue-devtools.ts';
+import { MailMergeCloud } from './types/ajax/mail-merge.ts';
+import Console from './util/console.ts';
+
+import './webpack-setup.ts';
 
 type Toast = ReturnType<typeof showError>;
 
@@ -78,13 +77,9 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     OCP: any;
   }
-  // eslint-disable-next-line
+
   var __webpack_public_path__: string;
 }
-
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js');
-Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
 if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
@@ -112,7 +107,7 @@ const validTemplatePath = (path: string) => {
   return initialState && path.startsWith(initialState?.sharing.files.folders.templates);
 };
 
-const getProjectNameFromProjectFolder = (folder: Folder, prefixPath?: string) => {
+const getProjectNameFromProjectFolder = (folder: IFolder, prefixPath?: string) => {
   let dirName = folder.dirname;
   if (!prefixPath || !dirName.startsWith(prefixPath)) {
     return null;
@@ -124,7 +119,7 @@ const getProjectNameFromProjectFolder = (folder: Folder, prefixPath?: string) =>
   return projectName;
 };
 
-const getProjectNameFromProjectBalancesFolder = (folder: Folder) => {
+const getProjectNameFromProjectBalancesFolder = (folder: IFolder) => {
   return getProjectNameFromProjectFolder(folder, projectBalancesFolder);
 };
 
@@ -139,19 +134,19 @@ const getProjectYearFromProjectName = function(projectName: string|null) {
   return null;
 };
 
-const isProjectManagementParentFolder = (folder: Folder) => (
+const isProjectManagementParentFolder = (folder: IFolder) => (
   folder.path === projectManagementFolder
     || (folder.dirname === projectManagementFolder
       && (/^\d{4}$/.test(folder.basename) || folder.basename === t(appName, 'templates'))));
 
-const isProjectParticipantsFolder = (folder: Folder) => {
+const isProjectParticipantsFolder = (folder: IFolder) => {
   if (!projectManagementFolder || !folder.dirname.startsWith(projectManagementFolder)) {
     return false;
   }
   return folder.basename === projectParticipantsFolder;
 };
 
-const isProjectBalanceSupportingDocumentsTopFolder = (folder: Folder, projectName: string|null) => {
+const isProjectBalanceSupportingDocumentsTopFolder = (folder: IFolder, projectName: string|null) => {
   projectName = projectName || getProjectNameFromProjectBalancesFolder(folder);
   if (!projectName || !projectBalancesFolder) {
     return false;
@@ -162,7 +157,7 @@ const isProjectBalanceSupportingDocumentsTopFolder = (folder: Folder, projectNam
     && baseName === supportingDocumentsFolder;
 };
 
-const isProjectBalanceSupportingDocumentsFolder = (folder: Folder, projectName: string|null, projectYear: string|null) => {
+const isProjectBalanceSupportingDocumentsFolder = (folder: IFolder, projectName: string|null, projectYear: string|null) => {
   projectName = projectName || getProjectNameFromProjectBalancesFolder(folder);
   if (!projectName) {
     return false;
@@ -179,10 +174,10 @@ const isProjectBalanceSupportingDocumentsFolder = (folder: Folder, projectName: 
   }
 };
 
-const isInvoicesFolder = (folder: Folder) =>
+const isInvoicesFolder = (folder: IFolder) =>
   initialState && folder.path.startsWith(initialState?.sharing.files.folders.invoices);
 
-const getDataFromInvoiceFolder = (folder: Folder) => {
+const getDataFromInvoiceFolder = (folder: IFolder) => {
   let path = folder.path;
   logger.debug('TEST INVOICE FOLDER', { folder, path });
   if (!initialState || !path.startsWith(initialState?.sharing.files.folders.invoices)) {
@@ -210,7 +205,7 @@ const getDataFromInvoiceFolder = (folder: Folder) => {
   return invoice;
 };
 
-const enableTemplateActions = function(node: Node) {
+const enableTemplateActions = function(node: INode) {
 
   if (node && node.type === FileType.Folder) {
     return false;
@@ -229,21 +224,24 @@ const enableTemplateActions = function(node: Node) {
   return true; // TODO depend on subdir etc.
 };
 
-registerFileAction(new FileAction({
+registerFileAction({
   id: appName + '-mailmerge',
-  displayName(/* nodes: Node[], view: View */) {
+  displayName(_context) {
     return '';
   },
-  title(/* files: Node[], view: View */) {
+  title(_context) {
     return t(appName, 'Perform mail-merge operation with this template file.');
   },
-  iconSvgInline(/* files: Node[], view: View) */) {
+  iconSvgInline(_context) {
     return logoSvg;
   },
-  enabled(nodes: Node[]/* , view: View) */) {
-    return nodes.length === 1 && enableTemplateActions(nodes[0]);
+  enabled(context) {
+    return context.nodes.length === 1 && enableTemplateActions(context.nodes[0]);
   },
-  async exec(node: Node, view: View, dir: string) {
+  async exec(context) {
+    const node = context.nodes[0];
+    const view = context.view;
+    const folder = context.folder;
     // You need read permissions to see the sidebar
     if ((node.permissions & Permission.READ) !== 0) {
       window.OCA?.Files?.Sidebar?.setActiveTab?.(appName + '-mailmerge');
@@ -264,8 +262,8 @@ registerFileAction(new FileAction({
         // Silently update current fileid
         window.OCP?.Files?.Router?.goToRoute(
           null,
-          { view: view.id, fileid: String(node.fileid) },
-          { ...window.OCP.Files.Router.query, dir, opendetails: 'true' },
+          { view: view.id, fileid: node.id },
+          { ...window.OCP.Files.Router.query, folder, opendetails: 'true' },
           true,
         );
 
@@ -279,14 +277,14 @@ registerFileAction(new FileAction({
   },
   inline: () => true,
   order: -1000000,
-}));
+});
 
 type createFolderResponse = {
-  fileid: number
-  source: string
-}
+  fileid: number;
+  source: string;
+};
 
-const createNewFolder = async (root: Folder, name: string): Promise<createFolderResponse> => {
+const createNewFolder = async (root: IFolder, name: string): Promise<createFolderResponse> => {
   const source = root.source + '/' + name;
   const encodedSource = root.encodedSource + '/' + encodeURIComponent(name);
 
@@ -324,11 +322,12 @@ class SupportingDocumentEntry implements NewMenuEntry {
     this.displayName = t(appName, 'New Supporting Document');
   }
 
-  public enabled(folder: Folder) {
+  public enabled(folder: IFolder) {
     // tweak further?
     // class="action upload-picker__menu-entry" data-cy-upload-picker-menu-entry="cafevdb-project-supporting-document-folder"><
     logger.debug(
-      'MENU ENTRY', {
+      'MENU ENTRY',
+      {
         folder,
         el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
       },
@@ -359,7 +358,7 @@ class SupportingDocumentEntry implements NewMenuEntry {
     return true;
   }
 
-  public async handler(folder: Folder, content: Node[]) {
+  public async handler(folder: IFolder, content: INode[]) {
     if (!this.projectYear && this.isTopFolder) {
       await this.yearFolderHandler(folder, content);
     } else {
@@ -367,13 +366,13 @@ class SupportingDocumentEntry implements NewMenuEntry {
     }
   }
 
-  private async yearFolderHandler(folder: Folder, content: Node[]) {
+  private async yearFolderHandler(folder: IFolder, content: INode[]) {
     const year = '' + new Date().getFullYear();
     let dirName = '' + year;
-    const yearFolders = content.filter((node: Node) => node.basename.match(/^\d{4}$/));
-    const existing = yearFolders.find((node: Node) => node.basename === dirName);
+    const yearFolders = content.filter((node: INode) => node.basename.match(/^\d{4}$/));
+    const existing = yearFolders.find((node: INode) => node.basename === dirName);
     if (existing) {
-      const maxYear = yearFolders.reduce((accumulator: number, currentValue: Node) => Math.max(accumulator, +currentValue.basename), +yearFolders[0].basename);
+      const maxYear = yearFolders.reduce((accumulator: number, currentValue: INode) => Math.max(accumulator, +currentValue.basename), +yearFolders[0].basename);
       dirName = '' + (maxYear + 1);
     }
     showInfo(t(appName, 'Year determined as {year}.', { year: dirName }));
@@ -398,11 +397,11 @@ class SupportingDocumentEntry implements NewMenuEntry {
     // emit('files:node:renamed', newFolder);
   }
 
-  private async supportingDocumentHandler(folder: Folder, content: Node[]) {
+  private async supportingDocumentHandler(folder: IFolder, content: INode[]) {
     const folderPrefix = this.projectYear ? this.projectName : this.projectName + '-' + folder.basename;
-    const nameRegExp = new RegExp('^(?:' + folderPrefix + '-?)?' + '\\d{3}$');
-    const sequenceFolders = content.filter((node: Node) => node.basename.match(nameRegExp));
-    const sequences = sequenceFolders.map((node: Node) => +node.basename.substring(node.basename.length - 3));
+    const nameRegExp = new RegExp('^(?:' + folderPrefix + '-?)?\\d{3}$');
+    const sequenceFolders = content.filter((node: INode) => node.basename.match(nameRegExp));
+    const sequences = sequenceFolders.map((node: INode) => +node.basename.substring(node.basename.length - 3));
     sequences.sort((a, b) => a - b);
     let sequence: number;
     if (sequences[sequences.length - 1] !== sequences.length) {
@@ -465,17 +464,17 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
     this.displayName = t(appName, 'New Project');
   }
 
-  public enabled(folder: Folder) {
+  public enabled(folder: IFolder) {
     this.isManagementFolder = isProjectManagementParentFolder(folder);
 
     return this.isManagementFolder;
   }
 
-  public async handler(_folder: Folder, _content: Node[]) {
+  public async handler(_folder: IFolder, _content: INode[]) {
     const route = generateAppUrl(`${END_POINT_PAGE}/projects`, {
-      // eslint-disable-next-line camelcase
+
       PME_sys_qfyear: (new Date()).getFullYear() - 1,
-      // eslint-disable-next-line camelcase
+
       PME_sys_qfyear_comp: '>=',
     });
     // <a target="_blank" style="text-decoration: revert; font-style: italic;" href="{route}">project overview</a> page.', {
@@ -483,7 +482,8 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
       title: t(appName, 'Please use the "{appName}" app!', { appName }),
       text: t(
         appName,
-        'New projects have to be created using the "{buttonName}" button on the {pageName} page.', {
+        'New projects have to be created using the "{buttonName}" button on the {pageName} page.',
+        {
           pageName: `@ANCHOR@${t(appName, 'project overview')}@ROHCNA@`,
           buttonName: t(appName, 'New Project'),
         },
@@ -515,11 +515,11 @@ class ProjectParticipantFolderEntry implements NewMenuEntry {
     this.displayName = t(appName, 'New Project-Participant');
   }
 
-  public enabled(folder: Folder) {
+  public enabled(folder: IFolder) {
     return isProjectParticipantsFolder(folder);
   }
 
-  public async handler(folder: Folder, _content: Node[]) {
+  public async handler(folder: IFolder, _content: INode[]) {
     // the project-name is the basename of folder.dirname
     const projectName = folder.dirname.substring(folder.dirname.lastIndexOf('/') + 1);
     const route = generateAppUrl(`${END_POINT_PAGE}/project-participants/{projectName}`, {
@@ -530,7 +530,8 @@ class ProjectParticipantFolderEntry implements NewMenuEntry {
       title: t(appName, 'Please use the "{appName}" app!', { appName }),
       text: t(
         appName,
-        'Participants have to be managed on the {pageName} page.', {
+        'Participants have to be managed on the {pageName} page.',
+        {
           pageName: `@ANCHOR@${t(appName, 'project participants')}@ROHCNA@`,
         },
       )
@@ -560,11 +561,10 @@ class InvoicesEntry implements NewMenuEntry {
     this.displayName = t(appName, 'New Invoice');
   }
 
-  public enabled(folder: Folder) {
+  public enabled(folder: IFolder) {
     logger.debug('FOLDER', {
       folder,
-    },
-    );
+    });
     if (!isInvoicesFolder(folder)) {
       return false;
     }
@@ -579,7 +579,7 @@ class InvoicesEntry implements NewMenuEntry {
     return true;
   }
 
-  public async handler(folder: Folder, content: Node[]) {
+  public async handler(folder: IFolder, content: INode[]) {
     logger.debug('FOLDER', { folder, content });
     // fixup later
 
@@ -593,14 +593,14 @@ class InvoicesEntry implements NewMenuEntry {
         invoiceIds: [invoiceData.invoiceNumber],
       };
       const mailMergeUrl = generateAppUrl(mailMergeEndPoint);
-      let mailMergeToast: Toast|null = showInfo(t(appName, 'Starting mail-merge, this may take some time ...'), { timeout: TOAST_PERMANENT_TIMEOUT });
+      let mailMergeToast: Toast|null = showInfo(t(appName, 'Starting mail-merge, this may take some time …'), { timeout: TOAST_PERMANENT_TIMEOUT });
       try {
         const response = await axios.post<MailMergeResponse>(mailMergeUrl, postData);
         const cloudFile = response.data.cloudFolder + '/' + response.data.cloudFiles[0];
 
         mailMergeToast.hideToast();
         mailMergeToast = null;
-        showInfo(t(appName, 'Mail-merge completed, moving document into the proper place ...'));
+        showInfo(t(appName, 'Mail-merge completed, moving document into the proper place …'));
 
         const moveUrl = generateAppUrl(
           `${uploadEndPoint}/${SECTION_FINANCE}/${FINANCE_TOPIC_INVOICES}/${DOCUMENT_ACTION_UPLOAD}`,
@@ -634,7 +634,7 @@ class InvoicesEntry implements NewMenuEntry {
       } catch (e: any) {
         if (mailMergeToast) {
           mailMergeToast.hideToast();
-          mailMergeToast = null;
+          // mailMergeToast = null;
         }
         // @todo: better diagnostics
         showError(t(appName, 'Mail-merge operation has failed'));
@@ -656,7 +656,7 @@ const newFileMenuEntryNeedsTweak = (entry: NewMenuEntry) => (
     && entry !== projectParticipantFolderEntry
     && entry.id !== 'rich-workspace-init');
 
-const isSpecialEntryEnabled = (folder: Folder) => (
+const isSpecialEntryEnabled = (folder: IFolder) => (
   projectManagementFolderEntry.enabled(folder)
     || projectParticipantFolderEntry.enabled(folder)
     || supportingDocumentsEntry.enabled(folder)
@@ -690,7 +690,7 @@ const observer = new MutationObserver(async (mutationList, _observer) => {
   }
 });
 
-let currentFolder: Folder|undefined;
+let currentFolder: IFolder|undefined;
 
 subscribe('files:list:updated', ({ folder }) => {
   currentFolder = folder;
@@ -709,7 +709,7 @@ window.addEventListener('DOMContentLoaded', () => {
   for (const entry of newFileMenuEntries) {
     if (newFileMenuEntryNeedsTweak(entry)) {
       const enabledMethod = entry.enabled;
-      entry.enabled = (folder: Folder) => !isSpecialEntryEnabled(folder) && (enabledMethod ? enabledMethod.call(entry, folder) : true);
+      entry.enabled = (folder: IFolder) => !isSpecialEntryEnabled(folder) && (enabledMethod ? enabledMethod.call(entry, folder) : true);
     }
   }
   const fileActionEntries = getFileActions();
@@ -718,14 +718,11 @@ window.addEventListener('DOMContentLoaded', () => {
       case 'delete':
       case 'move-copy':
       case 'rename': {
-        // @ts-expect-error 2341
-        const enabledMethod = fileAction._action.enabled;
-        // @ts-expect-error 2341
-        fileAction._action.enabled = (nodes: Node[], view: View) =>
+        const enabledMethod = fileAction.enabled;
+        fileAction.enabled = (context) =>
           (currentFolder && isSpecialEntryEnabled(currentFolder)
             ? false
-            // @ts-expect-error 2341
-            : (enabledMethod ? enabledMethod.call(fileAction._action, nodes, view) : true));
+            : (enabledMethod ? enabledMethod.call(fileAction, context) : true));
         break;
       }
       default:

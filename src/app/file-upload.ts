@@ -23,17 +23,18 @@
 
 // @todo remove this file.
 
-import { appName } from '../config.ts';
-import $ from './jquery.ts';
-import * as Notification from './notification.ts';
-import * as Ajax from './ajax.ts';
-import { formatFileSize } from '@nextcloud/files';
-import { translate as t } from '@nextcloud/l10n';
 import type { UploadFileData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
-require('jquery-ui/ui/widgets/progressbar');
-require('blueimp-file-upload');
-require('blueimp-file-upload/js/jquery.iframe-transport');
+import { formatFileSize } from '@nextcloud/files';
+import { translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+import * as Ajax from './ajax.ts';
+import $ from './jquery.ts';
+import * as Notification from './notification.ts';
+
+import 'jquery-ui/ui/widgets/progressbar';
+import 'blueimp-file-upload';
+import 'blueimp-file-upload/js/jquery.iframe-transport';
 
 type jqXHR = JQuery.jqXHR;
 const uploadingFiles: Record<string, jqXHR|jqXHR[]> = {};
@@ -41,16 +42,16 @@ const uploadingFiles: Record<string, jqXHR|jqXHR[]> = {};
 export type UploadFile = UploadFileData;
 
 interface UploadData {
-  result: UploadFileData[]|Record<string, UploadFileData>,
-  files: UploadFileData[],
-  originalFiles: UploadFileData[],
-  textStatus: 'dirorzero'|string,
-  errorThrown: string,
-  submit: () => jqXHR,
-  jqXHR: jqXHR,
-  loaded: number,
-  total: number,
-  bitrate: number,
+  result: UploadFileData[]|Record<string, UploadFileData>;
+  files: UploadFileData[];
+  originalFiles: UploadFileData[];
+  textStatus: 'dirorzero'|string;
+  errorThrown: string;
+  submit: () => jqXHR;
+  jqXHR: jqXHR;
+  loaded: number;
+  total: number;
+  bitrate: number;
 }
 
 const cancelUploads = function() {
@@ -67,25 +68,32 @@ const cancelUploads = function() {
   });
 };
 
-function defaultDoneCallback(file: UploadFileData, _index: number|string|symbol, $container:JQuery) {
+/**
+ * @param file TBD.
+ * @param _index TBD.
+ * @param $container TBD.
+ */
+function defaultDoneCallback(file: UploadFileData, _index: number|string|symbol, $container: JQuery) {
   file.status = 'new';
   // file.index = index;
-  $container.data('files') || $container.data('files', []);
+  if (!$container.data('files')) {
+    $container.data('files', []);
+  }
   $container.data('files').push(file);
   console.info($container.data('files'));
 }
 
 export interface Options {
-  doneCallback: typeof defaultDoneCallback,
-  startCallback?: (event: unknown) => void,
-  stopCallback?: (event: unknown, data: UploadData) => void,
-  failCallback?: (event: unknown, data: UploadData) => void,
-  dropZone: JQuery,
-  containerSelector: string,
-  inputSelector: string,
-  progressTemplate: string,
-  multiple: boolean,
-  url?: string,
+  doneCallback: typeof defaultDoneCallback;
+  startCallback?: (event: unknown) => void;
+  stopCallback?: (event: unknown, data: UploadData) => void;
+  failCallback?: (event: unknown, data: UploadData) => void;
+  dropZone: JQuery;
+  containerSelector: string;
+  inputSelector: string;
+  progressTemplate: string;
+  multiple: boolean;
+  url?: string;
 }
 
 const defaultOptions: Options = {
@@ -155,7 +163,7 @@ function init(parameters: Partial<Options>) {
       return false;
     },
     send(_event: unknown, data: UploadData) {
-      console.debug('SEND DATA', Object.assign({}, data));
+      console.debug('SEND DATA', { ...data });
     },
     /**
      * called after the first add, does NOT have the data param

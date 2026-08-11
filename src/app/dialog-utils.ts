@@ -24,13 +24,17 @@
  * @file Some support functions for jQuery dialogs.
  */
 
-import $ from './jquery.ts';
-import './jquery-extensions.ts';
-import { appName, appPrefix } from '../config.ts';
 import { translate as t } from '@nextcloud/l10n';
+import { appName, appPrefix } from '../config.ts';
+import $ from './jquery.ts';
+
+import './jquery-extensions.ts';
 
 /* global JQuery */
 
+/**
+ *
+ */
 function manageDialogToBackButtons() {
   // disable button if there are not enough dialogs
   const overlay = $('.ui-widget-overlay.ui-front').last();
@@ -63,7 +67,8 @@ function dialogToBackButton($dialogHolder: JQuery) {
     'If multiple dialogs are open, '
       + 'then move this one to the lowest layer '
       + 'and display it below the others. '
-      + 'Clicking anywhere on the dialog will bring to the front again.');
+      + 'Clicking anywhere on the dialog will bring to the front again.',
+  );
   const toBackButton = $('<button class="toBackButton customDialogHeaderButton" title="' + toBackButtonTitle + '"></button>');
   toBackButton.button({
     label: '_',
@@ -123,7 +128,8 @@ function dialogFullScreenButton(
   const fullScreenClass = appName + '-full-screen';
   const buttonTitle = t(
     appName,
-    'Maximize this dialog to cover the entire browser window.');
+    'Maximize this dialog to cover the entire browser window.',
+  );
   const $button = $('<button class="fullScreenButton customDialogHeaderButton" title="' + buttonTitle + '"></button>');
   $button.button({
     label: '_',
@@ -183,7 +189,8 @@ function dialogCustomCloseButton(
       + 'which was active before this dialog had been opened. '
       + 'If the current view shows a `Back\' button, then intentionally '
       + 'clicking the close-button (THIS button) should just be '
-      + 'equivalent to clicking the `Back\' button');
+      + 'equivalent to clicking the `Back\' button',
+  );
   const customCloseButton = $('<button class="customCloseButton customDialogHeaderButton" title="' + customCloseButtonTitle + '"></button>');
   customCloseButton.button({
     label: 'x',
@@ -206,9 +213,9 @@ function dialogCustomCloseButton(
 }
 
 export {
-  dialogToBackButton as toBackButton,
   dialogCustomCloseButton as customCloseButton,
   dialogFullScreenButton as fullScreenButton,
+  dialogToBackButton as toBackButton,
 };
 
 // Local Variables: ***

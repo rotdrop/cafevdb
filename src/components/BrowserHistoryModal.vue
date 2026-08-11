@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -22,19 +22,18 @@
  -
  -->
 <template>
-  <NcModal :close-on-click-outside="false"
-           :has-next="false"
-           :has-previous="false"
-           :label-id="modalPageHeadingId"
+  <NcModal :closeOnClickOutside="false"
+           :hasNext="false"
+           :hasPrevious="false"
+           :labelId="modalPageHeadingId"
            class="browser-history-modal"
            size="large"
            v-bind="$attrs"
-           v-on="$listeners"
            @click="dataPopupShown = undefined"
            @update:show="emit('update:show', false)"
   >
     <template #default>
-      <NcActions :class="['browser-history-actions', { loading }]">
+      <NcActions class="browser-history-actions" :class="[{ loading }]">
         <NcActionButton @click="reloadHistoryStates">
           <template #icon>
             <IconReload :size="20" />
@@ -49,10 +48,10 @@
         <NcListItem active
                     :name="stateDisplayName(state, mtime)"
                     :bold="true"
-                    :counter-number="Object.keys(state.history).length"
+                    :counterNumber="Object.keys(state.history).length"
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
-                    counter-type="highlighted"
-                    :force-display-actions="true"
+                    counterType="highlighted"
+                    :forceDisplayActions="true"
                     @click.prevent="pushRoute(mtime, state.position)"
         >
           <template #icon>
@@ -64,7 +63,7 @@
             />
           </template>
           <template #extra-actions>
-            <NcButton type="primary"
+            <NcButton variant="primary"
                       :aria-label="t(appName, 'Toggle Details')"
                       @click="dataPopupShown = undefined; expandedState = expandedState === mtime ? undefined : mtime"
             >
@@ -122,7 +121,7 @@ and navigate to the last active view of the saved history.`)"
                     }"
                     :bold="key === state.position"
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
-                    :force-display-actions="true"
+                    :forceDisplayActions="true"
                     @click.stop.prevent="pushRoute(mtime, key)"
         >
           <template #icon>
@@ -131,7 +130,8 @@ and navigate to the last active view of the saved history.`)"
           </template>
           <template #name>
             <span v-tooltip="key === state.position ? t(appName, 'Active page when the history was saved.') : undefined"
-                  :class="{ 'current-position': key === state.position, 'history-entry-name': true }"
+                  class="history-entry-name"
+                  :class="{ 'current-position': key === state.position }"
             >{{ '' + key }}</span>
           </template>
           <template #subname>
@@ -154,14 +154,17 @@ and navigate to the last active view of the saved history.`)"
     </template>
   </NcModal>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
-import useHistoryStore from '../stores/history.ts'
+import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 import type {
   FetchMode,
   HistoryPersistenceRecord,
   RouterHistoryState,
 } from '../stores/history.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import moment from '@nextcloud/moment'
 import {
   NcActionButton,
   NcActions,
@@ -170,66 +173,62 @@ import {
   NcListItem,
   NcModal,
 } from '@nextcloud/vue'
-import { translate as t } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
-import IconHistoryState from 'vue-material-design-icons/History.vue'
-import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
-import IconHideDetails from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import { v4 as uuidv4 } from 'uuid'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import IconDelete from 'vue-material-design-icons/Delete.vue'
-import IconLoad from 'vue-material-design-icons/Upload.vue'
-import IconLink from 'vue-material-design-icons/Link.vue'
-import IconLinkPosition from 'vue-material-design-icons/LinkVariant.vue'
 import IconViewData from 'vue-material-design-icons/Eye.vue'
 import IconHideData from 'vue-material-design-icons/EyeOff.vue'
+import IconHistoryState from 'vue-material-design-icons/History.vue'
+import IconLink from 'vue-material-design-icons/Link.vue'
+import IconLinkPosition from 'vue-material-design-icons/LinkVariant.vue'
 import IconReload from 'vue-material-design-icons/Reload.vue'
-import {
-  ref,
-  del as vueDel,
-} from 'vue'
-import { useRouter } from 'vue-router/composables'
+import IconHideDetails from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
+import IconLoad from 'vue-material-design-icons/Upload.vue'
+import { appName } from '../config.ts'
+import useHistoryStore from '../stores/history.ts'
 import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { v4 as uuidv4 } from 'uuid'
 import Console from '../util/console.ts'
 import { sanitizePostData } from '../util/legacy-post-data.ts'
-import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
 
+type TimestampType = `${number}`
+
+withDefaults(defineProps<{
+  heading?: string
+}>(), {
+  heading: t(appName, 'Manage Saved Web-Browser History'),
+})
+const emit = defineEmits([
+  'update:show',
+])
 const COMPONENT_NAME = 'BrowserHistoryModal'
 const logger = new Console(COMPONENT_NAME)
 
 logger.debug('HERE I AM')
 
-withDefaults(defineProps<{
-  heading?: string,
-}>(), {
-  heading: t(appName, 'Manage Saved Web-Browser History'),
-})
-
-const emit = defineEmits([
-  'update:show',
-])
-
 const modalPageHeadingId = ref<string>(uuidv4())
 
 const history = useHistoryStore()
 
-const historyData = ref<Record<number, HistoryPersistenceRecord<FetchMode> > >({})
+const historyData = ref<Record<number, HistoryPersistenceRecord<FetchMode>>>({})
 
 const pathDisplayName = (historyEntry: RouterHistoryState<'shallow'>) => {
   const name = historyEntry.path
   return name === '/' ? t(appName, 'Home') : name.replace(/^\/+/, '')
 }
 
-const stateDisplayName = <T extends FetchMode>(state: HistoryPersistenceRecord<T>, mtime: number) => {
-  return moment(mtime * 1000).format('LLL') + ' @ ' + state.position
+const stateDisplayName = <T extends FetchMode>(state: HistoryPersistenceRecord<T>, mtime: number|`${number}`) => {
+  return moment(+mtime * 1000).format('LLL') + ' @ ' + state.position
 }
 
-const expandedState = ref<undefined|number>(undefined)
+const expandedState = ref<undefined|TimestampType>(undefined)
 
-const dataPopupShown = ref<undefined | string>(undefined)
+const dataPopupShown = ref<undefined|string>(undefined)
 
-const isDataPopupShown = (mtime: number, key: string) => dataPopupShown.value === '' + mtime + key
+const isDataPopupShown = (mtime: TimestampType, key: string) => dataPopupShown.value === '' + mtime + key
 
-const toggleDataPopupShown = (mtime: number, key: string) => {
+const toggleDataPopupShown = (mtime: TimestampType, key: string) => {
   dataPopupShown.value = isDataPopupShown(mtime, key) ? undefined : ('' + mtime + key)
 }
 
@@ -239,26 +238,38 @@ const loading = ref(false)
 
 const router = useRouter()
 
-const pushRoute = async (timestamp: number, key: string) => {
+const loadPostData = async (timestamp: TimestampType, key: string) => {
+  if (historyData.value[timestamp].history[key].post) {
+    return historyData.value[timestamp].history[key].post
+  }
+  const entry = await history.loadHistoryEntry(timestamp, key)
+  if (entry) {
+    requestData[entry.hash] = entry.post
+    historyData.value[timestamp].history[key].post = entry.post
+  }
+  return historyData.value[timestamp].history[key].post
+}
+
+const pushRoute = async (timestamp: TimestampType, key: string) => {
   const entry = historyData.value[timestamp].history[key]
   const postData = await loadPostData(timestamp, key)
   if (!postData) {
     return
   }
   logger.info('POST DATA', postData)
-  const resolved = router.resolve(entry.path)
+  const resolved = router.resolve(entry.path, 'unknown')
   logger.info('RESOLVED ROUTE', resolved)
-  const params = sanitizePostData(Object.assign(postData, resolved.location.params))
+  const params = sanitizePostData(Object.assign(postData, resolved.params))
   const location = {
-    name: resolved.route.name!, // @todo error handling
+    name: resolved.name!,
     params,
   }
   logger.info('ABOUT TO PUSH ROUTE', location)
   return router.push(location)
 }
 
-const ensurePostData = async (timestamp: number) => {
-  const promises = Object.keys(historyData.value[timestamp].history).map(key => loadPostData(timestamp, key))
+const ensurePostData = async (timestamp: TimestampType) => {
+  const promises = Object.keys(historyData.value[timestamp].history).map((key) => loadPostData(timestamp, key))
   await Promise.all(promises) // the attached error handler should catch all errors
   for (const entry of Object.values(historyData.value[timestamp].history)) {
     if (!entry.post) {
@@ -268,7 +279,7 @@ const ensurePostData = async (timestamp: number) => {
   return true
 }
 
-const pushHistoryStack = async (timestamp: number) => {
+const pushHistoryStack = async (timestamp: TimestampType) => {
   if (!await ensurePostData(timestamp)) {
     return // user has already be informed
   }
@@ -276,7 +287,7 @@ const pushHistoryStack = async (timestamp: number) => {
   emit('update:show', false)
 }
 
-const replaceHistoryStack = async (timestamp: number) => {
+const replaceHistoryStack = async (timestamp: TimestampType) => {
   if (!await ensurePostData(timestamp)) {
     return // user has already be informed
   }
@@ -284,7 +295,7 @@ const replaceHistoryStack = async (timestamp: number) => {
   emit('update:show', false)
 }
 
-const appendHistoryStack = async (timestamp: number) => {
+const appendHistoryStack = async (timestamp: TimestampType) => {
   if (!await ensurePostData(timestamp)) {
     return // user has already be informed
   }
@@ -307,35 +318,24 @@ const reloadHistoryStates = async () => {
 
 reloadHistoryStates()
 
-const deleteHistoryState = async (timestamp: number) => {
+const deleteHistoryState = async (timestamp: TimestampType) => {
   const status = await history.deleteHistoryState(timestamp)
   if (status) {
-    vueDel(historyData.value, timestamp)
+    delete historyData.value[timestamp]
     if (history.modificationTime === history.saveTime && timestamp === history.saveTime) {
       history.saveTime = 0
     }
   }
 }
 
-const loadPostData = async (timestamp: number, key: string) => {
-  if (historyData.value[timestamp].history[key].post) {
-    return historyData.value[timestamp].history[key].post
-  }
-  const entry = await history.loadHistoryEntry(timestamp, key)
-  if (entry) {
-    requestData[entry.hash] = entry.post
-    historyData.value[timestamp].history[key].post = entry.post
-  }
-  return historyData.value[timestamp].history[key].post
-}
-
-const makePostDataTooltip = async (timestamp: number, key: string) => {
+const makePostDataTooltip = async (timestamp: TimestampType, key: string) => {
   const data = await loadPostData(timestamp, key)
   return data
     ? '<pre style="text-align:left;">' + JSON.stringify(data, undefined, 2) + '</pre>'
     : t(appName, 'No data coulde be found.')
 }
 </script>
+
 <style scoped lang="scss">
 .browser-history-modal {
   .modal-page-heading {

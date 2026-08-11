@@ -21,7 +21,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="['files-tab', ...cloudVersionClasses]">
+  <div class="files-tab" :class="[...cloudVersionClasses]">
     <ul>
       <li class="files-tab-entry flex clickable"
           @click="(event) => toggleMenuHandlerHelper(event, mailMergeOperations)"
@@ -36,14 +36,14 @@
           <NcActionButton v-tooltip="hints['templates:cloud:integration:download']"
                           icon="icon-download"
                           :disabled="senderId <= 0"
-                          :close-after-click="true"
+                          :closeAfterClick="true"
                           :title="t(appId, 'Download Merged Document')"
                           @click="mailMergeHandlerHelper(MailMergeDownload)($event)"
           >
             {{ t(appId, 'download locally') }}
           </NcActionButton>
           <NcActionButton v-tooltip="hints['templates:cloud:integration:cloudstore']"
-                          :close-after-click="true"
+                          :closeAfterClick="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Merge Document into Cloud')"
                           @click="mailMergeHandlerHelper(MailMergeCloud)($event)"
@@ -54,7 +54,7 @@
             {{ t(appId, 'save to cloud') }}
           </NcActionButton>
           <NcActionButton v-tooltip="hints['templates:cloud:integration:dataset']"
-                          :close-after-click="true"
+                          :closeAfterClick="true"
                           :disabled="senderId <= 0"
                           :title="t(appId, 'Download Replacement Data')"
                           @click="mailMergeHandlerHelper(MailMergeDataset)($event)"
@@ -79,10 +79,10 @@
                          :class="[{ empty: senderId <= 0 }]"
                          :placeholder="t(appId, 'e.g. John Doe')"
                          :multiple="false"
-                         :reset-action="true"
-                         :clear-action="false"
-                         :submit-button="false"
-                         search-scope="executive-board"
+                         :resetAction="true"
+                         :clearAction="false"
+                         :submitButton="false"
+                         searchScope="executive-board"
                          :searchable="false"
         />
       </li>
@@ -96,8 +96,7 @@
         <NcActions id="files-tabs-entry__recipients-base"
                    ref="recipientsSourceMenu"
         >
-          <NcActionRadio ref="radioDatabase"
-                         v-model:model-value="recipientsSource"
+          <NcActionRadio v-model:modelValue="recipientsSource"
                          name="recipientsSource"
                          value="database"
                          :disabled="senderId <= 0"
@@ -105,8 +104,7 @@
           >
             {{ t(appId, 'Musician\'s Datebase') }}
           </NcActionRadio>
-          <NcActionRadio ref="radioContacts"
-                         v-model:model-value="recipientsSource"
+          <NcActionRadio v-model:modelValue="recipientsSource"
                          name="recipientsSource"
                          value="contacts"
                          :disabled="senderId <= 0"
@@ -115,11 +113,10 @@
             {{ t(appId, 'Addressbooks') }}
           </NcActionRadio>
           <NcActionRadio v-if="false"
-                         ref="givenContact"
-                         v-model:model-value="recipientsSource"
+                         v-model:modelValue="recipientsSource"
                          name="recipientsSource"
                          value="input"
-                         :close-after-click="true"
+                         :closeAfterClick="true"
                          :disabled="true || senderId <= 0"
                          @change="closeMenu(recipientsSourceMenu)"
           >
@@ -133,19 +130,19 @@
                          :label="t(appId, 'Musicians')"
                          :placeholder="t(appId, 'e.g. Jane Doe')"
                          :multiple="true"
-                         :submit-button="false"
-                         :clear-action="true"
-                         :project-id="projectId"
+                         :submitButton="false"
+                         :clearAction="true"
+                         :projectId="projectId"
                          :disabled="senderId <= 0"
-                         search-scope="musicians"
+                         searchScope="musicians"
         />
         <SelectProjects v-model="project"
                         :tooltip="hints['templates:cloud:integration:project']"
                         :label="t(appId, 'Project')"
                         :placeholder="t(appId, 'e.g. Auvergne2019')"
                         :multiple="false"
-                        :submit-button="false"
-                        :clear-action="false"
+                        :submitButton="false"
+                        :clearAction="false"
                         :disabled="senderId <= 0"
         />
       </li>
@@ -155,84 +152,88 @@
                         :label="t(appId, 'Contacts')"
                         :placeholder="t(appId, 'e.g. Bilbo Baggins')"
                         :multiple="true"
-                        :clear-action="true"
-                        :only-address-books="onlyAddressBooks"
-                        :all-address-books="allAddressBooks"
+                        :clearAction="true"
+                        :onlyAddressBooks="onlyAddressBooks"
+                        :allAddressBooks="allAddressBooks"
                         :disabled="senderId <= 0"
-                        :select-all-option="false"
-                        :submit-button="false"
-                        search-scope="contacts"
+                        :selectAllOption="false"
+                        :submitButton="false"
+                        searchScope="contacts"
         />
         <SelectAddressBooks v-model="onlyAddressBooks"
                             :tooltip="hints['templates:cloud:integration:address-books']"
                             :label="t(appId, 'Address-Books')"
                             :multiple="true"
-                            :reset-button="true"
-                            :clear-button="false"
+                            :resetButton="true"
+                            :clearButton="false"
                             :disabled="senderId <= 0"
-                            @update:address-books="(books) => allAddressBooks = books"
+                            @update:addressBooks="(books) => allAddressBooks = books"
         />
       </li>
     </ul>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
+import type { LegacyFileInfo } from '@nextcloud/files'
+import type { FilesInitialState as InitialState, MailMergeResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import type { MusicianIdObject } from '../components/SelectMusicians.vue'
+import type { Project } from '../stores/app-data.ts'
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
+import type { AddressBook, Contact } from '../types/address-book.d.ts'
+import type {
+  ContactKeys,
+  MailMergeOperation,
+  MailMergePayload,
+} from '../types/ajax/mail-merge.ts'
+
+import axios from '@nextcloud/axios'
+import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
+import {
+  NcActionButton,
+  NcActionRadio,
+  NcActions,
+} from '@nextcloud/vue'
+import vTooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip'
+import md5 from 'blueimp-md5'
 import {
   computed,
   onBeforeMount,
+  reactive,
   ref,
   watch,
-  reactive,
 } from 'vue'
-import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
-import {
-  NcActions,
-  NcActionButton,
-  NcActionRadio,
-} from '@nextcloud/vue'
 import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
 import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
 // import DatabaseIcon from 'vue-material-design-icons/Database.vue'
 // import ContactsIcon from 'vue-material-design-icons/Contacts.vue'
-import axios from '@nextcloud/axios'
-import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import { translate as t } from '@nextcloud/l10n'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
-import { generateUrl } from '@nextcloud/router'
-import getInitialState from '../toolkit/util/initial-state.ts'
-import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
-import SelectMusicians, { type MusicianIdObject } from '../components/SelectMusicians.vue'
+import SelectContacts from '../components/SelectContacts.vue'
+import SelectMusicians from '../components/SelectMusicians.vue'
 import SelectProjects from '../components/SelectProjects.vue'
+import { END_POINT as mailMergeEndPoint } from '../../build/ts-types/php-modules/Controller/MailMergeController.ts'
+import { appName } from '../config.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
-import md5 from 'blueimp-md5'
-import type { LegacyFileInfo } from '@nextcloud/files'
-import type { Project } from '../stores/app-data.ts'
-import type { Contact, AddressBook } from '../types/address-book.d.ts'
-import Console from '../util/console.ts'
-import { tooltips } from '../util/tooltips.ts'
-import type { FilesInitialState as InitialState, MailMergeResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import {
+  MailMergeCloud,
   MailMergeDataset,
   MailMergeDownload,
-  MailMergeCloud,
 } from '../types/ajax/mail-merge.ts'
-import type {
-  MailMergeOperation,
-  ContactKeys,
-  MailMergePayload,
-} from '../types/ajax/mail-merge.ts'
-import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
-import { END_POINT as mailMergeEndPoint } from '../../build/ts-types/php-modules/Controller/MailMergeController.ts'
+import Console from '../util/console.ts'
+import { tooltips } from '../util/tooltips.ts'
 
 const COMPONENT_NAME = 'FilesTab'
 const logger = new Console(COMPONENT_NAME)
 
-type Musician = FrontEndEntity<'Musician'>;
+type Musician = FrontEndEntity<'Musician'>
 
 interface TargetedMouseEvent extends MouseEvent {
-  target: HTMLInputElement,
+  target: HTMLInputElement
 }
 
 type NcActionsType = typeof NcActions
@@ -241,7 +242,7 @@ const fileInfo = ref<null|LegacyFileInfo>(null)
 const sender = ref<undefined|MusicianIdObject>(undefined)
 const project = ref<undefined|Project>(undefined)
 const recipients = ref<Musician[]>([])
-const allAddressBooks = ref<Record<string, AddressBook> >({})
+const allAddressBooks = ref<Record<string, AddressBook>>({})
 const onlyAddressBooks = ref<AddressBook[]>([])
 const contacts = ref<Contact[]>([])
 const recipientsSource = ref<null | string>(null)
@@ -263,7 +264,7 @@ const senderId = computed(() => sender.value && sender.value.id ? sender.value.i
 const recipientIds = computed(() => {
   try {
     return recipients.value.filter((recipient) => !!recipient.id || recipient.id === 0).map((recipient) => recipient.id)
-  } catch (ignoreMe) {
+  } catch {
     return []
   }
 })
@@ -279,7 +280,7 @@ const contactKeys = computed((): ContactKeys[] => {
           book: contact['addressbook-key'],
         }
       })
-  } catch (ignoreMe) {
+  } catch {
     return []
   }
 })
@@ -368,7 +369,7 @@ const getData = async () => {
 /**
  * Reset the current view to its default state
  */
-const resetState = () => {
+function resetState() {
   sender.value = undefined
   recipients.value = []
   project.value = undefined
@@ -390,7 +391,12 @@ onBeforeMount(async () => {
 // TS support.
 const toggleMenuHandlerHelper = (event: MouseEvent, menu?: NcActionsType) => handleToggleMenu(event, menu!)
 
-const handleToggleMenu = (event: MouseEvent, menu: NcActionsType) => {
+/**
+ * @param event TBD.
+ *
+ * @param menu TBD.
+ */
+function handleToggleMenu(event: MouseEvent, menu: NcActionsType) {
   if ((event.target! as HTMLInputElement).closest('.action-item')) {
     return
   }
@@ -401,16 +407,22 @@ const handleToggleMenu = (event: MouseEvent, menu: NcActionsType) => {
   }
 }
 
-const closeMenu = (menu?: NcActionsType) => { menu!.closeMenu() }
+const closeMenu = (menu?: NcActionsType) => {
+  menu!.closeMenu()
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const recipientsSourceMenu = ref<NcActionsType>()
 const mailMergeOperations = ref<NcActionsType>()
 
 const mailMergeHandlerHelper = (operation: MailMergeOperation) =>
   (event: MouseEvent) => handleMailMergeRequest(operation, event as TargetedMouseEvent)
 
-const handleMailMergeRequest = async (operation: MailMergeOperation, event: TargetedMouseEvent) => {
+/**
+ * @param operation TBD.
+ *
+ * @param  event TBD.
+ */
+async function handleMailMergeRequest(operation: MailMergeOperation, event: TargetedMouseEvent) {
   logger.info('MAIL MERGE', operation, event)
   logger.info('FILE', fileInfo.value)
 
@@ -429,28 +441,28 @@ const handleMailMergeRequest = async (operation: MailMergeOperation, event: Targ
 
   try {
     switch (operation) {
-    case MailMergeDataset:
-      postData.limit = 1 // maybe ...
-      // fallthrough
-    case MailMergeDownload:
-      try {
-        await axiosFileDownload(ajaxUrl, postData)
-      } catch (e) {
-        showError(
-          t(appName, 'File download failed for {fileName}.', { fileName: postData.fileName! }),
-          { timeout: TOAST_PERMANENT_TIMEOUT },
-        )
+      case MailMergeDataset:
+        postData.limit = 1 // maybe ...
+        // fallthrough
+      case MailMergeDownload:
+        try {
+          await axiosFileDownload(ajaxUrl, postData)
+        } catch {
+          showError(
+            t(appName, 'File download failed for {fileName}.', { fileName: postData.fileName! }),
+            { timeout: TOAST_PERMANENT_TIMEOUT },
+          )
+        }
+        break
+      case MailMergeCloud: {
+        const response = await axios.post<MailMergeResponse>(ajaxUrl, postData)
+        const cloudFolder = response.data.cloudFolder
+        const message = response.data.messages.join(' ')
+        logger.info('CLOUD RESPONSE', response)
+        const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
+        showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
+        break
       }
-      break
-    case MailMergeCloud: {
-      const response = await axios.post<MailMergeResponse>(ajaxUrl, postData)
-      const cloudFolder = response.data.cloudFolder
-      const message = response.data.messages.join(' ')
-      logger.info('CLOUD RESPONSE', response)
-      const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
-      showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
-      break
-    }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -468,7 +480,7 @@ const handleMailMergeRequest = async (operation: MailMergeOperation, event: Targ
       ) {
         try {
           errorData = JSON.parse(await errorData.text())
-        } catch (ignoreMe) {
+        } catch {
           errorData = {}
         }
       }
@@ -483,13 +495,14 @@ const handleMailMergeRequest = async (operation: MailMergeOperation, event: Targ
   merging.value = false
 }
 </script>
+
 <style lang="scss" scoped>
 .files-tab {
   .bulk-operations {
     display: flex;
     align-items: center;
   }
-  &::v-deep form.select-musicians {
+  :deep(form.select-musicians) {
     &.empty .multiselect-vue {
       &, multiselect__tags {
         border:1px solid red;

@@ -21,44 +21,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq } from './jquery.ts';
-import { appName } from './config.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as PHPMyEdit from './pme.ts';
-import * as SelectUtils from './select-utils.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as Dialogs from './dialogs.ts';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import ajaxDownload from './file-download.ts';
+import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus';
 import type { TableDialogCallbackData } from './pme-state.ts';
-import setBusyIndicators from './busy-indicators.ts';
+
 import { translate as t } from '@nextcloud/l10n';
-import {
-  valueSelector as pmeValueSelector,
-  sys as pmeSys,
-  data as pmeData,
-  formSelector as pmeFormSelector,
-} from './pme-selectors.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
-import formatDate from '../util/formatDate.ts';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Invoices.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
-import { INVOICE_ACTIONS_MENU } from '../mountable-component-names.ts';
-import * as BusEvents from '../event-bus-events.ts';
+import formatDate from '../util/formatDate.ts';
+import setBusyIndicators from './busy-indicators.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import { appName } from './config.ts';
+import * as Dialogs from './dialogs.ts';
+import ajaxDownload from './file-download.ts';
+import $, { jq } from './jquery.ts';
+import {
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import {
+  data as pmeData,
+  formSelector as pmeFormSelector,
+  sys as pmeSys,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as SelectUtils from './select-utils.ts';
+import { templateRenderer } from './template-renderer.ts';
 import actionMenu from './vue-action-menu.ts';
-import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus';
-import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/Invoices.ts';
 
-require('./jquery-readonly.ts');
-require('invoices.scss');
-require('project-participant-fields-display.scss');
+import './jquery-readonly.ts';
+import 'invoices.scss';
+import 'project-participant-fields-display.scss';
 
 const isCompositeRow = (rowTag: string) => rowTag.startsWith('0;');
 
@@ -68,15 +69,6 @@ const findByName = ($container: JQuery, name: string) =>
 const iiAmountName = pmeData('InvoiceItems:amount');
 const iiSubjectName = pmeData('InvoiceItems:subject');
 const iDueDateName = pmeData('due_date');
-
-asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
-  if (event.template !== template) {
-    return;
-  }
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await overviewPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
 
 const overviewPopup = (containerSel: string, data: EventArgs[typeof BusEvents.LEGACY_RECORD_POPUP]) =>
   PHPMyEdit.tableDialogOpen({
@@ -93,12 +85,12 @@ const overviewPopup = (containerSel: string, data: EventArgs[typeof BusEvents.LE
     [pmeSys('rec')]: { id: data.entityId },
     [pmeSys('groupby_rec')]: {
       id: data.entityId,
-      // eslint-disable-next-line camelcase
+
       InvoiceItems__master_key_: '0;' + data.entityId,
     },
     [pmeSys('mrec_rec')]: {
       id: data.entityId,
-      // eslint-disable-next-line camelcase
+
       InvoiceItems__master_key_: '0;' + data.entityId,
     },
     projectId: data.projectId,
@@ -107,10 +99,19 @@ const overviewPopup = (containerSel: string, data: EventArgs[typeof BusEvents.LE
     modified: false,
   });
 
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
 type ItemPopupData = {
-  projectId: number,
-  debitorId: number,
-  [key: string]: number|string|Record<string, number|string>,
+  projectId: number;
+  debitorId: number;
+  [key: string]: number|string|Record<string, number|string>;
 };
 
 /**
@@ -323,16 +324,20 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
           if (projectIds.length > 1) {
             Dialogs.alert(
               t(appName, 'Too many Projects'),
-              t(appName, 'Currently merging invoices for different projects ({projects}) is not supported, sorry.',
-                { projects: projectIds.join(', ') }),
-              undefined, false, true);
+              t(appName, 'Currently merging invoices for different projects ({projects}) is not supported, sorry.', { projects: projectIds.join(', ') }),
+              undefined,
+              false,
+              true,
+            );
           }
           if (debitorIds.length > 1) {
             Dialogs.alert(
               t(appName, 'Too many Debitors'),
-              t(appName, 'Internal error: splits of invoices cannot belong to different debitors ({debitors}).',
-                { debitors: debitorIds.join(', ') }),
-              undefined, false, true);
+              t(appName, 'Internal error: splits of invoices cannot belong to different debitors ({debitors}).', { debitors: debitorIds.join(', ') }),
+              undefined,
+              false,
+              true,
+            );
           }
           const projectId = projectIds[0];
           const debitorId = debitorIds[0];
@@ -363,10 +368,12 @@ const ready = function(selector: string|JQuery, pmeParameters: Partial<TableDial
           this,
           -1, // projectId
           debitorId,
-          resizeCB, {
+          resizeCB,
+          {
             upload: 'documents/finance/' + template + '/upload',
             delete: 'documents/finance/' + template + '/delete',
-          });
+          },
+        );
         const ambientContainerSelector = pmeParameters?.tableDialogOptions?.ambientContainerSelector;
         if (ambientContainerSelector) {
           $(this).on('pme:upload-done pme:upload-deleted', (event) => {
@@ -443,6 +450,6 @@ const documentReady = function() {
 
 export {
   backgroundDecryption,
-  ready,
   documentReady,
+  ready,
 };

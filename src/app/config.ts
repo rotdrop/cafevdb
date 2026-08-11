@@ -20,12 +20,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as ncAuth from '@nextcloud/auth';
-import { getRootUrl as getCloudRootUrl, getAppRootUrl } from '@nextcloud/router';
-import getInitialState from '../toolkit/util/initial-state.ts';
-import { appName, appPrefix } from '../config.ts';
-import { appNameTag } from 'variables.scss';
 import type { CAFEVDBInitialState, PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+
+import * as ncAuth from '@nextcloud/auth';
+import { getAppRootUrl, getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { appName, appPrefix } from '../config.ts';
+import getInitialState from '../toolkit/util/initial-state.ts';
+
+import { appNameTag } from 'variables.scss';
 
 const initialState = {
   appName,
@@ -56,11 +58,11 @@ const webRoot = getAppRootUrl(appName) + '/';
 const cloudUser = ncAuth.getCurrentUser();
 
 export {
-  initialState,
   appName,
-  webRoot,
-  cloudWebRoot,
-  cloudUser,
-  appPrefix,
   appNameTag,
+  appPrefix,
+  cloudUser,
+  cloudWebRoot,
+  initialState,
+  webRoot,
 };

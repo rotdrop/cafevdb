@@ -314,7 +314,7 @@ CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
- $(MAKEFILE_DEP) package-lock.json package.json webpack.config.js .eslintrc.js
+ $(MAKEFILE_DEP) package-lock.json package.json webpack.config.js eslint.config.mjs
 
 THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 
@@ -324,7 +324,7 @@ DW_APP_CONFIG_PATCH = patches/
 $(DW_APP_CONFIG): node_modules
 	if ! [ -f $(DW_APP_CONFIG) ]; then\
  cd $(ABSSRCDIR);\
- patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.1.2.patch;\
+ patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.0.patch;\
 fi
 
 WEBPACK_DEPS =\

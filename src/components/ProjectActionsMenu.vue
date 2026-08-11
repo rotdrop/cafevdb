@@ -22,11 +22,11 @@
  -->
 <template>
   <LegacyPageActionsMenu ref="actions"
-                         :menu-caption="actualProjectName"
-                         :enable-overview-item="enableOverviewItem"
-                         :entity-id="entityId"
-                         :project-id="entityId"
-                         :project-name="actualProjectName"
+                         :menuCaption="actualProjectName"
+                         :enableOverviewItem="enableOverviewItem"
+                         :entityId="entityId"
+                         :projectId="entityId"
+                         :projectName="actualProjectName"
                          :template="template"
   >
     <template #actions>
@@ -34,8 +34,7 @@
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-participants')"
                       :name="t(appName, 'Participants')"
-                      exact
-                      :close-after-click="true"
+                      :closeAfterClick="true"
       >
         <template #icon>
           <ProjectParticipantsIcon />
@@ -45,7 +44,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Instrumentation Numbers')"
                     :href="getRouteHref(toProjectRouteData('project-instrumentation-numbers'))"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
                     @click="openInstrumentationNumbers"
       >
         <template #icon>
@@ -56,7 +55,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Participant Fields')"
                     :href="getRouteHref(toProjectRouteData('project-participant-fields'))"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
                     @click="openParticipantFields"
       >
         <template #icon>
@@ -69,7 +68,7 @@
                     :name="t(appName, 'Project Files')"
                     :href="projectFolderLink"
                     :target="projectFolderLinkTarget"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
       >
         <template #icon>
           <ProjectFolderIcon />
@@ -79,7 +78,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Project Notes')"
                     :href="projectNotesLink"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
                     @click="openProjectNotes"
       >
         <template #icon>
@@ -90,7 +89,7 @@
                     :class="[appName + '-project-actions']"
                     :name="t(appName, 'Events')"
                     :href="projectEventsLink"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
                     @click="openProjectEvents"
       >
         <template #icon>
@@ -100,7 +99,7 @@
       <NcActionButton v-tooltip.right="tooltips['project-action:email']"
                       :class="[appName + '-project-actions']"
                       :name="t(appName, 'Em@il')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="openProjectEmail"
       >
         <template #icon>
@@ -112,8 +111,7 @@
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-associates')"
                       :name="t(appName, 'Business Contacts / Associates')"
-                      exact
-                      :close-after-click="true"
+                      :closeAfterClick="true"
       >
         <template #icon>
           <ProjectAssociatesIcon />
@@ -123,8 +121,7 @@
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('sepa-bank-accounts')"
                       :name="t(appName, 'Debit Mandates')"
-                      exact
-                      :close-after-click="true"
+                      :closeAfterClick="true"
       >
         <template #icon>
           <SepaBankAccountsIcon />
@@ -134,8 +131,7 @@
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('project-payments')"
                       :name="t(appName, 'Payments')"
-                      exact
-                      :close-after-click="true"
+                      :closeAfterClick="true"
       >
         <template #icon>
           <span class="font-currency-symbol">{{ globalState.currencySymbol }}</span>
@@ -145,8 +141,7 @@
                       :class="[appName + '-project-actions']"
                       :to="toProjectRouteData('invoices')"
                       :name="t(appName, 'Invoices')"
-                      exact
-                      :close-after-click="true"
+                      :closeAfterClick="true"
       >
         <template #icon>
           <InvoicesIcon />
@@ -157,7 +152,7 @@
                     :name="t(appName, 'Financial Balance')"
                     :href="financialBalanceLink"
                     :target="financialBalanceLinkTarget"
-                    :close-after-click="true"
+                    :closeAfterClick="true"
       >
         <template #icon>
           <ProjectFolderIcon />
@@ -166,63 +161,66 @@
     </template>
   </LegacyPageActionsMenu>
 </template>
+
 <script setup lang="ts">
-import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import type { RouteLocationRaw as RouterLocation } from 'vue-router'
+import type { Project } from '../stores/app-data.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import {
   NcActionButton,
   NcActionLink,
   NcActionRouter,
   NcActionSeparator,
 } from '@nextcloud/vue'
-import globalState from '../app/globalstate.ts'
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
+import md5 from 'blueimp-md5'
+import {
+  computed,
+  onBeforeMount,
+  ref,
+  watch,
+} from 'vue'
+import {
+  useRoute,
+  useRouter,
+} from 'vue-router'
 import ProjectParticipantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
-import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
-import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
-import InvoicesIcon from 'vue-material-design-icons/InvoiceMultiple.vue'
-import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
-import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
-import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
-import ProjectEmailIcon from 'vue-material-design-icons/EmailArrowRight.vue'
-import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
 import SepaBankAccountsIcon from 'vue-material-design-icons/BankTransfer.vue'
+import ProjectEventsIcon from 'vue-material-design-icons/Calendar.vue'
+import InstrumentationNumbersIcon from 'vue-material-design-icons/CircleSlice5.vue'
+import ProjectEmailIcon from 'vue-material-design-icons/EmailArrowRight.vue'
+import ProjectFolderIcon from 'vue-material-design-icons/Folder.vue'
+import ProjectAssociatesIcon from 'vue-material-design-icons/Handshake.vue'
+import InvoicesIcon from 'vue-material-design-icons/InvoiceMultiple.vue'
+import ProjectNotesIcon from 'vue-material-design-icons/MessageBulleted.vue'
+import ParticipantFieldsIcon from 'vue-material-design-icons/TableAccount.vue'
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import globalState from '../app/globalstate.ts'
+import * as Authorization from '../authorization.ts'
+import { appName } from '../config.ts'
+import * as BusEvents from '../event-bus-events.ts'
+import { PROJECT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
+import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 // import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
 import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
-import type { Project } from '../stores/app-data.ts'
-import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
-import md5 from 'blueimp-md5'
-import {
-  computed,
-  ref,
-  watch,
-  onBeforeMount,
-} from 'vue'
-import {
-  useRoute,
-  useRouter,
-} from 'vue-router/composables'
-import * as Authorization from '../authorization.ts'
-import * as BusEvents from '../event-bus-events.ts'
-import type { Location as RouterLocation } from 'vue-router'
 import Console from '../util/console.ts'
-import { PROJECT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 
-const logger = new Console(COMPONENT_NAME)
-
-const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  enableOverviewItem?: boolean,
-  entityId: number,
-  projectName?: string,
-  template: string,
+const props = withDefaults(defineProps<{
+  enableOverviewItem?: boolean
+  entityId: number
+  projectName?: string
+  template: string
 }>(), {
+  // eslint-disable-next-line  vue/no-boolean-default
   enableOverviewItem: true,
   projectName: undefined,
 })
+
+const logger = new Console(COMPONENT_NAME)
 
 const appData = useAppDataStore()
 
@@ -267,6 +265,9 @@ defineExpose({
   closeMenu,
 })
 
+const router = useRouter()
+const currentRoute = useRoute()
+
 // computed
 const actualProjectName = computed(() => project.value?.name ?? props.projectName ?? 'unknown')
 const projectFolder = computed(() => project.value?.folders?.projectsFolder || null)
@@ -288,12 +289,9 @@ watch(open, (state, oldState) => {
   }
   logger.info('OPEN CHANGED', { state, oldState })
 })
-watch(() => props.entityId, async (newValue/*, oldValue */) => {
-  await syncProjectData(newValue)
-})
 
 // methods
-const toProjectRouteData = (template: string):RouterLocation => {
+const toProjectRouteData = (template: string): RouterLocation => {
   return {
     name: 'legacy-page',
     params: {
@@ -303,6 +301,7 @@ const toProjectRouteData = (template: string):RouterLocation => {
     },
   }
 }
+
 const syncProjectData = async (projectId: number) => {
   project.value = await appData.getProject(projectId) || null
   if (project.value) {
@@ -310,6 +309,11 @@ const syncProjectData = async (projectId: number) => {
   }
   // vueSet(this.project, 'folders', this.project.folders)
 }
+
+watch(() => props.entityId, async (newValue/* , oldValue */) => {
+  await syncProjectData(newValue)
+})
+
 const openInstrumentationNumbers = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
@@ -319,6 +323,7 @@ const openInstrumentationNumbers = (event: MouseEvent) => {
     projectName: actualProjectName.value,
   })
 }
+
 const openParticipantFields = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
@@ -328,6 +333,7 @@ const openParticipantFields = (event: MouseEvent) => {
     projectName: actualProjectName.value,
   })
 }
+
 const openProjectNotes = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
@@ -337,6 +343,7 @@ const openProjectNotes = (event: MouseEvent) => {
     popupTitle: t(appName, 'Project Wiki for {projectName}', { projectName: actualProjectName.value }),
   })
 }
+
 const openProjectEvents = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
@@ -351,6 +358,7 @@ const openProjectEvents = (event: MouseEvent) => {
   }
   return router.push(location)
 }
+
 const openProjectEmail = (event: MouseEvent) => {
   event.preventDefault()
   open.value = false
@@ -361,11 +369,9 @@ const openProjectEmail = (event: MouseEvent) => {
     reopen: true,
   })
 }
-const router = useRouter()
-const currentRoute = useRoute()
 
 const getRouteHref = (route: RouterLocation) => {
-  const routeProps = router.resolve(route)
+  const routeProps = router.resolve(route, 'unknown')
   return routeProps?.href || '#'
 }
 
@@ -374,6 +380,7 @@ onBeforeMount(async () => {
 })
 
 </script>
+
 <style lang="scss" scoped>
 .container {
   display: flex;
@@ -382,7 +389,7 @@ onBeforeMount(async () => {
     height: 28px;
   }
   .action-item.action-item--open.positioned {
-    &, ::v-deep * {
+    &, :deep(*) {
       width: 0 !important;
       height: 0 !important;
       min-width: 0 !important;
@@ -394,6 +401,7 @@ onBeforeMount(async () => {
   }
 }
 </style>
+
 <style lang="scss" scoped>
 @use '../../style/variables.scss' as *;
 .#{$appName}-project-actions.project-name.app-navigation-caption {
@@ -414,7 +422,7 @@ onBeforeMount(async () => {
   font-size: large;
   font-weight: bold;
 }
-.#{$appName}-project-actions::v-deep {
+.#{$appName}-project-actions :deep() {
   .action-link__longtext-wrapper, .action-router__longtext-wrapper {
     br {
       display:none;

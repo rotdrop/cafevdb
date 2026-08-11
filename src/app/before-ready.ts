@@ -20,23 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $, appName, appPrefix, appContainerSelector } from './globals.ts';
+import type { TableLoadCallback } from './pme-state.ts';
+
+import actionMenuHandlers from './action-menu.ts';
 import * as CAFEVDB from './cafevdb.ts';
+import * as Dialogs from './dialogs.ts';
+import { $, appContainerSelector, appName, appPrefix, globalState } from './globals.ts';
+import * as Invoices from './invoices.js';
+import * as Musicians from './musicians.js';
 import * as Page from './page.ts';
+import pmeExportMenu from './pme-export.ts';
+import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.ts';
+import * as PHPMyEdit from './pme.ts';
 import * as ProjectExtra from './project-participant-fields.ts';
+import * as ProjectPayments from './project-payments.ts';
+import * as Projects from './projects.ts';
 import * as SepaBulkTransactions from './sepa-bulk-transactions.ts';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
-import * as Musicians from './musicians.js';
-import * as Projects from './projects.ts';
-import * as ProjectPayments from './project-payments.ts';
-import * as Invoices from './invoices.js';
-import * as PHPMyEdit from './pme.ts';
-import * as Dialogs from './dialogs.ts';
-import { tweaks as pmeTweaks /* , unTweak as pmeUnTweak */ } from './pme-tweaks.ts';
-import pmeExportMenu from './pme-export.ts';
 import stopEnterSubmit from './stop-enter-submit.ts';
-import actionMenuHandlers from './action-menu.ts';
-import type { TableLoadCallback } from './pme-state.ts';
 
 const documentReady = function() {
 
@@ -59,17 +60,20 @@ const documentReady = function() {
 
   // Display the overview-page for the given project.
   content.on(
-    'click', 'ul#navigation-list li.nav-projectlabel-control a',
+    'click',
+    'ul#navigation-list li.nav-projectlabel-control a',
     function(event) {
       event.stopImmediatePropagation();
       const data = $(this).data('json');
       Projects.projectViewPopup(PHPMyEdit.selector(), data);
       return false;
-    });
+    },
+  );
 
   // Display the instrumentation numbers in a dialog widget if in project-mode
   content.on(
-    'click', 'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
+    'click',
+    'ul#navigation-list li.nav-project-instrumentation-numbers-control a',
     function(event) {
       const $this = $(this);
       const jsonData = $this.data('json');
@@ -79,7 +83,8 @@ const documentReady = function() {
         Projects.instrumentationNumbersPopup(PHPMyEdit.selector(), data);
         return false;
       }
-    });
+    },
+  );
 
   CAFEVDB.addReadyCallback(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,7 +92,7 @@ const documentReady = function() {
     $('input.alertdata.' + appPrefix('page')).each(function() {
       const title = $(this).attr('name');
       const text = $(this).attr('value')!;
-      promises.push(new Promise(resolve => Dialogs.alert(text, title, resolve, true, true)));
+      promises.push(new Promise((resolve) => Dialogs.alert(text, title, resolve, true, true)));
     });
     return Promise.allSettled(promises);
   });

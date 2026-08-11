@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts';
+import type { EnumFileUploadMode } from '../../../build/ts-types/php-modules/Controller.ts';
 
 export type TemplateFileUploadMode = Exclude<EnumFileUploadMode, EnumFileUploadMode.TEST>;
 
@@ -70,7 +70,7 @@ export type TemplateParameters = {
     reasons: string;
   };
   progressWrapperTemplate: {
-    wrapperId: strin;g
+    wrapperId: string;
     caption: string;
     label: string;
   };

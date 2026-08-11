@@ -26,37 +26,45 @@
  * General PME table stuff, popup-handling.
  */
 
-import $, { isJQuerySelect, jq } from './jquery.ts';
-import globalState from './globalstate.ts';
-import * as PMEState from './pme-state.ts';
 import type {
   PageTemplateValue,
   TableDialogCallbackData,
   TableDialogOptions,
   TriggerData,
 } from './pme-state.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
-import { templateFromRenderer, type TemplateRenderer } from './template-renderer.ts';
-import pageBusyIcon from './busy-icon.ts';
-import * as Notification from './notification.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import * as DialogUtils from './dialog-utils.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import modalizer from './modalizer.ts';
-import checkInvalidInputs from './check-invalid-inputs.ts';
-import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.ts';
-import clear from '../util/clear-object.ts';
-import pmeQueryLogMenu from './pme-querylog.ts';
-import { close as closeActionMenus } from './action-menu.ts';
+import type { TemplateRenderer } from './template-renderer.ts';
+
 import { translate as t } from '@nextcloud/l10n';
-import {
-  deselectAll as selectDeselectAll,
-  widget as selectWidget,
-  getControlObject as getSelectConstrolObject,
-  refreshWidget as refreshSelectWidget,
-} from './select-utils.ts';
+import { mergician } from 'mergician';
 import { parse as qsParse } from 'qs';
+import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
+import { ALLOW_EMPTY, DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import {
+  LEGACY_HISTORY_PATCH,
+  LEGACY_HISTORY_UPDATE,
+  LEGACY_PAGE_CLEANUP,
+  LEGACY_SANITIZE_POST_DATA,
+} from '../event-bus-events.ts';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  awaitEmit,
+} from '../services/async-event-bus.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import clear from '../util/clear-object.ts';
+import { close as closeActionMenus } from './action-menu.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import checkInvalidInputs from './check-invalid-inputs.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import globalState from './globalstate.ts';
+import $, { isJQuerySelect, jq } from './jquery.ts';
+import modalizer from './modalizer.ts';
+import * as Notification from './notification.ts';
+import pmeQueryLogMenu from './pme-querylog.ts';
 import {
   classSelector as pmeClassSelector,
   classSelectors as pmeClassSelectors,
@@ -78,26 +86,22 @@ import {
   token as pmeToken,
   valueSelector as pmeValueSelector,
 } from './pme-selectors.ts';
+import * as PMEState from './pme-state.ts';
+import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.ts';
+import {
+  getControlObject as getSelectConstrolObject,
+  refreshWidget as refreshSelectWidget,
+  deselectAll as selectDeselectAll,
+  widget as selectWidget,
+} from './select-utils.ts';
+import { templateFromRenderer } from './template-renderer.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
+
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import 'selectize/dist/scss/selectize.bootstrap.scss';
-import mergician from 'mergician';
-import {
-  LEGACY_HISTORY_PATCH,
-  LEGACY_HISTORY_UPDATE,
-  LEGACY_PAGE_CLEANUP,
-  LEGACY_SANITIZE_POST_DATA,
-} from '../event-bus-events.ts';
-import {
-  awaitEmit,
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from '../services/async-event-bus.ts';
-import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { loadingCssClass } from 'variables.scss';
-import { ALLOW_EMPTY, DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
-import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+
+require('selectize/dist/scss/selectize.bootstrap.scss');
 
 require('cafevdb-selectize.scss');
 
@@ -296,14 +300,14 @@ const deferKey = pmePrefix + '-submitdefer';
 const cancellableKey = pmePrefix + '-cancellable';
 
 type DeferReload = {
-  tag: string,
-  promise: Promise<string>,
-  resolve: (result?: string) => void,
+  tag: string;
+  promise: Promise<string>;
+  resolve: (result?: string) => void;
 };
 
 const cancelDeferredReload = <E extends HTMLElement>($container: JQuery<E>) => {
   console.info('CANCEL DEFER RELOAD');
-  const promises: Record<string, PromiseWithResolvers<string> > = $container.data(deferKey) ?? {};
+  const promises: Record<string, PromiseWithResolvers<string>> = $container.data(deferKey) ?? {};
   for (const promise of Object.values(promises)) {
     promise.resolve('cancelled');
   }
@@ -341,9 +345,9 @@ const pmeDeferReload = <E extends HTMLElement, T extends string>(
 };
 
 const reloadDeferred = <E extends HTMLElement>($container: JQuery<E>) => {
-  const promises: Record<string, PromiseWithResolvers<string> > = $container.data(deferKey) ?? {};
+  const promises: Record<string, PromiseWithResolvers<string>> = $container.data(deferKey) ?? {};
   console.info('RELOAD DEFERRED', { promises });
-  return Promise.allSettled(Object.values(promises).map(withResolvers => withResolvers.promise));
+  return Promise.allSettled(Object.values(promises).map((withResolvers) => withResolvers.promise));
 };
 
 const pmeCancelBeforeSubmit = <E extends HTMLElement>($container: JQuery<E>) => {
@@ -359,6 +363,18 @@ const pmePushCancellable = <E extends HTMLElement, T>($container: JQuery<E>, pro
   const cancellable = $container.data(cancellableKey) || [];
   cancellable.push(promise);
   $container.data(cancellableKey, cancellable);
+};
+
+const tableDialogLoadIndicator = <E extends HTMLElement>($container: JQuery<E>, state: boolean) => {
+  let $reloadButton = $container.data('reloadButton');
+  if (!$reloadButton) {
+    $reloadButton = $container.find(pmeNavigationSelector('reload'));
+  }
+  if (state) {
+    $reloadButton.addClass(loadingCssClass);
+  } else {
+    $reloadButton.removeClass(loadingCssClass);
+  }
 };
 
 /**
@@ -451,7 +467,8 @@ const pmePost = (post: JQuery.PlainObject|string) => {
         console.info('REJECT IN PME POST');
         Ajax.handleError(xhr, status, errorThrown);
         return $.Deferred().reject(xhr, status, errorThrown).promise();
-      });
+      },
+    );
 };
 
 const blockTableDialog = <E extends HTMLElement>($dialogHolder: JQuery<E>) => {
@@ -469,18 +486,6 @@ const unblockTableDialog = <E extends HTMLElement>($dialogHolder: JQuery<E>) => 
 
 const lockTableDialog = <E extends HTMLElement>($container: JQuery<E>, state: boolean) =>
   (state ? blockTableDialog($container) : unblockTableDialog($container));
-
-const tableDialogLoadIndicator = <E extends HTMLElement>($container: JQuery<E>, state: boolean) => {
-  let $reloadButton = $container.data('reloadButton');
-  if (!$reloadButton) {
-    $reloadButton = $container.find(pmeNavigationSelector('reload'));
-  }
-  if (state) {
-    $reloadButton.addClass(loadingCssClass);
-  } else {
-    $reloadButton.removeClass(loadingCssClass);
-  }
-};
 
 /**
  * Reload the current PME-dialog.
@@ -569,11 +574,11 @@ const tableDialogReload = async (
  * articifically triggered calling event handler. Will be passed on to
  * the changeCallback.
  */
-const tableDialogHandlers = (
+function tableDialogHandlers(
   tableDialogOptions: TableDialogOptions,
   changeCallback?: (data: TableDialogCallbackData) => void,
   triggerData?: TriggerData,
-) => {
+) {
 
   if (typeof changeCallback === 'undefined') {
     changeCallback = () => {};
@@ -622,7 +627,8 @@ const tableDialogHandlers = (
 
   const reloadButtonSelector = pmeClassSelectors(
     'input',
-    ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
+    ['change', 'delete', 'copy', 'apply', 'more', 'reload'],
+  );
   const reloadingButton = $container.find(reloadButtonSelector);
 
   const saveButtonSelector = 'input.' + pmeToken('save');
@@ -697,7 +703,7 @@ const tableDialogHandlers = (
               const $closestRows = $invalidInputs.closest('tr.pme-row');
               let minTab: 'all'|number = 'all';
               if ($closestRows.length === 1) {
-                const tabs = $closestRows.attr('class')!.matchAll(/tab-(\d+)/g).toArray().map(match => +match[1]);
+                const tabs = $closestRows.attr('class')!.matchAll(/tab-(\d+)/g).toArray().map((match) => +match[1]);
                 minTab = Math.min(...tabs);
               }
               $container.find('[data-tab-index=' + minTab + ']').trigger('click');
@@ -722,7 +728,8 @@ const tableDialogHandlers = (
         tableDialogReload(tableDialogOptions, changeCallback, triggerData);
 
         return false;
-      });
+      },
+    );
 
   /**************************************************************************
    *
@@ -769,7 +776,7 @@ const tableDialogHandlers = (
           const $closestRows = $invalidInputs.closest('tr.pme-row');
           let minTab: 'all'|number = 'all';
           if ($closestRows.length === 1) {
-            const tabs = $closestRows.attr('class')!.matchAll(/tab-(\d+)/g).toArray().map(match => +match[1]);
+            const tabs = $closestRows.attr('class')!.matchAll(/tab-(\d+)/g).toArray().map((match) => +match[1]);
             minTab = Math.min(...tabs);
           }
           $container.find('[data-tab-index=' + minTab + ']').trigger('click');
@@ -789,7 +796,8 @@ const tableDialogHandlers = (
 
       const applySelector = pmeSysNameSelectors(
         'input',
-        ['morechange', 'applyadd', 'applycopy']);
+        ['morechange', 'applyadd', 'applycopy'],
+      );
       const deleteSelector = pmeSysNameSelector('input', 'savedelete');
 
       pmeCancelBeforeSubmit($container);
@@ -887,7 +895,7 @@ const tableDialogHandlers = (
       discard: tableDialogOptions.reloadMode === 'discard',
     });
   }
-};
+}
 
 /**
  * Post the content of a pme-form via AJAX into a dialog
@@ -972,7 +980,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
  * is also possible to store all values in tableDialogOptions, as this is
  * added to the query-string in any case.
  */
-const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOptions: TableDialogOptions<T>, post?: string|JQuery.PlainObject) => {
+async function pmeTableDialogOpen<T extends PageTemplateValue>(tableDialogOptions: TableDialogOptions<T>, post?: string|JQuery.PlainObject) {
 
   const containerCSSId = tableDialogOptions.dialogHolderCSSId;
 
@@ -1000,7 +1008,6 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
     post += '&' + $.param({ [tableDialogOptions.initialName]: tableDialogOptions.initialValue });
   }
 
-  // eslint-disable-next-line promise/param-names
   await new Promise((resolveOpenDialog, rejectOpenDialog) =>
     pmePost(post)
       .fail(function(_xhr, _status, errorThrown) {
@@ -1080,8 +1087,8 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
             const resizeHandler = function() {
               $dialogHolder.dialog('option', 'height', 'auto');
               $dialogHolder.dialog('option', 'width', 'auto');
-              let newHeight = $dialogWidget.height()!
-                - $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
+              let newHeight = $dialogWidget.height()! -
+                $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
               newHeight -= $dialogHolder.outerHeight(true)! - $dialogHolder.height()!;
               $dialogHolder.height(newHeight);
               const form = $dialogHolder.find('form.pme-form')[0];
@@ -1197,9 +1204,8 @@ const pmeTableDialogOpen = async <T extends PageTemplateValue>(tableDialogOption
             return false;
           },
         });
-      }),
-  ); // promise ctor
-};
+      })); // promise ctor
+}
 
 /**
  * Quasi-submit the pme-form, returns the promise generated by the
@@ -1265,7 +1271,7 @@ const pseudoSubmitPost = ($form: JQuery<HTMLFormElement>, $element: JQuery, rese
  * @param resetFilter Bool, post a sw=Clear string in addition,
  * causing PHPMyEdit to reset the filter.
  */
-const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector: string, resetFilter: boolean = false) => {
+function pseudoSubmit($form: JQuery<HTMLFormElement>, $element: JQuery, selector: string, resetFilter: boolean = false) {
 
   const submitOptions = $form.data('submitOptions') || {};
 
@@ -1279,13 +1285,15 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
       $form.append(
         '<input type="hidden" '
           + 'name="' + $element.attr('name') + '" '
-          + 'value="' + $element.val() + '"/>');
+          + 'value="' + $element.val() + '"/>',
+      );
     }
     for (const [name, value] of Object.entries(submitOptions)) {
       $form.append(
         '<input type="hidden" '
           + 'name="' + name + '" '
-          + 'value="' + value + '"/>');
+          + 'value="' + value + '"/>',
+      );
     }
 
     console.warn('PSEUDO SUBMIT VIA FORM SUBMIT');
@@ -1357,7 +1365,7 @@ const pseudoSubmit = ($form: JQuery<HTMLFormElement>, $element: JQuery, selector
         container.trigger('pmetable:layoutchange');
       });
     });
-};
+}
 
 /**
  * Trigger either one of the upper or the lower button controls (but
@@ -1501,7 +1509,7 @@ const maybeTranspose = function(transpose: boolean, containerSel?: string) {
  *
  * @param [containerSel] TBD.
  */
-const transposeReady = (containerSel?: string) => {
+function transposeReady(containerSel?: string) {
 
   const $container = pmeContainer(containerSel);
 
@@ -1524,7 +1532,7 @@ const transposeReady = (containerSel?: string) => {
     // Initially the tabel _is_ untransposed
     // maybeTranspose(false); // needed?
   }
-};
+}
 
 const installFilterChosen = function(containerSel: string|JQuery) {
 
@@ -1563,9 +1571,9 @@ const installFilterChosen = function(containerSel: string|JQuery) {
   });
 
   const dblClickSel =
-      'td.' + pmeFilter + ' ul.chosen-choices li.search-field input[type="text"]' + ','
-      + 'td.' + pmeFilter + ' div.chosen-container' + ','
-      + 'td.' + pmeFilter + ' input[type="text"]';
+    `td.${pmeFilter} ul.chosen-choices li.search-field input[type="text"]`
+      + `, td.${pmeFilter} div.chosen-container`
+      + `, td.${pmeFilter} input[type="text"]`;
   $container.off('dblclick', dblClickSel);
   $container.on('dblclick', dblClickSel, function(event) {
     event.preventDefault();
@@ -1654,7 +1662,9 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
             });
         };
       } else {
-        selectizeOptions.create = function(inputData: string) { return { [valueField]: inputData, [labelField]: inputData }; };
+        selectizeOptions.create = function(inputData: string) {
+          return { [valueField]: inputData, [labelField]: inputData };
+        };
       }
     }
     // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
@@ -1679,7 +1689,12 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
   });
 }
 
-const installInputChosen = function(containerSel: string|JQuery, onlyClass?: string) {
+/**
+ * @param containerSel TBD.
+ *
+ * @param onlyClass TBD.
+ */
+function installInputChosen(containerSel: string|JQuery, onlyClass?: string) {
 
   if (!PHPMyEdit.selectChosen) {
     return;
@@ -1745,9 +1760,14 @@ const installInputChosen = function(containerSel: string|JQuery, onlyClass?: str
     });
 
   installInputSelectize(containerSel);
-};
+}
 
-const installTabHandler = (containerSel: string|JQuery, changeCallback: () => void = () => {}) => {
+/**
+ * @param containerSel TBD.
+ *
+ * @param changeCallback TBD.
+ */
+function installTabHandler(containerSel: string|JQuery, changeCallback: () => void = () => {}) {
 
   const $container = pmeContainer(containerSel);
 
@@ -1759,7 +1779,7 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
   const tabClasses = ['tab-' + $tabAnchor.data('tabIndex'), 'tab-' + $tabAnchor.data('tabId')];
 
   const updateTabReadOnlyFields = function(tabClasses: string[]) {
-    const readWriteClasses = tabClasses.map(tabClass => tabClass + '-readwrite');
+    const readWriteClasses = tabClasses.map((tabClass) => tabClass + '-readwrite');
     $form
       .find('td.' + pmeToken('value') + '.default-readonly').each(function() {
         const $td = $(this);
@@ -1809,8 +1829,9 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
       let reattachChosen = false;
       const pfx = (tabClasses.includes('tab-all')) ? '' : 'td.' + tabClasses.join('.');
       const selector = pmeClassSelectors(
-        pfx + ' ' + 'div.chosen-container',
-        ['input', 'filter', 'filter-comp']);
+        `${pfx} div.chosen-container`,
+        ['input', 'filter', 'filter-comp'],
+      );
       $form.find(selector).each(function() {
         const $this = $(this);
         if ($this.width()! <= PHPMyEdit.singleDeselectOffset) {
@@ -1839,7 +1860,7 @@ const installTabHandler = (containerSel: string|JQuery, changeCallback: () => vo
 
       return false;
     });
-};
+}
 
 /**
  * Fire a custom context menu event with the database key data if
@@ -1969,7 +1990,7 @@ const dropdownSavedOverflow = 'dropdownSavedOverflow';
  *
  * @param $container TBD.
  */
-const ensureDropdownVisibility = ($container: JQuery) => {
+function ensureDropdownVisibility($container: JQuery) {
   if (!$container.hasClass('ui-widget-content')) {
     return;
   }
@@ -1986,7 +2007,7 @@ const ensureDropdownVisibility = ($container: JQuery) => {
     $element.data(dropdownSavedOverflow, $element[0].style.overflow || '');
     $element.css('overflow', 'visible');
   }
-};
+}
 
 /**
  * Reset the CSS overflow property of dialogs to empty if they do not
@@ -1996,7 +2017,7 @@ const ensureDropdownVisibility = ($container: JQuery) => {
  *
  * @param $container TBD.
  */
-const resetDropdownVisibility = function($container: JQuery) {
+function resetDropdownVisibility($container: JQuery) {
   if (!$container.hasClass('ui-widget-content')) {
     return;
   }
@@ -2012,7 +2033,7 @@ const resetDropdownVisibility = function($container: JQuery) {
       $element.removeData(dropdownSavedOverflow);
     }
   }
-};
+}
 
 /**
  * @param  containerSel Selector or jQuery element of the
@@ -2022,7 +2043,7 @@ const resetDropdownVisibility = function($container: JQuery) {
  * submit buttons. This is used by the popup-dialogs which install
  * their own handlers.
  */
-const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
+function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
 
   containerSel = pmeSelector(containerSel);
   const $container = pmeContainer(containerSel);
@@ -2093,8 +2114,9 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
     const tabClass = form.find('input[name="' + pmeSys('cur_tab') + '"]').val();
     const pfx = 'tbody tr td' + (!tabClass || tabClass === 'all' ? '' : '.tab-' + tabClass);
     const selector = pmeClassSelectors(
-      pfx + ' ' + 'div.chosen-container',
-      ['filter', 'filter-comp']);
+      `${pfx} div.chosen-container`,
+      ['filter', 'filter-comp'],
+    );
     $table.find(selector).each(function() {
       if ($(this).width() === 0 || $(this).width() === 60) {
         $(this).prev().chosen('destroy');
@@ -2110,9 +2132,9 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
     return false;
   });
 
-  let onChangeSel = 'select.' + pmeGoto + ',' + 'select.' + pmePageRows;
+  let onChangeSel = `select.${pmeGoto}, select.${pmePageRows}`;
   if (!PHPMyEdit.selectChosen) {
-    onChangeSel += ',' + 'select.' + pmeFilter;
+    onChangeSel += `, select.${pmeFilter}`;
   }
   $container
     .off('change', onChangeSel)
@@ -2123,8 +2145,8 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
 
   // view/change/copy/delete buttons lead to a a popup
   if (form.find('input[name="templateRenderer"]').length > 0) {
-    const submitSel = formSel + ' input[class$="navigation"]:submit' + ','
-          + formSel + ' input.' + pmeToken('add') + ':submit';
+    const submitSel = `${formSel} input[class$="navigation"]:submit`
+      + `' ${formSel} input.${pmeToken('add')}:submit`;
     $container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
@@ -2139,7 +2161,7 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
       });
 
     // Trigger view or change "operation" when clicking on a data-row.
-    const rowSelector = formSel + ' tr:not(.disable-row-click)' + ' td.' + pmeToken('cell') + ':not(.control)';
+    const rowSelector = `${formSel} tr:not(.disable-row-click) td.${pmeToken('cell')}:not(.control)`;
     $container
       .off('click', rowSelector)
       .on('click', rowSelector, function(event) {
@@ -2246,7 +2268,8 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
 
   // Handle some special check-boxes disabling text-input fields
   $container.on(
-    'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-empty',
+    'change',
+    'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-empty',
     function() {
       const $this = $(this);
       const locked = !$this.prop('checked');
@@ -2268,10 +2291,12 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
         refreshSelectWidget($input);
       }
       return false;
-    });
+    },
+  );
 
   $container.on(
-    'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-unlock',
+    'change',
+    'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-unlock',
     function() {
       const $this = $(this);
       const locked = $this.prop('checked');
@@ -2292,10 +2317,12 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
         mceInstance.getBody().setAttribute('contenteditable', !locked);
       }
       return false;
-    });
+    },
+  );
 
   $container.on(
-    'change click', 'td.' + pmeToken('value') + ' input.clear-field',
+    'change click',
+    'td.' + pmeToken('value') + ' input.clear-field',
     function() {
       const $this = $(this);
       const $element = $this.parent().find('.' + pmeToken('input')).first();
@@ -2305,8 +2332,9 @@ const pmeInit = (containerSel?: string|JQuery, noSubmitHandlers?: boolean) => {
         $element.val('');
       }
       return false;
-    });
-};
+    },
+  );
+}
 
 const documentReady = function() {
 
@@ -2319,8 +2347,6 @@ const documentReady = function() {
 };
 
 export {
-  documentReady,
-  lockTableDialog as tableDialogLock,
   pmeAddTableLoadCallback as addTableLoadCallback,
   pmeClassSelector as classSelector,
   pmeClassSelectors as classSelectors,
@@ -2328,13 +2354,14 @@ export {
   pmeData as data,
   pmeDefaultSelector as defaultSelector,
   pmeDeferReload as deferReload,
+  documentReady,
   pmeFormSelector as formSelector,
   pmeHalt as halt,
+  pmeIsHalted as halted,
   pmeHasEditableData as hasEditableData,
   pmeIdSelector as idSelector,
   pmeInputClassSelector as inputClassSelector,
   pmeInputSelector as inputSelector,
-  pmeIsHalted as halted,
   pmeOpenRowDialog as openRowDialog,
   pmePushCancellable as pushCancellable,
   pmeSelectInputSelector as selectInputSelector,
@@ -2343,8 +2370,9 @@ export {
   pmeSubmitOuterFormNoThrow as submitOuterFormNoThrow,
   pmeSys as sys,
   pmeSysNameSelector as sysNameSelector,
+  tableDialogLoadIndicator,
+  lockTableDialog as tableDialogLock,
   pmeTableDialogOpen as tableDialogOpen,
   pmeTextareaInputSelector as textareaInputSelector,
   pmeTriggerSubmit as triggerSubmit,
-  tableDialogLoadIndicator,
 };

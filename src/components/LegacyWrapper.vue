@@ -33,7 +33,7 @@
         </template>
       </NcButton>
       <div class="spacer" />
-      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState, }"
+      <NcButton :class="{ [appPrefix('top-nav-button')]: true, loading: busyState }"
                 :data-busy-flag="appData.busyFlag ? 'true' : 'false'"
                 :data-busy-count="'' + appData.busyCount"
                 :aria-label="t(appName, 'Reload the current view.')"
@@ -58,7 +58,6 @@
                 :disabled="busyState"
                 :aria-label="t(appName, 'Go to the start page of the app.')"
                 :to="{ name: 'home' }"
-                exact
       >
         <template #icon>
           <HomeIcon />
@@ -72,16 +71,16 @@
         <template v-else #icon>
           <InfoOffIcon />
         </template>
-        <NcActionCheckbox v-model="toolTipsEnabled" :model-value="toolTipsEnabled">
+        <NcActionCheckbox v-model="toolTipsEnabled">
           {{ t(appName, 'Tooltips') }}
         </NcActionCheckbox>
         <NcActionLink :href="wikiManualUrl"
                       :target="wikiManualUrlTarget"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
         >
           {{ t(appName, 'Manual (other tab or window)') }}
         </NcActionLink>
-        <NcActionButton :close-after-click="true"
+        <NcActionButton :closeAfterClick="true"
                         @click="onUserManualPopup"
         >
           {{ t(appName, 'Manual (popup)') }}
@@ -90,7 +89,7 @@
     </div>
     <!-- eslint-disable vue/no-v-html  -->
     <div :id="appPrefix('general')"
-         :class="{ [appPrefix('general')]: true, loading, }"
+         :class="{ [appPrefix('general')]: true, loading }"
     >
       <!-- /* used to eliminate the pixel-size of the control bar -->
       <div :id="pagePrefix + 'header-box'" :class="[pagePrefix + 'header-box', legacyCssClass]">
@@ -116,26 +115,22 @@
     <div v-if="legacyAjaxError" class="flex-container flex-justify-center">
       <ErrorPageModal :show="showLegacyAjaxError"
                       :error="legacyAjaxError"
-                      initial-view="details"
-                      :close-details-label="errorPageCloseDetailsLabel"
-                      :no-summary="errorPageNoSummary"
+                      initialView="details"
+                      :closeDetailsLabel="errorPageCloseDetailsLabel"
+                      :noSummary="errorPageNoSummary"
                       @update:show="handleLegacyAjaxErrorClose"
       />
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName, appPrefix } from '../config.ts'
-import globalState from '../app/globalstate.ts'
-import {
-  nextTick,
-  ref,
-  computed,
-  watch,
-  onBeforeMount,
-  onUnmounted,
-  onErrorCaptured,
-} from 'vue'
+import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
+import type { AxiosResponse } from 'axios'
+import type { LegacyPageLoaderResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+
+import axios from '@nextcloud/axios'
+import { loadTranslations, translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
   NcActionCheckbox,
@@ -143,24 +138,33 @@ import {
   NcActions,
   NcButton,
 } from '@nextcloud/vue'
-import HomeIcon from 'vue-material-design-icons/Home.vue'
-import ReloadIcon from 'vue-material-design-icons/Reload.vue'
-import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
-import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
+import { storeToRefs } from 'pinia'
+import {
+  computed,
+  nextTick,
+  onBeforeMount,
+  onErrorCaptured,
+  onUnmounted,
+  ref,
+  watch,
+} from 'vue'
+import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import HistoryBackIcon from 'vue-material-design-icons/ArrowULeftTop.vue'
 import HistoryForwardIcon from 'vue-material-design-icons/ArrowURightTop.vue'
+import HomeIcon from 'vue-material-design-icons/Home.vue'
+import InfoOffIcon from 'vue-material-design-icons/InformationOffOutline.vue'
+import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
+import ReloadIcon from 'vue-material-design-icons/Reload.vue'
 import ErrorPageModal from './ErrorPageModal.vue'
-import axios from '@nextcloud/axios'
-import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { closeNavigation } from '../services/navigation.ts'
-import useAppDataStore from '../stores/app-data.ts'
-import useHistoryStore from '../stores/history.ts'
-import useErrorHandlerStore from '../stores/error-handler.ts'
+import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
 import {
-  subscribe as asyncSubscribe,
-  unsubscribe as asyncUnSubscribe,
-  emit as asyncEmit,
-} from '../services/async-event-bus.ts'
+  BASE_PATH as controllerBasePath,
+  END_POINT_REMEMBER,
+} from '../../build/ts-types/php-modules/Controller/LegacyPageController.ts'
+import globalState from '../app/globalstate.ts'
+import * as LegacyNotification from '../app/notification.ts'
+import { appName, appPrefix } from '../config.ts'
 import {
   LEGACY_AJAX_ERROR,
   LEGACY_HISTORY_PATCH,
@@ -172,30 +176,38 @@ import {
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
-import * as LegacyNotification from '../app/notification.ts'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  unsubscribe as asyncUnSubscribe,
+} from '../services/async-event-bus.ts'
+import { closeNavigation } from '../services/navigation.ts'
+import useAppDataStore from '../stores/app-data.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
+import useHistoryStore from '../stores/history.ts'
+import { AppError } from '../toolkit/types/errors.ts'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
+import { JQueryAjaxError } from '../types/ajax/jqxhr-error.ts'
+import Console from '../util/console.ts'
+import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
 import {
   FRONTEND_URL_PATH_KEY,
-  HASH_KEY,
   generatePostHash,
+  HASH_KEY,
   sanitizePostData,
 } from '../util/legacy-post-data.ts'
-import type { AxiosResponse } from 'axios'
-import { loadTranslations, translate as t } from '@nextcloud/l10n'
-import { useRouter, useRoute } from 'vue-router/composables'
-import { isNavigationFailure, NavigationFailureType } from 'vue-router'
-import { dokuWikiSection, dokuWikiUrl, dokuWikiUrlTarget } from '../util/doku-wiki.ts'
-import { AppError } from '../toolkit/types/errors.ts'
-import Console from '../util/console.ts'
-import { JQueryAjaxError } from '../types/ajax/jqxhr-error.ts'
-import { storeToRefs } from 'pinia'
-import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus'
-import type { LegacyPageLoaderResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
-import {
-  BASE_PATH as controllerBasePath,
-  END_POINT_REMEMBER,
-} from '../../build/ts-types/php-modules/Controller/LegacyPageController.ts'
-import { RENDER_AS_PARTS } from '../../build/ts-types/php-modules/Constants.ts'
 
+const props = withDefaults(defineProps<{
+  template: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  templateParameters?: Record<string, any>
+  hash?: string
+  noLegacyReload?: boolean
+}>(), {
+  templateParameters: () => { return {} },
+  hash: '',
+  noLegacyReload: false,
+})
 const COMPONENT_NAME = 'LegacyWrapper'
 const logger = new Console(COMPONENT_NAME)
 
@@ -210,24 +222,12 @@ const errorHandlerProvider = useErrorHandlerStore()
 
 errorHandlerProvider.pushHandler(errorHandler)
 
-onErrorCaptured((...args) => { logger.error('Vue error captured', ...args) })
+onErrorCaptured((...args) => {
+  logger.error('Vue error captured', ...args)
+})
 
 const router = useRouter()
 const currentRoute = useRoute()
-
-const props = withDefaults(defineProps<{
-  template: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  templateParameters?: Record<string, any>,
-  hash?: string,
-  noLegacyReload?: boolean,
-  navButtonSize?: string,
-}>(), {
-  templateParameters: () => { return {} },
-  hash: '',
-  noLegacyReload: false,
-  navButtonSize: 'large',
-})
 
 logger.debug('PROPS AT START', { ...props })
 
@@ -351,8 +351,12 @@ const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace
   const params: TemplatePostData = {
     template: post.template,
   }
-  post.projectId && (params.projectId = post.projectId)
-  post.projectName && (params.projectName = post.projectName)
+  if (post.projectId) {
+    params.projectId = post.projectId
+  }
+  if (post.projectName) {
+    params.projectName = post.projectName
+  }
 
   if (!!params.projectId !== !!params.projectName) {
     const projectKey = params.projectName || params.projectId
@@ -400,7 +404,7 @@ const updateLegacyRoute = async (post: TemplatePostData, action: 'push'|'replace
 const getPageLoadPromise = () => exposedLoadingPromise
 
 const nextFrame = () => {
-  return new Promise(resolve => requestAnimationFrame(() => {
+  return new Promise((resolve) => requestAnimationFrame(() => {
     requestAnimationFrame(resolve)
   }))
 }
@@ -420,7 +424,7 @@ const doLoadLegacy = async () => {
   await asyncEmit(LEGACY_PAGE_CLEANUP)
   logger.debug('HISTORY STATE AT ENTRY', { ...currentHistoryState.value })
   // const historyAppData = { ...currentHistoryState.value.post }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const post: TemplatePostData = {
     template: props.template,
     ...props.templateParameters,
@@ -442,8 +446,8 @@ const doLoadLegacy = async () => {
   post[HASH_KEY] = currentHash
   post[FRONTEND_URL_PATH_KEY] = currentRoute.fullPath
   try {
-    const response: AxiosResponse<LegacyPageLoaderResponse> =
-      await axios.post(generateAppUrl(`${controllerBasePath}/${END_POINT_REMEMBER}/${RENDER_AS_PARTS}`), post)
+    const response: AxiosResponse<LegacyPageLoaderResponse>
+      = await axios.post(generateAppUrl(`${controllerBasePath}/${END_POINT_REMEMBER}/${RENDER_AS_PARTS}`), post)
     const data = response.data // todo: validate
     legacyBodyHtml.value = data.bodyHtml
     legacyHeaderHtml.value = data.headerHtml
@@ -480,14 +484,16 @@ const doLoadLegacy = async () => {
       new AppError(
         { component: COMPONENT_NAME },
         t(appName, 'Error loading view "{template}".', { template: props.template }),
-        { cause: e }),
+        { cause: e },
+      ),
     )
   }
   popBusyState()
   loading.value = false
 }
 
-const loadLegacy = async () => {
+/** TBD. */
+async function loadLegacy() {
   logger.debug('VUE APP LOAD PAGE LOADING', props.template, props.templateParameters, props.hash)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let promise: Promise<any>
@@ -610,15 +616,19 @@ const legacyPageLoadHandler = asyncSubscribe(
     }
     const projectId = eventData?.projectId || eventData.post?.projectId
     const projectName = eventData?.projectName || eventData.post?.projectName
-    projectId && (params.projectId = projectId)
-    projectName && (params.projectName = projectName)
+    if (projectId) {
+      params.projectId = projectId
+    }
+    if (projectName) {
+      params.projectName = projectName
+    }
     if (!!params.projectId !== !!params.projectName) {
       const projectKey = params.projectName || params.projectId
       const project = await appData.getProject(projectKey!)
       params.projectId = project?.id || undefined
       params.projectName = project?.name || undefined
     }
-    const post = Object.assign({}, eventData.post, params)
+    const post = { ...eventData.post, ...params }
     const target = {
       name: 'legacy-page',
       params,
@@ -728,6 +738,7 @@ defineExpose({
 })
 
 </script>
+
 <style lang="scss" scoped>
 @use '../../style/mixins/flex.scss';
 @use '../../style/variables.scss' as *;

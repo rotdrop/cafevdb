@@ -27,18 +27,17 @@
                           label="label"
                           :options="contactsArray"
                           :selectable="isSelectable"
-                          :options-limit="100"
+                          :optionsLimit="100"
                           :placeholder="placeholder || label"
-                          :input-label="label"
+                          :inputLabel="label"
                           :loading="isLoading"
                           :multiple="multiple"
                           :clearable="clearable"
-                          :close-on-select="false"
-                          :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
-                          :reset-action="resetAction"
+                          :closeOnSelect="false"
+                          :clearAction="(!clearable && clearAction) || (multiple && clearAction)"
+                          :resetAction="resetAction"
                           :searchable="true"
-                          :filter-by="filterByProps"
-                          v-on="$listeners"
+                          :filterBy="filterByProps"
                           @search="nextcloudSelectSearch"
   >
     <template #option="option">
@@ -55,63 +54,74 @@
     </template>
   </SelectWithSubmitButton>
 </template>
+
 <script setup lang="ts">
+import type { NcSelect } from '@nextcloud/vue'
+import type { AxiosResponse } from 'axios'
+import type { AddressBook, Contact } from '../types/address-book.d.ts'
+
+import axios from '@nextcloud/axios'
+import { translate as t } from '@nextcloud/l10n'
+import { NcEllipsisedOption } from '@nextcloud/vue'
+import qs from 'qs'
 import {
   computed,
   onBeforeMount,
   ref,
-  set as vueSet,
   watch,
 } from 'vue'
-import { appName } from '../config.ts'
-import axios from '@nextcloud/axios'
-import type { AxiosResponse } from 'axios'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import type { NcSelect } from '@nextcloud/vue'
-import { translate as t } from '@nextcloud/l10n'
-import qs from 'qs'
-import { contactAddressPopup, contactNameFromContact } from '../util/address-popup.ts'
-import stringValue from '../util/string-valued.ts'
-import type { AddressBook, Contact } from '../types/address-book.d.ts'
-import Console from '../util/console.ts'
 import {
   BASE_PATH as contactsBasePath,
   END_POINT_SEARCH,
 } from '../../build/ts-types/php-modules/Controller/ContactsController.ts'
-
-const COMPONENT_NAME = 'SelectContacts'
-const logger = new Console(COMPONENT_NAME)
+import { appName } from '../config.ts'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import { contactAddressPopup, contactNameFromContact } from '../util/address-popup.ts'
+import Console from '../util/console.ts'
+import stringValue from '../util/string-valued.ts'
 
 const props = withDefaults(
   defineProps<{
-    multiple?: boolean,
-    label: string,
-    value?: number|string|Contact|Contact[],
-    placeholder?: string,
-    allAddressBooks?: Record<string, AddressBook>,
-    onlyAddressBooks?: AddressBook[],
-    selectAllOption?: boolean,
-    clearable?: boolean,
-    clearAction?: boolean,
-    resetAction?: boolean,
-    loading?: boolean,
-    loadingIndicator?: boolean,
-  }>(), {
+    multiple?: boolean
+    label: string
+    value?: number|string|Contact|Contact[]
+    placeholder?: string
+    allAddressBooks?: Record<string, AddressBook>
+    onlyAddressBooks?: AddressBook[]
+    selectAllOption?: boolean
+    clearable?: boolean
+    clearAction?: boolean
+    resetAction?: boolean
+    loading?: boolean
+    loadingIndicator?: boolean
+  }>(),
+  {
+    // eslint-disable-next-line vue/no-boolean-default
     multiple: true,
     value: () => [],
     placeholder: undefined,
     allAddressBooks: undefined,
     onlyAddressBooks: undefined,
+    // eslint-disable-next-line vue/no-boolean-default
     selectAllOption: undefined,
+    // eslint-disable-next-line vue/no-boolean-default
     clearable: true,
+    // eslint-disable-next-line vue/no-boolean-default
     clearAction: true,
     resetAction: false,
     loading: false,
+    // eslint-disable-next-line vue/no-boolean-default
     loadingIndicator: true,
   },
 )
+
+const emit = defineEmits([
+  'error',
+])
+
+const COMPONENT_NAME = 'SelectContacts'
+const logger = new Console(COMPONENT_NAME)
 
 const inputValObjects = ref<undefined|Contact|Contact[]>(undefined)
 const contacts = ref<Record<string | number, Contact>>({})
@@ -122,10 +132,11 @@ let ajaxPromise: Promise<any> = Promise.resolve(true)
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
 const contactsArray = computed(() => Object.values(contacts.value))
 const provideSelectAll = computed(() => props.selectAllOption === undefined ? props.multiple : props.selectAllOption)
-const isSelectAllSelected = computed(() => provideSelectAll.value
-  && Array.isArray(inputValObjects.value)
-  && inputValObjects.value.length === 1
-  && inputValObjects.value[0].key === 0,
+const isSelectAllSelected = computed(
+  () => provideSelectAll.value
+    && Array.isArray(inputValObjects.value)
+    && inputValObjects.value.length === 1
+    && inputValObjects.value[0].key === 0,
 )
 
 watch(() => props.value, async (newValue) => {
@@ -148,10 +159,6 @@ watch(() => props.onlyAddressBooks, async () => {
   ajaxLoading.value = false
 })
 
-const emit = defineEmits([
-  'error',
-])
-
 onBeforeMount(async () => {
   await ajaxPromise
   ajaxLoading.value = true
@@ -166,14 +173,17 @@ const select = ref<null|typeof SelectWithSubmitButton>(null)
 const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))
 
 const isSelectable = (option: Contact) => !isSelectAllSelected.value || option.key === 0
-const resetContacts = () => {
+
+/** TBD. */
+function resetContacts() {
   contacts.value = {}
   if (provideSelectAll.value) {
-    vueSet(contacts.value, 0, { key: 0, UID: 0, label: t(appName, '** everybody **') })
+    contacts.value[0] = { key: 0, UID: '0', label: t(appName, '** everybody **') }
   }
 }
 
-const getValueObject = (noUndefined: boolean) => {
+/** @param noUndefined TBD */
+function getValueObject(noUndefined: boolean) {
   const value = Array.isArray(props.value) ? props.value : (props.value || props.value === 0 ? [props.value] : [])
   let everybody = false
   let result = value.filter((contact) => contact !== '' && typeof contact !== 'undefined').map(
@@ -181,7 +191,7 @@ const getValueObject = (noUndefined: boolean) => {
       const key = typeof contact === 'string' || typeof contact === 'number'
         ? contact
         : contact.key || contact.UID || contact.URI!
-      if (key === 0) {
+      if (+key === 0) {
         everybody = true
       }
       if (typeof contacts.value[key] === 'undefined') {
@@ -203,10 +213,11 @@ const getValueObject = (noUndefined: boolean) => {
   return props.multiple ? result : (result.length > 0) ? result[0] : undefined
 }
 
-const getValueKeys = () => {
+/** TBD */
+function getValueKeys() {
   const value = Array.isArray(props.value) ? props.value : [props.value]
-  const result = value.filter(contact => !!contact).map(
-    contact => {
+  const result = value.filter((contact) => !!contact).map(
+    (contact) => {
       return typeof contact === 'string' || typeof contact === 'number'
         ? ''
         : (contact.key || contact.UID || contact.URI) + ''
@@ -235,7 +246,12 @@ const filterByProps = (contact: Contact, _label: string, query: string) => {
   return false
 }
 
-const findContacts = async (query: string, contactUids?: string[]) => {
+/**
+ * @param query TBD.
+ *
+ * @param contactUids TBD.
+ */
+async function findContacts(query: string, contactUids?: string[]) {
   logger.info('FIND CONTACTS', { query, contactUids })
   query = typeof query === 'string' ? encodeURI(query) : ''
   if (query !== '') {
@@ -261,7 +277,7 @@ const findContacts = async (query: string, contactUids?: string[]) => {
   try {
     const response: AxiosResponse<Contact[]> = await axios.get(generateAppUrl(`${contactsBasePath}/${END_POINT_SEARCH}${query}`), {
       params,
-      paramsSerializer: params => {
+      paramsSerializer: (params) => {
         return qs.stringify(params, { arrayFormat: 'brackets' })
       },
     })
@@ -286,7 +302,7 @@ const findContacts = async (query: string, contactUids?: string[]) => {
             contact.addressBookName = props.allAddressBooks[addressBookKey].displayName
             contact.label += ' [' + contact.addressBookName + ']'
           }
-          vueSet(contacts.value, key, contact)
+          contacts.value[key] = contact
         }
       }
       return true

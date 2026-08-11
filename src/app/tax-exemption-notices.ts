@@ -21,18 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import { addReadyCallback } from './cafevdb.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as PHPMyEdit from './pme.ts';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import fileDownload from './file-download.ts';
-import { formSelector as pmeFormSelector } from './pme-selectors.ts';
-import pmeAutocomplete from './pme-autocomplete.ts';
 import type { TableDialogCallbackData } from './pme-state.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/TaxExemptionNotices.ts';
 
-require('jquery-ui/ui/widgets/autocomplete');
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/TaxExemptionNotices.ts';
+import { addReadyCallback } from './cafevdb.ts';
+import fileDownload from './file-download.ts';
+import $ from './jquery.ts';
+import pmeAutocomplete from './pme-autocomplete.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import { formSelector as pmeFormSelector } from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import { templateRenderer } from './template-renderer.ts';
+
+import 'jquery-ui/ui/widgets/autocomplete';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('tax-exemption-notices.scss');
@@ -67,10 +69,12 @@ const pmeFormInit = (containerSel: string, parameters?: TableDialogCallbackData,
         this,
         -1, // projectId
         -1, // musicianId,
-        resizeCB, {
+        resizeCB,
+        {
           upload: `documents/finance/${template}/upload`,
           delete: `documents/finance/${template}/delete`,
-        });
+        },
+      );
       const ambientContainerSelector = parameters?.tableDialogOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
         $(this).on('pme:upload-done pme:upload-deleted', (event) => {
@@ -85,14 +89,16 @@ const pmeFormInit = (containerSel: string, parameters?: TableDialogCallbackData,
 const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(
-    template, {
+    template,
+    {
       callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
         }
         resizeCB();
       },
-    });
+    },
+  );
 
   addReadyCallback(async () => {
 

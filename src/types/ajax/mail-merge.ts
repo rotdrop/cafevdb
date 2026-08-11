@@ -28,29 +28,29 @@ export const MailMergeDownload = 'download';
 export const MailMergeCloud = 'cloud';
 export type MailMergeOperation = typeof MailMergeDataset
   | typeof MailMergeDownload
-  | typeof MailMergeCloud
+  | typeof MailMergeCloud;
 
 export interface ContactKeys {
-  key: string|number,
-  uri?: string,
-  uid: string,
+  key: string|number;
+  uri?: string;
+  uid: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  book: any,
+  book: any;
 }
 
 export interface MailMergePayload {
-  senderId?: number|string,
-  fileName?: string,
-  templateName?: string,
-  projectId?: null|number,
-  recipientIds?: number[],
-  contactKeys?: ContactKeys[],
-  addressBooksUris?: Record<string, string>,
-  compositePaymentIds?: number[],
-  invoiceIds?: (string|number)[],
-  operation: MailMergeOperation,
-  limit?: number,
-  offset?: null,
+  senderId?: number|string;
+  fileName?: string;
+  templateName?: string;
+  projectId?: null|number;
+  recipientIds?: number[];
+  contactKeys?: ContactKeys[];
+  addressBooksUris?: Record<string, string>;
+  compositePaymentIds?: number[];
+  invoiceIds?: (string|number)[];
+  operation: MailMergeOperation;
+  limit?: number;
+  offset?: null;
 }
 
 export {};

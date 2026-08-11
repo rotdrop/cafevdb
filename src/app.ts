@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,33 +21,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './app/jquery-extensions.ts';
 import appSettings from './app/app-settings.js';
-import attachWindowResizeHandler from './app/window-resize.ts';
 import beforeReady from './app/before-ready.ts';
-import personalSettings from './app/personal-settings.ts';
-import settings from './app/settings.ts';
 import { documentReady as blogDocumentReady } from './app/blog.ts';
 import { documentReady as configCheckDocumentReady } from './app/configcheck.ts';
 import { documentReady as donationReceiptsReady } from './app/donation-receipts.ts';
 import { documentReady as emailDocumentReady } from './app/email.ts';
+import { nonce, webRoot } from './app/globals.js';
 import { documentReady as insurancesDocumentReady } from './app/insurance.ts';
 import { documentReady as invoicesReady } from './app/invoices.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
 import { documentReady as pageDocumentReady } from './app/page.ts';
+import personalSettings from './app/personal-settings.ts';
 import { documentReady as phpMyEditDocumentReady } from './app/pme.ts';
-import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.ts';
 import { documentReady as projectInstrumentationNumbersDocumentReady } from './app/project-instrumentation-numbers.js';
+import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.ts';
 import { documentReady as projectParticipantsDocumentReady } from './app/project-participants.js';
 import { documentReady as projectPaymentsReady } from './app/project-payments.ts';
 import { documentReady as projectsDocumentReady } from './app/projects.ts';
 import { documentReady as sepaBulkTransactionsDocumentReady } from './app/sepa-bulk-transactions.js';
 import { documentReady as sepaDebitMandatesDocumentReady } from './app/sepa-debit-mandate.js';
+import settings from './app/settings.ts';
 import { documentReady as taxExemptionNoticesReady } from './app/tax-exemption-notices.js';
-import { nonce, webRoot } from './app/globals.js';
+import attachWindowResizeHandler from './app/window-resize.ts';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
-require('jquery-ui');
+import './app/jquery-extensions.ts';
+import 'jquery-ui';
 
 require('app-navigation.scss');
 require('navsnapper.scss');

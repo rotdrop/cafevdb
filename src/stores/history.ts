@@ -21,41 +21,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Route, TransitionType } from 'vue-router';
-import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
-import { defineStore } from 'pinia';
-import {
-  computed,
-  del as vueDel,
-  reactive,
-  ref,
-  set as vueSet,
-  watch,
-} from 'vue';
-import { useRoute } from 'vue-router/composables';
-import { NavigationFailureType } from 'vue-router';
-import { v4 as uuidv4 } from 'uuid';
+import type { AxiosResponse } from '@nextcloud/axios';
+import type {
+  RouteLocationGeneric,
+  RouteLocationNormalizedGeneric,
+  TransitionType,
+} from 'vue-router';
+import type { TemplatePostData } from '../util/legacy-post-data.ts';
 
-import axios, { type AxiosResponse } from '@nextcloud/axios';
-import moment from '@nextcloud/moment';
+import axios from '@nextcloud/axios';
 import { showError, showInfo, showMessage } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
-import * as SessionStorage from '../util/session-storage.ts';
-
-import Console from '../util/console.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import getInitialState from '../toolkit/util/initial-state.ts';
-import router from '../router/app-router.ts';
-import type { TemplatePostData } from '../util/legacy-post-data.ts';
-import useErrorHandler from './error-handler.ts';
-import { AppError } from '../toolkit/types/errors.ts';
-import { appName } from '../config.ts';
-import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
-import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
+import moment from '@nextcloud/moment';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
+import { defineStore } from 'pinia';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  computed,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
+import {
+  isNavigationFailure,
+  NavigationFailureType,
+  useRoute,
+} from 'vue-router';
 import {
   BASE_PATH as controllerBasePath,
   GET_REQUEST_TIMESTAMPS as getTimestamps,
 } from '../../build/ts-types/php-modules/Controller/WebBrowserHistoryController.ts';
+import { appName } from '../config.ts';
+import router from '../router/app-router.ts';
+import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
+import { AppError } from '../toolkit/types/errors.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import getInitialState from '../toolkit/util/initial-state.ts';
+import Console from '../util/console.ts';
+import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
+import * as SessionStorage from '../util/session-storage.ts';
+import useErrorHandler from './error-handler.ts';
 
 export const HistoryActionPush = 'push';
 export const HistoryActionPop = 'pop';
@@ -128,33 +133,33 @@ export interface RouterHistoryState<Mode extends FetchMode = 'deep'> {
   // The key assigned by the vue-router to the history state. The key
   // also determines the position in the history stack (numerical
   // ordering).
-  key: number,
-  hash: string,
-  position: string|number|null, // window.history.length at creation time.
-  path: string,
+  key: number;
+  hash: string;
+  position: string|number|null; // window.history.length at creation time.
+  path: string;
   post: Mode extends 'deep' ? TemplatePostData : undefined|TemplatePostData;
 }
 
 interface HistoryInitialState {
-  post?: Record<string, TemplatePostData>,
-  queryHash?: string,
-  lastUrlHash?: string,
-  lastUrlPath?: string,
+  post?: Record<string, TemplatePostData>;
+  queryHash?: string;
+  lastUrlHash?: string;
+  lastUrlPath?: string;
 }
 
 export interface HistoryPersistenceRecord<Mode extends FetchMode = 'deep'> {
-  modificationTime?: number,
-  position: string, // current history key
-  history: Record<string, RouterHistoryState<Mode> >,
-  requestData: Mode extends 'deep' ? Record<string, TemplatePostData> : undefined|Record<string, TemplatePostData>,
+  modificationTime?: number;
+  position: string; // current history key
+  history: Record<string, RouterHistoryState<Mode>>;
+  requestData: Mode extends 'deep' ? Record<string, TemplatePostData> : undefined|Record<string, TemplatePostData>;
 }
 
 type LoadHistoryDataType<T extends FetchAll|number, M extends string> =
- T extends FetchAll
- ? (M extends FetchMode ? Record<number, HistoryPersistenceRecord<M> > : never)
- : (M extends FetchMode
-    ? HistoryPersistenceRecord<M>
-    : RouterHistoryState<'deep'>);
+  T extends FetchAll
+    ? (M extends FetchMode ? Record<number, HistoryPersistenceRecord<M>> : never)
+    : (M extends FetchMode
+      ? HistoryPersistenceRecord<M>
+      : RouterHistoryState<'deep'>);
 
 export default defineStore(storeId, () => {
   const errorHandlerProvider = useErrorHandler();
@@ -167,15 +172,15 @@ export default defineStore(storeId, () => {
 
   logger.debug('HISTORY STORE INIT');
 
-  const requestData = reactive<Record<string, TemplatePostData> >({});
+  const requestData = reactive<Record<string, TemplatePostData>>({});
 
   class RouterHistoryRecord implements RouterHistoryState {
 
     constructor(arg: {
-      key: string|number,
-      hash?: string,
-      post?: TemplatePostData,
-      path: string,
+      key: string|number;
+      hash?: string;
+      post?: TemplatePostData;
+      path: string;
     }) {
       this.replaceKey(arg.key);
       this.path = arg.path;
@@ -195,8 +200,8 @@ export default defineStore(storeId, () => {
     }
 
     replaceHash(arg: {
-      hash?: string,
-      post?: TemplatePostData,
+      hash?: string;
+      post?: TemplatePostData;
     }) {
       logger.debug('REPLACE HASH ARGS', arg);
       if (arg.hash) {
@@ -221,13 +226,15 @@ export default defineStore(storeId, () => {
 
   }
 
-  const routerHistory = ref<Record<string, RouterHistoryRecord> >({});
+  const routerHistory = ref<Record<string, RouterHistoryRecord>>({});
 
   const currentRoute = useRoute();
 
   const saveTime = ref<number>(0);
   const modificationTime = ref<number>(0);
-  const updateModificationTime = () => { modificationTime.value = Date.now() / 1000.0; };
+  const updateModificationTime = () => {
+    modificationTime.value = Date.now() / 1000.0;
+  };
 
   const initialHistoryKey: undefined|string = window?.history?.state?.key;
   const currentHistoryKey = ref(initialHistoryKey || '');
@@ -287,7 +294,7 @@ export default defineStore(storeId, () => {
     }
   };
 
-  const getSessionStorageHistoryData = ():HistoryPersistenceRecord|null => {
+  const getSessionStorageHistoryData = (): HistoryPersistenceRecord|null => {
     try {
       const historyData = SessionStorage.getItem(sessionStorageHistoryKey);
       logger.debug('GOT HISTORY DATA', JSON.stringify(historyData, undefined, 2));
@@ -329,7 +336,7 @@ export default defineStore(storeId, () => {
           let historyString: string;
           try {
             historyString = JSON.stringify(window?.history, null, 2);
-          } catch (e: unknown) {
+          } catch {
             historyString = '';
           }
           logger.error('Window history state has not been set up.', { ...(window?.history || {}) });
@@ -364,7 +371,7 @@ export default defineStore(storeId, () => {
    *
    * @param route The current route.
    */
-  function adjustDocumentTitle(route: Route) {
+  function adjustDocumentTitle(route: RouteLocationGeneric) {
     const titleElement = document.querySelector('head title')!;
     const originalTitleAttribute = appName + '-original-title';
     if (!titleElement.getAttribute(originalTitleAttribute)) {
@@ -372,11 +379,11 @@ export default defineStore(storeId, () => {
     }
     const originalTitle = titleElement.getAttribute(originalTitleAttribute);
 
-    let titleSupplement = '';
+    let titleSupplement: string;
     if (route.path === '/') {
       titleSupplement = t(appName, 'Home');
     } else {
-      const routeParams = sanitizePostData(Object.assign({}, route.params));
+      const routeParams = sanitizePostData({ ...route.params });
       titleSupplement = Object.values(routeParams).join('/');
     }
     document.title = originalTitle + ' - ' + titleSupplement;
@@ -414,21 +421,33 @@ export default defineStore(storeId, () => {
     });
     if (action !== 'pop'
         && currentHistoryKey.value !== 'initial'
-        && pendingHistoryKey.value !== currentHistoryKey.value
-    ) {
+        && pendingHistoryKey.value !== currentHistoryKey.value) {
       logger.trace('SCHEDULE HISTORY KEY MISMATCH', pendingHistoryKey.value, currentHistoryKey.value);
     }
     return pendingHistoryHash.value;
   }
 
-  function scheduleHistoryPush(post: object, hash?: string):string {
+  /**
+   * @param post TBD.
+   *
+   * @param hash TBD.
+   */
+  function scheduleHistoryPush(post: object, hash?: string): string {
     return scheduleHistoryAction(HistoryActionPush, post, hash);
   }
 
-  function scheduleHistoryReplace(post: object, hash?: string):string {
+  /**
+   * @param post TBD.
+   *
+   * @param hash TBD.
+   */
+  function scheduleHistoryReplace(post: object, hash?: string): string {
     return scheduleHistoryAction(HistoryActionReplace, post, hash);
   }
 
+  /**
+   * @param resolve TBD.
+   */
   function terminateHistoryAction<E extends AppError>(resolve: boolean|E) {
     pendingHistoryAction.value = undefined;
     pendingHistoryData.value = undefined;
@@ -443,10 +462,14 @@ export default defineStore(storeId, () => {
     settleMutationPromise(resolve);
   }
 
+  /** TBD. */
   function clearHistoryAction() {
     terminateHistoryAction(true);
   }
 
+  /**
+   * @param error TBD.
+   */
   function cancelHistoryAction<E extends AppError>(error?: E) {
     terminateHistoryAction(error || new HistoryStoreNavigationError('History action has been cancelled'));
   }
@@ -483,7 +506,7 @@ export default defineStore(storeId, () => {
         key,
         entry: { ...routerHistory.value[key] },
       });
-      vueDel(routerHistory.value, key);
+      delete routerHistory.value[key];
     }
   }
 
@@ -520,7 +543,6 @@ export default defineStore(storeId, () => {
       let promise: Promise<void>;
       do {
         await (promise = mutationPromise.promise);
-        // eslint-disable-next-line no-unmodified-loop-condition
       } while (mutationPromise && promise !== mutationPromise.promise);
     }
     logger.debug('Schedule mutation promise');
@@ -528,7 +550,10 @@ export default defineStore(storeId, () => {
     return mutationPromise;
   };
 
-  const settleMutationPromise = <E extends AppError>(arg: boolean|E = true) => {
+  /**
+   * @param arg TBD.
+   */
+  function settleMutationPromise<E extends AppError>(arg: boolean|E = true) {
     logger.debug('SETTLE MUTATION PROMISE', mutationPromise);
     if (mutationPromise) {
       const promise = mutationPromise;
@@ -547,7 +572,7 @@ export default defineStore(storeId, () => {
     } else if (arg instanceof AppError) {
       errorHandler(arg);
     }
-  };
+  }
 
   /**
    * Called after route completion. Unfortunately the RouterLink Vue
@@ -564,7 +589,7 @@ export default defineStore(storeId, () => {
    *
    * @param from Originating route, if any.
    */
-  function finishHistoryAction(route: Route, from?: Route) {
+  function finishHistoryAction(route: RouteLocationNormalizedGeneric, from?: RouteLocationNormalizedGeneric) {
     const transition = route.transition;
     const key = window?.history?.state?.key || 'initial';
     const history = routerHistory.value;
@@ -600,8 +625,8 @@ export default defineStore(storeId, () => {
       }
       if (currentHistoryKey.value !== key) {
         const currentState = currentHistoryState.value;
-        vueDel(history, currentHistoryKey.value);
-        vueSet(history, key, currentState);
+        delete history[currentHistoryKey.value];
+        history[key] = currentState;
         currentState.replaceKey(key);
         currentHistoryKey.value = key;
         // logger.debug('Adjusted initial history key', JSON.parse(JSON.stringify(history)), { ...currentHistoryState.value });
@@ -669,16 +694,12 @@ export default defineStore(storeId, () => {
         }
         removeHistoryTail();
         const key = window.history.state.key;
-        vueSet(
-          history,
+        history[key] = new RouterHistoryRecord({
+          hash: pendingHistoryHash.value,
+          post: pendingHistoryData.value,
           key,
-          new RouterHistoryRecord({
-            hash: pendingHistoryHash.value,
-            post: pendingHistoryData.value,
-            key,
-            path: route.fullPath,
-          }),
-        );
+          path: route.fullPath,
+        });
         currentHistoryKey.value = key;
         updateModificationTime();
         break;
@@ -686,9 +707,9 @@ export default defineStore(storeId, () => {
       case HistoryActionReplace: {
         if (key !== currentHistoryKey.value) {
           logger.debug('BEFORE ADJUST KEYS', key, currentHistoryKey.value, { ...history[currentHistoryKey.value] }, history?.[key]);
-          vueSet(history, key, history[currentHistoryKey.value]);
+          history[key] = history[currentHistoryKey.value];
           logger.debug('CURRENT STATE 0', { ...history[key] });
-          vueDel(history, currentHistoryKey.value);
+          delete history[currentHistoryKey.value];
           logger.debug('CURRENT STATE 1', { ...history[key] });
           currentHistoryKey.value = key;
           history[key].replaceKey(key);
@@ -741,12 +762,12 @@ export default defineStore(storeId, () => {
    */
   const savedHistoryStates = ref<number[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  axios.get<any, AxiosResponse<number[]> >(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
+  axios.get<any, AxiosResponse<number[]>>(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
     .then((response) => {
-      savedHistoryStates.value = response.data.map(stamp => +(+stamp).toFixed(3));
+      savedHistoryStates.value = response.data.map((stamp) => +(+stamp).toFixed(3));
       logger.info('SAVE HISTORY STATES', { savedHistoryStates: savedHistoryStates.value });
     })
-    .catch(e => {
+    .catch((e) => {
       const error = new HistoryStorePersistenceError(
         t(appName, 'Unable to load the timestamps of the available history states.'),
         { cause: e },
@@ -754,14 +775,13 @@ export default defineStore(storeId, () => {
       errorHandler(error);
     });
 
-  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrKey: M)
-    : Promise<undefined|LoadHistoryDataType<T, M> > => {
+  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrKey: M): Promise<undefined|LoadHistoryDataType<T, M>> => {
     const url = generateAppUrl(`${controllerBasePath}/{timestamp}/{modeOrKey}`, {
       timestamp,
       modeOrKey,
     });
     try {
-      const response: AxiosResponse<LoadHistoryDataType<T, M> > = await axios.get(url);
+      const response: AxiosResponse<LoadHistoryDataType<T, M>> = await axios.get(url);
       return response.data;
     } catch (e) {
       let message: string;
@@ -785,8 +805,11 @@ export default defineStore(storeId, () => {
 
   const loadHistoryState = (timestamp: number, modeOrKey: FetchMode = 'shallow') => loadHistoryData(timestamp, modeOrKey);
 
-  function loadHistoryStates(): ReturnType<typeof loadHistoryData<'all', 'shallow'> >;
-  function loadHistoryStates<M extends FetchMode>(mode: M): ReturnType<typeof loadHistoryData<'all', M> >;
+  function loadHistoryStates(): ReturnType<typeof loadHistoryData<'all', 'shallow'>>;
+  function loadHistoryStates<M extends FetchMode>(mode: M): ReturnType<typeof loadHistoryData<'all', M>>;
+  /**
+   * @param mode TBD.
+   */
   function loadHistoryStates(mode: FetchMode = 'shallow') {
     return loadHistoryData('all', mode);
   }
@@ -799,7 +822,7 @@ export default defineStore(storeId, () => {
    * user, storing it in the database enables a restore from another
    * client machine.
    */
-  const prepareHistorySaveRecord = ():HistoryPersistenceRecord => {
+  function prepareHistorySaveRecord(): HistoryPersistenceRecord {
     // logger.debug('PREPARE HISTORY SAVE', JSON.stringify({
     //   position: currentHistoryKey.value,
     //   currentState: { ...currentHistoryState.value },
@@ -810,7 +833,7 @@ export default defineStore(storeId, () => {
       requestData, // the post data proper
       history: routerHistory.value,
     };
-  };
+  }
 
   /**
    * Save the current history data to the DB.
@@ -819,9 +842,11 @@ export default defineStore(storeId, () => {
     // logger.info('PREPARED HISTORY DATA', JSON.stringify(prepareHistorySaveRecord(), undefined, 2));
     const historySaveData = prepareHistorySaveRecord();
     const url = generateAppUrl(
-      `${controllerBasePath}/{timestamp}`, {
+      `${controllerBasePath}/{timestamp}`,
+      {
         timestamp: modificationTime.value,
-      });
+      },
+    );
     try {
       const response: AxiosResponse<{ message?: string }> = await axios.put(url, historySaveData);
       if (response.data.message) {
@@ -872,7 +897,7 @@ export default defineStore(storeId, () => {
   };
 
   const validateHistoryMutation = (
-    chain: Record<string, RouterHistoryState<'deep'> >,
+    chain: Record<string, RouterHistoryState<'deep'>>,
     posKey: string,
   ) => {
     const posEntry = chain[posKey];
@@ -915,7 +940,7 @@ export default defineStore(storeId, () => {
   });
 
   // onError does catch anything __except__ routing errors.
-  router.onError(error => {
+  router.onError((error) => {
     logger.debug('ROUTER ON ERROR HOOK', { error }, window?.history?.state);
     if (error instanceof HistoryStoreNavigationInhibitRequest) {
       logger.debug('Honour inhibit navigation request.');
@@ -935,11 +960,11 @@ export default defineStore(storeId, () => {
    * has no other abort handler, so this handler does not interfere
    * with any other abort handlers.
    */
-  router.onNavigationFailure(error => {
-    if (error.to.transition === HistoryActionPop
-        && error.type === NavigationFailureType.duplicated) {
+  // router.onNavigationFailure((error: NavigationFailure) => {
+  router.afterEach((to, from, error) => {
+    if (to.transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated)) {
       logger.debug('Finish history action on duplicated navigation.', { error });
-      finishHistoryAction(error.to, error.from);
+      finishHistoryAction(to, from);
     }
   });
 
@@ -967,9 +992,9 @@ export default defineStore(storeId, () => {
    * timestamp and hence always increasing.
    */
   const pushHistoryStack = async (
-    chain: Record<string, RouterHistoryState<'deep'> >,
+    chain: Record<string, RouterHistoryState<'deep'>>,
     posKey: string,
-    params: { replaceCurrent?: boolean, mutationLock?: PromiseWithResolvers<void> } = { replaceCurrent: false },
+    params: { replaceCurrent?: boolean; mutationLock?: PromiseWithResolvers<void> } = { replaceCurrent: false },
   ) => {
     if (!validateHistoryMutation(chain, posKey)) {
       return;
@@ -994,12 +1019,12 @@ export default defineStore(storeId, () => {
         // edge case: just replace using the regular vue router
         // replace functionality and skip the remainder of this
         // function.
-        const resolved = router.resolve(entry.path);
-        const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params));
+        const resolved = router.resolve(entry.path, 'unknown');
+        const params = sanitizePostData({ ...entry.post, ...resolved.params });
         const hash = entry.hash;
         const force = uuidv4();
         const location = {
-          name: resolved.route.name!, // @todo error handling for route.name
+          name: resolved.name!, // @todo error handling for route.name
           params,
           query: { hash, [force]: 'force' },
         };
@@ -1013,6 +1038,7 @@ export default defineStore(storeId, () => {
           errorHandler(
             new HistoryStoreMutationError(
               t(appName, 'Unable to replace the current view.'),
+              { cause: error },
             ),
           );
         }
@@ -1042,20 +1068,16 @@ export default defineStore(storeId, () => {
       // we need to tweak the keys of the given chain
       let counter = 0;
       const offset = currentHistoryKey.value;
-      const keyMap = Object.fromEntries(keys.map(key => [key, (+offset + (++counter) / 1000.0).toFixed(3)]) as [string, string][]);
+      const keyMap = Object.fromEntries(keys.map((key) => [key, (+offset + (++counter) / 1000.0).toFixed(3)]) as [string, string][]);
       logger.debug('KEYMAP', keyMap);
       for (const key of keys) {
         const entry = chain[key];
-        vueSet(
-          history,
-          keyMap[key],
-          new RouterHistoryRecord({
-            key: keyMap[key],
-            hash: entry.hash,
-            post: entry.post,
-            path: entry.path,
-          }),
-        );
+        history[keyMap[key]] = new RouterHistoryRecord({
+          key: keyMap[key],
+          hash: entry.hash,
+          post: entry.post,
+          path: entry.path,
+        });
         logger.debug('HISTORY DURING MUTAION', key, keyMap[key], { ...history });
         currentHistoryKey.value = keyMap[key];
       }
@@ -1067,8 +1089,8 @@ export default defineStore(storeId, () => {
         const entry = chain[key];
         const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
         window.history.pushState({ key: mappedKey }, '', url);
-        const resolved = router.resolve(entry.path);
-        adjustDocumentTitle(resolved.route);
+        const resolved = router.resolve(entry.path, 'unknown');
+        adjustDocumentTitle(resolved);
       }
     }
 
@@ -1090,12 +1112,12 @@ export default defineStore(storeId, () => {
         // push the final state throught the vue-router to avoid a reload by go(0)
         logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posKey] } });
         const entry = chain[posKey];
-        const resolved = router.resolve(entry.path);
-        const params = sanitizePostData(Object.assign({}, entry.post, resolved.location.params));
+        const resolved = router.resolve(entry.path, 'unknown');
+        const params = sanitizePostData({ ...entry.post, ...resolved.params });
         const hash = entry.hash;
         const force = uuidv4();
         const location = {
-          name: resolved.route.name!, // @todo error handling
+          name: resolved.name!, // @todo error handling
           params,
           query: { hash, [force]: 'force' },
         };
@@ -1124,7 +1146,7 @@ export default defineStore(storeId, () => {
    *
    * @param posKey Position to finally go to.
    */
-  const appendHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'> >, posKey: string) => {
+  const appendHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'>>, posKey: string) => {
     if (!validateHistoryMutation(chain, posKey)) {
       return;
     }
@@ -1159,7 +1181,7 @@ export default defineStore(storeId, () => {
    *
    * @param posKey Position to finally go to.
    */
-  const replaceHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'> >, posKey: string) => {
+  const replaceHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'>>, posKey: string) => {
     validateHistoryMutation(chain, posKey);
     const mutationLock = await aquireMutationLock();
     // navigate first to the start of the stack.
@@ -1191,7 +1213,7 @@ export default defineStore(storeId, () => {
   // - use replaceHistoryStack -- maybe tweak that ...
   // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
 
-  router.onReady(() => {
+  router.isReady().then(() => {
     logger.debug('ON ROUTER READY HOOK');
 
     // try load history from session storage ...

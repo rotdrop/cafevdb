@@ -29,24 +29,24 @@ const $ = jQuery;
 type SelectValue = string;
 
 interface SelectizeInstance<E extends HTMLElement = HTMLElement, T extends string = string, U = { input: string }> extends Selectize.IApi<T, U> {
-  $input: JQuery<E>,
+  $input: JQuery<E>;
   revertSettings: {
-    $children: JQuery,
-  },
-  settings_user: Record<string, string>,
-  $wrapper: JQuery,
-  isDisabled: boolean,
-  isLocked: boolean,
+    $children: JQuery;
+  };
+  settings_user: Record<string, string>;
+  $wrapper: JQuery;
+  isDisabled: boolean;
+  isLocked: boolean;
 }
 
 type JQuerySelect = JQuery<HTMLSelectElement>;
 
 type Selectized<E extends HTMLElement = HTMLSelectElement, T extends string = string, U = { input: string }> = E & {
-  selectize: SelectizeInstance<E, T, U>,
+  selectize: SelectizeInstance<E, T, U>;
 };
 
 type MaybeSelectized<E extends HTMLElement = HTMLSelectElement, T extends string = string, U = { input: string }> = E & {
-  selectize?: SelectizeInstance<E, T, U>,
+  selectize?: SelectizeInstance<E, T, U>;
 };
 
 /**
@@ -54,14 +54,14 @@ type MaybeSelectized<E extends HTMLElement = HTMLSelectElement, T extends string
  *
  * @param $select TBD.
  */
-export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<Selectized<E, T, U> >): SelectizeInstance<E, T, U>;
-export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U> >): undefined|SelectizeInstance<E, T, U>;
+export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<Selectized<E, T, U>>): SelectizeInstance<E, T, U>;
+export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U>>): undefined|SelectizeInstance<E, T, U>;
 /**
  * Get the underlying selectize control structure.
  *
  * @param $select TBD.
  */
-export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U> >|JQuery<Selectized<E, T, U> >) {
+export function getSelectize<E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U>>|JQuery<Selectized<E, T, U>>) {
   return $select.length > 0 ? $select[0].selectize : undefined;
 }
 
@@ -70,10 +70,10 @@ export function getSelectize<E extends HTMLElement, T extends string, U = { inpu
  *
  * @param $select TBD.
  */
-const selectizeActive = <E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U> >) =>
+const selectizeActive = <E extends HTMLElement, T extends string, U = { input: string }>($select: JQuery<MaybeSelectized<E, T, U>>) =>
   !!getSelectize($select);
 
-export const isSelectizedJQuery = <E extends HTMLElement, T extends string, U = { input: string }>($arg: JQuery<MaybeSelectized<E, T, U> >): $arg is JQuery<Selectized<E, T, U> > =>
+export const isSelectizedJQuery = <E extends HTMLElement, T extends string, U = { input: string }>($arg: JQuery<MaybeSelectized<E, T, U>>): $arg is JQuery<Selectized<E, T, U>> =>
   $arg.length > 0 && !!$arg[0].selectize;
 
 /**
@@ -459,22 +459,22 @@ const locked = function($select: JQuerySelect, state?: boolean) {
 };
 
 export {
-  findOptionByValue as optionByValue,
-  deselectAll,
+  getChildren as children,
   chosenActive,
-  selectizeActive,
+  deselectAll,
+  getControlObject,
+  isVanilla,
+  locked,
+  makePlaceholder,
+  findOptionByValue as optionByValue,
+  getOptions as options,
+  getOptionValues as optionValues,
   refreshSelectWidget as refreshWidget,
   refreshWidgetProperties,
   replaceSelectOptions as replaceOptions,
   selectedValues as selected,
   selectedOptions,
-  getOptions as options,
-  getOptionValues as optionValues,
-  getChildren as children,
-  getWidget as widget,
   getSelectFromWidget as selectFromWidget,
-  getControlObject,
-  isVanilla,
-  locked,
-  makePlaceholder,
+  selectizeActive,
+  getWidget as widget,
 };

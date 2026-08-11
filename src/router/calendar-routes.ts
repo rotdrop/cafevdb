@@ -19,38 +19,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadTranslations } from '@nextcloud/l10n';
-import Console from '../util/console.ts';
-import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import type {
-  Location,
-  NavigationGuardNext,
-  Route,
-  RouteConfig,
+  NavigationGuard,
+  RouteLocationAsRelativeGeneric,
+  RouteLocationRaw,
   RouteRecord,
+  RouteRecordRaw,
 } from 'vue-router';
 
-export interface CalendarObjectEditLocation extends Location {
-  name: string,
-  params: {
-    object: string,
-    recurrenceId: string, // seconds
-    context: string,
-  },
-  query: Record<string, string>,
-}
+import { loadTranslations } from '@nextcloud/l10n';
+import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
+import { emit as asyncEmit } from '../services/async-event-bus.ts';
+import Console from '../util/console.ts';
 
-export interface CalendarObjectAddLocation extends Location {
-  name: string,
+export type CalendarObjectEditLocation = RouteLocationRaw & {
+  name: string;
   params: {
-    allDay: string, // === '1' is used inside the calendar app
-    dtstart: string, // seconds
-    dtend: string, // secons
-    context: string,
-  },
-  query: Record<string, string>,
-}
+    object: string;
+    recurrenceId: string; // seconds
+    context: string;
+  };
+  query: Record<string, string>;
+};
+
+export type CalendarObjectAddLocation = RouteLocationRaw & {
+  name: string;
+  params: {
+    allDay: string; // === '1' is used inside the calendar app
+    dtstart: string; // seconds
+    dtend: string; // secons
+    context: string;
+  };
+  query: Record<string, string>;
+};
 
 const COMPONENT_NAME = 'CalendarRoutes';
 const logger = new Console(COMPONENT_NAME);
@@ -63,7 +64,7 @@ const ProjectEventsListing = async () => {
 
 const calendarSetup = async () => {
   // make sure the timezones are actually loaded
-  // @ts-expect-error 2307
+  // @ts-expect-error 2307 blah
   import('@nextcloud/app-calendar/css/app-full.scss');
   import('../services/calendar-store-setup.ts')
     .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
@@ -89,19 +90,19 @@ export const CALENDAR_APP_ROUTES = [
   'NewFullView',
 ];
 
-let preCalendarRoute: Location|undefined;
+let preCalendarRoute: RouteLocationAsRelativeGeneric|undefined;
 let pushDepth = 0;
 
-const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
+const beforeCalendarRouteEnter: NavigationGuard = (to, from) => {
   logger.debug('BEFORE CALENDAR ROUTE ENTER', { to, from });
-  if (!CALENDAR_APP_ROUTES.includes(from.name!)) {
+  if (!CALENDAR_APP_ROUTES.includes(from.name! as string)) {
     logger.debug('Remember previous route before entering calendar stuff', {
       from,
       to,
     });
     let prev: undefined|RouteRecord;
     for (const match of to.matched) {
-      if (CALENDAR_APP_ROUTES.includes(match.name!)) {
+      if (CALENDAR_APP_ROUTES.includes(match.name! as string)) {
         break;
       }
       prev = match;
@@ -119,10 +120,10 @@ const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: N
     const target = {
       name: to.name!,
       params: to.params,
-      query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
+      query: { ...(to.query || {}), hash: from.query.hash },
       replace: to.transition === 'replace',
     };
-    next(target);
+    return target;
   } else {
     if (from.path === '/' && from.transition === 'unknown') {
       pushDepth = 1;
@@ -135,11 +136,11 @@ const beforeCalendarRouteEnter = <V extends Vue>(to: Route, from: Route, next: N
         windowHistoryLength: window.history.length,
       });
     }
-    next();
+    return true;
   }
 };
 
-const calendarAppRoutes: RouteConfig[] = [
+const calendarAppRoutes: RouteRecordRaw[] = [
   {
     path: 'edit/popover/:object/:recurrenceId/:context?',
     name: 'EditPopoverView',
@@ -167,12 +168,13 @@ const calendarAppRoutes: RouteConfig[] = [
   {
     path: '--never--',
     name: 'CalendarView',
-    beforeEnter: (to, _from, next) => {
+    component: () => true,
+    beforeEnter: (to, _from) => {
       if (returnByPush && pushDepth > 0) {
         logger.debug('Try go back', pushDepth);
-        next(false);
         asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
         pushDepth = 0;
+        return false;
       } else if (preCalendarRoute) {
         logger.debug('Try restore previous route on leaving calendar stuff', { preCalendarRoute });
         const target = {
@@ -184,10 +186,10 @@ const calendarAppRoutes: RouteConfig[] = [
           replace: to.transition === 'replace',
         };
         preCalendarRoute = undefined;
-        next(target);
+        return target;
       } else {
         logger.error('No previous route defined');
-        next({ name: 'home', replace: to.transition === 'replace' });
+        return { name: 'home', replace: to.transition === 'replace' };
       }
     },
   },
@@ -197,12 +199,12 @@ const calendarAppRoutes: RouteConfig[] = [
 
 export const PROJECT_EVENTS_LISTING_NAME = 'ProjectEventsListing';
 
-const projectEventsRoute: RouteConfig = {
+const projectEventsRoute: RouteRecordRaw = {
   path: 'events/:eventsProjectName',
   name: PROJECT_EVENTS_LISTING_NAME,
   component: ProjectEventsListing,
-  props: route => ({ projectName: route.params.eventsProjectName }),
-  beforeEnter: <V extends Vue>(to: Route, from: Route, next: NavigationGuardNext<V>) => {
+  props: (route) => ({ projectName: route.params.eventsProjectName }),
+  beforeEnter: (to, from) => {
     logger.debug('BEFORE PROJECT EVENTS LISTING ENTER', {
       to,
       from,
@@ -212,12 +214,12 @@ const projectEventsRoute: RouteConfig = {
       const target = {
         name: to.name!,
         params: to.params,
-        query: Object.assign({}, to.query || {}, { hash: from.query.hash }),
+        query: { ...(to.query || {}), hash: from.query.hash },
         replace: to.transition === 'replace',
       };
-      next(target);
+      return target;
     } else {
-      next();
+      return true;
     }
   },
   children: calendarAppRoutes,

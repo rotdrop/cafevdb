@@ -21,13 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nonce, webRoot } from './app/globals.js';
 import { runReadyCallbacks } from './app/cafevdb.ts';
-import appSettings from './app/settings.js';
-import personalSettings from './app/personal-settings.js';
-import './app/jquery-extensions.ts';
 import { attachDialogHandlers } from './app/dialogs.js';
+import { nonce, webRoot } from './app/globals.js';
+import personalSettings from './app/personal-settings.js';
+import appSettings from './app/settings.js';
 import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
+
+import './app/jquery-extensions.ts';
 
 require('personal-settings.scss');
 

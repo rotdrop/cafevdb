@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 <template>
   <div class="container flex-container">
     <NcAppSidebar :name="project ? t(appName, '{name} - Add Contacts', { name: project.name }) : t(appName, 'Add Contacts')"
-                  :force-menu="false"
+                  :forceMenu="false"
                   @close="handleClose"
     >
       <NcAppSidebarTab>
@@ -33,30 +33,41 @@
                         :label="t(appName, 'Contacts')"
                         :placeholder="t(appName, 'e.g. Bilbo Baggins')"
                         :multiple="true"
-                        :clear-action="true"
-                        :only-address-books="onlyAddressBooks"
-                        :all-address-books="allAddressBooks"
+                        :clearAction="true"
+                        :onlyAddressBooks="onlyAddressBooks"
+                        :allAddressBooks="allAddressBooks"
                         :disabled="false"
-                        :select-all-option="false"
-                        :submit-button="false"
-                        search-scope="contacts"
+                        :selectAllOption="false"
+                        :submitButton="false"
+                        searchScope="contacts"
         />
         <SelectAddressBooks v-model="onlyAddressBooks"
                             :tooltip="hints['templates:cloud:integration:address-books']"
                             :label="t(appName, 'Address-Books')"
                             :multiple="true"
-                            :reset-button="true"
-                            :clear-button="false"
+                            :resetButton="true"
+                            :clearButton="false"
                             :disabled="false"
-                            @update:address-books="(books) => allAddressBooks = books"
+                            @update:addressBooks="(books) => allAddressBooks = books"
         />
         <!-- /div -->
       </NcAppSidebarTab>
     </NcAppSidebar>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
+import type {
+  RouteRecord,
+} from 'vue-router'
+import type { Project } from '../stores/app-data.ts'
+import type { AddressBook, Contact } from '../types/address-book.d.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import {
+  NcAppSidebar,
+  NcAppSidebarTab,
+} from '@nextcloud/vue'
 import {
   // computed,
   onBeforeMount,
@@ -64,32 +75,23 @@ import {
   ref,
 } from 'vue'
 import {
+  onBeforeRouteUpdate,
   useRoute,
   useRouter,
-  onBeforeRouteUpdate,
-} from 'vue-router/composables'
-import type {
-  RouteRecord,
 } from 'vue-router'
-import {
-  NcAppSidebar,
-  NcAppSidebarTab,
-} from '@nextcloud/vue'
-import SelectContacts from '../components/SelectContacts.vue'
 import SelectAddressBooks from '../components/SelectAddressBooks.vue'
-import Console from '../util/console.ts'
-import { tooltips } from '../util/tooltips.ts'
-import type { Contact, AddressBook } from '../types/address-book.d.ts'
-import type { Project } from '../stores/app-data.ts'
+import SelectContacts from '../components/SelectContacts.vue'
+import { appName } from '../config.ts'
 import { ADD_CONTACTS_TO_PROJECT_NAME } from '../router/add-contacts-to-project.ts'
 import useAppDataStore from '../stores/app-data.ts'
-
-const COMPONENT_NAME = ADD_CONTACTS_TO_PROJECT_NAME
-const logger = new Console(COMPONENT_NAME)
+import Console from '../util/console.ts'
+import { tooltips } from '../util/tooltips.ts'
 
 const props = withDefaults(defineProps<{
-  projectName: string,
+  projectName: string
 }>(), {})
+const COMPONENT_NAME = ADD_CONTACTS_TO_PROJECT_NAME
+const logger = new Console(COMPONENT_NAME)
 
 const appData = useAppDataStore()
 
@@ -145,7 +147,7 @@ const handleClose = () => {
 const project = ref<null|Project>(null)
 
 const contacts = ref<Contact[]>([])
-const allAddressBooks = ref<Record<string, AddressBook> >({})
+const allAddressBooks = ref<Record<string, AddressBook>>({})
 const onlyAddressBooks = ref<AddressBook[]>([])
 
 // const addressBookUris = computed(() => {
@@ -173,6 +175,7 @@ onBeforeMount(async () => {
 })
 
 </script>
+
 <style scoped lang="scss">
 @use "sass:list";
 @use '../../style/mixins/flex.scss';

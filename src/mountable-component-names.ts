@@ -32,57 +32,57 @@ export const SEPA_BULK_TRANSACTION_ACTIONS_MENU = 'SepaBulkTransactionActionsMen
 
 export interface ComponentProps {
   [DOKU_WIKI_WRAPPER]: {
-    wikiPage?: string,
-    query?: Record<string, string>,
-    iFrameAttributes?: Record<string, string>,
-    fullScreen?: boolean,
-  },
+    wikiPage?: string;
+    query?: Record<string, string>;
+    iFrameAttributes?: Record<string, string>;
+    fullScreen?: boolean;
+  };
   [INVOICE_ACTIONS_MENU]: {
-    amount?: number,
-    currencyCode?: string,
-    debitorId?: number,
-    debitorName?: string,
-    enableOverviewItem?: boolean,
-    entityId: number,
-    invoiceNumber: string,
-    menuCaption?: string,
-    originatorId: number,
-    originatorName?: string,
-    projectId: number,
-    projectName: string,
-    template: string,
-  },
+    amount?: number;
+    currencyCode?: string;
+    debitorId?: number;
+    debitorName?: string;
+    enableOverviewItem?: boolean;
+    entityId: number;
+    invoiceNumber: string;
+    menuCaption?: string;
+    originatorId: number;
+    originatorName?: string;
+    projectId: number;
+    projectName: string;
+    template: string;
+  };
   [LEGACY_QUERY_LOG]: {
-    queryLog: LegacySqlQueryLogItem[],
-  },
+    queryLog: LegacySqlQueryLogItem[];
+  };
   [PROJECT_ACTIONS_MENU]: {
-    entityId: number,
-    projectName?: string,
-    forceProjectName?: boolean,
-    enableOverviewItem?: boolean,
-    template: string,
-  },
+    entityId: number;
+    projectName?: string;
+    forceProjectName?: boolean;
+    enableOverviewItem?: boolean;
+    template: string;
+  };
   [PROJECT_PAYMENT_ACTIONS_MENU]: {
-    amount?: number,
-    entityId: number,
-    currencyCode?: string,
-    debitorId: number,
-    debitorName: string,
-    enableOverviewItem?: boolean,
-    isDonation: boolean,
-    menuCaption?: string,
-    projectId: number,
-    projectName: string,
-    template: string,
-  },
+    amount?: number;
+    entityId: number;
+    currencyCode?: string;
+    debitorId: number;
+    debitorName: string;
+    enableOverviewItem?: boolean;
+    isDonation: boolean;
+    menuCaption?: string;
+    projectId: number;
+    projectName: string;
+    template: string;
+  };
   [SEPA_BULK_TRANSACTION_ACTIONS_MENU]: {
-    enableOverviewItem?: boolean,
-    entityId: number,
-    menuCaption?: string,
-    projectId: number,
-    projectName: string,
-    template: string,
-  },
+    enableOverviewItem?: boolean;
+    entityId: number;
+    menuCaption?: string;
+    projectId: number;
+    projectName: string;
+    template: string;
+  };
 }
 
 export type PropsData<C extends keyof ComponentProps> = ComponentProps[C];

@@ -70,6 +70,8 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   scopedNamespaces: $scopedNamespaces,
 );
 
+require_once __DIR__ . '/../lib/Toolkit/Console/ConsoleOutput.php';
+
 try {
   $phpToTypeScript->run(
     input: new \Symfony\Component\Console\Input\ArgvInput,

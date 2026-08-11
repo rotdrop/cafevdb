@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ const nonTextInputTypes = [
   'submit',
 ] as const;
 
-const nonTextInputSelector = nonTextInputTypes.map(type => `[type=${type}]`).join();
+const nonTextInputSelector = nonTextInputTypes.map((type) => `[type=${type}]`).join();
 const textInputSelector = `:not(${nonTextInputSelector})`;
 
 const textElementSelector = [
@@ -42,6 +42,6 @@ const textElementSelector = [
 
 export {
   nonTextInputSelector,
-  textInputSelector,
   textElementSelector,
+  textInputSelector,
 };

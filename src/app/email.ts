@@ -21,53 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName, appPrefix } from './globals.ts';
-import $ from './jquery.ts';
-import { toolTipsInit, globalState } from './cafevdb.ts';
-import {
-  handleError as ajaxHandleError,
-  validateResponse as ajaxValidateResponse,
-} from './ajax.ts';
-import actual from 'actual';
-import pageBusyIcon from './busy-icon.ts';
-import * as Dialogs from './dialogs.ts';
-import { personalRecordDialog as participantRecordDialog } from './project-participants.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import fileUploadInit from './file-upload.ts';
-import * as DialogUtils from './dialog-utils.ts';
-import * as ProgressStatus from './progress-status.ts';
-import { show as notificationShow } from './notification.ts';
-import * as SelectUtils from './select-utils.ts';
-import * as Ajax from './ajax.ts';
-import { urlDecode } from './url-decode.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import { generateOcsUrl } from '@nextcloud/router';
-import { setPersonalUrl } from './settings-urls.ts';
-import selectPopup from './select-popup.ts';
-import debounce from './debounce.ts';
-import modalizer from './modalizer.ts';
-import { handleMenu as handleUserManualMenu } from './user-manual.ts';
-import fileDownload from './file-download.ts';
-import { showSuccess } from '@nextcloud/dialogs';
-import { translate as t } from '@nextcloud/l10n';
-import { token as pmeToken, data as pmeData } from './pme-selectors.ts';
-import {
-  LEGACY_UPDATE_EVENTS_SELECTION,
-  PROJECT_EVENTS_LISTING,
-} from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe, emit as asyncEmit } from '../services/async-event-bus.ts';
-import type { UploadFile } from './file-upload.ts';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
-
-import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap.css';
-import {
-  EnumEmailFormContactsOperation,
-  EnumPersonalSettingsKey,
-  type EnumEmailFormComposerOperation as ComposerOperation,
-  type EnumEmailFormComposerTopic as ComposerTopic,
-  type EnumEmailFormComposerElement,
-} from '../../build/ts-types/php-modules/Controller.ts';
+import type { EnumEmailFormComposerOperation as ComposerOperation, EnumEmailFormComposerTopic as ComposerTopic, EnumEmailFormComposerElement } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   // EmailFormComposerResponse,
   EmailFormComposerRequestData as ComposerRequestData,
@@ -79,21 +33,87 @@ import type {
   EmailWebFormResponse,
   ProgressResponse,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { UploadFile } from './file-upload.ts';
+
+import { showSuccess } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
+import { generateOcsUrl } from '@nextcloud/router';
+import actual from 'actual';
+import {
+  EnumEmailFormContactsOperation,
+  EnumPersonalSettingsKey,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  EnumMusicianValidationTopic,
+} from '../../build/ts-types/php-modules/Controller.ts';
+import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import {
+  BASE_PATH,
+  END_POINT_ATTACHMENT,
+  END_POINT_COMPOSER,
+  END_POINT_CONTACTS,
+  END_POINT_FORM,
+  END_POINT_RECIPIENTS,
+} from '../../build/ts-types/php-modules/Controller/EmailFormController.ts';
+import {
+  END_POINT as validationEndPoint,
+} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
+import {
+  GET_PROJECT_FOLDER,
+  BASE_PATH as projectsEndPoint,
+} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
+import { EnumAttachmentOrigin } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
 import {
   ComposerCgiKeys,
   EmailFormCssClasses,
   EnumPostTag,
   RecipientsFilterCgiKeys,
-  type EnumFromTag,
 } from '../../build/ts-types/php-modules/EmailForm.ts';
-// eslint-disable-next -line n/no-missing-import
+import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
+import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
+import { FOLDER_TYPE_PROJECT } from '../../build/ts-types/php-modules/Service/ProjectService.ts';
 import {
-  disabledCssClass,
-  loadingCssClass,
-  expandedCssClass,
-  reallyHiddenCssClass,
-  hiddenCssClass,
-} from 'variables.scss';
+  LEGACY_UPDATE_EVENTS_SELECTION,
+  PROJECT_EVENTS_LISTING,
+} from '../event-bus-events.ts';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import { asKey } from '../toolkit/types/type-traits.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import {
+  handleError as ajaxHandleError,
+  validateResponse as ajaxValidateResponse,
+} from './ajax.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import { globalState, toolTipsInit } from './cafevdb.ts';
+import debounce from './debounce.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import * as Dialogs from './dialogs.ts';
+import fileDownload from './file-download.ts';
+import fileUploadInit from './file-upload.ts';
+import { appName, appPrefix } from './globals.ts';
+import $ from './jquery.ts';
+import modalizer from './modalizer.ts';
+import { show as notificationShow } from './notification.ts';
+import { data as pmeData, token as pmeToken } from './pme-selectors.ts';
+import * as ProgressStatus from './progress-status.ts';
+import { personalRecordDialog as participantRecordDialog } from './project-participants.ts';
+import selectPopup from './select-popup.ts';
+import * as SelectUtils from './select-utils.ts';
+import { setPersonalUrl } from './settings-urls.ts';
+import { urlDecode } from './url-decode.ts';
+import { handleMenu as handleUserManualMenu } from './user-manual.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
+
+import 'selectize';
+import 'selectize/dist/css/selectize.bootstrap.css';
+import 'cafevdb-selectize.scss';
+import './jquery-readonly.ts';
+import 'bootstrap4-duallistbox';
+import 'emailform.scss';
 import {
   displayCssClass,
   dropdownOpenCssClass,
@@ -104,42 +124,19 @@ import {
   projectModeOffCssClass,
   showSelectableCssClass,
 } from 'emailform.scss';
-import { asKey } from '../toolkit/types/type-traits.ts';
-import { TEMPLATE as projectParticipantsTemplate } from '../../build/ts-types/php-modules/PageRenderer/ProjectParticipants.ts';
-import { TEMPLATE as allMusiciansTemplate } from '../../build/ts-types/php-modules/PageRenderer/AllMusicians.ts';
+// eslint-disable-next -line n/no-missing-import
 import {
-  END_POINT as validationEndPoint,
-} from '../../build/ts-types/php-modules/Controller/MusicianValidationController.ts';
-import {
-  EnumMusicianValidationTopic,
-} from '../../build/ts-types/php-modules/Controller.ts';
-import {
-  BASE_PATH as projectsEndPoint,
-  GET_PROJECT_FOLDER,
-} from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
-import { FOLDER_TYPE_PROJECT } from '../../build/ts-types/php-modules/Service/ProjectService.ts';
-import {
-  BASE_PATH,
-  END_POINT_ATTACHMENT,
-  END_POINT_COMPOSER,
-  END_POINT_CONTACTS,
-  END_POINT_FORM,
-  END_POINT_RECIPIENTS,
-} from '../../build/ts-types/php-modules/Controller/EmailFormController.ts';
-import { EnumAttachmentOrigin } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import { PersistentCGIKeys } from '../../build/ts-types/php-modules/PageRenderer.ts';
-import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
-
-require('cafevdb-selectize.scss');
-
-require('./jquery-readonly.ts');
-require('bootstrap4-duallistbox');
-require('emailform.scss');
+  disabledCssClass,
+  expandedCssClass,
+  hiddenCssClass,
+  loadingCssClass,
+  reallyHiddenCssClass,
+} from 'variables.scss';
 
 type AttachmentElementData = {
-  options: string, // HTML fragment
-  attachments: Record<string, unknown>,
-}
+  options: string; // HTML fragment
+  attachments: Record<string, unknown>;
+};
 
 type EmailFormRecipientsFilterResponseData = EmailFormRecipientsFilterReloadResponse
   |EmailFormRecipientsFilterResponse
@@ -192,6 +189,9 @@ const generateComposerUrl = <Operation extends ComposerOperation, Topic extends 
   return generateEmailFormUrl(`${END_POINT_COMPOSER}/{operation}/{topic}`, { operation, topic });
 };
 
+/**
+ * @param response TBD.
+ */
 function attachmentFromJSON(response: UploadFile) {
   const $fileAttachmentsHolder: JQuery<HTMLInputElement> = $(`form.${appName}-email-form fieldset.attachments input.file-attachments`);
   if ($fileAttachmentsHolder.length === 0) {
@@ -218,6 +218,10 @@ const cloudAttachment = function(paths: string|string[], callback: () => void = 
     });
 };
 
+/**
+ * @param $dialogWidget TBD.
+ * @param $panelHolder TBD.
+ */
 function emailTabResize($dialogWidget: JQuery, $panelHolder: JQuery) {
   // $panelHolder.css('width', 'auto');
   // $panelHolder.css('height', 'auto');
@@ -249,6 +253,10 @@ const findComposerInput = <E extends HTMLElement, S extends string, T extends st
   attr: T = 'name' as T,
 ) => $e.find(`input[${attr}="${EnumPostTag.COMPOSER}[${param}]"]`);
 
+/**
+ * @param $emailForm TBD.
+ * @param elements TBD.
+ */
 function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: EnumEmailFormComposerElement[]) {
   elements = elements ?? ['to'];
   if (!Array.isArray(elements)) {
@@ -265,9 +273,12 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
   const url = generateComposerUrl('update', 'element');
   $.post(url, post)
     .fail(ajaxHandleError)
-    .done((data: ResponseData<EmailFormComposerResponse<'update', 'element'> >) => {
+    .done((data: ResponseData<EmailFormComposerResponse<'update', 'element'>>) => {
       if (!ajaxValidateResponse(data, [
-        'projectId', 'projectName', 'operation', 'requestData',
+        'projectId',
+        'projectName',
+        'operation',
+        'requestData',
       ])) {
         return;
       }
@@ -315,7 +326,8 @@ function updateComposerElements($emailForm: JQuery<HTMLFormElement>, elements?: 
  */
 const emailFormRecipientsSelectControls = ($dialogHolder: JQuery, $fieldset: JQuery<HTMLFieldSetElement>) => {
 
-  if ($dialogHolder.tabs('option', 'active') !== 0 // visible?
+  if (
+    $dialogHolder.tabs('option', 'active') !== 0 // visible?
       || $fieldset.find('#participation-status-filer.selectized').length > 0 // already initialized
   ) {
     return;
@@ -360,7 +372,8 @@ const emailFormRecipientsSelectControls = ($dialogHolder: JQuery, $fieldset: JQu
   const dualSelect = $dualListBoxContainer.find('select');
   dualSelect.attr(
     'title',
-    t(appName, 'Click on the names to move the respective person to the other box'));
+    t(appName, 'Click on the names to move the respective person to the other box'),
+  );
   dualSelect.addClass('tooltip-top');
 
   if ($recipientsSelect.prop('readonly')) {
@@ -409,8 +422,8 @@ const emailFormRecipientsHandlers = (
     this: HTMLElement,
     event: JQuery.EventBase|JQuery.ClickEvent|JQuery.TriggeredEvent,
     userParameters: Partial<{
-      historySnapshot: boolean,
-      cleanup: () => void,
+      historySnapshot: boolean;
+      cleanup: () => void;
     }>,
   ) {
     const defaultParameters = {
@@ -708,13 +721,15 @@ const emailFormRecipientsHandlers = (
       const projectName = $formData.find<HTMLInputElement>(`input[name="${PersistentCGIKeys.PROJECT_NAME}"]`).val()!;
 
       participantRecordDialog(
-        musicianId, {
+        musicianId,
+        {
           template: (projectId > 0 && isParticipant) ? projectParticipantsTemplate : allMusiciansTemplate,
           projectId,
           projectName,
           initialValue: 'Change',
           ambientContainerSelector: '#emailformdialog',
-        });
+        },
+      );
 
       return false;
     });
@@ -740,7 +755,6 @@ const emailFormRecipientsHandlers = (
  * @param $dialogHolder The div holding the jQuery dialog for everything
  *
  * @param $panelHolder The div enclosing the $fieldset
- *
  */
 const emailFormCompositionHandlers = (
   $fieldset: JQuery<HTMLFieldSetElement>,
@@ -800,7 +814,7 @@ const emailFormCompositionHandlers = (
     create: true,
     persist: false,
     render: {
-      // eslint-disable-next-line
+
       option_create(data, escape) {
         return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
       },
@@ -861,8 +875,9 @@ const emailFormCompositionHandlers = (
 
   // Event dispatcher, so to say
   const applyComposerControls = function<
-    E extends HTMLElement, Operation extends ComposerOperation = ComposerOperation,
-    Topic extends ComposerTopic = 'general'
+    E extends HTMLElement,
+    Operation extends ComposerOperation = ComposerOperation,
+    Topic extends ComposerTopic = 'general',
   >(
     this: E,
     request: ComposerRequestData<Operation, Topic>,
@@ -925,7 +940,9 @@ const emailFormCompositionHandlers = (
         $.fn.cafevTooltip.remove();
         if (!ajaxValidateResponse(
           data,
-          ['projectId', 'projectName', 'operation', 'requestData'], validateUnlock)) {
+          ['projectId', 'projectName', 'operation', 'requestData'],
+          validateUnlock,
+        )) {
           return false;
         }
 
@@ -1004,7 +1021,9 @@ const emailFormCompositionHandlers = (
                         t(appName, 'Unknown form element: {formElement}', { formElement }),
                         t(appName, 'Error'),
                         validateUnlock,
-                        true, true);
+                        true,
+                        true,
+                      );
                       break;
                   }
                 }
@@ -1045,7 +1064,7 @@ const emailFormCompositionHandlers = (
                 emailFormRecipientsHandlers($rcptFieldSet, $form, $dialogHolder, rcptPanelHolder);
 
                 // adjust the title of the dialog
-                let dlgTitle = '';
+                let dlgTitle: string;
                 if ((requestData.projectId ?? 0) > 0) {
                   dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName! });
                 } else {
@@ -1251,7 +1270,8 @@ const emailFormCompositionHandlers = (
               });
 
               applyComposerControls.call(
-                $this[0], {
+                $this[0],
+                {
                   operation: 'send',
                   progressToken,
                   // send: 'ThePointOfNoReturn',
@@ -1275,7 +1295,8 @@ const emailFormCompositionHandlers = (
                     $dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
                     pageBusyIcon(false);
                   }
-                });
+                },
+              );
             });
           return false;
         },
@@ -1328,7 +1349,8 @@ const emailFormCompositionHandlers = (
           ajaxHandleError<EmailFormComposerResponse>(
             xhr,
             textStatus,
-            errorThrown, {
+            errorThrown,
+            {
               preProcess: (data) => {
                 const requestData = data.requestData;
                 const previewData: undefined|string = requestData?.previewData;
@@ -1370,26 +1392,31 @@ const emailFormCompositionHandlers = (
                   pageBusyIcon(false);
                 }
               },
-            });
+            },
+          );
         })
         .done(function(data: EmailFormComposerResponse) {
           if (!ajaxValidateResponse(
-            data, ['requestData'], function() {
+            data,
+            ['requestData'],
+            function() {
               if (--busyCount <= 0) {
                 pageBusyIcon(false);
               }
-            })
-          ) {
+            },
+          )) {
             return;
           }
           const requestData = data.requestData!;
           if (!ajaxValidateResponse(
-            data.requestData, ['previewData'], function() {
+            data.requestData,
+            ['previewData'],
+            function() {
               if (--busyCount <= 0) {
                 pageBusyIcon(false);
               }
-            })
-          ) {
+            },
+          )) {
             return;
           }
 
@@ -1425,7 +1452,8 @@ const emailFormCompositionHandlers = (
     .off('click')
     .on('click', function() {
       applyComposerControls.call(
-        this, {
+        this,
+        {
           operation: 'cancel',
           formStatus: 'submitted',
           singleItem: true,
@@ -1471,7 +1499,8 @@ const emailFormCompositionHandlers = (
           }
           Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
         }
-      });
+      },
+    );
   };
 
   const confirmAutoSaveDelete = function(doDelete: boolean = false) {
@@ -1485,12 +1514,10 @@ const emailFormCompositionHandlers = (
     console.info('DRAFT AUTO', { autoGenerated, $draftOption });
     if (autoGenerated && (doDelete || $draftAutoSave.prop('checked'))) {
       Dialogs.confirm(
-        t(appName,
-          'Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?'
+        t(appName, 'Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?'
           + '<br/>'
           + 'If you answer "no" then the current message will be saved again and marked as manually saved. '
-          + 'It will then linger on until you or someone else deletes it manually.',
-          { id: draftId }),
+          + 'It will then linger on until you or someone else deletes it manually.', { id: draftId }),
         t(appName, 'Delete Auto-Save Draft?'),
         function(confirmed) {
           if (confirmed) {
@@ -1528,7 +1555,8 @@ const emailFormCompositionHandlers = (
   };
   Email.autoSaveDelete = confirmAutoSaveDelete;
 
-  const startDraftAutoSave = function($element: JQuery) {
+  /** @param $element TBD. */
+  function startDraftAutoSave($element: JQuery) {
     if (Email.autoSaveTimer) {
       clearTimeout(Email.autoSaveTimer);
       Email.autoSaveTimer = null;
@@ -1537,7 +1565,7 @@ const emailFormCompositionHandlers = (
       // perhaps add a popup to set the auto-save timeout
       Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
     }
-  };
+  }
 
   $draftAutoSave
     .off('change')
@@ -1596,7 +1624,8 @@ const emailFormCompositionHandlers = (
                 applyComposerControls.call(self, request);
               }
             },
-            true);
+            true,
+          );
         } else {
           applyComposerControls.call(self, request);
         }
@@ -1631,9 +1660,7 @@ const emailFormCompositionHandlers = (
           return $(this).html().trim() === current;
         }).length > 0) {
           Dialogs.confirm(
-            t(appName, 'Do you really want to delete the template with the name "`{emailTemplateName}"?',
-              { emailTemplateName: current },
-            ),
+            t(appName, 'Do you really want to delete the template with the name "`{emailTemplateName}"?', { emailTemplateName: current }),
             t(appName, 'Really Delete Template?'),
             function(confirmed) {
               if (confirmed) {
@@ -1645,12 +1672,13 @@ const emailFormCompositionHandlers = (
                 });
               }
             },
-            true);
+            true,
+          );
         } else {
           Dialogs.alert(
-            t(appName, 'Cannot delete non-existing template `{emailTemplateName}\'',
-              { emailTemplateName: current }),
-            t(appName, 'Unknown Template'));
+            t(appName, 'Cannot delete non-existing template `{emailTemplateName}\'', { emailTemplateName: current }),
+            t(appName, 'Unknown Template'),
+          );
         }
       } else {
         const draftId = +(findComposerRequestInput($fieldset, 'messageDraftId').val()! as string);
@@ -1664,9 +1692,7 @@ const emailFormCompositionHandlers = (
             draftMeta = '<br/>' + title;
           }
           Dialogs.confirm(
-            t(appName,
-              'Do you really want to delete the backup copy of the current message (id = {id})?',
-              { id: draftId })
+            t(appName, 'Do you really want to delete the backup copy of the current message (id = {id})?', { id: draftId })
               + draftMeta,
             t(appName, 'Really Delete Draft?'),
             function(confirmed) {
@@ -1681,7 +1707,8 @@ const emailFormCompositionHandlers = (
               }
             },
             true,
-            true);
+            true,
+          );
         }
       }
       return false;
@@ -1698,10 +1725,12 @@ const emailFormCompositionHandlers = (
           t(appName, 'No Drafts Available'),
           function() {
             SelectUtils.deselectAll($draftEmailsSelector);
-          });
+          },
+        );
       } else {
         applyComposerControls.call(
-          this, {
+          this,
+          {
             operation: 'load',
             topic: 'draft',
             projectId: projectId(),
@@ -1718,7 +1747,8 @@ const emailFormCompositionHandlers = (
               $dialogHolder.tabs('option', 'disabled', []);
               pageBusyIcon(false);
             }
-          });
+          },
+        );
       }
       return false;
     });
@@ -1749,7 +1779,8 @@ const emailFormCompositionHandlers = (
     .on('change', function(_event: JQuery.EventBase) {
 
       applyComposerControls.call(
-        this, {
+        this,
+        {
           operation: 'load',
           topic: 'sent',
           projectId: projectId(),
@@ -1778,12 +1809,14 @@ const emailFormCompositionHandlers = (
   $fieldset
     .off('blur', 'input.email-subject, input.sender-name')
     .on(
-      'blur', 'input.email-subject, input.sender-name',
+      'blur',
+      'input.email-subject, input.sender-name',
       function() {
         const $self = $(this);
         $self.val($self.val().trim());
         return false;
-      });
+      },
+    );
 
   /**************************************************************************
    *
@@ -1839,8 +1872,7 @@ const emailFormCompositionHandlers = (
 
       if ($this.prop('checked')) {
         Dialogs.confirm(
-          t(appName,
-            'Do you really want to disclose the bulk-message recipients?'
+          t(appName, 'Do you really want to disclose the bulk-message recipients?'
             + ' This may violate privacy regulations.'),
           t(appName, 'Really disclose the recipients?'),
           function(confirmed) {
@@ -1887,7 +1919,8 @@ const emailFormCompositionHandlers = (
         //     carbonCopyBlur.call(this, event, header);
         //   });
         // }
-      });
+      },
+    );
     return false;
   };
 
@@ -1940,7 +1973,8 @@ const emailFormCompositionHandlers = (
       }
 
       asyncEmit(
-        PROJECT_EVENTS_LISTING, {
+        PROJECT_EVENTS_LISTING,
+        {
           projectName: projectName(),
         },
       ).then(() => {
@@ -2021,8 +2055,7 @@ const emailFormCompositionHandlers = (
       } else {
         // Ask for confirmation
         Dialogs.confirm(
-          t(appName,
-            'Do you really want to delete all event attachments?'),
+          t(appName, 'Do you really want to delete all event attachments?'),
           t(appName, 'Really Delete Attachments?'),
           function(confirmed) {
             if (!confirmed) {
@@ -2039,7 +2072,8 @@ const emailFormCompositionHandlers = (
 
             return false;
           },
-          true);
+          true,
+        );
       }
 
       return false;
@@ -2174,8 +2208,7 @@ const emailFormCompositionHandlers = (
       } else {
         // Ask for confirmation
         Dialogs.confirm(
-          t(appName,
-            'Do you really want to delete all file attachments?'),
+          t(appName, 'Do you really want to delete all file attachments?'),
           t(appName, 'Really Delete Attachments?'),
           function(confirmed) {
             if (!confirmed) {
@@ -2191,7 +2224,8 @@ const emailFormCompositionHandlers = (
             }
             return false;
           },
-          true);
+          true,
+        );
       }
 
       return false;
@@ -2293,17 +2327,19 @@ const emailFormCompositionHandlers = (
                 text: t(appName, 'Save Contacts'),
                 class: 'save-contacts',
                 title: t(
-                  appName, 'Save the selected supplementary emails to the address-book for later reusal.'),
+                  appName,
+                  'Save the selected supplementary emails to the address-book for later reusal.',
+                ),
                 click() {
                   const $dialogHolder = $(this);
                   const $selectElement = $dialogHolder.find('select');
-                  const selectize = SelectUtils.getSelectize<HTMLSelectElement, string, { email: string, optgroup: string, label: string }>($selectElement)!;
+                  const selectize = SelectUtils.getSelectize<HTMLSelectElement, string, { email: string; optgroup: string; label: string }>($selectElement)!;
                   console.info('SELECTED EMAIL OPTIONS', SelectUtils.selectedOptions($selectElement));
                   const selectedValues = SelectUtils.selected($selectElement)!;
                   const selectedFreeForm = selectize.items
-                    .map(email => selectize.options[email])
-                    .filter(option => option.optgroup === freeFormLabel)
-                    .map(option => {
+                    .map((email) => selectize.options[email])
+                    .filter((option) => option.optgroup === freeFormLabel)
+                    .map((option) => {
                       console.info('EMAIL OPTION', option);
                       return {
                         value: option.email,
@@ -2448,11 +2484,14 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
       const containerId = 'emailformdialog';
 
       if (!ajaxValidateResponse(
-        data, ['contents'], () => {
+        data,
+        ['contents'],
+        () => {
           Email.active = false;
           console.debug('EMAIL ACTIVE FALSE', Email);
           promiseCallback(new Error('Missing HTML content for email form.'));
-        })) {
+        },
+      )) {
         return;
       }
 
@@ -2464,7 +2503,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
       const $recipientsPanel = $dialogHolder.find('div#emailformrecipients');
       const $composerPanel = $dialogHolder.find('div#emailformcomposer');
 
-      let dlgTitle = '';
+      let dlgTitle: string;
       if ((data.projectId ?? 0) > 0) {
         dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName! });
       } else {
@@ -2539,8 +2578,8 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
                 // The following is primarily for the debug
                 // output in order to get the scroll-bars right
                 const panel = ui.newPanel;
-                let newHeight = $dialogWidget.height()!
-                    - $dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)!;
+                let newHeight = $dialogWidget.height()! -
+                    $dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)!;
                 newHeight -= $('#emailformtabs').outerHeight(true)!;
                 newHeight -= panel.outerHeight(true)! - panel.height()!;
                 panel.height(newHeight);
@@ -2606,12 +2645,14 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
             $recipientsFieldSet,
             $emailForm,
             $dialogHolder,
-            $recipientsPanel);
+            $recipientsPanel,
+          );
           emailFormCompositionHandlers(
             $composerFieldSet,
             $emailForm,
             $dialogHolder,
-            $composerPanel);
+            $composerPanel,
+          );
 
           // download support
           $dialogHolder.on('click', 'a.download-link.ajax-download', function() {

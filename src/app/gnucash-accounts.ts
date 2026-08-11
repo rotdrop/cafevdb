@@ -21,15 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import * as Ajax from './ajax.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { AutocompleteGnuCashAccountsResponse, GnuCashAccountsAutocompleteData } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+
 import { END_POINT as autocompleteEndPoint } from '../../build/ts-types/php-modules/Controller/AccountingController.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import $ from './jquery.ts';
 
 type AccountsAutocompleteData = {
-  [key: string|number]: GnuCashAccountsAutocompleteData,
+  [key: string|number]: GnuCashAccountsAutocompleteData;
 };
 
 const accountsAutocomplete: AccountsAutocompleteData = {};

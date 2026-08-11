@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,7 @@ export const setItem = (key: string, data: unknown) => {
   try {
     browserStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
-    logger.error('Unable to store data in browser session.', {
-      error, key, data,
-    });
+    logger.error('Unable to store data in browser session.', { error, key, data });
   }
 };
 
@@ -47,9 +45,7 @@ export const getItem = (key: string) => {
   try {
     return JSON.parse(data);
   } catch (error) {
-    logger.error('Unable to decode data.', {
-      error, key, data,
-    });
+    logger.error('Unable to decode data.', { error, key, data });
     return null;
   }
 };

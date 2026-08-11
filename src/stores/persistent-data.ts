@@ -21,14 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { EnumMusiciansSearchScope } from '../../build/ts-types/php-modules/Controller.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
+
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 
 export const usePersistentDataStore = defineStore('parsistent-data', () => {
 
   // set of already loaded selectable musicians
-  const selectMusicians = ref<Record<string, Record<number, Record<number, FrontEndEntity<'Musician'> > > > >({});
+  const selectMusicians = ref<Partial<Record<EnumMusiciansSearchScope, Record<number, Record<number, FrontEndEntity<'Musician'>>>>>>({});
 
   return { selectMusicians };
 });

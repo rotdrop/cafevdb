@@ -21,39 +21,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq } from './jquery.ts';
-import { appName } from './config.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as PHPMyEdit from './pme.ts';
-import { translate as t } from '@nextcloud/l10n';
-import * as SelectUtils from './select-utils.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as Dialogs from './dialogs.ts';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import ajaxDownload from './file-download.ts';
+import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
-import setBusyIndicators from './busy-indicators.ts';
-import {
-  valueSelector as pmeValueSelector,
-  sys as pmeSys,
-  data as pmeData,
-  formSelector as pmeFormSelector,
-} from './pme-selectors.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
+
+import { translate as t } from '@nextcloud/l10n';
+import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/ProjectPayments.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
-import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
-import * as BusEvents from '../event-bus-events.ts';
+import setBusyIndicators from './busy-indicators.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import { appName } from './config.ts';
+import * as Dialogs from './dialogs.ts';
+import ajaxDownload from './file-download.ts';
+import $, { jq } from './jquery.ts';
+import {
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import {
+  data as pmeData,
+  formSelector as pmeFormSelector,
+  sys as pmeSys,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as SelectUtils from './select-utils.ts';
+import { templateRenderer } from './template-renderer.ts';
 import actionMenu from './vue-action-menu.ts';
-import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
-import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/ProjectPayments.ts';
 
 require('project-payments.scss');
 require('project-participant-fields-display.scss');
@@ -65,15 +66,6 @@ const findByName = <T extends HTMLElement = HTMLFormElement>($container: string|
 
 const ppAmountName = pmeData('ProjectPayments:amount');
 const ppSubjectName = pmeData('ProjectPayments:subject');
-
-asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
-  if (event.template !== template) {
-    return;
-  }
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await overviewPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
 
 const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof BusEvents.LEGACY_RECORD_POPUP]['arg']) => {
   const entityId = data.entityId;
@@ -91,12 +83,12 @@ const overviewPopup = (containerSel: string, data: AsyncNextcloudEvents[typeof B
     [pmeSys('rec')]: { id: entityId },
     [pmeSys('groupby_rec')]: {
       id: entityId,
-      // eslint-disable-next-line camelcase
+
       ProjectPayments__master_key_: '0;' + entityId,
     },
     [pmeSys('mrec_rec')]: {
       id: data.entityId,
-      // eslint-disable-next-line camelcase
+
       ProjectPayments__master_key_: '0;' + entityId,
     },
     projectId: data.projectId,
@@ -291,8 +283,8 @@ const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, 
               return;
             }
             const optionData: {
-              musicianId: number,
-              projectId: number,
+              musicianId: number;
+              projectId: number;
             } = $option.data('data');
             musicianIds.push(optionData.musicianId);
             projectIds.push(optionData.projectId);
@@ -303,9 +295,7 @@ const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, 
           if (projectIds.length > 1) {
             Dialogs.alert({
               title: t(appName, 'Too many Projects'),
-              content: t(appName, 'Currently merging composite-payments for different projects ({projects}) is not supported, sorry.',
-                { projects: projectIds.join(', ') },
-              ),
+              content: t(appName, 'Currently merging composite-payments for different projects ({projects}) is not supported, sorry.', { projects: projectIds.join(', ') }),
               modal: true,
               allowHtml: false,
             });
@@ -313,9 +303,7 @@ const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, 
           if (musicianIds.length > 1) {
             Dialogs.alert({
               title: t(appName, 'Too many Musicians'),
-              content: t(appName, 'Internal error: splits of composite-payments cannot belong to different musicians ({musicians}).',
-                { musicians: musicianIds.join(', ') },
-              ),
+              content: t(appName, 'Internal error: splits of composite-payments cannot belong to different musicians ({musicians}).', { musicians: musicianIds.join(', ') }),
               modal: true,
               allowHtml: false,
             });
@@ -349,10 +337,12 @@ const ready = (selector: string|JQuery, pmeParameters: TableDialogCallbackData, 
           this,
           -1, // projectId
           +musicianId,
-          resizeCB, {
+          resizeCB,
+          {
             upload: 'documents/finance/' + template + '/upload',
             delete: 'documents/finance/' + template + '/delete',
-          });
+          },
+        );
         const ambientContainerSelector = pmeParameters?.tableDialogOptions?.ambientContainerSelector;
         if (ambientContainerSelector) {
           $(this).on('pme:upload-done pme:upload-deleted', (event) => {
@@ -426,8 +416,17 @@ const documentReady = function() {
 
 };
 
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
+
 export {
   backgroundDecryption,
-  ready,
   documentReady,
+  ready,
 };

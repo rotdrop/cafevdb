@@ -22,6 +22,7 @@
  */
 
 import type { AppName } from '../build/ts-types/app-config.ts';
+
 import { appName } from '../build/ts-types/app-config.ts';
 
 function appPrefix<T extends string>(id: T): `${AppName}-${T}`;
@@ -44,6 +45,6 @@ export type {
 
 export {
   appName,
-  appPrefix,
   appNameTag,
+  appPrefix,
 };

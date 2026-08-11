@@ -29,7 +29,7 @@
                   bold
                   :active="true"
                   class="envelope-error"
-                  :force-display-actions="true"
+                  :forceDisplayActions="true"
       >
         <template #name>
           <h5 class="envelope-error-heading">
@@ -38,19 +38,19 @@
         </template>
         <template #subname>
           <NextcloudLogModal v-if="logEntry"
-                             :open.sync="detailsModalOpen"
-                             :current-entry="logEntry"
-                             :translations-loaded="translationsLoaded"
+                             v-model:open="detailsModalOpen"
+                             :currentEntry="logEntry"
+                             :translationsLoaded="translationsLoaded"
                              :name="t(appName, 'Error Details')"
-                             :close-details-label="closeDetailsLabel"
-                             @problem-report:show="showProblemReport = true"
+                             :closeDetailsLabel="closeDetailsLabel"
+                             @problemReport:show="showProblemReport = true"
           />
           <HtmlErrorModal v-if="htmlString"
-                          :open.sync="detailsModalOpen"
+                          v-model:open="detailsModalOpen"
                           :caption="envelopeErrorMessage"
-                          :html-string="htmlString"
-                          :close-details-label="closeDetailsLabel"
-                          @problem-report:show="showProblemReport = true"
+                          :htmlString="htmlString"
+                          :closeDetailsLabel="closeDetailsLabel"
+                          @problemReport:show="showProblemReport = true"
           />
           <div v-if="false">
             <!-- TODO: split the message to have a nice continuation, see nextcloud-vue -->
@@ -59,7 +59,7 @@
         </template>
         <template #actions>
           <NcActionButton :name="t(appName, 'report error')"
-                          close-after-click
+                          closeAfterClick
                           :disabled="showProblemReport"
                           @click="showProblemReport = true"
           >
@@ -68,7 +68,7 @@
             </template>
           </NcActionButton>
           <NcActionButton v-if="logEntry || htmlString"
-                          close-after-click
+                          closeAfterClick
                           :name="t(appName, 'show details')"
                           @click="detailsModalOpen = true"
           >
@@ -77,7 +77,7 @@
             </template>
           </NcActionButton>
           <NcActionButton :name="t(appName, 'close')"
-                          close-after-click
+                          closeAfterClick
                           @click="$emit('close')"
           >
             <template #icon>
@@ -126,7 +126,7 @@
       <NcListItem v-if="showProblemReport"
                   bold
                   class="problem-report-list-item problem-report"
-                  :force-display-actions="true"
+                  :forceDisplayActions="true"
       >
         <template #name>
           <h5 class="problem-report">
@@ -136,7 +136,7 @@
         <template #extra-actions>
           <NcButton v-if="!submitted"
                     v-tooltip="hints['error-page:problem-report:cancel']"
-                    type="tertiary"
+                    variant="tertiary"
                     name="cancel"
                     :aria-label="t(appName, 'Cancel the problem report.')"
                     @click="showProblemReport = false"
@@ -147,7 +147,7 @@
           </NcButton>
           <NcButton v-if="!submitted"
                     v-tooltip="hints['error-page:problem-report:submit']"
-                    type="tertiary"
+                    variant="tertiary"
                     name="submit"
                     :aria-label="t(appName, 'Submit the problem report.')"
                     @click="reportError"
@@ -158,7 +158,7 @@
           </NcButton>
           <NcButton v-if="submitted"
                     v-tooltip="hints['error-page:problem-report:modify-comment']"
-                    type="tertiary"
+                    variant="tertiary"
                     name="modify comment"
                     :aria-label="t(appName, 'Modify the comment of the problem report.')"
                     @click="submitted = false"
@@ -169,7 +169,7 @@
           </NcButton>
           <NcButton v-if="submitted"
                     v-tooltip="hints['error-page:problem-report:close']"
-                    type="tertiary"
+                    variant="tertiary"
                     name="close"
                     :aria-label="t(appName, 'Close the problem report page.')"
                     @click="showProblemReport = false"
@@ -198,7 +198,7 @@
           <NcRichText class="problem-report-preview"
                       :text="reportText"
                       :autolink="true"
-                      :use-markdown="true"
+                      :useMarkdown="true"
                       :arguments="substitutions"
           />
         </template>
@@ -206,25 +206,20 @@
     </ul>
   </div>
 </template>
+
 <script setup lang="ts">
-import { isNextcloudExceptionResponse } from '../types/ajax/php-exception-response.ts'
-import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
 import type { AxiosError } from 'axios'
-import {
-  isAxiosMessagesErrorResponse,
-  isAxiosErrorResponse as isAxiosErrorResponseGuard,
-  isAxiosError as isAxiosErrorGuard,
-} from '../toolkit/types/axios-type-guards.ts'
-import { AppError } from '../toolkit/types/errors.ts'
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  ref,
-  watch,
-} from 'vue'
-import { appName } from '../config.ts'
-import { translate as t, loadTranslations } from '@nextcloud/l10n'
+import type { ErrorLike } from 'serialize-error'
+import type { StackFrame } from 'stacktrace-js'
+import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
+import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts'
+
+// import IconReload from 'vue-material-design-icons/Reload.vue'
+// import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
+import { getCurrentUser } from '@nextcloud/auth'
+import axios from '@nextcloud/axios'
+import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { loadTranslations, translate as t } from '@nextcloud/l10n'
 // import { useRouter } from 'vue-router/composables'
 import {
   NcActionButton,
@@ -232,54 +227,59 @@ import {
   NcListItem,
   NcRichText,
 } from '@nextcloud/vue'
+import md5 from 'blueimp-md5'
 import { NodeHtmlMarkdown /* , NodeHtmlMarkdownOptions */ } from 'node-html-markdown'
-import IconSubmit from 'vue-material-design-icons/Send.vue'
+import { isErrorLike, serializeError } from 'serialize-error'
+import StackTrace from 'stacktrace-js'
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue'
 import IconCancel from 'vue-material-design-icons/Cancel.vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
-import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
-import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import IconErrorDetails from 'vue-material-design-icons/Details.vue'
-// import IconReload from 'vue-material-design-icons/Reload.vue'
-// import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
-import { getCurrentUser } from '@nextcloud/auth'
-import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
+import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
+import IconSubmit from 'vue-material-design-icons/Send.vue'
+import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
-import { serializeError, isErrorLike } from 'serialize-error'
-import type { ErrorLike } from 'serialize-error'
-import md5 from 'blueimp-md5'
-import axios from '@nextcloud/axios'
-import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
+import { END_POINT as reportEndPoint } from '../../build/ts-types/php-modules/Controller/ProblemReportController.ts'
+import globalState from '../app/globalstate.ts'
+import { appName } from '../config.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import {
-  JQueryAjaxError,
-  isJqXHR as isJqXHRGuard,
+  isAxiosError as isAxiosErrorGuard,
+  isAxiosErrorResponse as isAxiosErrorResponseGuard,
+  isAxiosMessagesErrorResponse,
+} from '../toolkit/types/axios-type-guards.ts'
+import { AppError } from '../toolkit/types/errors.ts'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
+import {
   isJqJsonXHR as isJqJsonXHRGuard,
   isJqNextcloudLogEntryXHR,
   isJQueryAjaxHtmlError,
+  isJqXHR as isJqXHRGuard,
+  JQueryAjaxError,
 } from '../types/ajax/jqxhr-error.ts'
-import globalState from '../app/globalstate.ts'
-import StackTrace from 'stacktrace-js'
-import type { StackFrame } from 'stacktrace-js'
+import { isNextcloudExceptionResponse } from '../types/ajax/php-exception-response.ts'
 import Console, { stackTraceOptions } from '../util/console.ts'
-import { END_POINT as reportEndPoint } from '../../build/ts-types/php-modules/Controller/ProblemReportController.ts'
-import type { MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts'
-
-const COMPONENT_NAME = 'ErrorPage'
-const logger = new Console(COMPONENT_NAME)
 
 const props = withDefaults(defineProps <{
-  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>,
-  initialView?: 'summary'|'details'|'report',
-  noSummary?: boolean,
-  closeDetailsLabel?: string,
+  error: Error | AxiosError | AxiosError<NextcloudExceptionLogEntry>
+  initialView?: 'summary'|'details'|'report'
+  noSummary?: boolean
+  closeDetailsLabel?: string
 }>(), {
   initialView: 'summary',
   noSummary: false,
   closeDetailsLabel: t(appName, 'close details view'),
 })
-
 const emit = defineEmits(['close'])
+const COMPONENT_NAME = 'ErrorPage'
+const logger = new Console(COMPONENT_NAME)
 
 const tooltipKeys = [
   'error-page:problem-report:cancel',
@@ -296,8 +296,7 @@ const hints = tooltipsProvider.tooltipsData
 const envelopeError = computed(() =>
   (props.error instanceof AppError || props.error instanceof JQueryAjaxError) && (props.error.cause instanceof Error || isJqXHRGuard(props.error.cause))
     ? props.error
-    : new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Error'), { cause: props.error }),
-)
+    : new AppError({ component: COMPONENT_NAME }, t(appName, 'Top-Level Error'), { cause: props.error }))
 const originalError = computed(() =>
   envelopeError.value && (envelopeError.value.cause instanceof Error || isJqXHRGuard(envelopeError.value.cause))
     ? envelopeError.value.cause
@@ -315,13 +314,11 @@ const logEntry = computed(() =>
     ? originalError.value.response.data
     : isJqNextcloudLogEntryXHR(originalError.value)
       ? originalError.value.responseJSON
-      : null,
-)
+      : null)
 
 const htmlString = computed(() =>
   (isJQueryAjaxHtmlError(envelopeError.value) ? envelopeError.value.html : '')
-    .replaceAll(globalState.serverRoot, ''),
-)
+    .replaceAll(globalState.serverRoot, ''))
 
 //  isJqHtmlXHR(originalError.value) ? originalError.value.
 // const exception = computed(() =>
@@ -348,7 +345,9 @@ const submitted = ref(false)
 const userComment = ref('')
 const substitutions = ref<Record<string, string>>({})
 
-watch(() => props.error, () => { showProblemReport.value = false })
+watch(() => props.error, () => {
+  showProblemReport.value = false
+})
 
 type StackedErrorObject = Omit<ErrorLike, 'stack'> & { stack?: string | string[] }
 
@@ -385,7 +384,7 @@ const systemErrorString = ref(JSON.stringify(serializedError, undefined, 2))
 const stackTrace = ref<null|StackFrame[]>(null)
 watch(stackTrace, (value) => {
   if (Array.isArray(value)) {
-    serializedError.stack = value.map(arg => arg.toString())
+    serializedError.stack = value.map((arg) => arg.toString())
     systemErrorString.value = JSON.stringify(serializedError, undefined, 2)
   }
 })
@@ -415,8 +414,7 @@ ${htmlStringForMarkdown.value}${systemErrorHeading.value}
 \`\`\`
 ${systemErrorString.value}
 \`\`\`
-`,
-)
+`)
 
 const translationsLoaded = ref(false)
 
@@ -511,6 +509,7 @@ onMounted(() => {
 })
 
 </script>
+
 <style scoped lang="scss">
 @use '../../style/mixins/flex.scss';
 @include flex.flexRules;
@@ -548,7 +547,7 @@ onMounted(() => {
   max-width: 80ex;
   min-width: 60ex;
 }
-::v-deep .problem-report-list-item {
+:deep(.problem-report-list-item) {
   textarea.user-comment {
     width: 100%;
     resize: vertical;
@@ -563,6 +562,7 @@ onMounted(() => {
   }
 }
 </style>
+
 <style lang="scss">
 .modal-mask {
   &, * {

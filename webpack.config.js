@@ -7,11 +7,11 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const DeadCodePlugin = require('webpack-deadcode-plugin');
 // const Visualizer = require('webpack-visualizer-plugin2');
 const xml2js = require('xml2js');
@@ -41,7 +41,7 @@ const svgoOptions = {
         overrides: {
           // viewBox is required to resize SVGs with CSS.
           // @see https://github.com/svg/svgo/issues/1128
-          removeViewBox: false,
+          // removeViewBox: false,
         },
       },
     },
@@ -53,6 +53,9 @@ module.exports = {
   //   level: 'verbose',
   // },
   // stats: 'verbose',
+  stats: {
+    errorDetails: true,
+  },
   ignoreWarnings: [
     // get rid of sass warnings for code that we cannot change
     {
@@ -72,7 +75,7 @@ module.exports = {
     'files-sidebar-hooks': './src/files-sidebar-hooks.ts',
     'iframe-content-script': './src/iframe-content-script.ts',
   })
-    .filter(([name, entry]) => !process.env.ONLY || process.env.ONLY === name)
+    .filter(([name]) => !process.env.ONLY || process.env.ONLY === name)
     .reduce((a, [name, entry]) => Object.assign(a, { [name]: entry }), {}),
   output: {
     // path: path.resolve(__dirname, 'js'),

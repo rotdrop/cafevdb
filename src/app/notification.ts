@@ -21,14 +21,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import globalState from './globalstate.ts';
+import type { ToastOptions } from '@nextcloud/dialogs';
+
 import {
   showMessage,
-  TOAST_PERMANENT_TIMEOUT,
   TOAST_DEFAULT_TIMEOUT,
+  TOAST_PERMANENT_TIMEOUT,
   TOAST_UNDO_TIMEOUT,
-  type ToastOptions,
 } from '@nextcloud/dialogs';
+import globalState from './globalstate.ts';
 
 type Toastify = ReturnType<typeof showMessage>;
 
@@ -122,8 +123,8 @@ function messages(messages: undefined|string|string[], options: ToastOptions = {
 
 export {
   hide,
+  messages,
   show,
   showHtml,
   showTemporary,
-  messages,
 };

@@ -21,19 +21,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { SET_RESTORE_HISTORY as EVENT } from '../../event-bus-events.ts';
+import { subscribe } from '../../services/async-event-bus.ts';
+import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-import * as Ajax from './../ajax.ts';
 import * as Notification from './../notification.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_RESTORE_HISTORY as EVENT } from '../../event-bus-events.ts';
+import { setPersonalUrl } from './../settings-urls.ts';
 
-require('../../legacy/nextcloud/jquery/requesttoken.js');
-
-subscribe(EVENT, (event) => {
-  return setter(event?.value, event?.showMessage, event?.$control);
-});
+import '../../legacy/nextcloud/jquery/requesttoken.js';
 
 /**
  * @param value Value to set.
@@ -56,8 +52,11 @@ const setter = (value: boolean, showMessage?: typeof Notification.messages, _$co
       .fail(async function(xhr, status, errorThrown) {
         await Ajax.handleError(xhr, status, errorThrown);
         reject(xhr);
-      }),
-  );
+      }));
 };
+
+subscribe(EVENT, (event) => {
+  return setter(event?.value, event?.showMessage, event?.$control);
+});
 
 export default setter;

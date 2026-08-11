@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -22,58 +22,59 @@
  -->
 <template>
   <div class="template-container">
-    <NcActions :menu-name="t(appName, 'Query Log')"
-               :force-menu="true"
-               force-semantic-type="menu"
-               :open.sync="open"
-               :close-after-click="true"
+    <NcActions v-model:open="open"
+               :menuName="t(appName, 'Query Log')"
+               :forceMenu="true"
+               forceSemanticType="menu"
+               :closeAfterClick="true"
     >
       <NcActionButton v-for="logEntry in queryLog"
                       :key="logEntry.queryHash"
                       v-tooltip="logEntry.query"
                       :name="logLogEntryLabel(logEntry)"
-                      close-after-click
+                      closeAfterClick
                       @click="showLogEntry(logEntry)"
       />
     </NcActions>
     <LegacyQueryLogModal :show="doShowLogEntry"
-                         :query-log-entry="currentLogEntry"
+                         :queryLogEntry="currentLogEntry"
                          @update:show="doShowLogEntry = false"
     />
   </div>
 </template>
+
 <script setup lang="ts">
+import { translate as t } from '@nextcloud/l10n'
 import {
-  NcActions,
   NcActionButton,
+  NcActions,
 } from '@nextcloud/vue'
 // import globalState from '../app/globalstate.ts'
 import {
+  getCurrentInstance,
   onMounted,
   onUnmounted,
   ref,
-  getCurrentInstance,
 } from 'vue'
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
 import LegacyQueryLogModal from './LegacyQueryLogModal.vue'
-import Console from '../util/console.ts'
+import { appName } from '../config.ts'
 import { LEGACY_QUERY_LOG as COMPONENT_NAME } from '../mountable-component-names.ts'
+import Console from '../util/console.ts'
+const props = defineProps<{ queryLog: LegacySqlQueryLogEntry[] }>()
+
 // Will work in the future ...
 // import type { LegacySqlQueryLogEntry } from '../types/legacy-query-log.d.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
 interface LegacySqlQueryLogEntry {
-  query: string, // SQL code
-  queryHash: string, // hash code for indexing
-  affectedRows: number, // integral
-  duration: number, // micro seconds
-  errorCode: number, // 0 on success
-  errorInfo: null|string,
+  query: string // SQL code
+  queryHash: string // hash code for indexing
+  affectedRows: number // integral
+  duration: number // micro seconds
+  errorCode: number // 0 on success
+  errorInfo: null|string
 }
-
-const props = defineProps<{ queryLog: LegacySqlQueryLogEntry[] }>()
 
 const logLogEntryLabel = (logEntry: LegacySqlQueryLogEntry) => {
   const queryTag = logEntry.query.length > 24
@@ -96,8 +97,8 @@ onMounted(() => {
   logger.info('CURRENT INSTANCE', { instance: getCurrentInstance()?.proxy })
 })
 
-onUnmounted(() => { logger.info('UNMOUNTED') })
+onUnmounted(() => {
+  logger.info('UNMOUNTED')
+})
 
 </script>
-<style lang="scss" scoped>
-</style>

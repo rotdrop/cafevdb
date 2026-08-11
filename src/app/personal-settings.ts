@@ -21,17 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { appName } from '../config.ts';
+import * as Ajax from './ajax.ts';
+import * as CAFEVDB from './cafevdb.ts';
 import globalState from './globalstate.ts';
 import $ from './jquery.ts';
-import { appName } from '../config.ts';
-import { setPersonalUrl } from './settings-urls.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
 import * as Notification from './notification.ts';
 import { chosenActive, selected as selectedValues } from './select-utils.ts';
-import { handleMenu as handleUserManualMenu } from './user-manual.ts';
+import { setPersonalUrl } from './settings-urls.ts';
 import setDebugModes from './settings/debug-modes.ts';
-import './settings/debug-query-sql-filter.ts';
 import setDeselectInvisible from './settings/deselect-invisible.ts';
 import setDirectChange from './settings/direct-change.ts';
 import setExpertMode from './settings/expert-mode.ts';
@@ -41,8 +40,10 @@ import setPageRows from './settings/pagerows.ts';
 import setRestoreHistory from './settings/restore-history.ts';
 import setShowDisabled from './settings/show-disabled.ts';
 import setTooltipsMode from './settings/tooltips.ts';
-import { hiddenCssClass, appNameTag } from 'variables.scss';
-import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { handleMenu as handleUserManualMenu } from './user-manual.ts';
+
+import './settings/debug-query-sql-filter.ts';
+import { appNameTag, hiddenCssClass } from 'variables.scss';
 
 require('nav-area-settings.scss');
 

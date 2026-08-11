@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@
  */
 
 import pageBusyIcon from './busy-icon.ts';
-import { tableDialogLoadIndicator } from './pme.ts';
 import modalizer from './modalizer.ts';
+import { tableDialogLoadIndicator } from './pme.ts';
 
 /**
  * Switch busy-indicators on or off.
@@ -40,11 +40,15 @@ const setBusyIndicators = (state: boolean, $pmeContainer?: JQuery, modal: boolea
     if (modal) {
       modalizer(true);
     }
-    $pmeContainer && tableDialogLoadIndicator($pmeContainer, true);
+    if ($pmeContainer) {
+      tableDialogLoadIndicator($pmeContainer, true);
+    }
     pageBusyIcon(true);
   } else {
     pageBusyIcon(false);
-    $pmeContainer && tableDialogLoadIndicator($pmeContainer, false);
+    if ($pmeContainer) {
+      tableDialogLoadIndicator($pmeContainer, false);
+    }
     if (modal) {
       modalizer(false);
     }

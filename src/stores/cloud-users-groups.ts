@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,49 +21,48 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { defineStore } from 'pinia';
-import axios from '@nextcloud/axios';
-import { generateOcsUrl } from '@nextcloud/router';
-import { confirmPassword } from '@nextcloud/password-confirmation';
-import { set as vueSet /* , del as vueDelete */ } from 'vue';
-import type { AxiosResponse } from 'axios';
 // Why is the following needed?
-// eslint-disable-next-line n/no-missing-import
 import type { OCSResponse } from '@nextcloud/typings/ocs';
-import type { AnyPromise } from '../types/promise.d.ts';
+import type { AxiosResponse } from 'axios';
 import type Keyable from '../types/keyable.d.ts';
+import type { AnyPromise } from '../types/promise.d.ts';
+
+import axios from '@nextcloud/axios';
+import { confirmPassword } from '@nextcloud/password-confirmation';
+import { generateOcsUrl } from '@nextcloud/router';
+import { defineStore } from 'pinia';
 
 const storeId = 'cloud-user-groups';
 
 type ErrorHandler = <E extends Error>(error: E|unknown) => void;
 
 export type CloudUser = {
-  id: string,
-  enabled: boolean,
-  displayname: string,
-  backend: string,
-  lastLogin: number,
-  groups: string[],
-  email: string,
+  id: string;
+  enabled: boolean;
+  displayname: string;
+  backend: string;
+  lastLogin: number;
+  groups: string[];
+  email: string;
   // ... and more but we don't need more ...
-}
+};
 
 export type CloudGroup = {
-  id: string,
-  displayname: string,
-  usercount: number,
-  disabled: boolean,
-  canAdd: boolean,
-  canRemove: boolean,
-  backends: string[],
-  users?: string[],
-  usersDetails: Record<string, CloudUser>,
-  getUsers: (errorHandler: null|ErrorHandler) => AnyPromise,
-  getUsersDetails: (errorHandler: null|ErrorHandler) => AnyPromise,
-}
+  id: string;
+  displayname: string;
+  usercount: number;
+  disabled: boolean;
+  canAdd: boolean;
+  canRemove: boolean;
+  backends: string[];
+  users?: string[];
+  usersDetails: Record<string, CloudUser>;
+  getUsers: (errorHandler: null|ErrorHandler) => AnyPromise;
+  getUsersDetails: (errorHandler: null|ErrorHandler) => AnyPromise;
+};
 
-type GroupUsersDetailsResponse = AxiosResponse<OCSResponse<{ users: Record<string, CloudUser> }> >
-type GroupDetailsResponse = AxiosResponse<OCSResponse<{ groups: CloudGroup[] }> >
+type GroupUsersDetailsResponse = AxiosResponse<OCSResponse<{ users: Record<string, CloudUser> }>>;
+type GroupDetailsResponse = AxiosResponse<OCSResponse<{ groups: CloudGroup[] }>>;
 
 export const useCloudUsersGroupsStore = defineStore(storeId, {
   state: () => {
@@ -221,7 +220,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
               group.getUsers = (errorHandler: null|ErrorHandler) => this.getGroupUsers(group.id, errorHandler);
               group.getUsersDetails = (errorHandler: null|ErrorHandler) => this.getGroupUsersDetails(group.id, errorHandler);
               // this.groups[gid] = group;
-              vueSet(this.groups, gid, group);
+              this.groups[gid] = group;
             } else if (JSON.stringify(this.groups[gid]) !== JSON.stringify(group)) {
               // replace in order to keep the references from groups to user-details
               for (const [key, value] of Object.entries(group)) {
@@ -254,11 +253,11 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         while (count < limit) {
           const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=${limit}&offset=${offset}`)));
 
-          for (const [uid, user] of (Object.entries(response.data.ocs.data.users) as [string, unknown][])) {
+          for (const [uid, user] of (Object.entries(response.data.ocs.data.users) as [string, CloudUser][])) {
             ++count;
             const oldUser = this.users[uid];
             if (!oldUser) {
-              vueSet(this.users, uid, user);
+              this.users[uid] = user;
               // this.users[uid] = user;
             } else if (JSON.stringify(oldUser) !== JSON.stringify(user)) {
               // replace in order to keep the references from groups to user-details

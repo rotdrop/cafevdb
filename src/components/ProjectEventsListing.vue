@@ -24,7 +24,7 @@
   <div class="container flex-container">
     <NcAppSidebar v-show="!calendarAppFullActive"
                   :name="project ? t(appName, '{name} - Appointments', { name: project.name }) : t(appName, 'Appointments')"
-                  :force-menu="false"
+                  :forceMenu="false"
                   @close="handleClose()"
                   @opened="handleOpened()"
     >
@@ -33,8 +33,8 @@
           <NcActions v-tooltip.left="hints['projectevents:all:new']"
                      :type="actionButtonType"
                      class="new-event-menu fc-event"
-                     data-is-new="yes"
-                     :aria-label="t(appName, 'create a new appointment')"
+                     dataIsNew="yes"
+                     :ariaLabel="t(appName, 'create a new appointment')"
                      :disabled="isLoading"
           >
             <template #icon>
@@ -44,8 +44,7 @@
                             :key="uri"
                             v-tooltip.left="hints['projectevents:all:new:' + uri]"
                             :to="item.location"
-                            :exact="true"
-                            :close-after-click="true"
+                            :closeAfterClick="true"
             >
               <template #icon>
                 <component :is="calendarIcons[uri]" />
@@ -54,8 +53,8 @@
             </NcActionRouter>
           </NcActions>
           <NcButton v-tooltip="hints['projectevents:all:select']"
-                    :data-tooltip="hints['projectevents:all:select']"
-                    :aria-label="t(appName, 'mark all events')"
+                    :dataTooltip="hints['projectevents:all:select']"
+                    :ariaLabel="t(appName, 'mark all events')"
                     :disabled="isLoading"
                     @click="markAllEvents(true)"
           >
@@ -73,7 +72,7 @@
             </template>
           </NcButton>
           <NcButton v-tooltip="hints['projectevents:all:sendmail']"
-                    :aria-label="t(appName, 'open email editor')"
+                    :ariaLabel="t(appName, 'open email editor')"
                     :disabled="isLoading"
                     @click="emailEditor"
           >
@@ -83,7 +82,7 @@
             {{ t(appName, 'Em@il') }}
           </NcButton>
           <NcButton v-tooltip="hints['projectevents:all:download']"
-                    :aria-label="t(appName, 'export events')"
+                    :ariaLabel="t(appName, 'export events')"
                     :disabled="isLoading"
                     @click="exportEvents"
           >
@@ -99,26 +98,26 @@
             </template>
             <NcActionLink :href="wikiManualUrl"
                           :target="wikiManualUrlTarget"
-                          :close-after-click="true"
+                          :closeAfterClick="true"
             >
               <template #icon>
                 <IconManualOtherWindow />
               </template>
-              {{ t(appId, 'Manual (other tab or window)') }}
+              {{ t(appName, 'Manual (other tab or window)') }}
             </NcActionLink>
-            <NcActionButton :close-after-click="true"
+            <NcActionButton :closeAfterClick="true"
                             @click="onUserManualPopup"
             >
               <template #icon>
                 <IconManualPopup />
               </template>
-              {{ t(appId, 'Manual (popup)') }}
+              {{ t(appName, 'Manual (popup)') }}
             </NcActionButton>
           </NcActions>
           <NcButton v-tooltip="hints['projectevents:all:reload']"
                     :class="{ loading: showLoadingIndicator }"
                     :disabled="!project || isLoading"
-                    :aria-label="t(appName, 'reload the project appointments')"
+                    :ariaLabel="t(appName, 'reload the project appointments')"
                     @click="handleReload"
           >
             <template #icon>
@@ -129,14 +128,15 @@
       </template>
       <template #default>
         <ul v-for="matrixEntry in eventMatrix" :key="matrixEntry.uri">
-          <NcListItem :class="['calendar-header', { 'no-events': matrixEntry.events.length === 0 }]"
+          <NcListItem class="calendar-header"
+                      :class="{ 'no-events': matrixEntry.events.length === 0 }"
                       active
                       :name="matrixEntry.name + (matrixEntry.events.length > 0 ? '' : ': ' + t(appName, 'no events'))"
-                      one-line
+                      oneLine
                       bold
-                      :counter-number="matrixEntry.events.length"
-                      counter-type="highlighted"
-                      force-display-actions
+                      :counterNumber="matrixEntry.events.length"
+                      counterType="highlighted"
+                      forceDisplayActions
                       @click.prevent="toggleCalendarVisibility(matrixEntry)"
           >
             <template #icon>
@@ -145,8 +145,8 @@
             <template v-if="matrixEntry.events.length > 0"
                       #extra-actions
             >
-              <NcButton type="primary"
-                        :aria-label="t(appName, 'Toggle Details')"
+              <NcButton variant="primary"
+                        :ariaLabel="t(appName, 'Toggle Details')"
                         @click="toggleCalendarVisibility(matrixEntry)"
               >
                 <template #icon>
@@ -169,14 +169,14 @@
           <NcListItem v-for="event in matrixEntry.events"
                       v-show="showCalendarEvent(matrixEntry, event)"
                       :key="event.instanceId"
-                      :class="['project-event', 'fc-event', { detached: event.deleted }]"
+                      class="project-event fc-event"
+                      :class="{ detached: event.deleted }"
                       :to="routerEventEdit[event.instanceId] || ''"
-                      :data-object-id="routerEventEdit[event.instanceId]?.params.object || ''"
-                      :data-recurrence-id="routerEventEdit[event.instanceId]?.params.recurrenceId || ''"
-                      :exact="true"
-                      :exact-path="true"
-                      :force-display-actions="true"
-                      :one-line="false"
+                      :dataObjectId="routerEventEdit[event.instanceId]?.params.object || ''"
+                      :dataRecurrenceId="routerEventEdit[event.instanceId]?.params.recurrenceId || ''"
+                      :exactPath="true"
+                      :forceDisplayActions="true"
+                      :oneLine="false"
           >
             <template #name>
               <span class="event-date">{{ briefEventDate(event) }}</span><span v-if="event.deleted" class="detached-note">&nbsp;({{ t(appName, 'detached') }})</span>
@@ -208,39 +208,39 @@
             </template>
             <template #actions>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
-                             v-model:model-value="actionScope[event.uid]"
+                             v-model:modelValue="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:single']"
                              value="single"
                              :name="'action-scope-' + event.uid"
-                             :close-after-click="true"
+                             :closeAfterClick="true"
                              @change="updateActionScope(event, 'single')"
               >
-                {{ t(appId, 'act only on this event') }}
+                {{ t(appName, 'act only on this event') }}
               </NcActionRadio>
               <NcActionRadio v-if="eventSeries[event.uid]"
-                             v-model:model-value="actionScope[event.uid]"
+                             v-model:modelValue="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:series']"
                              value="series"
                              :name="'action-scope-' + event.uid"
-                             :close-after-click="true"
+                             :closeAfterClick="true"
                              @change="updateActionScope(event, 'series')"
               >
-                {{ t(appId, 'act on the event series') }}
+                {{ t(appName, 'act on the event series') }}
               </NcActionRadio>
               <NcActionRadio v-if="eventRelations[event.seriesUid]"
-                             v-model:model-value="actionScope[event.uid]"
+                             v-model:modelValue="actionScope[event.uid]"
                              v-tooltip="hints['projectevents:event:scope:related']"
                              value="related"
                              :name="'action-scope-' + event.uid"
-                             :close-after-click="true"
+                             :closeAfterClick="true"
                              @change="updateActionScope(event, 'related')"
               >
-                {{ t(appId, 'act on all related events') }}
+                {{ t(appName, 'act on all related events') }}
               </NcActionRadio>
               <NcActionSeparator v-if="eventRelations[event.seriesUid]" />
               <NcActionButton v-tooltip="hints['projectevents:event:absence-field:check']"
                               type="checkbox"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
                               :disabled="!mutationsAllowed || !!event.deleted || !CALENDARS[matrixEntry.uri]?.public"
                               @click="toggleAbsenceField(event)"
               >
@@ -253,7 +253,7 @@
               <NcActionButton v-tooltip="hints['projectevents:event:select']"
                               :disabled="!!event.deleted"
                               type="checkbox"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
                               @click="toggleAttachmentMark(event)"
               >
                 <template #icon>
@@ -266,9 +266,8 @@
               </NcActionButton>
               <NcActionRouter v-tooltip="hints['projectevents:event:edit']"
                               :to="routerEventEdit[event.instanceId] || ''"
-                              :exact="true"
-                              :exact-path="true"
-                              :close-after-click="true"
+                              :exactPath="true"
+                              :closeAfterClick="true"
               >
                 <template #icon>
                   <IconEventEdit />
@@ -279,7 +278,7 @@
                             v-tooltip="hints['projectevents:event:calendar-app:single']"
                             :href="calendarAppEventEdit[event.instanceId] || ''"
                             :target="calendarAppTarget"
-                            :close-after-click="true"
+                            :closeAfterClick="true"
               >
                 <template #icon>
                   <IconCalendar />
@@ -290,7 +289,7 @@
                             v-tooltip="hints['projectevents:event:calendar-app:series']"
                             :href="calendarAppEventEditSeries[event.uid] || ''"
                             :target="calendarAppTarget"
-                            :close-after-click="true"
+                            :closeAfterClick="true"
               >
                 <template #icon>
                   <IconCalendar />
@@ -298,7 +297,7 @@
                 {{ t(appName, 'open in calendar-app') }}
               </NcActionLink>
               <NcActionButton v-tooltip="hints['projectevents:event:delete']"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
                               :disabled="!mutationsAllowed"
                               @click="handleDeleteEvent(matrixEntry, event)"
               >
@@ -309,7 +308,7 @@
               </NcActionButton>
               <NcActionButton v-if="!event.deleted"
                               v-tooltip="hints['projectevents:event:detach']"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
                               :disabled="!mutationsAllowed"
                               @click="handleProjectLink(event, false)"
               >
@@ -320,7 +319,7 @@
               </NcActionButton>
               <NcActionButton v-else
                               v-tooltip="hints['projectevents:event:reattach']"
-                              :close-after-click="true"
+                              :closeAfterClick="true"
                               :disabled="!mutationsAllowed"
                               @click="handleProjectLink(event, true)"
               >
@@ -339,117 +338,124 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import {
-  NcActionButton,
-  NcActionLink,
-  NcActionRadio,
-  NcActionRouter,
-  NcActionSeparator,
-  NcActions,
-  NcSelect,
-  NcAppSidebar,
-  NcButton,
-  NcListItem,
-} from '@nextcloud/vue'
-import IconCalendar from 'vue-material-design-icons/Calendar.vue'
-import IconConcerts from 'vue-material-design-icons/TimerMusicOutline.vue'
-import IconDoNotRecordAbsence from 'vue-material-design-icons/AccountMultipleOutline.vue'
-import IconEventDelete from 'vue-material-design-icons/CalendarRemove.vue'
-import IconEventDetach from 'vue-material-design-icons/LinkVariantOff.vue'
-import IconEventAttach from 'vue-material-design-icons/LinkVariant.vue'
-import IconEventEdit from 'vue-material-design-icons/CalendarEdit.vue'
-import IconExport from 'vue-material-design-icons/CalendarExport.vue'
-import IconFinance from 'vue-material-design-icons/BankTransfer.vue'
-import IconHideDetails from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
-import IconInfo from 'vue-material-design-icons/InformationVariant.vue'
-import IconManagement from 'vue-material-design-icons/AccountGroup.vue'
-import IconManualOtherWindow from 'vue-material-design-icons/OpenInNew.vue'
-import IconManualPopup from 'vue-material-design-icons/MessageTextOutline.vue'
-import IconNew from 'vue-material-design-icons/Plus.vue'
-import IconOther from 'vue-material-design-icons/CogOutline.vue'
-import IconRecordAbsence from 'vue-material-design-icons/AccountMultipleCheckOutline.vue'
-import IconRehearsals from 'vue-material-design-icons/AccountMusicOutline.vue'
-import IconReload from 'vue-material-design-icons/Reload.vue'
-import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
-import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
-import svgEmailChecked from '../../img/email-new-yes-path.svg?raw'
-import svgEmailUnchecked from '../../img/email-new-path.svg?raw'
-import svgEmailCross from '../../img/email-new-x-path.svg?raw'
-import useAppDataStore from '../stores/app-data.ts'
-import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../toolkit/types/errors.ts'
-import { generateUrl } from '@nextcloud/router'
+import type { CalendarObjectInstanceStore, CalendarObjectsStore } from '@nextcloud/app-calendar'
+import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus'
+import type {
+  Component,
+  WatchStopHandle,
+} from 'vue'
+import type {
+  RouteLocationRaw,
+  RouteRecord,
+} from 'vue-router'
+import type { EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts'
+import type {
+  CalendarObjectAddLocation,
+  CalendarObjectEditLocation,
+} from '../router/calendar-routes.ts'
 import type {
   CalendarUris,
   EventMatrixEvent,
   Project,
   ProjectEventMatrix,
 } from '../stores/app-data.ts'
+
+import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calendarObjectInstance.js'
+import useCalendarObjects from '@nextcloud/app-calendar/src/store/calendarObjects.js'
+import { translate as t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
 import {
-  ref,
-  watch,
+  NcActionButton,
+  NcActionLink,
+  NcActionRadio,
+  NcActionRouter,
+  NcActions,
+  NcActionSeparator,
+  NcAppSidebar,
+  NcButton,
+  NcListItem,
+  NcSelect,
+} from '@nextcloud/vue'
+import md5 from 'blueimp-md5'
+import capitalize from 'capitalize'
+import { DateTime } from 'luxon'
+import { storeToRefs } from 'pinia'
+import {
   computed,
   nextTick,
   onBeforeMount,
   onUnmounted,
   reactive,
-  set as vueSet,
-} from 'vue'
-import type {
-  VueConstructor,
-  WatchStopHandle,
+  ref,
+  watch,
 } from 'vue'
 import {
+  onBeforeRouteUpdate,
   useRoute,
   useRouter,
-  onBeforeRouteUpdate,
-} from 'vue-router/composables'
-import type {
-  RouteRecord,
 } from 'vue-router'
-import capitalize from 'capitalize'
+import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
+import IconManagement from 'vue-material-design-icons/AccountGroup.vue'
+import IconRecordAbsence from 'vue-material-design-icons/AccountMultipleCheckOutline.vue'
+import IconDoNotRecordAbsence from 'vue-material-design-icons/AccountMultipleOutline.vue'
+import IconRehearsals from 'vue-material-design-icons/AccountMusicOutline.vue'
+import IconFinance from 'vue-material-design-icons/BankTransfer.vue'
+import IconCalendar from 'vue-material-design-icons/Calendar.vue'
+import IconEventEdit from 'vue-material-design-icons/CalendarEdit.vue'
+import IconExport from 'vue-material-design-icons/CalendarExport.vue'
+import IconEventDelete from 'vue-material-design-icons/CalendarRemove.vue'
+import IconOther from 'vue-material-design-icons/CogOutline.vue'
+import IconInfo from 'vue-material-design-icons/InformationVariant.vue'
+import IconEventAttach from 'vue-material-design-icons/LinkVariant.vue'
+import IconEventDetach from 'vue-material-design-icons/LinkVariantOff.vue'
+import IconManualPopup from 'vue-material-design-icons/MessageTextOutline.vue'
+import IconManualOtherWindow from 'vue-material-design-icons/OpenInNew.vue'
+import IconNew from 'vue-material-design-icons/Plus.vue'
+import IconReload from 'vue-material-design-icons/Reload.vue'
+import IconConcerts from 'vue-material-design-icons/TimerMusicOutline.vue'
+import IconHideDetails from 'vue-material-design-icons/UnfoldLessHorizontal.vue'
+import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
+import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
+import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
+import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
+import svgEmailUnchecked from '../../img/email-new-path.svg?raw'
+import svgEmailCross from '../../img/email-new-x-path.svg?raw'
+import svgEmailChecked from '../../img/email-new-yes-path.svg?raw'
+import { appName } from '../config.ts'
 import {
-  dokuWikiSection,
-  dokuWikiUrl,
-  dokuWikiUrlTarget,
-} from '../util/doku-wiki.ts'
-import {
-  LEGACY_UPDATE_EVENTS_SELECTION,
   EMAIL_POPUP,
+  LEGACY_UPDATE_EVENTS_SELECTION,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
+// _at_ts-expect-error: 7016
+import {
+  CALENDAR_APP_ROUTES,
+  PROJECT_EVENTS_LISTING_NAME,
+} from '../router/calendar-routes.ts'
+import appTranslate from '../services/app-l10n.ts'
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
   unsubscribe as asyncUnSubscribe,
 } from '../services/async-event-bus.ts'
 import calendarStoreSetup from '../services/calendar-store-setup.ts'
-import Console from '../util/console.ts'
-import md5 from 'blueimp-md5'
-import { DateTime } from 'luxon'
-// _at_ts-expect-error: 7016
-import useCalendarObjectInstance from '@nextcloud/app-calendar/src/store/calendarObjectInstance.js'
-import useCalendarObjects from '@nextcloud/app-calendar/src/store/calendarObjects.js'
+import useAppDataStore from '../stores/app-data.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
-import { storeToRefs } from 'pinia'
-import type { EventArgs } from '@rotdrop/async-nextcloud-event-bus'
-import {
-  CALENDAR_APP_ROUTES,
-  PROJECT_EVENTS_LISTING_NAME,
-  type CalendarObjectAddLocation,
-  type CalendarObjectEditLocation,
-} from '../router/calendar-routes.ts'
+import { AppError } from '../toolkit/types/errors.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
-import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
-import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
-import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
-import appTranslate from '../services/app-l10n.ts'
-import type { EventMatrixRow } from '../../build/ts-types/php-modules/Service/DTO.ts'
-// eslint-disable-next-line n/no-missing-import
-import type { CalendarObjectsStore, CalendarObjectInstanceStore } from '@nextcloud/app-calendar'
+import Console from '../util/console.ts'
+import {
+  dokuWikiSection,
+  dokuWikiUrl,
+  dokuWikiUrlTarget,
+} from '../util/doku-wiki.ts'
+
+const props = withDefaults(defineProps<{
+  projectName: string
+}>(), {})
 
 const COMPONENT_NAME = PROJECT_EVENTS_LISTING_NAME
 
@@ -460,10 +466,6 @@ const recordAbsenceCategory = appTranslate(RECORD_ABSENCE_CATEGORY)
 const errorHandlerProvider = useErrorHandlerStore()
 
 const errorHandler = errorHandlerProvider.getHandler()
-
-const props = withDefaults(defineProps<{
-  projectName: string,
-}>(), {})
 
 const appData = useAppDataStore()
 
@@ -498,64 +500,6 @@ const origin = prev
   }
 
 logger.info('COMPUTED ORIGIN', { origin, prev })
-
-onBeforeMount(() => {
-  logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
-})
-
-onBeforeRouteUpdate((to, from, next) => {
-  logger.debug('ON BEFORE ROUTE UPDATE', {
-    to: { ...to },
-    from: { ...from },
-    origin: { ...(origin || {}) },
-  })
-  if (origin.location.query && to.query.hash) {
-    origin.location.query.hash = to.query.hash
-  }
-  next()
-})
-
-// Make sure that the event of the route is open in the events listing.
-router.afterEach((to, _from) => {
-  // check if the current route contains a calendar app component
-  if (!CALENDAR_APP_ROUTES.includes(to.name!)) {
-    return
-  }
-  const calendarUri = calendarUriByEventObject[to.params.object]
-  const instanceId = instanceIdByEventObject[to.params.object]
-  if (calendarUri) {
-    expandedState.value[calendarUri] = true
-    if (instanceId && yearsByEvent[instanceId]) {
-      matrixEntryYear[calendarUri] = yearsByEvent[instanceId]
-    }
-  }
-})
-
-const handleOpened = () => {
-  logger.debug('OPENED EVENT', { currentRoute })
-  // check if the current route contains a calendar app component
-  if (CALENDAR_APP_ROUTES.includes(currentRoute.name!)) {
-    for (const instance of Object.values(currentRoute.matched[currentRoute.matched.length - 1].instances)) {
-      // @ts-expect-error: 2339
-      if (typeof instance.repositionPopover === 'function') {
-        nextTick().then(() => {
-          // @ts-expect-error: 2339
-          instance.repositionPopover(true)
-        })
-      }
-    }
-  }
-}
-
-const handleClose = () => {
-  if (origin?.transition === 'push' && origin?.transition !== 'push') {
-    logger.info('TRY GO TO PREVIOUS ON CLOSE', { origin })
-    router.go(-1) // maybe we want to avoid this altogether ...
-  } else if (origin) {
-    logger.info('TRY PUSH TO ORIGIN', { origin })
-    router.push(origin.location)
-  }
-}
 
 const project = ref<null | Project>(null)
 const projectEventMatrix = computed<undefined | ProjectEventMatrix>(() => project.value?.eventMatrix)
@@ -639,7 +583,7 @@ const onUserManualPopup = async () => {
   isWikiLoading.value = false
 }
 
-const calendarIcons: { [Key in CalendarUris|'']?: VueConstructor } = {
+const calendarIcons: { [Key in CalendarUris|'']?: Component } = {
   management: IconManagement,
   finance: IconFinance,
   concerts: IconConcerts,
@@ -651,25 +595,25 @@ const calendarIcons: { [Key in CalendarUris|'']?: VueConstructor } = {
 type ActionScope = 'single'|'series'|'related'
 
 const currentYear = new Date().getFullYear()
-const matrixEntryYear = reactive<{ [Key in CalendarUris | '']?: string }>({})
+const matrixEntryYear = reactive<{ [Key in CalendarUris | '']?: number }>({})
 for (const uri of Object.keys(calendarOrdering) as ((CalendarUris | '')[])) {
-  vueSet(matrixEntryYear, uri, currentYear)
+  matrixEntryYear[uri] = currentYear
 }
 const calendarUriByEventObject: Record<string, EventMatrixRow['uri']|undefined> = {}
 const instanceIdByEventObject: Record<string, string> = {}
 const eventsByYear = reactive<{ [Key in EventMatrixRow['uri']]?: Record<string, EventMatrixEvent[]> }>({})
-const yearsByEvent = reactive<Record<string, string> >({})
+const yearsByEvent = reactive<Record<string, number>>({})
 const expandedState = ref<{ [Key in CalendarUris]?: boolean }>({})
-const hasAbsenceField = ref<Record<string, boolean> >({})
-const attachmentMark = ref<Record<string, boolean> >({})
+const hasAbsenceField = ref<Record<string, boolean>>({})
+const attachmentMark = ref<Record<string, boolean>>({})
 const routerEventEdit = ref<Record<string, CalendarObjectEditLocation>>({})
 const routerEventAdd = ref<Record<string, { location: CalendarObjectAddLocation, label: string }>>({})
-const calendarAppEventEdit = ref<Record<string, string> >({})
-const calendarAppEventEditSeries = ref<Record<string, string> >({})
+const calendarAppEventEdit = ref<Record<string, string>>({})
+const calendarAppEventEditSeries = ref<Record<string, string>>({})
 const calendarAppTarget = computed(() => md5(appName + ': event edit in calendar app sidebar'))
-const actionScope = ref<Record<string, ActionScope> >({})
+const actionScope = ref<Record<string, ActionScope>>({})
 
-const eventSeries = ref<Record<string, number> >({})
+const eventSeries = ref<Record<string, number>>({})
 const eventRelations = ref<Record<string, number>>({})
 
 const relatedEvents: Record<string, EventMatrixEvent[]> = {}
@@ -678,6 +622,64 @@ const seriesEvents: Record<string, EventMatrixEvent[]> = {}
 // Block other async reload request until one has finished
 const eventListLock = Promise.withResolvers<void>()
 eventListLock.resolve()
+
+onBeforeMount(() => {
+  logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
+})
+
+onBeforeRouteUpdate((to, from, next) => {
+  logger.debug('ON BEFORE ROUTE UPDATE', {
+    to: { ...to },
+    from: { ...from },
+    origin: { ...(origin || {}) },
+  })
+  if (origin.location.query && to.query.hash) {
+    origin.location.query.hash = to.query.hash
+  }
+  next()
+})
+
+// Make sure that the event of the route is open in the events listing.
+router.afterEach((to, _from) => {
+  // check if the current route contains a calendar app component
+  if (!CALENDAR_APP_ROUTES.includes(to.name! as string)) {
+    return
+  }
+  const calendarUri = calendarUriByEventObject[to.params.object as string]
+  const instanceId = instanceIdByEventObject[to.params.object as string]
+  if (calendarUri) {
+    expandedState.value[calendarUri] = true
+    if (instanceId && yearsByEvent[instanceId]) {
+      matrixEntryYear[calendarUri] = yearsByEvent[instanceId]
+    }
+  }
+})
+
+const handleOpened = () => {
+  logger.debug('OPENED EVENT', { currentRoute })
+  // check if the current route contains a calendar app component
+  if (CALENDAR_APP_ROUTES.includes(currentRoute.name as string)) {
+    for (const instance of Object.values(currentRoute.matched[currentRoute.matched.length - 1].instances)) {
+      // @ts-expect-error: 2339 Too lazy to generate the types.
+      if (typeof instance?.repositionPopover === 'function') {
+        nextTick().then(() => {
+          // @ts-expect-error: 2339 Too lazy to generate the types.
+          instance.repositionPopover(true)
+        })
+      }
+    }
+  }
+}
+
+const handleClose = () => {
+  if (origin?.transition === 'push' && origin?.transition !== 'push') {
+    logger.info('TRY GO TO PREVIOUS ON CLOSE', { origin })
+    router.go(-1) // maybe we want to avoid this altogether ...
+  } else if (origin) {
+    logger.info('TRY PUSH TO ORIGIN', { origin })
+    router.push(origin.location)
+  }
+}
 
 const aquireEventListLock = async () => {
   let promise: Promise<void>
@@ -708,7 +710,7 @@ const syncProjectData = async (projectName: string) => {
       let relationsCounter = 1
       const calendarNames: { [Key in CalendarUris | '']?: string } = {}
       for (const entry of Object.values(projectEventMatrix.value)) {
-        vueSet(expandedState.value, entry.uri, false || expandedState.value?.[entry.uri])
+        expandedState.value[entry.uri] = !!expandedState.value?.[entry.uri]
         calendarNames[entry.uri] = entry.name
         if (entry.uri !== '') {
           const name = 'NewPopoverView'
@@ -724,13 +726,13 @@ const syncProjectData = async (projectName: string) => {
           const nowSeconds = Math.round(Date.now() / 1000 / 3600) * 3600
           const params = {
             ...currentRoute.params,
-            allDay: true,
-            dtstart: nowSeconds,
-            dtend: nowSeconds,
+            allDay: '1',
+            dtstart: '' + nowSeconds,
+            dtend: '' + nowSeconds,
             context: btoa(JSON.stringify(context)),
           }
-          const query = currentRoute.query
-          vueSet(routerEventAdd.value, entry.uri, { location: { name, params, query }, label })
+          const query = currentRoute.query as Record<string, string>
+          routerEventAdd.value[entry.uri] = { location: { name, params, query }, label }
         }
         for (const key in Object.keys(eventRelations.value)) {
           delete eventRelations.value[key]
@@ -738,19 +740,19 @@ const syncProjectData = async (projectName: string) => {
         for (const key in Object.keys(eventSeries.value)) {
           delete eventSeries.value[key]
         }
-        vueSet(eventsByYear, entry.uri, {})
+        eventsByYear[entry.uri] = {}
         for (const event of entry.events) {
           const eventStartDate = DateTime.fromISO(event.start).toISODate()!
           const eventYear = eventStartDate.substring(0, 4)
           if (eventsByYear[entry.uri]![eventYear]) {
             eventsByYear[entry.uri]![eventYear].push(event)
           } else {
-            vueSet(eventsByYear[entry.uri]!, eventYear, [event])
+            eventsByYear[entry.uri]![eventYear] = [event]
           }
-          vueSet(yearsByEvent, event.instanceId, eventYear)
-          vueSet(hasAbsenceField.value, event.instanceId, +(event.absenceField || 0) > 0)
-          vueSet(attachmentMark.value, event.instanceId, false || attachmentMark.value?.[event.instanceId])
-          vueSet(actionScope.value, event.uid, actionScope.value?.[event.uid] || 'single')
+          yearsByEvent[event.instanceId] = +eventYear
+          hasAbsenceField.value[event.instanceId] = !!event.absenceField
+          attachmentMark.value[event.instanceId] = !!attachmentMark.value?.[event.instanceId]
+          actionScope.value[event.uid] = actionScope.value?.[event.uid] || 'single'
 
           const name = 'EditPopoverView'
           const context = {}
@@ -761,11 +763,11 @@ const syncProjectData = async (projectName: string) => {
             ...currentRoute.params,
             object: eventObject,
             // recurrenceId: event.times.start.stamp, // event.recurrenceId is different
-            recurrenceId: +event.recurrenceId > 0 ? event.recurrenceId : event.times.start.stamp,
+            recurrenceId: '' + (+event.recurrenceId > 0 ? event.recurrenceId : event.times.start.stamp),
             context: btoa(JSON.stringify(context)),
           }
-          const query = currentRoute.query
-          vueSet(routerEventEdit.value, event.instanceId, { name, params, query })
+          const query = currentRoute.query as Record<string, string>
+          routerEventEdit.value[event.instanceId] = { name, params, query }
 
           const calendarAppUrlParams = {
             view: 'timeGridWeek',
@@ -774,33 +776,33 @@ const syncProjectData = async (projectName: string) => {
             objectId: params.object,
             recurrenceId: params.recurrenceId,
           }
-          vueSet(calendarAppEventEdit.value, event.instanceId, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
+          calendarAppEventEdit.value[event.instanceId] = generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams)
 
           if (event.seriesUid !== UUID_NIL) {
             if (eventRelations.value[event.seriesUid] === undefined) {
-              vueSet(eventRelations.value, event.seriesUid, relationsCounter++)
+              eventRelations.value[event.seriesUid] = relationsCounter++
               relatedEvents[event.seriesUid] = []
             }
             relatedEvents[event.seriesUid].push(event)
           }
           if (+event.recurrenceId > 0) {
             if (eventSeries.value[event.uid] === undefined) {
-              vueSet(eventSeries.value, event.uid, seriesCounter++)
+              eventSeries.value[event.uid] = seriesCounter++
               seriesEvents[event.uid] = []
-              calendarAppUrlParams.recurrenceId = DateTime.fromISO(event.seriesStart, { setZone: true }).toUnixInteger()
-              vueSet(calendarAppEventEditSeries.value, event.uid, generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams))
+              calendarAppUrlParams.recurrenceId = '' + DateTime.fromISO(event.seriesStart, { setZone: true }).toUnixInteger()
+              calendarAppEventEditSeries.value[event.uid] = generateUrl('/apps/calendar/{view}/{timeRange}/edit/{mode}/{objectId}/{recurrenceId}', calendarAppUrlParams)
             }
             seriesEvents[event.uid].push(event)
           }
           // check if the current route contains a calendar app component
-          if (CALENDAR_APP_ROUTES.includes(currentRoute.name!)) {
+          if (CALENDAR_APP_ROUTES.includes(currentRoute.name as string)) {
             if (eventObject === currentRoute.params.object) {
               expandedState.value[entry.uri] = true
               for (const instance of Object.values(currentRoute.matched[currentRoute.matched.length - 1].instances)) {
-                // @ts-expect-error: 2339
+                // @ts-expect-error: 2339 Just too lazy to define the types.
                 if (typeof instance.repositionPopover === 'function') {
                   nextTick().then(() => {
-                    // @ts-expect-error: 2339
+                    // @ts-expect-error: 2339 Just too lazy to define the types.
                     instance.repositionPopover()
                   })
                 }
@@ -826,6 +828,17 @@ const syncProjectData = async (projectName: string) => {
   })
 }
 
+let calendarObjectsStore: CalendarObjectsStore
+let calendarObjectInstanceStore: CalendarObjectInstanceStore
+const mutationsAllowed = ref(false)
+let stopModificationCountWatch: WatchStopHandle
+
+const syncEventListTrigger = ref(false)
+
+// some mutations do not require a reload, so pause the mutation
+// observer for those
+let ignoreCalendarObjectMutations = false
+
 const handleReload = async () => {
   syncProjectData(project.value?.name || '')
   if (currentRoute.name === 'EditPopoverView' || currentRoute.name === 'EditFullView') {
@@ -834,7 +847,7 @@ const handleReload = async () => {
     const {
       calendarObject,
     } = await calendarObjectInstanceStore.getCalendarObjectInstanceByObjectIdAndRecurrenceId({
-      objectId: currentRoute.params.object,
+      objectId: currentRoute.params.object as string,
       recurrenceId: +currentRoute.params.recurrenceId,
       reload: true,
     })
@@ -885,33 +898,33 @@ const updateActionScope = (event: EventMatrixEvent, scope: ActionScope) => {
   // transition to series: non-series events transition to single
   // transition to related: all related events have their scope set to related
   switch (scope) {
-  case 'single':
-    if (event.seriesUid === UUID_NIL) {
-      return
-    }
-    for (const related of relatedEvents[event.seriesUid]) {
-      actionScope.value[related.uid] = scope
-    }
-    break
-  case 'series':
-    for (const related of relatedEvents[event.seriesUid]) {
-      if (related.uid !== event.uid) {
-        actionScope.value[related.uid] = 'single'
+    case 'single':
+      if (event.seriesUid === UUID_NIL) {
+        return
       }
-    }
-    break
-  case 'related':
-    for (const related of relatedEvents[event.seriesUid]) {
-      actionScope.value[related.uid] = scope
-    }
-    break
+      for (const related of relatedEvents[event.seriesUid]) {
+        actionScope.value[related.uid] = scope
+      }
+      break
+    case 'series':
+      for (const related of relatedEvents[event.seriesUid]) {
+        if (related.uid !== event.uid) {
+          actionScope.value[related.uid] = 'single'
+        }
+      }
+      break
+    case 'related':
+      for (const related of relatedEvents[event.seriesUid]) {
+        actionScope.value[related.uid] = scope
+      }
+      break
   }
 }
 
 interface LegacyPostEvent {
-  calendarId: number,
-  uri: string,
-  recurrenceId?: number,
+  calendarId: number
+  uri: string
+  recurrenceId?: number
 }
 
 const legacyEventSelection: Record<string, string> = {}
@@ -955,18 +968,18 @@ const toggleAttachmentMark = (event: EventMatrixEvent) => {
   const mark = !attachmentMark.value[event.instanceId]
   updateAttachmentMark(event, mark)
   switch (actionScope.value[event.uid]) {
-  case 'single':
-    break
-  case 'related':
-    for (const related of relatedEvents[event.seriesUid]) {
-      updateAttachmentMark(related, mark && !related.deleted)
-    }
-    break
-  case 'series':
-    for (const sibling of seriesEvents[event.uid]) {
-      updateAttachmentMark(sibling, mark && !sibling.deleted)
-    }
-    break
+    case 'single':
+      break
+    case 'related':
+      for (const related of relatedEvents[event.seriesUid]) {
+        updateAttachmentMark(related, mark && !related.deleted)
+      }
+      break
+    case 'series':
+      for (const sibling of seriesEvents[event.uid]) {
+        updateAttachmentMark(sibling, mark && !sibling.deleted)
+      }
+      break
   }
   asyncEmit(LEGACY_UPDATE_EVENTS_SELECTION, {
     origin: COMPONENT_NAME,
@@ -1030,17 +1043,6 @@ const exportEvents = async () => {
     )
   }
 }
-
-let calendarObjectsStore: CalendarObjectsStore
-let calendarObjectInstanceStore: CalendarObjectInstanceStore
-const mutationsAllowed = ref(false)
-let stopModificationCountWatch: WatchStopHandle
-
-const syncEventListTrigger = ref(false)
-
-// some mutations do not require a reload, so pause the mutation
-// observer for those
-let ignoreCalendarObjectMutations = false
 
 calendarStoreSetup().then((_arg) => {
   calendarObjectInstanceStore = useCalendarObjectInstance()
@@ -1120,21 +1122,21 @@ const toggleAbsenceField = async (event: EventMatrixEvent) => {
   const newValue = !hasAbsenceField.value[event.instanceId]
   try {
     switch (actionScope.value[event.uid]) {
-    case 'single':
-      await mutateAbsenceField(event, newValue)
-      break
-    case 'related':
-      for (const related of relatedEvents[event.seriesUid]) {
-        await mutateAbsenceField(related, newValue && !related.deleted)
-      }
-      break
-    case 'series':
-      for (const sibling of seriesEvents[event.uid]) {
-        await mutateAbsenceField(sibling, newValue && !sibling.deleted)
-      }
-      break
+      case 'single':
+        await mutateAbsenceField(event, newValue)
+        break
+      case 'related':
+        for (const related of relatedEvents[event.seriesUid]) {
+          await mutateAbsenceField(related, newValue && !related.deleted)
+        }
+        break
+      case 'series':
+        for (const sibling of seriesEvents[event.uid]) {
+          await mutateAbsenceField(sibling, newValue && !sibling.deleted)
+        }
+        break
     }
-  } catch (error) {
+  } catch {
     errorHandler(new AppError({ component: COMPONENT_NAME }, t(appName, 'Unable to modify the absence field.')))
   }
   ignoreCalendarObjectMutations = false
@@ -1158,21 +1160,21 @@ const handleProjectLink = async (event: EventMatrixEvent, linkToProject: boolean
   ignoreCalendarObjectMutations = true
   try {
     switch (actionScope.value[event.uid]) {
-    case 'single':
-      await singleEventProjectLink(event, linkToProject)
-      break
-    case 'related': {
-      for (const related of relatedEvents[event.seriesUid]) {
-        await singleEventProjectLink(related, linkToProject)
+      case 'single':
+        await singleEventProjectLink(event, linkToProject)
+        break
+      case 'related': {
+        for (const related of relatedEvents[event.seriesUid]) {
+          await singleEventProjectLink(related, linkToProject)
+        }
+        break
       }
-      break
-    }
-    case 'series': {
-      for (const sibling of seriesEvents[event.uid]) {
-        await singleEventProjectLink(sibling, linkToProject)
+      case 'series': {
+        for (const sibling of seriesEvents[event.uid]) {
+          await singleEventProjectLink(sibling, linkToProject)
+        }
+        break
       }
-      break
-    }
     }
   } catch (error) {
     errorHandler(
@@ -1231,31 +1233,31 @@ const handleDeleteEvent = async (matrixEntry: EventMatrixRow, event: EventMatrix
   await aquireEventListLock()
   ignoreCalendarObjectMutations = true
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     switch (actionScope.value[event.uid]) {
-    case 'single':
-      await deleteSingleEvent(matrixEntry, event)
-      break
-    case 'related': {
-      const collection = [...relatedEvents[event.seriesUid]]
-      for (const related of collection) {
-        await deleteSingleEvent(matrixEntry, related)
+      case 'single':
+        await deleteSingleEvent(matrixEntry, event)
+        break
+      case 'related': {
+        const collection = [...relatedEvents[event.seriesUid]]
+        for (const related of collection) {
+          await deleteSingleEvent(matrixEntry, related)
+        }
+        break
       }
-      break
-    }
-    case 'series': {
-      const collection = [...seriesEvents[event.uid]]
-      for (const sibling of collection) {
-        await deleteSingleEvent(matrixEntry, sibling)
+      case 'series': {
+        const collection = [...seriesEvents[event.uid]]
+        for (const sibling of collection) {
+          await deleteSingleEvent(matrixEntry, sibling)
+        }
+        break
       }
-      break
-    }
     }
   } catch (error) {
     errorHandler(
       new AppError(
         { component: COMPONENT_NAME },
-        t(appName, 'Unable to delete events.'), { cause: error },
+        t(appName, 'Unable to delete events.'),
+        { cause: error },
       ),
     )
   }
@@ -1274,7 +1276,7 @@ const eventRelationsIndicator = (event: EventMatrixEvent) =>
     : ''
 
 syncProjectData(props.projectName).then(() => logger.debug('Project-data has been synced'))
-watch(() => props.projectName, async (newValue/*, oldValue */) => {
+watch(() => props.projectName, async (newValue, _oldValue) => {
   await syncProjectData(newValue)
 })
 
@@ -1302,11 +1304,9 @@ watch(syncEventListTrigger, async (value) => {
             ...currentRoute.params as { object: string, context: string },
             recurrenceId,
           },
-          // @ts-expect-error: 2322
-          query: currentRoute.query,
+          query: currentRoute.query as Record<string, string>,
         }
-        // @ts-expect-error: 2769
-        await router.replace(location as RawLocation)
+        await router.replace(location as RouteLocationRaw)
       }
     }
   }
@@ -1322,6 +1322,7 @@ onUnmounted(() => {
 })
 
 </script>
+
 <style scoped lang="scss">
 @use "sass:list";
 @use '../../style/mixins/flex.scss';

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { showError, showInfo, TOAST_DEFAULT_TIMEOUT/*, TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
+import { showError, showInfo, TOAST_DEFAULT_TIMEOUT /* , TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
 
 export const showErrorToast = (message: string, timeout?: number, isHTML?: boolean) =>
   showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT, isHTML });

@@ -21,31 +21,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState } from './globals.ts';
-import $, { isJQuerySelect, type JQuerySelect } from './jquery.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as PHPMyEdit from './pme.ts';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import fileDownload from './file-download.ts';
-import {
-  inputSelector as pmeInputSelector,
-  formSelector as pmeFormSelector,
-  valueSelector as pmeValueSelector,
-  selectInputSelector as pmeSelectInputSelector,
-  inputClassSelector as pmeInputClassSelector,
-} from './pme-selectors.ts';
-import {
-  refreshWidget as refreshSelectWidget,
-  options as getSelectOptions,
-  optionByValue as getSelectOptionByValue,
-} from './select-utils.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
+import type { JQuerySelect } from './jquery.ts';
 import type { TableLoadCallback } from './pme-state.ts';
 
-require('./jquery-readonly.ts');
-require('project-participant-fields-display.scss');
-require('donation-receipts.scss');
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import fileDownload from './file-download.ts';
+import { globalState } from './globals.ts';
+import $, { isJQuerySelect } from './jquery.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import {
+  formSelector as pmeFormSelector,
+  inputClassSelector as pmeInputClassSelector,
+  inputSelector as pmeInputSelector,
+  selectInputSelector as pmeSelectInputSelector,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import {
+  optionByValue as getSelectOptionByValue,
+  options as getSelectOptions,
+  refreshWidget as refreshSelectWidget,
+} from './select-utils.ts';
+import { templateRenderer } from './template-renderer.ts';
+
+import './jquery-readonly.ts';
+import 'project-participant-fields-display.scss';
+import 'donation-receipts.scss';
 
 const pmeFormInit = (
   containerSel: Parameters<TableLoadCallback['callback']>[1],
@@ -82,7 +84,8 @@ const pmeFormInit = (
         {
           upload: 'documents/finance/' + template + '/upload',
           delete: 'documents/finance/' + template + '/delete',
-        });
+        },
+      );
       const ambientContainerSelector = parameters?.tableDialogOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
         $(this).on('pme:upload-done pme:upload-deleted', (event) => {
@@ -281,7 +284,8 @@ const pmeFormInit = (
 const documentReady = () => {
 
   PHPMyEdit.addTableLoadCallback(
-    template, {
+    template,
+    {
       callback(_template, selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
@@ -290,7 +294,8 @@ const documentReady = () => {
         resizeCB();
       },
       context: globalState,
-    });
+    },
+  );
 
   CAFEVDB.addReadyCallback(async () => {
 

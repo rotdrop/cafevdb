@@ -3,7 +3,6 @@ js/**
 css/**
 statistics/**
 package-lock.json
-/
 *~
 lib/Toolkit/[A-Z]*
 lib/tooltips.php.new

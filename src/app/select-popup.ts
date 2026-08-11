@@ -21,34 +21,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
+import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
 import { toolTipsInit } from './cafevdb.ts';
+import $ from './jquery.ts';
+
 import './jquery-extensions.ts';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
-import { translate as t } from '@nextcloud/l10n';
 require('cafevdb-selectize.scss');
 
 interface SelectedOptionDTO {
-  value: string,
-  html: string,
-  text: string,
+  value: string;
+  html: string;
+  text: string;
 }
 
 interface Options {
-  title: string,
-  position: JQueryUI.JQueryPositionOptions,
-  dialogClass?: string,
-  saveText: string,
-  saveTitle: string,
-  cancelText: string,
-  cancelTitle: string,
-  buttons: JQueryUI.ButtonOptions[], // additional buttons.
-  openCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void,
-  saveCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>, selected: SelectedOptionDTO[]) => void,
-  closeCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void,
-  selectize: Selectize.IOptions,
+  title: string;
+  position: JQueryUI.JQueryPositionOptions;
+  dialogClass?: string;
+  saveText: string;
+  saveTitle: string;
+  cancelText: string;
+  cancelTitle: string;
+  buttons: JQueryUI.ButtonOptions[]; // additional buttons.
+  openCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
+  saveCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>, selected: SelectedOptionDTO[]) => void;
+  closeCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
+  selectize: Selectize.IOptions;
 }
 
 /*
@@ -68,12 +69,14 @@ const selectPopup = function(contents: string, userOptions: Partial<Options>) {
     saveText: t(appName, 'Save'),
     saveTitle: t(
       appName,
-      'Accept the currently selected options and return to the underlying form. '),
+      'Accept the currently selected options and return to the underlying form. ',
+    ),
     cancelText: t(appName, 'Cancel'),
     cancelTitle: t(
       appName,
       'Discard the current selection and close the dialog. '
-        + 'The initial set of selected options will remain unchanged.'),
+        + 'The initial set of selected options will remain unchanged.',
+    ),
     buttons: [], // additional buttons.
     openCallback: undefined,
     saveCallback: undefined,

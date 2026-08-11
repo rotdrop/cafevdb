@@ -22,18 +22,18 @@
  -->
 <template>
   <LegacyPageActionsMenu ref="actions"
-                         :menu-caption="menuCaption"
-                         :enable-overview-item="enableOverviewItem"
-                         :entity-id="entityId"
-                         :project-id="projectId"
-                         :project-name="projectName"
+                         :menuCaption="menuCaption"
+                         :enableOverviewItem="enableOverviewItem"
+                         :entityId="entityId"
+                         :projectId="projectId"
+                         :projectName="projectName"
                          :template="template"
   >
     <template #actions>
       <NcActionButton v-tooltip.right="tooltips['invoice:download']"
                       :class="[cssClass]"
                       :name="t(appName, 'Download Standard Invoice')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleInvoiceDownload(MailMergeDownload)"
       >
         <template #icon>
@@ -43,7 +43,7 @@
       <NcActionButton v-tooltip.right="tooltips['invoice:send']"
                       :class="[cssClass]"
                       :name="t(appName, 'Email Standard Invoice')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleInvoiceEmail"
       >
         <template #icon>
@@ -53,7 +53,7 @@
       <NcActionButton v-tooltip.right="tooltips['invoice:download-data']"
                       :class="[cssClass]"
                       :name="t(appName, 'Download Substitution Data')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleInvoiceDownload(MailMergeDataset)"
       >
         <template #icon>
@@ -63,55 +63,58 @@
     </template>
   </LegacyPageActionsMenu>
 </template>
+
 <script setup lang="ts">
-import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
-import { NcActionButton } from '@nextcloud/vue'
-import { appName } from '../config.ts'
+import type { MailMergeOperation, MailMergePayload } from '../types/ajax/mail-merge.ts'
+
 import { translate as t } from '@nextcloud/l10n'
-import IconInvoiceDownload from 'vue-material-design-icons/FileDownloadOutline.vue'
+import { NcActionButton } from '@nextcloud/vue'
+import { computed, ref } from 'vue'
 import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
-import { emit as asyncEmit } from '../services/async-event-bus.ts'
-import useTooltipsStore from '../stores/tooltips.ts'
-import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
-import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../toolkit/types/errors.ts'
-import { computed, ref } from 'vue'
+import IconInvoiceDownload from 'vue-material-design-icons/FileDownloadOutline.vue'
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import { appName } from '../config.ts'
 import * as BusEvents from '../event-bus-events.ts'
 import { INVOICE_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import type { MailMergePayload, MailMergeOperation } from '../types/ajax/mail-merge.ts'
-import { MailMergeDownload, MailMergeDataset } from '../types/ajax/mail-merge.ts'
+import { emit as asyncEmit } from '../services/async-event-bus.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
+import { AppError } from '../toolkit/types/errors.ts'
+import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
+import { MailMergeDataset, MailMergeDownload } from '../types/ajax/mail-merge.ts'
 import Console from '../util/console.ts'
+
+const props = withDefaults(defineProps<{
+  // amount?: number
+  // currencyCode?: string
+  // debitorId?: number
+  // debitorName?: string
+  enableOverviewItem?: boolean
+  entityId: number
+  invoiceNumber: string
+  menuCaption?: string
+  originatorId: number
+  // originatorName?: string
+  projectId: number
+  projectName: string
+  template: string
+}>(), {
+  amount: undefined,
+  currencyCode: undefined,
+  debitorId: undefined,
+  debitorName: undefined,
+  // eslint-disable-next-line vue/no-boolean-default
+  enableOverviewItem: true,
+  menuCaption: undefined,
+  originatorName: undefined,
+})
 
 const logger = new Console(COMPONENT_NAME)
 
 const errorHandlerProvider = useErrorHandlerStore()
 
 const errorHandler = errorHandlerProvider.getHandler()
-
-const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  amount?: number,
-  currencyCode?: string,
-  debitorId?: number,
-  debitorName?: string,
-  enableOverviewItem?: boolean,
-  entityId: number,
-  invoiceNumber: string,
-  menuCaption?: string,
-  originatorId: number,
-  originatorName?: string,
-  projectId: number,
-  projectName: string,
-  template: string,
-}>(), {
-  amount: undefined,
-  currencyCode: undefined,
-  debitorId: undefined,
-  debitorName: undefined,
-  enableOverviewItem: true,
-  menuCaption: undefined,
-  originatorName: undefined,
-})
 
 // data
 const cssClass = computed(() => appName + '-invoice-actions')
@@ -130,10 +133,14 @@ const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
-  actions.value && actions.value.closeMenu()
+  if (actions.value) {
+    actions.value.closeMenu()
+  }
 }
 const openMenu = (x?: number, y?: number) => {
-  actions.value && actions.value.openMenu(x, y)
+  if (actions.value) {
+    actions.value.openMenu(x, y)
+  }
 }
 
 // we need to expose some methods in order to allow legacy code to
@@ -160,7 +167,7 @@ const handleInvoiceDownload = async (operation: MailMergeOperation = MailMergeDo
     asyncEmit(BusEvents.POP_BUSY_STATE)
     logger.error('Unable to download invoice', { props, error })
     const messageData = {
-      error: error.message || t(appName, 'unknown error'),
+      error: (error as { message?: string }).message || t(appName, 'unknown error'),
       invoiceNumber: props.invoiceNumber,
     }
     const message = (operation === MailMergeDownload)
@@ -186,6 +193,7 @@ const handleInvoiceEmail = async () => {
 }
 
 </script>
+
 <style lang="scss" scoped>
   // empty
 </style>

@@ -21,13 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import camelCase from 'camelcase';
 import { jq } from './jquery.ts';
 import {
+  classSelector as pmeClassSelector,
   sys as pmeSys,
   sysNameSelector as pmeSysNameSelector,
-  classSelector as pmeClassSelector,
 } from './pme-selectors.ts';
-import camelCase from 'camelcase';
 
 /**
  * Find the record-id for the given column
@@ -36,14 +36,14 @@ import camelCase from 'camelcase';
  *
  * @param column Name
  *
- * @returns The id value or false if not found.
+ * @return The id value or false if not found.
  */
 const pmeRecordValue = function($container: JQuery, column: string) {
   // PME_sys_rec[COLUMN]
   // PME_sys_groupby_rec[COLUMN]
   const recordNames = ['rec', 'groupby_rec'];
 
-  column = column.replace(/[A-Z]/g, m => '_' + m.toLowerCase());
+  column = column.replace(/[A-Z]/g, (m) => '_' + m.toLowerCase());
 
   let idValue = -1;
   const formSelector = pmeClassSelector('form', 'form');
@@ -81,6 +81,6 @@ const pmeRec = (selector: string|JQuery) => {
 };
 
 export {
-  pmeRecordValue as recordValue,
   pmeRec as rec,
+  pmeRecordValue as recordValue,
 };

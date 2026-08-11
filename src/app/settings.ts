@@ -21,40 +21,44 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.js';
-import { appName, appPrefix } from '../config.ts';
-import * as Ajax from './ajax.ts';
-import * as Notification from './notification.ts';
-import * as Dialogs from './dialogs.ts';
-import * as FileUpload from './file-upload.ts';
-import * as SelectUtils from './select-utils.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import { simpleSetHandler, simpleSetValueHandler, type GetValueResult } from './simple-set-value.ts';
-import { toolTipsInit } from './cafevdb.ts';
-import { setPersonalUrl, setAppUrl, getUrl, generateUrl as generateSettingsUrl } from './settings-urls.ts';
-import fileDownload from './file-download.ts';
-import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
+import type * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { GetValueResult } from './simple-set-value.ts';
+
 import { showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
-import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
-import * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import { EnumPersonalSettingsKey, EnumSettingsGetApp } from '../../build/ts-types/php-modules/Controller.ts';
-import { hiddenCssClass } from 'variables.scss';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import {
   BASE_PATH,
   END_POINT_APP_GET,
   END_POINT_PERSONAL_FORM,
 } from '../../build/ts-types/php-modules/Controller/PersonalSettingsController.ts';
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
+import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
+import { appName, appPrefix } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import { toolTipsInit } from './cafevdb.ts';
+import * as Dialogs from './dialogs.ts';
+import fileDownload from './file-download.ts';
+import * as FileUpload from './file-upload.ts';
+import $ from './jquery.js';
+import * as Notification from './notification.ts';
+import personalSettingsAfterLoad, { updateCreditsTimer } from './personal-settings.js';
+import * as SelectUtils from './select-utils.ts';
+import { makePlaceholder as selectPlaceholder } from './select-utils.ts';
+import { generateUrl as generateSettingsUrl, getUrl, setAppUrl, setPersonalUrl } from './settings-urls.ts';
+import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-require('../legacy/nextcloud/jquery/showpassword.js');
-require('jquery-ui/ui/widgets/autocomplete');
+import '../legacy/nextcloud/jquery/showpassword.js';
+import 'jquery-ui/ui/widgets/autocomplete';
+import 'jquery-ui/ui/widgets/accordion';
+import 'jquery-ui/ui/widgets/tabs';
+import { hiddenCssClass } from 'variables.scss';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
-require('jquery-ui/ui/widgets/accordion');
-require('jquery-ui/ui/widgets/tabs');
 
 require('personal-settings.scss');
 require('about.scss');
@@ -122,16 +126,15 @@ const afterLoad = function(container?: JQuery) {
     return;
   }
 
-  // @ts-expect-error 2339
-  tabsHolder.tabs({ selected: 0 });
+  tabsHolder.tabs({ active: 0 });
 
   // Work around showPassword erasing the value and returns the
   // text input clone.
   const showPassword = function(element: JQuery) {
     const tmp = element.val();
     let showElement: JQuery;
-    // @ts-expect-error 2339
-    element.showPassword(function(args: { input: JQuery, checkbox: JQuery, clone: JQuery }) {
+    // @ts-expect-error 2339 CUSTOM LEGACY OVERRIDE
+    element.showPassword(function(args: { input: JQuery; checkbox: JQuery; clone: JQuery }) {
       showElement = args.clone;
     });
     element.val(tmp || '');
@@ -155,12 +158,14 @@ const afterLoad = function(container?: JQuery) {
       return false;
     }
     $.post(
-      setPersonalUrl(EnumPersonalSettingsKey.ENCRYPTION_KEY), {
+      setPersonalUrl(EnumPersonalSettingsKey.ENCRYPTION_KEY),
+      {
         value: {
           [EnumPersonalSettingsKey.ENCRYPTION_KEY]: encryptionKey.val(),
           loginpassword: loginPassword.val(),
         },
-      })
+      },
+    )
       .done(function(data) {
         console.log(data);
         $('#userkey input[name="dbkey1"]').val('');
@@ -206,7 +211,8 @@ const afterLoad = function(container?: JQuery) {
     simpleSetValueHandler(
       adminGeneral.find('input[name="orchestra"]') as JQuery<HTMLInputElement>,
       'blur',
-      msg, {
+      msg,
+      {
         success(_element, _data, value, _msg) {
           if (value === '') {
             $('div.personalblock.admin,div.personalblock.sharing').find('fieldset').each(function() {
@@ -227,10 +233,14 @@ const afterLoad = function(container?: JQuery) {
             }
           }
         },
-      });
+      },
+    );
 
     simpleSetValueHandler(
-      adminGeneral.find<HTMLSelectElement>(`select[name="${ConfigConstants.ORCHESTRA_LOCALE_KEY}"]`), 'change', msg, {
+      adminGeneral.find<HTMLSelectElement>(`select[name="${ConfigConstants.ORCHESTRA_LOCALE_KEY}"]`),
+      'change',
+      msg,
+      {
         success(_element, data: DTO.OrchestraLocaleResponse, _value, _msg) {
           if (data.localeInfo) {
             const $localeInfo = adminGeneral.find('.locale.information');
@@ -238,7 +248,8 @@ const afterLoad = function(container?: JQuery) {
             $localeInfo.append($(data.localeInfo as string).children());
           }
         },
-      });
+      },
+    );
   }
 
   {
@@ -272,7 +283,8 @@ const afterLoad = function(container?: JQuery) {
               systemkey: keyInput.val(),
               oldkey: oldKeyInput.val(),
             },
-          })
+          },
+        )
           .done(function(data) {
             // re-enable all forms
             $(tabsSelector + ' fieldset').prop('disabled', false);
@@ -328,7 +340,8 @@ const afterLoad = function(container?: JQuery) {
       }
 
       $.post(
-        getUrl('passwordgenerate'))
+        getUrl('passwordgenerate'),
+      )
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -373,7 +386,10 @@ const afterLoad = function(container?: JQuery) {
 
     // test password
     simpleSetValueHandler(
-      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} input.button`), 'click', $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} .statusmessage`), {
+      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} input.button`),
+      'click',
+      $(`fieldset.${appName}_${ConfigConstants.APP_DB_PASSWORD} .statusmessage`),
+      {
         success(_element, _data, _value) {
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
           // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
@@ -385,7 +401,8 @@ const afterLoad = function(container?: JQuery) {
           }
           return val;
         },
-      });
+      },
+    );
   }
 
   /****************************************************************************
@@ -438,7 +455,10 @@ const afterLoad = function(container?: JQuery) {
     });
 
     simpleSetValueHandler(
-      $shareOwnerCheck, 'click', msg, {
+      $shareOwnerCheck,
+      'click',
+      msg,
+      {
         success(_element, _data, _value, _msg) { // done
           $shareOwnerSaved.val($shareOwner.val()!);
           $shareOwner.prop('disabled', true);
@@ -454,7 +474,8 @@ const afterLoad = function(container?: JQuery) {
             },
           };
         },
-      });
+      },
+    );
   } // fieldset block
 
   // Share-owner´s password
@@ -467,7 +488,10 @@ const afterLoad = function(container?: JQuery) {
     const passwordClone = showPassword(password);
 
     simpleSetValueHandler(
-      change, 'click', msg, {
+      change,
+      'click',
+      msg,
+      {
         success(_element, _data, _value, _msg) { // done
           // Why should we want to empty this except for security reasons?
           // password.val('');
@@ -481,7 +505,8 @@ const afterLoad = function(container?: JQuery) {
           }
           return val;
         },
-      });
+      },
+    );
 
     container.find('#generate').on('click', function(_event) {
       $('.statusmessage').hide();
@@ -493,7 +518,8 @@ const afterLoad = function(container?: JQuery) {
       }
 
       $.post(
-        getUrl('passwordgenerate'))
+        getUrl('passwordgenerate'),
+      )
         .fail(function(xhr, status, errorThrown) {
           msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
         })
@@ -536,7 +562,9 @@ const afterLoad = function(container?: JQuery) {
       },
     );
 
-    container.find(`#${ConfigConstants.SHARED_FOLDER}-form`).on('submit', function() { return false; });
+    container.find(`#${ConfigConstants.SHARED_FOLDER}-form`).on('submit', function() {
+      return false;
+    });
 
     type CSSBase = typeof ConfigConstants.DEDICATED_FOLDERS[number];
     type CSSSaved<T extends CSSBase> = `${T}${'-saved'}`;
@@ -581,7 +609,10 @@ const afterLoad = function(container?: JQuery) {
       });
 
       simpleSetValueHandler(
-        sharedObjectCheck, 'click', msg, {
+        sharedObjectCheck,
+        'click',
+        msg,
+        {
           success(element, data: DTO.FolderValueResponse, value: Value<CSS>, msg) { // done
             // value is just the thing submitted to the AJAX call
             sharedObject.val(data.value);
@@ -604,7 +635,8 @@ const afterLoad = function(container?: JQuery) {
               } as Value<CSS>,
             };
           },
-        });
+        },
+      );
     };
 
     sharedFolder(ConfigConstants.SHARED_FOLDER, function(_element, css, data, value, _msg) {
@@ -696,7 +728,8 @@ const afterLoad = function(container?: JQuery) {
     simpleSetValueHandler(
       $importClubMembersAsCloudUsers,
       'change',
-      undefined, {
+      undefined,
+      {
         setup() {
           console.info('SETUP');
           const $this = $(this) as JQuery;
@@ -722,7 +755,8 @@ const afterLoad = function(container?: JQuery) {
           $this.prop('checked', !$this.is(':checked'));
           updateOtherOnImportChange($this);
         },
-      });
+      },
+    );
 
     const $cloudUserViewsDatabase = $importClubMembersFieldSet.find('input[name="cloudUserViewsDatabase"]') as JQuery<HTMLInputElement>;
     const $cloudUserViewsDatabaseCheckbox = $importClubMembersFieldSet.find('input.checkbox.user-sql.separate-database') as JQuery<HTMLInputElement>;
@@ -761,7 +795,10 @@ const afterLoad = function(container?: JQuery) {
     });
 
     simpleSetValueHandler(
-      $musicianPersonalizedViews, 'change', undefined, {
+      $musicianPersonalizedViews,
+      'change',
+      undefined,
+      {
         setup() {
           const $this = $(this) as JQuery;
           $this.addClass('busy');
@@ -783,7 +820,8 @@ const afterLoad = function(container?: JQuery) {
           $this.prop('checked', !$this.is(':checked'));
           updateOtherOnPersonalizedViewsChange($this);
         },
-      });
+      },
+    );
 
     simpleSetValueHandler($recreatePersonalizedViewsButton, 'click', undefined, {
       setup() { $recreatePersonalizedViewsButton.addClass('busy'); },
@@ -814,15 +852,13 @@ const afterLoad = function(container?: JQuery) {
       const $container = $emailContainer.find('fieldset.' + configKey);
       const $input = $container.find<HTMLInputElement>('input#' + configKey);
 
-      simpleSetValueHandler($input, 'blur', undefined,
-        {
-          success($element, data: DTO.SimpleSetValueResponse) {
-            if (data.value) {
-              $element.val(data.value);
-            }
-          },
+      simpleSetValueHandler($input, 'blur', undefined, {
+        success($element, data: DTO.SimpleSetValueResponse) {
+          if (data.value) {
+            $element.val(data.value);
+          }
         },
-      );
+      });
     }
 
     {
@@ -839,7 +875,9 @@ const afterLoad = function(container?: JQuery) {
         const name = $input.attr('name')!;
         if (value !== '') {
           $.post(
-            setAppUrl(name), { value })
+            setAppUrl(name),
+            { value },
+          )
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
             })
@@ -856,7 +894,7 @@ const afterLoad = function(container?: JQuery) {
     {
       const $container = $emailContainer.find('form.serversettings');
       const $serverSelects = $container.find<HTMLSelectElement>(
-        [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map(x => 'select#' + x).join(','),
+        [ConfigConstants.SMTP_SECURITY, ConfigConstants.IMAP_SECURITY].map((x) => 'select#' + x).join(','),
       );
       const $serverInputs = $container.find<HTMLInputElement>(
         [
@@ -864,14 +902,16 @@ const afterLoad = function(container?: JQuery) {
           ConfigConstants.SMTP_SERVER,
           ConfigConstants.IMAP_PORT,
           ConfigConstants.IMAP_SERVER,
-        ].map(x => 'input#' + x).join(','),
+        ].map((x) => 'input#' + x).join(','),
       );
 
       $serverSelects.on('change', function(this: HTMLSelectElement, _event) {
         const name = $(this).attr('name')!;
         const value = $(this).val();
         $.post(
-          setAppUrl(name), { value })
+          setAppUrl(name),
+          { value },
+        )
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);
           })
@@ -888,7 +928,8 @@ const afterLoad = function(container?: JQuery) {
       simpleSetValueHandler(
         $serverInputs,
         'blur',
-        undefined, {
+        undefined,
+        {
           success($element, data: DTO.SimpleSetValueResponse) {
             console.info('EMAIL SERVER VALUE', { data });
             if (data.value) {
@@ -917,7 +958,8 @@ const afterLoad = function(container?: JQuery) {
       simpleSetValueHandler(
         $blurInputs,
         'blur',
-        undefined, {
+        undefined,
+        {
           success($element, data: DTO.SimpleSetValueResponse) {
             console.info('BULK EMAIL VALUE', { data });
             if (data.value && $element.val() !== data.value) {
@@ -952,7 +994,8 @@ const afterLoad = function(container?: JQuery) {
       simpleSetValueHandler(
         $bulkEmailPrivacyNotice,
         'blur',
-        undefined, {
+        undefined,
+        {
           success($element, data: DTO.SimpleSetValueResponse) {
             console.info('BULK EMAIL PRIVACY NOTICE', { data });
             if (data.value && $element.val() !== data.value) {
@@ -970,7 +1013,10 @@ const afterLoad = function(container?: JQuery) {
       simpleSetHandler($container.find('#emailtestbutton'), 'click');
       simpleSetValueHandler($emailTestAddress, 'blur');
       simpleSetValueHandler(
-        $container.find('#' + ConfigConstants.EMAIL_TEST_MODE), 'change', undefined, {
+        $container.find('#' + ConfigConstants.EMAIL_TEST_MODE),
+        'change',
+        undefined,
+        {
           success(_element, _data) {
             // if (element.is(':checked')) {
             //   emailTestAddress.prop('disabled', false);
@@ -978,7 +1024,8 @@ const afterLoad = function(container?: JQuery) {
             //   emailTestAddress.prop('disabled', true);
             // }
           },
-        });
+        },
+      );
     }
 
     {
@@ -989,7 +1036,7 @@ const afterLoad = function(container?: JQuery) {
         ...Object.values(ConfigConstants.MAILING_LIST_CONFIG),
         ...Object.values(ConfigConstants.MAILING_LIST_REST_CONFIG),
       ];
-      const $inputs = $container.find<HTMLInputElement>(inputValues.map(x => '#' + x).join(','));
+      const $inputs = $container.find<HTMLInputElement>(inputValues.map((x) => '#' + x).join(','));
 
       const $password = $container.find('#' + ConfigConstants.MAILING_LIST_REST_CONFIG.password);
       showPassword($password);
@@ -1017,11 +1064,13 @@ const afterLoad = function(container?: JQuery) {
     simpleSetValueHandler(
       $('input.phoneNumber') as JQuery<HTMLInputElement>,
       'blur',
-      msg, {
+      msg,
+      {
         success(element, data: DTO.PhoneNumberResponse, _value, _msgElement) {
           element.val(data.number);
         },
-      });
+      },
+    );
 
     const $streetAddressCountry = $('select.' + ConfigConstants.STREET_ADDRESS_COUNTRY);
     $streetAddressCountry.chosen({
@@ -1061,7 +1110,8 @@ const afterLoad = function(container?: JQuery) {
     simpleSetValueHandler(
       $specialMemberProjects,
       'blur',
-      msg, {
+      msg,
+      {
         success($self, data: DTO.SpecialProjectsResponse, _value, _msgElement) {
           const name = $self.attr('name');
           $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
@@ -1083,13 +1133,15 @@ const afterLoad = function(container?: JQuery) {
                     data.feedback = decision;
                     if (decision === true) {
                       $.post(
-                        setAppUrl(name + option), {
+                        setAppUrl(name + option),
+                        {
                           value: {
                             project: data.project,
                             projectId: data.projectId,
                             newName: data.newName,
                           },
-                        })
+                        },
+                      )
                         .fail(function(xhr, status, errorThrown) {
                           Ajax.handleError(xhr, status, errorThrown);
                         })
@@ -1108,22 +1160,27 @@ const afterLoad = function(container?: JQuery) {
                         });
                     }
                   },
-                  true);
+                  true,
+                );
               }
             }
           }
         },
-      });
+      },
+    );
 
     type SpecialProjectCreatePayload = {
-      newProjectName: string,
-      projectId: number,
-      projectName: string,
+      newProjectName: string;
+      projectId: number;
+      projectName: string;
     };
 
     const $specialMemberProjectsCreate = $('input[type="button"].specialMemberProjects') as JQuery<HTMLInputElement>;
     simpleSetValueHandler(
-      $specialMemberProjectsCreate, 'click', msg, {
+      $specialMemberProjectsCreate,
+      'click',
+      msg,
+      {
         success(_$self, _data: DTO.SpecialProjectsResponse, _value: SpecialProjectCreatePayload, _msgElement) {},
         getValue($self, _msgElement) {
           const name = $self.attr('name')!;
@@ -1136,7 +1193,8 @@ const afterLoad = function(container?: JQuery) {
             },
           };
         },
-      });
+      },
+    );
 
     const executiveBoardIds = $('select.executive-board-ids') as JQuery<HTMLSelectElement>;
     // ts-expect-error 2339
@@ -1234,18 +1292,20 @@ const afterLoad = function(container?: JQuery) {
     const moveIntoPlace = function(file: FileUpload.UploadFile, $container: JQuery, $trigger: JQuery) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
-            '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
+        '/' + $(`#${ConfigConstants.SHARED_FOLDER}`).val()
             + '/' + $('#documenttemplatesfolder').val()
             + (subFolderId === '' ? '' : '/' + $('#' + subFolderId).val())
             + '/' + file.original_name;
 
       $.post(
-        generateAppUrl(UploadsController.END_POINT_MOVE), {
+        generateAppUrl(UploadsController.END_POINT_MOVE),
+        {
           stashedFile: file.tmp_name,
           destinationPath,
           originalFileName: file.original_name,
           uploadMode: 'copy',
-        })
+        },
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown);
           $trigger.removeClass('busy');
@@ -1259,7 +1319,9 @@ const afterLoad = function(container?: JQuery) {
           const fileName = data.fileName;
           const downloadLink = data.downloadLink;
           $.post(
-            setAppUrl($container.data('documentTemplate')), { value: fileName })
+            setAppUrl($container.data('documentTemplate')),
+            { value: fileName },
+          )
             .fail(function(xhr, status, errorThrown) {
               Ajax.handleError(xhr, status, errorThrown);
               $trigger.removeClass('busy');
@@ -1301,17 +1363,20 @@ const afterLoad = function(container?: JQuery) {
       $self.addClass('busy');
 
       fileDownload(
-        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST}`, {
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST}`,
+        {
           documentTemplate: $self.data('template'),
           format: $self.data('format'),
-        }, {
+        },
+        {
           always() {
             $self.removeClass('busy');
           },
           errorMessage() {
             return t(appName, 'Unable to download auto-fill result.');
           },
-        });
+        },
+      );
 
       return false;
     });
@@ -1323,16 +1388,19 @@ const afterLoad = function(container?: JQuery) {
       $self.addClass('busy');
 
       fileDownload(
-        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST_DATA}`, {
+        `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.AUTO_FILL_TEST_DATA}`,
+        {
           documentTemplate: $self.data('template'),
-        }, {
+        },
+        {
           always() {
             $self.removeClass('busy');
           },
           errorMessage() {
             return t(appName, 'Unable to download auto-fill result.');
           },
-        });
+        },
+      );
 
       return false;
     });
@@ -1387,7 +1455,8 @@ const afterLoad = function(container?: JQuery) {
                   t(appName, 'Error'),
                   function() {
                     $this.removeClass('busy');
-                  });
+                  },
+                );
                 return;
               }
               moveIntoPlace(files[0], $container, $this);
@@ -1484,7 +1553,10 @@ const afterLoad = function(container?: JQuery) {
     });
 
     simpleSetValueHandler(
-      $translationText, 'blur', $msg, {
+      $translationText,
+      'blur',
+      $msg,
+      {
         success(_element, _data, _value, _$msg) { // done
           // no need to do any extra stuff?
         },
@@ -1507,7 +1579,8 @@ const afterLoad = function(container?: JQuery) {
             return val;
           }
         },
-      });
+      },
+    );
 
     simpleSetHandler($deleteRecorded, 'click', $msg, {
       success(_$self, _data, _msgElement) {
@@ -1520,11 +1593,13 @@ const afterLoad = function(container?: JQuery) {
 
       fileDownload(
         `${BASE_PATH}/${END_POINT_APP_GET}/${EnumSettingsGetApp.TRANSLATION_TEMPLATES}`,
-        [], {
+        [],
+        {
           errorMessage(_url: string, _data: any) {
             return t(appName, 'Unable to download translation templates.');
           },
-        });
+        },
+      );
       return false;
     });
 

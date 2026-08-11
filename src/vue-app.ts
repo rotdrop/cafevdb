@@ -21,58 +21,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line n/no-missing-import
-import 'core-js/actual';
-import { appName } from './config.ts';
-import globalState from './app/globalstate.ts';
-import { generateFilePath } from '@nextcloud/router';
-import { getRequestToken } from '@nextcloud/auth';
-// import { sync } from 'vuex-router-sync'
-import Vue from 'vue';
-import Router from 'vue-router';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
 import CAFeVDB from './CAFeVDB.vue';
-import router from './router/app-router.ts';
-import { createPinia, PiniaVuePlugin } from 'pinia';
-import { Tooltip } from '@nextcloud/vue';
-import { mixin as globalMixin } from './mixins/global-mixin.ts';
+import globalState from './app/globalstate.ts';
 import * as Authorization from './authorization.ts';
+import { appName } from './config.ts';
+import { mixin as globalMixin } from './mixins/global-mixin.ts';
+import router from './router/app-router.ts';
 import { provideMountableComponents } from './services/mountable-components.ts';
 
-// Enabe dev-tools also needs unsafe-eval on script-src in the CSP.
+import 'core-js/actual';
+import './webpack-setup.ts';
+
+// Enable dev-tools also needs unsafe-eval on script-src in the CSP.
 // window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
 // window.__VUE__ = Vue;
 
-Vue.use(Router);
-Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
-// CSP config for webpack dynamic chunk loading
-__webpack_nonce__ = btoa(getRequestToken() || '');
-__webpack_public_path__ = generateFilePath(appName, '', '');
-
-Vue.directive('tooltip', Tooltip);
-Vue.mixin(globalMixin);
-
-const provide = Object.assign(
-  {},
-  { appId: appName },
-  Object.fromEntries(
+const provide = {
+  appId: appName,
+  ...Object.fromEntries(
     Object.entries(Authorization).filter(([key]) => key.startsWith('PERMISSION_')),
   ),
-);
+};
 
-const vueApp = new Vue({
-  el: '#content',
-  name: appName,
-  render: h => h(CAFeVDB),
-  provide,
-  // @ts-expect-error 2769
-  router,
-  pinia,
-});
+const app = createApp(CAFeVDB);
+app.directive('tooltip', Tooltip);
+app.mixin(globalMixin);
+app.use(router);
+app.use(pinia);
+for (const [key, value] of Object.entries(provide)) {
+  app.provide(key, value);
+}
+app.mount('#content');
 
 globalState.vueMode = true;
 
-provideMountableComponents(vueApp);
+provideMountableComponents(app);
 
-export default vueApp;
+export default app;

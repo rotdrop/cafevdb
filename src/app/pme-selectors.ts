@@ -26,8 +26,6 @@
  * PME CSS selector support.
  */
 
-import * as PHPMyEdit from './pme-state.ts';
-import $, { jq, isJQuery } from './jquery.ts';
 import {
   OPERATION_CHANGE,
   OPERATION_COPY_ADD,
@@ -35,6 +33,8 @@ import {
   OPERATION_LIST,
   OPERATION_VIEW,
 } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import $, { isJQuery, jq } from './jquery.ts';
+import * as PHPMyEdit from './pme-state.ts';
 
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.prefix;
@@ -278,7 +278,6 @@ const pmeContainer = (selector?: string|JQuery) => {
 // };
 
 export {
-  PHPMyEdit,
   pmeCellSelector as cellSelector,
   pmeClassSelector as classSelector,
   pmeClassSelectors as classSelectors,
@@ -294,6 +293,7 @@ export {
   pmeInputSelector as inputSelector,
   pmeKeySelector as keySelector,
   pmeNavigationSelector as navigationSelector,
+  PHPMyEdit,
   pmeQueryInfoSelector as queryInfoSelector,
   pmeSelectInputSelector as selectInputSelector,
   pmeSelector as selector,

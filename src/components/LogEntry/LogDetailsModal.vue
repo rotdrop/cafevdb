@@ -3,11 +3,10 @@
         SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <template>
-  <NcModal ref="modal"
-           :show="open"
+  <NcModal :show="open"
            size="large"
-           :has-previous="false"
-           :has-next="false"
+           :hasPrevious="false"
+           :hasNext="false"
            :name="name"
            container="#body-user"
            @update:show="$emit('update:open', false)"
@@ -15,7 +14,7 @@
     <template #actions>
       <NcActionButton ref="modalActionsReportError"
                       :name="t(appName, 'report error')"
-                      close-after-click
+                      closeAfterClick
                       @click="handleReportError"
       >
         <template #icon>
@@ -23,7 +22,7 @@
         </template>
       </NcActionButton>
       <NcActionButton :name="closeDetailsLabel"
-                      close-after-click
+                      closeAfterClick
                       @click="emit('update:open', false)"
       >
         <template #icon>
@@ -43,13 +42,13 @@
           <dt>{{ t('logreader', 'Time') }}</dt>
           <dd>{{ timeString }}</dd>
         </dl>        <div class="log-details__actions">
-          <NcButton :aria-label="t('logreader', 'Copy raw entry')" type="tertiary" @click="copyRaw">
+          <NcButton :aria-label="t('logreader', 'Copy raw entry')" variant="tertiary" @click="copyRaw">
             <template #icon>
               <IconContentCopy />
             </template>
             {{ t('logreader', 'Copy raw entry') }}
           </NcButton>
-          <NcButton :aria-label="t('logreader', 'Copy formatted entry')" type="tertiary" @click="copyFormatted">
+          <NcButton :aria-label="t('logreader', 'Copy formatted entry')" variant="tertiary" @click="copyFormatted">
             <template #icon>
               <IconContentCopy />
             </template>
@@ -65,7 +64,7 @@
         <template v-if="currentEntry.exception">
           <LogException :exception="currentEntry.exception"
                         class="log-details__exception"
-                        :is-expanded="isExceptionExpanded"
+                        :isExpanded="isExceptionExpanded"
           />
           <hr>
         </template>
@@ -80,43 +79,54 @@
 </template>
 
 <script setup lang="ts">
-import { appName } from '../../config.ts'
 import type { ILogEntry } from '@nextcloud/app-logreader/src/interfaces/index.ts'
-import { translate as t } from '@nextcloud/l10n'
-import { showSuccess } from '@nextcloud/dialogs'
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import type { NcActions } from '@nextcloud/vue'
+// import type { Component } from 'vue'
+
+import { LOGGING_LEVEL, LOGGING_LEVEL_NAMES } from '@nextcloud/app-logreader/src/constants.ts'
 import { copyToCipboard } from '@nextcloud/app-logreader/src/utils/clipboard.ts'
 import { useLogFormatting } from '@nextcloud/app-logreader/src/utils/format.ts'
-import { LOGGING_LEVEL, LOGGING_LEVEL_NAMES } from '@nextcloud/app-logreader/src/constants.ts'
+import { showSuccess } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
   NcButton,
   NcModal,
 } from '@nextcloud/vue'
-import IconContentCopy from 'vue-material-design-icons/ContentCopy.vue'
-import IconClose from 'vue-material-design-icons/Close.vue'
-import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import hljs from 'highlight.js/lib/core'
 import json from 'highlight.js/lib/languages/json'
-
-import 'highlight.js/styles/base16/material-darker.css'
+import {
+  computed,
+  onMounted,
+  ref,
+  useTemplateRef,
+  watch,
+  watchEffect,
+} from 'vue'
+import IconClose from 'vue-material-design-icons/Close.vue'
+import IconContentCopy from 'vue-material-design-icons/ContentCopy.vue'
+import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import LogException from './exception/LogException.vue'
+import { appName } from '../../config.ts'
 
-hljs.registerLanguage('json', json)
+// @ts-expect-error 2882 I do not care.
+import 'highlight.js/styles/base16/material-darker.css'
 
 const props = withDefaults(defineProps<{
-  open: boolean,
-  currentEntry: ILogEntry,
-  name?: string,
-  closeDetailsLabel: string,
+  open: boolean
+  currentEntry: ILogEntry
+  name?: string
+  closeDetailsLabel: string
 }>(), {
   name: undefined,
 })
 
 const emit = defineEmits([
   'update:open',
-  'problem-report:show',
+  'problemReport:show',
 ])
+
+hljs.registerLanguage('json', json)
 
 const { formatTime, formatLogEntry } = useLogFormatting()
 
@@ -179,20 +189,23 @@ const copyFormatted = async () => {
 
 const handleReportError = () => {
   emit('update:open', false)
-  emit('problem-report:show', true)
+  emit('problemReport:show', true)
 }
 
-const modal = ref(null)
+const reportErrorAction = useTemplateRef<typeof NcActionButton>('modalActionsReportError')
+// const modal = useTemplateRef<Component>('modal')
 
 const openMenu = () => {
-  for (const child of (modal.value?.$children || [])) {
-    if (child?.actionsMenuSemanticType === 'menu') {
-      child.openMenu()
-    }
-  }
+  const menu = reportErrorAction.value?.$parent as (typeof NcActions)
+  menu?.openMenu()
+  // for (const child of (modal.value?.$children || [])) {
+  //   if (child?.actionsMenuSemanticType === 'menu') {
+  //     child.openMenu()
+  //   }
+  // }
 }
 
-watch(() => props.open, value => {
+watch(() => props.open, (value) => {
   console.info('OPEN WATCHER', { value })
   if (value) {
     openMenu()

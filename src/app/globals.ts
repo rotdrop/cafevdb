@@ -21,24 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { onRequestTokenUpdate, getRequestToken } from '@nextcloud/auth';
-import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix } from './config.ts';
-import jQuery from './jquery.ts';
-import globalState from './globalstate.ts';
+import { getRequestToken, onRequestTokenUpdate } from '@nextcloud/auth';
 import ImagesLoaded from 'imagesloaded';
+import { appName, appPrefix, cloudUser, cloudWebRoot, initialState, webRoot } from './config.ts';
+import globalState from './globalstate.ts';
+import jQuery from './jquery.ts';
 
-require('jquery-ui');
-require('jquery-ui/ui/effect');
-require('jquery-ui/ui/widgets/dialog');
-require('jquery-ui/ui/widgets/tabs');
+import 'jquery-ui';
+import 'jquery-ui/ui/effect';
+import 'jquery-ui/ui/widgets/dialog';
+import 'jquery-ui/ui/widgets/tabs';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('chosen/public/chosen.jquery.js');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('chosen/public/chosen.css');
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ImagesLoaded {
     interface ImagesLoadedConstructor {
-      makeJQueryPlugin($: JQueryStatic): void,
+      makeJQueryPlugin($: JQueryStatic): void;
     }
   }
 }
@@ -48,14 +50,12 @@ ImagesLoaded.makeJQueryPlugin(jQuery);
 // some nextcloud hacks
 
 // still needed for jquery
-require('../legacy/nextcloud/jquery/requesttoken.js');
-// require('@nextcloud/dialogs/styles/toast.scss');
-
+import '../legacy/nextcloud/jquery/requesttoken.js';
+// import '@nextcloud/dialogs/styles/toast.scss';
 // CSS unrelated to particular modules
-
-require('oc-fixes.scss');
-require('mobile.scss');
-require('config-check.scss');
+import 'oc-fixes.scss';
+import 'mobile.scss';
+import 'config-check.scss';
 
 // ok, this ain't pretty, but unless we really switch to object OOP we
 // need some global state which is accessible in all or most modules.
@@ -85,14 +85,14 @@ const appContainerSelector = [
 ].join(',');
 
 export {
-  globalState,
-  appName,
-  webRoot,
-  cloudWebRoot,
-  nonce,
-  jQuery,
   jQuery as $,
-  cloudUser,
-  appPrefix,
   appContainerSelector,
+  appName,
+  appPrefix,
+  cloudUser,
+  cloudWebRoot,
+  globalState,
+  jQuery,
+  nonce,
+  webRoot,
 };

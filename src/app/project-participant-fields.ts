@@ -21,51 +21,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.ts';
-import $, { jq } from './jquery.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
-import * as PHPMyEdit from './pme.ts';
-import * as Notification from './notification.ts';
-import { translate as t } from '@nextcloud/l10n';
-import * as SelectUtils from './select-utils.ts';
-import * as Dialogs from './dialogs.ts';
-import * as DialogUtils from './dialog-utils.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import textareaResize from './textarea-resize.ts';
-import { rec as pmeRec } from './pme-record-id.ts';
-import './lock-input.ts';
-import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.ts';
-import {
-  data as pmeData,
-  inputSelector as pmeInputSelector,
-} from './pme-selectors.ts';
-import { showSuccess } from '@nextcloud/dialogs';
-import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
-import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
-import type { AmountResponse, ParticipantFieldGeneratorDefineResponse, ParticipantFieldGeneratorRunResponse, ParticipantFieldOptionDefineResponse, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
-import searchEntities from '../services/search-entities.ts';
-import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
-import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import * as ValidationController from '../../build/ts-types/php-modules/Controller/ValidationController.ts';
 import type {
   EnumParticipantFieldRequestSubTopic,
   EnumParticipantFieldRequestTopic,
 } from '../../build/ts-types/php-modules/Controller.ts';
-import { END_POINT } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
+import type { AmountResponse, ParticipantFieldGeneratorDefineResponse, ParticipantFieldGeneratorRunResponse, ParticipantFieldOptionDefineResponse, ReceivablesStatistics } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { EnumParticipantFieldDataType, EnumParticipantFieldMultiplicity } from '../../build/ts-types/php-modules/Database/Doctrine/DBAL/Types.ts';
+import type * as IRecurringReceivablesGenerator from '../../build/ts-types/php-modules/Service/Finance/IRecurringReceivablesGenerator.ts';
+import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+
+import { showSuccess } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
 import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { END_POINT } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
+import * as ValidationController from '../../build/ts-types/php-modules/Controller/ValidationController.ts';
+import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
+import searchEntities from '../services/search-entities.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { nonTextInputSelector, textElementSelector, textInputSelector } from '../util/css-selectors.ts';
+import * as Ajax from './ajax.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import * as Dialogs from './dialogs.ts';
+import { appName, globalState } from './globals.ts';
+import getBalancingAccountsAutocomplete from './gnucash-accounts.ts';
+import $, { jq } from './jquery.ts';
+import * as Notification from './notification.ts';
+import { rec as pmeRec } from './pme-record-id.ts';
+import {
+  data as pmeData,
+  inputSelector as pmeInputSelector,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import * as SelectUtils from './select-utils.ts';
+import textareaResize from './textarea-resize.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-require('./jquery-readonly.ts');
-require('../legacy/nextcloud/jquery/octemplate.js');
+import './lock-input.ts';
+import './jquery-readonly.ts';
+import '../legacy/nextcloud/jquery/octemplate.js';
+import 'jquery-ui/ui/widgets/autocomplete';
 
-require('jquery-ui/ui/widgets/autocomplete');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
 
-require('./jquery-ui-progressbar.ts');
-require('./jquery-datetimepicker.ts');
+import './jquery-ui-progressbar.ts';
+import './jquery-datetimepicker.ts';
 
 // NB: much of the visibility stuff is handled by CSS, e.g. which
 // input is shown for which multiplicity.
@@ -201,8 +203,8 @@ export type UpdateStrategy = typeof IRecurringReceivablesGenerator.UPDATE_STRATE
  */
 const confirmedReceivablesUpdate = async (
   field: Pick<FrontEndEntity<'ProjectParticipantField'>, 'id'|'name'>,
-  receivables: Pick<FrontEndEntity<'ProjectParticipantFieldDataOption'>, 'key'|'label'/* |'data'|'limit' */>[],
-  participants: Awaited<ReturnType<typeof getProjectParticipants> >|{ musicianId: number, publicName: string, personalPublicName: string }[],
+  receivables: Pick<FrontEndEntity<'ProjectParticipantFieldDataOption'>, 'key'|'label'>[],
+  participants: Awaited<ReturnType<typeof getProjectParticipants>>|{ musicianId: number; publicName: string; personalPublicName: string }[],
   updateStrategy: UpdateStrategy,
 ) => {
   let confirmed = true;
@@ -304,22 +306,23 @@ const confirmedReceivablesUpdate = async (
         $progressWrapper.dialog(
           'option',
           'title',
-          t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
-            { fieldName, receivableLabel, musicianName }),
+          t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}', { fieldName, receivableLabel, musicianName }),
         );
       }
 
       const request: RequestTopic = 'option/regenerate' as const;
       try {
         const data: ReceivablesStatistics = await $.post(
-          generateAppUrl(`${END_POINT}/${request}`), {
+          generateAppUrl(`${END_POINT}/${request}`),
+          {
             data: {
               fieldId,
               key,
               musicianId,
               updateStrategy,
             },
-          }).promise();
+          },
+        ).promise();
         for (const key of receivableAccumulatorProperties) {
           statistics[key] += data[key];
         }
@@ -328,25 +331,32 @@ const confirmedReceivablesUpdate = async (
         }
         ++current;
         const currentPercentage = current / totals * 100.0;
-        single || $progressBar.progressbar('option', 'value', currentPercentage);
-        single || $label.html(currentPercentage.toFixed(1) + '%');
+        if (!single) {
+          $progressBar.progressbar('option', 'value', currentPercentage);
+          $label.html(currentPercentage.toFixed(1) + '%');
+        }
         showSuccess(
           t(appName, '{musicianName}, {receivableLabel}: "{message}".', {
-            musicianName, receivableLabel, message: data.messages.join('; '),
+            musicianName,
+            receivableLabel,
+            message: data.messages.join('; '),
           }),
         );
       } catch (error) {
         const xhr = error as JQuery.jqXHR;
         const failData = await new Promise<Ajax.AjaxFailData>((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
-        cancel = t(appName, 'Error');
-        single || $progressWrapper.dialog('close');
+        // cancel = t(appName, 'Error');
+        if (!single) {
+          $progressWrapper.dialog('close');
+        }
+        // eslint-disable-next-line preserve-caught-error
         throw new Error(failData.error, { cause: failData.xhr });
       }
     }
   }
   statistics.cancel = cancel;
-  if (!cancel) {
-    single || $progressWrapper.dialog('close');
+  if (!cancel && !single) {
+    $progressWrapper.dialog('close');
   }
   return statistics;
 };
@@ -371,9 +381,9 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
   });
 
   const setFieldTypeCssClass = function(data?: {
-    multiplicity: EnumParticipantFieldMultiplicity,
-    dataType: EnumParticipantFieldDataType|'',
-    depositDueDate: 'set'|'unset',
+    multiplicity: EnumParticipantFieldMultiplicity;
+    dataType: EnumParticipantFieldDataType|'';
+    depositDueDate: 'set'|'unset';
   }) {
     if (!data) {
       return;
@@ -436,9 +446,10 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     const inputData = $container.find('table.data-options').data('size');
     let $dataInputs = $container
       .find(
-        'tr.pme-row.' + 'data-options-' + multiplicity + ' td.pme-value'
+        `tr.pme-row.data-options-${multiplicity} td.pme-value`
           + ', '
-          + 'tr.pme-row.data-options td.pme-value table.' + multiplicityClass + ' tr:not(.generator, .placeholder)')
+          + `tr.pme-row.data-options td.pme-value table.${multiplicityClass} tr:not(.generator, .placeholder)`,
+      )
       .find('input.field-data, textarea.field-data')
       .not(nonTextInputSelector);
 
@@ -556,11 +567,13 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
 
   // Field-Type Selectors
   $container.on(
-    'change', [
+    'change',
+    [
       'select.multiplicity',
       'select.data-type',
       'input.deposit-due-date',
-    ].join(), function() {
+    ].join(),
+    function() {
       const $depositDueDateInput = $container.find<HTMLInputElement>('input.deposit-due-date');
       const $multiplicitySelect = $container.find<HTMLSelectElement>('select.multiplicity');
       const $dataTypeSelect = $container.find<HTMLSelectElement>('select.data-type');
@@ -580,7 +593,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
         }
         $option.prop('disabled', !enabled);
       });
-      // @ts-expect-error 2345
+      // @ts-expect-error 2345 IT IS OK TO SEARCH FOR NON-EXISTING ARRAY ELEMENT
       if (enabledTypes.indexOf(dataType) === -1) {
         if (enabledTypes.length > 0) {
           dataType = enabledTypes[0];
@@ -603,7 +616,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       $.fn.cafevTooltip.remove(); // remove left-overs
 
       return false;
-    });
+    },
+  );
 
   const $multiplicitySelect = $container.find('select.multiplicity.pme-input');
   const $multiplicityLock = $container.find('#pme-field-multiplicity-lock');
@@ -625,7 +639,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     if (!checked) {
       Dialogs.confirm(
         t(appName, 'This field already is filled out for some participants. Changing the multiplicity is still possible in some cases, but generally irrevertible. The app will allow changes from checkboxes and multiple-choice fields to general "simple" free-form content and disallow any other changes. Selected choices will then be collected into the remaining free-form field. Mostly probably the outcome will be broken unless the data type is "text" or "HTML-text".'),
-        t(appName, 'Really allow changing the multiplicity?'), {
+        t(appName, 'Really allow changing the multiplicity?'),
+        {
           default: 'cancel',
           callback(answer) {
             const checked = !answer;
@@ -647,7 +662,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     if (!checked) {
       Dialogs.confirm(
         t(appName, 'This field already is filled out for some participants. Changing the data-type is still possible in some cases, but does not always make sense. The app will allow changes between data-types and try to be smart, but please be prepared that the results might look unexpected.'),
-        t(appName, 'Really allow changing the data-type?'), {
+        t(appName, 'Really allow changing the data-type?'),
+        {
           default: 'cancel',
           callback(answer) {
             const checked = !answer;
@@ -791,6 +807,25 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     return false;
   });
 
+  const lockGeneratedValuesRow = ($row: JQuery<HTMLTableRowElement>) => {
+    const $generated = $row.find<HTMLInputElement>('input' + textInputSelector + ', textarea');
+    $generated.each(function() {
+      const $this = $(this);
+      if ((!$this.hasClass('expert-mode-only') && !$this.hasClass('not-expert-mode-hidden'))
+          || (!$this.hasClass('finance-mode-only') && !$this.hasClass('not-finance-mode-hidden'))) {
+        $this.lockUnlock({
+          locked: $this.val()!.trim() !== '',
+        });
+      }
+    });
+  };
+
+  const lockGeneratedValues = ($container: JQuery) => {
+    // generated options
+    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
+    lockGeneratedValuesRow($container.find<HTMLTableRowElement>(generatedSelector));
+  };
+
   $container.on('click', 'tr.data-options input.generator-run', function() {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
@@ -806,12 +841,14 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
     const startDate = $self.closest('tr').find('.field-limit');
     $self.addClass('busy');
     $.post(
-      generateAppUrl(`${END_POINT}/${request}`), {
+      generateAppUrl(`${END_POINT}/${request}`),
+      {
         data: {
           fieldId,
           startDate: startDate.val(),
         },
-      })
+      },
+    )
       .fail(function(xhr, status, errorThrown) {
         Ajax.handleError(xhr, status, errorThrown, cleanup);
       })
@@ -908,7 +945,9 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       $.post(
         generateAppUrl(
           `${ValidationController.END_POINT_VALIDATE_GENERAL}/${ValidationController.TOPIC_MONETARY_VALUE}`,
-        ), { value: amount })
+        ),
+        { value: amount },
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
@@ -920,26 +959,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           cleanup();
         });
       return false;
-    });
-
-  const lockGeneratedValuesRow = function($row: JQuery<HTMLTableRowElement>) {
-    const $generated = $row.find<HTMLInputElement>('input' + textInputSelector + ', textarea');
-    $generated.each(function() {
-      const $this = $(this);
-      if ((!$this.hasClass('expert-mode-only') && !$this.hasClass('not-expert-mode-hidden'))
-          || (!$this.hasClass('finance-mode-only') && !$this.hasClass('not-finance-mode-hidden'))) {
-        $this.lockUnlock({
-          locked: $this.val()!.trim() !== '',
-        });
-      }
-    });
-  };
-
-  const lockGeneratedValues = function($container: JQuery) {
-    // generated options
-    const generatedSelector = 'tr.data-options table.multiplicity-recurring tr.data-line.data-options:not(.generator)';
-    lockGeneratedValuesRow($container.find<HTMLTableRowElement>(generatedSelector));
-  };
+    },
+  );
 
   lockGeneratedValues($container);
 
@@ -1000,7 +1021,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
 
       $.post(
         generateAppUrl(`${END_POINT}/${request}`),
-        postData)
+        postData,
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
@@ -1008,7 +1030,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           if (!Ajax.validateResponse(
             data,
             ['value', 'slug', 'operationLabels', 'availableUpdateStrategies'],
-            cleanup)) {
+            cleanup,
+          )) {
             return;
           }
 
@@ -1072,11 +1095,13 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           cleanup();
         });
       return false;
-    });
+    },
+  );
 
   // multi-field input matrix
   $container.on(
-    'blur', [
+    'blur',
+    [
       'tr.data-options tr.data-line:not(.generator) input' + textInputSelector,
       'tr.data-options tr.data-line textarea',
     ].join(),
@@ -1098,7 +1123,7 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
       const dflt = $container.find('select.default-multi-value');
 
       const request: RequestTopic = 'option/define';
-      const data = Object.assign({ default: dflt.val() }, fieldTypeData(), $row.data());
+      const data = { default: dflt.val(), ...fieldTypeData(), ...$row.data() };
       const allowed = $row.find(textElementSelector);
       const postData = $.param({ request, data })
             + '&' + allowed.serialize();
@@ -1116,7 +1141,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
 
       $.post(
         generateAppUrl(`${END_POINT}/${request}`),
-        postData)
+        postData,
+      )
         .fail(function(xhr, status, errorThrown) {
           Ajax.handleError(xhr, status, errorThrown, cleanup);
         })
@@ -1124,7 +1150,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           if (!Ajax.validateResponse(
             data,
             ['dataOptionSelectOptions', 'dataOptionFormInputs'],
-            cleanup)) {
+            cleanup,
+          )) {
             return;
           }
           const option = data.dataOptionSelectOptions;
@@ -1139,7 +1166,11 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
             resizeCB();
           } else {
             const $nextRow = $row.next();
-            try { $row.find('.field-balancingAccount').autocomplete('destroy'); } catch (e) { /* ignore */ }
+            try {
+              $row.find('.field-balancingAccount').autocomplete('destroy');
+            } catch {
+              /* ignore */
+            }
             $row.replaceWith(input);
             $newRow = $nextRow.prev();
             if ($table.hasClass('multiplicity-recurring')) {
@@ -1172,7 +1203,8 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
           cleanup();
         });
       return false;
-    });
+    },
+  );
 
   // When a reader-group is removed, we also deselect it from the
   // writers. This -- of course -- only works if initially
@@ -1295,15 +1327,15 @@ const documentReady = function() {
 };
 
 export {
-  ready,
-  documentReady,
+  autocompleteFocusHandler, // @todo: move somewhere else
+  balancingAccountsAutocompleteData,
   confirmedReceivablesUpdate,
-  getProjectParticipants,
-  getProjectParticipantFields,
+  documentReady,
+  fetchBalancingAccountsAutocompleteData,
   getProjectParticipantFieldOptions,
+  getProjectParticipantFields,
+  getProjectParticipants,
+  ready,
   receivableAccumulatorProperties,
   receivableKeyedProperties,
-  balancingAccountsAutocompleteData,
-  fetchBalancingAccountsAutocompleteData,
-  autocompleteFocusHandler, // @todo: move somewhere else
 };

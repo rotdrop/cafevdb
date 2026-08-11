@@ -21,22 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import { appName } from '../config.ts';
-import globalState from './globalstate.ts';
-import * as Dialogs from './dialogs.ts';
-// @ts-expect-error 2595 confused by multiple version probablyx
-import { isPlainObject } from 'is-plain-object';
-import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
-import { getLanguage, translate as t } from '@nextcloud/l10n';
-import { emit as asyncEmit, hasSubscriptions } from '../services/async-event-bus.ts';
-import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
-import l10nHttpStatus from '@http-util/status-i18n';
-import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
-import { type NextcloudExceptionLogEntry, isNextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
-import type Keyable from '../types/keyable.d.ts';
 import type { IException } from '@nextcloud/app-logreader/src/interfaces/ILogEntry.ts';
+import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
+import type Keyable from '../types/keyable.d.ts';
+
+import l10nHttpStatus from '@http-util/status-i18n';
+import { getLanguage, translate as t } from '@nextcloud/l10n';
+import { getRootUrl as getCloudRootUrl } from '@nextcloud/router';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
+import { isPlainObject } from 'is-plain-object';
+import { appName } from '../config.ts';
+import { LEGACY_AJAX_ERROR } from '../event-bus-events.ts';
+import { emit as asyncEmit, hasSubscriptions } from '../services/async-event-bus.ts';
 import { hasProperty } from '../toolkit/types/type-traits.ts';
+import { isNextcloudExceptionLogEntry } from '../types/ajax/php-exception-response.ts';
+import * as Dialogs from './dialogs.ts';
+import globalState from './globalstate.ts';
+import $ from './jquery.ts';
 
 const cloudWebRoot = getCloudRootUrl() || '/';
 
@@ -61,9 +62,9 @@ export type AjaxFailData<T = unknown> = Partial<T> & Partial<NextcloudExceptionL
   html?: string;
   parsed: boolean;
   confirmation?: {
-    question: string,
-    override: string,
-    title?: string,
+    question: string;
+    override: string;
+    title?: string;
   };
   closeDetailsLabel?: string;
 };
@@ -103,7 +104,7 @@ const ajaxHandleError = async <T = unknown>(
   xhr: JQuery.jqXHR,
   textStatus: string,
   errorThrown: string,
-  userCallbacks?: Callbacks<T>['cleanup']|Partial<Callbacks<T> >,
+  userCallbacks?: Callbacks<T>['cleanup']|Partial<Callbacks<T>>,
 ) => {
   const defaultCallbacks: Callbacks<T> = {
     cleanup(_data) {},
@@ -310,7 +311,10 @@ const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
     Dialogs.alert(
       t(appName, 'Unrecoverable unknown internal error, '
         + 'no further information available, sorry.'),
-      t(appName, 'Internal Error'), dialogCallback, true);
+      t(appName, 'Internal Error'),
+      dialogCallback,
+      true,
+    );
     return false;
   }
   let missing = '';
@@ -318,8 +322,10 @@ const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
     if (typeof data === 'object' && data && typeof data[key] === 'undefined') {
       const keyString = typeof key === 'symbol' ? key.toString() : '' + (key as string|number);
       missing += t(
-        appName, 'Field {RequiredField} not present in AJAX response.',
-        { RequiredField: keyString }) + '<br>';
+        appName,
+        'Field {RequiredField} not present in AJAX response.',
+        { RequiredField: keyString },
+      ) + '<br>';
     }
   }
   if (missing.length > 0) {
@@ -341,7 +347,8 @@ const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
             appName,
             'The submitted data "{stringValue}" seems to be a plain string, '
               + 'but we need an object where the data is provided through above listed properties.',
-            { stringValue: data.substring(0, 32) + '...' });
+            { stringValue: data.substring(0, 32) + '...' },
+          );
           caption = t(appName, 'Error: plain string received');
           break;
         default:
@@ -349,7 +356,8 @@ const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
             appName,
             'The submitted data is not a plain object, '
               + 'and does not provide the properties listed above.',
-            { stringValue: ('' + data).substring(0, 32) + '...' });
+            { stringValue: ('' + data).substring(0, 32) + '...' },
+          );
           caption = t(appName, 'Error: not a plain object');
           break;
       }
@@ -373,11 +381,11 @@ const ajaxValidateResponse = <T, R extends readonly (keyof T)[]>(
  *
  * @param errorThrown see fail() method of jQuery ajax.
  */
-const ajaxFailData = <T = object>(
+function ajaxFailData<T = object>(
   xhr: JQuery.jqXHR|AjaxFailData<T>,
   textStatus: string,
   errorThrown: string,
-) => {
+) {
   console.debug('AJAX FAIL DATA ARGS', {
     xhr,
     textStatus,
@@ -388,7 +396,7 @@ const ajaxFailData = <T = object>(
   }
   if (textStatus === 'error' && xhr.status !== undefined) {
     textStatus = httpStatusText(+xhr.status);
-    // @ts-expect-error 2345
+    // @ts-expect-error 2540 DO NOT CARE.
     xhr.statusText = textStatus;
   }
   const data: AjaxFailData = {
@@ -404,7 +412,7 @@ const ajaxFailData = <T = object>(
     // to 'binary' mode and responseJSON is not set.
     try {
       xhr.responseJSON = JSON.parse(xhr.responseText);
-    } catch (e) {
+    } catch {
       console.error('Unable to parse as JSON', { ct, text: xhr.responseText });
     }
   }
@@ -416,7 +424,8 @@ const ajaxFailData = <T = object>(
       console.debug('html response', xhr, xhr.status, textStatus, errorThrown);
       data.messages = [
         t(
-          appName, 'HTTP error response to AJAX call: {code} / {text}',
+          appName,
+          'HTTP error response to AJAX call: {code} / {text}',
           { code: xhr.status, text: xhr.statusText },
         ),
       ];
@@ -429,7 +438,7 @@ const ajaxFailData = <T = object>(
   }
   console.debug('AJAX FAIL DATA RETURN', { data });
   return data;
-};
+}
 
 /**
  * Generate some diagnostic output, mostly needed during application
@@ -452,9 +461,9 @@ const ajaxFailMessages = (xhr: JQuery.jqXHR|AjaxFailData, textStatus: string, er
 $(Dialogs.attachDialogHandlers);
 
 export {
-  ajaxHandleError as handleError,
-  ajaxValidateResponse as validateResponse,
   ajaxFailData as failData,
   ajaxFailMessage as failMessage,
   ajaxFailMessages as failMessages,
+  ajaxHandleError as handleError,
+  ajaxValidateResponse as validateResponse,
 };

@@ -21,13 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import * as Ajax from './ajax.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import type { ProgressResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { GET_URL, POST_URL } from '../../build/ts-types/php-modules/Controller/ProgressStatusController.ts';
 import type { EnumProgressStatusOperation } from '../../build/ts-types/php-modules/Controller.ts';
+import type { ProgressResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
+
+import { GET_URL, POST_URL } from '../../build/ts-types/php-modules/Controller/ProgressStatusController.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import $ from './jquery.ts';
 
 require('progressbar.scss');
 
@@ -49,13 +50,14 @@ const createProgressStatus = (target: number, current: number, data?: ProgressRe
   const operation: EnumProgressStatusOperation = 'create';
   return $.post(
     generateAppUrl(POST_URL, { operation }),
-    { target: target || 100, current: current || 0, data });
+    { target: target || 100, current: current || 0, data },
+  );
 };
 
-export interface PollOptions{
-  interval: number,
-  fail: typeof Ajax.handleError,
-  update(id: string|number, current: number, target: number, data?: ProgressResponseData): boolean,
+export interface PollOptions {
+  interval: number;
+  fail: typeof Ajax.handleError;
+  update(id: string|number, current: number, target: number, data?: ProgressResponseData): boolean;
 }
 
 /**
@@ -116,7 +118,9 @@ const pollProgressStatus = (id: string, parameters: Partial<PollOptions>) => {
 const deleteProgressStatus = function(id: string) {
   const operation: EnumProgressStatusOperation = 'delete';
   return $.post(
-    generateAppUrl(POST_URL, { operation }), { id });
+    generateAppUrl(POST_URL, { operation }),
+    { id },
+  );
 };
 
 pollProgressStatus.stop = function() {
@@ -129,6 +133,6 @@ pollProgressStatus.active = function() {
 
 export {
   createProgressStatus as create,
-  pollProgressStatus as poll,
   deleteProgressStatus as delete,
+  pollProgressStatus as poll,
 };

@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <component :is="'script'"
+  <component :is="'script' /* intentionally literal */"
              id="musicianAddressViewTemplate"
              ref="outer"
              type="text/template"
@@ -87,12 +87,15 @@
     </div>
   </component>
 </template>
+
 <script lang="ts" setup>
+import { translate as t } from '@nextcloud/l10n'
 import { onMounted, ref } from 'vue'
 import { appName } from '../../config.ts'
-import { translate as t } from '@nextcloud/l10n'
 
 const inner = ref<null|HTMLElement>(null)
 const outer = ref<null|HTMLScriptElement>(null)
-onMounted(() => { outer.value!.innerHTML = inner.value!.outerHTML })
+onMounted(() => {
+  outer.value!.innerHTML = inner.value!.outerHTML
+})
 </script>

@@ -3,7 +3,7 @@
 ## @nextcloud/app-calendar
 
 Already a patched version with some add-ons. In order to make it fit
-for reusal in this (we want to have the editor components) one has to
+for reusal in this app (we want to have the editor components) one has to
 change some things:
 
 - replace the path alias `@/` => `PACKAGE/src` by a relative path, e.g.:

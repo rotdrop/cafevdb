@@ -29,17 +29,14 @@ const $ = localJQuery;
 
 declare global {
   interface Window {
-    jQuery: JQueryStatic,
+    jQuery: JQueryStatic;
   }
 }
 
 // jQuery still installs itself globally ...
-// eslint-disable-next-line @nextcloud/no-deprecations
 console.debug('JQUERY INSTANCES window / self', {
-  // eslint-disable-next-line @nextcloud/no-deprecations
   global: window.jQuery?.fn.jquery,
   local: localJQuery.fn.jquery,
-  // eslint-disable-next-line @nextcloud/no-deprecations
   equal: window.jQuery === localJQuery,
 });
 

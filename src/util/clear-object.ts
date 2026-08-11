@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,10 +26,12 @@
  *
  * @param object The object to empty.
  *
- * @returns The given object for convenience.
+ * @return The given object for convenience.
  */
 function clearObject(object: object) {
-  Object.keys(object).forEach(function(key) { delete object[key]; });
+  Object.keys(object).forEach(function(key) {
+    delete object[key];
+  });
   return object;
 }
 

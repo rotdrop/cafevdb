@@ -21,14 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { parse, basename, dirname, extname } from 'path';
+import { basename, dirname, extname, parse } from 'path';
 
 const filename = (path: string) => basename(path, extname(path));
 
 export {
-  parse,
   basename,
-  filename,
   dirname,
   extname,
+  filename,
+  parse,
 };

@@ -21,16 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
+import type { ErrorContext } from '../toolkit/types/errors.ts';
+
 import { translate as t } from '@nextcloud/l10n';
-import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useErrorHandler from './error-handler.ts';
-import { AppError, type ErrorContext } from '../toolkit/types/errors.ts';
-import Console from '../util/console.ts';
-import * as EntityRepository from '../toolkit/services/entity-repository.ts';
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import { ref } from 'vue';
+import { appName } from '../config.ts';
 import { SEARCH_DATABASE_ENTITIES } from '../event-bus-events.ts';
+import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import * as EntityRepository from '../toolkit/services/entity-repository.ts';
+import { AppError } from '../toolkit/types/errors.ts';
+import Console from '../util/console.ts';
+import useErrorHandler from './error-handler.ts';
 
 const storeId = 'entities';
 

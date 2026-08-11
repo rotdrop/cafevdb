@@ -22,18 +22,18 @@
  -->
 <template>
   <LegacyPageActionsMenu ref="actions"
-                         :menu-caption="menuCaption"
-                         :enable-overview-item="enableOverviewItem"
-                         :entity-id="entityId"
-                         :project-id="projectId"
-                         :project-name="projectName"
+                         :menuCaption="menuCaption"
+                         :enableOverviewItem="enableOverviewItem"
+                         :entityId="entityId"
+                         :projectId="projectId"
+                         :projectName="projectName"
                          :template="template"
   >
     <template #actions>
       <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:download']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'Bank Transaction Data')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleTransactionDataDownload"
       >
         <template #icon>
@@ -43,7 +43,7 @@
       <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:announce']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'Email Pre-Notification')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handlePreNotificationEmail"
       >
         <template #icon>
@@ -53,7 +53,7 @@
       <NcActionButton v-tooltip.right="tooltips['sepa-bulk-transaction:gnucash-balance']"
                       :class="[appName + '-sepa-bulk-transaction-actions']"
                       :name="t(appName, 'GnuCash Balance Data')"
-                      :close-after-click="true"
+                      :closeAfterClick="true"
                       @click="handleGnuCashBalanceDownload"
       >
         <template #icon>
@@ -63,40 +63,48 @@
     </template>
   </LegacyPageActionsMenu>
 </template>
+
 <script setup lang="ts">
-import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
-import { NcActionButton } from '@nextcloud/vue'
-import { appName } from '../config.ts'
+// import type { ComponentProps } from '../mountable-component-names.ts'
+
 import { translate as t } from '@nextcloud/l10n'
-import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
-import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
-import IconEmail from 'vue-material-design-icons/Email.vue'
-import { emit as asyncEmit } from '../services/async-event-bus.ts'
-import useTooltipsStore from '../stores/tooltips.ts'
-import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
-import useErrorHandlerStore from '../stores/error-handler.ts'
-import { AppError } from '../toolkit/types/errors.ts'
+import { NcActionButton } from '@nextcloud/vue'
 import { ref } from 'vue'
+import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
+import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
+import IconEmail from 'vue-material-design-icons/Email.vue'
+import LegacyPageActionsMenu from './LegacyPageActionsMenu.vue'
+import { EnumSepaBulkTransactionsExportPurpose, EnumSepaBulkTransactionsTopic } from '../../build/ts-types/php-modules/Controller.ts'
+import { END_POINT } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts'
+import { appName } from '../config.ts'
 import * as BusEvents from '../event-bus-events.ts'
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import { END_POINT } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts'
-import { EnumSepaBulkTransactionsExportPurpose, EnumSepaBulkTransactionsTopic } from '../../build/ts-types/php-modules/Controller.ts'
+import { emit as asyncEmit } from '../services/async-event-bus.ts'
+import useErrorHandlerStore from '../stores/error-handler.ts'
+import useTooltipsStore from '../stores/tooltips.ts'
+import { AppError } from '../toolkit/types/errors.ts'
+import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
+
+const props = withDefaults(
+  // defineProps<ComponentProps[typeof COMPONENT_NAME]>
+  defineProps<{
+    enableOverviewItem?: boolean
+    entityId: number
+    menuCaption?: string
+    projectId: number
+    projectName: string
+    template: string
+  }>(),
+  {
+    // eslint-disable-next-line vue/no-boolean-default
+    enableOverviewItem: true,
+    menuCaption: undefined,
+  },
+)
 
 const errorHandlerProvider = useErrorHandlerStore()
 
 const errorHandler = errorHandlerProvider.getHandler()
-
-const props = withDefaults(defineProps</* ComponentProps[typeof COMPONENT_NAME] */{
-  enableOverviewItem?: boolean,
-  entityId: number,
-  menuCaption?: string,
-  projectId: number,
-  projectName: string,
-  template: string,
-}>(), {
-  enableOverviewItem: true,
-  menuCaption: undefined,
-})
 
 const tooltipKeys = [
   'sepa-bulk-transaction:download',
@@ -112,10 +120,14 @@ const actions = ref<null|typeof LegacyPageActionsMenu>(null)
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
-  actions.value && actions.value.closeMenu()
+  if (actions.value) {
+    actions.value.closeMenu()
+  }
 }
 const openMenu = (x?: number, y?: number) => {
-  actions.value && actions.value.openMenu(x, y)
+  if (actions.value) {
+    actions.value.openMenu(x, y)
+  }
 }
 
 // we need to expose some methods in order to allow legacy code to
@@ -185,8 +197,8 @@ const handleGnuCashBalanceDownload = async () => {
     )
   }
 }
-
 </script>
+
 <style lang="scss" scoped>
 .container {
   display: flex;
@@ -195,7 +207,7 @@ const handleGnuCashBalanceDownload = async () => {
     height: 28px;
   }
   .action-item.action-item--open.positioned {
-    &, ::v-deep * {
+    &, :deep(*) {
       width: 0 !important;
       height: 0 !important;
       min-width: 0 !important;

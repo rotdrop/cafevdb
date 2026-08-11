@@ -21,20 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { SET_DEBUG_MODES } from '../../event-bus-events.ts';
+import { subscribe } from '../../services/async-event-bus.ts';
+import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';
-import { setPersonalUrl } from './../settings-urls.ts';
-import * as Ajax from './../ajax.ts';
-import { selected as selectedValues } from './../select-utils.ts';
 import * as Notification from './../notification.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
-import { SET_DEBUG_MODES } from '../../event-bus-events.ts';
+import { selected as selectedValues } from './../select-utils.ts';
+import { setPersonalUrl } from './../settings-urls.ts';
 
-require('../../legacy/nextcloud/jquery/requesttoken.js');
-
-subscribe(SET_DEBUG_MODES, (event) => {
-  return setter(event?.value, event?.showMessage, event?.$control);
-});
+import '../../legacy/nextcloud/jquery/requesttoken.js';
 
 /**
  * @param selection Array of objects with a value attribute.
@@ -45,7 +41,7 @@ subscribe(SET_DEBUG_MODES, (event) => {
  * @param $control Originating select, may be undefined.
  */
 const setter = (
-  selection: { value: number|string, name?: string }[],
+  selection: { value: number|string; name?: string }[],
   showMessage?: typeof Notification.messages,
   $control?: JQuery<HTMLSelectElement>,
 ) => {
@@ -67,8 +63,11 @@ const setter = (
       .fail(async function(xhr, status, errorThrown) {
         await Ajax.handleError(xhr, status, errorThrown);
         reject(xhr);
-      }),
-  );
+      }));
 };
+
+subscribe(SET_DEBUG_MODES, (event) => {
+  return setter(event?.value, event?.showMessage, event?.$control);
+});
 
 export default setter;

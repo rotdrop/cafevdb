@@ -316,8 +316,8 @@ abstract class PMETableViewBase extends AbstractPageRenderer
       }
       $queryLog = $this->pme->queryLog();
       usort($queryLog, function($a, $b) {
-        $aVal = (double)$a['duration'];
-        $bVal = (double)$b['duration'];
+        $aVal = (float)$a['duration'];
+        $bVal = (float)$b['duration'];
         return (($aVal == $bVal) ? 0 : ($aVal < $bVal ? +1 : -1));
       });
       $dotsSvg = '<svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24" class="material-design-icon__svg"><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"><!----></path></svg>';

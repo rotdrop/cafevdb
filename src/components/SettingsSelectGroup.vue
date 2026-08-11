@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2022, 2023, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -30,70 +30,77 @@
                           label="displayname"
                           :reduce="reduceGroup"
                           :options="groupsArray"
-                          :options-limit="100"
+                          :optionsLimit="100"
                           :placeholder="label"
-                          :input-label="label"
+                          :inputLabel="label"
                           :loading="isLoading"
                           :hint="hint"
                           :multiple="false"
-                          :close-on-select="true"
+                          :closeOnSelect="true"
                           :disabled="disabled"
                           :clearable="clearable"
-                          v-on="$listeners"
                           @search="findGroups"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="groupInfoPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
     </template>
     <template #selected-option="option">
       <NcEllipsisedOption v-tooltip="groupInfoPopup(option)"
-                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appId, 'undefined')"
-                          :search="ncSelect ? ncSelect.search : t(appId, 'undefined')"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
       />
     </template>
   </SelectWithSubmitButton>
 </template>
+
 <script setup lang="ts">
+import type { NcSelect } from '@nextcloud/vue'
+import type { CloudGroup } from '../stores/cloud-users-groups.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import { NcEllipsisedOption } from '@nextcloud/vue'
+import { storeToRefs } from 'pinia'
 import {
   computed,
   ref,
   watch,
 } from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
-import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import type { NcSelect } from '@nextcloud/vue'
-import { translate as t } from '@nextcloud/l10n'
+import { appName } from '../config.ts'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.ts'
-import type { CloudGroup } from '../stores/cloud-users-groups.ts'
 import { groupInfoPopup } from '../util/user-info-popup.ts'
-import { storeToRefs } from 'pinia'
 
 type ValueObject = CloudGroup | { id: string, displayname: string }
 
 const props = withDefaults(
   defineProps<{
-    label: string,
-    hint?: string,
+    label: string
+    hint?: string
     value?: string
-    disabled?: boolean,
+    disabled?: boolean
     // clearable allows deselection of the last item
     clearable?: boolean
-    // required blocks the final submit if no value is selected
-    required?: boolean
-    loading?: boolean,
-    loadingIndicator?: boolean,
-  }>(), {
+    loading?: boolean
+    loadingIndicator?: boolean
+  }>(),
+  {
     hint: '',
     value: '',
     disabled: false,
+    // eslint-disable-next-line vue/no-boolean-default
     clearable: true,
-    required: false,
     loading: false,
+    // eslint-disable-next-line vue/no-boolean-default
     loadingIndicator: true,
-  })
+  },
+)
+
+const emit = defineEmits([
+  'error',
+])
 
 const store = useCloudUsersGroupsStore()
 const { groups } = storeToRefs(store)
@@ -103,6 +110,15 @@ const ajaxLoading = ref(false)
 
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
 const groupsArray = computed(() => Object.values(groups.value))
+
+const reduceGroup = (group: ValueObject) => group.id
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
+const getGroup = (groupId: string) => store.getGroup(groupId, errorHandler)
+const getGroupObject = async (id: string) => {
+  return (await getGroup(id)) || { id, displayname: id }
+}
+const findGroups = (query: string) => store.findGroups(query, errorHandler)
 
 /**
  * This watcher catches changed property values and promotes the
@@ -122,17 +138,6 @@ watch(() => props.value, async (newValue) => {
   inputValObject.value = await getGroupObject(newValue)
   ajaxLoading.value = false
 })
-
-const emit = defineEmits([
-  'error',
-])
-
-const reduceGroup = (group: ValueObject) => group.id
-const getGroupObject = async (id: string) => { return (await getGroup(id)) || { id, displayname: id } }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const errorHandler = <T extends Error>(error: T | any) => emit('error', error)
-const getGroup = (groupId: string) => store.getGroup(groupId, errorHandler)
-const findGroups = (query: string) => store.findGroups(query, errorHandler)
 
 const select = ref<null|typeof SelectWithSubmitButton>(null)
 const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))

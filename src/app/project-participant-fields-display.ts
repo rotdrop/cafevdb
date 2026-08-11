@@ -21,43 +21,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $, { jq, isJQuerySelect } from './jquery.ts';
-import { appName } from '../config.ts';
-import * as Ajax from './ajax.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import * as Dialogs from './dialogs.ts';
-import { submitOuterFormNoThrow, tableDialogLoadIndicator } from './pme.ts';
+import type { EnumParticipantFieldPropertyGet } from '../../build/ts-types/php-modules/Controller.ts';
+import type { ParticipantFieldPropertyGetDefaultValue, ParticipantFieldPropertyGetResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { RationalNumber } from '../../build/ts-types/php-modules/Toolkit/Common.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { TableDialogCallbackData } from './pme-state.ts';
+import type { UpdateStrategy } from './project-participant-fields.ts';
+
 import { translate as t } from '@nextcloud/l10n';
 import {
-  confirmedReceivablesUpdate,
-  autocompleteFocusHandler,
-  fetchBalancingAccountsAutocompleteData,
-  balancingAccountsAutocompleteData,
-  type UpdateStrategy,
-} from './project-participant-fields.ts';
-import pageBusyIcon from './busy-icon.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import fileDownload from './file-download.ts';
-import { selected as selectedValues } from './select-utils.ts';
-import {
-  formSelector as pmeFormSelector,
-  inputSelector as pmeInputSelector,
-  inputClassSelector as pmeInputClassSelector,
-} from './pme-selectors.ts';
-import type { TableDialogCallbackData } from './pme-state.ts';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import type { ParticipantFieldPropertyGetDefaultValue, ParticipantFieldPropertyGetResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
-import { type EnumParticipantFieldPropertyGet } from '../../build/ts-types/php-modules/Controller.ts';
-import { REVERT_TO_DEFAULT } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
-import type { RationalNumber } from '../../build/ts-types/php-modules/Toolkit/Common.ts';
-import { END_POINT as participantFieldsEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
-import {
-  EnumParticipantFieldRequestTopic,
   EnumParticipantFieldRequestSubTopic,
+  EnumParticipantFieldRequestTopic,
 } from '../../build/ts-types/php-modules/Controller.ts';
 import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { END_POINT as participantFieldsEndPoint } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
+import { REVERT_TO_DEFAULT } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
+import { appName } from '../config.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import * as Dialogs from './dialogs.ts';
+import fileDownload from './file-download.ts';
+import $, { isJQuerySelect, jq } from './jquery.ts';
+import {
+  formSelector as pmeFormSelector,
+  inputClassSelector as pmeInputClassSelector,
+  inputSelector as pmeInputSelector,
+} from './pme-selectors.ts';
+import { submitOuterFormNoThrow, tableDialogLoadIndicator } from './pme.ts';
+import {
+  autocompleteFocusHandler,
+  balancingAccountsAutocompleteData,
+  confirmedReceivablesUpdate,
+  fetchBalancingAccountsAutocompleteData,
+} from './project-participant-fields.ts';
+import { selected as selectedValues } from './select-utils.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
 
-require('jquery-ui/ui/widgets/autocomplete');
+import 'jquery-ui/ui/widgets/autocomplete';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
 
 const balancingAccountsAutocompleteOptions: JQueryUI.AutocompleteOptions = {
@@ -149,10 +151,12 @@ const participantOptionHandlers = (
 
       const revertHandler = () => {
         $.post(
-          generateAppUrl(`${participantFieldsEndPoint}/${EnumParticipantFieldRequestTopic.PROPERTY}/${EnumParticipantFieldRequestSubTopic.GET}`), {
+          generateAppUrl(`${participantFieldsEndPoint}/${EnumParticipantFieldRequestTopic.PROPERTY}/${EnumParticipantFieldRequestSubTopic.GET}`),
+          {
             fieldId,
             property: fieldProperty,
-          })
+          },
+        )
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown);
           })
@@ -179,8 +183,7 @@ const participantOptionHandlers = (
 
       if ($inputElement.val() !== '') {
         Dialogs.confirm(
-          t(appName,
-            'Input element is not empty, do your really want to revert it to its default value?'),
+          t(appName, 'Input element is not empty, do your really want to revert it to its default value?'),
           t(appName, 'Revert to default value?'),
           function(confirmed) {
             if (confirmed) {
@@ -320,7 +323,7 @@ const participantOptionHandlers = (
       };
 
       // or parse the Dom:
-      const receivables: { key: string, label: string }[] = [];
+      const receivables: { key: string; label: string }[] = [];
       if (!$this.hasClass('no-progress')) {
         $row.closest('table').find('tr.field-datum').each(function() {
           const $row = $(this);

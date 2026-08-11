@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
 import type { UrlOptions } from '@nextcloud/router';
+import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+
 import {
   BASE_PATH,
   END_POINT_APP_GET,
@@ -31,6 +31,7 @@ import {
   END_POINT_GET,
   END_POINT_PERSONAL_SET,
 } from '../../build/ts-types/php-modules/Controller/PersonalSettingsController.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
 
 /**
  * Generate an URL for the settings-controllers.
@@ -109,8 +110,8 @@ const getAppUrl = (
 
 export {
   generateSettingsUrl as generateUrl,
-  setPersonalUrl,
-  setAppUrl,
-  getUrl,
   getAppUrl,
+  getUrl,
+  setAppUrl,
+  setPersonalUrl,
 };

@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,13 @@
  -
  -->
 <template>
-  <NcModal :close-on-click-outside="false"
-           :has-next="false"
-           :has-previous="false"
-           :label-id="queryLogEntryHeadingId"
+  <NcModal :closeOnClickOutside="false"
+           :hasNext="false"
+           :hasPrevious="false"
+           :labelId="queryLogEntryHeadingId"
            size="large"
            container="#body-user"
            v-bind="$attrs"
-           v-on="$listeners"
   >
     <template #default>
       <h2 :id="queryLogEntryHeadingId" class="query-log-entry-heading">
@@ -40,8 +39,8 @@
                     :active="false"
                     class="query-log-item"
                     :details="queryLogEntry.duration + ' ms'"
-                    :counter-number="queryLogEntry.affectedRows"
-                    :force-display-actions="true"
+                    :counterNumber="queryLogEntry.affectedRows"
+                    :forceDisplayActions="true"
         >
           <template #name>
             <h5 class="sql-query">
@@ -66,40 +65,41 @@
     </template>
   </NcModal>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../config.ts'
+import { showError, showInfo } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
   NcListItem,
   NcModal,
 } from '@nextcloud/vue'
-// import IconClipBoard from 'vue-material-design-icons/ClipboardOutline.vue'
-import IconClipBoard from 'vue-material-design-icons/Clippy.vue'
+import { mariadb as sqlDialect, formatDialect as sqlFormat } from 'sql-formatter'
+import { v4 as uuidv4 } from 'uuid'
 import {
   computed,
   ref,
 } from 'vue'
-import { showInfo, showError } from '@nextcloud/dialogs'
-import { v4 as uuidv4 } from 'uuid'
-import { formatDialect as sqlFormat, mariadb as sqlDialect } from 'sql-formatter'
-import Console from '../util/console.ts'
+// import IconClipBoard from 'vue-material-design-icons/ClipboardOutline.vue'
+import IconClipBoard from 'vue-material-design-icons/Clippy.vue'
+import { appName } from '../config.ts'
 import { LEGACY_QUERY_LOG as COMPONENT_NAME } from '../mountable-component-names.ts'
+import Console from '../util/console.ts'
+const props = defineProps<{ queryLogEntry: LegacySqlQueryLogEntry }>()
+
 // Will work in the future ...
 // import type { LegacySqlQueryLogEntry } from '../types/legacy-query-log.d.ts'
 
 const logger = new Console(COMPONENT_NAME)
 
 interface LegacySqlQueryLogEntry {
-  query: string, // SQL code
-  queryHash: string, // hash code for indexing
-  affectedRows: number, // integral
-  duration: number, // micro seconds
-  errorCode: number, // 0 on success
-  errorInfo: null|string,
+  query: string // SQL code
+  queryHash: string // hash code for indexing
+  affectedRows: number // integral
+  duration: number // micro seconds
+  errorCode: number // 0 on success
+  errorInfo: null|string
 }
-
-const props = defineProps<{ queryLogEntry: LegacySqlQueryLogEntry }>()
 
 logger.info('SQL QUERY MODAL', props)
 
@@ -113,18 +113,19 @@ const copyToClipboard = async () => {
     showInfo(t(appName, 'Query has been copied to the clipboard.'))
   } catch (error) {
     logger.error('CLIPBOARD ERROR', { error })
-    showError(t(appName, 'Failed copying query to the clipboard: {error}.', { error }))
+    showError(t(appName, 'Failed copying query to the clipboard: {error}.', { error: '' + error }))
   }
 }
 
 </script>
+
 <style scoped lang="scss">
 @use '../../style/mixins/flex.scss';
 @include flex.flexRules;
 .query-log-entry-heading {
   margin-left: 6px;
 }
-::v-deep .query-log-item {
+:deep(.query-log-item) {
   .list-item__anchor {
     height: auto;
   }

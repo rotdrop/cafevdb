@@ -21,14 +21,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import { translate as t, getCanonicalLocale } from '@nextcloud/l10n';
-import type { Contact } from '../types/address-book.d.ts';
-import { stringValue } from '../util/string-valued.ts';
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
+import type { Contact } from '../types/address-book.d.ts';
+
+import { getCanonicalLocale, translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+import { stringValue } from '../util/string-valued.ts';
 
 const addressItemUnknownLabel = (item: string) =>
   t(appName, '{item}: unknown', { item: t(appName, item) });
+
+export const addressPopup = (content: string) => {
+  return {
+    content,
+    // placement: 'bottom',
+    preventOverflow: false,
+    boundariesElement: 'viewport',
+    // shown: true,
+    // triggers: [],
+    html: true,
+    csstag: ['vue-tooltip-data-popup'],
+  };
+};
 
 export const musicianAddressPopup = (option: FrontEndEntity<'Musician'>) => {
   if (option.id === 0) {
@@ -94,17 +108,4 @@ export const contactAddressPopup = (option: Contact) => {
   const content = `<h4>${displayName}</h4>`
     + additionalInfo.join('<br/>');
   return addressPopup(content);
-};
-
-export const addressPopup = (content: string) => {
-  return {
-    content,
-    // placement: 'bottom',
-    preventOverflow: false,
-    boundariesElement: 'viewport',
-    // shown: true,
-    // triggers: [],
-    html: true,
-    csstag: ['vue-tooltip-data-popup'],
-  };
 };

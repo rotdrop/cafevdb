@@ -4,7 +4,7 @@
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
  - @author Claus-Justus Heine
- - @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  - @license AGPL-3.0-or-later
  -
  - This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,9 @@
 <template>
   <div class="container flex-container">
     <LegacyWrapper :template="template"
-                   :template-parameters="templateParameters"
+                   :templateParameters="templateParameters"
                    :hash="postDataHash"
-                   :no-legacy-reload="noLegacyReload"
+                   :noLegacyReload="noLegacyReload"
                    class="legacy-page-wrapper"
     />
     <!-- Project-event editing -->
@@ -40,25 +40,27 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+import type { RouteLocationNormalizedGeneric } from 'vue-router'
+
 // import globalState from '../app/globalstate.ts'
-import { ref, onBeforeMount } from 'vue'
-import LegacyWrapper from './LegacyWrapper.vue'
+import { onBeforeMount, ref } from 'vue'
 import {
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
   useRoute,
   useRouter,
-} from 'vue-router/composables'
-import type { Route } from 'vue-router'
-import Console from '../util/console.ts'
+} from 'vue-router'
+import LegacyWrapper from './LegacyWrapper.vue'
 import {
-  PROJECT_EVENTS_LISTING,
   ADD_CONTACTS_TO_PROJECT,
+  PROJECT_EVENTS_LISTING,
 } from '../event-bus-events.ts'
-import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 import { ADD_CONTACTS_TO_PROJECT_NAME } from '../router/add-contacts-to-project.ts'
+import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
+import Console from '../util/console.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
 const COMPONENT_NAME = 'LegacyWrapperRouterReactivity'
@@ -66,7 +68,7 @@ const logger = new Console(COMPONENT_NAME)
 
 const template = ref('')
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const templateParameters = ref<Record<string, any> >({})
+const templateParameters = ref<Record<string, any>>({})
 const postDataHash = ref<undefined|string>(undefined)
 const noLegacyReload = ref(false)
 
@@ -118,13 +120,13 @@ asyncSubscribe(ADD_CONTACTS_TO_PROJECT, async (event) => {
   }
 })
 
-const onRouteChange = (to: Route) => {
+const onRouteChange = (to: RouteLocationNormalizedGeneric) => {
   logger.info('onRouteChange()', { to: { ...to }, historyState: window?.history?.state })
-  template.value = to.params.template
+  template.value = to.params.template as string
   // Object.assign(templateParameters.value, to.params)
   templateParameters.value = sanitizeTemplateParams(to.params)
   postDataHash.value = (to.query?.hash as string) || undefined
-  noLegacyReload.value = +to.query?.['no-reload'] === 1
+  noLegacyReload.value = +(to.query?.['no-reload'] ?? 0) === 1
 }
 
 onBeforeMount(() => {
@@ -151,6 +153,7 @@ onBeforeRouteLeave((to, from, next) => {
   next()
 })
 </script>
+
 <style scoped lang="scss">
 @use '../../style/mixins/flex.scss';
 @include flex.flexRules;

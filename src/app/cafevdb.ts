@@ -21,24 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, appContainerSelector } from './globals.ts';
-import $, { jq } from './jquery.ts';
 import type { ReadyCallback } from './globalstate.ts';
-import { urlDecode } from './url-decode.ts';
+import type { TooltipsStatistics } from './jquery-cafevdb-tooltips.ts';
+
 import { translate as t } from '@nextcloud/l10n';
-import {
-  token as pmeToken,
-  textareaInputSelector as pmeTextareaInputSelector,
-  inputSelector as pmeInputSelector,
-  tableSelector as pmeTableSelector,
-} from './pme-selectors.ts';
+import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import { appContainerSelector, appName, globalState } from './globals.ts';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
-  type TooltipsStatistics,
 } from './jquery-cafevdb-tooltips.ts';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
-import * as BusEvents from '../event-bus-events.ts';
-import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import $, { jq } from './jquery.ts';
+import {
+  inputSelector as pmeInputSelector,
+  tableSelector as pmeTableSelector,
+  textareaInputSelector as pmeTextareaInputSelector,
+  token as pmeToken,
+} from './pme-selectors.ts';
+import { urlDecode } from './url-decode.ts';
+
 import { tooltipWideCssClass } from 'tooltips.scss';
 
 require('cafevdb.scss');
@@ -50,20 +52,18 @@ const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initiali
 
 Object.assign(
   globalState,
-  Object.assign(
-    {
-      appName,
-      [EnumPersonalSettingsKey.TOOL_TIPS_ENABLED]: true,
-      [EnumPersonalSettingsKey.WYSIWYG_EDITOR]: 'tinymce',
-      language: 'en',
-      readyCallbacks: [], // quasi-document-ready-callbacks
-      creditsTimer: -1,
-      phpUserAgent: t(appName, 'unknown'),
-      subscribe: {},
-    },
-    globalState,
-    { initialized: true },
-  ),
+  {
+    appName,
+    [EnumPersonalSettingsKey.TOOL_TIPS_ENABLED]: true,
+    [EnumPersonalSettingsKey.WYSIWYG_EDITOR]: 'tinymce',
+    language: 'en',
+    readyCallbacks: [], // quasi-document-ready-callbacks
+    creditsTimer: -1,
+    phpUserAgent: t(appName, 'unknown'),
+    subscribe: {},
+    ...globalState,
+    initialized: true,
+  },
 );
 
 if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initialized) {
@@ -169,7 +169,7 @@ const snapperClose = () => {
 
 type ToolTipSpec = {
   selector: string;
-  options: TooltipOptions,
+  options: TooltipOptions;
 };
 
 const toolTipSelectors: ToolTipSpec[] = [
@@ -308,14 +308,14 @@ const toolTipsInit = async (containerSel?: string|JQuery) => {
 };
 
 export {
-  appName,
-  globalState,
   addReadyCallback,
-  runReadyCallbacks,
-  unfocus,
+  appName,
   formSubmit,
+  globalState,
+  runReadyCallbacks,
   snapperClose,
-  toolTipsOnOff,
-  toolTipsInit,
   toolTipsEnabled,
+  toolTipsInit,
+  toolTipsOnOff,
+  unfocus,
 };

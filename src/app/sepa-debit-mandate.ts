@@ -21,71 +21,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $, appPrefix } from './globals.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import { getRequestToken } from '@nextcloud/auth';
-import { translate as t } from '@nextcloud/l10n';
-import * as Ajax from './ajax.ts';
-import * as Dialogs from './dialogs.ts';
-import * as DialogUtils from './dialog-utils.ts';
-import pageBusyIcon from './busy-icon.ts';
-// import * as Email from './email.ts';
-import { showError } from '@nextcloud/dialogs';
-import * as Notification from './notification.ts';
-import checkInvalidInputs from './check-invalid-inputs.ts';
-import * as PHPMyEdit from './pme.ts';
-import participantFieldsHandlers from './project-participant-fields-display.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import * as FileUpload from './file-upload.ts';
-import fileDownload from './file-download.ts';
-import pmeExportMenu from './pme-export.ts';
-import * as SelectUtils from './select-utils.ts';
-import modalizer from './modalizer.ts';
-// import { recordValue as pmeRecordValue } from './pme-record-id.ts';
-import {
-  confirmedReceivablesUpdate,
-  getProjectParticipants,
-  getProjectParticipantFields,
-  getProjectParticipantFieldOptions,
-  receivableAccumulatorProperties,
-  receivableKeyedProperties,
-  type UpdateStrategy,
-} from './project-participant-fields.ts';
-import initFileUploadRow from './pme-file-upload-row.ts';
-import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
-import './lock-input.ts';
-import {
-  data as pmeData,
-  formSelector as pmeFormSelector,
-  token as pmeToken,
-  classSelectors as pmeClassSelectors,
-} from './pme-selectors.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
-import 'selectize';
-import 'selectize/dist/css/selectize.bootstrap.css';
+import type { EnumSepaDebitMandateRevocationAction, EnumSepaDebitMandateValidationParam } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   ReceivablesStatistics,
+  SepaBankAccount,
   SepaBulkTransactionResponse,
   SepaDebitMandate,
-  SepaBankAccount,
   SepaDebitMandateValidation,
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type { END_POINTS } from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
+import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
+import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
+import type { UpdateStrategy } from './project-participant-fields.ts';
+
+import { getRequestToken } from '@nextcloud/auth';
+// import * as Email from './email.ts';
+import { showError } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
 import {
   CssClasses,
   EnumFileUploadMode,
   EnumSepaBulkTransactionsTopic,
   EnumSepaDebitMandateBinding,
-  type EnumSepaDebitMandateRevocationAction,
-  type EnumSepaDebitMandateValidationParam,
 } from '../../build/ts-types/php-modules/Controller.ts';
-import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
-import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
-import type { TemplateParameters } from '../components/oc-template/oc-template-parameters.d.ts';
-import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
+import {
+  HAVE_WRITTEN_MANDATE,
+  NO_WRITTEN_MANDATE,
+  WRITTEN_MANDATE_UPLOAD,
+} from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import { END_POINT as bulkTransactionsEndPoint } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
 import {
   ACTION_DIALOG,
   ACTION_HARDCOPY,
@@ -98,30 +63,67 @@ import {
   HARDCOPY_ACTION_DELETE,
   HARDCOPY_ACTION_UPLOAD,
   WRITTEN_MANDATE_FILE_UPLOAD,
-  type END_POINTS,
 } from '../../build/ts-types/php-modules/Controller/SepaDebitMandatesController.ts';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
 import * as UploadsController from '../../build/ts-types/php-modules/Controller/UploadsController.ts';
-import { END_POINT as bulkTransactionsEndPoint } from '../../build/ts-types/php-modules/Controller/SepaBulkTransactionsController.ts';
-import type { ResponseData } from '../types/ajax/response-data.d.ts';
+import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
+import * as Ajax from './ajax.ts';
+import pageBusyIcon from './busy-icon.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import checkInvalidInputs from './check-invalid-inputs.ts';
+import cloudFilePickerDialog from './cloud-file-picker-dialog.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import * as Dialogs from './dialogs.ts';
+import fileDownload from './file-download.ts';
+import * as FileUpload from './file-upload.ts';
+import { $, appName, appPrefix, globalState } from './globals.ts';
 import {
-  HAVE_WRITTEN_MANDATE,
-  NO_WRITTEN_MANDATE,
-  WRITTEN_MANDATE_UPLOAD,
-} from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import modalizer from './modalizer.ts';
+import * as Notification from './notification.ts';
+import pmeExportMenu from './pme-export.ts';
+import initFileUploadRow from './pme-file-upload-row.ts';
+import {
+  classSelectors as pmeClassSelectors,
+  data as pmeData,
+  formSelector as pmeFormSelector,
+  token as pmeToken,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import participantFieldsHandlers from './project-participant-fields-display.ts';
+// import { recordValue as pmeRecordValue } from './pme-record-id.ts';
+import {
+  confirmedReceivablesUpdate,
+  getProjectParticipantFieldOptions,
+  getProjectParticipantFields,
+  getProjectParticipants,
+  receivableAccumulatorProperties,
+  receivableKeyedProperties,
+} from './project-participant-fields.ts';
+import * as SelectUtils from './select-utils.ts';
+
+import './lock-input.ts';
+import 'selectize';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('selectize/dist/css/selectize.bootstrap.css');
 
 require('cafevdb-selectize.scss');
 
-require('jquery-ui/ui/widgets/autocomplete');
+import 'jquery-ui/ui/widgets/autocomplete';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('sepa-debit-mandate.scss');
 require('project-participant-fields-display.scss');
 require('lock-input.scss');
 
-require('./jquery-datetimepicker.ts');
-
-require('./jquery-readonly.ts');
+import './jquery-datetimepicker.ts';
+import './jquery-readonly.ts';
 
 // import { hasProperty } from '../toolkit/types/type-traits.ts';
 // const isSepaBankAccount = (arg: Record<string, unknown>): arg is SepaBankAccount =>
@@ -213,16 +215,16 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   $popup.on(
     'blur',
-    mandateFormSelector + ' ' + 'input[type="text"]:not(.no-validation):not(.selectize-input-element)',
-    function(this: HTMLInputElement, event) {
+    `${mandateFormSelector} input[type="text"]:not(.no-validation):not(.selectize-input-element)`,
+    function(this: HTMLInputElement, event: JQuery.Event) {
       // @todo This is a JQ TS kludge. Get rid of this trampoline.
       validateInput.call(this, event);
     },
   );
   $popup.on(
     'change',
-    mandateFormSelector + ' ' + 'select:not(.no-validation)',
-    function(this: HTMLInputElement, event) {
+    `${mandateFormSelector} select:not(.no-validation)`,
+    function(this: HTMLInputElement, event: JQuery.Event) {
       // @todo This is a JQ TS kludge. Get rid of this trampoline.
       // @todo This is a JQ TS kludge. Get rid of this trampoline.
       validateInput.call(this, event);
@@ -332,17 +334,16 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   $popup.on(
     'click',
-    mandateFormSelector + ' ' + uploadPlaceholderSelector
-      + ', '
-      + mandateFormSelector + ' ' + 'input.upload-from-client',
+    `${mandateFormSelector} ${uploadPlaceholderSelector}, ${mandateFormSelector} input.upload-from-client`,
     function() {
       $('#' + uploadWrapperId + ' input[type="file"]').trigger('click');
       return false;
-    });
+    },
+  );
 
   const writtenMandateUploadDone: FileUpload.Options['doneCallback'] = (file, _index, _$container) => {
     console.info('FILE', { file });
-    const mandateFieldset = $popup.find(mandateFormSelector + ' ' + 'fieldset.debit-mandate');
+    const mandateFieldset = $popup.find(`${mandateFormSelector} fieldset.debit-mandate`);
     mandateFieldset.find(`input[name="${WRITTEN_MANDATE_FILE_UPLOAD}"]`).val(JSON.stringify([file]));
     const fileName = (file.upload_mode !== EnumFileUploadMode.LINK)
       ? file.original_name
@@ -356,7 +357,7 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
   $popup.on(
     'click',
-    mandateFormSelector + ' ' + 'input.upload-from-cloud',
+    `${mandateFormSelector} input.upload-from-cloud`,
     function(this: JQuery<HTMLInputElement>, _event) {
       const $this = $(this);
 
@@ -373,7 +374,8 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
 
       $.fn.cafevTooltip.remove();
       return false;
-    });
+    },
+  );
 
   $popup.on(
     'change',
@@ -382,7 +384,8 @@ const mandatesInit = (data: SepaDebitMandate, onChangeCallback: () => void = () 
       $(mandateFormSelector + ' ' + uploadPlaceholderSelector)
         .prop('required', !$(this).prop('checked'));
       return false;
-    });
+    },
+  );
 
   // Render some inputs as disabled to prevent accidental overwrite
   const conservativeAllowChange = function($fieldSet: JQuery<HTMLFieldSetElement>) {
@@ -804,7 +807,8 @@ const defaultLoadOptions = {
   always() {},
 };
 
-const mandateLoad = function(options_: Pick<MandateLoadOptions, 'sepaId'> & Partial<Omit<MandateLoadOptions, 'sepaId'> >) {
+/** @param options_ TBD */
+function mandateLoad(options_: Pick<MandateLoadOptions, 'sepaId'> & Partial<Omit<MandateLoadOptions, 'sepaId'>>) {
   const options = { ...defaultLoadOptions, ...options_ };
   $.post(generateAppUrl(`${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_DIALOG}`), options.sepaId)
     .fail(function(xhr, status, errorThrown) {
@@ -829,7 +833,7 @@ const mandateLoad = function(options_: Pick<MandateLoadOptions, 'sepaId'> & Part
         options.always();
       }
     });
-};
+}
 
 type MandateStoreOptions = {
   $form: JQuery<HTMLFormElement>;
@@ -838,9 +842,12 @@ type MandateStoreOptions = {
   always: () => void;
 };
 
-// Store the form data. We assume that validation already has been
-// done
-const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omit<MandateStoreOptions, '$form'> >) => {
+/**
+ * Store the form data. We assume that validation already has been done.
+ *
+ * @param options_ TBD
+ */
+function mandateStore(options_: Pick<MandateStoreOptions, '$form'> & Partial<Omit<MandateStoreOptions, '$form'>>) {
   const defaultOptions = {
     done() {},
     fail() {},
@@ -891,16 +898,24 @@ const mandateStore = (options_: Pick<MandateStoreOptions, '$form'> & Partial<Omi
         options.always();
       }
     });
-};
+}
 
-// Delete a mandate
-const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate|SepaBankAccount) => void, action: EnumSepaDebitMandateRevocationAction) => {
+/**
+ * Delete a mandate.
+ *
+ * @param sepaId TBD.
+ *
+ * @param callbackOk TBD.
+ *
+ * @param action TBD.
+ */
+function mandateDelete(sepaId: SepaId, callbackOk: (data: SepaDebitMandate|SepaBankAccount) => void, action: EnumSepaDebitMandateRevocationAction) {
 
   // "submit" the entire form
   // const post = $('#sepa-debit-mandate-form').serialize();
 
   let endPoint: (typeof END_POINTS)[number] = END_POINT_DEBIT_MANDATES;
-  let confirmationText = '';
+  let confirmationText: string;
   switch (action) {
     case 'disable':
       // disable account if the mandate is already disabled
@@ -956,8 +971,9 @@ const mandateDelete = (sepaId: SepaId, callbackOk: (data: SepaDebitMandate|SepaB
           }
         });
     },
-    true);
-};
+    true,
+  );
+}
 
 const makeSuggestions = (data: Partial<SepaDebitMandateValidation>) => {
   if (data.suggestions) {
@@ -977,7 +993,7 @@ const makeSuggestions = (data: Partial<SepaDebitMandateValidation>) => {
  *
  * @param validateLockCB TBD.
  */
-const mandateValidate = function <Element extends HTMLElement, Event extends JQuery.Event>(this: Element, event: Event, validateLockCB: (lock: boolean) => void = () => {}) {
+function mandateValidate<Element extends HTMLElement, Event extends JQuery.Event>(this: Element, event: Event, validateLockCB: (lock: boolean) => void = () => {}) {
   const dialogId = '#sepa-debit-mandate-dialog';
 
   const validateLock = function() {
@@ -1027,7 +1043,8 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'messages'],
-        validateUnlock)) {
+        validateUnlock,
+      )) {
         if (typeof data !== 'string') {
           // One special case: if the user has submitted an IBAN and
           // the BLZ appeared to be valid after all checks, then
@@ -1091,7 +1108,7 @@ const mandateValidate = function <Element extends HTMLElement, Event extends JQu
       return true;
 
     });
-};
+}
 
 /**
  * Validate version for the PME dialog.
@@ -1215,7 +1232,8 @@ const mandateValidatePMEWorker = function<Element extends HTMLElement, ET1, ET2,
       if (!Ajax.validateResponse(
         data,
         ['suggestions', 'messages'],
-        validateErrorUnlock)) {
+        validateErrorUnlock,
+      )) {
         if (typeof data !== 'string' && data.blz) {
           $('input.bankAccountBLZ').val(data.blz);
         }
@@ -1729,11 +1747,10 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
       }
       maybeAutoFillInput($owner, autoOwner, true, function(autoFillAction) {
         Dialogs.confirm(
-          t(appName,
-            'The bank-account-owner is already set but differs from the project-participant.'
+          t(appName, 'The bank-account-owner is already set but differs from the project-participant.'
             + ' Shall we replace the current bank-account-owner by the project-participant?'),
           t(appName, 'Set Bank-Account-Owner to Project-Participant?'),
-          confirm => confirm && autoFillAction(),
+          (confirm) => confirm && autoFillAction(),
           true, // modal
           false, // allowHtml
         );
@@ -1786,11 +1803,10 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
         } else {
           // ask the user if the participant should be replaced
           Dialogs.confirm(
-            t(appName,
-              'Project-participant is already set but differs from the bank-account-owner.'
+            t(appName, 'Project-participant is already set but differs from the bank-account-owner.'
               + ' Shall we set the project-participant to the bank-account-owner?'),
             t(appName, 'Set Project-Participant to Bank-Account-Owner?'),
-            confirm => confirm && autoFillParticipant(),
+            (confirm) => confirm && autoFillParticipant(),
             true, // modal
             false, // allowHtml
           );
@@ -1922,10 +1938,12 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
           this,
           projectId,
           musicianId,
-          resizeCB, {
+          resizeCB,
+          {
             upload: `${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_HARDCOPY}/${HARDCOPY_ACTION_UPLOAD}`,
             delete: `${BASE_PATH}/${END_POINT_DEBIT_MANDATES}/${ACTION_HARDCOPY}/${HARDCOPY_ACTION_DELETE}`,
-          });
+          },
+        );
         $(this).on('pme:upload-done pme:upload-deleted', notifyUpload);
       });
   }
@@ -1942,7 +1960,8 @@ const mandatesDocumentReady = () => {
         }
         resizeCB();
       },
-    });
+    },
+  );
 
   CAFEVDB.addReadyCallback(async () => {
     mandateReady(PHPMyEdit.defaultSelector);
@@ -1953,7 +1972,7 @@ const mandatesDocumentReady = () => {
 
 export {
   mandatesDocumentReady as documentReady,
-  mandatePopupInit as popupInit,
-  mandateInsuranceReady as insuranceReady,
   mandateExportHandler as exportHandler,
+  mandateInsuranceReady as insuranceReady,
+  mandatePopupInit as popupInit,
 };

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,20 +24,20 @@
  * @file
  *
  * Tweak the tooltips class.
- *
  */
 
-import $ from './jquery.ts';
-import { appName } from '../config.ts';
-import toolTipProvider from 'bootstrap/js/dist/tooltip.js';
-import { translate as t } from '@nextcloud/l10n';
 import type Tooltip from 'bootstrap/js/dist/tooltip.js';
+
+import { translate as t } from '@nextcloud/l10n';
+import toolTipProvider from 'bootstrap/js/dist/tooltip.js';
+import { appName } from '../config.ts';
+import $ from './jquery.ts';
 
 require('tooltips.scss');
 
 type TooltipOptions = Tooltip.Options & {
-  cssclass: string[],
-  timestamp?: number,
+  cssclass: string[];
+  timestamp?: number;
 };
 
 const vendorOriginalTitleKey = 'bsOriginalTitle' as const;
@@ -85,9 +85,9 @@ export type TooltipsStatistics = {
   pending: number;
   pendingMax: number;
   dropped: {
-    duplicates: number,
-    locked: number,
-  },
+    duplicates: number;
+    locked: number;
+  };
 };
 const statistics: TooltipsStatistics = {
   processed: 0,
@@ -107,8 +107,8 @@ const resetStatistics = () => {
 };
 
 let backGroundPromise = Promise.resolve<TooltipsStatistics>(statistics);
-let backGroundResolve: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics> >['resolve'];
-let backGroundReject: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics> >['reject'];
+let backGroundResolve: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics>>['resolve'];
+let backGroundReject: undefined|ReturnType<typeof Promise.withResolvers<TooltipsStatistics>>['reject'];
 
 const rejectBackgroundPromise = function() {
   if (toolTipsTimer) {
@@ -187,12 +187,17 @@ const unlockElement = function($element: JQuery) {
 };
 
 const toolTipsWorkQueue: {
-  element: JQuery,
-  options: TooltipOptions,
+  element: JQuery;
+  options: TooltipOptions;
 }[] = [];
 
 // const spaceRe = /\s+/;
 
+/**
+ * @param $this TBD.
+ * @param optionsForAll TBD.
+ * @param jobChunkSize TBD.
+ */
 function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobChunkSize?: number) {
   ++statistics.processed;
   // const $this = this;
@@ -283,6 +288,9 @@ function singleToolTipWorker($this: JQuery, optionsForAll: TooltipOptions, jobCh
 
 type TooltipArgument = Parameters<Tooltip.jQueryInterface>[0];
 
+/**
+ * @param config TBD.
+ */
 function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<TooltipOptions>|TooltipArgument) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const $this = this;
@@ -334,7 +342,7 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
   } else {
     try {
       $this.tooltip(config);
-    } catch (e) {
+    } catch {
       console.error('EXCEPTION DURING TOOLTIP HANDLING', { self: this, config });
     }
     if (config === 'dispose') {
@@ -378,7 +386,7 @@ cafevTooltip.hide = () => {
 $.fn.cafevTooltip = cafevTooltip;
 
 export {
-  statistics,
   backGroundPromise,
   rejectBackgroundPromise,
+  statistics,
 };

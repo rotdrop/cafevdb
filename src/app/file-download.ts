@@ -21,18 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
+import { translate as t } from '@nextcloud/l10n';
+import * as ncRouter from '@nextcloud/router';
+import { parse as parseContentDisposition } from 'content-disposition';
 import { appName } from '../config.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import * as Ajax from './ajax.ts';
-import * as Notification from './notification.ts';
-import * as ncRouter from '@nextcloud/router';
-import { parse as parseContentDisposition } from 'content-disposition';
 import setBusyIndicators from './busy-indicators.ts';
-import { translate as t } from '@nextcloud/l10n';
+import $ from './jquery.ts';
+import * as Notification from './notification.ts';
 
 // still needed for jquery
-require('../legacy/nextcloud/jquery/requesttoken.js');
+import '../legacy/nextcloud/jquery/requesttoken.js';
 
 const defaultOptions = {
   done(url: string, _down: Record<string, unknown>) { console.info('DONE downloading', url); },
@@ -148,24 +148,16 @@ const download = (
       // Convert the Byte Data to BLOB object.
       const blob = new Blob([data], { type: contentType });
 
-      // Check the Browser type and download the File.
-      // @ts-expect-error 2551
-      const isIE = false || !!document.documentMode;
-      if (isIE) {
-        // @ts-expect-error 2339
-        window.navigator.msSaveBlob(blob, fileName);
-      } else {
-        // eslint-disable-next-line n/no-unsupported-features/node-builtins
-        const url = window.URL || window.webkitURL;
-        const link = url.createObjectURL(blob);
-        const $a = $('<a />');
-        $a.attr('download', fileName);
-        $a.attr('href', link);
-        $('body').append($a);
-        $a[0].click();
-        console.info('DOWNLOAD A', $a);
-        $a.remove();
-      }
+      const url = window.URL || window.webkitURL;
+      const link = url.createObjectURL(blob);
+      const $a = $('<a />');
+      $a.attr('download', fileName);
+      $a.attr('href', link);
+      $('body').append($a);
+      $a[0].click();
+      console.info('DOWNLOAD A', $a);
+      $a.remove();
+
       options.done(downloadUrl, data);
       options.always();
     });

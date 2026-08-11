@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.ts';
 import * as CAFEVDB from './cafevdb.ts';
+import { $, globalState } from './globals.ts';
 import * as PHPMyEdit from './pme.ts';
 
 require('project-instrumentation-numbers.scss');
@@ -44,7 +44,8 @@ const documentReady = function() {
         resizeCB();
       },
       context: globalState,
-    });
+    },
+  );
 
   CAFEVDB.addReadyCallback(async () => {
     const $container = $(PHPMyEdit.defaultSelector + '.project-instrumentation-numbers');

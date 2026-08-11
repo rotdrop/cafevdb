@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,19 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts';
-import globalState from '../app/globalstate.ts';
 import { translate as t } from '@nextcloud/l10n';
 import { defineStore } from 'pinia';
 import {
   reactive,
   ref,
   watch,
-  set as vueSet,
 } from 'vue';
-import { tooltips } from '../util/tooltips.ts';
-import Console from '../util/console.ts';
+import globalState from '../app/globalstate.ts';
+import { appName } from '../config.ts';
 import { DEBUG_TOOLTIPS } from '../debug-modes.ts';
+import Console from '../util/console.ts';
+import { tooltips } from '../util/tooltips.ts';
 
 const storeId = 'tooltips';
 
@@ -60,7 +59,7 @@ export default defineStore(storeId, () => {
     const pending: string[] = [];
     for (const key of keys) {
       if (tooltipsData[key] === undefined) {
-        vueSet(tooltipsData, key, '');
+        tooltipsData[key] = '';
         pending.push(key);
       }
     }
@@ -83,7 +82,7 @@ export default defineStore(storeId, () => {
     () => {
       for (const key of failedKeys.value) {
         if (tooltipsData[key] !== undefined) {
-          vueSet(tooltipsData, key, failedTooltipMessage(key));
+          tooltipsData[key] = failedTooltipMessage(key);
         }
       }
     },
@@ -104,10 +103,10 @@ export default defineStore(storeId, () => {
         if (!tooltip) {
           failedKeys.value.push(key);
           // tooltipsData[key] = failedTooltipMessage(key);
-          vueSet(tooltipsData, key, failedTooltipMessage(key));
+          tooltipsData[key] = failedTooltipMessage(key);
         } else {
           // tooltipsData[key] = tooltip;
-          vueSet(tooltipsData, key, tooltip);
+          tooltipsData[key] = tooltip;
         }
       }
       logger.debug('TOOLTIPS AFTER FETCHING', { tooltips: { ...tooltipsData } });

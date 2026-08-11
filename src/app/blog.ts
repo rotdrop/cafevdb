@@ -21,24 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName } from './globals.ts';
-import $ from './jquery.ts';
-import generateAppUrl from '../toolkit/util/generate-url.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import * as Ajax from './ajax.ts';
-import * as Dialogs from './dialogs.ts';
-import * as WysiwygEditor from './wysiwyg-editor.ts';
-import * as DialogUtils from './dialog-utils.ts';
-import { translate as t } from '@nextcloud/l10n';
-import '../legacy/nextcloud/jquery/avatar.js';
 import type { BlogResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+
+import { translate as t } from '@nextcloud/l10n';
+import { EnumBlogAction } from '../../build/ts-types/php-modules/Controller.ts';
 import {
   BASE_PATH,
   END_POINT_ACTION,
   END_POINT_EDIT,
 } from '../../build/ts-types/php-modules/Controller/BlogController.ts';
-import { EnumBlogAction } from '../../build/ts-types/php-modules/Controller.ts';
 import { RESIZE_TARGET } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
+import generateAppUrl from '../toolkit/util/generate-url.ts';
+import * as Ajax from './ajax.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import * as DialogUtils from './dialog-utils.ts';
+import * as Dialogs from './dialogs.ts';
+import { appName, globalState } from './globals.ts';
+import $ from './jquery.ts';
+import * as WysiwygEditor from './wysiwyg-editor.ts';
+
+import '../legacy/nextcloud/jquery/avatar.js';
 
 require('blog.scss');
 
@@ -59,7 +61,8 @@ const popupPosition = {
   offset: '0 0',
 };
 
-const editWindow = function(data: BlogResponse) {
+/** @param data TBD. */
+function editWindow(data: BlogResponse) {
   // @todo: should not be necessary, just attach to body without first
   // injectin the HTML content.
   $('#dialog_holder').html(data.content);
@@ -98,8 +101,8 @@ const editWindow = function(data: BlogResponse) {
       const resizeHandler = function() {
         $dialogHolder.dialog('option', 'height', 'auto');
         $dialogHolder.dialog('option', 'width', 'auto');
-        let newHeight = $dialogWidget.height()!
-            - $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
+        let newHeight = $dialogWidget.height()! -
+            $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
         newHeight -= $dialogHolder.outerHeight(false)! - $dialogHolder.height()!;
         $dialogHolder.height(newHeight);
       };
@@ -136,9 +139,10 @@ const editWindow = function(data: BlogResponse) {
     },
   });
   return true;
-};
+}
 
-const cancel = function(event: JQuery.ClickEvent) {
+/** @param event TBD. */
+function cancel(event: JQuery.ClickEvent) {
   event.preventDefault();
   // $('#blogtextarea').tinymce().save();
   if ($('#blogtextarea').val() === BlogState.text) {
@@ -152,12 +156,14 @@ const cancel = function(event: JQuery.ClickEvent) {
           $('#blogedit').dialog('close').remove();
         }
       },
-      true);
+      true,
+    );
   }
   return false;
-};
+}
 
-const submit = function(event: JQuery.ClickEvent) {
+/** @param event TBD. */
+function submit(event: JQuery.ClickEvent) {
   event.preventDefault();
   // $('#blogtextarea').tinymce().save();
   let popupValue = 0;
@@ -166,7 +172,7 @@ const submit = function(event: JQuery.ClickEvent) {
   } else if ($('#blogpopupclear').prop('checked')) {
     popupValue = -1;
   }
-  let clearReaderValue = 0;
+  let clearReaderValue: number;
   if ($('#blogreaderclear').prop('checked')) {
     clearReaderValue = 1;
   } else {
@@ -193,7 +199,7 @@ const submit = function(event: JQuery.ClickEvent) {
       return true;
     });
   return false;
-};
+}
 
 const avatar = function() {
   const blogThreads = $('#blogthreads');
@@ -262,13 +268,14 @@ const popupMessages = function() {
   });
 };
 
-const updateThreads = function(data: BlogResponse) {
+/** @param data TBD. */
+function updateThreads(data: BlogResponse) {
   const blogThreads = $('#blogthreads');
   blogThreads.html(data.content);
   popupMessages();
   avatar();
   return true;
-};
+}
 
 const documentReady = function() {
 
@@ -306,7 +313,8 @@ const documentReady = function() {
           })
           .done(editWindow);
         return false;
-      });
+      },
+    );
 
     blogThreads.on(
       'click',
@@ -323,7 +331,8 @@ const documentReady = function() {
           })
           .done(editWindow);
         return false;
-      });
+      },
+    );
 
     blogThreads.on(
       'click',
@@ -344,9 +353,11 @@ const documentReady = function() {
                 .done(updateThreads);
             }
           },
-          true);
+          true,
+        );
         return false;
-      });
+      },
+    );
 
     blogThreads.on(
       'click',
@@ -368,7 +379,8 @@ const documentReady = function() {
           })
           .done(updateThreads);
         return false;
-      });
+      },
+    );
 
     blogThreads.on(
       'click',
@@ -390,7 +402,8 @@ const documentReady = function() {
           })
           .done(updateThreads);
         return false;
-      });
+      },
+    );
 
     popupMessages(); // annoy people
     avatar(); // display avatars

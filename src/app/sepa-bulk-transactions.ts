@@ -21,39 +21,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from './jquery.ts';
-import * as CAFEVDB from './cafevdb.ts';
-import { templateRenderer } from './template-renderer.ts';
-import * as PHPMyEdit from './pme.ts';
-import {
-  sys as pmeSys,
-  classSelector as pmeClassSelector,
-} from './pme-selectors.ts';
-import {
-  lazyDecrypt,
-  reject as rejectDecryptionPromise,
-  promise as decryptionPromise,
-} from './lazy-decryption.ts';
+import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
+
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBulkTransactions.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names.ts';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
 } from '../services/async-event-bus.ts';
-import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names.ts';
-import * as BusEvents from '../event-bus-events.ts';
+import * as CAFEVDB from './cafevdb.ts';
+import $ from './jquery.ts';
+import {
+  promise as decryptionPromise,
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+} from './lazy-decryption.ts';
+import {
+  classSelector as pmeClassSelector,
+  sys as pmeSys,
+} from './pme-selectors.ts';
+import * as PHPMyEdit from './pme.ts';
+import { templateRenderer } from './template-renderer.ts';
 import actionMenu from './vue-action-menu.ts';
-import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBulkTransactions.ts';
 
 require('sepa-bulk-transactions.scss');
-
-asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
-  if (event.template !== template) {
-    return;
-  }
-  asyncEmit(BusEvents.PUSH_BUSY_STATE);
-  await overviewPopup(PHPMyEdit.selector(), event);
-  asyncEmit(BusEvents.POP_BUSY_STATE);
-});
 
 const backgroundDecryption = (container: string|JQuery) => {
   const $container = PHPMyEdit.container(container);
@@ -83,12 +75,12 @@ const overviewPopup = async function(containerSel: string, data: AsyncNextcloudE
     [pmeSys('rec')]: { id: entityId },
     [pmeSys('groupby_rec')]: {
       id: entityId,
-      // eslint-disable-next-line camelcase
+
       CompositePayments__master_key_: '0;' + entityId,
     },
     [pmeSys('mrec_rec')]: {
       id: entityId,
-      // eslint-disable-next-line camelcase
+
       CompositePayments__master_key_: '0;' + entityId,
     },
     projectId: data.projectId,
@@ -97,6 +89,15 @@ const overviewPopup = async function(containerSel: string, data: AsyncNextcloudE
     modified: false,
   });
 };
+
+asyncSubscribe(BusEvents.LEGACY_RECORD_POPUP, async (event) => {
+  if (event.template !== template) {
+    return;
+  }
+  asyncEmit(BusEvents.PUSH_BUSY_STATE);
+  await overviewPopup(PHPMyEdit.selector(), event);
+  asyncEmit(BusEvents.POP_BUSY_STATE);
+});
 
 const ready = function(container: string|JQuery, resizeCB: () => void = () => {}) {
 
@@ -146,7 +147,7 @@ const documentReady = function() {
 };
 
 export {
-  documentReady,
   backgroundDecryption,
+  documentReady,
   ready,
 };
