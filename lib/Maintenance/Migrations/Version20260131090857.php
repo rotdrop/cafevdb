@@ -62,7 +62,7 @@ final class Version20260131090857 extends AbstractTransactionalMigration
   /** {@inheritdoc} */
   public function postDown(Schema $schema): void
   {
-    // cannot be easily undown because the various event listeners will
+    // cannot be easily undone because the various event listeners will
     // enforce consistency: as long as the calendar events exist the project
     // events will be regenerated and the registrationevent association will
     // be established.
