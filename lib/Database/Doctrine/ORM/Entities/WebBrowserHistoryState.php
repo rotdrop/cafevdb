@@ -60,12 +60,12 @@ class WebBrowserHistoryState implements \ArrayAccess
   protected ?DateTimeImmutable $created = null;
 
   /** @var Collection<string, WebBrowserHistoryEntry> */
-  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'key', fetch: 'EXTRA_LAZY')]
-  #[ORM\OrderBy(['key' => 'ASC'])]
+  #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'position', fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['position' => 'ASC'])]
   protected Collection $stack;
 
   #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: true)]
-  #[ORM\JoinColumn(name: 'pos_key', referencedColumnName: 'key', nullable: true)]
+  #[ORM\JoinColumn(name: 'pos_position', referencedColumnName: 'position', nullable: true)]
   #[ORM\OneToOne(targetEntity: WebBrowserHistoryEntry::class, cascade: ['remove'], fetch: 'EXTRA_LAZY')]
   protected ?WebBrowserHistoryEntry $pos;
 

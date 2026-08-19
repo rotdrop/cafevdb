@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2025 Claus-Justus Heine
+ * @copyright 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,10 +42,10 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Id]
   protected WebBrowserHistoryState $state;
 
-  #[ORM\Column(type: 'decimal', precision: 16, scale: 3, nullable: false, options: ['unsigned' => true])]
+  #[ORM\Column(type: 'integer', length: 20, nullable: false, options: ['unsigned' => true])]
   #[ORM\GeneratedValue(strategy: 'NONE')]
   #[ORM\Id]
-  protected string $key;
+  protected int $position;
 
   #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
   protected string $path;
@@ -69,7 +69,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return WebBrowserHistoryState */
-  public function getState():WebBrowserHistoryState
+  public function getState(): WebBrowserHistoryState
   {
     return $this->state;
   }
@@ -79,7 +79,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setState(WebBrowserHistoryState $state):WebBrowserHistoryEntry
+  public function setState(WebBrowserHistoryState $state): WebBrowserHistoryEntry
   {
     $this->state = $state;
 
@@ -87,7 +87,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return null|string */
-  public function getKey():?string
+  public function getKey(): ?string
   {
     return $this->key ?? null;
   }
@@ -97,15 +97,33 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setKey(string $key):WebBrowserHistoryEntry
+  public function setKey(string $key): WebBrowserHistoryEntry
   {
     $this->key = $key;
 
     return $this;
   }
 
+  /** @return ?int */
+  public function getPosition(): ?int
+  {
+    return $this->position ?? null;
+  }
+
+  /**
+   * @param ?int $position
+   *
+   * @return WebBrowserHistoryEntry
+   */
+  public function setPosition(?int $position): WebBrowserHistoryEntry
+  {
+    $this->position = $position;
+
+    return $this;
+  }
+
   /** @return string */
-  public function getPath():string
+  public function getPath(): string
   {
     return $this->path;
   }
@@ -115,7 +133,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setPath(string $path):WebBrowserHistoryEntry
+  public function setPath(string $path): WebBrowserHistoryEntry
   {
     $this->path = $path;
 
@@ -123,7 +141,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return WebBrowserHistoryData */
-  public function getData():WebBrowserHistoryData
+  public function getData(): WebBrowserHistoryData
   {
     return $this->data;
   }
@@ -142,7 +160,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   }
 
   /** @return string */
-  public function getDataHash():string
+  public function getDataHash(): string
   {
     return $this->data->getHash();
   }
