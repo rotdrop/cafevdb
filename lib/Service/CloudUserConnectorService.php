@@ -1112,7 +1112,15 @@ SELECT t.* FROM " . $table . " t";
         if (preg_match(self::CREATE_FUNCTION_REGEXP, $sql)) {
           $currentStatement = sprintf(self::REVOKE_EXECUTE, $key, $cloudDbUser);
           $this->logDebug('SQL ' . $currentStatement);
-          $this->connection->prepare($currentStatement)->executeQuery();
+          try {
+            $this->connection->prepare($currentStatement)->executeQuery();
+          } catch (DBALDriverException $e) {
+            $sqlState = $e->getSQLState();
+            $code = $e->getCode();
+            if ($sqlState === '42000' && $code === 1403) {
+              // ignore, the grant just does not exist
+            }
+          }
           $currentStatement = sprintf('DROP FUNCTION IF EXISTS %1$s', $key);
         } elseif (preg_match(self::CREATE_VIEW_REGEXP, $sql)) {
           $currentStatement = sprintf(self::REVOKE_SELECT, $key, $cloudDbUser);
@@ -1125,7 +1133,15 @@ SELECT t.* FROM " . $table . " t";
             array_shift($matches);
             $currentStatement = sprintf('REVOKE %1$s %2$s ON %3$s FROM %4$s', ...$matches);
             $this->logDebug('SQL ' . $currentStatement);
-            $this->connection->prepare($currentStatement)->executeQuery();
+            try {
+              $this->connection->prepare($currentStatement)->executeQuery();
+            } catch (DBALDriverException $e) {
+              $sqlState = $e->getSQLState();
+              $code = $e->getCode();
+              if ($sqlState === '42000' && ($code === 1441 || $code === 1147)) {
+                // ignore, the grant just does not exist
+              }
+            }
           }
           continue;
         }
