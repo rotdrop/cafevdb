@@ -1207,7 +1207,7 @@ class PersonalSettingsController extends Controller
             try {
               $folderLink = $this->userStorage->getFilesAppLink($real);
             } catch (Throwable $t) {
-              // don't care
+              $folderLink = null;
             }
             return DTO\FolderValueResponse::fromArray([
               'message' => $this->l->t('"%s" which is configured as "%s" exists and is usable.', [$parameter, $actual]),
@@ -1574,7 +1574,7 @@ class PersonalSettingsController extends Controller
         $newValue = Util::normalizeSpaces($value);
         $oldValue = $this->getConfigValue($parameter, null);
         $this->logInfo('OLD / NEW ' . $oldValue . ' / ' . $newValue);
-        $hints = '';
+        $hints = [];
         if ($newValue != $oldValue) {
           try {
             /** @var CloudUserConnectorService $userConnectorService */
