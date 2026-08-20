@@ -21,7 +21,7 @@
  -->
 <template>
   <NcContent :appName="appId">
-    <NcAppNavigation>
+    <NcAppNavigation :ariaLabel="t(appId, '{appId} Navigation', { appId })">
       <template #list>
         <NcAppNavigationItem :to="{ name: 'home' }"
                              :name="t(appId, 'Home')"
@@ -725,7 +725,7 @@ router.beforeEach((to, from, next) => {
     pendingHistoryAction: history.pendingHistoryAction,
   })
   if (!history.pendingHistoryAction) {
-    history.scheduleHistoryAction(to.transition, to.params)
+    history.scheduleHistoryAction(to.transition!, to.params)
   }
   next()
 })
@@ -746,7 +746,7 @@ router.afterEach((to, from, _failure) => {
   // extending given default template parameters (if present).
 })
 // onReady is called once at start
-router.onReady(() => {
+router.isReady().then(() => {
   logger.debug('ROUTER ON READY HOOK', {
     urlPath: history.lastUrlPath,
     route,
