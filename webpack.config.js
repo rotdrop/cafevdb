@@ -155,6 +155,9 @@ module.exports = {
       APP_NAME: JSON.stringify(appName),
       appName: JSON.stringify(appName),
       appVersion: JSON.stringify(appVersion),
+      __VUE_OPTIONS_API__: 'true',
+      __VUE_PROD_DEVTOOLS__: 'false',
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
     }),
     new HtmlWebpackPlugin({
       inject: false,
