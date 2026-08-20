@@ -213,7 +213,7 @@
       }
     }
 
-    a.sharedfolder-view {
+    a.sharedFolder-view {
       display:inline-block;
       background-repeat:no-repeat;
       background-size: #{$iconSize} #{$iconSize};
@@ -283,11 +283,6 @@
     }
 
     #sharing-settings {
-      form.sharedfolders {
-        input#taxExcemptionNoticeTemplate {
-          width:25em;
-        }
-      }
       form.cloud-user {
         .info, .hint {
           font-style:italic;
