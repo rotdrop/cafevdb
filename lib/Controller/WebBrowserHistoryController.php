@@ -43,7 +43,11 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 
-/** Fetch one or multiple tooltip via AJAX. */
+/**
+ * Fetch stored web-browser history entries.
+ *
+ * @todo This should be handled by the general entity serializer stuff.
+ */
 #[TSAttributes\TypeScript]
 class WebBrowserHistoryController extends Controller
 {
@@ -91,7 +95,7 @@ class WebBrowserHistoryController extends Controller
   private function exportHistoryEntry(Entities\WebBrowserHistoryEntry $entry, string $mode):array
   {
     $data = [
-      'key' => $entry->getKey(),
+      'state' => $entry->getWindowHistoryState(),
       'path' => $entry->getPath(),
       'hash' => $entry->getDataHash(),
     ];
@@ -106,7 +110,7 @@ class WebBrowserHistoryController extends Controller
    *
    * @param Entities\WebBrowserHistoryState $historyState
    *
-   * @param string $modeOrKey If not in self::GET_MODES then export just the
+   * @param string $modeOrPosition If not in self::GET_MODES then export just the
    * single history entry with the given key, including the corresponding
    * post-data. If equal to self::GET_MODE_DEEP include also the request
    * parameters (post-data), otherwise omit theem.
@@ -117,35 +121,35 @@ class WebBrowserHistoryController extends Controller
    */
   private function exportHistoryState(
     Entities\WebBrowserHistoryState $historyState,
-    string $modeOrKey,
+    string $modeOrPosition,
   ):array {
-    switch ($modeOrKey) {
+    switch ($modeOrPosition) {
       case self::GET_MODE_DEEP:
       case self::GET_MODE_SHALLOW:
         $dataItem = [
           'modificationTime' => $historyState->getCreated()->format('U.v'),
-          'position' => $historyState->getPos()->getKey(),
+          'position' => $historyState->getPos()->getPosition(),
           'history' => [],
         ];
-        if ($modeOrKey === self::GET_MODE_DEEP) {
+        if ($modeOrPosition === self::GET_MODE_DEEP) {
           $dataItem['requestData'] = [];
         }
         /** @var Entities\WebBrowserHistoryEntry $entry */
-        foreach ($historyState->getStack() as $key => $entry) {
+        foreach ($historyState->getStack() as $position => $entry) {
           $hash = $entry->getData()->getHash();
-          $dataItem['history'][$key] = $this->exportHistoryEntry($entry, $modeOrKey);
-          if ($modeOrKey === self::GET_MODE_DEEP) {
+          $dataItem['history'][$position] = $this->exportHistoryEntry($entry, $modeOrPosition);
+          if ($modeOrPosition === self::GET_MODE_DEEP) {
             $dataItem['requestData'][$hash] = $entry->getData()->getData();
           }
         }
         break;
       default:
         // just the data form a single item, this is always "deep" including the post data.
-        $entry = $historyState->getEntry($modeOrKey);
+        $entry = $historyState->getEntry($modeOrPosition);
         if ($entry === null) {
           throw new Exceptions\EnduserNotificationException(
             $this->l->t('History record with key "%1$s" at time "%2$s" for user "%3$s" could not be found.', [
-              $modeOrKey,
+              $modeOrPosition,
               $this->dateTimeFormatter->formatDateTime($historyState->getCreated()),
               $this->userId,
             ]),
@@ -162,20 +166,20 @@ class WebBrowserHistoryController extends Controller
   /**
    * @param string|float $timestamp
    *
-   * @param string $modeOrKey
+   * @param string $modeOrPosition
    *
    * @return DataResponse
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'GET',
-    url: '/' . self::BASE_PATH . '/{timestamp}/{modeOrKey}',
+    url: '/' . self::BASE_PATH . '/{timestamp}/{modeOrPosition}',
     defaults: [
       'timestamp' => self::GET_REQUEST_ALL,
-      'modeOrKey' => self::GET_MODE_SHALLOW,
+      'modeOrPosition' => self::GET_MODE_SHALLOW,
     ],
   )]
-  public function get(string|float $timestamp, string $modeOrKey = self::GET_MODE_SHALLOW)
+  public function get(string|float $timestamp, string $modeOrPosition = self::GET_MODE_SHALLOW)
   {
     $repository = $this->getDatabaseRepository(Entities\WebBrowserHistoryState::class);
     switch ($timestamp) {
@@ -187,7 +191,7 @@ class WebBrowserHistoryController extends Controller
         $data = [];
         /** @var Entities\WebBrowserHistoryState $historyState */
         foreach ($historyStates as $historyState) {
-          $item = $this->exportHistoryState($historyState, $modeOrKey);
+          $item = $this->exportHistoryState($historyState, $modeOrPosition);
           $data[$item['modificationTime']] = $item;
         }
         break;
@@ -215,7 +219,7 @@ class WebBrowserHistoryController extends Controller
             httpStatusCode: Http::STATUS_NOT_FOUND,
           );
         }
-        $data = $this->exportHistoryState($historyState, $modeOrKey);
+        $data = $this->exportHistoryState($historyState, $modeOrPosition);
         break;
     }
     return self::dataResponse($data);
@@ -224,7 +228,7 @@ class WebBrowserHistoryController extends Controller
   /**
    * @param float $timestamp
    *
-   * @param string $position
+   * @param int $position
    *
    * @param array $history
    *
@@ -236,7 +240,7 @@ class WebBrowserHistoryController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'PUT', url: '/' . self::BASE_PATH . '/{timestamp}')]
-  public function put(float $timestamp, string $position, array $history, array $requestData):DataResponse
+  public function put(float $timestamp, int $position, array $history, array $requestData):DataResponse
   {
     $historyState = new Entities\WebBrowserHistoryState($timestamp, $this->userId);
     $this->entityManager->beginTransaction();
@@ -255,12 +259,13 @@ class WebBrowserHistoryController extends Controller
         $data[$hash] = $dataItem;
       }
 
-      foreach ($history as $key => $entryData) {
+      foreach ($history as $entryPosition => $entryData) {
         $entry = new Entities\WebBrowserHistoryEntry(
           state: $historyState,
-          key: $key,
+          position: $entryPosition,
           path: $entryData['path'],
           data: $data[$entryData['hash']],
+          windowHistoryState: $entryData['state'],
         );
         $this->persist($entry);
         $historyState->addEntry($entry);

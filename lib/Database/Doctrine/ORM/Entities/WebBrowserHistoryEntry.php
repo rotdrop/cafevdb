@@ -50,22 +50,32 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 32768, nullable: false, options: ['collation' => 'ascii_bin'])]
   protected string $path;
 
-  /** @var Collection<WebBrowserHistoryData> */
+  /**
+   * @var array<string, mixed>
+   *
+   * Opaque window history state.
+   */
+  #[ORM\Column(type: 'json', nullable: false, options: ['default' => '{}'])]
+  protected array $windowHistoryState;
+
+  /** @var WebBrowserHistoryData */
   #[ORM\JoinColumn(name: 'data_hash', referencedColumnName: 'hash', nullable: false)]
   #[ORM\ManyToOne(targetEntity: WebBrowserHistoryData::class, cascade: ['persist'], inversedBy: 'entries', fetch: 'EXTRA_LAZY')]
   protected WebBrowserHistoryData $data;
 
   /** {@inheritdoc} */
   public function __construct(
-    ?string $key = null,
+    ?int $position = null,
     ?WebBrowserHistoryState $state = null,
     ?string $path = null,
     ?WebBrowserHistoryData $data = null,
+    ?array $windowHistoryState = null,
   ) {
-    $key && $this->key = $key;
+    $position && $this->position = $position;
     $state && $this->state = $state;
     $path && $this->path = $path;
     $data && $this->setData($data);
+    $windowHistoryState && $this->windowHistoryState = $windowHistoryState;
   }
 
   /** @return WebBrowserHistoryState */
@@ -151,7 +161,7 @@ class WebBrowserHistoryEntry implements \ArrayAccess
    *
    * @return WebBrowserHistoryEntry
    */
-  public function setData(WebBrowserHistoryData $data):WebBrowserHistoryEntry
+  public function setData(WebBrowserHistoryData $data): WebBrowserHistoryEntry
   {
     $this->data = $data;
     $data->addToEntry($this);
@@ -163,6 +173,24 @@ class WebBrowserHistoryEntry implements \ArrayAccess
   public function getDataHash(): string
   {
     return $this->data->getHash();
+  }
+
+  /** @return array */
+  public function getWindowHistoryState(): array
+  {
+    return $this->windowHistoryState;
+  }
+
+  /**
+   * @param array $windowHistoryState
+   *
+   * @return WebBrowserHistoryEntry
+   */
+  public function setWindowHistoryState(array $windowHistoryState): WebBrowserHistoryEntry
+  {
+    $this->windowHistoryState = $windowHistoryState;
+
+    return $this;
   }
 
   /**

@@ -23,6 +23,7 @@
 
 import type { AxiosResponse } from '@nextcloud/axios';
 import type {
+  HistoryState,
   RouteLocationGeneric,
   RouteLocationNormalizedGeneric,
   TransitionType,
@@ -52,7 +53,7 @@ import {
   GET_REQUEST_TIMESTAMPS as getTimestamps,
 } from '../../build/ts-types/php-modules/Controller/WebBrowserHistoryController.ts';
 import { appName } from '../config.ts';
-import router from '../router/app-router.ts';
+import router, { history as vueRouterHistory } from '../router/app-router.ts';
 import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
@@ -73,6 +74,16 @@ export type HistoryActionReplace = typeof HistoryActionReplace;
 export type HistoryActionUnknown = typeof HistoryActionUnknown;
 
 export type HistoryAction = HistoryActionPush|HistoryActionReplace|HistoryActionPop|HistoryActionUnknown;
+
+export interface VueRouterHistoryState extends HistoryState {
+  position: number;
+  // replaced: boolean;
+  // back: string | null;
+  // current: string;
+  // forward: string | null;
+}
+
+export const isVueRouterHistoryState = (arg: HistoryState): arg is VueRouterHistoryState => !!arg?.position;
 
 const storeId = 'history';
 
@@ -130,12 +141,9 @@ export type FetchMode = 'deep'|'shallow';
 export type FetchAll = 'all';
 
 export interface RouterHistoryState<Mode extends FetchMode = 'deep'> {
-  // The key assigned by the vue-router to the history state. The key
-  // also determines the position in the history stack (numerical
-  // ordering).
-  key: number;
+  state: VueRouterHistoryState;
   hash: string;
-  position: string|number|null; // window.history.length at creation time.
+  windowHistoryPosition: number|null; // window.history.length at creation time.
   path: string;
   post: Mode extends 'deep' ? TemplatePostData : undefined|TemplatePostData;
 }
@@ -149,8 +157,8 @@ interface HistoryInitialState {
 
 export interface HistoryPersistenceRecord<Mode extends FetchMode = 'deep'> {
   modificationTime?: number;
-  position: string; // current history key
-  history: Record<string, RouterHistoryState<Mode>>;
+  position: number; // current history state.position
+  history: Record<number, RouterHistoryState<Mode>>;
   requestData: Mode extends 'deep' ? Record<string, TemplatePostData> : undefined|Record<string, TemplatePostData>;
 }
 
@@ -172,31 +180,32 @@ export default defineStore(storeId, () => {
 
   logger.debug('HISTORY STORE INIT');
 
+  // post-data indexed by its hash
   const requestData = reactive<Record<string, TemplatePostData>>({});
 
   class RouterHistoryRecord implements RouterHistoryState {
 
     constructor(arg: {
-      key: string|number;
+      state: VueRouterHistoryState;
       hash?: string;
       post?: TemplatePostData;
       path: string;
     }) {
-      this.replaceKey(arg.key);
+      this.replaceState(arg.state);
       this.path = arg.path;
-      this.position = window.history.length;
+      this.windowHistoryPosition = window.history.length;
       this.replaceHash(arg);
     }
 
-    _key: number = -1;
+    _state: VueRouterHistoryState = { position: -1 };
     private _hash: string = '';
-    position: number;
+    windowHistoryPosition: number;
     path: string;
-    get key() { return this._key; }
+    get state() { return this._state; }
     get post() { return requestData[this._hash]; }
     get hash() { return this._hash; }
-    replaceKey(arg?: string|number) {
-      this._key = parseFloat(arg || window.history.state.key);
+    replaceState(state?: HistoryState) {
+      this._state = state ? { ...state } : { position: -1, ...window.history.state };
     }
 
     replaceHash(arg: {
@@ -226,7 +235,7 @@ export default defineStore(storeId, () => {
 
   }
 
-  const routerHistory = ref<Record<string, RouterHistoryRecord>>({});
+  const routerHistory = ref<Record<number, RouterHistoryRecord>>({});
 
   const currentRoute = useRoute();
 
@@ -236,18 +245,18 @@ export default defineStore(storeId, () => {
     modificationTime.value = Date.now() / 1000.0;
   };
 
-  const initialHistoryKey: undefined|string = window?.history?.state?.key;
-  const currentHistoryKey = ref(initialHistoryKey || '');
-  const routerHistoryKeys = computed(() => Object.keys(routerHistory.value).sort((a, b) => +a - +b));
+  const initialHistoryState = window?.history?.state;
+  const currentHistoryPosition = ref<number>(initialHistoryState?.position ?? -1);
+  const routerHistoryPositions = computed(() => Object.keys(routerHistory.value).map((a) => +a).sort((a, b) => a - b));
 
   const pendingHistoryData = ref<undefined|TemplatePostData>(undefined);
   const pendingHistoryHash = ref<undefined|string>(undefined); // optimization, do not compute twice
   const pendingHistoryAction = ref<undefined|HistoryAction>(undefined);
-  const pendingHistoryKey = ref<undefined|string|number>('initial');
-  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryKey.value || ''] || null);
-  const currentHistoryIndex = computed(() => routerHistoryKeys.value.indexOf(currentHistoryKey.value));
+  const pendingHistoryPosition = ref<undefined|number>(-1);
+  const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryPosition.value ?? -1] ?? null);
+  const currentHistoryIndex = computed(() => routerHistoryPositions.value.indexOf(currentHistoryPosition.value));
   const atHistoryBase = computed(() => currentHistoryIndex.value === 0);
-  const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryKeys.value.length - 1);
+  const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryPositions.value.length - 1);
 
   const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({
     section: 'historyPostData',
@@ -287,7 +296,7 @@ export default defineStore(storeId, () => {
   document.onvisibilitychange = (event) => {
     // no async code in this function, it will not be executed.
     logger.info('VISIBILITY CHANGE EVENT', { event, state: document.visibilityState });
-    if (document.visibilityState === 'hidden' && routerHistoryKeys.value.length > 1) {
+    if (document.visibilityState === 'hidden' && routerHistoryPositions.value.length > 1) {
       const historySaveRecord = prepareHistorySaveRecord();
       SessionStorage.setItem(sessionStorageHistoryKey, historySaveRecord);
       // logger.debug('SESSION STORAGE HISTORY', JSON.stringify(historySaveRecord, undefined, 2));
@@ -306,33 +315,36 @@ export default defineStore(storeId, () => {
     return null;
   };
 
-  const defineInitialHistory = (initialHistoryKey: string) => {
+  const defineInitialHistory = (initialHistoryState: VueRouterHistoryState) => {
     routerHistory.value = {
-      [initialHistoryKey]: new RouterHistoryRecord({
+      [initialHistoryState.position]: new RouterHistoryRecord({
         post: initialPostData,
         hash: initialPostHash,
-        key: initialHistoryKey,
+        state: initialHistoryState,
         path: currentRoute.fullPath,
       }),
     };
-    currentHistoryKey.value = initialHistoryKey;
+    currentHistoryPosition.value = initialHistoryState.position;
     updateModificationTime();
-    logger.debug('INITIAL ROUTER HISTORY', currentHistoryKey.value, { ...routerHistory.value[initialHistoryKey] });
+    logger.debug('INITIAL ROUTER HISTORY', currentHistoryPosition.value, { ...routerHistory.value[initialHistoryState.position] });
   };
 
   let pendingInitTransition: TransitionType|undefined;
 
-  if (initialHistoryKey) {
-    defineInitialHistory(initialHistoryKey);
+  if (isVueRouterHistoryState(initialHistoryState)) {
+    defineInitialHistory(initialHistoryState);
   } else {
-    logger.info('HISTORY YET EMPTY, INSTALLING WATCH ON CURRENT ROUTE', currentRoute);
+    logger.info('HISTORY YET EMPTY, INSTALLING WATCH ON CURRENT ROUTE', {
+      currentRoute,
+      historyState: { ...vueRouterHistory.state },
+    });
     const stop = watch(
       currentRoute,
       (newValue, oldValue) => {
         stop();
         logger.debug('INITIAL ROUTE WATCHER', newValue, oldValue);
-        const initialHistoryKey = window?.history?.state?.key;
-        if (!initialHistoryKey) {
+        const initialHistoryState = window?.history?.state;
+        if (!isVueRouterHistoryState(initialHistoryState)) {
           let historyString: string;
           try {
             historyString = JSON.stringify(window?.history, null, 2);
@@ -344,12 +356,12 @@ export default defineStore(storeId, () => {
           error.context.type = storeId;
           return errorHandler(error);
         }
-        defineInitialHistory(initialHistoryKey);
+        defineInitialHistory(initialHistoryState);
         if (pendingInitTransition !== undefined) {
           finishHistoryAction(currentRoute);
           pendingInitTransition = undefined;
-        } else if (pendingHistoryKey.value === 'initial') {
-          pendingHistoryKey.value = currentHistoryKey.value; // ?? really
+        } else if (pendingHistoryPosition.value === -1) {
+          pendingHistoryPosition.value = currentHistoryPosition.value; // ?? really
         }
       },
     );
@@ -404,25 +416,25 @@ export default defineStore(storeId, () => {
    * @param hash Hash value of request data. Recomputed if not provided.
    */
   function scheduleHistoryAction(action: HistoryAction, post: TemplatePostData, hash?: string): string {
-    const key = window?.history?.state?.key || 'initial';
+    const key = window?.history?.state?.position || 'initial';
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
     hash = pendingHistoryHash.value = hash || generatePostHash(pendingHistoryData.value);
-    pendingHistoryKey.value = key;
+    pendingHistoryPosition.value = key;
     logger.debug('scheduleHistoryAction()', {
       action,
       key,
-      currentHistoryKey: currentHistoryKey.value,
-      pendingHistoryKey: pendingHistoryKey.value,
+      currentHistoryPosition: currentHistoryPosition.value,
+      pendingHistoryPosition: pendingHistoryPosition.value,
       post,
       hash,
       routerHistory: { ...routerHistory.value },
       requestData: { ...requestData },
     });
     if (action !== 'pop'
-        && currentHistoryKey.value !== 'initial'
-        && pendingHistoryKey.value !== currentHistoryKey.value) {
-      logger.trace('SCHEDULE HISTORY KEY MISMATCH', pendingHistoryKey.value, currentHistoryKey.value);
+        && currentHistoryPosition.value !== -1
+        && pendingHistoryPosition.value !== currentHistoryPosition.value) {
+      logger.trace('SCHEDULE HISTORY KEY MISMATCH', pendingHistoryPosition.value, currentHistoryPosition.value);
     }
     return pendingHistoryHash.value;
   }
@@ -452,11 +464,11 @@ export default defineStore(storeId, () => {
     pendingHistoryAction.value = undefined;
     pendingHistoryData.value = undefined;
     pendingHistoryHash.value = undefined;
-    pendingHistoryKey.value = undefined;
+    pendingHistoryPosition.value = undefined;
     logger.debug('terminateHistoryAction()', {
       resolve,
       history: JSON.parse(JSON.stringify(routerHistory.value)),
-      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryPosition: currentHistoryPosition.value,
       currentHistoryState: { ...(currentHistoryState.value || { undefined }) },
     });
     settleMutationPromise(resolve);
@@ -483,23 +495,23 @@ export default defineStore(storeId, () => {
   function removeHistoryTail() {
     if (currentHistoryIndex.value < 0) {
       logger.debug('INDEX < 0', {
-        keys: [...routerHistoryKeys.value],
+        keys: [...routerHistoryPositions.value],
         history: { ...routerHistory },
-        key: currentHistoryKey.value,
+        key: currentHistoryPosition.value,
         index: currentHistoryIndex.value,
       });
       errorHandler(new HistoryStoreConsistencyError(
-        t(appName, 'Unable to find key {key} in current history stack.', { key: currentHistoryKey.value }),
+        t(appName, 'Unable to find key {key} in current history stack.', { key: currentHistoryPosition.value }),
       ));
       return false;
     }
-    const keysToDelete = routerHistoryKeys.value.slice(currentHistoryIndex.value + 1);
+    const keysToDelete = routerHistoryPositions.value.slice(currentHistoryIndex.value + 1);
     logger.debug('Removing history tail', {
-      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryPosition: currentHistoryPosition.value,
       currentHistoryIndex: currentHistoryIndex.value,
       history: { ...routerHistory.value },
       keysToDelete,
-      routerHistoryKeys: [...routerHistoryKeys.value],
+      routerHistoryPositions: [...routerHistoryPositions.value],
     });
     for (const key of keysToDelete) {
       logger.debug('DELETING HISTORY ENTRY', {
@@ -581,7 +593,7 @@ export default defineStore(storeId, () => {
    * callback handlers. Hence the logic is:
    *
    * - if pendingHistoryAction is defined, use its value else look at
-   * - window.history.state.key,if defined and equal to the current *
+   * - window.history.state.position,if defined and equal to the current *
    *   (i.e. previous) key, then assume that the history state has
    *   been replaced, otherwise assume a push.
    *
@@ -591,45 +603,52 @@ export default defineStore(storeId, () => {
    */
   function finishHistoryAction(route: RouteLocationNormalizedGeneric, from?: RouteLocationNormalizedGeneric) {
     const transition = route.transition;
-    const key = window?.history?.state?.key || 'initial';
+    const windowHistoryState = { ...(window?.history?.state ?? {}) };
+    const position = windowHistoryState.position ?? -1;
     const history = routerHistory.value;
     logger.debug('ON HISTORY FINISH', {
-      key,
+      windowHistoryState,
+      position,
       transition,
       to: { ...route },
       from: from ? { ...from } : undefined,
       currentHistoryIndex: currentHistoryIndex.value,
-      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryPosition: currentHistoryPosition.value,
       pendingHistoryAction: pendingHistoryAction.value,
-      pendingHistoryKey: pendingHistoryKey.value,
+      pendingHistoryPosition: pendingHistoryPosition.value,
       pendingHistoryData: pendingHistoryData.value,
       pendingHistoryHash: pendingHistoryHash.value,
       currentHistoryState: { ...currentHistoryState.value },
       history: { ...history },
-      historyOfKey: { ...(history?.['' + key] || { undefined: true }) },
-      historyKeys: [...routerHistoryKeys.value],
+      historyOfPosition: { ...(history?.['' + position] || { undefined: true }) },
+      historyPositions: [...routerHistoryPositions.value],
       requestData: { ...requestData },
     });
-    if (routerHistoryKeys.value.length === 0) {
+    if (routerHistoryPositions.value.length === 0) {
       logger.info('POSTPONING HISTORY FINISH CALL UNTIL AFTER INIT');
       pendingInitTransition = transition;
       return;
     }
+    if (!isVueRouterHistoryState(windowHistoryState)) {
+      return errorHandler(
+        new HistoryStoreSetupError(t(appName, 'Window history state seems uninitialized')),
+      );
+    }
     adjustDocumentTitle(currentRoute);
-    if (transition === 'replace' && pendingHistoryKey.value === 'initial') {
-      // just replace the keys and be gone.
-      if (routerHistoryKeys.value.length > 1) {
+    if (transition === 'replace' && pendingHistoryPosition.value === -1) {
+      // just replace the positions and be gone.
+      if (routerHistoryPositions.value.length > 1) {
         return errorHandler(
           new HistoryStoreSetupError(t(appName, 'History already contains more than the initial setup item.')),
         );
       }
-      if (currentHistoryKey.value !== key) {
+      if (currentHistoryPosition.value !== position) {
         const currentState = currentHistoryState.value;
-        delete history[currentHistoryKey.value];
-        history[key] = currentState;
-        currentState.replaceKey(key);
-        currentHistoryKey.value = key;
-        // logger.debug('Adjusted initial history key', JSON.parse(JSON.stringify(history)), { ...currentHistoryState.value });
+        delete history[currentHistoryPosition.value];
+        history[position] = currentState;
+        currentState.replaceState(windowHistoryState);
+        currentHistoryPosition.value = position;
+        // logger.debug('Adjusted initial history position', JSON.parse(JSON.stringify(history)), { ...currentHistoryState.value });
       }
       if (currentHistoryState.value.path !== route.fullPath) {
         logger.info('Replacing route path', currentHistoryState.value.path, route.fullPath);
@@ -650,11 +669,11 @@ export default defineStore(storeId, () => {
       clearHistoryAction();
     }
     // TODO: is this still needed?
-    if (pendingHistoryAction.value === 'replace' && key !== currentHistoryKey.value && currentHistoryKey.value !== 'initial') {
+    if (pendingHistoryAction.value === 'replace' && position !== currentHistoryPosition.value && currentHistoryPosition.value !== -1) {
       logger.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
-        key,
-        pendingHistoryKey: pendingHistoryKey.value,
-        currentHistoryKey: currentHistoryKey.value,
+        position,
+        pendingHistoryPosition: pendingHistoryPosition.value,
+        currentHistoryPosition: currentHistoryPosition.value,
         history: { ...history },
       });
       cancelHistoryAction();
@@ -663,10 +682,10 @@ export default defineStore(storeId, () => {
       if (transition !== HistoryActionUnknown) {
         pendingHistoryAction.value = transition;
         pendingHistoryData.value = {};
-      } else if (key === pendingHistoryKey.value) {
+      } else if (position === pendingHistoryPosition.value) {
         // replace action from RouterLink
         pendingHistoryAction.value = HistoryActionReplace;
-      } else if (history[key]) {
+      } else if (history[position]) {
         // 'pop' action, back or forward
         pendingHistoryAction.value = HistoryActionPop;
       } else {
@@ -675,10 +694,10 @@ export default defineStore(storeId, () => {
       }
       logger.debug('TWEAKED HISTORY ACTION IS', {
         pendingHistoryAction: pendingHistoryAction.value,
-        key,
-        pendingHistoryKey: pendingHistoryKey.value,
-        currentHistoryKey: currentHistoryKey.value,
-        historyAtKey: history?.[key],
+        position,
+        pendingHistoryPosition: pendingHistoryPosition.value,
+        currentHistoryPosition: currentHistoryPosition.value,
+        historyAtPosition: history?.[position],
         history: { ...history },
       });
     }
@@ -693,38 +712,42 @@ export default defineStore(storeId, () => {
           );
         }
         removeHistoryTail();
-        const key = window.history.state.key;
-        history[key] = new RouterHistoryRecord({
+        const position = window.history.state.position;
+        history[position] = new RouterHistoryRecord({
           hash: pendingHistoryHash.value,
           post: pendingHistoryData.value,
-          key,
+          state: windowHistoryState,
           path: route.fullPath,
         });
-        currentHistoryKey.value = key;
+        currentHistoryPosition.value = position;
         updateModificationTime();
         break;
       }
       case HistoryActionReplace: {
-        if (key !== currentHistoryKey.value) {
-          logger.debug('BEFORE ADJUST KEYS', key, currentHistoryKey.value, { ...history[currentHistoryKey.value] }, history?.[key]);
-          history[key] = history[currentHistoryKey.value];
-          logger.debug('CURRENT STATE 0', { ...history[key] });
-          delete history[currentHistoryKey.value];
-          logger.debug('CURRENT STATE 1', { ...history[key] });
-          currentHistoryKey.value = key;
-          history[key].replaceKey(key);
-          logger.debug('AFTER ADJUST KEYS', history);
+        if (position !== currentHistoryPosition.value) {
+          logger.debug('BEFORE ADJUST POSITIONS', {
+            position,
+            currentHistoryPosition: { ...history[currentHistoryPosition.value] },
+            historyAtPosition: history?.[position],
+          });
+          history[position] = history[currentHistoryPosition.value];
+          logger.debug('CURRENT STATE 0', { ...history[position] });
+          delete history[currentHistoryPosition.value];
+          logger.debug('CURRENT STATE 1', { ...history[position] });
+          currentHistoryPosition.value = position;
+          history[position].replaceState(windowHistoryState);
+          logger.debug('AFTER ADJUST POSITIONS', history);
         }
-        history[key].replaceHash({
+        history[position].replaceHash({
           hash: pendingHistoryHash.value,
           post: pendingHistoryData.value,
         });
-        history[key].path = route.fullPath;
+        history[position].path = route.fullPath;
         updateModificationTime();
         break;
       }
       case HistoryActionPop: {
-        currentHistoryKey.value = window.history?.state?.key || 'initial';
+        currentHistoryPosition.value = window.history?.state?.position ?? -1;
         updateModificationTime();
         break;
       }
@@ -736,9 +759,9 @@ export default defineStore(storeId, () => {
         })));
         return;
     }
-    for (const [key, record] of Object.entries(routerHistory.value)) {
-      if (key !== record.key.toFixed(3)) {
-        logger.trace('SELF INCONSISTENCY', key, { ...record }, { ...routerHistory });
+    for (const [position, record] of Object.entries(routerHistory.value)) {
+      if (+position !== +record.state.position) {
+        logger.trace('SELF INCONSISTENCY', position, { ...record }, { ...routerHistory });
       }
     }
     clearHistoryAction();
@@ -746,12 +769,12 @@ export default defineStore(storeId, () => {
       atBase: atHistoryBase.value,
       atTop: atHistoryTop.value,
       currentHistoryIndex: currentHistoryIndex.value,
-      currentHistoryKey: currentHistoryKey.value,
+      currentHistoryPosition: currentHistoryPosition.value,
       currentHistoryState: { ...currentHistoryState.value },
       requestData: { ...requestData },
       currentPostData: { ...(currentHistoryState.value?.post || {}) },
       routerHistory: { ...routerHistory.value },
-      routerHistoryKeys: [...routerHistoryKeys.value],
+      routerHistoryPositions: [...routerHistoryPositions.value],
       windowHistoryState: window?.history?.state,
     });
   }
@@ -775,10 +798,10 @@ export default defineStore(storeId, () => {
       errorHandler(error);
     });
 
-  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrKey: M): Promise<undefined|LoadHistoryDataType<T, M>> => {
-    const url = generateAppUrl(`${controllerBasePath}/{timestamp}/{modeOrKey}`, {
+  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrPosition: M): Promise<undefined|LoadHistoryDataType<T, M>> => {
+    const url = generateAppUrl(`${controllerBasePath}/{timestamp}/{modeOrPosition}`, {
       timestamp,
-      modeOrKey,
+      modeOrPosition,
     });
     try {
       const response: AxiosResponse<LoadHistoryDataType<T, M>> = await axios.get(url);
@@ -787,14 +810,14 @@ export default defineStore(storeId, () => {
       let message: string;
       if (timestamp === 'all') {
         message = t(appName, 'Unable to load the available history states.');
-      } else if (modeOrKey === 'shallow' || modeOrKey === 'deep') {
+      } else if (modeOrPosition === 'shallow' || modeOrPosition === 'deep') {
         message = t(appName, 'Unable to load the history states at time {time} (timestamp: {timestamp}).', {
           time: moment((timestamp as number) * 1000).format('LLL'),
           timestamp,
         });
       } else {
-        message = t(appName, 'Unable to load the history state data for "{key}" at time {time} (timestamp: {timestamp}).', {
-          key: modeOrKey,
+        message = t(appName, 'Unable to load the history state data for "{position}" at time {time} (timestamp: {timestamp}).', {
+          position: modeOrPosition,
           time: moment((timestamp as number) * 1000).format('LLL'),
           timestamp,
         });
@@ -803,7 +826,7 @@ export default defineStore(storeId, () => {
     }
   };
 
-  const loadHistoryState = (timestamp: number, modeOrKey: FetchMode = 'shallow') => loadHistoryData(timestamp, modeOrKey);
+  const loadHistoryState = (timestamp: number, modeOrPosition: FetchMode = 'shallow') => loadHistoryData(timestamp, modeOrPosition);
 
   function loadHistoryStates(): ReturnType<typeof loadHistoryData<'all', 'shallow'>>;
   function loadHistoryStates<M extends FetchMode>(mode: M): ReturnType<typeof loadHistoryData<'all', M>>;
@@ -813,7 +836,7 @@ export default defineStore(storeId, () => {
   function loadHistoryStates(mode: FetchMode = 'shallow') {
     return loadHistoryData('all', mode);
   }
-  const loadHistoryEntry = (timestamp: number, key: string) => loadHistoryData(timestamp, key);
+  const loadHistoryEntry = (timestamp: number, position: string) => loadHistoryData(timestamp, position);
 
   /**
    * Collect the current history state into one JSON serializatble
@@ -824,12 +847,12 @@ export default defineStore(storeId, () => {
    */
   function prepareHistorySaveRecord(): HistoryPersistenceRecord {
     // logger.debug('PREPARE HISTORY SAVE', JSON.stringify({
-    //   position: currentHistoryKey.value,
+    //   position: currentHistoryPosition.value,
     //   currentState: { ...currentHistoryState.value },
     //   currentRequestData: { ...requestData[currentHistoryState.value.hash] },
     // }, undefined, 2));
     return {
-      position: currentHistoryKey.value,
+      position: currentHistoryPosition.value,
       requestData, // the post data proper
       history: routerHistory.value,
     };
@@ -898,14 +921,14 @@ export default defineStore(storeId, () => {
 
   const validateHistoryMutation = (
     chain: Record<string, RouterHistoryState<'deep'>>,
-    posKey: string,
+    posPosition: number,
   ) => {
-    const posEntry = chain[posKey];
+    const posEntry = chain[posPosition];
     if (!posEntry) {
       errorHandler(
         new HistoryStoreMutationError(
-          t(appName, 'The key "{posKey}" of the final destination does not point into the provided history chain.', {
-            posKey,
+          t(appName, 'The position "{posPosition}" of the final destination does not point into the provided history chain.', {
+            posPosition,
           }),
         ),
       );
@@ -972,12 +995,12 @@ export default defineStore(storeId, () => {
    * Push the given history chain to on top of the current state and
    * navigate then to the given location.
    *
-   * In order to keep the states consistent we have to adjust the keys
+   * In order to keep the states consistent we have to adjust the positions
    * to start just after the current index.
    *
    * @param chain History data to append, including post-data.
    *
-   * @param posKey Position to finally go to.
+   * @param posPosition Position to finally go to.
    *
    * @param params Parameters.
    *
@@ -985,18 +1008,13 @@ export default defineStore(storeId, () => {
    * state by the first state of chain.
    *
    * @param params.mutationLock Already aquired mutation lock from caller
-   *
-   * @todo We should probably check that the history data is sorted in
-   * ascending order. Actually, we could get rid of the rather
-   * complicated prev/next list by just using the key, which is a
-   * timestamp and hence always increasing.
    */
   const pushHistoryStack = async (
-    chain: Record<string, RouterHistoryState<'deep'>>,
-    posKey: string,
+    chain: Record<number, RouterHistoryState<'deep'>>,
+    posPosition: number,
     params: { replaceCurrent?: boolean; mutationLock?: PromiseWithResolvers<void> } = { replaceCurrent: false },
   ) => {
-    if (!validateHistoryMutation(chain, posKey)) {
+    if (!validateHistoryMutation(chain, posPosition)) {
       return;
     }
     // the check above also ensures that chain contains at least one state
@@ -1007,15 +1025,15 @@ export default defineStore(storeId, () => {
     removeHistoryTail();
     const history = routerHistory.value;
 
-    // sort the keys ascending
-    const keys = Object.keys(chain).sort((a, b) => +a - +b);
+    // sort the positions ascending
+    const positions = Object.keys(chain).map((a) => +a).sort((a, b) => a - b);
 
     if (replaceCurrent) {
       logger.debug('REPLACE CURRENT STATE BY FIRST STATE');
-      const firstKey = keys.shift() as string;
-      const entry = chain[firstKey];
+      const firstPosition = positions.shift()!; // we know the array is non-empty at this point
+      const entry = chain[firstPosition];
 
-      if (keys.length === 0) {
+      if (positions.length === 0) {
         // edge case: just replace using the regular vue router
         // replace functionality and skip the remainder of this
         // function.
@@ -1057,38 +1075,40 @@ export default defineStore(storeId, () => {
     }
 
     // Compute the offset from the tail to the desired position
-    const jump = keys.indexOf(posKey) + 1 - keys.length;
-    logger.debug('JUMP COMPUTATION', jump, keys.indexOf(posKey), keys.length);
+    const jump = positions.indexOf(posPosition) + 1 - positions.length;
+    logger.debug('JUMP COMPUTATION', jump, positions.indexOf(posPosition), positions.length);
     if (jump === 0) {
       // if jump is 0 we finally have to do a router.push(), as go(0) reloads the page
-      keys.pop();
+      positions.pop();
     }
 
-    if (keys.length > 0) {
-      // we need to tweak the keys of the given chain
+    if (positions.length > 0) {
+      // we need to tweak the positions of the given chain
       let counter = 0;
-      const offset = currentHistoryKey.value;
-      const keyMap = Object.fromEntries(keys.map((key) => [key, (+offset + (++counter) / 1000.0).toFixed(3)]) as [string, string][]);
-      logger.debug('KEYMAP', keyMap);
-      for (const key of keys) {
-        const entry = chain[key];
-        history[keyMap[key]] = new RouterHistoryRecord({
-          key: keyMap[key],
+      const offset = currentHistoryPosition.value;
+      const positionMap = Object.fromEntries(positions.map((position) => [position, (+offset + ++counter)])) as Record<number, number>;
+      logger.debug('POSITIONMAP', positionMap);
+      for (const position of positions) {
+        const entry = chain[position];
+        const windowHistoryState = { ...entry.state, position: positionMap[position] };
+        history[positionMap[position]] = new RouterHistoryRecord({
+          state: windowHistoryState,
           hash: entry.hash,
           post: entry.post,
           path: entry.path,
         });
-        logger.debug('HISTORY DURING MUTAION', key, keyMap[key], { ...history });
-        currentHistoryKey.value = keyMap[key];
+        logger.debug('HISTORY DURING MUTATION', position, positionMap[position], { ...history });
+        currentHistoryPosition.value = positionMap[position];
       }
 
       logger.debug('HISTORY AFTER INTERNAL STATE MUTATION', { ...history });
 
       // First push to the window history ignoring the vue-router
-      for (const [key, mappedKey] of Object.entries(keyMap)) {
-        const entry = chain[key];
+      for (const [position, mappedPosition] of Object.entries(positionMap)) {
+        const entry = chain[position];
         const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
-        window.history.pushState({ key: mappedKey }, '', url);
+        const windowHistoryState = { ...entry.state, position: mappedPosition };
+        window.history.pushState(windowHistoryState, '', url);
         const resolved = router.resolve(entry.path, 'unknown');
         adjustDocumentTitle(resolved);
       }
@@ -1109,9 +1129,11 @@ export default defineStore(storeId, () => {
       }
     } else {
       try {
-        // push the final state throught the vue-router to avoid a reload by go(0)
-        logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posKey] } });
-        const entry = chain[posKey];
+        // Push the final state throught the vue-router to avoid a
+        // reload by go(0).  This ignores the stored old window
+        // history state as the vue router will generate a new one.
+        logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posPosition] } });
+        const entry = chain[posPosition];
         const resolved = router.resolve(entry.path, 'unknown');
         const params = sanitizePostData({ ...entry.post, ...resolved.params });
         const hash = entry.hash;
@@ -1144,15 +1166,15 @@ export default defineStore(storeId, () => {
    *
    * @param chain History stack.
    *
-   * @param posKey Position to finally go to.
+   * @param posPosition Position to finally go to.
    */
-  const appendHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'>>, posKey: string) => {
-    if (!validateHistoryMutation(chain, posKey)) {
+  const appendHistoryStack = async (chain: Record<number, RouterHistoryState<'deep'>>, posPosition: number) => {
+    if (!validateHistoryMutation(chain, posPosition)) {
       return;
     }
     const mutationLock = await aquireMutationLock();
     // navigate first to the top of the stack.
-    const counter = routerHistoryKeys.value.length - currentHistoryIndex.value - 1;
+    const counter = routerHistoryPositions.value.length - currentHistoryIndex.value - 1;
     if (counter > 0) {
       try {
         const mutationPromise = await scheduleMutationPromise();
@@ -1171,7 +1193,7 @@ export default defineStore(storeId, () => {
         return;
       }
     }
-    return pushHistoryStack(chain, posKey, { mutationLock });
+    return pushHistoryStack(chain, posPosition, { mutationLock });
   };
 
   /**
@@ -1179,10 +1201,10 @@ export default defineStore(storeId, () => {
    *
    * @param chain History stack.
    *
-   * @param posKey Position to finally go to.
+   * @param posPosition Position to finally go to.
    */
-  const replaceHistoryStack = async (chain: Record<string, RouterHistoryState<'deep'>>, posKey: string) => {
-    validateHistoryMutation(chain, posKey);
+  const replaceHistoryStack = async (chain: Record<number, RouterHistoryState<'deep'>>, posPosition: number) => {
+    validateHistoryMutation(chain, posPosition);
     const mutationLock = await aquireMutationLock();
     // navigate first to the start of the stack.
     const counter = -currentHistoryIndex.value;
@@ -1204,7 +1226,7 @@ export default defineStore(storeId, () => {
         return;
       }
     }
-    return pushHistoryStack(chain, posKey, { replaceCurrent: true, mutationLock });
+    return pushHistoryStack(chain, posPosition, { replaceCurrent: true, mutationLock });
   };
 
   // If available
@@ -1214,7 +1236,10 @@ export default defineStore(storeId, () => {
   // logger.debug('HISTORY DATA FROM SESSION STORAGE', getSessionStorageHistoryData());
 
   router.isReady().then(() => {
-    logger.debug('ON ROUTER READY HOOK');
+    logger.debug('ON ROUTER READY HOOK', {
+      router,
+      historyState: { ...vueRouterHistory.state },
+    });
 
     // try load history from session storage ...
     const historyData = getSessionStorageHistoryData();
@@ -1236,8 +1261,8 @@ export default defineStore(storeId, () => {
     popErrorHandler: errorHandlerProvider.popHandler,
     currentRoute,
     routerHistory,
-    routerHistoryKeys,
-    currentHistoryKey,
+    routerHistoryPositions,
+    currentHistoryPosition,
     currentHistoryIndex,
     currentHistoryState,
     atHistoryBase,

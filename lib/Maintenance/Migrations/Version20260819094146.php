@@ -45,6 +45,7 @@ final class Version20260819094146 extends AbstractStructuralMigration
   {
     $this->addSql('ALTER TABLE WebBrowserHistoryEntries ADD position INT UNSIGNED DEFAULT NULL');
     $this->addSql('ALTER TABLE WebBrowserHistoryStates ADD pos_position INT UNSIGNED DEFAULT NULL');
+    $this->addSql('ALTER TABLE WebBrowserHistoryEntries ADD window_history_state JSON DEFAULT \'{}\' NOT NULL');
   }
 
   /** {@inheritdoc} */
@@ -60,5 +61,6 @@ final class Version20260819094146 extends AbstractStructuralMigration
     $this->addSql('CREATE INDEX IF NOT EXISTS IDX_FD38B3C74CDC76F1D06B458A ON WebBrowserHistoryStates (pos_state_id, pos_key)');
     $this->addSql('ALTER TABLE WebBrowserHistoryEntries DROP IF EXISTS position');
     $this->addSql('ALTER TABLE WebBrowserHistoryStates DROP IF EXISTS pos_position');
+    $this->addSql('ALTER TABLE WebBrowserHistoryEntries DROP IF EXISTS window_history_state');
   }
 }

@@ -46,6 +46,14 @@ final class Version20260819094422 extends AbstractTransactionalMigration
   {
     $this->addSql('UPDATE WebBrowserHistoryEntries SET position = `key`*1000');
     $this->addSql('UPDATE WebBrowserHistoryStates SET pos_position = pos_key*1000');
+    $this->addSql('UPDATE WebBrowserHistoryEntries SET window_history_state = JSON_OBJECT(
+  "position", position,
+  "current", path,
+  "back", NULL,
+  "forward", NULL,
+  "replaced", false,
+  "scroll", NULL
+)');
   }
 
   /** {@inheritdoc} */
