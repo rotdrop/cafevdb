@@ -32,16 +32,22 @@ import {
   // isNavigationFailure,
 } from 'vue-router';
 import { appName } from '../config.ts';
-// import Console from '../util/console.ts';
+import Console from '../util/console.ts';
 import appRoutes from './routes.ts';
 
-// const COMPONENT_NAME = 'app-router';
-// const logger = new Console(COMPONENT_NAME);
+const COMPONENT_NAME = 'app-router';
+const logger = new Console(COMPONENT_NAME);
 
 const base = generateUrl('/apps/' + appName);
 
+export const history = createWebHistory(base);
+
+history.listen((to, from, info) => {
+  logger.info('HISTORY LISTENER', { to, from, info });
+});
+
 const options: RouterOptions = {
-  history: createWebHistory(base),
+  history,
   linkActiveClass: 'active',
   routes: appRoutes,
   scrollBehavior(to, _from, savedPosition) {
