@@ -14,8 +14,8 @@
     "./node_modules/ckeditor5/**.ts",
     "./node_modules/moment/**.ts",
     "./node_modules/pinia/**.ts",
-    "./node_modules/vue-router/**.ts",
-    "./node_modules/vue/**.ts",
+    "./node_modules/vue-router/**/*.ts",
+    "./node_modules/vue/**/*.ts",
     "./node_modules/webpack/**.ts",
     "./src/**/*.ts",
     "./src/**/*.vue",
@@ -34,9 +34,7 @@
       "moment",
       "node",
       "popper",
-      "selectize",
-      "vue",
-      "vue-router"
+      "selectize"
     ],
     "traceResolution": false,
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
