@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: import('../components/StartPage.vue'),
+    component: () => import('../components/StartPage.vue'),
     props: (_to) => ({
       routeTitle: t(appName, 'Home'),
     }),
