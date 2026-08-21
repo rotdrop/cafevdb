@@ -134,7 +134,7 @@ onBeforeMount(() => {
   onRouteChange(currentRoute)
 })
 
-onBeforeRouteUpdate((to, from, next) => {
+onBeforeRouteUpdate((to, from) => {
   logger.debug('ON BEFORE ROUTE UPDATE', {
     to: { ...to },
     from: { ...from },
@@ -145,12 +145,10 @@ onBeforeRouteUpdate((to, from, next) => {
           || (to.matched.length > 1 && to.matched[0].name === 'legacy-page'))) {
     onRouteChange(to)
   }
-  next()
 })
 
-onBeforeRouteLeave((to, from, next) => {
+onBeforeRouteLeave((to, from) => {
   logger.debug('ON BEFORE ROUTE LEAVE', { ...to }, { ...from }, window?.history?.state)
-  next()
 })
 </script>
 

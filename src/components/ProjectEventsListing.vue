@@ -627,7 +627,7 @@ onBeforeMount(() => {
   logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
 })
 
-onBeforeRouteUpdate((to, from, next) => {
+onBeforeRouteUpdate((to, from) => {
   logger.debug('ON BEFORE ROUTE UPDATE', {
     to: { ...to },
     from: { ...from },
@@ -636,7 +636,6 @@ onBeforeRouteUpdate((to, from, next) => {
   if (origin.location.query && to.query.hash) {
     origin.location.query.hash = to.query.hash
   }
-  next()
 })
 
 // Make sure that the event of the route is open in the events listing.

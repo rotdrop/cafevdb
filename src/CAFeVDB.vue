@@ -717,7 +717,7 @@ watch(
   },
 )
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
     to,
     from,
@@ -727,7 +727,6 @@ router.beforeEach((to, from, next) => {
   if (!history.pendingHistoryAction) {
     history.scheduleHistoryAction(to.transition!, to.params)
   }
-  next()
 })
 router.afterEach((to, from, _failure) => {
   logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', {
