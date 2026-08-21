@@ -35,3 +35,5 @@ __webpack_nonce__ = btoa(getRequestToken() || '');
 onRequestTokenUpdate(function(token) {
   __webpack_nonce__ = btoa(token);
 });
+
+export {};

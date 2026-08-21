@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export * from './webpack-setup.ts';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
@@ -33,11 +34,6 @@ import router from './router/app-router.ts';
 import { provideMountableComponents } from './services/mountable-components.ts';
 
 import 'core-js/actual';
-import './webpack-setup.ts';
-
-// Enable dev-tools also needs unsafe-eval on script-src in the CSP.
-// window.__VUE_DEVTOOLS_GLOBAL_HOOK__.enabled = true;
-// window.__VUE__ = Vue;
 
 const pinia = createPinia();
 

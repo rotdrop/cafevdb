@@ -21,13 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export * from './webpack-setup.ts';
 import appSettings from './app/app-settings.js';
 import beforeReady from './app/before-ready.ts';
 import { documentReady as blogDocumentReady } from './app/blog.ts';
 import { documentReady as configCheckDocumentReady } from './app/configcheck.ts';
 import { documentReady as donationReceiptsReady } from './app/donation-receipts.ts';
 import { documentReady as emailDocumentReady } from './app/email.ts';
-import { nonce, webRoot } from './app/globals.js';
 import { documentReady as insurancesDocumentReady } from './app/insurance.ts';
 import { documentReady as invoicesReady } from './app/invoices.js';
 import { documentReady as musiciansDocumentReady } from './app/musicians.js';
@@ -48,13 +48,11 @@ import onDocumentLoaded from './toolkit/util/on-document-loaded.ts';
 
 import './app/jquery-extensions.ts';
 import 'jquery-ui';
+import 'core-js/actual';
 
 require('app-navigation.scss');
 require('navsnapper.scss');
 require('variables-generator.scss');
-
-__webpack_public_path__ = webRoot;
-__webpack_nonce__ = nonce ?? '';
 
 onDocumentLoaded(() => {
   attachWindowResizeHandler();
