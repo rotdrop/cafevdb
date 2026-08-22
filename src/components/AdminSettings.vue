@@ -122,7 +122,7 @@
         </label>
         <!-- Note: v-model does not work here -->
         <TextField id="wiki-name-space"
-                   v-model:value="settings.wikiNameSpace"
+                   v-model="settings.wikiNameSpace"
                    type="text"
                    :label="t(appId, 'Wiki Name-Space')"
                    :hint="hints['settings:admin:wiki-name-space']"
@@ -277,7 +277,7 @@
         </label>
         <!-- Note: v-model does not work here -->
         <TextField id="gnucash-participant-receivables-template"
-                   v-model:value="settings.gnuCashParticipantReceivablesAccount"
+                   v-model="settings.gnuCashParticipantReceivablesAccount"
                    type="text"
                    :label="t(appId, 'GnuCash Participant Receivables Account')"
                    :placeholder="t(appId, 'e.g. &quot;assets:receivables:participants:{PERSON}:{PROJECT}:{GENERATOR_TAG}&quot;.')"
@@ -289,7 +289,7 @@
         </label>
         <!-- Note: v-model does not work here -->
         <TextField id="gnucash-instrument-insurances-template"
-                   v-model:value="settings.gnuCashInstrumentInsuranceBalancingAccount"
+                   v-model="settings.gnuCashInstrumentInsuranceBalancingAccount"
                    type="text"
                    :label="t(appId, 'GnuCash Instrument Insurances Balancing Account')"
                    :placeholder="t(appId, 'e.g. &quot;outside-capital:escrow-accounts:insurances:receivables:{BROKER}&quot;.')"
@@ -301,7 +301,7 @@
         </label>
         <!-- Note: v-model does not work here -->
         <TextField id="gnucash-accounts-tree"
-                   v-model:value="settings.gnuCashAccountsTreeData"
+                   v-model="settings.gnuCashAccountsTreeData"
                    type="text"
                    :label="t(appId, 'GnuCash Accounts Tree (CSV export)')"
                    :placeholder="t(appId, 'e.g. &quot;{sharedFolder}/finance/ledger/accounts.csv&quot;.', config)"
@@ -369,7 +369,7 @@
                        :name="t(appId, 'Configure Problem Report Handling')"
     >
       <div class="problem-report email-recipient" :class="['verification-status-' + settings.problemReportEmailRecipientStatus]">
-        <TextField v-model:value="settings.problemReportEmailRecipient"
+        <TextField v-model="settings.problemReportEmailRecipient"
                    :disabled="settings.problemReportEmailRecipientStatus === 'pending'"
                    type="text"
                    :label="t(appId, 'Problem Report Email Recipient')"
@@ -395,7 +395,7 @@
           />
         </TextField>
         <TextField v-if="settings.problemReportEmailRecipientStatus === 'pending' || settings.problemReportEmailRecipientStatus === 'failed'"
-                   v-model:value="settings.problemReportEmailRecipientVerification"
+                   v-model="settings.problemReportEmailRecipientVerification"
                    type="text"
                    :label="t(appId, 'Email Verification Code')"
                    :helperText="hints['settings:admin:problem-report:email:verification:code']"
