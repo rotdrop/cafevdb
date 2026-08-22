@@ -41,6 +41,7 @@ export const SET_BUSY_FLAG = appEventName('set-busy-flag');
 export const TOGGLE_TOOLTIPS = appEventName('toggle-tooltips');
 export const WIKI_POPUP = appEventName('wiki-popup');
 export const GLOBAL_STATE_INITIALIZED = appEventName('global-state-initialized');
+export const REQUEST_GLOBAL_STATE = appEventName('request-global-state');
 export const SEARCH_DATABASE_ENTITIES = appEventName('search-database-entities');
 
 export const SET_DEBUG_MODES = appEventName('set-debug-modes');

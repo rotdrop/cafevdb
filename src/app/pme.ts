@@ -41,6 +41,7 @@ import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/
 import { END_POINT as controllerEndPoint } from '../../build/ts-types/php-modules/Controller/PmeTableController.ts';
 import { ALLOW_EMPTY, DIRECT_CHANGE } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
 import { DATA_PME_INITIAL_VALUES } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
+import { appName } from '../config.ts';
 import {
   LEGACY_HISTORY_PATCH,
   LEGACY_HISTORY_UPDATE,
@@ -60,7 +61,6 @@ import pageBusyIcon from './busy-icon.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import checkInvalidInputs from './check-invalid-inputs.ts';
 import * as DialogUtils from './dialog-utils.ts';
-import globalState from './globalstate.ts';
 import $, { isJQuerySelect, jq } from './jquery.ts';
 import modalizer from './modalizer.ts';
 import * as Notification from './notification.ts';
@@ -86,7 +86,13 @@ import {
   token as pmeToken,
   valueSelector as pmeValueSelector,
 } from './pme-selectors.ts';
-import * as PMEState from './pme-state.ts';
+import {
+  PHPMyEdit,
+  defaultSelector as pmeDefaultSelector,
+  dialogCSSId as pmeDialogCSSId,
+  openDialogs as pmeOpenDialogs,
+  prefix as pmePrefix,
+} from './pme-state.ts';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.ts';
 import {
   getControlObject as getSelectConstrolObject,
@@ -107,18 +113,22 @@ require('cafevdb-selectize.scss');
 
 require('pme-table.scss');
 
+export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
+  callback(
+    template: T,
+    selector: string,
+    parameters: TableDialogCallbackData,
+    resizeCB: () => void,
+  ): void;
+  context?: unknown;
+};
+
 const popupPosition = {
   my: 'left top',
   at: 'left+5% top+5%',
   // of: window
   of: '#app-content, #app-content-vue', // main?
 };
-
-const appName = PMEState.appName;
-const PHPMyEdit = PMEState.PHPMyEdit;
-const pmeDefaultSelector = PMEState.defaultSelector;
-const pmePrefix = PMEState.prefix;
-const pmeOpenDialogs = PMEState.openDialogs;
 
 /**
  * Cleanup vue-component when replacing parts of the DOM.
@@ -172,14 +182,16 @@ const pmeInner = function(selector: string|JQuery) {
   return $container.children('div:first') as JQuery<HTMLDivElement>;
 };
 
+const tableLoadCallbacks: Record<string, TableLoadCallback> = {};
+
 const pmeAddTableLoadCallback = <T extends PageTemplateValue>(
   template: T,
-  cbObject: PMEState.TableLoadCallback<T>,
+  cbObject: TableLoadCallback<T>,
 ) => {
   if (typeof cbObject.context === 'undefined') {
     cbObject.context = this;
   }
-  PHPMyEdit.tableLoadCallbacks[template] = cbObject;
+  tableLoadCallbacks[template] = cbObject;
 };
 
 const tableLoadCallback = <T extends PageTemplateValue>(
@@ -188,10 +200,10 @@ const tableLoadCallback = <T extends PageTemplateValue>(
   parameters?: TableDialogCallbackData,
   resizeReadyCB?: (keepLocked?: boolean) => void,
 ) => {
-  let cbHandle: PMEState.TableLoadCallback<T>;
+  let cbHandle: TableLoadCallback<T>;
 
-  if (typeof PHPMyEdit.tableLoadCallbacks[template] !== 'undefined') {
-    cbHandle = PHPMyEdit.tableLoadCallbacks[template];
+  if (typeof tableLoadCallbacks[template] !== 'undefined') {
+    cbHandle = tableLoadCallbacks[template];
   } else {
     // console.info('no table load callback for ' + template);
     throw new Error('no table load callback for ' + template);
@@ -940,7 +952,7 @@ const tableDialog = ($form: JQuery<HTMLFormElement>, $element: JQuery, container
     viewOperation = cssClass.indexOf(pmeToken('view')) > -1;
   }
 
-  let dialogCSSId = PHPMyEdit.dialogCSSId;
+  let dialogCSSId = pmeDialogCSSId;
   containerSel = pmeSelector(containerSel);
   if (containerSel !== pmeDefaultSelector) {
     if (containerSel.charAt(0) === '#') {
@@ -1960,7 +1972,7 @@ const pmeOpenRowDialog = function(element: HTMLElement, event: JQuery.ClickEvent
   const formSel = 'form.' + pmeToken('form');
   const $form = $container.find(formSel) as JQuery<HTMLFormElement>;
   let recordEl: undefined|string;
-  console.info('DIRECT CHANGE PROBS', globalState.PHPMyEdit, PHPMyEdit, $row, $form);
+  console.info('DIRECT CHANGE PROBS', PHPMyEdit, $row, $form);
   if ($row.hasClass(pmeToken('change-enabled'))
       && ($form.hasClass(pmeToken(DIRECT_CHANGE)) || PHPMyEdit.directChange)) {
     recordEl = '<input type="hidden" class="' + pmeToken('change-navigation') + '"'
@@ -2146,7 +2158,8 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
   // view/change/copy/delete buttons lead to a a popup
   if (form.find('input[name="templateRenderer"]').length > 0) {
     const submitSel = `${formSel} input[class$="navigation"]:submit`
-      + `' ${formSel} input.${pmeToken('add')}:submit`;
+      + ` ${formSel} input.${pmeToken('add')}:submit`;
+
     $container
       .off('click', submitSel)
       .on('click', submitSel, function(event) {
@@ -2169,7 +2182,7 @@ function pmeInit(containerSel?: string|JQuery, noSubmitHandlers?: boolean) {
       });
   }
 
-  const contextMenuRowSelector = formSel + ' tr.' + pmeToken('row');
+  const contextMenuRowSelector = `${formSel} tr.${pmeToken('row')}`;
   $container
     .off('contextmenu', contextMenuRowSelector)
     .on('contextmenu', contextMenuRowSelector, function(event) {

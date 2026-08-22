@@ -23,21 +23,15 @@
 /** @file just provide the globalState object */
 
 import type { showMessage } from '@nextcloud/dialogs';
-import type { EventBus } from '@rotdrop/async-nextcloud-event-bus';
 import type { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 import type { CAFEVDBInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { PHPMyEditState } from './pme-state.ts';
 
 type Toastify = ReturnType<typeof showMessage>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ReadyCallback = () => Promise<any>;
-
 export interface GlobalState extends CAFEVDBInitialState {
   appName: string;
   PHPMyEdit: PHPMyEditState;
-  vueMode?: boolean;
-  eventBus?: EventBus;
   orchestra: string;
   wikiNameSpace: string;
   toolTipsEnabled: boolean;
@@ -67,34 +61,39 @@ export interface GlobalState extends CAFEVDBInitialState {
   oldHeight?: number;
 
   nonce: null|string;
-  initialNonce: null|string;
 
   language: string;
 
   windowResizeTimeout?: NodeJS.Timeout;
 
-  readyCallbacks: ReadyCallback[];
-
-  subscribe: Record<string, boolean>;
-
   sharedFolder: string;
 }
 
-declare global {
+export const legacyGlobalState: GlobalState = { initialized: false, PHPMyEdit: { initialized: false } } as GlobalState;
 
-  var CAFEVDB: GlobalState;
-}
+let globalStateObject: GlobalState = legacyGlobalState;
 
-/**
- * Typescript does not complain although the assignment is
- * "stupid". Note that we use the global scope here in order to
- * separate the legacy code from the Vue-wrapper. The Vue-wrapper
- * needs access to the global state variable, but we do not want to
- * pull in all the legacy code into the wrapper asset. We therefore
- * attach the global state to the window object and do a minimal
- * initialization here.
- */
-// @ts-expect-error 2322 Missing properties are initialized later.
-const globalState: GlobalState = globalThis.CAFEVDB = (globalThis.CAFEVDB as GlobalState|undefined) ?? { PHPMyEdit: {} };
+const globalState = new Proxy(legacyGlobalState, {
+  get(_target, property) {
+    return Reflect.get(globalStateObject, property);
+  },
+  set(_target, property, value) {
+    return Reflect.set(globalStateObject, property, value);
+  },
+});
+
+export const setGlobalStateObject = (state: GlobalState) => {
+  globalStateObject = state;
+  for (const key of Object.keys(legacyGlobalState.PHPMyEdit) as (keyof PHPMyEditState)[]) {
+    delete legacyGlobalState.PHPMyEdit[key];
+  }
+  for (const key of Object.keys(legacyGlobalState) as (keyof GlobalState)[]) {
+    delete legacyGlobalState[key];
+  }
+  console.debug('LEGACY GLOBAL STATE REPLACED', {
+    state,
+    legacyGlobalState,
+  });
+};
 
 export default globalState;

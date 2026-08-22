@@ -29,11 +29,10 @@ import {
   translate,
   translatePlural,
 } from '@nextcloud/l10n';
-import globalState from '../app/globalstate.ts';
+import { watch } from 'vue';
 import { appName } from '../config.ts';
-import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
 import logger from '../logger.ts';
-import { subscribe as asyncSubscribe } from './async-event-bus.ts';
+import globalState from '../services/legacy-global-state.ts';
 
 type TranslationOptions = Exclude<Parameters<typeof translatePlural>[5], undefined>;
 type TranslationVariables<T extends string> = Exclude<Parameters<typeof translate<T>>[2], undefined>;
@@ -81,13 +80,12 @@ export const setupAppBundle = async () => {
 };
 
 if (!globalState.initialized) {
-  logger.debug('GLOBAL_STATE_INITIALIZED yet uninitialized');
-  asyncSubscribe(GLOBAL_STATE_INITIALIZED, async () => {
-    logger.debug('RECEIVING GLOBAL_STATE_INITIALIZED');
-    await setupAppBundle();
+  watch(() => globalState.initialized, () => {
+    logger.debug('WATCHER ON GLOBAL STATE INITIALIZATION TRIGGERED', { globalState });
+    setupAppBundle();
   });
 } else {
-  logger.debug('GLOBAL_STATE_INITIALIZED already');
+  logger.debug('GLOBAL_STATE_INITIALIZED already', { globalState });
   setupAppBundle();
 }
 

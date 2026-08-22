@@ -34,11 +34,11 @@ import {
   OPERATION_VIEW,
 } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import $, { isJQuery, jq } from './jquery.ts';
-import * as PHPMyEdit from './pme-state.ts';
-
-const pmeDefaultSelector = PHPMyEdit.defaultSelector;
-const pmePrefix = PHPMyEdit.prefix;
-const PMEPrefix = PHPMyEdit.ucPrefix;
+import {
+  defaultSelector as pmeDefaultSelector,
+  prefix as pmePrefix,
+  ucPrefix as PMEPrefix,
+} from './pme-state.ts';
 
 const pmeFormViewSuffixes = [
   OPERATION_LIST,
@@ -293,7 +293,6 @@ export {
   pmeInputSelector as inputSelector,
   pmeKeySelector as keySelector,
   pmeNavigationSelector as navigationSelector,
-  PHPMyEdit,
   pmeQueryInfoSelector as queryInfoSelector,
   pmeSelectInputSelector as selectInputSelector,
   pmeSelector as selector,

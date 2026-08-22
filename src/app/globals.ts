@@ -21,10 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getRequestToken, onRequestTokenUpdate } from '@nextcloud/auth';
+export { default as globalState } from './globalstate.ts';
 import ImagesLoaded from 'imagesloaded';
-import { appName, appPrefix, cloudUser, cloudWebRoot, initialState, webRoot } from './config.ts';
-import globalState from './globalstate.ts';
+import { appName, appPrefix, cloudUser, cloudWebRoot, webRoot } from './config.ts';
 import jQuery from './jquery.ts';
 
 import 'jquery-ui';
@@ -57,27 +56,6 @@ import 'oc-fixes.scss';
 import 'mobile.scss';
 import 'config-check.scss';
 
-// ok, this ain't pretty, but unless we really switch to object OOP we
-// need some global state which is accessible in all or most modules.
-
-if (!globalState.initialized) {
-  Object.assign(globalState, initialState.CAFEVDB);
-  // @TODO the nonce in principle could go to the initial-state
-  const requestToken = getRequestToken();
-  globalState.nonce = requestToken ? btoa(requestToken) : null;
-  globalState.initialNonce = globalState.nonce;
-  globalState.initialized = true;
-}
-let nonce = globalState.nonce;
-
-// this may not be necessary as the actual secret value does not change
-onRequestTokenUpdate(function(token) {
-  __webpack_nonce__ = token;
-  globalState.nonce = token;
-  nonce = globalState.nonce;
-  console.debug('NEW REQUEST TOKEN', token);
-});
-
 const appContainerSelector = [
   '#content.app-' + appName,
   // '#content-vue.content.app-' + appName + ' ' + '#app-content-vue',
@@ -91,8 +69,6 @@ export {
   appPrefix,
   cloudUser,
   cloudWebRoot,
-  globalState,
   jQuery,
-  nonce,
   webRoot,
 };

@@ -23,7 +23,7 @@
 
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router';
 import md5 from 'blueimp-md5';
-import globalState from '../app/globalstate.ts';
+import globalState from '../services/legacy-global-state.ts';
 
 /**
  * @param path Wiki path as string array.

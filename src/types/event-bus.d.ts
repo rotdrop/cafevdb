@@ -22,11 +22,13 @@
  */
 
 // import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
-import { jqXHR } from '@types/jquery/misc.d.ts';
-import { messages } from '../app/notification.ts';
-import type { SearchArguments as SearchEntitiesArguments, search as searchEntities } from '../toolkit/services/entity-repository.ts';
-
-import {
+import type { jqXHR } from '@types/jquery/misc.d.ts';
+import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
+import type { GlobalState } from '../app/globalstate.ts';
+import type { messages } from '../app/notification.ts';
+import type { LegacyPageActionsMenu } from '../components/LegacyPageActionsMenu.vue';
+import type {
   ADD_CONTACTS_TO_PROJECT,
   APP_SETTINGS_POPUP,
   EMAIL_POPUP,
@@ -34,11 +36,11 @@ import {
   GLOBAL_STATE_INITIALIZED,
   HISTORY_GO_REQUEST,
   LEGACY_AJAX_ERROR,
+  LEGACY_HISTORY_PATCH,
+  LEGACY_HISTORY_UPDATE,
   LEGACY_PAGE_CLEANUP,
   LEGACY_PAGE_FINALIZE,
   LEGACY_PAGE_LOAD,
-  LEGACY_HISTORY_UPDATE,
-  LEGACY_HISTORY_PATCH,
   LEGACY_RECORD_POPUP,
   LEGACY_SANITIZE_POST_DATA,
   LEGACY_UPDATE_EVENTS_SELECTION,
@@ -48,6 +50,7 @@ import {
   PROJECT_INSTRUMENTATION_NUMBERS_POPUP,
   PROJECT_PARTICIPANT_FIELDS_POPUP,
   PUSH_BUSY_STATE,
+  REQUEST_GLOBAL_STATE,
   SEARCH_DATABASE_ENTITIES,
   SET_BUSY_FLAG,
   SET_DEBUG_MODES,
@@ -64,113 +67,114 @@ import {
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts';
-
 import type { ComponentProps, PropsData } from '../mountable-component-names.ts';
-
-import type { Callbacks as AppSettingsCallbacks } from '../app/app-settings.ts';
-import type { GlobalState } from '../app/globalstate.ts';
-import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
-import type { LegacyPageActionsMenu } from '../components/LegacyPageActionsMenu.vue';
+import type { search as searchEntities, SearchArguments as SearchEntitiesArguments } from '../toolkit/services/entity-repository.ts';
 
 declare module '@rotdrop/async-nextcloud-event-bus' {
 
   export type TemplatePostData = {
-    template?: string,
-    projectId?: number,
-    projectName?: string,
-    musicianId?: number,
+    template?: string;
+    projectId?: number;
+    projectName?: string;
+    musicianId?: number;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: PropertyKey]: any,
-  }
+    [key: PropertyKey]: any;
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type SetterArgs<T = any, E extends HTMLElement = HTMLElement> = {
-    value: T,
-    showMessage?: typeof messages,
-    $control?: JQuery<E>,
+    value: T;
+    showMessage?: typeof messages;
+    $control?: JQuery<E>;
   };
-  type BoolSetterArgs = SetterArgs<boolean, HTMLInputElement>
+  type BoolSetterArgs = SetterArgs<boolean, HTMLInputElement>;
 
   export interface EventArgs {
     // mapping of 'event name' => { arg: 'event type', res: result type }
-    [ADD_CONTACTS_TO_PROJECT]: { projectName: string },
-    [APP_SETTINGS_POPUP]: AppSettingsCallbacks,
+    [ADD_CONTACTS_TO_PROJECT]: { projectName: string };
+    [APP_SETTINGS_POPUP]: AppSettingsCallbacks;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [EMAIL_POPUP]: { projectId?: number, projectName?: string, reopen?: boolean, post?: Record<string, any> },
+    [EMAIL_POPUP]: { projectId?: number; projectName?: string; reopen?: boolean; post?: Record<string, any> };
     [GET_VUE_COMPONENT]: {
-      name: keyof ComponentProps,
-      propsData: PropsData<keyof ComponentProps>,
-    }, // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
-    [GLOBAL_STATE_INITIALIZED]: GlobalState,
-    [HISTORY_GO_REQUEST]: { level: number },
-    [LEGACY_AJAX_ERROR]: { xhr: jqXHR, message: string, html?: string, closeDetailsLabel?: string },
-    [LEGACY_PAGE_CLEANUP]: undefined,
-    [LEGACY_PAGE_FINALIZE]: undefined,
-    [LEGACY_PAGE_LOAD]: { post: TemplatePostData, template?: string|null, projectId?: number|null, projectName?: string|undefined, keepHistory: boolean, },
-    [LEGACY_HISTORY_UPDATE]: { post: TemplatePostData, htmlBody: string, action: 'push'|'replace', },
-    [LEGACY_HISTORY_PATCH]: { patch: TemplatePostData, action: 'push'|'replace', },
-    [LEGACY_RECORD_POPUP]: { entityId: number, projectId?: number, projectName?: string, template: string },
-    [LEGACY_SANITIZE_POST_DATA]: { post: TemplatePostData },
-    [LEGACY_UPDATE_EVENTS_SELECTION]: { origin?: string, projectId: number, projectName?: string, selection: string[] },
-    [PAGE_TEMPLATE_ACTION_MENU]: { template: string, entityId: number, open: boolean, x?: number, y?: number },
-    [POP_BUSY_STATE]: undefined,
-    [PROJECT_EVENTS_LISTING]: { projectName: string },
-    [PROJECT_INSTRUMENTATION_NUMBERS_POPUP]: { projectId: number, projectName: string },
-    [PROJECT_PARTICIPANT_FIELDS_POPUP]: { projectId: number, projectName: string },
-    [PUSH_BUSY_STATE]: undefined,
-    [SET_BUSY_FLAG]: { value: boolean },
-    [WIKI_POPUP]: { wikiPage: string, popupTitle: string },
+      name: keyof ComponentProps;
+      propsData: PropsData<keyof ComponentProps>;
+    }; // { name: keyof ComponentProps, propsData: ComponentProps[typeof name] },
+    [GLOBAL_STATE_INITIALIZED]: GlobalState;
+    [HISTORY_GO_REQUEST]: { level: number };
+    [LEGACY_AJAX_ERROR]: { xhr: jqXHR; message: string; html?: string; closeDetailsLabel?: string };
+    [LEGACY_PAGE_CLEANUP]: undefined;
+    [LEGACY_PAGE_FINALIZE]: undefined;
+    [LEGACY_PAGE_LOAD]: { post: TemplatePostData; template?: string|null; projectId?: number|null; projectName?: string|undefined; keepHistory: boolean };
+    [LEGACY_HISTORY_UPDATE]: { post: TemplatePostData; htmlBody: string; action: 'push'|'replace' };
+    [LEGACY_HISTORY_PATCH]: { patch: TemplatePostData; action: 'push'|'replace' };
+    [LEGACY_RECORD_POPUP]: { entityId: number; projectId?: number; projectName?: string; template: string };
+    [LEGACY_SANITIZE_POST_DATA]: { post: TemplatePostData };
+    [LEGACY_UPDATE_EVENTS_SELECTION]: { origin?: string; projectId: number; projectName?: string; selection: string[] };
+    [PAGE_TEMPLATE_ACTION_MENU]: { template: string; entityId: number; open: boolean; x?: number; y?: number };
+    [POP_BUSY_STATE]: undefined;
+    [PROJECT_EVENTS_LISTING]: { projectName: string };
+    [PROJECT_INSTRUMENTATION_NUMBERS_POPUP]: { projectId: number; projectName: string };
+    [PROJECT_PARTICIPANT_FIELDS_POPUP]: { projectId: number; projectName: string };
+    [PUSH_BUSY_STATE]: undefined;
+    [REQUEST_GLOBAL_STATE]: undefined;
+    [SET_BUSY_FLAG]: { value: boolean };
+    [WIKI_POPUP]: { wikiPage: string; popupTitle: string };
 
-    [SEARCH_DATABASE_ENTITIES]: SearchEntitiesArguments<keyof EntityMap, number, null|number, number>,
-    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[], HTMLSelectElement>,
-    [SET_DEBUG_QUERY_SQL_FILTER]: SetterArgs<string, HTMLSelectElement>,
-    [SET_DESELECT_INVISIBLE]: BoolSetterArgs,
-    [SET_DIRECT_CHANGE]: BoolSetterArgs,
-    [SET_EXPERT_MODE]: BoolSetterArgs,
-    [SET_FINANCE_MODE]: BoolSetterArgs,
-    [SET_INITIAL_FILTER_VISIBILITY]: BoolSetterArgs,
-    [SET_PAGE_ROWS]: SetterArgs<number, HTMLSelectElement>,
-    [SET_RESTORE_HISTORY]: BoolSetterArgs,
-    [SET_SHOW_DISABLED]: BoolSetterArgs,
-    [SET_TOOLTIPS_MODE]: BoolSetterArgs,
+    [SEARCH_DATABASE_ENTITIES]: SearchEntitiesArguments<keyof EntityMap, number, null|number, number>;
+    [SET_DEBUG_MODES]: SetterArgs<{ value: number }[], HTMLSelectElement>;
+    [SET_DEBUG_QUERY_SQL_FILTER]: SetterArgs<string, HTMLSelectElement>;
+    [SET_DESELECT_INVISIBLE]: BoolSetterArgs;
+    [SET_DIRECT_CHANGE]: BoolSetterArgs;
+    [SET_EXPERT_MODE]: BoolSetterArgs;
+    [SET_FINANCE_MODE]: BoolSetterArgs;
+    [SET_INITIAL_FILTER_VISIBILITY]: BoolSetterArgs;
+    [SET_PAGE_ROWS]: SetterArgs<number, HTMLSelectElement>;
+    [SET_RESTORE_HISTORY]: BoolSetterArgs;
+    [SET_SHOW_DISABLED]: BoolSetterArgs;
+    [SET_TOOLTIPS_MODE]: BoolSetterArgs;
 
-    [TOGGLE_TOOLTIPS]: { enabled: boolean },
+    [TOGGLE_TOOLTIPS]: { enabled: boolean };
   }
 
   export interface EventResults {
     /* Vue action menus opened in legacy pages */
-    [GET_VUE_COMPONENT]: LegacyPageActionsMenu,
+    [GET_VUE_COMPONENT]: LegacyPageActionsMenu;
+    /* The proxy object generated by the Vue code */
+    [GLOBAL_STATE_INITIALIZED]: GlobalState;
     /** The current value of the counter. */
-    [PUSH_BUSY_STATE]: number,
+    [PUSH_BUSY_STATE]: number;
     /** The current value of the counter. */
-    [POP_BUSY_STATE]: number,
+    [POP_BUSY_STATE]: number;
+    /** The legacy global state object */
+    [REQUEST_GLOBAL_STATE]: GlobalState;
     /** The prior state of the flag. */
-    [SET_BUSY_FLAG]: boolean,
+    [SET_BUSY_FLAG]: boolean;
     /** Entity search result */
-    [SEARCH_DATABASE_ENTITIES]: Awaited<ReturnType<typeof searchEntities<keyof EntityMap> > >,
+    [SEARCH_DATABASE_ENTITIES]: Awaited<ReturnType<typeof searchEntities<keyof EntityMap>>>;
     /* Sanitizing post data */
-    [LEGACY_SANITIZE_POST_DATA]: TemplatePostData,
+    [LEGACY_SANITIZE_POST_DATA]: TemplatePostData;
   }
 
   type KeysOfValue<T, TCondition> = {
     [K in keyof T]: T[K] extends TCondition
-    ? K
-    : never;
-  }[keyof T]
+      ? K
+      : never;
+  }[keyof T];
 
   export type SetterEventKeys = KeysOfValue<EventArgs, SetterArgs>;
   export type SetterEvents = Pick<EventArgs, SetterEventKeys>;
   export type SetterEventValue<EventName extends SetterEventKeys> = SetterEvents[EventName]['value'];
 
-  type IsUndefined<T> = [T] extends [undefined] ? true : false
+  type IsUndefined<T> = [T] extends [undefined] ? true : false;
 
   export type Events = {
     [K in keyof EventArgs]: {
-      arg: EventArgs[K],
-      res: K extends keyof EventResults ? EventResults[K] : unknown,
+      arg: EventArgs[K];
+      res: K extends keyof EventResults ? EventResults[K] : unknown;
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   export interface AsyncNextcloudEvents extends Events {
   }
 }

@@ -30,9 +30,8 @@ import type { PMEInitialState } from '../../build/ts-types/php-modules/Controlle
 import type { EnumTemplate } from '../../build/ts-types/php-modules/PageRenderer.ts';
 import type { TemplateRenderer } from './template-renderer.ts';
 
-import { GLOBAL_STATE_INITIALIZED } from '../event-bus-events.ts';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import { appName, initialState } from './config.ts';
+import { globalStateInitializer } from './globalstate-factory.ts';
 import globalState from './globalstate.ts';
 
 export type PageTemplateValue = `${EnumTemplate}`;
@@ -76,16 +75,6 @@ export type TableDialogCallbackData<S extends PageTemplateValue = PageTemplateVa
   tableDialogOptions?: TableDialogOptions<S>;
 };
 
-export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
-  callback(
-    template: T,
-    selector: string,
-    parameters: TableDialogCallbackData,
-    resizeCB: () => void,
-  ): void;
-  context?: unknown;
-};
-
 export interface PHPMyEditState extends PMEInitialState {
   directChange: boolean;
   filterSelectPlaceholder: string;
@@ -100,7 +89,6 @@ export interface PHPMyEditState extends PMEInitialState {
   defaultSelector: string;
 
   /* actual volatile state variables */
-  tableLoadCallbacks: Record<string, TableLoadCallback>;
   openDialogs: Record<string, boolean>;
 
   stopped: boolean;
@@ -115,7 +103,6 @@ export interface PHPMyEditState extends PMEInitialState {
   emit: boolean;
 
   restoreHistory?: boolean;
-  dialogCSSId: string;
 }
 
 const PHPMyEditDefault = {
@@ -144,34 +131,36 @@ const PHPMyEditDefault = {
  *
  */
 
-const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initialized;
+globalStateInitializer((globalState) => {
+  Object.assign(
+    globalState.PHPMyEdit,
+    {
+      ...PHPMyEditDefault,
+      ...initialState.PHPMyEdit,
+      ...globalState.PHPMyEdit, // safe-guard against accidental multiple execution
+      initialized: true,
+    },
+  );
+});
 
-const PHPMyEdit: PHPMyEditState = Object.assign(
-  globalState.PHPMyEdit,
-  {
-
-    ...PHPMyEditDefault,
-    ...initialState.PHPMyEdit,
-    ...globalState.PHPMyEdit, // safe-guard against accidental multipled execution
-    initialized: true,
+const PHPMyEdit = new Proxy(globalState.PHPMyEdit, {
+  get(_target, property) {
+    return Reflect.get(globalState.PHPMyEdit, property);
   },
-);
+  set(_target, property, value) {
+    return Reflect.set(globalState.PHPMyEdit, property, value);
+  },
+});
 
-PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
-
-if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initialized) {
-  asyncEmit(GLOBAL_STATE_INITIALIZED, globalState);
-}
-
+const pmeDialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;
 const PMEPrefix = pmePrefix.toUpperCase();
 const pmeOpenDialogs = PHPMyEdit.openDialogs;
 
 export {
-  appName,
   pmeDefaultSelector as defaultSelector,
-  globalState,
+  pmeDialogCSSId as dialogCSSId,
   pmeOpenDialogs as openDialogs,
   PHPMyEdit,
   pmePrefix as prefix,

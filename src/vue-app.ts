@@ -26,7 +26,6 @@ import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import CAFeVDB from './CAFeVDB.vue';
-import globalState from './app/globalstate.ts';
 import * as Authorization from './authorization.ts';
 import { appName } from './config.ts';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
@@ -53,8 +52,6 @@ for (const [key, value] of Object.entries(provide)) {
   app.provide(key, value);
 }
 app.mount('#content');
-
-globalState.vueMode = true;
 
 provideMountableComponents(app);
 

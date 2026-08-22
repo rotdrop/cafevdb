@@ -164,7 +164,7 @@
                                   :submitButton="false"
           />
           <TextFieldWithSubmitButton v-if="globalState.expertMode && !!(globalState.debugMode & DEBUG_QUERY)"
-                                     :value="globalState.debugQuerySqlFilter"
+                                     :modelValue="globalState.debugQuerySqlFilter"
                                      :label="t(appId, 'SQL Filter')"
                                      :placeholder="t(appId, 'SQL filter regexp')"
                                      :hint="t(appId, 'A regular expression which selects matching SQL queries for logging.')"
@@ -267,7 +267,6 @@ import {
   computed,
   nextTick,
   onMounted,
-  reactive,
   ref,
   watch,
 } from 'vue'
@@ -288,7 +287,6 @@ import ProgressWrapperTemplate from './components/oc-template/ProgressWrapperTem
 import IconPageTemplate from './components/PageTemplateIcon.vue'
 import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/Controller/ConfigCheckController.ts'
 import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
-import globalState from './app/globalstate.ts'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { appName as appId, appName } from './config.ts'
 import allDebugOptions, { DEBUG_QUERY, DEBUG_VUE } from './debug-modes.ts'
@@ -297,6 +295,7 @@ import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
 } from './services/async-event-bus.ts'
+import { globalState, synchronizeGlobalState } from './services/legacy-global-state.ts'
 import { closeNavigation } from './services/navigation.ts'
 import useAppDataStore from './stores/app-data.ts'
 import useErrorHandlerStore from './stores/error-handler.ts'
@@ -311,6 +310,11 @@ import generateAppUrl from './toolkit/util/generate-url.ts'
 import getInitialState from './toolkit/util/initial-state.ts'
 import { vueDevTools } from './toolkit/util/vue-devtools.ts'
 import Console from './util/console.ts'
+
+type DebugOption = {
+  value: number
+  label: string
+}
 
 const COMPONENT_NAME = 'CAFeVDB'
 const logger = new Console(COMPONENT_NAME)
@@ -329,11 +333,6 @@ const errorHandler = <E extends AppError>(error: E) => {
 errorHandlerProvider.pushHandler(errorHandler)
 
 const initialState = getInitialState({ section: 'CAFEVDB' })
-
-type DebugOption = {
-  value: number
-  label: string
-}
 
 const appData = useAppDataStore()
 const history = useHistoryStore()
@@ -393,8 +392,14 @@ const debugOptions = computed(() => {
 })
 const toolTipsEnabled = ref(globalState.toolTipsEnabled)
 watch(toolTipsEnabled, (value) => {
+  logger.debug('TOOLTIPS WATCHER', { value })
   tooltipOptions.themes.tooltip.disabled = !value
   if (value !== globalState.toolTipsEnabled) {
+    logger.debug('EMIT TOGGLE TOOLTIPS', {
+      value,
+      globalState,
+      gsTTEnable: globalState.toolTipsEnabled,
+    })
     asyncEmit(BusEvents.TOGGLE_TOOLTIPS, { enabled: value })
   }
 })
@@ -408,7 +413,12 @@ const authorizedNavigationItems = computed(() => {
   const items = navigationItems.value.filter(
     (item: NavigationItem) => (item.permissions === (item.permissions & userPermissions.value)),
   )
-  logger.debug('FILTERED NAVIGATION ITEMS', { items, globalState })
+  logger.debug('FILTERED NAVIGATION ITEMS', {
+    items,
+    navigationItems,
+    userPermissions: userPermissions.value,
+    globalState,
+  })
   return items
 })
 
@@ -448,7 +458,7 @@ const updatePersonalSettings = async (
   value: SetterEventValue<typeof event>,
   oldValue: SetterEventValue<typeof event>|undefined,
 ) => {
-  logger.debug('UPDATE PERSONAL SETTING', {
+  logger.debug('UPDATE PERSONAL SETTING TOOLTIPS', {
     event,
     value,
     oldValue,
@@ -558,18 +568,10 @@ const showBrowserHistoryModal = ref(false)
 const redirectToLastUrlPath = ref(false)
 
 // watchers
-const reactifyGlobalState = function() {
-  logger.debug('BEFORE REACTIFY GLOBAL STATE', globalState)
-  for (const [key, value] of Object.entries(globalState)) {
-    delete globalState[key]
-    globalState[key] = value
-  }
-  for (const [key, value] of Object.entries(globalState.PHPMyEdit)) {
-    delete globalState.PHPMyEdit[key]
-    globalState.PHPMyEdit[key] = value
-  }
-  // reactive(globalState) this alone does not seem to work ...
-  logger.debug('AFTER REACTIFY GLOBAL STATE', globalState)
+logger.debug('CALL SYNC GLOBAL STATE')
+synchronizeGlobalState().then((globalState) => {
+
+  logger.debug('AFTER GLOBAL STATE SYNC')
 
   // due to the async initialization of the globalstate computed
   // properties cannot work, but watchers do. We can exploit this to
@@ -599,6 +601,10 @@ const reactifyGlobalState = function() {
   watch(
     () => globalState.toolTipsEnabled,
     (value, oldValue) => {
+      logger.debug('GLOBAL STATE TOOLTIPS ENABLED WATCHER', {
+        value,
+        oldValue,
+      })
       tooltipOptions.themes.tooltip.disabled = !value
       toolTipsEnabled.value = value
       updatePersonalSettings(BusEvents.SET_TOOLTIPS_MODE, value, oldValue)
@@ -648,24 +654,7 @@ const reactifyGlobalState = function() {
     () => globalState.PHPMyEdit.initialFilterVisibility,
     (value, oldValue) => updatePersonalSettings(BusEvents.SET_INITIAL_FILTER_VISIBILITY, value, oldValue),
   )
-}
-
-if (!(globalState.initialized && globalState.PHPMyEdit.initialized)) {
-  globalState.initialized = globalState.initialized || false
-  globalState.PHPMyEdit.initialized = globalState.PHPMyEdit.initialized || false
-  reactive(globalState)
-  logger.debug('INSTALL WATCHER FOR GLOBAL STATE', { ...globalState })
-  const stop = watch(
-    () => globalState.initialized && globalState.PHPMyEdit.initialized,
-    () => {
-      reactifyGlobalState()
-      logger.debug('AFTER GLOBAL STATE REACTIFY IN WATCHER', globalState)
-      stop()
-    },
-  )
-} else {
-  reactifyGlobalState()
-}
+})
 
 const stopRedirectWatcher = watch(
   () => globalState.initialized && globalState.PHPMyEdit.initialized && redirectToLastUrlPath.value,

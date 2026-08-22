@@ -20,7 +20,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CAFEVDBInitialState, PMEInitialState } from '../../build/ts-types/php-modules/Controller/DTO.ts';
+import type {
+  CAFEVDBInitialState,
+  PMEInitialState,
+} from '../../build/ts-types/php-modules/Controller/DTO.ts';
 
 import * as ncAuth from '@nextcloud/auth';
 import { getAppRootUrl, getRootUrl as getCloudRootUrl } from '@nextcloud/router';
@@ -38,7 +41,7 @@ const initialState = {
 try {
   const state = getInitialState<CAFEVDBInitialState>({ section: 'CAFEVDB', onError: 'throw' });
   initialState.CAFEVDB = state!;
-  console.debug('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
+  console.trace('CAFEVDB INITIAL STATE', initialState.CAFEVDB);
   if (appName !== initialState.CAFEVDB.appName) {
     throw new Error('appName / CAFEVDB.appName are different: ' + appName + ' / ' + initialState.CAFEVDB.appName);
   }

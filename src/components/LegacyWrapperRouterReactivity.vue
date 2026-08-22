@@ -44,7 +44,6 @@
 <script setup lang="ts">
 import type { RouteLocationNormalizedGeneric } from 'vue-router'
 
-// import globalState from '../app/globalstate.ts'
 import { onBeforeMount, ref } from 'vue'
 import {
   onBeforeRouteLeave,

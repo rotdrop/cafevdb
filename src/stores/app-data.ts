@@ -45,7 +45,6 @@ import {
   BASE_PATH as projectsEndPoint,
 } from '../../build/ts-types/php-modules/Controller/ProjectsController.ts';
 import { WILDCARD_QUERY_OPTIONS } from '../../build/ts-types/php-modules/Database/Constants.ts';
-import globalState from '../app/globalstate.ts';
 import { appName } from '../config.ts';
 import {
   POP_BUSY_STATE,
@@ -53,6 +52,7 @@ import {
   SET_BUSY_FLAG,
 } from '../event-bus-events.ts';
 import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
+import globalState from '../services/legacy-global-state.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import Console from '../util/console.ts';

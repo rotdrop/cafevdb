@@ -123,7 +123,7 @@ const documentReady = function() {
 
   let firstReadyCallbackInvocation = true;
   CAFEVDB.addReadyCallback(async () => {
-    console.info('PERSONAL READY CALLBACK');
+    console.debug('PERSONAL READY CALLBACK');
     if (firstReadyCallbackInvocation) {
       firstReadyCallbackInvocation = false;
       return;

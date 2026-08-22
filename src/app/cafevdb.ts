@@ -21,14 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ReadyCallback } from './globalstate.ts';
+import type { GlobalState } from './globalstate.ts';
 import type { TooltipsStatistics } from './jquery-cafevdb-tooltips.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
 import * as BusEvents from '../event-bus-events.ts';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
-import { appContainerSelector, appName, globalState } from './globals.ts';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  hasSubscriptions,
+} from '../services/async-event-bus.ts';
+import { appContainerSelector, appName } from './globals.ts';
+import { globalStateInitializer } from './globalstate-factory.ts';
+import globalState from './globalstate.ts';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
 } from './jquery-cafevdb-tooltips.ts';
@@ -45,30 +51,25 @@ import { tooltipWideCssClass } from 'tooltips.scss';
 
 require('cafevdb.scss');
 
-// ok, this ain't pretty, but unless we really switch to object OOP we
-// need some global state which is accessible in all or most modules.
+export type ReadyCallback = () => Promise<undefined>;
 
-const oldInitialized = globalState.initialized && globalState.PHPMyEdit.initialized;
+globalStateInitializer((globalState) => {
+  Object.assign(
+    globalState,
+    {
+      appName,
+      [EnumPersonalSettingsKey.TOOL_TIPS_ENABLED]: true,
+      [EnumPersonalSettingsKey.WYSIWYG_EDITOR]: 'tinymce',
+      language: 'en',
+      creditsTimer: -1,
+      phpUserAgent: t(appName, 'unknown'),
+      ...(globalState as Partial<GlobalState>),
+      initialized: true,
+    },
+  );
+});
 
-Object.assign(
-  globalState,
-  {
-    appName,
-    [EnumPersonalSettingsKey.TOOL_TIPS_ENABLED]: true,
-    [EnumPersonalSettingsKey.WYSIWYG_EDITOR]: 'tinymce',
-    language: 'en',
-    readyCallbacks: [], // quasi-document-ready-callbacks
-    creditsTimer: -1,
-    phpUserAgent: t(appName, 'unknown'),
-    subscribe: {},
-    ...globalState,
-    initialized: true,
-  },
-);
-
-if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initialized) {
-  asyncEmit(BusEvents.GLOBAL_STATE_INITIALIZED, globalState);
-}
+const readyCallbacks: ReadyCallback[] = [];
 
 /**
  * Register callbacks which are run after partial page reload in
@@ -79,15 +80,14 @@ if (!oldInitialized && globalState.initialized && globalState.PHPMyEdit.initiali
  * @param callBack TBD.
  */
 const addReadyCallback = (callBack: ReadyCallback) => {
-  globalState.readyCallbacks.push(callBack);
+  readyCallbacks.push(callBack);
 };
 
 /**
  * Run artificial document-ready stuff.
  */
 const runReadyCallbacks = async () => {
-  const promises = globalState
-    .readyCallbacks
+  const promises = readyCallbacks
     .filter((callback) => typeof callback === 'function')
     .map(async (callback) => await callback());
   return await Promise.allSettled(promises);
@@ -133,10 +133,16 @@ const formSubmit = function(url: string, values: string, method: 'get'|'post' = 
 };
 
 const toolTipsOnOff = function(onOff: boolean) {
+  console.debug('TOOLTIPS ON OFF', { onOff, globalState, gsOnOff: globalState.toolTipsEnabled });
   if (onOff === globalState.toolTipsEnabled) {
     return;
   }
   globalState.toolTipsEnabled = onOff;
+  console.debug('EMIT TOGGLE TOOLTIPS', {
+    onOff,
+    gsTTOnOff: globalState.toolTipsEnabled,
+    globalState,
+  });
   asyncEmit(BusEvents.TOGGLE_TOOLTIPS, {
     enabled: globalState.toolTipsEnabled,
   });
@@ -148,10 +154,13 @@ const toolTipsOnOff = function(onOff: boolean) {
   }
 };
 
-if (!globalState.subscribe['toggle-tooltips']) {
-  globalState.subscribe['toggle-tooltips'] = true;
+if (!hasSubscriptions(BusEvents.TOGGLE_TOOLTIPS)) {
+  console.debug('SUBSCRIBE TO TOOLTIPS TOGGLE', {
+    globalState,
+    hasSubscriptions: hasSubscriptions(BusEvents.TOGGLE_TOOLTIPS),
+  });
   asyncSubscribe(BusEvents.TOGGLE_TOOLTIPS, (event) => {
-    console.info('EVENT', event);
+    console.debug('TOOLTIPS EVENT', { event, globalState, gsOnOff: globalState.toolTipsEnabled });
     // avoid  ping-pong
     if (event.enabled !== globalState.toolTipsEnabled) {
       toolTipsOnOff(event.enabled);

@@ -49,7 +49,6 @@ import {
   NcActionButton,
   NcActions,
 } from '@nextcloud/vue'
-// import globalState from '../app/globalstate.ts'
 import {
   getCurrentInstance,
   onMounted,

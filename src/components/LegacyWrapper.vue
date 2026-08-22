@@ -162,7 +162,6 @@ import {
   BASE_PATH as controllerBasePath,
   END_POINT_REMEMBER,
 } from '../../build/ts-types/php-modules/Controller/LegacyPageController.ts'
-import globalState from '../app/globalstate.ts'
 import * as LegacyNotification from '../app/notification.ts'
 import { appName, appPrefix } from '../config.ts'
 import {
@@ -181,6 +180,7 @@ import {
   subscribe as asyncSubscribe,
   unsubscribe as asyncUnSubscribe,
 } from '../services/async-event-bus.ts'
+import globalState from '../services/legacy-global-state.ts'
 import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
@@ -645,7 +645,7 @@ const legacyPageLoadHandler = asyncSubscribe(
       try {
         return await router.replace(target)
       } catch (e) {
-        console.info('ROUTER ERROR', { e })
+        logger.info('ROUTER ERROR', { e })
         router.go(0)
       }
     } else {

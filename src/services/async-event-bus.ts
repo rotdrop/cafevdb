@@ -24,12 +24,15 @@
 import type { AsyncNextcloudEvents, EventArg, EventHandler } from '@rotdrop/async-nextcloud-event-bus';
 
 import { SimpleBus } from '@rotdrop/async-nextcloud-event-bus';
-import globalState from '../app/globalstate.ts';
 
-if (!globalState.eventBus) {
-  globalState.eventBus = new SimpleBus();
+declare global {
+  var atRotDropAsyncNextcloudEventBus: SimpleBus;
 }
-const bus = globalState.eventBus;
+
+if (!globalThis.atRotDropAsyncNextcloudEventBus) {
+  globalThis.atRotDropAsyncNextcloudEventBus = new SimpleBus();
+}
+const bus: SimpleBus = globalThis.atRotDropAsyncNextcloudEventBus;
 
 /**
  * Register an event listener

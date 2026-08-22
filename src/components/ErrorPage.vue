@@ -247,8 +247,8 @@ import IconEdit from 'vue-material-design-icons/TextBoxEdit.vue'
 import HtmlErrorModal from './HtmlErrorModal.vue'
 import NextcloudLogModal from './LogEntry/LogDetailsModal.vue'
 import { END_POINT as reportEndPoint } from '../../build/ts-types/php-modules/Controller/ProblemReportController.ts'
-import globalState from '../app/globalstate.ts'
 import { appName } from '../config.ts'
+import globalState from '../services/legacy-global-state.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import {
   isAxiosError as isAxiosErrorGuard,

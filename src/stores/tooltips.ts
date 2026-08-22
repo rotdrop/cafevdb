@@ -28,9 +28,9 @@ import {
   ref,
   watch,
 } from 'vue';
-import globalState from '../app/globalstate.ts';
 import { appName } from '../config.ts';
 import { DEBUG_TOOLTIPS } from '../debug-modes.ts';
+import globalState from '../services/legacy-global-state.ts';
 import Console from '../util/console.ts';
 import { tooltips } from '../util/tooltips.ts';
 
