@@ -48,7 +48,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "declaration": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
