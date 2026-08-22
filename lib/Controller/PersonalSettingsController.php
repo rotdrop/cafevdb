@@ -195,7 +195,7 @@ class PersonalSettingsController extends Controller
         $this->setUserValue($parameter, $realValue);
         return (new DTO\MessagesResponse([
           $this->l->t('Setting %2$s to %1$s', [$realValue, $parameter]),
-        ]))->respones();
+        ]))->response();
 
       case EnumPersonalSettingsKey::DEBUG_MODE:
         if (!is_array($value)) {
