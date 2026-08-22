@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export * from './webpack-setup.ts';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
@@ -29,7 +30,6 @@ import { appName } from './config.ts';
 import { mixin as globalMixin } from './mixins/global-mixin.ts';
 
 import 'core-js/actual';
-import './webpack-setup.ts';
 
 const pinia = createPinia();
 
