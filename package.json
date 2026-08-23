@@ -140,7 +140,7 @@
     "qs": "^6.15.2",
     "sanitize.css": "^13.0.0",
     "sass": "^1.99.0",
-    "sass-loader": "^16.0.8",
+    "sass-loader": "^17.0.0",
     "selectize": "file:3rdparty/selectize",
     "serialize-error": "^13.0.1",
     "sql-formatter": "^15.8.0",
