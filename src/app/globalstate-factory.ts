@@ -48,15 +48,15 @@ export const globalStateInitializer = async (initFunction: (legacyGlobalState: G
 
   if (!oldInitialized && legacyGlobalState.initialized && legacyGlobalState.PHPMyEdit.initialized) {
     if (hasSubscriptions(GLOBAL_STATE_INITIALIZED)) {
-      console.trace('EMIT GLOBAL STATE INITIALIZED');
+      console.debug('EMIT GLOBAL STATE INITIALIZED');
       const reactiveGlobalState = await awaitEmit(GLOBAL_STATE_INITIALIZED, legacyGlobalState);
       console.info('AFTER GLOBAL STATE INITIALIZATION', reactiveGlobalState);
       setGlobalStateObject(reactiveGlobalState);
     } else {
-      console.trace('AWAIT GLOBAL STATE REQUEST');
+      console.debug('AWAIT GLOBAL STATE REQUEST');
       const requestHandler = asyncSubscribe(REQUEST_GLOBAL_STATE, () => {
         unsubscribe(REQUEST_GLOBAL_STATE, requestHandler);
-        console.info('RECEIVED GLOBAL STATE REQUEST');
+        console.debug('RECEIVED GLOBAL STATE REQUEST');
         return legacyGlobalState;
       });
       const initializedHandler = asyncSubscribe(GLOBAL_STATE_INITIALIZED, (reactiveGlobalState) => {
