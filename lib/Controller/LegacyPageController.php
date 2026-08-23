@@ -227,6 +227,7 @@ class LegacyPageController extends Controller
         AssetService::CSS => $this->assetService->getCSSAsset('app'),
       ],
       'appConfig' => $this->configService,
+      'appContainer' => $this->appContainer,
       'pageNavigation' => $this->pageNavigation,
       'roles' => $this->organizationalRolesService,
 
