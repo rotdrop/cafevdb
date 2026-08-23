@@ -24,15 +24,16 @@
 
 namespace OCA\CAFEVDB;
 
-
 /**
  * @param OCA\CAFEVDB\PageRenderer\BlogRenderer $renderer
  * @param OCP\IDateTimeFormatter $dateTimeFormatter
  */
 
+$dateTimeFormatter = $dateTimeFormatter ?? $appContainer->get(\OCP\IDateTimeFormatter::class);
+
 $formatDateTime = function(mixed $timeStamp) use ($dateTimeFormatter) {
   // was s_trftime('%x, %H:%M', $created, $timezone, $localeSymbol);
-  return $dateTimeFormatter->formatDateTime(created, formatDate: 'short', formatTime: 'short');
+  return $dateTimeFormatter->formatDateTime(timestamp: $timeStamp, formatDate: 'short', formatTime: 'short');
 };
 
 $blog = $renderer->findThreadDisplay();

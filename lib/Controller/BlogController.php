@@ -174,11 +174,13 @@ class BlogController extends Controller
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(
     verb: 'POST',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_ACTION . '/{action}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_ACTION . '/{operation}',
   )]
-  public function action(string|EnumBlogAction $action): Http\DataResponse|Http\JsonResponse
+  public function action(string|EnumBlogAction $operation): Http\DataResponse|Http\JsonResponse
   {
-    $action = EnumBlogAction::get($action);
+    $this->logInfo('HELLO WORLD');
+
+    $operation = EnumBlogAction::get($operation);
 
     $author    = $this->request->getParam('author', $this->userId);
     $blogId    = $this->request->getParam('blogId', null);
@@ -222,7 +224,7 @@ class BlogController extends Controller
     $generateContents = true;
     $html = '';
 
-    switch ($action) {
+    switch ($operation) {
       case EnumBlogAction::CREATE:
         // Sanity checks
         if (empty(trim($content))) {
