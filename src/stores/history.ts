@@ -26,8 +26,8 @@ import type {
   HistoryState,
   RouteLocationGeneric,
   RouteLocationNormalizedGeneric,
-  TransitionType,
 } from 'vue-router';
+import type { VueRouterHistory, VueRouterHistoryState } from '../router/app-router.ts';
 import type { TemplatePostData } from '../util/legacy-post-data.ts';
 
 import axios from '@nextcloud/axios';
@@ -41,7 +41,6 @@ import {
   computed,
   reactive,
   ref,
-  watch,
 } from 'vue';
 import {
   isNavigationFailure,
@@ -75,15 +74,19 @@ export type HistoryActionUnknown = typeof HistoryActionUnknown;
 
 export type HistoryAction = HistoryActionPush|HistoryActionReplace|HistoryActionPop|HistoryActionUnknown;
 
-export interface VueRouterHistoryState extends HistoryState {
-  position: number;
-  // replaced: boolean;
-  // back: string | null;
-  // current: string;
-  // forward: string | null;
+export type Blah = Parameters<Parameters<VueRouterHistory['listen']>[0]>;
+export type Foo = Blah[2];
+
+type NavigationCallback = Parameters<VueRouterHistory['listen']>[0];
+type NavigationInformation = Parameters<NavigationCallback>[2];
+interface ExtendedNavigationInformation extends NavigationInformation {
+  to: Parameters<NavigationCallback>[0];
+  from: Parameters<NavigationCallback>[1];
+  fromPosition: number;
+  toPosition: number;
 }
 
-export const isVueRouterHistoryState = (arg: HistoryState): arg is VueRouterHistoryState => !!arg?.position;
+export const isVueRouterHistoryState = (arg: HistoryState): arg is VueRouterHistoryState => (arg.position as number) >= 0;
 
 const storeId = 'history';
 
@@ -143,7 +146,6 @@ export type FetchAll = 'all';
 export interface RouterHistoryState<Mode extends FetchMode = 'deep'> {
   state: VueRouterHistoryState;
   hash: string;
-  windowHistoryPosition: number|null; // window.history.length at creation time.
   path: string;
   post: Mode extends 'deep' ? TemplatePostData : undefined|TemplatePostData;
 }
@@ -175,6 +177,8 @@ export default defineStore(storeId, () => {
     errorHandlerProvider.errorHandler(error);
   };
 
+  const ready = ref(false);
+
   const loggerRef = ref(new Console(storeId));
   const logger = loggerRef.value;
 
@@ -186,26 +190,35 @@ export default defineStore(storeId, () => {
   class RouterHistoryRecord implements RouterHistoryState {
 
     constructor(arg: {
-      state: VueRouterHistoryState;
+      state?: VueRouterHistoryState;
       hash?: string;
       post?: TemplatePostData;
-      path: string;
+      path?: string;
     }) {
       this.replaceState(arg.state);
-      this.path = arg.path;
-      this.windowHistoryPosition = window.history.length;
+      this.replacePath(arg.path);
       this.replaceHash(arg);
     }
 
-    _state: VueRouterHistoryState = { position: -1 };
+    _state: VueRouterHistoryState = {
+      position: -1,
+      current: '',
+      forward: null,
+      back: null,
+      replaced: false,
+    };
+
     private _hash: string = '';
-    windowHistoryPosition: number;
-    path: string;
+    get path() { return this._state.current; }
     get state() { return this._state; }
     get post() { return requestData[this._hash]; }
     get hash() { return this._hash; }
-    replaceState(state?: HistoryState) {
-      this._state = state ? { ...state } : { position: -1, ...window.history.state };
+    replacePath(path?: string) {
+      this._state.current = path ?? vueRouterHistory.state.current;
+    }
+
+    replaceState(state?: VueRouterHistoryState) {
+      this._state = { ...(state ?? vueRouterHistory.state) };
     }
 
     replaceHash(arg: {
@@ -239,24 +252,55 @@ export default defineStore(storeId, () => {
 
   const currentRoute = useRoute();
 
+  const navigationInformation = ref<Partial<ExtendedNavigationInformation>>({});
+
+  vueRouterHistory.listen((to, from, info) => {
+    navigationInformation.value = {
+      to,
+      from,
+      fromPosition: vueRouterHistory.state.position - info.delta,
+      toPosition: vueRouterHistory.state.position,
+      ...info,
+    };
+    logger.info('HISTORY LISTENER', { ...navigationInformation.value });
+  });
+
   const saveTime = ref<number>(0);
   const modificationTime = ref<number>(0);
   const updateModificationTime = () => {
     modificationTime.value = Date.now() / 1000.0;
   };
 
-  const initialHistoryState = window?.history?.state;
-  const currentHistoryPosition = ref<number>(initialHistoryState?.position ?? -1);
+  const currentHistoryPosition = ref<number>(vueRouterHistory.state.position);
   const routerHistoryPositions = computed(() => Object.keys(routerHistory.value).map((a) => +a).sort((a, b) => a - b));
 
   const pendingHistoryData = ref<undefined|TemplatePostData>(undefined);
   const pendingHistoryHash = ref<undefined|string>(undefined); // optimization, do not compute twice
   const pendingHistoryAction = ref<undefined|HistoryAction>(undefined);
-  const pendingHistoryPosition = ref<undefined|number>(-1);
+  const oldHistoryPosition = ref<undefined|number>(-1);
   const currentHistoryState = computed(() => routerHistory.value?.[currentHistoryPosition.value ?? -1] ?? null);
   const currentHistoryIndex = computed(() => routerHistoryPositions.value.indexOf(currentHistoryPosition.value));
   const atHistoryBase = computed(() => currentHistoryIndex.value === 0);
   const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryPositions.value.length - 1);
+
+  const transitionType = ref<HistoryAction>('unknown');
+  const updateTransitionType = (): HistoryAction => {
+    if (
+      navigationInformation.value.toPosition === vueRouterHistory.state.position
+        && navigationInformation.value.fromPosition === currentHistoryPosition.value
+        && navigationInformation.value.from?.localeCompare(currentHistoryState.value.path) === 0
+        && navigationInformation.value.to?.localeCompare(vueRouterHistory.state.current) === 0
+    ) {
+      transitionType.value = HistoryActionPop;
+      navigationInformation.value = {}; // clear
+    } else if (vueRouterHistory.state.replaced) {
+      transitionType.value = HistoryActionReplace;
+    } else {
+      transitionType.value = HistoryActionPush;
+    }
+
+    return transitionType.value;
+  };
 
   const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({
     section: 'historyPostData',
@@ -326,46 +370,33 @@ export default defineStore(storeId, () => {
     };
     currentHistoryPosition.value = initialHistoryState.position;
     updateModificationTime();
-    logger.debug('INITIAL ROUTER HISTORY', currentHistoryPosition.value, { ...routerHistory.value[initialHistoryState.position] });
+    logger.debug('INITIAL ROUTER HISTORY', {
+      currentHistoryPosition: currentHistoryPosition.value,
+      currentHistory: { ...routerHistory.value[initialHistoryState.position] },
+      vueRouterHistoryStateContent: { ...vueRouterHistory.state },
+      vueRouterHistoryState: vueRouterHistory.state,
+    });
   };
 
-  let pendingInitTransition: TransitionType|undefined;
-
-  if (isVueRouterHistoryState(initialHistoryState)) {
-    defineInitialHistory(initialHistoryState);
-  } else {
-    logger.info('HISTORY YET EMPTY, INSTALLING WATCH ON CURRENT ROUTE', {
-      currentRoute,
-      historyState: { ...vueRouterHistory.state },
+  if (!isVueRouterHistoryState(vueRouterHistory.state)) {
+    // we can probably remove this now that the history state is just
+    // defined right from the start
+    console.error('NO HISTORY STATE', {
+      routerHistoryStateValue: { ...((vueRouterHistory?.state as undefined|VueRouterHistoryState) ?? {}) },
+      routerHistoryState: vueRouterHistory.state,
+      windowHistoryValue: { ...(window.history?.state ?? {}) },
+      windowHistory: window.history?.state,
     });
-    const stop = watch(
-      currentRoute,
-      (newValue, oldValue) => {
-        stop();
-        logger.debug('INITIAL ROUTE WATCHER', newValue, oldValue);
-        const initialHistoryState = window?.history?.state;
-        if (!isVueRouterHistoryState(initialHistoryState)) {
-          let historyString: string;
-          try {
-            historyString = JSON.stringify(window?.history, null, 2);
-          } catch {
-            historyString = '';
-          }
-          logger.error('Window history state has not been set up.', { ...(window?.history || {}) });
-          const error = new HistoryStoreSetupError('Window history state has not been set up: ' + historyString);
-          error.context.type = storeId;
-          return errorHandler(error);
-        }
-        defineInitialHistory(initialHistoryState);
-        if (pendingInitTransition !== undefined) {
-          finishHistoryAction(currentRoute);
-          pendingInitTransition = undefined;
-        } else if (pendingHistoryPosition.value === -1) {
-          pendingHistoryPosition.value = currentHistoryPosition.value; // ?? really
-        }
-      },
-    );
+    let historyString: string;
+    try {
+      historyString = JSON.stringify(window?.history, null, 2);
+    } catch {
+      historyString = '';
+    }
+    errorHandler(new HistoryStoreSetupError('Window history state has not been set up: ' + historyString));
   }
+
+  defineInitialHistory(vueRouterHistory.state);
 
   /**
    * Adjust the document title in order to provide more useful
@@ -416,25 +447,25 @@ export default defineStore(storeId, () => {
    * @param hash Hash value of request data. Recomputed if not provided.
    */
   function scheduleHistoryAction(action: HistoryAction, post: TemplatePostData, hash?: string): string {
-    const key = window?.history?.state?.position || 'initial';
+    const position = vueRouterHistory.state.position;
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
     hash = pendingHistoryHash.value = hash || generatePostHash(pendingHistoryData.value);
-    pendingHistoryPosition.value = key;
-    logger.debug('scheduleHistoryAction()', {
+    oldHistoryPosition.value = position;
+    logger.trace('scheduleHistoryAction()', {
       action,
-      key,
+      position,
       currentHistoryPosition: currentHistoryPosition.value,
-      pendingHistoryPosition: pendingHistoryPosition.value,
+      oldHistoryPosition: oldHistoryPosition.value,
       post,
       hash,
       routerHistory: { ...routerHistory.value },
       requestData: { ...requestData },
     });
-    if (action !== 'pop'
+    if (action !== HistoryActionPop
         && currentHistoryPosition.value !== -1
-        && pendingHistoryPosition.value !== currentHistoryPosition.value) {
-      logger.trace('SCHEDULE HISTORY KEY MISMATCH', pendingHistoryPosition.value, currentHistoryPosition.value);
+        && oldHistoryPosition.value !== currentHistoryPosition.value) {
+      logger.trace('SCHEDULE HISTORY KEY MISMATCH', oldHistoryPosition.value, currentHistoryPosition.value);
     }
     return pendingHistoryHash.value;
   }
@@ -464,7 +495,7 @@ export default defineStore(storeId, () => {
     pendingHistoryAction.value = undefined;
     pendingHistoryData.value = undefined;
     pendingHistoryHash.value = undefined;
-    pendingHistoryPosition.value = undefined;
+    oldHistoryPosition.value = undefined;
     logger.debug('terminateHistoryAction()', {
       resolve,
       history: JSON.parse(JSON.stringify(routerHistory.value)),
@@ -602,12 +633,11 @@ export default defineStore(storeId, () => {
    * @param from Originating route, if any.
    */
   function finishHistoryAction(route: RouteLocationNormalizedGeneric, from?: RouteLocationNormalizedGeneric) {
-    const transition = route.transition;
-    const windowHistoryState = { ...(window?.history?.state ?? {}) };
-    const position = windowHistoryState.position ?? -1;
+    const position = vueRouterHistory.state.position;
     const history = routerHistory.value;
+    const transition = updateTransitionType();
+
     logger.debug('ON HISTORY FINISH', {
-      windowHistoryState,
       position,
       transition,
       to: { ...route },
@@ -615,28 +645,31 @@ export default defineStore(storeId, () => {
       currentHistoryIndex: currentHistoryIndex.value,
       currentHistoryPosition: currentHistoryPosition.value,
       pendingHistoryAction: pendingHistoryAction.value,
-      pendingHistoryPosition: pendingHistoryPosition.value,
+      oldHistoryPosition: oldHistoryPosition.value,
       pendingHistoryData: pendingHistoryData.value,
       pendingHistoryHash: pendingHistoryHash.value,
       currentHistoryState: { ...currentHistoryState.value },
       history: { ...history },
-      historyOfPosition: { ...(history?.['' + position] || { undefined: true }) },
+      historyOfPosition: { ...(history?.[position] || { undefined: true }) },
       historyPositions: [...routerHistoryPositions.value],
       requestData: { ...requestData },
+      vueRouterHistoryState: { ...vueRouterHistory.state },
+      windowHistoryState: { ...(window?.history?.state ?? {}) },
     });
     if (routerHistoryPositions.value.length === 0) {
-      logger.info('POSTPONING HISTORY FINISH CALL UNTIL AFTER INIT');
-      pendingInitTransition = transition;
-      return;
+      return errorHandler(
+        new HistoryStoreSetupError(t(appName, 'History data has not been set up')),
+      );
     }
-    if (!isVueRouterHistoryState(windowHistoryState)) {
+    if (!isVueRouterHistoryState(window?.history?.state)) {
       return errorHandler(
         new HistoryStoreSetupError(t(appName, 'Window history state seems uninitialized')),
       );
     }
     adjustDocumentTitle(currentRoute);
-    if (transition === 'replace' && pendingHistoryPosition.value === -1) {
+    if (transition === HistoryActionReplace && oldHistoryPosition.value === -1) {
       // just replace the positions and be gone.
+      // @todo Still needed?
       if (routerHistoryPositions.value.length > 1) {
         return errorHandler(
           new HistoryStoreSetupError(t(appName, 'History already contains more than the initial setup item.')),
@@ -646,13 +679,17 @@ export default defineStore(storeId, () => {
         const currentState = currentHistoryState.value;
         delete history[currentHistoryPosition.value];
         history[position] = currentState;
-        currentState.replaceState(windowHistoryState);
+        currentState.replaceState(vueRouterHistory.state);
         currentHistoryPosition.value = position;
         // logger.debug('Adjusted initial history position', JSON.parse(JSON.stringify(history)), { ...currentHistoryState.value });
       }
       if (currentHistoryState.value.path !== route.fullPath) {
-        logger.info('Replacing route path', currentHistoryState.value.path, route.fullPath);
-        currentHistoryState.value.path = route.fullPath;
+        logger.info('HISTORY REPLACING ROUTE PATH', {
+          currentHistoryState: { ...currentHistoryState.value },
+          route: { ...route },
+          history: { ...vueRouterHistory.state },
+        });
+        currentHistoryState.value.replacePath(route.fullPath);
       }
       updateModificationTime();
       clearHistoryAction();
@@ -660,7 +697,9 @@ export default defineStore(storeId, () => {
       return;
     }
 
-    if (pendingHistoryAction.value && pendingHistoryAction.value !== transition) {
+    if (pendingHistoryAction.value === HistoryActionUnknown) {
+      pendingHistoryAction.value = transition;
+    } else if (pendingHistoryAction.value && pendingHistoryAction.value !== transition) {
       logger.error('PENDING HISTORY ACTION DOES NOT MATCH ACTUAL TRANSITION', {
         pendingHistoryAction: pendingHistoryAction.value,
         transition,
@@ -669,10 +708,10 @@ export default defineStore(storeId, () => {
       clearHistoryAction();
     }
     // TODO: is this still needed?
-    if (pendingHistoryAction.value === 'replace' && position !== currentHistoryPosition.value && currentHistoryPosition.value !== -1) {
+    if (pendingHistoryAction.value === HistoryActionReplace && position !== currentHistoryPosition.value && currentHistoryPosition.value !== -1) {
       logger.trace('EXPLICIT HISTORY REPLACE REQUESTED, BUT CURRENT HISTORY IS GONE', {
         position,
-        pendingHistoryPosition: pendingHistoryPosition.value,
+        oldHistoryPosition: oldHistoryPosition.value,
         currentHistoryPosition: currentHistoryPosition.value,
         history: { ...history },
       });
@@ -682,7 +721,7 @@ export default defineStore(storeId, () => {
       if (transition !== HistoryActionUnknown) {
         pendingHistoryAction.value = transition;
         pendingHistoryData.value = {};
-      } else if (position === pendingHistoryPosition.value) {
+      } else if (position === oldHistoryPosition.value) {
         // replace action from RouterLink
         pendingHistoryAction.value = HistoryActionReplace;
       } else if (history[position]) {
@@ -695,7 +734,7 @@ export default defineStore(storeId, () => {
       logger.debug('TWEAKED HISTORY ACTION IS', {
         pendingHistoryAction: pendingHistoryAction.value,
         position,
-        pendingHistoryPosition: pendingHistoryPosition.value,
+        oldHistoryPosition: oldHistoryPosition.value,
         currentHistoryPosition: currentHistoryPosition.value,
         historyAtPosition: history?.[position],
         history: { ...history },
@@ -712,12 +751,16 @@ export default defineStore(storeId, () => {
           );
         }
         removeHistoryTail();
-        const position = window.history.state.position;
+        const position = vueRouterHistory.state.position;
         history[position] = new RouterHistoryRecord({
           hash: pendingHistoryHash.value,
           post: pendingHistoryData.value,
-          state: windowHistoryState,
+          state: vueRouterHistory.state,
           path: route.fullPath,
+        });
+        currentHistoryState.value.replaceState({
+          ...currentHistoryState.value.state,
+          forward: vueRouterHistory.state.current,
         });
         currentHistoryPosition.value = position;
         updateModificationTime();
@@ -735,14 +778,21 @@ export default defineStore(storeId, () => {
           delete history[currentHistoryPosition.value];
           logger.debug('CURRENT STATE 1', { ...history[position] });
           currentHistoryPosition.value = position;
-          history[position].replaceState(windowHistoryState);
+          history[position].replaceState(vueRouterHistory.state);
           logger.debug('AFTER ADJUST POSITIONS', history);
         }
         history[position].replaceHash({
           hash: pendingHistoryHash.value,
           post: pendingHistoryData.value,
         });
-        history[position].path = route.fullPath;
+        history[position].replaceState(vueRouterHistory.state);
+        if (route.fullPath !== vueRouterHistory.state.current) {
+          logger.error('VUE ROUTER HISTORY AND ROUTE PATH MISMATCH', {
+            route: { ...route },
+            history: { ...vueRouterHistory.state },
+          });
+          history[position].replacePath(route.fullPath);
+        }
         updateModificationTime();
         break;
       }
@@ -776,6 +826,7 @@ export default defineStore(storeId, () => {
       routerHistory: { ...routerHistory.value },
       routerHistoryPositions: [...routerHistoryPositions.value],
       windowHistoryState: window?.history?.state,
+      vueRouterHistoryState: vueRouterHistory.state,
     });
   }
 
@@ -788,7 +839,10 @@ export default defineStore(storeId, () => {
   axios.get<any, AxiosResponse<number[]>>(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
     .then((response) => {
       savedHistoryStates.value = response.data.map((stamp) => +(+stamp).toFixed(3));
-      logger.info('SAVE HISTORY STATES', { savedHistoryStates: savedHistoryStates.value });
+      logger.info('SAVE HISTORY STATES', {
+        savedHistoryStates: savedHistoryStates.value,
+        responseData: response.data,
+      });
     })
     .catch((e) => {
       const error = new HistoryStorePersistenceError(
@@ -945,21 +999,21 @@ export default defineStore(storeId, () => {
    */
   let inhibitRouterTransition = false;
 
-  router.beforeEach((to, from, next) => {
+  router.beforeEach((to, from) => {
     logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
       to,
       from,
-      windowHistory: window?.history?.state,
+      windowHistory: { ...(window?.history?.state ?? {}) },
+      vueRouterHistory: { ...vueRouterHistory.state },
     });
     if (inhibitRouterTransition) {
-      // Note: just calling next(false) would still initiate either a
+      // Note: just returning false would still initiate either a
       // replace or a push transition which we do not want
       // here. Instead we throw a special error which simply aborts
       // the navigation and react on it in the error handler below
       logger.debug('INHIBIT ROUTER TRANSITION');
       throw new HistoryStoreNavigationInhibitRequest();
     }
-    next();
   });
 
   // onError does catch anything __except__ routing errors.
@@ -985,7 +1039,8 @@ export default defineStore(storeId, () => {
    */
   // router.onNavigationFailure((error: NavigationFailure) => {
   router.afterEach((to, from, error) => {
-    if (to.transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated)) {
+    const transition = updateTransitionType();
+    if (transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated)) {
       logger.debug('Finish history action on duplicated navigation.', { error });
       finishHistoryAction(to, from);
     }
@@ -1037,7 +1092,7 @@ export default defineStore(storeId, () => {
         // edge case: just replace using the regular vue router
         // replace functionality and skip the remainder of this
         // function.
-        const resolved = router.resolve(entry.path, 'unknown');
+        const resolved = router.resolve(entry.path);
         const params = sanitizePostData({ ...entry.post, ...resolved.params });
         const hash = entry.hash;
         const force = uuidv4();
@@ -1064,14 +1119,24 @@ export default defineStore(storeId, () => {
         return;
       }
 
-      // To there is at least one additional state. Just install the
+      // So there is at least one additional state. Just install the
       // post-data and path into the current history state.
-      currentHistoryState.value.path = entry.path;
       currentHistoryState.value.replaceHash(entry);
+      currentHistoryState.value.replaceState(entry.state);
+      if (entry.path !== entry.state.current) {
+        logger.error('HISTORY STATE PATH MISMATCH', { entry });
+        currentHistoryState.value.replacePath(entry.path);
+      }
       // bypass routing
+      const windowHistoryState = { ...currentHistoryState.value.state, position: vueRouterHistory.state.position };
       const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
-      logger.debug('REPLACE HISTORY STATE', { state: window.history.state, url });
-      window.history.replaceState(window.history.state, '', url);
+      logger.debug('REPLACE HISTORY STATE', {
+        windowHistoryState: { ...(window?.history?.state ?? {}) },
+        routerHistoryState: { ...vueRouterHistory.state },
+        url,
+        newState: windowHistoryState,
+      });
+      window.history.replaceState(windowHistoryState, '', url);
     }
 
     // Compute the offset from the tail to the desired position
@@ -1090,7 +1155,7 @@ export default defineStore(storeId, () => {
       logger.debug('POSITIONMAP', positionMap);
       for (const position of positions) {
         const entry = chain[position];
-        const windowHistoryState = { ...entry.state, position: positionMap[position] };
+        const windowHistoryState = { ...entry.state, position: positionMap[position], replaced: false };
         history[positionMap[position]] = new RouterHistoryRecord({
           state: windowHistoryState,
           hash: entry.hash,
@@ -1105,11 +1170,11 @@ export default defineStore(storeId, () => {
 
       // First push to the window history ignoring the vue-router
       for (const [position, mappedPosition] of Object.entries(positionMap)) {
-        const entry = chain[position];
+        const entry = chain[+position];
         const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
-        const windowHistoryState = { ...entry.state, position: mappedPosition };
+        const windowHistoryState = { ...entry.state, position: mappedPosition, replaced: false };
         window.history.pushState(windowHistoryState, '', url);
-        const resolved = router.resolve(entry.path, 'unknown');
+        const resolved = router.resolve(entry.path);
         adjustDocumentTitle(resolved);
       }
     }
@@ -1134,7 +1199,7 @@ export default defineStore(storeId, () => {
         // history state as the vue router will generate a new one.
         logger.debug('PUSH FINAL STATE AS REQUESTED POS IS LAST ONE', { entry: { ...chain[posPosition] } });
         const entry = chain[posPosition];
-        const resolved = router.resolve(entry.path, 'unknown');
+        const resolved = router.resolve(entry.path);
         const params = sanitizePostData({ ...entry.post, ...resolved.params });
         const hash = entry.hash;
         const force = uuidv4();
@@ -1238,11 +1303,15 @@ export default defineStore(storeId, () => {
   router.isReady().then(() => {
     logger.debug('ON ROUTER READY HOOK', {
       router,
-      historyState: { ...vueRouterHistory.state },
+      windowHistoryState: { ...(window?.history?.state ?? {}) },
+      vueRouterHistoryState: { ...vueRouterHistory.state },
     });
 
     // try load history from session storage ...
     const historyData = getSessionStorageHistoryData();
+
+    ready.value = true;
+
     if (historyData
         && historyData.history[historyData.position]
         && historyData.history[historyData.position].path === currentRoute.fullPath) {
@@ -1293,5 +1362,7 @@ export default defineStore(storeId, () => {
     adjustDocumentTitle,
     aquireMutationLock,
     releaseMutationLock,
+    ready,
+    transitionType,
   };
 });

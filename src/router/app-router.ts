@@ -21,6 +21,8 @@
 
 import type {
   // RouteLocationRaw,
+  HistoryState,
+  RouterHistory,
   RouterOptions,
 } from 'vue-router';
 
@@ -40,10 +42,22 @@ const logger = new Console(COMPONENT_NAME);
 
 const base = generateUrl('/apps/' + appName);
 
-export const history = createWebHistory(base);
+export interface VueRouterHistoryState extends HistoryState {
+  position: number;
+  current: string;
+  back: string|null;
+  forward: string | null;
+  replaced: boolean;
+}
 
-history.listen((to, from, info) => {
-  logger.info('HISTORY LISTENER', { to, from, info });
+export interface VueRouterHistory extends RouterHistory {
+  readonly state: VueRouterHistoryState;
+}
+
+export const history: VueRouterHistory = createWebHistory(base) as VueRouterHistory;
+
+logger.info('ROUTER HISTORY JUST AFTER CREATION', {
+  state: history.state,
 });
 
 const options: RouterOptions = {

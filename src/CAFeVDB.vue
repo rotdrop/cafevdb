@@ -299,7 +299,7 @@ import { globalState, synchronizeGlobalState } from './services/legacy-global-st
 import { closeNavigation } from './services/navigation.ts'
 import useAppDataStore from './stores/app-data.ts'
 import useErrorHandlerStore from './stores/error-handler.ts'
-import useHistoryStore from './stores/history.ts'
+import useHistoryStore, { HistoryActionPush } from './stores/history.ts'
 import useTooltipsStore from './stores/tooltips.ts'
 // import ProjectInfoIcon from 'vue-material-design-icons/InformationOutline.vue'
 // import ProjectPartici<pantsIcon from 'vue-material-design-icons/AccountMultiple.vue'
@@ -336,6 +336,10 @@ const initialState = getInitialState({ section: 'CAFEVDB' })
 
 const appData = useAppDataStore()
 const history = useHistoryStore()
+
+const {
+  ready: historyReady,
+} = storeToRefs(history)
 
 const {
   currentProjectId,
@@ -712,9 +716,13 @@ router.beforeEach((to, from) => {
     from,
     windowHistory: window?.history?.state,
     pendingHistoryAction: history.pendingHistoryAction,
+    historyReady: historyReady.value,
   })
+  if (!historyReady.value) {
+    return
+  }
   if (!history.pendingHistoryAction) {
-    history.scheduleHistoryAction(to.transition!, to.params)
+    history.scheduleHistoryAction(HistoryActionPush, to.params)
   }
 })
 router.afterEach((to, from, _failure) => {
@@ -722,19 +730,23 @@ router.afterEach((to, from, _failure) => {
     to,
     from,
     windowHistory: window?.history?.state,
+    historyReady: historyReady.value,
   })
-  pageTemplate.value = (to.params?.template as undefined|string) || 'home'
+  if (!historyReady.value) {
+    return
+  }
+  pageTemplate.value = (to.params?.template as undefined | string) || 'home'
   history.finishHistoryAction(to, from)
   // @todo: parse the query parameters, e.g.
   //
   // ?template=blah&foo=bar
   //
-  // This should result in setting the legacacy template to blah and
+  // This should result in setting the legacy template to blah and
   // passing { foo: bar } as tempalte parameters, potentially
   // extending given default template parameters (if present).
 })
-// onReady is called once at start
-router.isReady().then(() => {
+
+watch(historyReady, () => {
   logger.debug('ROUTER ON READY HOOK', {
     urlPath: history.lastUrlPath,
     route,
