@@ -452,7 +452,7 @@ export default defineStore(storeId, () => {
     pendingHistoryData.value = post || {};
     hash = pendingHistoryHash.value = hash || generatePostHash(pendingHistoryData.value);
     oldHistoryPosition.value = position;
-    logger.trace('scheduleHistoryAction()', {
+    logger.debug('scheduleHistoryAction()', {
       action,
       position,
       currentHistoryPosition: currentHistoryPosition.value,
