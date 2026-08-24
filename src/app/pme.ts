@@ -26,6 +26,7 @@
  * General PME table stuff, popup-handling.
  */
 
+import type { MountableComponent } from '../services/mountable-components.ts';
 import type {
   PageTemplateValue,
   TableDialogCallbackData,
@@ -140,9 +141,10 @@ const pmeDestroyVueComponents = function($container: JQuery) {
     $container,
     vueComponents: $container?.data('vueComponents'),
   });
-  const vueComponents = $container.data('vueComponents') || [];
+  const vueComponents: MountableComponent[] = $container.data('vueComponents') || [];
   for (const component of vueComponents) {
-    component.$destroy();
+    component.unmount();
+    component.destroy();
     console.info('REMOVED VUE COMPONENT', { component });
   }
   $container.data('vueComponents', []);

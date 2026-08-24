@@ -21,17 +21,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { App, Component } from 'vue';
+import type { App, Component, VNode } from 'vue';
 
 import { translate as t } from '@nextcloud/l10n';
-import { createApp } from 'vue';
+import {
+  // createApp,
+  createVNode,
+  render,
+} from 'vue';
 import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
+// import router from '../router/app-router.ts';
 import { AppError } from '../toolkit/types/errors.ts';
+// import { pinia } from '../vue-app.ts';
 import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 
 const vueComponents: Record<string, Component> = {};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ExposedComponentProperties = undefined|null|number|string|Record<number|string, unknown>|((...args: any) => any)|VNode|HTMLElement;
+
+export type MountableComponent = {
+  vNode?: VNode;
+  element?: HTMLElement;
+  parent?: HTMLElement;
+  mount: (element: HTMLElement) => void;
+  unmount: () => void;
+  destroy: () => void;
+  [x: string]: ExposedComponentProperties;
+  [x: number]: ExposedComponentProperties;
+};
 
 export const provideMountableComponents = <T extends App>(vueApp: T) => {
   asyncSubscribe(GET_VUE_COMPONENT, async (event) => {
@@ -63,8 +83,64 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
       vueApp.component(event.name, vueComponent);
     }
     // obtain a new instance
-    const instance = createApp(vueComponents[event.name], event.propsData);
-    Object.assign(instance._context, vueApp);
-    return instance;
+    // const instance = createApp(vueComponents[event.name], event.propsData);
+    // instance.use(router);
+    // instance.use(pinia);
+    // Object.assign(instance._context, vueApp);
+    // instance._context = vueApp._context;
+    const vNode = createVNode(vueComponents[event.name], event.propsData);
+    if (vueApp._context) {
+      vNode.appContext = vueApp._context;
+    }
+    console.info('MOUNTABLE COMPONENT APP', {
+      vueApp,
+      // instance,
+      vNode,
+    });
+    // return instance;
+    return new Proxy<MountableComponent>(
+      {
+        vNode,
+        element: undefined,
+        mount(element: HTMLElement) {
+          this.element = element;
+          this.parent = element.parentElement!;
+          this.element.remove();
+          render(vNode, this.parent);
+        },
+        unmount() {
+          if (!this.element || !this.parent) {
+            return;
+          }
+          render(null, this.parent);
+          this.parent.appendChild(this.element);
+          this.element = undefined;
+          this.parent = undefined;
+        },
+        destroy() {
+          this.vNode = undefined;
+        },
+      },
+      {
+        set(target, property, value, receiver) {
+          if (!target.vNode) {
+            return Reflect.set(target, property, value, receiver);
+          }
+          if (property in (vNode.component?.exposed ?? {})) {
+            return Reflect.set(vNode.component!.exposeProxy!, property, value);
+          }
+          return Reflect.set(target, property, value, receiver);
+        },
+        get(target, property, receiver) {
+          if (!target.vNode) {
+            return Reflect.get(target, property, receiver);
+          }
+          if (property in (vNode.component?.exposed ?? {})) {
+            return Reflect.get(vNode.component!.exposeProxy!, property);
+          }
+          return Reflect.get(target, property, receiver);
+        },
+      },
+    );
   });
 };
