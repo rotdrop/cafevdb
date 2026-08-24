@@ -47,7 +47,7 @@
                             :closeAfterClick="true"
             >
               <template #icon>
-                <component :is="calendarIcons[uri]" />
+                <component :is="calendarIcons[uri as (CalendarUris | '')]" />
               </template>
               {{ item.label }}
             </NcActionRouter>
@@ -172,8 +172,8 @@
                       class="project-event fc-event"
                       :class="{ detached: event.deleted }"
                       :to="routerEventEdit[event.instanceId] || ''"
-                      :dataObjectId="routerEventEdit[event.instanceId]?.params.object || ''"
-                      :dataRecurrenceId="routerEventEdit[event.instanceId]?.params.recurrenceId || ''"
+                      :data-object-id="routerEventEdit[event.instanceId]?.params.object || ''"
+                      :data-recurrence-id="routerEventEdit[event.instanceId]?.params.recurrenceId || ''"
                       :exactPath="true"
                       :forceDisplayActions="true"
                       :oneLine="false"
@@ -241,7 +241,7 @@
               <NcActionButton v-tooltip="hints['projectevents:event:absence-field:check']"
                               type="checkbox"
                               :closeAfterClick="true"
-                              :disabled="!mutationsAllowed || !!event.deleted || !CALENDARS[matrixEntry.uri]?.public"
+                              :disabled="!mutationsAllowed || !!event.deleted || !(matrixEntry.uri && CALENDARS[matrixEntry.uri]?.public)"
                               @click="toggleAbsenceField(event)"
               >
                 <template #icon>
@@ -490,13 +490,11 @@ const origin = prev
       params: { ...currentRoute.params },
       query: { ...currentRoute.query },
     },
-    transition: currentRoute.transition,
   }
   : {
     location: {
       name: 'home',
     },
-    transition: 'unknown',
   }
 
 logger.info('COMPUTED ORIGIN', { origin, prev })
@@ -504,7 +502,9 @@ logger.info('COMPUTED ORIGIN', { origin, prev })
 const project = ref<null | Project>(null)
 const projectEventMatrix = computed<undefined | ProjectEventMatrix>(() => project.value?.eventMatrix)
 
-const calendarOrdering: { [Key in EventMatrixRow['uri']]: number } = {
+type CalendarUriKey = EventMatrixRow['uri']
+
+const calendarOrdering: { [Key in CalendarUriKey]: number } = {
   concerts: 0,
   rehearsals: 10,
   management: 20,
@@ -583,7 +583,7 @@ const onUserManualPopup = async () => {
   isWikiLoading.value = false
 }
 
-const calendarIcons: { [Key in CalendarUris|'']?: Component } = {
+const calendarIcons: { [Key in CalendarUriKey]?: Component } = {
   management: IconManagement,
   finance: IconFinance,
   concerts: IconConcerts,
@@ -603,7 +603,7 @@ const calendarUriByEventObject: Record<string, EventMatrixRow['uri']|undefined> 
 const instanceIdByEventObject: Record<string, string> = {}
 const eventsByYear = reactive<{ [Key in EventMatrixRow['uri']]?: Record<string, EventMatrixEvent[]> }>({})
 const yearsByEvent = reactive<Record<string, number>>({})
-const expandedState = ref<{ [Key in CalendarUris]?: boolean }>({})
+const expandedState = ref<{ [Key in CalendarUriKey]?: boolean }>({})
 const hasAbsenceField = ref<Record<string, boolean>>({})
 const attachmentMark = ref<Record<string, boolean>>({})
 const routerEventEdit = ref<Record<string, CalendarObjectEditLocation>>({})
