@@ -239,20 +239,25 @@ export default defineStore(storeId, () => {
       return undefined;
     }
   };
+  const vueInternalTag = '__v_' as const;
   const statePutProject = (
     project: FrontEndEntity<'Project'>,
     errorHandler?: ErrorHandler,
   ): Project => {
     const projectId = '' + project.id;
-    if (state.projects[projectId]) {
-      return state.projects[projectId];
+    if (state.projects[project.id]) {
+      return state.projects[project.id];
     }
     const projectReference: EntityReference<'Project'> = {
       entityClassName: 'Project',
       flatIdentifier: projectId,
     };
     const proxyHandler: ProxyHandler<EntityReference<'Project'>> = {
-      get: (entityReference, field, _receiver) => {
+      get: (entityReference, field, receiver) => {
+        // logger.debug('PROXY GET', { entityReference, field, receiver });
+        if (typeof field !== 'symbol' && field.startsWith(vueInternalTag)) {
+          return Reflect.get(entityReference, field, receiver);
+        }
         switch (field) {
           case 'wikiPage': {
             // see ProjectService::projectWikiLink()
@@ -260,16 +265,13 @@ export default defineStore(storeId, () => {
             return `${globalState.wikiNameSpace ?? ''}:${globalState.projectsFolder ?? ''}:${project.name ?? ''}`;
           }
           case 'folders':
-            return state.projectFolders[projectId] ?? undefined;
+            return state.projectFolders[project.id] ?? undefined;
           case 'getFolders':
             return (handler?: ErrorHandler) => stateGetProjectFolders(+projectId, handler || errorHandler);
           case 'eventMatrix':
-            return state.projectEvents[projectId] ?? undefined;
+            return state.projectEvents[project.id] ?? undefined;
           case 'getEventMatrix':
             return (handler?: ErrorHandler) => stateGetEventMatrix(+projectId, handler || errorHandler);
-          case '__ob__':
-          case '__v_skip':
-            return Reflect.get(entityReference, field);
           default: {
             const project = databaseEntities.find('Project', projectId)!;
             if (field === 'hasOwnProperty') {
@@ -282,6 +284,10 @@ export default defineStore(storeId, () => {
         }
       },
       has: (entityReference, field) => {
+        // logger.debug('PROXY HAS', { entityReference, field });
+        if (typeof field !== 'symbol' && field.startsWith(vueInternalTag)) {
+          return Reflect.has(entityReference, field);
+        }
         switch (field) {
           case 'wikiPage':
           case 'folders':
@@ -289,9 +295,6 @@ export default defineStore(storeId, () => {
           case 'eventMatrix':
           case 'getEventMatrix':
             return true;
-          case '__ob__':
-          case '___v_skip':
-            return Reflect.has(entityReference, field);
           default: {
             const project = databaseEntities.find('Project', projectId)!;
             return field in project;
@@ -299,11 +302,13 @@ export default defineStore(storeId, () => {
         }
       },
       ownKeys: (entityReference) => {
+        // logger.debug('PROXY OWN KEYS', { entityReference });
         const project = databaseEntities.find('Project', projectId)!;
-        return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project), ...Reflect.ownKeys(entityReference).filter((key) => key === '__ob__' || key === '__v_skip')];
+        return ['wikiPage', 'folders', 'getFolders', 'eventMatrix', 'getEventMatrix', ...Object.keys(project), ...Reflect.ownKeys(entityReference).filter((field) => typeof field !== 'symbol' && field.startsWith(vueInternalTag))];
       },
-      set: (entityReference, field, value) => {
-        if (field === '__ob__' || field === '__v_skip') {
+      set: (entityReference, field, value, _receiver) => {
+        // logger.debug('PROXY SET', { entityReference, field, value, _receiver });
+        if (typeof field !== 'symbol' && field.startsWith(vueInternalTag)) {
           return Reflect.set(entityReference, field, value);
         }
         throw new AppDataStoreError(
@@ -311,33 +316,34 @@ export default defineStore(storeId, () => {
           t(appName, 'App-store projects may not be modified.'),
         );
       },
-      getOwnPropertyDescriptor: (entityRefererence, key) => {
-        if (key === '__ob__' || key === '__v_skip') {
-          return Reflect.getOwnPropertyDescriptor(entityRefererence, key);
+      getOwnPropertyDescriptor: (entityReference, field) => {
+        // logger.debug('PROXY GET OWN PROPERTY DESCRIPTOR', { entityReference, field });
+        if (typeof field !== 'symbol' && field.startsWith(vueInternalTag)) {
+          return Reflect.getOwnPropertyDescriptor(entityReference, field);
         } else {
-          switch (key) {
+          switch (field) {
             case 'wikiPage':
             case 'folders':
             case 'getFolders':
             case 'eventMatrix':
             case 'getEventMatrix':
               // non-existing properties must be configurable ...
-              return { enumerable: true, configurable: true, value: proxyHandler.get!(entityRefererence, key, undefined) };
+              return { enumerable: true, configurable: true, value: proxyHandler.get!(entityReference, field, undefined) };
             default: {
               const project = databaseEntities.find('Project', projectId)!;
-              if (key in project) {
-                return Reflect.getOwnPropertyDescriptor(project, key);
+              if (field in project) {
+                return Reflect.getOwnPropertyDescriptor(project, field);
               }
               return undefined;
             }
           }
         }
       },
-      defineProperty: (entityReference, key, descriptor) => {
-        // console.trace('DEFINE PROP', { entityReference, key, descriptor });
+      defineProperty: (entityReference, field, descriptor) => {
+        // logger.debug('PROXY DEFINE PROP', { entityReference, field, descriptor });
         // return Reflect.defineProperty(entityReference, key, descriptor);
-        if (key === '__ob__' || key === '__v_skip') {
-          return Reflect.defineProperty(entityReference, key, descriptor);
+        if (typeof field !== 'symbol' && field.startsWith(vueInternalTag)) {
+          return Reflect.defineProperty(entityReference, field, descriptor);
         }
         return true;
       },
@@ -346,9 +352,10 @@ export default defineStore(storeId, () => {
       projectReference,
       proxyHandler,
     ) as unknown as Project;
-    state.projects[projectId] = stateProject;
+    state.projects[project.id] = stateProject;
     state.projectsByName[project.name] = stateProject;
-    return state.projects[projectId];
+
+    return state.projects[project.id];
   };
 
   /**
@@ -365,9 +372,7 @@ export default defineStore(storeId, () => {
         entityName: 'Project',
         identifier: { id: projectId },
       });
-      logger.info('FIND PROJECT RESPONSE', data);
-      const project = statePutProject(data.Project[projectId], errorHandler);
-      return project;
+      return statePutProject(data.Project[projectId], errorHandler);
     } catch (e) {
       stateHandleError(
         e,
