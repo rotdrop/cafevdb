@@ -72,6 +72,7 @@ import {
   nextTick,
   onMounted,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue'
 import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
@@ -109,7 +110,19 @@ type NcActionsType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   closeMenu(returnFocus?: boolean): Promise<any>
   $refs: {
-    popover: { $refs: { popover: { $refs: { reference: HTMLElement } } } }
+    popover: {
+      $refs: {
+        popover: {
+          $refs: {
+            popper: {
+              $refs: {
+                reference: HTMLElement
+              }
+            }
+          }
+        }
+      }
+    }
     triggerButton: NcButtonType
   }
 }
@@ -193,10 +206,10 @@ const handleClosedEvent = () => {
 }
 
 const openedPromise = Promise.withResolvers()
-openedPromise.resolve()
+openedPromise.resolve(undefined)
 
 const handleOpenedEvent = () => {
-  openedPromise.resolve()
+  openedPromise.resolve(undefined)
 }
 
 const openMenu = async (x?: number, y?: number) => {
@@ -244,13 +257,17 @@ defineExpose({
 //   await syncProjectData(props.projectId)
 // })
 
-const actions = ref<null|NcActionsType>(null)
+const actions = useTemplateRef<NcActionsType>('actions')
 
 onMounted(() => {
   const origCloseMenu = actions.value!.closeMenu
   actions.value!.closeMenu = (returnFocus) => origCloseMenu(positioned.value ? false : returnFocus)
-  referenceElement.value = actions.value!.$refs.popover.$refs.popover.$refs.reference
+  referenceElement.value = actions.value!.$refs.popover.$refs.popover.$refs.popper.$refs.reference
   triggerButton.value = actions.value!.$refs.triggerButton
+  logger.debug('ACTIONS MENU MOUNTED', {
+    referenceElement: referenceElement.value,
+    triggerButton: triggerButton.value,
+  })
   asyncSubscribe(PAGE_TEMPLATE_ACTION_MENU, (event) => {
     if (event.template !== props.template) {
       return
