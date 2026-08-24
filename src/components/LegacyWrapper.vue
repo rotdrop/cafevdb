@@ -146,6 +146,7 @@ import {
   onErrorCaptured,
   onUnmounted,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
@@ -264,8 +265,7 @@ let previousHash = null as null|string // reactivity not needed
 
 // *** former computed properties
 
-// Pre-vue3 useTemplateRef()
-const legacyHtmlContainer = ref(null)
+const legacyHtmlContainer = useTemplateRef('legacyHtmlContainer')
 const wikiManualSection = computed(() => dokuWikiSection([
   appName,
   'documentation',

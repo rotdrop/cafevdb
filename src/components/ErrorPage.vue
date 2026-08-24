@@ -236,6 +236,7 @@ import {
   onBeforeMount,
   onMounted,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue'
 import IconCancel from 'vue-material-design-icons/Cancel.vue'
@@ -490,7 +491,7 @@ const parseStackTrace = async () => {
 
 onBeforeMount(parseStackTrace)
 
-const envelopeErrorItem = ref<typeof NcListItem|null>(null)
+const envelopeErrorItem = useTemplateRef<typeof NcListItem>('envelopeErrorItem')
 
 watch(detailsModalOpen, () => {
   if (!detailsModalOpen.value && !showProblemReport.value) {

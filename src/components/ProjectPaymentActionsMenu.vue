@@ -96,7 +96,7 @@ import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton } from '@nextcloud/vue'
-import { computed, ref } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
 import IconStandardReceiptDownload from 'vue-material-design-icons/ReceiptOutline.vue'
 import IconStandardReceiptEmail from 'vue-material-design-icons/ReceiptSendOutline.vue'
@@ -156,7 +156,7 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
-const actions = ref<null|typeof LegacyPageActionsMenu>(null)
+const actions = useTemplateRef<typeof LegacyPageActionsMenu>('actions')
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
@@ -216,7 +216,7 @@ async function handleMailMergeDownload(
     asyncEmit(BusEvents.POP_BUSY_STATE)
   } catch (error) {
     asyncEmit(BusEvents.POP_BUSY_STATE)
-    const messageData = { error, paymentId: props.entityId }
+    const messageData = { error: '' + error, paymentId: props.entityId }
     const message = (operation === MailMergeDownload)
       ? t(appName, 'Unable to download the receipt for the payment with id {paymentId}: {error}.', messageData)
       : t(appName, 'Unable to download the mail-merge substituions for the payment with id {paymentId}: {error}.', messageData)

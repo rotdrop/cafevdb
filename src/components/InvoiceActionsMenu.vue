@@ -69,7 +69,7 @@ import type { MailMergeOperation, MailMergePayload } from '../types/ajax/mail-me
 
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton } from '@nextcloud/vue'
-import { computed, ref } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import IconSubstitutionDataDownload from 'vue-material-design-icons/CodeJson.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
 import IconInvoiceDownload from 'vue-material-design-icons/FileDownloadOutline.vue'
@@ -129,7 +129,7 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
-const actions = ref<null|typeof LegacyPageActionsMenu>(null)
+const actions = useTemplateRef<typeof LegacyPageActionsMenu>('actions')
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {

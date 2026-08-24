@@ -69,7 +69,7 @@
 
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton } from '@nextcloud/vue'
-import { ref } from 'vue'
+import { useTemplateRef } from 'vue'
 import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
 import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
 import IconEmail from 'vue-material-design-icons/Email.vue'
@@ -116,7 +116,7 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
-const actions = ref<null|typeof LegacyPageActionsMenu>(null)
+const actions = useTemplateRef<typeof LegacyPageActionsMenu>('actions')
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {

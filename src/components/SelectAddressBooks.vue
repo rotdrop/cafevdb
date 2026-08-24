@@ -48,6 +48,7 @@ import {
   computed,
   onBeforeMount,
   ref,
+  useTemplateRef,
 } from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import {
@@ -133,7 +134,7 @@ onBeforeMount(async () => {
   ajaxLoading.value = false
 })
 
-const select = ref(null)
+const select = useTemplateRef('select')
 
 /** @param value TBD. */
 function emitInput(value: undefined|AddressBook|AddressBook[]) {

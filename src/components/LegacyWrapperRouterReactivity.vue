@@ -47,7 +47,7 @@ import type { RouteLocationNormalizedGeneric } from 'vue-router'
 import { onBeforeMount, ref } from 'vue'
 import {
   onBeforeRouteLeave,
-  onBeforeRouteUpdate,
+  // onBeforeRouteUpdate,
   useRoute,
   useRouter,
 } from 'vue-router'
@@ -120,7 +120,14 @@ asyncSubscribe(ADD_CONTACTS_TO_PROJECT, async (event) => {
 })
 
 const onRouteChange = (to: RouteLocationNormalizedGeneric) => {
-  logger.info('onRouteChange()', { to: { ...to }, historyState: window?.history?.state })
+  logger.info(
+    'onRouteChange()',
+    {
+      to: { ...to },
+      historyState: window?.history?.state,
+      currentRoute: { ...currentRoute },
+    },
+  )
   template.value = to.params.template as string
   // Object.assign(templateParameters.value, to.params)
   templateParameters.value = sanitizeTemplateParams(to.params)
@@ -133,21 +140,38 @@ onBeforeMount(() => {
   onRouteChange(currentRoute)
 })
 
-onBeforeRouteUpdate((to, from) => {
-  logger.debug('ON BEFORE ROUTE UPDATE', {
+// This used to work with vue-router 3 in that the wrapped
+// LegacyWrapper component had its currentRoute instance already set
+// to "to". Updates now seem to run quicker, so updating the
+// LegacyWrapper has to wait until route transition has been
+// confirmed.
+//
+// onBeforeRouteUpdate((to, from) => {
+//   logger.debug('ON BEFORE ROUTE UPDATE', {
+//     to: { ...to },
+//     from: { ...from },
+//     windowState: { ...(window?.history?.state || {}) },
+//     route: { ...currentRoute },
+//   })
+// })
+
+const unregister = router.afterEach((to, from) => {
+  logger.debug('AFTER EACH', {
     to: { ...to },
     from: { ...from },
     windowState: { ...(window?.history?.state || {}) },
+    route: { ...currentRoute },
   })
   if (!to.path.includes('--never--')
-      && (to.name === 'legacy-page'
-          || (to.matched.length > 1 && to.matched[0].name === 'legacy-page'))) {
+    && (to.name === 'legacy-page'
+      || (to.matched.length > 1 && to.matched[0].name === 'legacy-page'))) {
     onRouteChange(to)
   }
 })
 
 onBeforeRouteLeave((to, from) => {
   logger.debug('ON BEFORE ROUTE LEAVE', { ...to }, { ...from }, window?.history?.state)
+  unregister()
 })
 </script>
 

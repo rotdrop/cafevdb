@@ -174,6 +174,7 @@ import {
   NcActionRouter,
   NcActionSeparator,
 } from '@nextcloud/vue'
+import vTooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip'
 import md5 from 'blueimp-md5'
 import {
   computed,

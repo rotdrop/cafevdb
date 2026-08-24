@@ -68,6 +68,7 @@ import {
   computed,
   onBeforeMount,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
@@ -169,7 +170,7 @@ onBeforeMount(async () => {
   ajaxLoading.value = false
 })
 
-const select = ref<null|typeof SelectWithSubmitButton>(null)
+const select = useTemplateRef<typeof SelectWithSubmitButton>('select')
 const ncSelect = computed(() => select.value?.ncSelect as (typeof NcSelect|null))
 
 const isSelectable = (option: Contact) => !isSelectAllSelected.value || option.key === 0

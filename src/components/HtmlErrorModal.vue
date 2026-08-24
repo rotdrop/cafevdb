@@ -66,12 +66,18 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
   NcModal,
 } from '@nextcloud/vue'
-import { onMounted, ref, watch } from 'vue'
+import {
+  onMounted,
+  useTemplateRef,
+  watch,
+} from 'vue'
 import IconClose from 'vue-material-design-icons/Close.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import { appName } from '../config.ts'
@@ -98,7 +104,7 @@ const handleReportError = () => {
   emit('problemReport:show', true)
 }
 
-const modal = ref<Vue|null>(null)
+const modal = useTemplateRef<Component>('modal')
 
 const openMenu = () => {
   for (const child of (modal.value?.$children || [])) {
