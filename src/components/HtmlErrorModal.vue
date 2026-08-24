@@ -23,7 +23,6 @@
  -->
 <template>
   <NcModal v-if="htmlString"
-           ref="modal"
            :closeOnClickOutside="false"
            :show="open"
            size="large"
@@ -34,7 +33,8 @@
            @update:show="emit('update:open', false)"
   >
     <template #actions>
-      <NcActionButton :name="t(appName, 'report error')"
+      <NcActionButton ref="modalActionsReportError"
+                      :name="t(appName, 'report error')"
                       closeAfterClick
                       @click="handleReportError"
       >
@@ -66,8 +66,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue'
-
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
@@ -104,14 +102,11 @@ const handleReportError = () => {
   emit('problemReport:show', true)
 }
 
-const modal = useTemplateRef<Component>('modal')
+const reportErrorAction = useTemplateRef<typeof NcActionButton>('modalActionsReportError')
 
 const openMenu = () => {
-  for (const child of (modal.value?.$children || [])) {
-    if (child?.actionsMenuSemanticType === 'menu') {
-      child.openMenu()
-    }
-  }
+  const menu = reportErrorAction.value?.$parent as (typeof NcActions)
+  menu?.openMenu()
 }
 
 watch(() => props.open, (value) => {

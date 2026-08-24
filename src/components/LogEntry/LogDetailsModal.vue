@@ -193,16 +193,10 @@ const handleReportError = () => {
 }
 
 const reportErrorAction = useTemplateRef<typeof NcActionButton>('modalActionsReportError')
-// const modal = useTemplateRef<Component>('modal')
 
 const openMenu = () => {
   const menu = reportErrorAction.value?.$parent as (typeof NcActions)
   menu?.openMenu()
-  // for (const child of (modal.value?.$children || [])) {
-  //   if (child?.actionsMenuSemanticType === 'menu') {
-  //     child.openMenu()
-  //   }
-  // }
 }
 
 watch(() => props.open, (value) => {
