@@ -162,7 +162,7 @@
     "vue-loader": "^17.4.2",
     "vue-material-design-icons": "^5.3.1",
     "vue-multiselect": "*",
-    "vue-router": "file:3rdparty/vuejs-router/packages/router",
+    "vue-router": "^5.2.0",
     "walkjs": "^6.0.1",
     "webpack": "~5.106.2",
     "webpack-bundle-analyzer": "^5.3.0",
@@ -201,8 +201,8 @@
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
   "engines": {
-    "node": "^22.0.0",
-    "npm": "^10.0.0"
+    "node": "^24.0.0",
+    "npm": "^11.0.0"
   },
   "homepage": "https://github.com/rotdrop/cafevdb#readme",
   "keywords": [
@@ -215,5 +215,13 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rotdrop/cafevdb.git"
+  },
+  "allowScripts": {
+    "core-js@3.50.0": true,
+    "github:stacktracejs/stacktrace-gps#62f6967fc85e6fdd5fb9cea1a056b935d9b07a9a": true,
+    "vue-demi@0.14.10": true,
+    "github:rotdrop/nextcloud-dialogs#4747087828b80a77f92a8213846ba1fafa2a4492": true,
+    "@parcel/watcher@2.6.0": true,
+    "github:rotdrop/nextcloud-app-dokuwiki#661a3f54f375aa4eda204a50d5c26769423a9673": true
   }
 }
