@@ -48,6 +48,3 @@
 [submodule "3rdparty/eslint-import-resolver-jest"]
 	path = 3rdparty/eslint-import-resolver-jest
 	url = git@github.com:rotdrop/eslint-import-resolver-jest.git
-[submodule "3rdparty/vuejs-router"]
-	path = 3rdparty/vuejs-router
-	url = https://github.com/vuejs/router.git
