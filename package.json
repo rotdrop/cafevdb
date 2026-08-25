@@ -222,6 +222,7 @@
     "vue-demi@0.14.10": true,
     "github:rotdrop/nextcloud-dialogs#4747087828b80a77f92a8213846ba1fafa2a4492": true,
     "@parcel/watcher@2.6.0": true,
-    "github:rotdrop/nextcloud-app-dokuwiki#661a3f54f375aa4eda204a50d5c26769423a9673": true
+    "github:rotdrop/nextcloud-app-dokuwiki#661a3f54f375aa4eda204a50d5c26769423a9673": true,
+    "github:rotdrop/async-nextcloud-event-bus#304c6541b07865a90b0967837ea494860c04431a": true
   }
 }
