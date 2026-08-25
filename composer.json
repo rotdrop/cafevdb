@@ -57,6 +57,7 @@
     "tinybutstrong/opentbs": "dev-production/cafevdb",
     "tuqqu/gender-detector": "^0.5.2",
     "guzzlehttp/promises": "2.5.1",
+    "guzzlehttp/psr7": "2.13.0",
     "paragonie/constant_time_encoding": "v2.6.3",
     "symfony/translation-contracts": "v3.7.0",
     "symfony/translation": "v6.4.38"
