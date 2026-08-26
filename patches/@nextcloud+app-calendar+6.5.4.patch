@@ -420,7 +420,7 @@ index bcc91b9..7327d1c 100644
  export type TalkRoomListRequest = {
  	noStatusUpdate?: boolean
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue b/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue
-index 84ef612..2e6222b 100644
+index c102eb6..d931fcd 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/Proposal/ProposalEditor.vue
 @@ -202,7 +202,7 @@
