@@ -201,7 +201,7 @@
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
   "engines": {
-    "node": "^24.0.0",
+    "node": "^24.0.0 || ^26.0.0",
     "npm": "^11.0.0"
   },
   "homepage": "https://github.com/rotdrop/cafevdb#readme",
