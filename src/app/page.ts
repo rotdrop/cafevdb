@@ -23,9 +23,9 @@
 
 import type { TemplatePostData } from '@rotdrop/async-nextcloud-event-bus';
 
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { parse as qsParse } from 'qs';
 import { LEGACY_PAGE_CLEANUP, LEGACY_PAGE_LOAD } from '../event-bus-events.ts';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import pageBusyIcon from './busy-icon.ts';
 import $ from './jquery.ts';
 import modalizer from './modalizer.ts';

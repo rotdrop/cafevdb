@@ -24,8 +24,8 @@
 import type { EntityMap } from '../../build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
 import type { SearchArguments, search as searchRepository } from '../toolkit/services/entity-repository.ts';
 
+import { emit as asyncEmit, getEmitResult } from '@rotdrop/async-nextcloud-event-bus';
 import { SEARCH_DATABASE_ENTITIES } from '../event-bus-events.ts';
-import { emit as asyncEmit, getEmitResult } from './async-event-bus.ts';
 
 /**
  * Search for entities of the given name. In order to separate "new"

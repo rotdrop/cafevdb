@@ -25,13 +25,13 @@ import type { GlobalState } from './globalstate.ts';
 import type { TooltipsStatistics } from './jquery-cafevdb-tooltips.ts';
 
 import { translate as t } from '@nextcloud/l10n';
-import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
-import * as BusEvents from '../event-bus-events.ts';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
   hasSubscriptions,
-} from '../services/async-event-bus.ts';
+} from '@rotdrop/async-nextcloud-event-bus';
+import { EnumPersonalSettingsKey } from '../../build/ts-types/php-modules/Controller.ts';
+import * as BusEvents from '../event-bus-events.ts';
 import { appContainerSelector, appName } from './globals.ts';
 import { globalStateInitializer } from './globalstate-factory.ts';
 import globalState from './globalstate.ts';

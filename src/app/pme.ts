@@ -36,6 +36,11 @@ import type {
 import type { TemplateRenderer } from './template-renderer.ts';
 
 import { translate as t } from '@nextcloud/l10n';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  awaitEmit,
+} from '@rotdrop/async-nextcloud-event-bus';
 import { mergician } from 'mergician';
 import { parse as qsParse } from 'qs';
 import { RESIZE_TARGET, WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
@@ -49,11 +54,6 @@ import {
   LEGACY_PAGE_CLEANUP,
   LEGACY_SANITIZE_POST_DATA,
 } from '../event-bus-events.ts';
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-  awaitEmit,
-} from '../services/async-event-bus.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import clear from '../util/clear-object.ts';
 import { close as closeActionMenus } from './action-menu.ts';

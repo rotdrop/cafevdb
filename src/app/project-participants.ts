@@ -71,7 +71,7 @@ import * as SelectUtils from './select-utils.ts';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import { templateRenderer } from './template-renderer.ts';
 // import { ADD_CONTACTS_TO_PROJECT } from '../event-bus-events.ts';
-// import { emit as asyncEmit } from '../services/async-event-bus.ts';
+// import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus';
 
 import '../legacy/nextcloud/jquery/octemplate.js';
 require('project-participant-fields-display.scss');

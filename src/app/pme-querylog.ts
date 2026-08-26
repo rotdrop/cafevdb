@@ -26,10 +26,10 @@
  * PME table epxort.
  */
 
+import { awaitEmit } from '@rotdrop/async-nextcloud-event-bus';
 import { appPrefix } from '../config.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { LEGACY_QUERY_LOG } from '../mountable-component-names.ts';
-import { awaitEmit } from '../services/async-event-bus.ts';
 import $ from './jquery.js';
 
 const vueQueryLogKey = 'vueQueryLog';

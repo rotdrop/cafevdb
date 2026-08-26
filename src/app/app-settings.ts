@@ -22,9 +22,9 @@
  */
 
 import { translate as t } from '@nextcloud/l10n';
+import { emit, subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { appName } from '../config.ts';
 import { APP_SETTINGS_POPUP, POP_BUSY_STATE, PUSH_BUSY_STATE } from '../event-bus-events.ts';
-import { emit, subscribe } from '../services/async-event-bus.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import { unfocus } from './cafevdb.ts';
 import $ from './jquery.ts';

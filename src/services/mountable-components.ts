@@ -24,6 +24,8 @@
 import type { App, Component, VNode } from 'vue';
 
 import { translate as t } from '@nextcloud/l10n';
+// import { pinia } from '../vue-app.ts';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import {
   // createApp,
   createVNode,
@@ -34,8 +36,6 @@ import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
 // import router from '../router/app-router.ts';
 import { AppError } from '../toolkit/types/errors.ts';
-// import { pinia } from '../vue-app.ts';
-import { subscribe as asyncSubscribe } from './async-event-bus.ts';
 
 const vueComponents: Record<string, Component> = {};
 

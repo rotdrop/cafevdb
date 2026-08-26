@@ -21,9 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { appPrefix } from '../../config.ts';
 import { SET_FINANCE_MODE } from '../../event-bus-events.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
 import * as Ajax from './../ajax.ts';
 import globalState from './../globalstate.ts';
 import $ from './../jquery.ts';

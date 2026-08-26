@@ -24,18 +24,18 @@
 import type { GlobalState } from '../app/globalstate.ts';
 import type Console from '../util/console.ts';
 
+import {
+  subscribe as asyncSubscribe,
+  awaitEmit,
+  hasSubscriptions,
+  unsubscribe,
+} from '@rotdrop/async-nextcloud-event-bus';
 import { reactive } from 'vue';
 import { legacyGlobalState } from '../app/globalstate.ts';
 import {
   GLOBAL_STATE_INITIALIZED,
   REQUEST_GLOBAL_STATE,
 } from '../event-bus-events.ts';
-import {
-  subscribe as asyncSubscribe,
-  awaitEmit,
-  hasSubscriptions,
-  unsubscribe,
-} from './async-event-bus.ts';
 
 export type { GlobalState };
 

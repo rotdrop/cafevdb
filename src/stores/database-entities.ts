@@ -24,11 +24,11 @@
 import type { ErrorContext } from '../toolkit/types/errors.ts';
 
 import { translate as t } from '@nextcloud/l10n';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { appName } from '../config.ts';
 import { SEARCH_DATABASE_ENTITIES } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import * as EntityRepository from '../toolkit/services/entity-repository.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 import Console from '../util/console.ts';

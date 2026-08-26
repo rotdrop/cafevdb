@@ -260,6 +260,10 @@ import {
   NcContent,
   NcEllipsisedOption,
 } from '@nextcloud/vue'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '@rotdrop/async-nextcloud-event-bus'
 import md5 from 'blueimp-md5'
 import { options as tooltipOptions } from 'floating-vue'
 import { storeToRefs } from 'pinia'
@@ -291,10 +295,6 @@ import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { appName as appId, appName } from './config.ts'
 import allDebugOptions, { DEBUG_QUERY, DEBUG_VUE } from './debug-modes.ts'
 import * as BusEvents from './event-bus-events.ts'
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from './services/async-event-bus.ts'
 import { globalState, synchronizeGlobalState } from './services/legacy-global-state.ts'
 import { closeNavigation } from './services/navigation.ts'
 import useAppDataStore from './stores/app-data.ts'

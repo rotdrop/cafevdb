@@ -25,14 +25,14 @@ import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
 
 import { translate as t } from '@nextcloud/l10n';
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '@rotdrop/async-nextcloud-event-bus';
 import { PAGE_RENDERER } from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/ProjectPayments.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_PAYMENT_ACTIONS_MENU } from '../mountable-component-names.ts';
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from '../services/async-event-bus.ts';
 import setBusyIndicators from './busy-indicators.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import { appName } from './config.ts';

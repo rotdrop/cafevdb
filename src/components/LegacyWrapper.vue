@@ -138,6 +138,11 @@ import {
   NcActions,
   NcButton,
 } from '@nextcloud/vue'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  unsubscribe as asyncUnSubscribe,
+} from '@rotdrop/async-nextcloud-event-bus'
 import { storeToRefs } from 'pinia'
 import {
   computed,
@@ -176,11 +181,6 @@ import {
   TOGGLE_TOOLTIPS,
   WIKI_POPUP,
 } from '../event-bus-events.ts'
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-  unsubscribe as asyncUnSubscribe,
-} from '../services/async-event-bus.ts'
 import globalState from '../services/legacy-global-state.ts'
 import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'

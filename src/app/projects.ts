@@ -34,6 +34,10 @@ import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } f
 
 import { translate as t } from '@nextcloud/l10n';
 import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+} from '@rotdrop/async-nextcloud-event-bus';
+import {
   EnumProjectValidationTopic,
 } from '../../build/ts-types/php-modules/Controller.ts';
 import {
@@ -49,10 +53,6 @@ import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRende
 import { appName } from '../config.ts';
 import * as BusEvents from '../event-bus-events.ts';
 import { PROJECT_ACTIONS_MENU } from '../mountable-component-names.ts';
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-} from '../services/async-event-bus.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import * as Ajax from './ajax.ts';
 import pageBusyIcon from './busy-icon.ts';

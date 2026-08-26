@@ -69,6 +69,7 @@
 
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton } from '@nextcloud/vue'
+import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import { useTemplateRef } from 'vue'
 import IconGnuCashBalances from 'vue-material-design-icons/BankCheck.vue'
 import IconBankTransfer from 'vue-material-design-icons/BankTransfer.vue'
@@ -79,7 +80,6 @@ import { END_POINT } from '../../build/ts-types/php-modules/Controller/SepaBulkT
 import { appName } from '../config.ts'
 import * as BusEvents from '../event-bus-events.ts'
 import { SEPA_BULK_TRANSACTION_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
-import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import { AppError } from '../toolkit/types/errors.ts'

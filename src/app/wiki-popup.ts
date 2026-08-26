@@ -24,10 +24,10 @@
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { WIKI_POPUP } from '../event-bus-events.ts';
 
+import { awaitEmit } from '@rotdrop/async-nextcloud-event-bus';
 import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import { DOKU_WIKI_WRAPPER } from '../mountable-component-names.ts';
-import { awaitEmit } from '../services/async-event-bus.ts';
 import { toBackButton as dialogToBackButton } from './dialog-utils.ts';
 import $ from './jquery.js';
 import modalizer from './modalizer.ts';

@@ -44,6 +44,7 @@
 <script setup lang="ts">
 import type { RouteLocationNormalizedGeneric } from 'vue-router'
 
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
 import { onBeforeMount, ref } from 'vue'
 import {
   onBeforeRouteLeave,
@@ -58,7 +59,6 @@ import {
 } from '../event-bus-events.ts'
 import { ADD_CONTACTS_TO_PROJECT_NAME } from '../router/add-contacts-to-project.ts'
 import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import Console from '../util/console.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 

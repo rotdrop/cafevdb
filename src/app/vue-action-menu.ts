@@ -24,13 +24,13 @@
 import type { ComponentProps } from '../mountable-component-names.ts';
 
 import {
+  emit as asyncEmit,
+  awaitEmit,
+} from '@rotdrop/async-nextcloud-event-bus';
+import {
   GET_VUE_COMPONENT,
   PAGE_TEMPLATE_ACTION_MENU,
 } from '../event-bus-events.ts';
-import {
-  emit as asyncEmit,
-  awaitEmit,
-} from '../services/async-event-bus.ts';
 import $ from './jquery.js';
 import {
   formSelector as pmeFormSelector,

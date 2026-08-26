@@ -67,6 +67,7 @@ import {
   NcActions,
   NcActionSeparator,
 } from '@nextcloud/vue'
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus'
 import {
   computed,
   nextTick,
@@ -79,7 +80,6 @@ import IconOverview from 'vue-material-design-icons/InformationOutline.vue'
 import { appName } from '../config.ts'
 import { PAGE_TEMPLATE_ACTION_MENU } from '../event-bus-events.ts'
 import * as BusEvents from '../event-bus-events.ts'
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts'
 import { closeNavigation } from '../services/navigation.ts'
 import Console from '../util/console.ts'
 

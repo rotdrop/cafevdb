@@ -25,13 +25,13 @@ import type { ApplyMigrationsResponse } from '../../build/ts-types/php-modules/C
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
 import { translate as t } from '@nextcloud/l10n';
+import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus';
 import {
   END_POINT_APPLY as migrationsApply,
   BASE_PATH as migrationsBasePath,
 } from '../../build/ts-types/php-modules/Controller/MigrationsController.ts';
 import { appName } from '../config.ts';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import * as Ajax from './ajax.ts';
 import setBusyIndicators from './busy-indicators.ts';

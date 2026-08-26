@@ -21,8 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { subscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { SET_TOOLTIPS_MODE } from '../../event-bus-events.ts';
-import { subscribe } from '../../services/async-event-bus.ts';
 import * as Ajax from './../ajax.ts';
 import { toolTipsOnOff } from './../cafevdb.ts';
 import globalState from './../globalstate.ts';

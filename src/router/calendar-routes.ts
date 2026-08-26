@@ -28,8 +28,8 @@ import type {
 } from 'vue-router';
 
 import { loadTranslations } from '@nextcloud/l10n';
+import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
-import { emit as asyncEmit } from '../services/async-event-bus.ts';
 import Console from '../util/console.ts';
 
 export type CalendarObjectEditLocation = RouteLocationRaw & {

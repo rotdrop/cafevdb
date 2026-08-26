@@ -174,6 +174,8 @@ import {
   NcActionRouter,
   NcActionSeparator,
 } from '@nextcloud/vue'
+// import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
+import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
 import vTooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip'
 import md5 from 'blueimp-md5'
 import {
@@ -202,8 +204,6 @@ import { appName } from '../config.ts'
 import * as BusEvents from '../event-bus-events.ts'
 import { PROJECT_ACTIONS_MENU as COMPONENT_NAME } from '../mountable-component-names.ts'
 import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
-// import ProjectPaymentsIcon from 'vue-material-design-icons/CurrencyEur.vue' // Mmmh. l10n?
-import { emit as asyncEmit } from '../services/async-event-bus.ts'
 import globalState from '../services/legacy-global-state.ts'
 import { closeNavigation } from '../services/navigation.ts'
 import useAppDataStore from '../stores/app-data.ts'

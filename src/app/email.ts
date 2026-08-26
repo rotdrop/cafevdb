@@ -40,6 +40,7 @@ import type { UploadFile } from './file-upload.ts';
 import { showSuccess } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import { generateOcsUrl } from '@nextcloud/router';
+import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import actual from 'actual';
 import {
   EnumEmailFormContactsOperation,
@@ -79,7 +80,6 @@ import {
   LEGACY_UPDATE_EVENTS_SELECTION,
   PROJECT_EVENTS_LISTING,
 } from '../event-bus-events.ts';
-import { emit as asyncEmit, subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import { asKey } from '../toolkit/types/type-traits.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import {

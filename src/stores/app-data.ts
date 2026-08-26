@@ -32,6 +32,7 @@ import type { AnyPromise } from '../types/promise.d.ts';
 
 import axios from '@nextcloud/axios';
 import { translate as t } from '@nextcloud/l10n';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { defineStore } from 'pinia';
 import {
   computed,
@@ -51,7 +52,6 @@ import {
   PUSH_BUSY_STATE,
   SET_BUSY_FLAG,
 } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import globalState from '../services/legacy-global-state.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';

@@ -23,9 +23,9 @@
 
 import { translate as t } from '@nextcloud/l10n';
 import * as ncRouter from '@nextcloud/router';
+import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import { appName, appPrefix } from '../config.ts';
 import { WIKI_POPUP } from '../event-bus-events.ts';
-import { subscribe as asyncSubscribe } from '../services/async-event-bus.ts';
 import $ from './jquery.js';
 import { classSelector as pmeClassSelector } from './pme-selectors.ts';
 import wikiPopup from './wiki-popup.ts';

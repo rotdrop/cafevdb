@@ -378,6 +378,11 @@ import {
   NcListItem,
   NcSelect,
 } from '@nextcloud/vue'
+import {
+  emit as asyncEmit,
+  subscribe as asyncSubscribe,
+  unsubscribe as asyncUnSubscribe,
+} from '@rotdrop/async-nextcloud-event-bus'
 import md5 from 'blueimp-md5'
 import capitalize from 'capitalize'
 import { DateTime } from 'luxon'
@@ -435,11 +440,6 @@ import {
   PROJECT_EVENTS_LISTING_NAME,
 } from '../router/calendar-routes.ts'
 import appTranslate from '../services/app-l10n.ts'
-import {
-  emit as asyncEmit,
-  subscribe as asyncSubscribe,
-  unsubscribe as asyncUnSubscribe,
-} from '../services/async-event-bus.ts'
 import calendarStoreSetup from '../services/calendar-store-setup.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'

@@ -23,13 +23,13 @@
 
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 
-import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBulkTransactions.ts';
-import * as BusEvents from '../event-bus-events.ts';
-import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names.ts';
 import {
   emit as asyncEmit,
   subscribe as asyncSubscribe,
-} from '../services/async-event-bus.ts';
+} from '@rotdrop/async-nextcloud-event-bus';
+import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBulkTransactions.ts';
+import * as BusEvents from '../event-bus-events.ts';
+import { SEPA_BULK_TRANSACTION_ACTIONS_MENU } from '../mountable-component-names.ts';
 import * as CAFEVDB from './cafevdb.ts';
 import $ from './jquery.ts';
 import {

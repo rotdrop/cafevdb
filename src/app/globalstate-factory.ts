@@ -25,15 +25,15 @@ export type * from './globalstate.ts';
 import type { GlobalState } from './globalstate.ts';
 
 import {
-  GLOBAL_STATE_INITIALIZED,
-  REQUEST_GLOBAL_STATE,
-} from '../event-bus-events.ts';
-import {
   subscribe as asyncSubscribe,
   awaitEmit,
   hasSubscriptions,
   unsubscribe,
-} from '../services/async-event-bus.ts';
+} from '@rotdrop/async-nextcloud-event-bus';
+import {
+  GLOBAL_STATE_INITIALIZED,
+  REQUEST_GLOBAL_STATE,
+} from '../event-bus-events.ts';
 import { initialState } from './config.ts';
 import { legacyGlobalState, setGlobalStateObject } from './globalstate.ts';
 
