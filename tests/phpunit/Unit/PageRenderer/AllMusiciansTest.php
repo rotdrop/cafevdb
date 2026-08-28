@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the AllMusicians page renderer. */
@@ -176,6 +177,8 @@ class AllMusiciansTest extends TestCase
     }
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
 
     $this->request = $this->mockProvider->getRequest();
     $this->request->method('getParam')->willReturnCallback(

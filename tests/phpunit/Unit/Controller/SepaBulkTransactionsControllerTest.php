@@ -42,13 +42,16 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\Finance\DoNothingReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Legacy\PME\GetPMEStubTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the SepaBulkTransactionsController. */
@@ -195,6 +198,7 @@ class SepaBulkTransactionsControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
   use GetPMEStubTrait;
+  use MockUserStorageTrait;
   use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
@@ -238,6 +242,9 @@ class SepaBulkTransactionsControllerTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
+    $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
+
     $this->now = DateTimeImmutable::createFromFormat('Y-m-d h:i:s', '2099-01-01 12:00:00');
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');
@@ -270,6 +277,35 @@ class SepaBulkTransactionsControllerTest extends TestCase
     }
 
     $appContainer = $this->mockProvider->getAppContainer();
+
+    $organizationalRolesService = $this->createStub(OrganizationalRolesService::class);
+    $organizationalRolesService->method('treasurerContact')
+      ->willReturnCallback(
+        function() use ($organizationalRolesService) {
+          return $organizationalRolesService->dedicatedBoardMemberContact(
+            OrganizationalRolesService::TREASURER_ROLE,
+          );
+        },
+      );
+    $organizationalRolesService->method('dedicatedBoardMemberContact')
+      ->willReturnCallback(
+        function(string $role, int $musicianId = 0) {
+          return [
+            'email' => 'role@orchestra.org',
+            'name' => 'Board Member ' . ucfirst($role),
+            'firstName' => 'Board Member',
+            'surName' => ucfirst($role),
+            'street' => 'Some Street',
+            'streetNumber' => 17,
+            'streetAndNumber' => 'Some Street 17',
+            'postalCode' => 'Z-12345',
+            'city' => 'Unknown City',
+            'phone' => '1234567',
+            'mobile' => '1234567',
+          ];
+        },
+      );
+    $this->mockProvider->registerClassInstance(OrganizationalRolesService::class, $organizationalRolesService, global: true);
 
     $this->controller = new Controller\SepaBulkTransactionsController(
       appName: $this->mockProvider->appName,
@@ -321,6 +357,6 @@ class SepaBulkTransactionsControllerTest extends TestCase
       sepaBulkTransactions: [ self::$fieldId ],
       sepaDueDeadline: null,
       topic: Controller\EnumSepaBulkTransactionsTopic::CREATE,
-);
+    );
   }
 }

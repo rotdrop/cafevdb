@@ -278,6 +278,7 @@ class ProjectAssociatesTest extends TestCase
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
     $userStorage = $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
 
     $projectService = new ProjectService(
       configService: $configService,

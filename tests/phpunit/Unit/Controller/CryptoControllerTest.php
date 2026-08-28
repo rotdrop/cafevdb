@@ -109,6 +109,12 @@ class CryptoControllerTest extends TestCase
   /** @return void */
   public function testBatchUnsealEncryptionDisabled(): void
   {
+    $financeService = $this->getMockBuilder(FinanceService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $financeService->expects($this->once())->method('getIbanInfo')->willReturn(MockProvider::IBAN_INFO[MockProvider::TEST_IBAN]);
+    $this->mockProvider->registerClassInstance(FinanceService::class, $financeService);
+
     $inputData = [ 'one', 'two' ];
     $result = $this->cryptoController->batchUnseal(
       sealedData: $inputData,

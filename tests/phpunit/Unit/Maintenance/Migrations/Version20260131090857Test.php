@@ -33,6 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 
 /** Test attaching the registration events as ProjectEvent entity to the projects. */
@@ -145,15 +146,17 @@ class Version20260131090857Test extends TestCase
   public function testVersion20260131090857(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer->get(EventsService::class);
-    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // up to the previous
     $this->applyMigrations(upToVersion: '20260130130553');
     $this->generateCalendarBackend();
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // we actually here only need the project ...
     $this->generateProjectParticipant(persist: true);

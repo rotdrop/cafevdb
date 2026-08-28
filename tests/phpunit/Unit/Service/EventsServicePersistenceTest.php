@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
@@ -208,6 +209,8 @@ class EventsServicePersistenceTest extends TestCase
       ->method('getDateTimeImmutable')
       ->willReturn(DateTimeImmutable::createFromFormat('d-m-Y', self::START_DATE));
     $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
 
     /** @var EventsService $eventsService */
     $this->eventsService = $this->appContainer->get(EventsService::class);

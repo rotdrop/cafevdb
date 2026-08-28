@@ -391,7 +391,7 @@ trait SetupCalendarBackendTrait
               $objects = [];
               $timezones = [];
               foreach ($components as $component) {
-                if ($comp instanceof VObject\Component\VTimeZone) {
+                if ($component instanceof VObject\Component\VTimeZone) {
                   $timezones[] = $component;
                 } else {
                   $categories = VCalendarService::getCategories($component);

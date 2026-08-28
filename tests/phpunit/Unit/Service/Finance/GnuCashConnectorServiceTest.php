@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
@@ -125,6 +126,8 @@ class GnuCashConnectorServiceTest extends TestCase
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
     $this->encryptionService = $this->mockProvider->getEncryptionService();
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $appContainer = $this->mockProvider->getAppContainer();
 
@@ -242,7 +245,7 @@ class GnuCashConnectorServiceTest extends TestCase
     $this->assertEqualsCanonicalizing(self::COMPOSITE_EXPORT_KEYS, array_keys($leadingRecord));
     $projectName = $this->project->getName();
     $this->assertStringEndsWith(':' . $projectName, $leadingRecord['account']);
-    $expectedKeys = array_diff([...self::COMPOSITE_EXPORT_KEYS, 'subject'], ['currency']);
+    $expectedKeys = array_values(array_diff([...self::COMPOSITE_EXPORT_KEYS, 'subject'], ['currency']));
     $this->assertTrue(
       ($leadingRecord['amount'] == '-' . $leadingRecord['negativeAmount'])
       ||

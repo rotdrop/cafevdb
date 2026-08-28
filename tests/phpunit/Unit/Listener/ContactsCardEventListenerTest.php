@@ -396,7 +396,7 @@ END:VCARD
       $this->appL10n->t(Entities\ProjectInstrument::NON_INSTRUMENT_ASSOCIATE),
       $this->appL10n->t(Entities\ProjectInstrument::NON_INSTRUMENT_BUSINESS_PARTNER),
     ];
-    $this->assertEqualsCanonicalizing($expectedCategories, array_intersect($categories, $expectedCategories));
+    $this->assertEqualsCanonicalizing($expectedCategories, array_values(array_intersect($categories, $expectedCategories)));
 
     $this->assertEquals(2, $this->project->getParticipants()->count());
     $this->assertEquals(1, $this->project->getParticipants(EnumParticipationContext::ASSOCIATES)->count());
@@ -480,7 +480,7 @@ END:VCARD
       $this->appL10n->t(Entities\ProjectInstrument::NON_INSTRUMENT_ASSOCIATE),
       $this->appL10n->t(Entities\ProjectInstrument::NON_INSTRUMENT_BUSINESS_PARTNER),
     ];
-    $this->assertEqualsCanonicalizing($expectedCategories, array_intersect($categories, $expectedCategories));
+    $this->assertEqualsCanonicalizing($expectedCategories, array_values(array_intersect($categories, $expectedCategories)));
 
     $this->assertEquals(2, $this->project->getParticipants()->count());
     $this->assertEquals(1, $this->project->getParticipants(EnumParticipationContext::ASSOCIATES)->count());

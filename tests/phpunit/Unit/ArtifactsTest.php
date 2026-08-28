@@ -169,6 +169,13 @@ class ArtifactsTest extends TestCase
   {
     error_reporting(E_ALL);
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
+    $this->databaseProvider = \OCP\Server::get(DatabaseProvider::class);
+
+    if (!$this->databaseProvider->getDatabaseConfig()) {
+      // echo 'STARTING DB SERVER' . PHP_EOL;
+      $this->databaseProvider->startServer();
+    }
   }
 
   /** @return void */

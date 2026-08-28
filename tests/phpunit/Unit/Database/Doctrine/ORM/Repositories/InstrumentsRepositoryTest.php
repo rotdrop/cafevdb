@@ -134,7 +134,8 @@ class InstrumentsRepositoryTest extends TestCase
       $this->assertEquals($families, $instrumentInfo['idGroups'][$id]);
       $allGroups[] = $families;
     }
-    $allGroups = array_unique($allGroups);
+    $allGroups = array_values(array_unique($allGroups));
+
     $this->assertEqualsCanonicalizing($allGroups, $instrumentInfo['families']);
   }
 

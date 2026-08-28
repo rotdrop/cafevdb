@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
@@ -152,6 +153,7 @@ class Version20260206193722Test extends TestCase
   public function testVersion20260206193722(): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
     /** @var TimeFactory $timeFactory */
@@ -164,13 +166,13 @@ class Version20260206193722Test extends TestCase
       ->willReturn(DateTimeImmutable::createFromFormat('d-m-Y', self::START_DATE));
     $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
 
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer->get(EventsService::class);
-    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
-
     // up to the previous
     $this->applyMigrations(upToVersion: '20260131090857');
     $this->generateCalendarBackend();
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // we actually here only need the project ...
     $this->generateProjectParticipant(persist: true);

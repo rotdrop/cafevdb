@@ -68,6 +68,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupEventsServiceTrait;
 use OCA\CAFEVDB\Toolkit;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+use OCA\RotDrop\Tests\DeprecationException;
 
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestData::class)]
 #[Attributes\CoversClass(DTO\EmailFormComposerRequestDataTypes\ElementData::class)]
@@ -206,6 +207,8 @@ class EmailFormControllerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+
     $this->generateEventsService();
 
     $this->generateInstruments();
@@ -374,6 +377,12 @@ class EmailFormControllerTest extends TestCase
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
   }
 
   /**
@@ -1159,7 +1168,7 @@ class EmailFormControllerTest extends TestCase
       },
       $globalSubstitutionKeys,
     );
-    $this->assertEqualsCanonicalizing($enumL10NValues, $globalL10NSubstitutionKeys);
+    $this->assertEqualsCanonicalizing(array_values($enumL10NValues), $globalL10NSubstitutionKeys);
     foreach ($enumL10NValues as $untranslated => $translated) {
       $this->assertNotEquals($untranslated, $translated);
     }
@@ -1196,7 +1205,7 @@ class EmailFormControllerTest extends TestCase
       },
       $untranslatedKeys,
     );
-    $this->assertEqualsCanonicalizing($enumL10NValues, $memberL10NSubstitutionKeys);
+    $this->assertEqualsCanonicalizing(array_values($enumL10NValues), $memberL10NSubstitutionKeys);
     foreach ($enumL10NValues as $untranslated => $translated) {
       if (!in_array($untranslated, self::L10N_EXCEPTIONS)) {
         $this->assertNotEquals($untranslated, $translated);

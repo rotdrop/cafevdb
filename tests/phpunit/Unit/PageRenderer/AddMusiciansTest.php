@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Service\PhoneNumberService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\RotDrop\Tests\DeprecationException;
@@ -232,6 +233,7 @@ class AddMusiciansTest extends TestCase
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
     $userStorage = $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
 
     $this->postData[PersistentCGIKeys::PROJECT_ID] = self::$projectId;
 

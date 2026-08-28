@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\DoctrineMigrationsListener;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
@@ -114,6 +115,8 @@ class DoctrineMigrationsServiceTest extends TestCase
   {
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
+
+    $mockProvider->registerClassInstance(UserStorage::class, $this->createStub(UserStorage::class), global: true);
 
     /** @var DatabaseProvider $databaseProvider */
     $databaseProvider = \OCP\Server::get(DatabaseProvider::class);

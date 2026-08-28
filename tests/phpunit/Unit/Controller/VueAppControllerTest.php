@@ -39,8 +39,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 
 #[Attributes\CoversClass(VueAppController::class)]
 /**
@@ -119,6 +121,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class VueAppControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use MockUserStorageTrait;
   use TestRoutesAreDefinedTrait;
 
   private const CONTROLLER_CLASS = VueAppController::class;
@@ -141,6 +144,9 @@ class VueAppControllerTest extends TestCase
 
     /** @var MockProvider $mockProvider */
     $mockProvider = $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    $this->userStorage = $this->getUserStorageStub();
+    $mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     $this->entityManager->method('getRepository')->willReturnCallback(
       function(string $className) {

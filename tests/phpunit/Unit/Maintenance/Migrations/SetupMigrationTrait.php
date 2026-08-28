@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
 use OCA\CAFEVDB\Service\DoctrineMigrationsService;
 use OCA\CAFEVDB\Service\MigrationsServiceInterface;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Console\ConsoleOutput;
 use OCA\CAFEVDB\Wrapped\Doctrine\Migrations\DependencyFactory;
@@ -76,12 +77,18 @@ trait SetupMigrationTrait
     /** @var MockProvider $mockProvider */
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
 
+    if (!$this->mockProvider->isServiceMocked(UserStorage::class)) {
+      $userStorage = $this->createStub(UserStorage::class);
+      $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
+    }
+
     $this->databaseProvider = \OCP\Server::get(DatabaseProvider::class);
 
     if (!$this->databaseProvider->getDatabaseConfig()) {
       // echo 'STARTING DB SERVER' . PHP_EOL;
       $this->databaseProvider->startServer();
     }
+    // print_r($this->databaseProvider->getDatabaseConfig());
 
     $this->entityManager = $this->entityManager ?? $this->mockProvider->getEntityManager();
 

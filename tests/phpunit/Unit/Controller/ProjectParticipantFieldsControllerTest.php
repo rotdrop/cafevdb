@@ -47,10 +47,12 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGen
 use OCA\CAFEVDB\Service\Finance\ManuallyGeneratedReceivablesGenerator;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+use OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the ProjectParticipantFieldsController. */
@@ -168,9 +170,10 @@ use OCA\RotDrop\Tests\DeprecationException;
 class ProjectParticipantFieldsControllerTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use MockUserStorageTrait;
+  use SetupCalendarBackendTrait;
   use SetupMigrationTrait;
   use TestRoutesAreDefinedTrait;
-  use SetupCalendarBackendTrait;
 
   private const CONTROLLER_CLASS = Controller\ProjectParticipantFieldsController::class;
   private const EXPECTED_ROUTES = [
@@ -229,6 +232,9 @@ class ProjectParticipantFieldsControllerTest extends TestCase
 
     $this->timeFactory->expects($this->never())->method('withTimeZone');
     $this->mockProvider->registerClassInstance(TimeFactory::class, $this->timeFactory, global: true);
+
+    $this->getUserStorageStub();
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->userStorage, global: true);
 
     if (!self::$migrationsApplied) {
       $this->applyMigrations('latest');

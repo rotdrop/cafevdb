@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
 use OCA\RotDrop\Tests\DeprecationException;
@@ -164,6 +165,7 @@ class SepaBulkTransactionsTest extends TestCase
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
+  use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
   use GetFormValuesTrait;
 
   private PageRenderer\SepaBulkTransactions $renderer;
@@ -221,6 +223,8 @@ class SepaBulkTransactionsTest extends TestCase
     $this->phpMyEdit = $appContainer->get(PHPMyEdit::class);
 
     $this->postData[PersistentCGIKeys::PROJECT_ID] = self::$projectId;
+
+    $this->mockProvider->registerClassInstance(UserStorage::class, $this->getUserStorageStub(), global: true);
 
     $this->renderer = new PageRenderer\SepaBulkTransactions(
       configService: $configService,
