@@ -35,6 +35,7 @@ require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 define('ROT_DROP_PHPUNIT', true);
 define('PHPUNIT_NC_APP_NAME', \OCA\CAFEVDB\AppInfo\Application::getAppName());
 define('PHPUNIT_NC_APP_NAMESPACE', \OCA\CAFEVDB::class);
+define('PHPUNIT_NC_MOCKED_APPS', [\OCA\CAFEVDB::class, \OCA\BAV::class]);
 define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
 define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
