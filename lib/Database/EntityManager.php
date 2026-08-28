@@ -30,13 +30,14 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
+use OCP\Config\IUserConfig;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Common\IUndoable;
@@ -97,6 +98,7 @@ use OCA\CAFEVDB\Wrapped\Symfony\Component\Cache\Adapter\ArrayAdapter;
 class EntityManager extends AbstractEntityManager
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . '/Doctrine/ORM/Entities',
@@ -233,6 +235,7 @@ class EntityManager extends AbstractEntityManager
     protected LoggerInterface $logger,
     protected string $appName,
     protected IConfig $cloudConfig,
+    protected IUserConfig $cloudUserConfig,
   ) {
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = [];
@@ -294,11 +297,11 @@ class EntityManager extends AbstractEntityManager
     $userId = $this->encryptionService->getUserId() ?: $this->l->t('unknown');
     if (empty($this->wrapped) || $userId != $this->userId) {
       $this->userId = $userId;
-      $debugMode = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::DEBUG_MODE->value, 0);
+      $debugMode = $this->getUserValue(EnumPersonalSettingsKey::DEBUG_MODE, 0);
       $debugMode = filter_var($debugMode, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) ?: 0;
       $this->debug = 0 != ($debugMode & ConfigConstants::DEBUG_QUERY);
       $this->devMode = 0 != ($debugMode & ConfigConstants::DEBUG_ORM);
-      $this->showSoftDeleted = $this->cloudConfig->getUserValue($this->userId, $this->appName, EnumPersonalSettingsKey::SHOW_DISABLED->value) === 'on';
+      $this->showSoftDeleted = $this->getUserValue(EnumPersonalSettingsKey::SHOW_DISABLED) === 'on';
       $this->decorateClassMetadata = true;
     }
     parent::__construct($this->getEntityManager());

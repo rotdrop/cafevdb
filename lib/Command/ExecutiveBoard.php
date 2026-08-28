@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2023, 2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
 /**
  * Sanitize some stuff for the members of the management board:
@@ -59,6 +60,7 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 class ExecutiveBoard extends Command
 {
   use AuthenticatedCommandTrait;
+  use UserPreferencesTrait;
 
   private const BOARD_USER_BACKEND = 'LDAP';
 
@@ -480,7 +482,7 @@ class ExecutiveBoard extends Command
           if ($configValue == '{PHONE}') {
             $configValue = $dbPhone;
           }
-          $configuredValue = $cloudConfig->getUserValue($userId, $appName, $configKey);
+          $configuredValue = $this->getUserValue($configKey, userId: $userId);
           if ($configuredValue !== $configValue) {
             ++$problems;
             $output->writeln(

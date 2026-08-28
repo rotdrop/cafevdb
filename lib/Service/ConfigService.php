@@ -31,6 +31,7 @@ use RuntimeException;
 use Throwable;
 
 use Psr\Container\ContainerInterface;
+use OCP\Config\IUserConfig;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
 use OCP\IDateTimeFormatter;
@@ -66,11 +67,11 @@ use OCA\CAFEVDB\Settings\OldSettingsKeys;
  */
 class ConfigService
 {
-  use \OCA\CAFEVDB\Traits\AppConfigTrait;
-  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
-  use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\AppConfigTrait;
+  use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
+  use \OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
   /**
    * @var array
@@ -130,6 +131,9 @@ class ConfigService
   /** @var IConfig */
   private IConfig $cloudConfig;
 
+  /** @var IUserConfig */
+  protected IUserConfig $cloudUserConfig;
+
   /** @var IUserSession */
   private IUserSession $userSession;
 
@@ -184,6 +188,12 @@ class ConfigService
   public function getCloudConfig():IConfig
   {
     return $this->cloudConfig ?? ($this->cloudConfig = $this->appContainer->get(IConfig::class));
+  }
+
+  /** @return IUserConfig */
+  public function getCloudUserConfig(): IUserConfig
+  {
+    return $this->cloudUserConfig ?? ($this->cloudUserConfig = $this->appContainer->get(IUserConfig::class));
   }
 
   /** @return string */

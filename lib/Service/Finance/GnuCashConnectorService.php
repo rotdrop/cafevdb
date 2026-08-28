@@ -301,6 +301,9 @@ class GnuCashConnectorService
     /** @var Entities\ProjectPayment $projectPayment */
     foreach ($compositePayment->getProjectPayments() as $projectPayment) {
       $receivableAccount = $this->generateParticipantReceivablesAccount($projectPayment->getReceivable());
+      if ($receivableAccount === null) {
+        continue;
+      }
       if (!isset($receivableAccounts[$receivableAccount])) {
         $receivableAccounts[$receivableAccount] = [
           'payments' => [ $projectPayment ],

@@ -32,6 +32,7 @@ use Behat\Transliterator\Transliterator;
 
 use Psr\Container\ContainerInterface;
 use OCP\App\IAppManager;
+use OCP\Config\IUserConfig;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
 use OCP\IDateTimeFormatter;
@@ -88,6 +89,17 @@ trait ConfigTrait
   public function cloudConfig():IConfig
   {
     return $this->configService->getCloudConfig();
+  }
+
+  /**
+   * Return the stored config-service of the embedding cloud
+   * container.
+   *
+   * @return IUserConfig
+   */
+  public function cloudUserConfig():IUserConfig
+  {
+    return $this->configService->getCloudUserConfig();
   }
 
   /** @return IL10N */

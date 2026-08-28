@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,11 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use UnexpectedValueException;
+
+use OCP\Config\Exceptions\UnknownKeyException;
+use OCP\Config\IUserConfig;
+use OCP\Config\ValueType;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Controller\EnumPersonalSettingsKey;
@@ -36,6 +41,8 @@ trait UserPreferencesTrait
 {
   protected string $appName;
 
+  protected IUserConfig $cloudUserConfig;
+
   /**
    * @param ?string $userId
    *
@@ -47,25 +54,57 @@ trait UserPreferencesTrait
   }
 
   /**
+   * @param string $userId Use the current user if null.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @return mixed
+   */
+  private function __doGetUserValue(string $userId, string $key, mixed $default = null): mixed
+  {
+    $this->cloudUserConfig = $this->cloudUserConfig ?? $this->getCloudUserConfig();
+    try {
+        $valueType = $this->cloudUserConfig->getValueType($userId, $this->appName, $key);
+    } catch (UnknownKeyException) {
+        $valueType = ValueType::MIXED;
+    }
+    switch ($valueType) {
+      case ValueType::MIXED:
+      case ValueType::STRING:
+        return $this->cloudUserConfig->getValueString($userId, $this->appName, $key, $default ?? '');
+      case ValueType::BOOL:
+        return $this->cloudUserConfig->getValueBool($userId, $this->appName, $key, $default ?? false);
+      case ValueType::FLOAT:
+        return $this->cloudUserConfig->getValueFloat($userId, $this->appName, $key, $default ?? 0.0);
+      case ValueType::INT:
+        return $this->cloudUserConfig->getValueInt($userId, $this->appName, $key, $default ?? 0);
+      case ValueType::ARRAY:
+        return $this->cloudUserConfig->getValueArray($userId, $this->appName, $key, $default ?? []);
+    }
+    throw new UnexpectedValueException('Unexpected value type for key "' . $key . '": "' . $valueType->getDefinition());
+  }
+
+  /**
    * @param string|EnumPersonalSettingsKey $key Config key.
    *
    * @param mixed $default Default value.
    *
-   * @param null|string $userId Use the current user if null.
+   * @param ?string $userId Use the current user if null.
    *
    * @return mixed
    */
-  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null)
+  public function getUserValue(string|EnumPersonalSettingsKey $key, mixed $default = null, ?string $userId = null): mixed
   {
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
-    $userId = $this->__userPreferencesTraitGetUserId($userId);
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
+    $userId = $userId ??  $this->__userPreferencesTraitGetUserId($userId);
     if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
-      $default = $cloudConfig->getUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key], $default);
+      $default = $this->__doGetUserValue($userId, OldSettingsKeys::USER_KEYS[$key], $default);
     }
-    return $cloudConfig->getUserValue($userId, $this->appName, $key, $default);
+    return $this->__doGetUserValue($userId, $key, $default);
   }
 
   /**
@@ -82,11 +121,34 @@ trait UserPreferencesTrait
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
-    $userId = $this->__userPreferencesTraitGetUserId($userId);
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
-    $cloudConfig->setUserValue($userId, $this->appName, $key, $value);
+    $userId = $userId ?? $this->__userPreferencesTraitGetUserId($userId);
+    $this->cloudUserConfig = $this->cloudUserConfig ?? $this->getCloudUserConfig();
+    try {
+      $valueType = $this->cloudUserConfig->getValueType($userId, $this->appName, $key);
+    } catch (UnknownKeyException) {
+      $valueType = ValueType::MIXED;
+    }
+    switch ($valueType) {
+      case ValueType::MIXED:
+        // fallthrough
+      case ValueType::STRING:
+        $this->cloudUserConfig->setValueString($userId, $this->appName, $key, (string)$value);
+        break;
+      case ValueType::BOOL:
+        $this->cloudUserConfig->setValueBool($userId, $this->appName, $key, (bool)$value);
+        break;
+      case ValueType::FLOAT:
+        $this->cloudUserConfig->getValueFloat($userId, $this->appName, $key, (float)$value);
+        break;
+      case ValueType::INT:
+        $this->cloudUserConfig->getValueInt($userId, $this->appName, $key, (int)$value);
+        break;
+      case ValueType::ARRAY:
+        $this->cloudUserConfig->getValueArray($userId, $this->appName, $key, (array)$value);
+        break;
+    }
     if (!empty(OldSettingsKeys::USER_KEYS[$key]) && OldSettingsKeys::USER_KEYS[$key] != $key) {
-      $cloudConfig->deleteUserValue($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key]);
+      $this->cloudUserConfig->deleteUserConfig($userId, $this->appName, OldSettingsKeys::USER_KEYS[$key]);
     }
   }
 
@@ -102,8 +164,8 @@ trait UserPreferencesTrait
     if ($key instanceof EnumPersonalSettingsKey) {
       $key = $key->value;
     }
-    $userId = $this->__userPreferencesTraitGetUserId($userId);
-    $cloudConfig = method_exists($this, 'getCloudConfig') ? $this->getCloudConfig() : $this->cloudConfig;
-    $cloudConfig->deleteUserValue($userId, $this->appName, $key);
+    $userId = $userId ?? $this->__userPreferencesTraitGetUserId($userId);
+    $this->cloudUserConfig = $this->cloudUserConfig ?? $this->getCloudUserConfig();
+    $this->cloudUserConfig->deleteUserConfig($userId, $this->appName, $key);
   }
 }

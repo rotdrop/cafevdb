@@ -57,6 +57,7 @@ class Util
     'image/vnd.microsoft.icon' => 'ico',
     'image/svg+xml' => 'svg',
     'application/pdf' => 'pdf',
+    'text/plain' => 'txt',
   ];
 
   /**

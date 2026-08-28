@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,16 +27,22 @@ namespace OCA\CAFEVDB\Crypto;
 use Throwable;
 use InvalidArgumentException;
 
-use Psr\Log\LoggerInterface as ILogger;
+use OCP\Config\IUserConfig;
 use OCP\IL10N;
-use OCP\IConfig;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
 /** Key-storage base-class. */
 abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use UserPreferencesTrait {
+    UserPreferencesTrait::setUserValue as protected setUserValueCloud;
+    UserPreferencesTrait::getUserValue as protected getUserValueCloud;
+    UserPreferencesTrait::deleteUserValue as protected deleteUserValueCloud;
+  }
 
   const NAME_SEPARATOR = ';';
 
@@ -45,10 +51,10 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private string $appName,
+    protected string $appName,
     protected ILogger $logger,
     protected IL10N $l,
-    private IConfig $cloudConfig,
+    protected IUserConfig $cloudUserConfig,
     private SymmetricCryptorInterface $cryptor,
   ) {
   }
@@ -100,8 +106,8 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   /** {@inheritdoc} */
   public function wipeKeyPair(string $ownerId):void
   {
-    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PRIVATE_ENCRYPTION_KEY);
-    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
+    $this->deleteUserValueCloud(self::PRIVATE_ENCRYPTION_KEY, userId: $ownerId);
+    $this->deleteUserValueCloud(self::PUBLIC_ENCRYPTION_KEY, userId: $ownerId);
   }
 
 
@@ -129,7 +135,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
       if (!empty($value)) {
         $this->setUserValue($ownerId, $backupKey, $value);
       } else {
-        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $backupKey);
+        $this->deleteUserValueCloud($ownerId, $this->appName, $backupKey);
       }
     }
   }
@@ -143,7 +149,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
       if (!empty($value)) {
         $this->setUserValue($ownerId, $key, $value);
       } else {
-        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $key);
+        $this->deleteUserValueCloud($ownerId, $this->appName, $key);
       }
     }
   }
@@ -188,7 +194,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
    */
   private function getUserValue(string $ownerId, string $key, mixed $default = null):mixed
   {
-    $value = $this->cloudConfig->getUserValue($ownerId, $this->appName, $key, $default);
+    $value = $this->getUserValueCloud($key, userId: $ownerId);
     if (!empty($value)) {
       $separatorPos = strpos($value, self::NAME_SEPARATOR);
       if ($separatorPos !== false) {
@@ -196,8 +202,10 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
         if ($name != static::$name) {
           throw new InvalidArgumentException($this->l->t('Key-storage mismatch: %1$s / %2$s', [ $name, static::$name ]));
         }
-        $value = substr($value, $separatorPos+1);
+        $value = substr($value, $separatorPos + 1);
       }
+    } else {
+      $value = $default;
     }
     return $value;
   }
@@ -216,6 +224,6 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     if (!empty(static::$name)) {
       $value = static::$name . self::NAME_SEPARATOR . $value;
     }
-    $this->cloudConfig->setUserValue($ownerId, $this->appName, $key, $value);
+    $this->setUserValueCloud($key, $value, userId: $ownerId);
   }
 }

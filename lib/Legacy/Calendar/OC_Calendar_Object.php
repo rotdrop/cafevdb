@@ -444,7 +444,7 @@ class OC_Calendar_Object
         }
       }
       if (isset($request['weekofmonthoptions'])) {
-        if (is_nan((double)$request['weekofmonthoptions'])) {
+        if (is_nan((float)$request['weekofmonthoptions'])) {
           $errarr['weekofmonthoptions'] = 'true';
           $errnum++;
         }

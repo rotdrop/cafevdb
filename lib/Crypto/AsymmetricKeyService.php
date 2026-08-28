@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2025 Claus-Justus Heine
+ * @copyright 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,22 +27,23 @@ namespace OCA\CAFEVDB\Crypto;
 use DateTime;
 use Throwable;
 
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
-use OCP\EventDispatcher\IEventDispatcher;
-use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
-use OCP\Authentication\LoginCredentials\ICredentials;
-use OCP\IConfig;
-use OCP\IUserSession;
-use Psr\Container\ContainerInterface;
-use OCP\Notification\INotification;
-use OCP\Notification\IManager as NotificationManager;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Authentication\LoginCredentials\ICredentials;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Config\IUserConfig;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IL10N;
+use OCP\IUserSession;
+use OCP\Notification\IManager as NotificationManager;
+use OCP\Notification\INotification;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Notifications\Notifier;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Traits\UserPreferencesTrait;
 
 /**
  * Support functions encapsulating the underlying encryption framework
@@ -51,6 +52,11 @@ use OCA\CAFEVDB\Notifications\Notifier;
 class AsymmetricKeyService
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use UserPreferencesTrait {
+    UserPreferencesTrait::setUserValue as protected;
+    UserPreferencesTrait::getUserValue as protected;
+    UserPreferencesTrait::deleteUserValue as protected;
+  }
 
   const PUBLIC_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PUBLIC_ENCRYPTION_KEY;
   const PRIVATE_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PRIVATE_ENCRYPTION_KEY;
@@ -71,16 +77,16 @@ class AsymmetricKeyService
    */
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private string $appName,
-    protected ContainerInterface $appContainer,
-    private IUserSession $userSession,
+    private AsymmetricCryptorInterface $cryptorPrototype,
+    private AsymmetricKeyStorageInterface $keyStorage,
     private ICredentialsStore $credentialsStore,
-    private IConfig $cloudConfig,
     private IEventDispatcher $eventDispatcher,
     private IL10N $l,
+    private IUserSession $userSession,
+    protected ContainerInterface $appContainer,
     protected ILogger $logger,
-    private AsymmetricKeyStorageInterface $keyStorage,
-    private AsymmetricCryptorInterface $cryptorPrototype,
+    protected IUserConfig $cloudUserConfig,
+    protected string $appName,
   ) {
   }
   // phpcs:enable
@@ -140,7 +146,7 @@ class AsymmetricKeyService
     } catch (Throwable $t) {
       $this->logException($t, $this->l->t('Unable to retrieve old key-pair for "%s".', [ $ownerId ]));
       $keyPair = [];
-      throw new Exceptions\EnduserNotificationException('DEBUG: IGNORE FAILED KEYPAIR REQUESTS');
+      // throw new Exceptions\EnduserNotificationException('DEBUG: IGNORE FAILED KEYPAIR REQUESTS');
     }
     if (empty($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG]) || empty($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG])) {
 
@@ -291,14 +297,14 @@ class AsymmetricKeyService
     $value = (string)$value;
     $configKey = self::CONFIG_KEY_PREFIX . $key;
     if (empty($value)) {
-      $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
+      $this->deleteUserValue($configKey, userId: $ownerId);
       return;
     }
     $cryptor = $this->getCryptor($ownerId);
     if (!$cryptor->canEncrypt()) {
       throw new Exceptions\CannotEncryptException($this->l->t('Cannot encrypt personal value "%1$s" for "%2$s".', [ $key, $ownerId ]));
     }
-    $this->cloudConfig->setUserValue($ownerId, $this->appName, $configKey, $cryptor->encrypt($value));
+    $this->setUserValue($configKey, $cryptor->encrypt($value), userId: $ownerId);
   }
 
   /**
@@ -317,7 +323,7 @@ class AsymmetricKeyService
   public function getSharedPrivateValue(string $ownerId, string $key, mixed $default = null):?string
   {
     $configKey = self::CONFIG_KEY_PREFIX . $key;
-    $value = $this->cloudConfig->getUserValue($ownerId, $this->appName, $configKey, $default);
+    $value = $this->getUserValue($configKey, $default, userId: $ownerId);
     if (empty($value) || $value === $default) { // allow empty and default values
       return $value === null ? null : (string)$value;
     }
@@ -353,7 +359,7 @@ class AsymmetricKeyService
   public function getSharedPrivateData(string $ownerId):array
   {
     $privateConfigKeys = array_filter(
-      $this->cloudConfig->getUserKeys($ownerId, $this->appName),
+      $this->cloudUserConfig->getKeys($ownerId, $this->appName),
       function($configKey) {
         return str_starts_with($configKey, self::CONFIG_KEY_PREFIX);
       });
@@ -374,9 +380,9 @@ class AsymmetricKeyService
    */
   public function removeSharedPrivateData(string $ownerId):void
   {
-    foreach ($this->cloudConfig->getUserKeys($ownerId, $this->appName) as $configKey) {
+    foreach ($this->cloudUserConfig->getKeys($ownerId, $this->appName) as $configKey) {
       if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
-        $this->cloudConfig->deleteUserValue($ownerId, $this->appName, $configKey);
+        $this->deleteUserValue($configKey, userId: $ownerId);
       }
     }
   }
@@ -430,11 +436,10 @@ class AsymmetricKeyService
   public function getRecryptionRequests(?string $ownerId = null):array
   {
     if (!empty($ownerId)) {
-      $requestValue = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+      $requestValue = $this->getUserValue(self::RECRYPTION_REQUEST_KEY, userId: $ownerId);
       $requests[$ownerId] = $requestValue;
     } else {
-      $recryptionUsers = $this->cloudConfig->getUsersForUserValue($this->appName, self::RECRYPTION_REQUEST_KEY);
-      $requests = $this->cloudConfig->getUserValueForUsers($this->appName, self::RECRYPTION_REQUEST_KEY, $recryptionUsers);
+      $requests = $this->cloudUserConfig->getValuesByUsers($this->appName, self::RECRYPTION_REQUEST_KEY);
       // sort by value, value is a timestamp
       arsort($requests, SORT_NUMERIC);
     }
@@ -453,7 +458,7 @@ class AsymmetricKeyService
   public function pushRecryptionRequestNotification(string $ownerId):INotification
   {
     $requestData = $this->appContainer->get(ITimeFactory::class)->getTime();
-    $this->cloudConfig->setUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY, $requestData);
+    $this->setUserValue(self::RECRYPTION_REQUEST_KEY, $requestData, userId: $ownerId);
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -498,7 +503,7 @@ class AsymmetricKeyService
    */
   public function removeRecryptionRequestNotification(string $ownerId):void
   {
-    $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+    $this->deleteUserValue(self::RECRYPTION_REQUEST_KEY, userId: $ownerId);
 
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -524,7 +529,7 @@ class AsymmetricKeyService
    */
   public function pushRecryptionRequestDeniedNotification(string $ownerId, bool $allowProtest = true):INotification
   {
-    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+    $requestData = $this->getUserValue(self::RECRYPTION_REQUEST_KEY, userId: $ownerId);
 
     if (empty($requestData)) {
       throw new Exceptions\RecryptionRequestNotFoundException($this->l->t('No pending recryption-request for user "%s".', $ownerId));
@@ -585,7 +590,7 @@ class AsymmetricKeyService
    */
   public function pushRecryptionRequestHandledNotification(string $ownerId):INotification
   {
-    $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
+    $requestData = $this->getUserValue($this->appName, self::RECRYPTION_REQUEST_KEY, userId: $ownerId);
 
     if (empty($requestData)) {
       throw new Exceptions\RecryptionRequestNotFoundException($this->l->t('No pending recryption-request for user "%s".', $ownerId));

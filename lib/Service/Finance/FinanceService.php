@@ -724,7 +724,6 @@ class FinanceService
   {
     $treasurer = $this->rolesService->treasurerContact();
     $user = $this->user();
-
     if ($this->rolesService->isTreasurer()) {
       $participants = [
         'organizer'=> [

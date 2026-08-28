@@ -571,8 +571,8 @@ class PhpMyEdit
 	 */
 	function label_cmp($a, $b) {
 		return ($a == $b ||
-				(isset($this->labels[$b]) && $a == $this->labels[$b]) ||
-				(isset($this->labels[$a]) && $this->labels[$a] == $b));
+				($b !== null && isset($this->labels[$b]) && $a == $this->labels[$b]) ||
+				($a !== null && isset($this->labels[$a]) && $this->labels[$a] == $b));
 	}
 
 	function default_sort() { return !isset($this->sfn) || count($this->sfn) == 0; }
@@ -996,7 +996,7 @@ class PhpMyEdit
 			$values += $value_group_data['values'];
 		}
 
-		$values = array_diff_key($values, [ null => true ]);
+		$values = array_filter($values, fn(mixed $key) => $key !== null, ARRAY_FILTER_USE_KEY);
 
 		$fdd['setvalues'] = [
 			'values' => $values,
@@ -3733,8 +3733,8 @@ EOT;
 				}
 				$value = implode($glue, $value_ar2); // display, so no escape of delimiter
 			} else {
-				if (isset($this->fdd[$k][self::FDD_VALUES2][$value])) {
-					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value], $k, $css, $key_rec);
+				if (isset($this->fdd[$k][self::FDD_VALUES2][$value ?? ''])) {
+					$value	= $this->formatValue($this->fdd[$k][self::FDD_VALUES2][$value ?? ''], $k, $css, $key_rec);
 					$escape = false;
 				}
 			}

@@ -3993,7 +3993,6 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         $shareStatus = false;
       }
 
-
       $filesCount = $this->userStorage->folderWalk($folder);
       $this->logInfo('FILES COUNT DOWNLOAD FOLDER ' . $filesCount);
       if ($filesCount == 0) {
@@ -4061,9 +4060,9 @@ Euer Camerata Vorstand (${GLOBAL::ORGANIZER})
         'filesCount' => $filesCount,
         'httpStatusCode' => $httpStatusCode,
         'httpStatusPhrase' => HttpStatus::getPhrase($httpStatusCode),
-        'folder' => $folder,
+        'folder' => $folder->getPath(),
         'appLink' => $appLink,
-        'share' => $share,
+        'share' => $url,
       ];
 
       $this->executionStatus = $this->executionStatus && $shareStatus;

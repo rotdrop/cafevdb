@@ -433,8 +433,8 @@ class GeoCodingService
 
     $locations = [];
     foreach ($remoteLocations as $zipCodePlace) {
-      $lat = (double)($zipCodePlace['lat']);
-      $lng = (double)($zipCodePlace['lng']);
+      $lat = (float)($zipCodePlace['lat']);
+      $lng = (float)($zipCodePlace['lng']);
       $placeName = $zipCodePlace['placeName'];
       $placeCountry = $zipCodePlace['countryCode'];
       $postalCode = $zipCodePlace['postalCode'];
@@ -731,8 +731,8 @@ class GeoCodingService
       foreach ($zipCodeInfo[self::POSTALCODESLOOKUP_TAG] as $zipCodePlace) {
         ++$numTotal;
 
-        $lat  = (double)($zipCodePlace['lat']);
-        $lng  = (double)($zipCodePlace['lng']);
+        $lat  = (float)($zipCodePlace['lat']);
+        $lng  = (float)($zipCodePlace['lng']);
         $name = $zipCodePlace['placeName'];
         $stateCode = $zipCodePlace[self::POSTAL_CODE_STATE_CODE_TAG] ?? null;
         $stateName = $zipCodePlace[self::POSTAL_CODE_STATE_NAME_TAG] ?? null;

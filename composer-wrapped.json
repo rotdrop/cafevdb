@@ -96,6 +96,9 @@
         "Make the DependencyFactory extendable": "../composer-patches/doctrine/migrations/extendable-dependency-factory.patch",
         "Handle micro-second resolution in executedAt": "../composer-patches/doctrine/migrations/handle-micro-second-resolution.patch"
       },
+      "nesbot/carbon": {
+        "Fix setAccessible() deprecation": "../composer-patches/nesbot/carbon/fix-set-accessible-deprecation.php"
+      },
       "symfony/string": {
         "Add AsciiSlugger::transliterate($string, $locale), transliterate only": "../composer-patches/symfony/string/enhance-ascii-slugger.patch"
       }
