@@ -38,6 +38,9 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 use OCP\Authentication\LoginCredentials\ICredentials as ILoginCredentials;
 use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\Config\Exceptions\TypeConflictException;
+use OCP\Config\IUserConfig;
+use OCP\Config\ValueType;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -45,6 +48,7 @@ use OCP\ISession;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\L10N\IFactory as L10NFactory;
+use OCP\PreConditionNotMetException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -77,6 +81,8 @@ abstract class AbstractMockProvider
   private array $appConfigValues = [];
 
   private array $userConfigValues = [];
+
+  private array $userConfigTypes = [];
 
   private array $systemConfigValues = [];
 
@@ -199,7 +205,7 @@ abstract class AbstractMockProvider
     }
     $appContainer = self::$appContainer;
     $mockContainer = $this->getAppContainer();
-    if (str_starts_with($service, \PHPUNIT_NC_APP_NAMESPACE)) {
+    if (!empty(array_filter(\PHPUNIT_NC_MOCKED_APPS, fn(string $prefix) => str_starts_with($service, $prefix)))) {
       $appContainer->registerService($service, function() use ($service, $mockContainer) {
         return $mockContainer->get($service);
       });
@@ -249,6 +255,17 @@ abstract class AbstractMockProvider
       // echo 'REGISTER GLOBALLY ' . $className . PHP_EOL;
       $this->registerService($className);
     }
+  }
+
+  /**
+   * @param string $className
+   *
+   * @return bool
+   */
+  public function isServiceMocked(string $className): bool
+  {
+    self::$mockedServices = self::$mockedServices ?? static::getMockedServices();
+    return !empty(self::$mockedServices[$className]);
   }
 
   /** @return void */
@@ -363,7 +380,7 @@ abstract class AbstractMockProvider
       return $this->instances[$className];
     }
 
-    $instance = $this->createStub(IUser::class);
+    $instance = $this->createStub($className);
     $instance->method('getUID')->willReturn(self::CLOUD_USER_UID);
 
     $this->instances[$className] = $instance;
@@ -462,7 +479,7 @@ abstract class AbstractMockProvider
    *
    * @param EnumConfigSection $section
    *
-   * @param string $key
+   * @param ?string $key
    *
    * @param ?string $app App for user and app config.
    *
@@ -474,11 +491,210 @@ abstract class AbstractMockProvider
    */
   protected function cloudConfigGet(
     EnumConfigSection $section,
-    string $key,
+    ?string $key,
     ?string $app = null,
     ?string $user = null,
   ): mixed {
-    return null;
+    return $key === null ? [] : null;
+  }
+
+  /**
+   * Get faked user preferences.
+   *
+   * @param string $userId
+   *
+   * @param string $appName
+   *
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @return mixed
+   */
+  private function doGetUserValue(string $userId, string $appName, string $key, mixed $default = null): mixed
+  {
+    if (isset($this->userConfigValues[$userId . $appName . $key])) {
+      return $this->userConfigValues[$userId . $appName . $key];
+    }
+    return $this->cloudConfigGet(EnumConfigSection::USER, $key, $appName, $userId) ?? $default;
+  }
+
+  /**
+   * @param string $userId
+   *
+   * @param string $appName
+   *
+   * @param string $key
+   *
+   * @return void
+   */
+  private function doDeleteUserValue(string $userId, string $appName, string $key): void
+  {
+    unset($this->userConfigValues[$userId . $appName . $key]);
+  }
+
+  /**
+   * Return the available user preferences keys for the given user.
+   *
+   * @param string $userId
+   *
+   * @param string $appName
+   *
+   * @return array
+   */
+  private function doGetUserKeys(string $userId, string $appName): array
+  {
+    $overridKeys = $this->cloudConfigGet(EnumConfigSection::USER, key: null, app: $appName, user: $userId);
+    $tag = $userId . $appName;
+    $userKeys = array_map(
+      fn(string $key) => substr($key, strlen($tag)),
+      array_filter(
+        array_keys($this->userConfigValues),
+        fn(string $key) => str_starts_with($key, $tag),
+      ),
+    );
+    return array_values(array_unique(array_merge($overridKeys, $userKeys)));
+  }
+
+  /**
+   * Set faked user preferences.
+   *
+   * @param string $userId
+   *
+   * @param string $appName
+   *
+   * @param string $key
+   *
+   * @param mixed $value
+   *
+   * @return void
+   */
+  private function doSetUserValue(string $userId, string $appName, string $key, mixed $value): void
+  {
+    $this->userConfigValues[$userId . $appName . $key] = $value;
+  }
+
+  /**
+   * Mock the cloud user config provider.
+   *
+   * @return IUserConfig
+   */
+  public function getCloudUserConfig(): IUserConfig
+  {
+    $className = IUserConfig::class;
+
+    if ($this->instances[$className] ?? null) {
+      return $this->instances[$className];
+    }
+
+    $instance = $this->createStub($className);
+
+    $instance->method('getValueType')->willReturnCallback(
+      function(string $userId, string $appName, string $key): ValueType {
+        return $this->userConfigTypes[$appName . $key] ?? ValueType::MIXED;
+      }
+    );
+
+    $instance->method('getValueString')->willReturnCallback(
+      function(string $userId, string $appName, string $key, string $default = '', bool $lazy = false): string {
+        return (string)$this->doGetUserValue($userId, $appName, $key, $default);
+      }
+    );
+
+    $instance->method('setValueString')->willReturnCallback(
+      function(string $userId, string $appName, string $key, string $value, bool $lazy = false, int $flags = 0): bool {
+        $this->userConfigTypes[$appName . $key] = ValueType::STRING;
+        $result =!isset($this->userConfigValues[$userId . $appName . $key])
+          || $value !== $this->userConfigValues[$userId . $appName . $key];
+        $this->doSetUserValue($userId, $appName, $key, $value);
+        return $result;
+      }
+    );
+
+    $instance->method('getValueInt')->willReturnCallback(
+      function(string $userId, string $appName, string $key, int $default = 0, bool $lazy = false): int {
+        return (int)$this->doGetUserValue($userId, $appName, $key, $default);
+      }
+    );
+
+    $instance->method('setValueInt')->willReturnCallback(
+      function(string $userId, string $appName, string $key, int $value, bool $lazy = false, int $flags = 0): bool {
+        $this->userConfigTypes[$appName . $key] = ValueType::INT;
+        $result = !isset($this->userConfigValues[$userId . $appName . $key])
+          || $value !== $this->userConfigValues[$userId . $appName . $key];
+        $this->doSetUserValue($userId, $appName, $key, $value);
+        return $result;
+      }
+    );
+
+    $instance->method('getValueFloat')->willReturnCallback(
+      function(string $userId, string $appName, string $key, float $default = 0, bool $lazy = false): float {
+        return (float)$this->doGetUserValue($userId, $appName, $key, $default);
+      }
+    );
+
+    $instance->method('setValueFloat')->willReturnCallback(
+      function(string $userId, string $appName, string $key, float $value, bool $lazy = false, int $flags = 0): bool {
+        $this->userConfigTypes[$appName . $key] = ValueType::FLOAT;
+        $result = !isset($this->userConfigValues[$userId . $appName . $key])
+          || $value !== $this->userConfigValues[$userId . $appName . $key];
+        $this->doSetUserValue($userId, $appName, $key, $value);
+        return $result;
+      }
+    );
+
+    $instance->method('getValueBool')->willReturnCallback(
+      function(string $userId, string $appName, string $key, bool $default = false, bool $lazy = false): bool {
+        $value = $this->doGetUserValue($userId, $appName, $key, $default);
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]) ?? $default;
+      }
+    );
+
+    $instance->method('setValueBool')->willReturnCallback(
+      function(string $userId, string $appName, string $key, bool $value, bool $lazy = false, int $flags = 0): bool {
+        $this->userConfigTypes[$appName . $key] = ValueType::BOOL;
+        $result = !isset($this->userConfigValues[$userId . $appName . $key])
+          || $value !== $this->userConfigValues[$userId . $appName . $key];
+        $this->doSetUserValue($userId, $appName, $key, $value);
+        return $result;
+      }
+    );
+
+    $instance->method('getValueArray')->willReturnCallback(
+      function(string $userId, string $appName, string $key, array $default = [], bool $lazy = false): array {
+        $value = $this->doGetUserValue($userId, $appName, $key, $default);
+        if (!is_array($value)) {
+          throw new TypeConflictException('conflict with value type from database');
+        }
+        return $value;
+      }
+    );
+
+    $instance->method('setValueArray')->willReturnCallback(
+      function(string $userId, string $appName, string $key, array $value, bool $lazy = false, int $flags = 0): bool {
+        $this->userConfigTypes[$appName . $key] = ValueType::ARRAY;
+        $result = !isset($this->userConfigValues[$userId . $appName . $key])
+          || json_encode($value, JSON_THROW_ON_ERROR) !== json_encode($this->userConfigValues[$userId . $appName . $key] ?? [], JSON_THROW_ON_ERROR);
+        $this->doSetUserValue($userId, $appName, $key, $value);
+        return $result;
+      }
+    );
+
+    $instance->method('deleteUserConfig')->willReturnCallback(
+      function(string $userId, string $appName, string $key): void {
+        $this->doDeleteUserValue($userId, $appName, $key);
+      }
+    );
+
+    $instance->method('getKeys')->willReturnCallback(
+      function(string $userId, string $appName): array {
+        return $this->doGetUserKeys($userId, $appName);
+      }
+    );
+
+    $this->instances[$className] = $instance;
+
+    return $instance;
   }
 
   /**
@@ -533,33 +749,27 @@ abstract class AbstractMockProvider
     );
     $instance->method('getUserValue')->willReturnCallback(
       function(string $userId, string $appName, string $key, mixed $default = null) {
-        if (isset($this->userConfigValues[$userId . $appName . $key])) {
-          return $this->userConfigValues[$userId . $appName . $key];
-        }
-        return $this->cloudConfigGet(EnumConfigSection::USER, $key, $appName, $userId) ?? $default;
+        return $this->doGetUserValue($userId, $appName, $key, $default);
       },
     );
     $instance->method('setUserValue')->willReturnCallback(
-      function(string $userId, string $appName, string $key, mixed $value) {
-        $this->userConfigValues[$userId . $appName . $key] = $value;
+      function(string $userId, string $appName, string $key, mixed $value, mixed $precondition = null) {
+        if ($precondition !== null
+            && array_key_exists($this->userConfigValues, $userId . $appName . $key)
+            && $precondition !== $this->userConfigValues[$userId . $appName . $key]) {
+          throw new PreConditionNotMetException();
+        }
+        $this->doSetUserValue($userId, $appName, $key, $value);
       },
     );
     $instance->method('deleteUserValue')->willReturnCallback(
       function(string $userId, string $appName, string $key): void {
-        unset($this->userConfigValues[$userId . $appName . $key]);
+        $this->doDeleteUserValue($userId, $appName, $key);
       },
     );
     $instance->method('getUserKeys')->willReturnCallback(
       function(string $userId, string $appName) {
-        $tag = $userId . $appName;
-        $userKeys = array_map(
-          fn(string $key) => substr($key, strlen($tag)),
-          array_filter(
-            array_keys($this->userConfigValues),
-            fn(string $key) => str_starts_with($key, $tag),
-          ),
-        );
-        return $userKeys;
+        return $this->doGetUserKeys($userId, $appName);
       },
     );
     $instance->method('setSystemValue')->willReturnCallback(
@@ -588,6 +798,7 @@ abstract class AbstractMockProvider
     return [
       'userId' => fn(self $self) => $self->getUserSession()->getUser()->getUID(),
       IConfig::class => fn(self $self) => $self->getCloudConfig(),
+      IUserConfig::class => fn(self $self) => $self->getCloudUserConfig(),
       IL10N::class => fn(self $self) => $self->getL10N(),
       IRequest::class => fn(self $self) => $self->getRequest(),
       ISession::class => fn(self $self) => $self->getSession(),
@@ -615,7 +826,8 @@ abstract class AbstractMockProvider
           return $this->instances[$service];
         }
         if (!empty(self::$mockedServices[$service])) {
-          return self::$mockedServices[$service]($this);
+          $phpMdFoo = self::$mockedServices;
+          return $phpMdFoo[$service]($this);
         }
         // try to generate "the real thing"
         $newInstance = $this->app->getContainer()->get($service);
@@ -633,7 +845,8 @@ abstract class AbstractMockProvider
         $oldInstance = $this->instances[$service] ?? null;
         unset($this->instances[$service]);
         if (!empty(self::$mockedServices[$service])) {
-          $instance = self::$mockedServices[$service]($this);
+          $phpMdFoo = self::$mockedServices;
+          $instance = $phpMdFoo[$service]($this);
         }
         if ($oldInstance) {
           $this->instances[$service] = $oldInstance;
