@@ -47,6 +47,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the MusicianValidationController. */
 #[Attributes\CoversClass(TestedController::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\PHPMailer::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Util::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]

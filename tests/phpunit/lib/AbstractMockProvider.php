@@ -839,25 +839,25 @@ abstract class AbstractMockProvider
       },
     );
 
-    $instance->method('resolve')->willReturnCallback(
-      function(string $service) {
-        $oldInstance = $this->instances[$service] ?? null;
-        unset($this->instances[$service]);
-        if (!empty(self::$mockedServices[$service])) {
-          $phpMdFoo = self::$mockedServices;
-          $instance = $phpMdFoo[$service]($this);
-        }
-        if ($oldInstance) {
-          $this->instances[$service] = $oldInstance;
-        } else {
-          unset($this->instances[$service]);
-        }
-        if (empty($instance)) {
-          $instance = $this->app->getContainer()->resolve($service);
-        }
-        return $instance;
-      }
-    );
+    // $instance->method('resolve')->willReturnCallback(
+    //   function(string $service) {
+    //     $oldInstance = $this->instances[$service] ?? null;
+    //     unset($this->instances[$service]);
+    //     if (!empty(self::$mockedServices[$service])) {
+    //       $phpMdFoo = self::$mockedServices;
+    //       $instance = $phpMdFoo[$service]($this);
+    //     }
+    //     if ($oldInstance) {
+    //       $this->instances[$service] = $oldInstance;
+    //     } else {
+    //       unset($this->instances[$service]);
+    //     }
+    //     if (empty($instance)) {
+    //       $instance = $this->app->getContainer()->resolve($service);
+    //     }
+    //     return $instance;
+    //   }
+    // );
 
     // $instance->expects($this->never())->method('registerMiddleWare');
 
