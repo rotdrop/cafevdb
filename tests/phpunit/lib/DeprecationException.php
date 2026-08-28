@@ -76,17 +76,18 @@ class DeprecationException extends \Exception
       ) {
         if (($errno == E_DEPRECATED || $errno == E_USER_DEPRECATED)
             && ($exclude === null || !preg_match($exclude, $message))) {
-          $blah = '';
+          $classes = [];
           if ($excludeFromCore) {
             $backTrace = debug_backtrace(limit: $excludeFromCore);
             foreach ($backTrace as $frame) {
-              $blah .= ' ' . ($frame['class'] ?? 'NO CLASS');
-              if (str_starts_with($blah, 'OC\\')) {
+              $classes[] = $class = $frame['class'] ?? 'NO CLASS';
+              if (str_starts_with($class, 'OC\\')) {
                 return;
               }
             }
+            $classes = implode(' ', $classes) . ' || ';
           }
-          throw new DeprecationException(message: "{$blah} || {$file}:{$line} -- $message", deprecationWarning: compact('errno', 'message', 'file', 'line'));
+          throw new DeprecationException(message: "{$classes}{$file}:{$line} -- $message", deprecationWarning: compact('errno', 'message', 'file', 'line'));
         }
       },
     );
