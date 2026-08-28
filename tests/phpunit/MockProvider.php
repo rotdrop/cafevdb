@@ -107,15 +107,24 @@ class MockProvider extends AbstractMockProvider
   /** {@inheritdoc} */
   protected function cloudConfigGet(
     EnumConfigSection $section,
-    string $key,
+    ?string $key,
     ?string $app = null,
     ?string $user = null,
   ): mixed {
     if ($app != $this->appName) {
-      return null;
+      return parent::cloudConfigGet($section, $key, $app, $user);
     }
     switch ($section) {
       case EnumConfigSection::APP:
+        if ($key === null) {
+          return array_merge(array_keys(self::CONFIG_MOCK_VALUES), [
+            ConfigConstants::APP_DB_NAME,
+            ConfigConstants::APP_DB_SERVER,
+            ConfigConstants::APP_DB_USER,
+            ConfigConstants::APP_DB_PASSWORD,
+            ConfigConstants::APP_ENCRYPTION_KEY_HASH_KEY,
+          ]);
+        }
         $newKey = array_search($key, OldSettingsKeys::APP_KEYS);
         if ($newKey !== false) {
           $key = $newKey;
@@ -142,7 +151,7 @@ class MockProvider extends AbstractMockProvider
       case EnumConfigSection::SYSTEM:
         break;
     }
-    return null;
+    return $key === null ? [] : null;
   }
 
   /**
@@ -197,6 +206,7 @@ class MockProvider extends AbstractMockProvider
       logger: $this->getLoggerInterface(),
       appName: $this->appName,
       cloudConfig: $this->getCloudConfig(),
+      cloudUserConfig: $this->getCloudUserConfig(),
     );
 
     $this->instances[$className] = $instance;
@@ -238,6 +248,7 @@ class MockProvider extends AbstractMockProvider
     $instance = new EncryptionService(
       appName: $app->get('appName'),
       cloudConfig: $this->getCloudConfig(),
+      cloudUserConfig: $this->getCloudUserConfig(),
       asymKeyService: $this->getAsymmetricKeyService(),
       hasher: \OCP\Server::get(IHasher::class),
       eventDispatcher: $this->getEventDispatcher(),
