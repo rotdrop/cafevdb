@@ -51,7 +51,7 @@ import { tooltipWideCssClass } from 'tooltips.scss';
 
 require('cafevdb.scss');
 
-export type ReadyCallback = () => Promise<undefined>;
+export type ReadyCallback = () => Promise<void>;
 
 globalStateInitializer((globalState) => {
   Object.assign(
