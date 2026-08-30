@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:rotdrop/nextcloud-app-phpunit.git
 	branch = main
-	commit = c662ee2fe7eb07df95da8c958a222a71254d35b8
-	parent = fba978c2998e8d36b02c1a6ecc579f4dd04d8a98
+	commit = 0b3725feb97af4e9d0270006befd0f0814da6954
+	parent = 9c1ff77159700c296c0963ccd32b3a7dcc37b872
 	method = merge
 	cmdver = 0.4.9
