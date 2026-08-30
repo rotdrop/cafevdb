@@ -156,11 +156,19 @@ const message = ({
     dialog.setHTML(content);
   }
 
-  const promise = dialog.show().then(() => {
-    if (!callback._clicked) {
-      callback(false);
-    }
-  });
+  const promise = dialog.show()
+    .then(() => {
+      if (!callback._clicked) {
+        callback(false);
+      }
+    })
+    .catch((error) => {
+      if (error instanceof Error && error.message === 'Dialog closed') {
+        callback(false);
+      } else {
+        throw error;
+      }
+    });
 
   $('body').find('.legacy-dialog.' + appNameTag)
     .closest('.modal-container')
