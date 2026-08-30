@@ -65,7 +65,7 @@ const ProjectEventsListing = async () => {
 const calendarSetup = async () => {
   // make sure the timezones are actually loaded
   // @ts-expect-error 2307 blah
-  import('@nextcloud/app-calendar/css/app-full.scss');
+  // import('@nextcloud/app-calendar/css/app-full.scss');
   import('../services/calendar-store-setup.ts')
     .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
   // translations are probably not reactive, so we have to await their
