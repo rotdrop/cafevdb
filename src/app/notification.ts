@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 - 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,11 +31,11 @@ import {
 } from '@nextcloud/dialogs';
 import globalState from './globalstate.ts';
 
-type Toastify = ReturnType<typeof showMessage>;
+type ToastHandle = ReturnType<typeof showMessage>;
 
 if (globalState.Notification === undefined) {
   globalState.Notification = {
-    toasts: [] as Toastify[],
+    toasts: [] as ToastHandle[],
   };
 }
 
@@ -51,7 +51,7 @@ const hide = function(callback?: () => void) {
   }
 };
 
-const escapeHTML = function(text: string|object) {
+const escapeHTML = function(text: string) {
   return text.toString()
     .split('&').join('&amp;')
     .split('<').join('&lt;')
@@ -66,10 +66,10 @@ const tweakTimeout = function(options: ToastOptions) {
   }
 };
 
-const show = function(text: string |object, options: ToastOptions = {}) {
-  console.info(text);
+const show = function(text: string, options: ToastOptions = {}) {
+  console.info('TOAST', { text });
   tweakTimeout(options);
-  options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
+  options.timeout = options.timeout ?? TOAST_PERMANENT_TIMEOUT;
   const toast = showMessage(escapeHTML(text), options);
   toasts.push(toast);
   console.info('SHOW TOAST', toast);
@@ -77,22 +77,22 @@ const show = function(text: string |object, options: ToastOptions = {}) {
 };
 
 const showHtml = function(text: string, options: ToastOptions = {}) {
-  console.info(text);
+  console.info('TOAST', { text });
   options.isHTML = true;
   tweakTimeout(options);
-  options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
+  options.timeout = options.timeout ?? TOAST_PERMANENT_TIMEOUT;
   const toast = showMessage(text, options);
   toasts.push(toast);
   return toast;
 };
 
-const showTemporary = function(text: object|string, options: ToastOptions = {}) {
-  console.info(text);
+const showTemporary = function(text: string, options: ToastOptions = {}) {
+  console.info('TOAST', { text });
   tweakTimeout(options);
-  options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT;
+  options.timeout = options.timeout ?? TOAST_DEFAULT_TIMEOUT;
   return options.isHTML
-    ? showMessage(text as string, options)
-    : show(text as object, options);
+    ? showMessage(text, options)
+    : show(text, options);
 };
 
 /**
