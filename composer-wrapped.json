@@ -23,7 +23,7 @@
     "doctrine/dbal": "^4.0",
     "doctrine/migrations": "*",
     "doctrine/orm": "dev-production/3.6.x/cafevdb",
-    "gedmo/doctrine-extensions": "3.x-dev",
+    "gedmo/doctrine-extensions": "3.6.x-dev",
     "maennchen/zipstream-php": "^3.0.0",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "nesbot/carbon": "^2.46",
