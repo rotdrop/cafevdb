@@ -44,7 +44,10 @@ let appLanguage: string;
 export const getAppLocale = () => globalState.appLocale;
 export const getAppLanguage = () => appLanguage;
 
+const globalStateInitialized = Promise.withResolvers<void>();
+
 export const setupAppBundle = async () => {
+  await globalStateInitialized.promise;
   let locale: Intl.Locale;
   try {
     // funny JavaScript conventions ...
@@ -82,12 +85,14 @@ export const setupAppBundle = async () => {
 if (!globalState.initialized) {
   watch(() => globalState.initialized, () => {
     logger.debug('WATCHER ON GLOBAL STATE INITIALIZATION TRIGGERED', { globalState });
-    setupAppBundle();
+    globalStateInitialized.resolve();
   });
 } else {
   logger.debug('GLOBAL_STATE_INITIALIZED already', { globalState });
-  setupAppBundle();
+  globalStateInitialized.resolve();
 }
+
+setupAppBundle();
 
 export const appTranslate = <T extends string>(
   text: Parameters<typeof translate<T>>[1],
