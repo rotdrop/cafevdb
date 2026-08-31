@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,17 +21,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { loadTranslations } from '@nextcloud/l10n';
+
 import { expect, jest } from '@jest/globals';
-import globalState from '../../../../src/app/globalstate.ts';
+import { getLanguage, register, setLanguage } from '@nextcloud/l10n';
+import fs from 'fs';
+import path from 'path';
 import {
   PROJECT_REGISTRATION_CATEGORY,
   RECORD_ABSENCE_CATEGORY,
 } from '../../../../build/ts-types/php-modules/Service/EventsService.ts';
-import { emit as asyncEmit, hasSubscriptions } from '../../../../src/services/async-event-bus.ts';
-import { GLOBAL_STATE_INITIALIZED } from '../../../../src/event-bus-events.ts';
-import { getLanguage, loadTranslations, register, setLanguage } from '@nextcloud/l10n';
-import path from 'path';
-import fs from 'fs';
+import logger from '../../../../src/logger.ts';
 import {
   appTranslate,
   appTranslatePlural,
@@ -39,9 +39,9 @@ import {
   getAppLocale,
   setupAppBundle,
 } from '../../../../src/services/app-l10n.ts';
-import logger from '../../../../src/logger.ts';
+import globalState from '../../../../src/services/legacy-global-state.ts';
 
-type AppTranslations = Awaited<ReturnType<typeof loadTranslations> >
+type AppTranslations = Awaited<ReturnType<typeof loadTranslations>>;
 
 jest.mock('../../../../src/logger.ts', () => {
   const originalModule: object = jest.requireActual('../../../../src/logger.ts');
@@ -53,23 +53,25 @@ jest.mock('../../../../src/logger.ts', () => {
     ...originalModule,
     default: {
       setSilent: (value: boolean) => { silent = value; },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       debug: (..._args: any[]) => {
-        // console.debug(...args);
+        // if (!silent) {
+        //   console.debug(..._args);
+        // }
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       info: (...args: any[]) => {
         if (!silent) {
           console.info(...args);
         }
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       error: (...args: any[]) => {
         if (!silent) {
           console.error(...args);
         }
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       trace: (...args: any[]) => {
         if (!silent) {
           console.trace(...args);
@@ -137,16 +139,11 @@ const translationData = {
 
 const setupLocale = (locale: string) => {
   globalState.appLocale = locale;
-  return globalState.initialized
-    ? setupAppBundle()
-    : asyncEmit(GLOBAL_STATE_INITIALIZED, globalState);
+  if (!globalState.initialized) {
+    globalState.initialized = true;
+  }
+  return setupAppBundle();
 };
-
-describe('async-event-bus', () => {
-  it('should have subscriptions iff the global-state is uninitialized', () => {
-    expect(hasSubscriptions(GLOBAL_STATE_INITIALIZED)).toBe(!globalState.initialized);
-  });
-});
 
 describe('app-l10n', () => {
   for (const [locale, translations] of Object.entries(translationData)) {
@@ -187,10 +184,10 @@ describe('app-l10n', () => {
         expect(getAppLanguage()).toBe(language);
       });
       it('should fail to setup the language given an invalid locale', async () => {
-        // @ts-expect-error 2339
+        // @ts-expect-error 2339 Blah
         logger.setSilent(true);
         await setupLocale('!"§$%&/()=');
-        // @ts-expect-error 2339
+        // @ts-expect-error 2339 Blah
         logger.setSilent(false);
         expect(getAppLanguage()).toBe('en');
       });

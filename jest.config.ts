@@ -3,10 +3,14 @@
  * https://jestjs.io/docs/configuration
  */
 
-import deepmerge from 'deepmerge';
-import preset from '@vue/cli-plugin-unit-jest/presets/typescript-and-babel/jest-preset.js';
-import cwd from 'cwd';
 import type { Config } from 'jest';
+
+import cwd from 'cwd';
+import deepmerge from 'deepmerge';
+import { createRequire } from 'node:module';
+import preset from './tests/jest/presets/typescript-and-babel/jest-preset.js';
+
+const require = createRequire(import.meta.url);
 
 const APP_ROOT = cwd();
 const JEST_ARTIFACTS = `${APP_ROOT}/build/artifacts/tests/jest`;
@@ -30,6 +34,7 @@ const ignorePatterns = [
   'comma-separated-tokens',
   'decode-named-character-reference',
   'devlop', // ESM dependency of unified
+  'emoji-mart-vue-fast',
   'escape-string-regexp',
   'hast-*',
   'is-*',
@@ -131,6 +136,9 @@ const config: Config = deepmerge(
     globals: {
       APP_ROOT,
       JEST_ARTIFACTS,
+      'vue-jest': {
+        tsConfig: './tests/jest/tsconfig.json',
+      },
     },
 
     // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
@@ -262,6 +270,7 @@ const config: Config = deepmerge(
 
     // A map from regular expressions to paths to transformers
     transform: {
+      '^.+\\.vue$': ['@vue/vue3-jest', { tsConfig: './tests/jest/tsconfig.json' }],
       '^.+\\.tsx?$': ['ts-jest', { babelConfig: true, useESM: true, tsconfig: './tests/jest/tsconfig.json' }],
       '^.+\\.mjs$': require.resolve('babel-jest'),
       // '^.+\\.css$': ['jest-transform-css', { modules: true }] as [string, Record<string, unknown>],
