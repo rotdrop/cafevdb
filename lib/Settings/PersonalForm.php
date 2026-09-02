@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\App\IAppManager;
 use OCP\IInitialStateService;
+use OCP\Util as CoreUtil;
 
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\Util;
@@ -90,14 +91,13 @@ class PersonalForm
    */
   public function getForm()
   {
+    CoreUtil::addScript($this->appName, $this->assetService->getJSAsset(self::TEMPLATE));
+    CoreUtil::addStyle($this->appName, $this->assetService->getCSSAsset(self::TEMPLATE));
+
     if (!$this->inGroup()) {
       return $this->templateResponse(
         self::ERROR_TEMPLATE,
         [
-          'assets' => [
-            Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-            Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
-          ],
           'error' => 'notamember',
           'userId' => $this->userId(),
         ],
