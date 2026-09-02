@@ -24,6 +24,18 @@ index 033dd7b..1270cc7 100644
      }
      _getConfig(config) {
        const dataAttributes = Manipulator.getDataAttributes(this._element);
+diff --git a/node_modules/bootstrap/js/dist/util/index.js b/node_modules/bootstrap/js/dist/util/index.js
+index adfe39d..b266e2f 100644
+--- a/node_modules/bootstrap/js/dist/util/index.js
++++ b/node_modules/bootstrap/js/dist/util/index.js
+@@ -163,6 +163,7 @@
+     element.offsetHeight; // eslint-disable-line no-unused-expressions
+   };
+   const getjQuery = () => {
++    return require('jquery');
+     if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
+       return window.jQuery;
+     }
 diff --git a/node_modules/bootstrap/scss/_tooltip-with-deps.scss b/node_modules/bootstrap/scss/_tooltip-with-deps.scss
 new file mode 100644
 index 0000000..351f8cf

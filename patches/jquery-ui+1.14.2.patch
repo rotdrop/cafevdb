@@ -187,6 +187,681 @@ index 5e136c2..41ca0af 100644
  /*!
   * jQuery UI Form Reset Mixin 1.14.2
   * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-af.js b/node_modules/jquery-ui/ui/i18n/datepicker-af.js
+index d239561..06a16d5 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-af.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-af.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Afrikaans initialisation for the jQuery UI date picker plugin. */
+ /* Written by Renier Pretorius. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ar-DZ.js b/node_modules/jquery-ui/ui/i18n/datepicker-ar-DZ.js
+index 2bcdf47..e6399f8 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ar-DZ.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ar-DZ.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Algerian Arabic Translation for jQuery UI date picker plugin.
+ /* Used in most of Maghreb countries, primarily in Algeria, Tunisia, Morocco.
+ /* Mohamed Cherif BOUCHELAGHEM -- cherifbouchelaghem@yahoo.fr */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ar.js b/node_modules/jquery-ui/ui/i18n/datepicker-ar.js
+index 0776841..cde847e 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ar.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ar.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Arabic Translation for jQuery UI date picker plugin. */
+ /* Used in most of Arab countries, primarily in Bahrain, */
+ /* Kuwait, Oman, Qatar, Saudi Arabia and the United Arab Emirates, Egypt, Sudan and Yemen. */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-az.js b/node_modules/jquery-ui/ui/i18n/datepicker-az.js
+index 8d59547..98a888b 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-az.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-az.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Azerbaijani (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Jamil Najafov (necefov33@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-be.js b/node_modules/jquery-ui/ui/i18n/datepicker-be.js
+index 125ed0f..006af65 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-be.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-be.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Belarusian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Pavel Selitskas <p.selitskas@gmail.com> */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-bg.js b/node_modules/jquery-ui/ui/i18n/datepicker-bg.js
+index 62be734..b229840 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-bg.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-bg.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Bulgarian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Stoyan Kyosev. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-bs.js b/node_modules/jquery-ui/ui/i18n/datepicker-bs.js
+index 3ee9db4..94f6716 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-bs.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-bs.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Bosnian i18n for the jQuery UI date picker plugin. */
+ /* Written by Kenan Konjo. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ca.js b/node_modules/jquery-ui/ui/i18n/datepicker-ca.js
+index bca86de..a5e6789 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ca.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ca.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Inicialització en català per a l'extensió 'UI date picker' per jQuery. */
+ /* Writers: (joan.leon@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-cs.js b/node_modules/jquery-ui/ui/i18n/datepicker-cs.js
+index 6e5552c..98a3413 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-cs.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-cs.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Czech initialisation for the jQuery UI date picker plugin. */
+ /* Written by Tomas Muller (tomas@tomas-muller.net). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-cy-GB.js b/node_modules/jquery-ui/ui/i18n/datepicker-cy-GB.js
+index 942c24f..9a3f11e 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-cy-GB.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-cy-GB.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Welsh/UK initialisation for the jQuery UI date picker plugin. */
+ /* Written by William Griffiths. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-da.js b/node_modules/jquery-ui/ui/i18n/datepicker-da.js
+index d2de755..6d7c73d 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-da.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-da.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Danish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Jan Christensen ( deletestuff@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-de-AT.js b/node_modules/jquery-ui/ui/i18n/datepicker-de-AT.js
+index 4a8b781..aab9db1 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-de-AT.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-de-AT.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* German/Austrian initialisation for the jQuery UI date picker plugin. */
+ /* Based on the de initialisation. */
+ 
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-de.js b/node_modules/jquery-ui/ui/i18n/datepicker-de.js
+index 8a08ebf..b38b3bd 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-de.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-de.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* German initialisation for the jQuery UI date picker plugin. */
+ /* Written by Milian Wolff (mail@milianw.de). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-el.js b/node_modules/jquery-ui/ui/i18n/datepicker-el.js
+index 9716e41..6553a30 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-el.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-el.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Greek (el) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Alex Cicovic (https://alexcicovic.com) */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-en-AU.js b/node_modules/jquery-ui/ui/i18n/datepicker-en-AU.js
+index baef43a..8215990 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-en-AU.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-en-AU.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* English/Australia initialisation for the jQuery UI date picker plugin. */
+ /* Based on the en-GB initialisation. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-en-GB.js b/node_modules/jquery-ui/ui/i18n/datepicker-en-GB.js
+index e0a7a32..1fd5fb0 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-en-GB.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-en-GB.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* English/UK initialisation for the jQuery UI date picker plugin. */
+ /* Written by Stuart. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-en-NZ.js b/node_modules/jquery-ui/ui/i18n/datepicker-en-NZ.js
+index 6e47689..8369513 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-en-NZ.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-en-NZ.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* English/New Zealand initialisation for the jQuery UI date picker plugin. */
+ /* Based on the en-GB initialisation. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-eo.js b/node_modules/jquery-ui/ui/i18n/datepicker-eo.js
+index 08aa96e..a10e3c5 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-eo.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-eo.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Esperanto initialisation for the jQuery UI date picker plugin. */
+ /* Written by Olivier M. (olivierweb@ifrance.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-es.js b/node_modules/jquery-ui/ui/i18n/datepicker-es.js
+index dbb1f0a..498bcd5 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-es.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-es.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Inicialización en español para la extensión 'UI date picker' para jQuery. */
+ /* Traducido por Vester (xvester@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-et.js b/node_modules/jquery-ui/ui/i18n/datepicker-et.js
+index 11d5857..586be9b 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-et.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-et.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Estonian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Mart Sõmermaa (mrts.pydev at gmail com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-eu.js b/node_modules/jquery-ui/ui/i18n/datepicker-eu.js
+index 0de057c..f252ad7 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-eu.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-eu.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Karrikas-ek itzulia (karrikas@karrikas.com) */
+ ( function( factory ) {
+ 	"use strict";
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fa.js b/node_modules/jquery-ui/ui/i18n/datepicker-fa.js
+index ac30752..0c4eacb 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fa.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fa.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Persian (Farsi) Translation for the jQuery UI date picker plugin. */
+ /* Javad Mowlanezhad -- jmowla@gmail.com */
+ /* Jalali calendar should supported soon! (Its implemented but I have to test it) */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fi.js b/node_modules/jquery-ui/ui/i18n/datepicker-fi.js
+index d355e9e..709cf0d 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fi.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fi.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Finnish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Harri Kilpiö (harrikilpio@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fo.js b/node_modules/jquery-ui/ui/i18n/datepicker-fo.js
+index d2ec9d7..a6babe3 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fo.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fo.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Faroese initialisation for the jQuery UI date picker plugin */
+ /* Written by Sverri Mohr Olsen, sverrimo@gmail.com */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fr-CA.js b/node_modules/jquery-ui/ui/i18n/datepicker-fr-CA.js
+index a14b1d3..a992a05 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fr-CA.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fr-CA.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Canadian-French initialisation for the jQuery UI date picker plugin. */
+ ( function( factory ) {
+ 	"use strict";
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fr-CH.js b/node_modules/jquery-ui/ui/i18n/datepicker-fr-CH.js
+index 7221d14..f96883d 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fr-CH.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fr-CH.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Swiss-French initialisation for the jQuery UI date picker plugin. */
+ /* Written Martin Voelkle (martin.voelkle@e-tc.ch). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-fr.js b/node_modules/jquery-ui/ui/i18n/datepicker-fr.js
+index 42b582b..d2cd2eb 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-fr.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-fr.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* French initialisation for the jQuery UI date picker plugin. */
+ /* Written by Keith Wood (kbwood{at}iinet.com.au),
+ 			  Stéphane Nahmani (sholby@sholby.net),
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-gl.js b/node_modules/jquery-ui/ui/i18n/datepicker-gl.js
+index 27abb02..9175986 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-gl.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-gl.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Galician localization for 'UI date picker' jQuery extension. */
+ /* Translated by Jorge Barreiro <yortx.barry@gmail.com>. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-he.js b/node_modules/jquery-ui/ui/i18n/datepicker-he.js
+index fbe3c40..3f961be 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-he.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-he.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Hebrew initialisation for the UI Datepicker extension. */
+ /* Written by Amir Hardon (ahardon at gmail dot com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-hi.js b/node_modules/jquery-ui/ui/i18n/datepicker-hi.js
+index e3b72e5..24773b3 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-hi.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-hi.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Hindi initialisation for the jQuery UI date picker plugin. */
+ /* Written by Michael Dawart. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-hr.js b/node_modules/jquery-ui/ui/i18n/datepicker-hr.js
+index 2898d5c..25d1309 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-hr.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-hr.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Croatian i18n for the jQuery UI date picker plugin. */
+ /* Written by Vjekoslav Nesek. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-hu.js b/node_modules/jquery-ui/ui/i18n/datepicker-hu.js
+index 3bb86da..81c3114 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-hu.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-hu.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Hungarian initialisation for the jQuery UI date picker plugin. */
+ ( function( factory ) {
+ 	"use strict";
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-hy.js b/node_modules/jquery-ui/ui/i18n/datepicker-hy.js
+index 7d4da5a..089f0f4 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-hy.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-hy.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Armenian(UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Levon Zakaryan (levon.zakaryan@gmail.com)*/
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-id.js b/node_modules/jquery-ui/ui/i18n/datepicker-id.js
+index 17082e9..b738373 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-id.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-id.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Indonesian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Deden Fathurahman (dedenf@gmail.com). */
+ /* Fixed by Denny Septian Panggabean (xamidimura@gmail.com) */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-is.js b/node_modules/jquery-ui/ui/i18n/datepicker-is.js
+index c453fa4..fd7d538 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-is.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-is.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Icelandic initialisation for the jQuery UI date picker plugin. */
+ /* Written by Haukur H. Thorsson (haukur@eskill.is). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-it-CH.js b/node_modules/jquery-ui/ui/i18n/datepicker-it-CH.js
+index 73b7918..68501ff 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-it-CH.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-it-CH.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Italian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Antonello Pasella (antonello.pasella@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-it.js b/node_modules/jquery-ui/ui/i18n/datepicker-it.js
+index d1d4980..6e66a8e 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-it.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-it.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Italian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Antonello Pasella (antonello.pasella@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ja.js b/node_modules/jquery-ui/ui/i18n/datepicker-ja.js
+index 95fa6fd..6bd33a3 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ja.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ja.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Japanese initialisation for the jQuery UI date picker plugin. */
+ /* Written by Kentaro SATO (kentaro@ranvis.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ka.js b/node_modules/jquery-ui/ui/i18n/datepicker-ka.js
+index d347de8..e784e1e 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ka.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ka.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Georgian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Lado Lomidze (lado.lomidze@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-kk.js b/node_modules/jquery-ui/ui/i18n/datepicker-kk.js
+index 20a8486..9fd7784 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-kk.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-kk.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Kazakh (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Dmitriy Karasyov (dmitriy.karasyov@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-km.js b/node_modules/jquery-ui/ui/i18n/datepicker-km.js
+index ab3d89a..09d2432 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-km.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-km.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Khmer initialisation for the jQuery calendar extension. */
+ /* Written by Chandara Om (chandara.teacher@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ko.js b/node_modules/jquery-ui/ui/i18n/datepicker-ko.js
+index deb1475..2a9aa81 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ko.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ko.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Korean initialisation for the jQuery calendar extension. */
+ /* Written by DaeKwon Kang (ncrash.dk@gmail.com), Edited by Genie and Myeongjin Lee. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ky.js b/node_modules/jquery-ui/ui/i18n/datepicker-ky.js
+index 05dc5dd..975ed68 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ky.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ky.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Kyrgyz (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Sergey Kartashov (ebishkek@yandex.ru). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-lb.js b/node_modules/jquery-ui/ui/i18n/datepicker-lb.js
+index 936eb44..e8ab8eb 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-lb.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-lb.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Luxembourgish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Michel Weimerskirch <michel@weimerskirch.net> */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-lt.js b/node_modules/jquery-ui/ui/i18n/datepicker-lt.js
+index 5f45734..39c7e80 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-lt.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-lt.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Lithuanian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* @author Arturas Paleicikas <arturas@avalon.lt> */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-lv.js b/node_modules/jquery-ui/ui/i18n/datepicker-lv.js
+index 25d4a37..0813d83 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-lv.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-lv.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Latvian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* @author Arturas Paleicikas <arturas.paleicikas@metasite.net> */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-mk.js b/node_modules/jquery-ui/ui/i18n/datepicker-mk.js
+index 6f430e9..e49eb48 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-mk.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-mk.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Macedonian i18n for the jQuery UI date picker plugin. */
+ /* Written by Stojce Slavkovski. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ml.js b/node_modules/jquery-ui/ui/i18n/datepicker-ml.js
+index b6223c8..977cb40 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ml.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ml.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Malayalam (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Saji Nediyanchath (saji89@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ms.js b/node_modules/jquery-ui/ui/i18n/datepicker-ms.js
+index 4170519..fc9f5e7 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ms.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ms.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Malaysian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Mohd Nawawi Mohamad Jamili (nawawi@ronggeng.net). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-nb.js b/node_modules/jquery-ui/ui/i18n/datepicker-nb.js
+index 19bb0bc..17d86c0 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-nb.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-nb.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Norwegian Bokmål initialisation for the jQuery UI date picker plugin. */
+ /* Written by Bjørn Johansen (post@bjornjohansen.no). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-nl-BE.js b/node_modules/jquery-ui/ui/i18n/datepicker-nl-BE.js
+index 1b37288..323b9a5 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-nl-BE.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-nl-BE.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Dutch (Belgium) initialisation for the jQuery UI date picker plugin. */
+ /* David De Sloovere @DavidDeSloovere */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-nl.js b/node_modules/jquery-ui/ui/i18n/datepicker-nl.js
+index 6ac5d07..75e50d6 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-nl.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-nl.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Dutch (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Mathias Bynens <https://mathiasbynens.be/> */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-nn.js b/node_modules/jquery-ui/ui/i18n/datepicker-nn.js
+index 5eccb4a..890200e 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-nn.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-nn.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Norwegian Nynorsk initialisation for the jQuery UI date picker plugin. */
+ /* Written by Bjørn Johansen (post@bjornjohansen.no). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-no.js b/node_modules/jquery-ui/ui/i18n/datepicker-no.js
+index becc8bf..37d7d78 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-no.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-no.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Norwegian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Naimdjon Takhirov (naimdjon@gmail.com). */
+ 
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-pl.js b/node_modules/jquery-ui/ui/i18n/datepicker-pl.js
+index 4d31086..b81f7eb 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-pl.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-pl.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Polish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Jacek Wysocki (jacek.wysocki@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-pt-BR.js b/node_modules/jquery-ui/ui/i18n/datepicker-pt-BR.js
+index 3c3984f..b8f0da6 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-pt-BR.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-pt-BR.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Brazilian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Leonildo Costa Silva (leocsilva@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-pt.js b/node_modules/jquery-ui/ui/i18n/datepicker-pt.js
+index 3112cb4..136a5f7 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-pt.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-pt.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Portuguese initialisation for the jQuery UI date picker plugin. */
+ ( function( factory ) {
+ 	"use strict";
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-rm.js b/node_modules/jquery-ui/ui/i18n/datepicker-rm.js
+index 4f150c5..9cd39ec 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-rm.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-rm.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Romansh initialisation for the jQuery UI date picker plugin. */
+ /* Written by Yvonne Gienal (yvonne.gienal@educa.ch). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ro.js b/node_modules/jquery-ui/ui/i18n/datepicker-ro.js
+index 60f56ae..5b10539 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ro.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ro.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Romanian initialisation for the jQuery UI date picker plugin.
+  *
+  * Written by Edmond L. (ll_edmond@walla.com)
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ru.js b/node_modules/jquery-ui/ui/i18n/datepicker-ru.js
+index 5a8b3b7..4927dcd 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ru.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ru.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Russian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Andrew Stromnov (stromnov@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sk.js b/node_modules/jquery-ui/ui/i18n/datepicker-sk.js
+index 826dfcb..c6f8f7a 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sk.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sk.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Slovak initialisation for the jQuery UI date picker plugin. */
+ /* Written by Vojtech Rinik (vojto@hmm.sk). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sl.js b/node_modules/jquery-ui/ui/i18n/datepicker-sl.js
+index 4b329e2..4982503 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sl.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sl.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Slovenian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Jaka Jancar (jaka@kubje.org). */
+ /* c = č, s = š z = ž C = Č S = Š Z = Ž */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sq.js b/node_modules/jquery-ui/ui/i18n/datepicker-sq.js
+index 9952fb1..4ef9535 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sq.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sq.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Albanian initialisation for the jQuery UI date picker plugin. */
+ /* Written by Flakron Bytyqi (flakron@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sr-SR.js b/node_modules/jquery-ui/ui/i18n/datepicker-sr-SR.js
+index b28ceed..c2e84fc 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sr-SR.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sr-SR.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Serbian i18n for the jQuery UI date picker plugin. */
+ /* Written by Dejan Dimić. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sr.js b/node_modules/jquery-ui/ui/i18n/datepicker-sr.js
+index 8b04d9b..95e62a7 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sr.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sr.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Serbian i18n for the jQuery UI date picker plugin. */
+ /* Written by Dejan Dimić. */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-sv.js b/node_modules/jquery-ui/ui/i18n/datepicker-sv.js
+index ee9296e..022fdb2 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-sv.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-sv.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Swedish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Anders Ekdahl ( anders@nomadiz.se). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-ta.js b/node_modules/jquery-ui/ui/i18n/datepicker-ta.js
+index 730c5df..fc4c72d 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-ta.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-ta.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Tamil (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by S A Sureshkumar (saskumar@live.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-th.js b/node_modules/jquery-ui/ui/i18n/datepicker-th.js
+index 41cef52..7cd07ac 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-th.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-th.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Thai initialisation for the jQuery UI date picker plugin. */
+ /* Written by pipo (pipo@sixhead.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-tj.js b/node_modules/jquery-ui/ui/i18n/datepicker-tj.js
+index a3669da..1dd3c18 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-tj.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-tj.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Tajiki (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Abdurahmon Saidov (saidovab@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-tr.js b/node_modules/jquery-ui/ui/i18n/datepicker-tr.js
+index 32eb3ed..f203621 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-tr.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-tr.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Turkish initialisation for the jQuery UI date picker plugin. */
+ /* Written by Izzet Emre Erkan (kara@karalamalar.net). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-uk.js b/node_modules/jquery-ui/ui/i18n/datepicker-uk.js
+index c273fd6..19ad8dd 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-uk.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-uk.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Ukrainian (UTF-8) initialisation for the jQuery UI date picker plugin. */
+ /* Written by Maxim Drogobitskiy (maxdao@gmail.com). */
+ /* Corrected by Igor Milla (igor.fsp.milla@gmail.com). */
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-vi.js b/node_modules/jquery-ui/ui/i18n/datepicker-vi.js
+index 8664c4f..f5313a5 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-vi.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-vi.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Vietnamese initialisation for the jQuery UI date picker plugin. */
+ /* Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-zh-CN.js b/node_modules/jquery-ui/ui/i18n/datepicker-zh-CN.js
+index a00553e..d111131 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-zh-CN.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-zh-CN.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Chinese initialisation for the jQuery UI date picker plugin. */
+ /* Written by Cloudream (cloudream@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-zh-HK.js b/node_modules/jquery-ui/ui/i18n/datepicker-zh-HK.js
+index e61bf66..d7e7378 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-zh-HK.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-zh-HK.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Chinese initialisation for the jQuery UI date picker plugin. */
+ /* Written by SCCY (samuelcychan@gmail.com). */
+ ( function( factory ) {
+diff --git a/node_modules/jquery-ui/ui/i18n/datepicker-zh-TW.js b/node_modules/jquery-ui/ui/i18n/datepicker-zh-TW.js
+index f5e02a6..7cdd064 100644
+--- a/node_modules/jquery-ui/ui/i18n/datepicker-zh-TW.js
++++ b/node_modules/jquery-ui/ui/i18n/datepicker-zh-TW.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* Chinese initialisation for the jQuery UI date picker plugin. */
+ /* Written by Ressol (ressol@gmail.com). */
+ ( function( factory ) {
 diff --git a/node_modules/jquery-ui/ui/jquery-patch.js b/node_modules/jquery-ui/ui/jquery-patch.js
 index 3835d54..3ca06e2 100644
 --- a/node_modules/jquery-ui/ui/jquery-patch.js
