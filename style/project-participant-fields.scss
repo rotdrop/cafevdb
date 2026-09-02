@@ -59,7 +59,7 @@
 /// @param{list} $property A CSS class or list of CSS classes
 ///
 @mixin elementShownIf($property, $element, $prefix: "&", $relation: "~", $display: unset, $important: false) {
-  $important: if($important, "!important", "");
+  $important: if(sass($important): "!important"; else: "");
   $prefixProperty: local.listToString($property, ".");
   $elementProperty: local.listToString($property, "-");
 
