@@ -1,0 +1,486 @@
+diff --git a/node_modules/jquery-ui/dist/jquery-ui.js b/node_modules/jquery-ui/dist/jquery-ui.js
+index fcead8b..6bacfa3 100644
+--- a/node_modules/jquery-ui/dist/jquery-ui.js
++++ b/node_modules/jquery-ui/dist/jquery-ui.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*! jQuery UI - v1.14.2 - 2026-01-28
+ * https://jqueryui.com
+ * Includes: widget.js, position.js, data.js, disable-selection.js, effect.js, effects/effect-blind.js, effects/effect-bounce.js, effects/effect-clip.js, effects/effect-drop.js, effects/effect-explode.js, effects/effect-fade.js, effects/effect-fold.js, effects/effect-highlight.js, effects/effect-puff.js, effects/effect-pulsate.js, effects/effect-scale.js, effects/effect-shake.js, effects/effect-size.js, effects/effect-slide.js, effects/effect-transfer.js, focusable.js, form-reset-mixin.js, jquery-patch.js, keycode.js, labels.js, scroll-parent.js, tabbable.js, unique-id.js, widgets/accordion.js, widgets/autocomplete.js, widgets/button.js, widgets/checkboxradio.js, widgets/controlgroup.js, widgets/datepicker.js, widgets/dialog.js, widgets/draggable.js, widgets/droppable.js, widgets/menu.js, widgets/mouse.js, widgets/progressbar.js, widgets/resizable.js, widgets/selectable.js, widgets/selectmenu.js, widgets/slider.js, widgets/sortable.js, widgets/spinner.js, widgets/tabs.js, widgets/tooltip.js
+diff --git a/node_modules/jquery-ui/ui/data.js b/node_modules/jquery-ui/ui/data.js
+index f09c343..66c4667 100644
+--- a/node_modules/jquery-ui/ui/data.js
++++ b/node_modules/jquery-ui/ui/data.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI :data 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/disable-selection.js b/node_modules/jquery-ui/ui/disable-selection.js
+index 7e6c2a1..087b2bf 100644
+--- a/node_modules/jquery-ui/ui/disable-selection.js
++++ b/node_modules/jquery-ui/ui/disable-selection.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Disable Selection 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effect.js b/node_modules/jquery-ui/ui/effect.js
+index ebd3346..e538086 100644
+--- a/node_modules/jquery-ui/ui/effect.js
++++ b/node_modules/jquery-ui/ui/effect.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-blind.js b/node_modules/jquery-ui/ui/effects/effect-blind.js
+index 473bfe8..2fc7ae0 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-blind.js
++++ b/node_modules/jquery-ui/ui/effects/effect-blind.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Blind 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-bounce.js b/node_modules/jquery-ui/ui/effects/effect-bounce.js
+index f66f866..cac5362 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-bounce.js
++++ b/node_modules/jquery-ui/ui/effects/effect-bounce.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Bounce 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-clip.js b/node_modules/jquery-ui/ui/effects/effect-clip.js
+index d3a08db..6564be5 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-clip.js
++++ b/node_modules/jquery-ui/ui/effects/effect-clip.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Clip 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-drop.js b/node_modules/jquery-ui/ui/effects/effect-drop.js
+index 81376fd..aef1624 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-drop.js
++++ b/node_modules/jquery-ui/ui/effects/effect-drop.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Drop 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-explode.js b/node_modules/jquery-ui/ui/effects/effect-explode.js
+index b6ded71..c6736db 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-explode.js
++++ b/node_modules/jquery-ui/ui/effects/effect-explode.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Explode 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-fade.js b/node_modules/jquery-ui/ui/effects/effect-fade.js
+index 7ef42f8..c546791 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-fade.js
++++ b/node_modules/jquery-ui/ui/effects/effect-fade.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Fade 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-fold.js b/node_modules/jquery-ui/ui/effects/effect-fold.js
+index 2d77327..faede44 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-fold.js
++++ b/node_modules/jquery-ui/ui/effects/effect-fold.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Fold 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-highlight.js b/node_modules/jquery-ui/ui/effects/effect-highlight.js
+index 8da95bf..71b05e2 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-highlight.js
++++ b/node_modules/jquery-ui/ui/effects/effect-highlight.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Highlight 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-puff.js b/node_modules/jquery-ui/ui/effects/effect-puff.js
+index 9236812..d4a07d9 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-puff.js
++++ b/node_modules/jquery-ui/ui/effects/effect-puff.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Puff 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-pulsate.js b/node_modules/jquery-ui/ui/effects/effect-pulsate.js
+index d9e9fb7..47faa51 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-pulsate.js
++++ b/node_modules/jquery-ui/ui/effects/effect-pulsate.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Pulsate 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-scale.js b/node_modules/jquery-ui/ui/effects/effect-scale.js
+index 6c7b07d..170c208 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-scale.js
++++ b/node_modules/jquery-ui/ui/effects/effect-scale.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Scale 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-shake.js b/node_modules/jquery-ui/ui/effects/effect-shake.js
+index acd6efb..672d63b 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-shake.js
++++ b/node_modules/jquery-ui/ui/effects/effect-shake.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Shake 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-size.js b/node_modules/jquery-ui/ui/effects/effect-size.js
+index ee09b4e..871aa01 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-size.js
++++ b/node_modules/jquery-ui/ui/effects/effect-size.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Size 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-slide.js b/node_modules/jquery-ui/ui/effects/effect-slide.js
+index 521e2f1..9c3dfbf 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-slide.js
++++ b/node_modules/jquery-ui/ui/effects/effect-slide.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Slide 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/effects/effect-transfer.js b/node_modules/jquery-ui/ui/effects/effect-transfer.js
+index 6d599b5..0d1759f 100644
+--- a/node_modules/jquery-ui/ui/effects/effect-transfer.js
++++ b/node_modules/jquery-ui/ui/effects/effect-transfer.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Effects Transfer 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/focusable.js b/node_modules/jquery-ui/ui/focusable.js
+index acf2ef2..a3c0afb 100644
+--- a/node_modules/jquery-ui/ui/focusable.js
++++ b/node_modules/jquery-ui/ui/focusable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Focusable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/form-reset-mixin.js b/node_modules/jquery-ui/ui/form-reset-mixin.js
+index 5e136c2..41ca0af 100644
+--- a/node_modules/jquery-ui/ui/form-reset-mixin.js
++++ b/node_modules/jquery-ui/ui/form-reset-mixin.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Form Reset Mixin 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/jquery-patch.js b/node_modules/jquery-ui/ui/jquery-patch.js
+index 3835d54..3ca06e2 100644
+--- a/node_modules/jquery-ui/ui/jquery-patch.js
++++ b/node_modules/jquery-ui/ui/jquery-patch.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Legacy jQuery Core patches 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/jquery-var-for-color.js b/node_modules/jquery-ui/ui/jquery-var-for-color.js
+index f37ed56..15dd42f 100644
+--- a/node_modules/jquery-ui/ui/jquery-var-for-color.js
++++ b/node_modules/jquery-ui/ui/jquery-var-for-color.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ ( function( factory ) {
+ 	"use strict";
+ 
+diff --git a/node_modules/jquery-ui/ui/keycode.js b/node_modules/jquery-ui/ui/keycode.js
+index e2d5ec6..3eb9032 100644
+--- a/node_modules/jquery-ui/ui/keycode.js
++++ b/node_modules/jquery-ui/ui/keycode.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Keycode 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/labels.js b/node_modules/jquery-ui/ui/labels.js
+index c3d4771..0eeb803 100644
+--- a/node_modules/jquery-ui/ui/labels.js
++++ b/node_modules/jquery-ui/ui/labels.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Labels 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/plugin.js b/node_modules/jquery-ui/ui/plugin.js
+index 1e46017..5ff68ab 100644
+--- a/node_modules/jquery-ui/ui/plugin.js
++++ b/node_modules/jquery-ui/ui/plugin.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ ( function( factory ) {
+ 	"use strict";
+ 
+diff --git a/node_modules/jquery-ui/ui/position.js b/node_modules/jquery-ui/ui/position.js
+index 0d3698e..a21dc64 100644
+--- a/node_modules/jquery-ui/ui/position.js
++++ b/node_modules/jquery-ui/ui/position.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Position 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/scroll-parent.js b/node_modules/jquery-ui/ui/scroll-parent.js
+index dda73c3..6bedaf8 100644
+--- a/node_modules/jquery-ui/ui/scroll-parent.js
++++ b/node_modules/jquery-ui/ui/scroll-parent.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Scroll Parent 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/tabbable.js b/node_modules/jquery-ui/ui/tabbable.js
+index 7e8f183..61ccd4d 100644
+--- a/node_modules/jquery-ui/ui/tabbable.js
++++ b/node_modules/jquery-ui/ui/tabbable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Tabbable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/unique-id.js b/node_modules/jquery-ui/ui/unique-id.js
+index 0087291..d4fb43d 100644
+--- a/node_modules/jquery-ui/ui/unique-id.js
++++ b/node_modules/jquery-ui/ui/unique-id.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Unique ID 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/version.js b/node_modules/jquery-ui/ui/version.js
+index 81f727a..3d3dd67 100644
+--- a/node_modules/jquery-ui/ui/version.js
++++ b/node_modules/jquery-ui/ui/version.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ ( function( factory ) {
+ 	"use strict";
+ 
+diff --git a/node_modules/jquery-ui/ui/widget.js b/node_modules/jquery-ui/ui/widget.js
+index c907320..b099659 100644
+--- a/node_modules/jquery-ui/ui/widget.js
++++ b/node_modules/jquery-ui/ui/widget.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Widget 1.14.2
+  * https://jqueryui.com
+@@ -28,6 +29,8 @@
+ } )( function( $ ) {
+ "use strict";
+ 
++    console.info('WIDGET JQUERY', { $ });
++
+ var widgetUuid = 0;
+ var widgetHasOwnProperty = Array.prototype.hasOwnProperty;
+ var widgetSlice = Array.prototype.slice;
+@@ -50,7 +53,7 @@ $.cleanData = ( function( orig ) {
+ $.widget = function( name, base, prototype ) {
+ 	var existingConstructor, constructor, basePrototype;
+ 
+-	// ProxiedPrototype allows the provided prototype to remain unmodified
++  // ProxiedPrototype allows the provided prototype to remain unmodified
+ 	// so that it can be used as a mixin for multiple widgets (#8876)
+ 	var proxiedPrototype = {};
+ 
+diff --git a/node_modules/jquery-ui/ui/widgets/accordion.js b/node_modules/jquery-ui/ui/widgets/accordion.js
+index 1ed5424..f0b3638 100644
+--- a/node_modules/jquery-ui/ui/widgets/accordion.js
++++ b/node_modules/jquery-ui/ui/widgets/accordion.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Accordion 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/autocomplete.js b/node_modules/jquery-ui/ui/widgets/autocomplete.js
+index 958d9d8..819b3ae 100644
+--- a/node_modules/jquery-ui/ui/widgets/autocomplete.js
++++ b/node_modules/jquery-ui/ui/widgets/autocomplete.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Autocomplete 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/button.js b/node_modules/jquery-ui/ui/widgets/button.js
+index b0002f8..39f555a 100644
+--- a/node_modules/jquery-ui/ui/widgets/button.js
++++ b/node_modules/jquery-ui/ui/widgets/button.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Button 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/checkboxradio.js b/node_modules/jquery-ui/ui/widgets/checkboxradio.js
+index 61f3e26..504a6be 100644
+--- a/node_modules/jquery-ui/ui/widgets/checkboxradio.js
++++ b/node_modules/jquery-ui/ui/widgets/checkboxradio.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Checkboxradio 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/controlgroup.js b/node_modules/jquery-ui/ui/widgets/controlgroup.js
+index ea37637..02949da 100644
+--- a/node_modules/jquery-ui/ui/widgets/controlgroup.js
++++ b/node_modules/jquery-ui/ui/widgets/controlgroup.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Controlgroup 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/datepicker.js b/node_modules/jquery-ui/ui/widgets/datepicker.js
+index 8b71e1d..fead6c0 100644
+--- a/node_modules/jquery-ui/ui/widgets/datepicker.js
++++ b/node_modules/jquery-ui/ui/widgets/datepicker.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /* eslint-disable max-len */
+ /*!
+  * jQuery UI Datepicker 1.14.2
+diff --git a/node_modules/jquery-ui/ui/widgets/dialog.js b/node_modules/jquery-ui/ui/widgets/dialog.js
+index e56b4dc..a83de7a 100644
+--- a/node_modules/jquery-ui/ui/widgets/dialog.js
++++ b/node_modules/jquery-ui/ui/widgets/dialog.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Dialog 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/draggable.js b/node_modules/jquery-ui/ui/widgets/draggable.js
+index 0ebc989..b6f3d7f 100644
+--- a/node_modules/jquery-ui/ui/widgets/draggable.js
++++ b/node_modules/jquery-ui/ui/widgets/draggable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Draggable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/droppable.js b/node_modules/jquery-ui/ui/widgets/droppable.js
+index a56c22a..75262f0 100644
+--- a/node_modules/jquery-ui/ui/widgets/droppable.js
++++ b/node_modules/jquery-ui/ui/widgets/droppable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Droppable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/menu.js b/node_modules/jquery-ui/ui/widgets/menu.js
+index b1bb2ab..1c5a5a4 100644
+--- a/node_modules/jquery-ui/ui/widgets/menu.js
++++ b/node_modules/jquery-ui/ui/widgets/menu.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Menu 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/mouse.js b/node_modules/jquery-ui/ui/widgets/mouse.js
+index 1a432f9..c6ca228 100644
+--- a/node_modules/jquery-ui/ui/widgets/mouse.js
++++ b/node_modules/jquery-ui/ui/widgets/mouse.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Mouse 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/progressbar.js b/node_modules/jquery-ui/ui/widgets/progressbar.js
+index 52a438d..52392a0 100644
+--- a/node_modules/jquery-ui/ui/widgets/progressbar.js
++++ b/node_modules/jquery-ui/ui/widgets/progressbar.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Progressbar 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/resizable.js b/node_modules/jquery-ui/ui/widgets/resizable.js
+index 50e63b6..6c5f846 100644
+--- a/node_modules/jquery-ui/ui/widgets/resizable.js
++++ b/node_modules/jquery-ui/ui/widgets/resizable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Resizable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/selectable.js b/node_modules/jquery-ui/ui/widgets/selectable.js
+index 1b90893..5496324 100644
+--- a/node_modules/jquery-ui/ui/widgets/selectable.js
++++ b/node_modules/jquery-ui/ui/widgets/selectable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Selectable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/selectmenu.js b/node_modules/jquery-ui/ui/widgets/selectmenu.js
+index 439bcae..9a42d94 100644
+--- a/node_modules/jquery-ui/ui/widgets/selectmenu.js
++++ b/node_modules/jquery-ui/ui/widgets/selectmenu.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Selectmenu 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/slider.js b/node_modules/jquery-ui/ui/widgets/slider.js
+index 76945b4..fd4b18e 100644
+--- a/node_modules/jquery-ui/ui/widgets/slider.js
++++ b/node_modules/jquery-ui/ui/widgets/slider.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Slider 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/sortable.js b/node_modules/jquery-ui/ui/widgets/sortable.js
+index 3f6439c..856e582 100644
+--- a/node_modules/jquery-ui/ui/widgets/sortable.js
++++ b/node_modules/jquery-ui/ui/widgets/sortable.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Sortable 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/spinner.js b/node_modules/jquery-ui/ui/widgets/spinner.js
+index dbed0f7..c9164fb 100644
+--- a/node_modules/jquery-ui/ui/widgets/spinner.js
++++ b/node_modules/jquery-ui/ui/widgets/spinner.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Spinner 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/tabs.js b/node_modules/jquery-ui/ui/widgets/tabs.js
+index 982a7cf..3f11eeb 100644
+--- a/node_modules/jquery-ui/ui/widgets/tabs.js
++++ b/node_modules/jquery-ui/ui/widgets/tabs.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Tabs 1.14.2
+  * https://jqueryui.com
+diff --git a/node_modules/jquery-ui/ui/widgets/tooltip.js b/node_modules/jquery-ui/ui/widgets/tooltip.js
+index 7118c02..005f267 100644
+--- a/node_modules/jquery-ui/ui/widgets/tooltip.js
++++ b/node_modules/jquery-ui/ui/widgets/tooltip.js
+@@ -1,3 +1,4 @@
++const jQuery = require('jquery');
+ /*!
+  * jQuery UI Tooltip 1.14.2
+  * https://jqueryui.com
