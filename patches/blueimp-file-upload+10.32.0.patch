@@ -1,0 +1,70 @@
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js
+index 9cc3d3f..a07647d 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js
+@@ -83,7 +83,7 @@
+ 
+       // Callback to retrieve the list of files from the server response:
+       getFilesFromResponse: function (data) {
+-        if (data.result && $.isArray(data.result.files)) {
++        if (data.result && Array.isArray(data.result.files)) {
+           return data.result.files;
+         }
+         return [];
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload.js b/node_modules/blueimp-file-upload/js/jquery.fileupload.js
+index e56ce76..3e81b60 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload.js
+@@ -19,7 +19,7 @@
+     define(['jquery', 'jquery-ui/ui/widget'], factory);
+   } else if (typeof exports === 'object') {
+     // Node/CommonJS:
+-    factory(require('jquery'), require('./vendor/jquery.ui.widget'));
++    factory(require('jquery'), require('jquery-ui/ui/widget'));
+   } else {
+     // Browser globals:
+     factory(window.jQuery);
+@@ -356,7 +356,7 @@
+       if ($.type(options.formData) === 'function') {
+         return options.formData(options.form);
+       }
+-      if ($.isArray(options.formData)) {
++      if (Array.isArray(options.formData)) {
+         return options.formData;
+       }
+       if ($.type(options.formData) === 'object') {
+@@ -646,7 +646,7 @@
+         if (!paramName.length) {
+           paramName = [fileInput.prop('name') || 'files[]'];
+         }
+-      } else if (!$.isArray(paramName)) {
++      } else if (!Array.isArray(paramName)) {
+         paramName = [paramName];
+       }
+       return paramName;
+diff --git a/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js b/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js
+index 3e3b9a9..a8723bd 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js
++++ b/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js
+@@ -83,7 +83,7 @@
+               '"></iframe>'
+           ).on('load', function () {
+             var fileInputClones,
+-              paramNames = $.isArray(options.paramName)
++              paramNames = Array.isArray(options.paramName)
+                 ? options.paramName
+                 : [options.paramName];
+             iframe.off('load').on('load', function () {
+diff --git a/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js b/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js
+index 78e6255..def008e 100644
+--- a/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js
++++ b/node_modules/blueimp-file-upload/js/vendor/jquery.ui.widget.js
+@@ -87,7 +87,7 @@
+       base = $.Widget;
+     }
+ 
+-    if ($.isArray(prototype)) {
++    if (Array.isArray(prototype)) {
+       prototype = $.extend.apply(null, [{}].concat(prototype));
+     }
+ 
