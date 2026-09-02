@@ -44,7 +44,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { NcEmptyContent } from '@nextcloud/vue'
 import { ref } from 'vue'
 import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
-import appIcon from '../../img/cafevdb.svg?raw'
+import appIcon from '../../img/cafevdb.svg'
 import { appName } from '../config.ts'
 import getInitialState from '../toolkit/util/initial-state.ts'
 
