@@ -24,3 +24,16 @@ index 033dd7b..1270cc7 100644
      }
      _getConfig(config) {
        const dataAttributes = Manipulator.getDataAttributes(this._element);
+diff --git a/node_modules/bootstrap/scss/_tooltip-with-deps.scss b/node_modules/bootstrap/scss/_tooltip-with-deps.scss
+new file mode 100644
+index 0000000..351f8cf
+--- /dev/null
++++ b/node_modules/bootstrap/scss/_tooltip-with-deps.scss
+@@ -0,0 +1,7 @@
++@import 'bootstrap/scss/functions';
++@import 'bootstrap/scss/variables';
++@import 'bootstrap/scss/mixins/border-radius';
++@import 'bootstrap/scss/mixins/deprecate';
++@import 'bootstrap/scss/mixins/reset-text';
++@import 'bootstrap/scss/vendor/rfs';
++@import 'bootstrap/scss/tooltip';
