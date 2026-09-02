@@ -14,6 +14,7 @@
     "./node_modules/ckeditor5/**.ts",
     "./node_modules/moment/**.ts",
     "./node_modules/pinia/**.ts",
+    "./node_modules/vite/**/*.ts",
     "./node_modules/vue-router/**/*.ts",
     "./node_modules/vue/**/*.ts",
     "./node_modules/webpack/**.ts",
@@ -27,7 +28,7 @@
     "types": [
       "bootstrap",
       "camelcase",
-      "chosen",
+      "chosen-js",
       "imagesLoaded",
       "jquery",
       "jqueryui",
@@ -56,7 +57,7 @@
     "verbatimModuleSyntax": false
   },
   "vueCompilerOptions": {
-    "target": 2.7
+    "target": "^3.5.0"
   },
   "ts-node": {
     "esm": true,
