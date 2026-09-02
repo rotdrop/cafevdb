@@ -182,33 +182,33 @@
         }
 
         &.delete {
-          background-image:url('../../../core/img/actions/delete.svg');
+          background-image:url('../../../../core/img/actions/delete.svg');
         }
 
         &.upload-replace {
-          background-image:url('../../../core/img/actions/upload.svg');
+          background-image:url('../../../../core/img/actions/upload.svg');
         }
 
         &.select-cloud {
-          background-image:url('../img/cloud-icon.svg');
+          background-image:url('../../img/cloud-icon.svg');
         }
 
 
         &.auto-fill-test {
-          background-image:url('../../../core/img/actions/details.svg');
+          background-image:url('../../../../core/img/actions/details.svg');
         }
         &.auto-fill-test.pdf {
-          background-image:url('../../../core/img/filetypes/application-pdf.svg');
+          background-image:url('../../../../core/img/filetypes/application-pdf.svg');
         }
         &.auto-fill-test-data {
-          background-image:url('../../../core/img/actions/download.svg');
+          background-image:url('../../../../core/img/actions/download.svg');
         }
         &.auto-fill-test.legacy {
-          background-image:url('../img/dont.svg');
+          background-image:url('../../img/dont.svg');
         }
 
         &.busy {
-          background-image:url('../../../core/img/loading.gif') !important;
+          background-image:url('../../../../core/img/loading.gif') !important;
         }
       }
     }
@@ -221,7 +221,7 @@
       width:28px;
       min-height:34px;
       vertical-align:middle;
-      background-image:url('../../../core/img/filetypes/folder-external.svg');
+      background-image:url('../../../../core/img/filetypes/folder-external.svg');
     }
 
     input.specialMemberProjects {
@@ -237,7 +237,7 @@
     }
 
     .popup-title .heading {
-      background-image:url('../img/logo-greyf-large.svg');
+      background-image:url('../../img/logo-greyf-large.svg');
       background-repeat:no-repeat;
       background-origin:padding-box;
       background-size:contain;
@@ -289,7 +289,7 @@
           color:blue;
           margin-left:3ex;
           padding-left:16px;
-          background-image: url('../../../core/img/actions/info.svg');
+          background-image: url('../../../../core/img/actions/info.svg');
           background-position:left center;
           background-repeat:no-repeat;
           background-origin:padding-box;
@@ -307,19 +307,19 @@
         }
         fieldset {
           input.recreate-views {
-            background-image:url('../img/reload-solid.svg');
+            background-image:url('../../img/reload-solid.svg');
             background-position:center center;
             background-repeat:no-repeat;
             background-size:#{$iconSize} #{$iconSize};
             font-size:0;
             &.busy {
-              background-image:url('../../../core/img/loading.gif');
+              background-image:url('../../../../core/img/loading.gif');
             }
           }
           input.checkbox.busy {
             &, &:checked {
               & + label::before {
-                background-image:url('../../../core/img/loading.gif');
+                background-image:url('../../../../core/img/loading.gif');
                 background-color:unset;
                 border:0;
                 background-size:contain;
@@ -358,7 +358,7 @@
     }
 
     .specialMemberProjects.validate {
-      background-image:url('../img/reload-solid.svg');
+      background-image:url('../../img/reload-solid.svg');
       background-repeat:no-repeat;
       background-position:center;
       text-indent:-100000em;
