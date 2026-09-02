@@ -100,12 +100,12 @@ class VueAppController extends Controller
   public function index(): TemplateResponse
   {
     // add the vue assets
-    Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
-    Util::addStyle($this->appName, $this->assetService->getCSSAsset('vue-app')['asset']);
+    Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app'));
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('vue-app'));
 
     // add the legacy assets
-    Util::addScript($this->appName, $this->assetService->getJSAsset('app')['asset']);
-    Util::addStyle($this->appName, $this->assetService->getCSSAsset('app')['asset']);
+    Util::addScript($this->appName, $this->assetService->getJSAsset('app'));
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('app'));
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());

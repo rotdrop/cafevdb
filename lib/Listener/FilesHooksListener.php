@@ -241,7 +241,7 @@ class FilesHooksListener implements IEventListener
     $assetBasename = self::ASSET_BASENAME[$eventClass][Constants::JS];
     if ($assetBasename) {
       try {
-        list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
+        $scriptAsset = $assetService->getJSAsset($assetBasename);
         \OCP\Util::addScript($appName, $scriptAsset);
       } catch (Throwable $t) {
         $this->logException($t, 'Unable to add script asset ' . $assetBasename);
@@ -250,7 +250,7 @@ class FilesHooksListener implements IEventListener
     $assetBasename = self::ASSET_BASENAME[$eventClass][Constants::CSS];
     if ($assetBasename) {
       try {
-        list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
+        $styleAsset = $assetService->getCSSAsset($assetBasename);
         \OCP\Util::addStyle($appName, $styleAsset);
       } catch (Throwable $t) {
         $this->logException($t, 'Unable to add style asset ' . $assetBasename);

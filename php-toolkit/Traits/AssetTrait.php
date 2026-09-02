@@ -106,7 +106,7 @@ trait AssetTrait
           $type,
         ]));
     }
-    return $this->assets[$type][$baseName];
+    return pathinfo($this->assets[$baseName][$type], PATHINFO_FILENAME);
   }
 
   /**
