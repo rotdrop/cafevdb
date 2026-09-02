@@ -1,0 +1,1206 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2021-2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:meta";
+@use './mixins/flex.scss' as *;
+@use './mixins/error-dialogs.scss' as *;
+@use './variables.scss' as *;
+@use '../build/scss-variables/EmailForm/EmailFormCssClasses.scss' as *;
+@use '../build/scss-variables/EmailForm/ComposerCssClasses.scss' as *;
+@use '../build/scss-variables/EmailForm/RecipientsFilterCssClasses.scss' as *;
+
+$editorHeight: 20em;
+
+$displayCssClass: display;
+$dropdownOpenCssClass: dropdown-open;
+$editCssClass: edit;
+$showSelectableCssClass: show-selectable;
+$rowClass: #{$appName}#{$classSeparator}#{$rowCssClass};
+
+.ui-widget.ui-dialog.emailform.#{$appNameTag} {
+  overflow:hidden;
+  max-height: calc(100vh - var(--header-height));
+  padding:0;
+
+  .no-margin {
+    margin: 0;
+    &-right {
+      margin-right: 0;
+    }
+  }
+
+  /* dialog popup, header */
+
+  div.ui-dialog-titlebar {
+    padding-bottom:0;
+    border-bottom-right-radius:0;
+    border-bottom-left-radius:0;
+    border-bottom:0;
+  }
+
+  #emailformdialog {
+
+    @include flexRules;
+
+    padding:0;
+    border-top-right-radius:0;
+    border-top-left-radius:0;
+
+    div#emailformwrapper {
+
+      /************************************************************************
+       *
+       * General stuff, background etc.
+       *
+       */
+
+      padding:0;
+      background-color: #F2F8FF;
+
+      .ui-tabs-nav {
+        margin-bottom: 0;
+      }
+
+      > div {
+        height:auto !important;
+        overflow-y:auto;
+        overflow-x:hidden;
+      }
+
+      ul#emailformtabs {
+        padding-top:0;
+        border-top-right-radius:0;
+        border-top-left-radius:0;
+        border-top:0;
+
+        li.dropdown-container {
+          &:hover {
+            font-weight:bold;
+            background-color: var(--color-background-hover);
+          }
+
+          &:active {
+            background-color: var(--color-primary-light);
+          }
+
+          nav {
+            top:30px;
+          }
+        }
+      } /* ul#emailformtabs */
+
+      form##{$appName}#{$classSeparator}#{$emailFormCssClass} {
+
+        &.#{projectModeOffCssClass} {
+          fieldset##{$appName}-email-composition-fieldset {
+            tr.event-attachments {
+              display: none !important;
+              visibility: hidden !important;
+            }
+            tr.all-attachments button.attachment.events  {
+              display: none !important;
+              visibility: hidden !important;
+            }
+          }
+        }
+
+        fieldset.page {
+          max-width:65em;
+          /* padding-right:1.2em; */
+        }
+
+        &:not(.#{projectModeCssClass}) {
+          .#{$onlyProjectModeCssClass} {
+            display:none !important;
+          }
+        }
+        &.#{projectModeCssClass} {
+          .#{$notProjectModeCssClass} {
+            display:none !important;
+          }
+        }
+
+        // two-state checkbox with button-like display
+        span.checkbox-button.#{$appName}-container {
+          position:relative;
+          vertical-align:middle;
+          width:var(--default-clickable-area);
+          height:var(--default-clickable-area);
+
+          span.button {
+            background-repeat:no-repeat;
+            background-position:center;
+            background-size:22px 22px;
+            display:inline-block;
+            width:var(--default-clickable-area);
+          }
+
+          &:not(.inverted) input[type=checkbox]:checked,
+          &.inverted input[type=checkbox],
+          &:not(.inverted) input[type=radio]:checked,
+          &.inverted input[type=radio] {
+            & + label span.button {
+              background-color:red;
+              box-shadow:2px 2px 2px #080808 inset;
+            }
+          }
+
+          &:not(.inverted) input[type=checkbox],
+          &.inverted input[type=checkbox]:checked,
+          &:not(.inverted) input[type=radio],
+          &.inverted input[type=radio]:checked {
+            & + label span.button {
+              background-color: var(--color-background-dark);
+              box-shadow:unset;
+            }
+          }
+
+          input[type=checkbox],
+          input[type=radio] {
+            &:disabled ~ * {
+              opacity:20%;
+            }
+
+            & ~ .checkbox-alert {
+              background-image:url('../../../core/img/actions/alert-outline.svg');
+              background-color:red;
+              background-repeat:no-repeat;
+              background-position:center;
+              display:block;
+              position:absolute;
+              left:-4px;
+              top:-4px;
+              width:20px;
+              height:20px;
+              z-index:1;
+              border-radius:var(--border-radius-pill);
+              border:1px solid black;
+              &.alert-checked {
+                display:none;
+              }
+              &.alert-unchecked {
+                display:block;
+              }
+            }
+
+            &:checked {
+              & ~ .checkbox-alert.alert-checked {
+                display:block;
+              }
+              & ~ .checkbox-alert.alert-unchecked {
+                display:none;
+              }
+            }
+
+            position: absolute;
+            left:-10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+          }
+        }
+
+        /****************************************************************************
+         *
+         * recipients filters
+         *
+         */
+
+        div#emailformrecipients {
+          /* has just one child, the fieldset */
+
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-bottom: 0px !important;
+
+          div.#{$rowClass} {
+            width:100%;
+          }
+
+          div.#{$rowClass}:not(.flex-container):after {
+            content:"";
+            display:block;
+            height:0;
+            clear: both;
+          }
+
+          #basic-recipient-set-wrapper {
+            /* contains the "basic recipients set" drop-down */
+            overflow:visible;
+          }
+
+          .recipients-select {
+            @include meta.load-css('bootstrap/dist/css/bootstrap');
+            @include meta.load-css('bootstrap4-duallistbox/dist/bootstrap-duallistbox');
+            & {
+              --bs-border-radius: var(--border-radius-large);
+              --bs-border-width: var(--border-width-input, 2px);
+              --bs-border-color: var(--color-border-maxcontrast);
+              --bs-badge-color: var(--color-main-text);
+            }
+            button {
+              min-height: unset;
+            }
+            .bootstrap-duallistbox-container {
+              .btn.moveall, .btn.removeall, select {
+                border: 2px solid var(--color-border-maxcontrast);
+              }
+              .btn {
+                --bs-btn-hover-color: var(--color-primary-element-light-text);
+                --bs-btn-color: var(--color-primary-element-light-text);
+                // --bs-btn-bg: var(--color-primary-element-light);
+                --bs-btn-hover-bg: var(--color-primary-element-light-hover);
+                --bs-btn-bg: var(--color-main-background);
+                &.moveall, &.removeall {
+                  font-weight: bold;
+                  background-repeat: no-repeat, no-repeat;
+                  background-size: auto 60%;
+                  background-position-x: 47%, 53%;
+                  background-position-y: center, center;
+                  text-indent: -200vw;
+                }
+                &.moveall {
+                  $icon: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/arrow-right.svg');
+                  background-image: $icon, $icon;
+                }
+                &.removeall {
+                  $icon: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/arrow-left.svg');
+                  background-image: $icon, $icon;
+                }
+              }
+              input, select {
+                background-color: var(--color-main-background);
+              }
+              input {
+                &:hover, &:focus {
+                  &:not([disabled]) {
+                    border-color: var(--color-main-text);
+                    border-width: var(--border-width-input-focused, 2px);
+                    box-shadow: 0 0 0 2px var(--color-main-background) !important;
+                    --input-border-width-offset: 0px;
+                  }
+                }
+              }
+            }
+          }
+
+          .busy-indicator {
+	    position: absolute;
+	    width: fit-content;
+	    bottom: 50%;
+	    left: 50%;
+	    margin: 0;
+	    transform: translate(-50%, -50%);
+	    opacity: 1;
+	    background: lightgray;
+            padding:3px 7px;
+            z-index:50;
+          }
+
+          .missing-email-addresses {
+            &.names.#{$disabledCssClass} .personal-record {
+              opacity:40%;
+              pointer-events:none;
+            }
+
+            .personal-record {
+              color:red;
+              font-style:italic;
+              text-decoration:underline;
+              font-weight:bold;
+              cursor:pointer;
+              padding:2px;
+            }
+
+            .personal-record:hover {
+              /* box-shadow:1px 1px 1px #080808; /*, 1px 1px 1px #cfc inset;*/
+              /* background-color:LightSteelBlue; */
+              color: var(--color-main-text);
+              background-color:rgba(250,250,250,1.0);
+
+            }
+
+            .personal-record:active {
+              /* box-shadow:1px 1px 1px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
+              color: var(--color-main-text);
+              background-color:LightSteelBlue;
+            }
+          }
+
+          span.basic-recipients-set.#{$appName}-container.outer {
+            max-width:100%;
+            white-space:nowrap;
+            overflow:hidden;
+
+            .basic-recipients-set.brief-description {
+              display:none;
+              font-style:italic;
+              font-weight:bold;
+              color:red;
+            }
+
+            &.announcementsMailingList {
+              .basic-recipients-set.brief-description.announcementsMailingList {
+                display:initial;
+              }
+            }
+
+            &.projectMailingList {
+              .basic-recipients-set.brief-description.projectMailingList {
+                display:initial;
+              }
+            }
+
+            &:not(.announcementsMailingList, .projectMailingList) {
+
+              @each $selector1 in ".fromProjectConfirmed", ":not(.fromProjectConfirmed)" {
+                @each $selector2 in ".fromProjectPreliminary", ":not(.fromProjectPreliminary)" {
+                  @each $selector3 in ".exceptProject", ":not(.exceptProject)" {
+                    &#{$selector1}#{$selector2}#{$selector3} {
+                      .basic-recipients-set.brief-description {
+                        &#{$selector1}#{$selector2}#{$selector3} {
+                          display:initial;
+                          &.announcementsMailingList, &.projectMailingList {
+                            display:none;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .basic-recipients-set.#{$appName}-container.inner {
+              position:relative;
+              width:100%;
+
+              input[type=checkbox], input[type=radio] {
+                position: absolute;
+                left:-10000px;
+                top: auto;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+
+                + label {
+                  width:100%;
+                  white-space:nowrap;
+                  overflow:hidden;
+                  text-overflow:ellipsis;
+                  background-repeat:no-repeat;
+                  background-size:16px 16px;
+                  background-position:4px center;
+                  padding-left:24px;
+                }
+                &:checked + label {
+                  color:red;
+                  font-style:italic !important;
+                  background-image:url('../../../core/img/actions/checkmark.svg');
+                }
+                &:disabled + label {
+                  opacity: 0.2;
+                }
+              }
+            }
+          }
+
+          .recipients-select.#{$appName}-container {
+            /* width:80%; */
+
+            .btn, .btn-outline-secondary {
+              &:focus {
+                box-shadow:0 0;
+              }
+            }
+          }
+
+          .participation-status-filter.#{$appName}-container {
+            flex-basis: auto;
+            margin-right: 0.5ex;
+
+            label {
+            }
+            .chosen-container {
+              width:100% !important;
+            }
+            .selectize-control {
+              min-width:100%;
+            }
+          }
+
+          .instruments-filter.#{$appName}-container {
+            text-align:right;
+            flex-basis: auto;
+            margin-left: 0.5ex;
+
+            label {
+            }
+            .chosen-container {
+              width:100% !important;
+            }
+
+            span#instruments-filter-wrapper {
+              display:inline-block;
+              text-align:left;
+              width: 100%;
+              .selectize-control {
+                min-width:100%;
+              }
+            }
+          }
+
+          input.instruments-filter-controls {
+            &.apply, &.undo, &.redo, &.reset {
+              background-repeat:no-repeat;
+              background-size: 28px 28px;
+              background-position: center;
+              width:28px;
+              height:28px;
+              font-size:0pt;
+              vertical-align:middle;
+            }
+            &.apply { background-image:url('../img/email-new-yes.svg'); }
+            &.undo { background-image:url('../img/email-new-undo.svg'); }
+            &.redo { background-image:url('../img/email-new-redo.svg'); }
+            &.reset { background-image:url('../img/email-new-x.svg'); }
+          }
+
+
+        }
+
+
+        /****************************************************************************
+         *
+         * status messages
+         *
+         */
+
+        div#emailformdebug {
+          height:auto;
+          width:65em;
+          max-width:65em;
+          overflow:auto;
+
+          /*****************************************************************************
+           *
+           * Preview in debug tab
+           *
+           */
+
+          div##{$appName}-email-preview {
+            line-height:initial;
+            font-size:initial;
+
+            .email-header {
+              color:red;
+              font-weight:bold;
+              margin-bottom:0.5em;
+              margin-top:0.5em;
+            }
+
+            .reset-css {
+
+              &, * {
+                all:revert;
+              }
+
+              // @import 'sanitize.css/sanitize';
+              // @import '@csstools/normalize.css/normalize';
+              /*@import 'normalize.css/normalize';*/
+              @include meta.load-css('sanitize.css/sanitize');
+              @include meta.load-css('@csstools/normalize.css/normalize');
+
+              blockquote {
+                display: block;
+                margin-top: 1em;
+                margin-bottom: 1em;
+                margin-left: 40px;
+                margin-right: 40px;
+                &[cite^="mid:"] {
+                  border-left:2px solid blue;
+                  margin-left:0;
+                  padding-left:0.5em;
+                  blockquote[cite^="mid:"] {
+                    border-left:2px solid lightgrey;
+                  }
+                }
+              }
+
+              .email-body {
+              }
+
+              &.email-attachments {
+                &.empty {
+                  display:none;
+                }
+                h4.centered-in-rule {
+                  font-weight:normal;
+                  display: flex;
+                  flex-direction: row;
+                  &:before, &:after{
+                    content: "";
+                    flex: 1 1;
+                    border-bottom: 1px solid;
+                    margin: auto;
+                  }
+                  &:before {
+                    margin-right: 1em;
+                    margin-left:0.5em;
+                  }
+                  &:after {
+                    margin-left: 1em;
+                    margin-right:0.5em;
+                  }
+                }
+                li .attachment-item {
+                  /* display:inline-block; */
+                  display:inline-flex;
+                  align-items:baseline;
+                  span {
+                    /* margin-right: 0.5em; */
+                    display:inline-block;
+
+                    &.filename {
+                      font-family:monospace;
+                    }
+                    &.mime-type {
+                      font-style:italic;
+                    }
+                    &.size {
+                    }
+                    &.separator {
+                      margin-left:0.5em;
+                      margin-right:0.5em;
+                    }
+                  }
+                }
+              }
+            }
+
+            hr.email-preview-separator  {
+              border:1px solid black;
+            }
+          }
+        }
+
+        /****************************************************************************
+         *
+         * email composition
+         *
+         */
+
+        div#emailformcomposer  {
+          overflow-y: auto;
+          overflow-x: auto;
+          padding-bottom: 0px !important;
+          display:flex;
+          flex-wrap:nowrap;
+          flex-direction:row;
+          justify-content:space-between;
+          align-items:baseline;
+
+          // tweak editor height etc.
+          #message-text ~ .ck-editor .ck-editor__editable {
+            min-height: calc($editorHeight - var(--ck-form-header-height));
+          }
+          #message-text ~ .tox.tox-tinymce {
+            height:$editorHeight;
+          }
+
+          fieldset.email-composition.page {
+            margin-bottom:1em;
+            flex: 1 0 auto;
+          }
+          padding-right: calc(1.4em - 20px);
+          div.scrollbar-compensator {
+            min-width:0;
+            width:20px;
+            flex: 0 1 auto;
+          }
+
+          tr {
+
+            &.column-layout td {
+              height:0;
+              &.first {
+                width:0;
+              }
+              &.second {
+                width:100%;
+              }
+              &.third {
+                width:0;
+              }
+            }
+
+            td.caption {
+              font-weight:bold;
+              vertical-align:top;
+              padding-right:0.5em;
+              /* min-width:10em; */
+              width:fit-content;
+            }
+
+            &.all-attachments {
+              .flex-container {
+                margin-bottom:3px;
+              }
+              button {
+                display: flex;
+                align-items: center;
+                background-color: #C6DEFF;
+                // vertical-align:middle;
+                height:34px;
+                min-height: 34px;
+                width:34px;
+                padding:0;
+                border-style:outset;
+                margin-right: 0.5em;
+                & img {
+                  margin: auto;
+                }
+                &.upload {
+                  img {
+                    width: #{$iconSize};
+                  }
+                }
+                &.cloud {
+                  padding:5px 0;
+                  img {
+                    width:26px;
+                  }
+                }
+                &.events {
+                  padding:0px;
+                  img {
+                    vertical-align:top;
+                    height: #{$iconSize};
+                  }
+                }
+                &.personal {
+                  img {
+                    width: #{$iconSize};
+                  }
+                }
+                &.visibility-toggle {
+                  img {
+                    width: #{$iconSize};
+                  }
+                }
+              }
+              .separator {
+                display: inline-block;
+                margin: 8px 1em 8px 0.5em;
+                border-left: 1px solid black;
+              }
+            } // tr.all-attachments
+
+            /* attachments selectors and controls */
+            &.attachments {
+              &.#{$noAttachmentsCssClass} {
+                display:none;
+              }
+              &.#{$emptySelectionCssClass} {
+                display:none;
+                &.#{$showSelectableCssClass} {
+                  display:table-row;
+                }
+              }
+	      /* give show-selectable priority */
+	      &.#{$hiddenCssClass}.#{$showSelectableCssClass} {
+                display:table-row;
+              }
+              td.content {
+                .selectize-control {
+                  flex-grow: 1;
+                  // max-width: 85%;
+                }
+                .attachment-controls {
+                  margin-left: 1em;
+                  height: 0%;
+                  input[type=submit], input[type=button] {
+                    float:left;
+                    background-repeat:no-repeat;
+                    background-size: #{$iconSize} #{$iconSize};
+                    background-position: center;
+                    width:34px;
+                    height:34px;
+                    font-size:0pt;
+                    vertical-align:middle;
+                    &.visibility-toggle {
+                      background-image:url('../../../core/img/actions/toggle.svg');
+                    }
+                    &.delete-all-attachments {
+                      background-image:url('../img/#{$appName}-delete.svg');
+                    }
+                  }
+                }
+              }
+            } // tr.attachments
+
+            &.submit {
+              td {
+                padding-top:0.5em;
+                margin:0;
+
+                .container {
+                  display:inline-block;
+                  &.send, .preview {
+                    float:left;
+                  }
+                  &.cancel {
+                    float:right;
+                  }
+                }
+              }
+            } // tr.submit
+
+          } // tr
+
+          /**************************/
+
+          tr, tr:hover, tr:active {
+            background-color:inherit;
+          }
+
+          td.body, td.caption {
+            vertical-align:top;
+          }
+
+          tr.stored-messages {
+            td {
+              padding-bottom: 0.5em;
+            }
+            & > tr td {
+              border-top: 1px solid #808080;
+              padding-bottom:0.5em;
+            }
+          }
+
+
+
+          td.email-address.input input.address-book-emails,
+          td.stored-messages-storage input.submit,
+          td.email-from input[type=button] {
+            background-repeat:no-repeat;
+            background-size: #{$iconSize} #{$iconSize};
+            background-position: center;
+            width: var(--default-clickable-area);
+            height: var(--default-clickable-area);
+            font-size:0pt;
+            vertical-align:middle;
+          }
+
+          td.email-from input.save-from-tag {
+            background-image: var(--icon-settings-dark);
+          }
+
+          td.stored-messages-storage {
+            text-align:right;
+
+            .button-container > * {
+              margin-left: 3px;
+            }
+
+            input.save-message {
+              background-image:url('../img/save.svg');
+            }
+
+            input.delete-message {
+              background-image:url('../img/#{$appName}-delete.svg');
+            }
+
+            input {
+              padding-top:5px;
+            }
+
+            span.checkbox-button.#{$appName}-container {
+
+              span.button.save-as-template {
+                background-image: url('../img/template.svg');
+              }
+
+              span.button.draft-auto-save {
+                background-image: url('../img/autosave.svg');
+              }
+            }
+
+            input[type=checkbox]:checked + label span.button.draft-auto-save {
+              background-color:lightgreen;
+            }
+          } /* td.stored-messages-storage */
+
+          .stored-messages-choose {
+            --drop-down-min-width: 0px;
+            --drop-down-margin: 3px;
+            .select-container > * {
+              margin-right: var(--drop-down-margin);
+            }
+            .chosen-container, .selectize-control {
+              flex-shrink:10;
+              flex-basis:100%;
+              max-width: calc(100% - 2 * var(--drop-down-min-width) - 2 * var(--drop-down-margin));
+              min-width: var(--drop-down-min-width); /* in order to have something left ... */
+              width:0!important;
+              &.chosen-with-drop, &.#{$dropdownOpenCssClass}, &.#{$loadingCssClass}, &.#{$expandedCssClass} {
+                flex-grow:10;
+                flex-shrink:0;
+              }
+              &:not(.#{$dropdownOpenCssClass}) {
+                overflow: hidden;
+              }
+            }
+          }
+
+          .chosen-container .chosen-default {
+            color: #000;
+            font-weight:bold;
+          }
+
+          #emailCurrentTemplate {
+            width:16em;
+            margin-left:1em;
+            vertical-align:middle;
+          }
+
+          #emailCurrentTemplate:disabled {
+            opacity:1;
+          }
+
+          td.email-address {
+
+            &.input input.address-book-emails {
+              background-image:url('../img/contacts-dark.svg');
+              /*  background-color: #000;*/
+              float:right;
+              &.#{$loadingCssClass} {
+                background-image:url('../../../core/img/loading.gif');
+              }
+            }
+
+            width:100%;
+            /*padding: 0 1em 0 0;*/
+            .email-address-holder {
+              width:90%;
+              float:left;
+            }
+
+            .flex-container {
+              flex-wrap: nowrap;
+              justify-content:space-between;
+              flex-direction:row;
+              align-items:center;
+              > * {
+                /* display:inline-flex; */
+              }
+              .email-address-holder {
+                flex: 1 0 auto;
+              }
+              .checkbox-button {
+                flex: 0 1 auto;
+              }
+            }
+
+            &.#{$displayCssClass} {
+              overflow:hidden;
+
+              span.email-address-holder {
+                max-width:45em;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                margin-right:0.3ex;
+              }
+
+              .checkbox-button.disclosed-recipients {
+                input[type=checkbox] {
+                  & + label span.button {
+                    padding-left:0;
+                    padding-right:0;
+                    text-align:center;
+                    width:34px;
+                    height:34px;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    span.label {
+                      display:inline-flex;
+                      font-weight:bold;
+                    }
+                  }
+                }
+                &:not(.inverted) input[type=checkbox]:checked,
+                &.inverted input[type=checkbox] {
+                  & + label span.button {
+                    background-color:lightgreen;
+                  }
+                }
+                &:not(.inverted) input[type=checkbox],
+                &.inverted input[type=checkbox]:checked {
+                  & + label span.button {
+                    background-color: var(--color-background-dark);
+                  }
+                }
+              }
+            }
+          }
+
+          td.subject.input {
+            span.subject.tag {
+              &.#{$displayCssClass} {
+                .editable {
+                  display: none;
+                }
+                .#{$displayCssClass} {
+                  display: inline-block;
+                }
+              }
+              &.#{$editCssClass} {
+                .editable {
+                  display: inline-block;
+                }
+                .#{$displayCssClass} {
+                  display: none;
+                }
+              }
+              .button.edit-subject-tag {
+                background-image: var(--icon-settings-dark);
+                background-repeat: no-repeat;
+                background-position: center;
+                width: #{$iconSize};
+                height: #{$iconSize};
+                min-height: #{$iconSize};
+                min-width: #{$iconSize};
+                max-height: #{$iconSize};
+                max-width: #{$iconSize};
+                padding: 0;
+              }
+              &, *:not(input) {
+                flex-basis:auto;
+                font-family:monospace;
+                font-size:100%;
+                width:fit-content;
+                text-align:right;
+                font-weight:bold;
+                line-height:2.5em;
+              }
+            }
+
+            span.subject.input {
+              flex-basis:auto;
+              width:100%;
+              /* padding: 0 1em 0 0; */
+              display:inline-block;
+              line-height:2.5em;
+            }
+
+            input {
+              width:100%;
+            }
+          }
+
+          td.messagetext {
+            padding: 0.5em 0;
+          }
+
+          td input.sender-name {
+            width:100%;
+          }
+
+        } // #emailformcomposer
+
+        span.#{$appName}-container {
+          display:inline-block;
+        }
+
+        .#{$appName}-container.left {
+          float:left;
+        }
+
+        .#{$appName}-container.right {
+          float:right;
+          text-align:right;
+        }
+
+        .label {
+          font-weight:bold;
+        }
+
+        .label.top {
+          display:block;
+        }
+
+        .label.left {
+          display:inline-block;
+          float:left;
+          padding-right:0.5em;
+        }
+
+        .label.right {
+          display:inline-block;
+          float:right;
+          padding-left:0.5em;
+        }
+
+        .spacer {
+          width:100%;
+          height:1px;
+          margin: 0.5em 0;
+          text-align:center;
+          line-height:3px;
+
+          .ruler {
+            display:block;
+            height:100%;
+            width:100%;
+            opacity:50%;
+            background-color:black;
+          }
+        } /* .spacer */
+
+        .vmiddle {
+          vertical-align:middle;
+        }
+
+        .vmiddle * {
+          vertical-align:middle;
+        }
+
+      } /* form##{$appName}-email-form */
+
+      div#sendingprogresswrapper {
+        display:none;
+        width:60em;
+        vertical-align:middle;
+
+        .messagecount {
+          width:100%;
+          line-height:2em;
+          vertical-align:middle;
+          font-size:120%;
+          font-weight:bold;
+          margin-bottom:0.5em;
+          text-align:center;
+        }
+
+        div.progress.#{$rowClass} {
+          width:100%;
+          height:2em;
+          padding: 0.5em;
+          line-height:2em;
+        }
+
+        span.title {
+          font-weight:bold;
+          float:left;
+          display:inline-block;
+          width:10em;
+          vertical-align:middle;
+        }
+
+        span.progressbar {
+          float:right;
+          display:inline-block;
+          width:40em;
+          margin-right:1em;
+        }
+      } /* div#sendingprogresswrapper */
+
+    } /* div#emailformwrapper */
+  } /* #emailformdialog */
+} /* .ui-dialog.emailform */
+
+/* special elements */
+
+.error.emailform span,
+.error.emailform div {
+  max-width:60em;
+}
+
+.emailform.error.group {
+  padding-bottom:0.5em;
+}
+
+span.error.code,
+span.error.contents.item.substitutions {
+  color:red;
+  font-family:monospace;
+  font-weight:bold;
+}
+
+/******************************************************************************
+ *
+ * Hide message text in oc-dialog after sending, still visible in
+ * status-tab, which really is enough
+ *
+ */
+.oc-dialog .group.message.text {
+  display:none;
+  height:0;
+  max-height:0;
+}
+
+/******************************************************************************
+ *
+ * File upload support
+ *
+ */
+
+.file-upload-form {
+  width:0;
+  height:0;
+}
+.file-upload-target {
+  display:none;
+}
+.file-upload-start {
+  ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter:alpha(opacity=0);
+  opacity:0;
+  z-index:1001;
+  width:0;
+  height:0;
+}
+
+/*****************************************************************************
+ *
+ * Status messages in dialog and debug tab
+ *
+ */
+div.emailform.statuspage {
+  @include errorDialogs($appNameTag);
+}
+
+:export {
+  displayCssClass: $displayCssClass;
+  dropdownOpenCssClass: $dropdownOpenCssClass;
+  editCssClass: $editCssClass;
+  emptySelectionCssClass: $emptySelectionCssClass;
+  noAttachmentsCssClass: $noAttachmentsCssClass;
+  notProjectModeCssClass: $notProjectModeCssClass;
+  onlyProjectModeCssClass: $onlyProjectModeCssClass;
+  projectModeCssClass: $projectModeCssClass;
+  projectModeOffCssClass: $projectModeOffCssClass;
+  showSelectableCssClass: $showSelectableCssClass;
+}
