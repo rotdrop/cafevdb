@@ -63,25 +63,12 @@ import { vueDevTools } from './toolkit/util/vue-devtools.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import Console from './util/console.ts';
 
-import './webpack-setup.ts';
-
 type Toast = ReturnType<typeof showError>;
 
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
 const logger = new Console(COMPONENT_NAME);
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    OCA: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    OCP: any;
-  }
-
-  var __webpack_public_path__: string;
-}
-
-if (!window.OCA.CAFEVDB) {
+f (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 

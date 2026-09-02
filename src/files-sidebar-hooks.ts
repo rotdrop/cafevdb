@@ -31,8 +31,6 @@ import logoSvg from '../img/cafevdb.svg?raw';
 import { appName } from './config.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
 
-import './webpack-setup.ts';
-
 const sidebarTabTag = `${appName}-mailmerge-files-sidebar-tab` as const;
 
 const initialState = getInitialState<FilesInitialState>({ section: 'files' });
