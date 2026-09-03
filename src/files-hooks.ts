@@ -65,10 +65,20 @@ import Console from './util/console.ts';
 
 type Toast = ReturnType<typeof showError>;
 
+declare global {
+  interface window {
+    OCA: {
+      CAFEVDB: {
+        node?: INode;
+      };
+    };
+  }
+}
+
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
 const logger = new Console(COMPONENT_NAME);
 
-f (!window.OCA.CAFEVDB) {
+if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
