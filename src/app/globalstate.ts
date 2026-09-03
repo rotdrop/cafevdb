@@ -80,6 +80,15 @@ const globalState = new Proxy(legacyGlobalState, {
   set(_target, property, value) {
     return Reflect.set(globalStateObject, property, value);
   },
+  has(_target, property) {
+    return Reflect.has(globalStateObject, property);
+  },
+  ownKeys(_target) {
+    return Reflect.ownKeys(globalStateObject);
+  },
+  getOwnPropertyDescriptor(_target, property) {
+    return Reflect.getOwnPropertyDescriptor(globalStateObject, property);
+  },
 });
 
 export const setGlobalStateObject = (state: GlobalState) => {
@@ -90,10 +99,6 @@ export const setGlobalStateObject = (state: GlobalState) => {
   for (const key of Object.keys(legacyGlobalState) as (keyof GlobalState)[]) {
     delete legacyGlobalState[key];
   }
-  console.debug('LEGACY GLOBAL STATE REPLACED', {
-    state,
-    legacyGlobalState,
-  });
 };
 
 export default globalState;

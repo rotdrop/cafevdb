@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type Console from '../util/console.ts';
+
 import {
   getLanguage,
   loadTranslations,
@@ -29,14 +31,14 @@ import {
   translate,
   translatePlural,
 } from '@nextcloud/l10n';
-import { watch } from 'vue';
 import { appName } from '../config.ts';
-import logger from '../logger.ts';
-import globalState from '../services/legacy-global-state.ts';
+import globalState, { globalStateInitialized } from '../services/legacy-global-state.ts';
 
 type TranslationOptions = Exclude<Parameters<typeof translatePlural>[5], undefined>;
 type TranslationVariables<T extends string> = Exclude<Parameters<typeof translate<T>>[2], undefined>;
 type AppTranslationsPromise = ReturnType<typeof loadTranslations>;
+
+let logger: Console;
 
 let appBundle: Awaited<AppTranslationsPromise>;
 let appLanguage: string;
@@ -44,10 +46,9 @@ let appLanguage: string;
 export const getAppLocale = () => globalState.appLocale;
 export const getAppLanguage = () => appLanguage;
 
-const globalStateInitialized = Promise.withResolvers<void>();
-
 export const setupAppBundle = async () => {
-  await globalStateInitialized.promise;
+  await globalStateInitialized;
+  logger = (await import('../logger.ts')).default;
   let locale: Intl.Locale;
   try {
     // funny JavaScript conventions ...
@@ -81,16 +82,6 @@ export const setupAppBundle = async () => {
     appLanguage,
   });
 };
-
-if (!globalState.initialized) {
-  watch(() => globalState.initialized, () => {
-    logger.debug('WATCHER ON GLOBAL STATE INITIALIZATION TRIGGERED', { globalState });
-    globalStateInitialized.resolve();
-  });
-} else {
-  logger.debug('GLOBAL_STATE_INITIALIZED already', { globalState });
-  globalStateInitialized.resolve();
-}
 
 setupAppBundle();
 

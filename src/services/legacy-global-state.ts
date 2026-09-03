@@ -39,7 +39,11 @@ import {
 
 export type { GlobalState };
 
-export const globalState = reactive(legacyGlobalState);
+export const globalState = reactive({ ...legacyGlobalState });
+const {
+  resolve: resolveGlobalStateInitialized,
+  promise: globalStateInitialized,
+} = Promise.withResolvers<GlobalState>();
 
 let logger: Console;
 
@@ -50,7 +54,7 @@ const reactifyGlobalState = function(legacyGlobalState: GlobalState) {
   // reactive(globalState) this alone does not seem to work ...
   logger.debug('AFTER REACTIFY GLOBAL STATE', {
     globalState,
-    selectChosen: globalState.PHPMyEdit.selectChosen,
+    expanded: { ...globalState },
   });
 };
 
@@ -62,19 +66,22 @@ export const synchronizeGlobalState = async () => {
     reactifyGlobalState(legacyGlobalState);
     logger.debug('AFTER GLOBAL STATE REACTIFY', globalState);
     await awaitEmit(GLOBAL_STATE_INITIALIZED, globalState);
-    return globalState;
+    resolveGlobalStateInitialized(globalState);
   } else {
-    const { promise, resolve } = Promise.withResolvers<GlobalState>();
     logger.debug('WAIT FOR GLOBAL STATE INITIALIZED');
     const initializedHandler = asyncSubscribe(GLOBAL_STATE_INITIALIZED, (legacyGlobalState) => {
       unsubscribe(GLOBAL_STATE_INITIALIZED, initializedHandler);
       reactifyGlobalState(legacyGlobalState);
       logger.debug('AFTER GLOBAL STATE REACTIFY', globalState);
-      resolve(globalState);
+      resolveGlobalStateInitialized(globalState);
       return globalState;
     });
-    return promise;
   }
+  return globalStateInitialized;
+};
+
+export {
+  globalStateInitialized,
 };
 
 export default globalState;
