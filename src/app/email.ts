@@ -42,6 +42,7 @@ import { translate as t } from '@nextcloud/l10n';
 import { generateOcsUrl } from '@nextcloud/router';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import actual from 'actual';
+import Duallistbox from 'bootstrap4-duallistbox';
 import {
   EnumEmailFormContactsOperation,
   EnumPersonalSettingsKey,
@@ -112,8 +113,7 @@ import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import 'cafevdb-selectize.scss';
 import './jquery-readonly.ts';
-import 'bootstrap4-duallistbox';
-import 'emailform.scss';
+import 'emailform.module.scss';
 import {
   displayCssClass,
   dropdownOpenCssClass,
@@ -123,7 +123,7 @@ import {
   projectModeCssClass,
   projectModeOffCssClass,
   showSelectableCssClass,
-} from 'emailform.scss';
+} from 'emailform.module.scss';
 // eslint-disable-next -line n/no-missing-import
 import {
   disabledCssClass,
@@ -131,7 +131,7 @@ import {
   hiddenCssClass,
   loadingCssClass,
   reallyHiddenCssClass,
-} from 'variables.scss';
+} from 'variables.module.scss';
 
 type AttachmentElementData = {
   options: string; // HTML fragment
@@ -141,6 +141,8 @@ type AttachmentElementData = {
 type EmailFormRecipientsFilterResponseData = EmailFormRecipientsFilterReloadResponse
   |EmailFormRecipientsFilterResponse
   |EmailFormRecipientsFilterSnapshotResponse;
+
+console.info('DUALLB', { Duallistbox });
 
 const isRecipientsFilterReloadResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterReloadResponse =>
   (asKey(<EmailFormRecipientsFilterReloadResponse>arg, 'contents') in arg) && typeof arg.contents === 'string' && arg.contents.length > 0;
@@ -1082,7 +1084,7 @@ const emailFormCompositionHandlers = (
                 delete requestData.recipientsForm;
 
                 // deselect menu item
-                SelectUtils.deselectAll($draftEmailsSelector);
+                SeglectUtils.deselectAll($draftEmailsSelector);
                 break;
               }
               case 'sent': {
@@ -2516,8 +2518,8 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
 
       const position = {
         my: 'center top',
-        at: 'center bottom',
-        of: '#header',
+        at: 'center top',
+        of: '#content-vue',
       };
 
       $dialogHolder.cafevDialog({
@@ -2529,6 +2531,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         closeOnEscape: false,
         dialogClass: 'emailform custom-close',
         resizable: false,
+        draggable: true,
         open() {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton($dialogHolder);
@@ -2670,6 +2673,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
           if (difference > 0) {
             position.at = `center bottom+${difference}`;
+            console.info('EMAILL DIALOG POSITION', position);
             $dialogHolder.dialog('option', 'position', position);
           }
           $dialogWidget

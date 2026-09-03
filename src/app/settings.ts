@@ -55,7 +55,7 @@ import '../legacy/nextcloud/jquery/showpassword.js';
 import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/widgets/accordion';
 import 'jquery-ui/ui/widgets/tabs';
-import { hiddenCssClass } from 'variables.scss';
+import { hiddenCssClass } from 'variables.module.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');

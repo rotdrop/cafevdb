@@ -31,7 +31,7 @@ import $ from './jquery.ts';
 
 import '../legacy/nextcloud/jquery/requesttoken.js';
 import 'personal-settings-popup.scss';
-import { hiddenCssClass, loadingCssClass } from 'variables.scss';
+import { hiddenCssClass, loadingCssClass } from 'variables.module.scss';
 
 export interface Callbacks {
   done: <T extends HTMLElement>(this: T) => void;

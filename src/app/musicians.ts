@@ -87,7 +87,7 @@ import '../legacy/nextcloud/jquery/octemplate.js';
 require('jquery-ui/themes/base/autocomplete.css');
 import 'musicians.scss';
 import 'sepa-bank-accounts.scss';
-import { disabledCssClass } from 'variables.scss';
+import { disabledCssClass } from 'variables.module.scss';
 
 type CANCELLED_STATUS = 'cancelled';
 type ErrorTextStatus = JQuery.Ajax.ErrorTextStatus|CANCELLED_STATUS;
