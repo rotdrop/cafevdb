@@ -18,9 +18,7 @@
  */
 
 // The core window.d.ts seems to be ignored (why?) so we duplicate the defs here
-import type Tab from '../../../../files/src/models/Tab.js';
 import type Settings from '../../../../files/src/services/Settings.js';
-import type Sidebar from '../../../../files/src/services/Sidebar.js';
 
 import '@nextcloud/typings';
 
