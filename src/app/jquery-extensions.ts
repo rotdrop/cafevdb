@@ -31,11 +31,20 @@ import { appPrefix } from './config.ts';
 import $ from './jquery.ts';
 
 import './jquery-cafevdb-tooltips.ts';
+import 'jquery-ui/ui/version.js';
+import 'jquery-ui/ui/data';
+import 'jquery-ui/ui/tabbable';
+import 'jquery-ui/ui/focusable';
+import 'jquery-ui/ui/unique-id';
+import 'jquery-ui/ui/widget';
+import 'jquery-ui/ui/plugin';
+import 'jquery-ui/ui/scroll-parent';
+import 'jquery-ui/ui/widgets/button';
+import 'jquery-ui/ui/widgets/mouse';
+import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/dialog';
 import 'jquery-ui/ui/widgets/resizable';
-import { appNameTag } from 'variables.scss';
-
-console.log('jquery-extensions');
+import { appNameTag } from 'variables.module.scss';
 
 /**
  * We leave it to the z-index-plane to disallow interaction. Every
@@ -91,7 +100,7 @@ $.fn.extend({
       if (this.dialog('option', 'draggable')) {
         console.debug('Try to set containment');
         // @ts-expect-error 2554 TS confusion, too many overloads?
-        $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#app-content, #app-content-vue');
+        $.fn.dialog.call(this, 'widget').draggable('option', 'containment', '#content-vue, #app-content, #app-content-vue');
         if (this.dialog('option', 'position')) {
           // @ts-expect-error 2554 TS confusion, too many overloads?
           $.fn.dialog.call(this, 'widget').position(this.dialog('option', 'position'));
