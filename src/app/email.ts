@@ -2518,8 +2518,8 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
 
       const position = {
         my: 'center top',
-        at: 'center top',
-        of: '#content-vue',
+        at: 'center bottom',
+        of: '#header',
       };
 
       $dialogHolder.cafevDialog({

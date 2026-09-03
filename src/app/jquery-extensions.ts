@@ -34,6 +34,7 @@ import './jquery-cafevdb-tooltips.ts';
 import 'jquery-ui/ui/version.js';
 import 'jquery-ui/ui/data';
 import 'jquery-ui/ui/tabbable';
+import 'jquery-ui/ui/position';
 import 'jquery-ui/ui/focusable';
 import 'jquery-ui/ui/unique-id';
 import 'jquery-ui/ui/widget';
