@@ -17,6 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare global {
+  interface Array<T> {
+    includes<U>(searchElement: U, fromIndex?: number | undefined): searchElement is T;
+    indexOf<U>(searchElement: U): number;
+  }
+
+  interface ReadonlyArray<T> {
+    includes<U>(searchElement: U, fromIndex?: number | undefined): searchElement is T;
+    indexOf<U>(searchElement: U): number;
+  }
+}
+
 declare module '*.svg?raw' {
   const content: string;
   export default content;
@@ -32,3 +44,5 @@ declare module '*.vue' {
   const instance: ComponentPublicInstance;
   export = instance;
 }
+
+export {};

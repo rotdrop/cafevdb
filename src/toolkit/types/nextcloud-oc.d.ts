@@ -19,6 +19,7 @@
 
 declare global {
   interface Window {
+    _oc_webroot: string;
     OC: Record<string, unknown> & {
       config: {
         versionstring: string;
