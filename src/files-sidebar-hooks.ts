@@ -22,13 +22,16 @@
  */
 
 import type { ISidebarContext } from '@nextcloud/files';
+import type { Pinia } from 'pinia';
 import type { FilesInitialState } from '../build/ts-types/php-modules/Controller/DTO.ts';
 
 import { FileType, registerSidebarTab } from '@nextcloud/files';
 import { translate as t } from '@nextcloud/l10n';
+import { createPinia } from 'pinia';
 import { defineAsyncComponent, defineCustomElement } from 'vue';
 import logoSvg from '../img/cafevdb.svg?raw';
 import { appName } from './config.ts';
+import { filesMailmergeId } from './files-common.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
 
 const sidebarTabTag = `${appName}-mailmerge-files-sidebar-tab` as const;
@@ -68,13 +71,26 @@ const enableTemplateActions = function(context: ISidebarContext) {
 };
 
 if (window.customElements.get(sidebarTabTag) === undefined) {
+  let pinia: Pinia;
   window.customElements.define(
     sidebarTabTag,
-    defineCustomElement(defineAsyncComponent(() => import('./views/FilesTab.vue')), { shadowRoot: false }),
+    defineCustomElement(
+      defineAsyncComponent(async () => {
+        const filesTab = await import('./views/FilesTab.vue');
+        pinia = createPinia();
+        return filesTab;
+      }),
+      {
+        configureApp(app) {
+          app.use(pinia);
+        },
+        shadowRoot: false,
+      },
+    ),
   );
 
   registerSidebarTab({
-    id: `${appName}-mailmerge`,
+    id: filesMailmergeId,
     displayName: t(appName, 'MailMerge'),
     order: 50,
     iconSvgInline: logoSvg,

@@ -27,6 +27,7 @@ import type {
   MailMergePayload,
   MailMergeResponse,
 } from './types/ajax/mail-merge.ts';
+import type { OCA_CAFEVDB } from './types/nextcloud-oca.d.ts';
 
 import { getCurrentUser } from '@nextcloud/auth';
 import axios from '@nextcloud/axios';
@@ -38,12 +39,14 @@ import {
   Folder,
   getFileActions,
   getNewFileMenuEntries,
+  getSidebar,
   Permission,
   registerFileAction,
 } from '@nextcloud/files';
 import { translate as t } from '@nextcloud/l10n';
 import { basename } from 'path';
 import { nextTick as vueNextTick } from 'vue';
+import folderIcon from '../../../core/img/filetypes/folder.svg';
 import { EnumAddDocumentConflictAction, EnumFileUploadMode, EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
 import {
   DOCUMENT_ACTION_UPLOAD,
@@ -54,8 +57,9 @@ import {
 import { END_POINT as mailMergeEndPoint } from '../build/ts-types/php-modules/Controller/MailMergeController.ts';
 import { END_POINT_PAGE } from '../build/ts-types/php-modules/Controller/VueAppController.ts';
 import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
-import logoSvg from '../img/cafevdb.svg?raw';
+import logoSvg from '../img/cafevdb.svg';
 import { appName } from './config.ts';
+import { filesMailmergeId } from './files-common.ts';
 import dialogAlert from './toolkit/util/dialog-alert.ts';
 import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
@@ -64,16 +68,6 @@ import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import Console from './util/console.ts';
 
 type Toast = ReturnType<typeof showError>;
-
-declare global {
-  interface window {
-    OCA: {
-      CAFEVDB: {
-        node?: INode;
-      };
-    };
-  }
-}
 
 const COMPONENT_NAME = 'CAFEVDB-FILES-HOOKS';
 const logger = new Console(COMPONENT_NAME);
@@ -216,13 +210,13 @@ const enableTemplateActions = function(node: INode) {
     return false;
   }
 
-  window.OCA.CAFEVDB.node = node;
+  (window.OCA as OCA_CAFEVDB).CAFEVDB.node = node;
 
   return true; // TODO depend on subdir etc.
 };
 
 registerFileAction({
-  id: appName + '-mailmerge',
+  id: filesMailmergeId,
   displayName(_context) {
     return '';
   },
@@ -241,26 +235,24 @@ registerFileAction({
     const folder = context.folder;
     // You need read permissions to see the sidebar
     if ((node.permissions & Permission.READ) !== 0) {
-      window.OCA?.Files?.Sidebar?.setActiveTab?.(appName + '-mailmerge');
+      const sidebar = getSidebar();
 
       // borrowed from ../files/src/actions/sidebarAction.ts
       try {
         // If the sidebar is already open for the current file, do nothing
-        if (window.OCA.Files.Sidebar.file === node.path) {
+        if (sidebar.node?.path === node.path) {
           logger.debug('Sidebar already open for this file', { node });
+          sidebar.setActiveTab(filesMailmergeId);
           return null;
         }
-        // Open sidebar and set active tab to our mailmerge tool
-        window.OCA.Files.Sidebar.setActiveTab(appName + '-mailmerge');
 
-        // TODO: migrate Sidebar to use a Node instead
-        await window.OCA.Files.Sidebar.open(node.path);
+        sidebar.open(node, filesMailmergeId);
 
         // Silently update current fileid
         window.OCP?.Files?.Router?.goToRoute(
           null,
-          { view: view.id, fileid: node.id },
-          { ...window.OCP.Files.Router.query, folder, opendetails: 'true' },
+          { view: view.id, fileid: node.id! },
+          { ...window.OCP.Files.Router.query, folder: folder.path, opendetails: 'true' },
           true,
         );
 
@@ -309,10 +301,10 @@ class SupportingDocumentEntry implements NewMenuEntry {
   private projectYear: string|null = null;
   private isTopFolder: boolean = false;
 
-  public id: string;
-  public displayName: string;
-  public iconClass: string = 'icon-folder';
-  public order: number = 1000000;
+  public id;
+  public displayName;
+  public iconSvgInline = folderIcon;
+  public order = 1000000;
 
   public constructor(appName: string) {
     this.id = appName + '-project-supporting-document-folder';
@@ -322,13 +314,13 @@ class SupportingDocumentEntry implements NewMenuEntry {
   public enabled(folder: IFolder) {
     // tweak further?
     // class="action upload-picker__menu-entry" data-cy-upload-picker-menu-entry="cafevdb-project-supporting-document-folder"><
-    logger.debug(
-      'MENU ENTRY',
-      {
-        folder,
-        el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
-      },
-    );
+    // logger.debug(
+    //   'MENU ENTRY',
+    //   {
+    //     folder,
+    //     el: document.querySelector('[data-cy-upload-picker-menu-entry="' + this.id + '"]'),
+    //   },
+    // );
 
     const projectName = getProjectNameFromProjectBalancesFolder(folder);
     const projectYear = getProjectYearFromProjectName(projectName);
@@ -451,10 +443,10 @@ class ProjectManagementFolderEntry implements NewMenuEntry {
 
   private isManagementFolder: boolean = false;
 
-  public id: string;
-  public displayName: string;
-  public iconClass: string = 'icon-folder';
-  public order: number = 1000000;
+  public id;
+  public displayName;
+  public iconSvgInline = folderIcon;
+  public order = 1000000;
 
   public constructor(appName: string) {
     this.id = appName + '-project-management-folder';
@@ -502,10 +494,10 @@ addNewFileMenuEntry(projectManagementFolderEntry);
  */
 class ProjectParticipantFolderEntry implements NewMenuEntry {
 
-  public id: string;
-  public displayName: string;
-  public iconClass: string = 'icon-folder';
-  public order: number = 1000000;
+  public id;
+  public displayName;
+  public iconSvgInline = folderIcon;
+  public order = 1000000;
 
   public constructor(appName: string) {
     this.id = appName + '-project-participant-folder';
@@ -548,10 +540,10 @@ addNewFileMenuEntry(projectParticipantFolderEntry);
 
 class InvoicesEntry implements NewMenuEntry {
 
-  public id: string;
-  public displayName: string;
-  public iconClass: string = 'icon-folder';
-  public order: number = 1000000;
+  public id;
+  public displayName;
+  public iconSvgInline = folderIcon;
+  public order = 1000000;
 
   public constructor(appName: string) {
     this.id = appName + '-invoices-folder';
@@ -559,9 +551,9 @@ class InvoicesEntry implements NewMenuEntry {
   }
 
   public enabled(folder: IFolder) {
-    logger.debug('FOLDER', {
-      folder,
-    });
+    // logger.debug('FOLDER', {
+    //   folder,
+    // });
     if (!isInvoicesFolder(folder)) {
       return false;
     }
