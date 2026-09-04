@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { IOptions as SelectizeOptions } from 'selectize';
 import type { EnumEmailFormComposerOperation as ComposerOperation, EnumEmailFormComposerTopic as ComposerTopic, EnumEmailFormComposerElement } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   // EmailFormComposerResponse,
@@ -42,7 +43,6 @@ import { translate as t } from '@nextcloud/l10n';
 import { generateOcsUrl } from '@nextcloud/router';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import actual from 'actual';
-import Duallistbox from 'bootstrap4-duallistbox';
 import {
   EnumEmailFormContactsOperation,
   EnumPersonalSettingsKey,
@@ -109,6 +109,7 @@ import { urlDecode } from './url-decode.ts';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
+import 'bootstrap4-duallistbox';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import 'cafevdb-selectize.scss';
@@ -141,8 +142,6 @@ type AttachmentElementData = {
 type EmailFormRecipientsFilterResponseData = EmailFormRecipientsFilterReloadResponse
   |EmailFormRecipientsFilterResponse
   |EmailFormRecipientsFilterSnapshotResponse;
-
-console.info('DUALLB', { Duallistbox });
 
 const isRecipientsFilterReloadResponse = (arg: EmailFormRecipientsFilterResponseData): arg is EmailFormRecipientsFilterReloadResponse =>
   (asKey(<EmailFormRecipientsFilterReloadResponse>arg, 'contents') in arg) && typeof arg.contents === 'string' && arg.contents.length > 0;
@@ -789,7 +788,7 @@ const emailFormCompositionHandlers = (
 
   WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
-  const messageSelectorSelectizeOptions: Selectize.IOptions = {
+  const messageSelectorSelectizeOptions: Partial<SelectizeOptions> = {
     onBeforeDropdownOpen(_$dropdown: JQuery) {
       this.$wrapper.toggleClass(dropdownOpenCssClass, true);
     },
@@ -816,7 +815,6 @@ const emailFormCompositionHandlers = (
     create: true,
     persist: false,
     render: {
-
       option_create(data, escape) {
         return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
       },
@@ -1084,7 +1082,7 @@ const emailFormCompositionHandlers = (
                 delete requestData.recipientsForm;
 
                 // deselect menu item
-                SeglectUtils.deselectAll($draftEmailsSelector);
+                SelectUtils.deselectAll($draftEmailsSelector);
                 break;
               }
               case 'sent': {
@@ -1901,11 +1899,11 @@ const emailFormCompositionHandlers = (
       operation: 'validateEmailRecipients',
       recipients: $self.val() as string|undefined,
       header,
+      [header]: $self.val() as string|undefined, // remove duplicate later
       singleItem: true,
       projectId: projectId(),
       projectName: projectName(),
     } as const;
-    request[header] = request.recipients; // remove duplicate later
     applyComposerControls.call(
       this,
       request,
@@ -2318,7 +2316,7 @@ const emailFormCompositionHandlers = (
                       .find('button.save-contacts').prop('disabled', false);
                   });
               },
-            } as Selectize.IOptions,
+            },
             buttons: [
               {
                 // "text" is documented, however, this is just the

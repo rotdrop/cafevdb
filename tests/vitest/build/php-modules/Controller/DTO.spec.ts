@@ -23,7 +23,7 @@
 
 import type { DownloadsShareResponse } from '../../../../../build/ts-types/php-modules/Controller/DTO.ts';
 
-import { spawnSync } from 'child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'fs';
 import { DateTime } from 'luxon';
 import path from 'path';

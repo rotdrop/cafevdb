@@ -43,7 +43,8 @@ export default defineConfig(async (configEnv) => {
           ],
         },
         test: {
-          environment: 'jsdom',
+          environment: 'node',
+          // environment: 'jsdom',
           testTimeout: 15000,
           include: [
             './tests/vitest/**/*.{test,spec}.?(c|m)[jt]s?(x)',
@@ -69,8 +70,8 @@ export default defineConfig(async (configEnv) => {
   //   'opera131',
   //   'safari17.6',
   // ];
-  result.build.cssTarget = 'esnext';
-  result.build.target = 'esnext';
+  // result.build.cssTarget = 'esnext';
+  // result.build.target = 'esnext';
   result.oxc.target = 'esnext';
   // console.info({
   //   // json: JSON.stringify(result, undefined, 2),

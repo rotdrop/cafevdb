@@ -9,10 +9,10 @@
     "build": "vite --mode production build",
     "dev": "vite --mode development build",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
-    "jest": "jest",
+    "vitest": "vitest",
     "postinstall": "patch-package",
     "prettier": "prettier",
-    "test": "jest"
+    "test": "vitest"
   },
   "devDependencies": {
     "@babel/node": "^7.29.0",
