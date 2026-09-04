@@ -1,10 +1,6 @@
 /**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LegacyFileInfo } from '@nextcloud/files';
+import type { INode } from '@nextcloud/files';
 
-declare module '@nextcloud/files' {
+export type OCA_CAFEVDB = {
+  CAFEVDB: {
+    node?: INode;
+  };
+};
 
-  export interface LegacyFileInfo {
-    id: number,
-    mimetype: string,
-    path: string,
-    name: string,
-    isDirectory(): boolean,
+declare global {
+  interface Window {
+    OCA: Record<string, unknown> & OCA_CAFEVDB;
   }
 }
+
+export {};

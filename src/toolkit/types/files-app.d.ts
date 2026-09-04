@@ -1,11 +1,18 @@
 /*!
- * SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2025, 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 import type { ISidebar } from '@nextcloud/files';
 import type { Pinia } from 'pinia';
 import type Router from '../../../../files/src/services/RouterService.ts';
+
+export type OCA_FILES = {
+  Files?: {
+    /** private implementation of the sidebar to be proxied by `@nextcloud/files` */
+    _sidebar?: () => Omit<ISidebar, 'available' | 'registerTab' | 'registerAction' | 'registerAction'>;
+  };
+};
 
 declare global {
   interface Window {
@@ -19,11 +26,6 @@ declare global {
       };
     };
 
-    OCA: Record<string, unknown> & {
-      Files?: {
-        /** private implementation of the sidebar to be proxied by `@nextcloud/files` */
-        _sidebar?: () => Omit<ISidebar, 'available' | 'registerTab' | 'registerAction' | 'registerAction'>;
-      };
-    };
+    OCA: Record<string, unknown> & OCA_FILES;
   }
 }

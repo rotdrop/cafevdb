@@ -1,6 +1,6 @@
 /**
- * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare global {
-  var OC: {
-    config: {
-      versionstring: string,
-    }
-  };
+declare module '*.svg?raw' {
+  const content: string;
+  export default content;
 }
 
-export {}
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.vue' {
+  import type { ComponentPublicInstance } from 'vue';
+  const instance: ComponentPublicInstance;
+  export = instance;
+}
