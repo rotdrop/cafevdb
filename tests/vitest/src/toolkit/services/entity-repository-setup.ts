@@ -21,31 +21,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { spawnSync } from 'child_process';
 import type { OCSResponse } from '@nextcloud/typings/ocs';
-import path from 'path';
-import fs from 'fs';
-import { type EntityResponse } from '@/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
-import entityFactory, { type FrontEndEntity } from '@/src/toolkit/services/entity-factory.ts';
-import type { ObjectEntries } from '@/src/toolkit/types/type-traits';
+import type { EntityResponse } from '~/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntitySerializer.ts';
+import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
+import type { ObjectEntries } from '~/src/toolkit/types/type-traits.d.ts';
 
-const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
+import { spawnSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import entityFactory from '~/src/toolkit/services/entity-factory.ts';
+
+export const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
+export type EntityNames = typeof entityNames[number];
 const inputFilePrefix = 'EntityRepositoryResponse-' as const;
 
-export const dtos = {} as { [K in typeof entityNames[number]]: OCSResponse<EntityResponse<K> > };
+export const dtos = {} as { [K in EntityNames]: OCSResponse<EntityResponse<K>> };
 export const entities = {
   Musician: {},
   Project: {},
   ProjectParticipant: {},
-} as { [K in typeof entityNames[number]]: Record<string, FrontEndEntity<K> > };
+} as { [K in typeof entityNames[number]]: Record<string, FrontEndEntity<K>> };
 
-export const generateEntities = async (names: (typeof entityNames[number])[] = [...entityNames], depth: number = 2) => {
+export const generateEntities = async (names: EntityNames[] = [...entityNames], depth: number = 2) => {
   for (const entityName of names) {
     const inputFile = `${inputFilePrefix}${entityName}.json`;
-    spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, JEST_ARTIFACTS, inputFile, '' + depth]);
-    const dtoJSON = fs.readFileSync(path.join(JEST_ARTIFACTS, inputFile));
+    spawnSync(path.join(__dirname, 'generate-entity-repository-response.php'), [entityName, TEST_ARTIFACTS, inputFile, '' + depth]);
+    const dtoJSON = fs.readFileSync(path.join(TEST_ARTIFACTS, inputFile));
     dtos[entityName] = JSON.parse(dtoJSON.toString()); //  as OCSResponse<EntityResponse<typeof entityName> >;
-    const entityRepository = dtos[entityName].ocs.data.repositories[entityName];
+    const entityRepository = (dtos[entityName] as OCSResponse<EntityResponse<typeof entityName>>).ocs.data.repositories[entityName];
     for (const [identifier, entityDto] of Object.entries(entityRepository) as ObjectEntries<typeof entityRepository>) {
       const entity = await entityFactory(entityName, entityDto);
       entities[entityName][identifier as string] = entity as (typeof entities)[typeof entityName][string];

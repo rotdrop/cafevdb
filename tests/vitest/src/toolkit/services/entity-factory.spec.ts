@@ -21,23 +21,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { generateEntities, entities, dtos } from './entity-repository-setup.ts';
-import { beforeAll, jest } from '@jest/globals';
-import entityFactory from '@/src/toolkit/services/entity-factory.ts';
+import type { EntityMap } from '~/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
 
-const entityNames = ['ProjectParticipant', 'Project', 'Musician'] as const;
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { dtos, entities, entityNames, generateEntities } from './entity-repository-setup.ts';
+import entityFactory from '~/src/toolkit/services/entity-factory.ts';
 
-jest.mock('@/src/toolkit/services/entity-repository.ts', () => {
-  const originalModule: object = jest.requireActual('@/src/toolkit/services/entity-repository.ts');
+export type Blah = (keyof EntityMap) extends 'Musician' ? true : false;
 
+function find<N extends keyof EntityMap>(entityName: N, identifier: string) {
+  if (entityNames.includes(entityName)) {
+    return entities[entityName]?.[identifier] as FrontEndEntity<N>;
+  }
+}
+
+vi.mock(import('~/src/toolkit/services/entity-repository.ts'), async (originalImport) => {
+  const originalModule = await originalImport();
   return {
-    __esModule: true,
     ...originalModule,
-    find: (entityName: string, identifier: string) => entities?.[entityName]?.[identifier],
+    find,
   };
 });
 
-beforeAll(generateEntities);
+beforeAll(() => generateEntities());
 
 describe('Validate Response Object', () => {
   for (const entityName of entityNames) {

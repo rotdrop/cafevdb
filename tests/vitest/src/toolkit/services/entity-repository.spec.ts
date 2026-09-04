@@ -21,11 +21,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { EntityMap } from '~/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
+import type { ObjectEntries } from '~/src/toolkit/types/type-traits.ts';
+
+import { describe, expect, it } from 'vitest';
 import { entityIdentifiers } from './mock-axios-entity-repository-controller.ts';
-import { type EntityMap } from '@/build/ts-types/php-modules/Toolkit/Doctrine/ORM/EntityMetadata.ts';
-import { fetch as fetchEntity, find as findEntity, search as searchEntities } from '@/src/toolkit/services/entity-repository.ts';
-import type { ObjectEntries } from '@/src/toolkit/types/type-traits';
-import { describe, it, expect } from '@jest/globals';
+import { fetch as fetchEntity, find as findEntity, search as searchEntities } from '~/src/toolkit/services/entity-repository.ts';
 
 describe('Fetch entities', () => {
   it('Should work ;)', async () => {

@@ -16,12 +16,15 @@
     "./node_modules/vite/**/*.ts",
     "./node_modules/vue-router/**/*.ts",
     "./node_modules/vue/**/*.ts",
-    "./node_modules/webpack/**.ts",
+    "./node_modules/vite/**/*.ts",
+    "./node_modules/vitest/**/*.ts",
+    "./src/toolkit/types/custom.d.ts",
     "./src/**/*.ts",
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
     "./src/*.ts",
-    "./src/*.vue"
+    "./src/*.vue",
+    "./tests/vitest/**/*.ts"
   ],
   "compilerOptions": {
     "types": [
@@ -36,11 +39,14 @@
       "popper",
       "selectize"
     ],
+    "paths": {
+      "~/*": ["./*"]
+    },
     "traceResolution": false,
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
     "rootDir": "./",
     "outDir": "./dist/",
-    "target": "ESNext",
+   "target": "ESNext",
     "module": "esnext",
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
