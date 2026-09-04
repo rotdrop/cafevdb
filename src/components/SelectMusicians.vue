@@ -163,7 +163,7 @@ const ajaxLoading = ref(false)
 
 const isLoading = computed(() => (props.loading || ajaxLoading.value) && props.loadingIndicator)
 const musiciansArray = computed(() => {
-  const result = Object.values(musicians.value)
+  const result = Object.values(musicians.value ?? {})
   logger.info('MUS ARRAY', { result })
   return result
 })
@@ -197,7 +197,7 @@ const findMusicians = async (query: string, musicianIds?: number[]) => {
     const url = generateAppOcsUrl(`${searchEndPoint}${query}`)
     const data = await loadEntities<'Musician'>(url, params)
     for (const [id, musician] of Object.entries(data.Musician)) {
-      musicians.value[id] = musician
+      musicians.value[+id] = musician
     }
     return Object.entries(data.Musician).length > 0
   } catch (error) {
@@ -282,16 +282,15 @@ const getData = async () => {
   ajaxLoading.value = true
   resetMusicians()
   if (!props.searchable) {
-    try {
-      musicians.value = persistentData.selectMusicians[props.searchScope]?.[props.projectId] || {}
+    const stored = persistentData.selectMusicians[props.searchScope]?.[props.projectId]
+    if (stored !== undefined) {
+      musicians.value = stored
       inputValObjects.value = getValueObjects(false)
       if (props.resetAction) {
         initialValObjects.value = inputValObjects.value || []
       }
       ajaxLoading.value = false
       return
-    } catch /* (ignoreMe) */ {
-      // ignored
     }
   }
   await findMusicians('', getValueIds())
