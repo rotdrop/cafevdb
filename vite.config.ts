@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { AppOptions } from '@nextcloud/vite-config';
 import type { OutputAsset, OutputChunk } from 'rolldown';
 import type { Config as SVGOConfig } from 'svgo';
 import type { Plugin } from 'vite';
@@ -173,6 +174,42 @@ const overrides = defineConfig({
   ],
 });
 
+const appOptions: AppOptions = {
+  // coreJS: {
+  //   modules: 'core-js/es',
+  //   usage: true,
+  // },
+  config: overrides,
+  // nodePolyfills: false,
+  assetsPrefix,
+  assetFileNames: (assetInfo) => {
+    const [name] = assetInfo.names;
+    const extType = name.split('.').pop()!;
+    if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+      return `${cssFolder}/img/[name][extname]`;
+    } else if (/css/i.test(extType)) {
+      // we need hashed css name for css chunks as a cache buster
+      return `${cssFolder}/[name]-[hash].css`;
+    } else if (/woff2?|ttf|otf/i.test(extType)) {
+      return `${cssFolder}/fonts/[name][extname]`;
+    }
+    return 'dist/[name]-[hash][extname]';
+  },
+  extractLicenseInformation: {},
+  codeSplitting: {
+    groups: [
+      { name: 'shared', minShareCount: 2, minSize: 70_000 },
+      { name: 'common', entriesAware: true, entriesAwareMergeThreshold: 90_000, minSize: 70_000 },
+      { name: 'vendor', test: /node_modules/ },
+      { name: 'remain' },
+    ],
+  },
+};
+
+if (process.env.VITEST) {
+  appOptions.nodePolyfills = false;
+}
+
 const appConfig = createAppConfig(
   {
     // entry points: {name: script}
@@ -185,38 +222,7 @@ const appConfig = createAppConfig(
     'files-sidebar-hooks': path.resolve(path.join('src', 'files-sidebar-hooks.ts')),
     'iframe-content-script': path.resolve(path.join('src', 'iframe-content-script.ts')),
   },
-  {
-    // coreJS: {
-    //   modules: 'core-js/es',
-    //   usage: true,
-    // },
-    config: overrides,
-    assetsPrefix,
-    assetFileNames: (assetInfo) => {
-      const [name] = assetInfo.names;
-      const extType = name.split('.').pop()!;
-      if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-        return `${cssFolder}/img/[name][extname]`;
-      } else if (/css/i.test(extType)) {
-        // we need hashed css name for css chunks as a cache buster
-        return `${cssFolder}/[name]-[hash].css`;
-      } else if (/woff2?|ttf|otf/i.test(extType)) {
-        return `${cssFolder}/fonts/[name][extname]`;
-      }
-      return 'dist/[name]-[hash][extname]';
-    },
-    extractLicenseInformation: {},
-    codeSplitting: {
-      groups: [
-        { name: 'shared', minShareCount: 2, minSize: 70_000 },
-        { name: 'common', entriesAware: true, entriesAwareMergeThreshold: 90_000, minSize: 70_000 },
-        { name: 'vendor', test: /node_modules/ },
-        { name: 'remain' },
-      ],
-    },
-  },
+  appOptions,
 );
-
-console.info(appConfig);
 
 export default appConfig;

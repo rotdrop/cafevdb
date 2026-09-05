@@ -22,7 +22,9 @@
  */
 
 import cwd from 'cwd';
+import os from 'node:os';
 import path from 'node:path';
+import process from 'node:process';
 import { configDefaults, defineConfig, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config.ts';
 
@@ -35,6 +37,7 @@ export default defineConfig(async (configEnv) => {
       await viteConfig(configEnv),
       defineConfig({
         define: {
+          APP_ROOT: JSON.stringify(APP_ROOT),
           TEST_ARTIFACTS: JSON.stringify(`${APP_ROOT}/build/artifacts/tests/vitest`),
         },
         resolve: {
@@ -43,8 +46,12 @@ export default defineConfig(async (configEnv) => {
           ],
         },
         test: {
-          environment: 'node',
-          // environment: 'jsdom',
+          // environment: 'node',
+          environment: 'jsdom',
+          execArgv: [
+            '--localstorage-file',
+            path.resolve(os.tmpdir(), `vitest-${process.pid}.localstorage`),
+          ],
           testTimeout: 15000,
           include: [
             './tests/vitest/**/*.{test,spec}.?(c|m)[jt]s?(x)',
@@ -73,13 +80,16 @@ export default defineConfig(async (configEnv) => {
   // result.build.cssTarget = 'esnext';
   // result.build.target = 'esnext';
   result.oxc.target = 'esnext';
+  result.plugins = (result.plugins as unknown[]).filter((plugin) => plugin.name !== 'builtin:replace');
   // console.info({
-  //   // json: JSON.stringify(result, undefined, 2),
-  //   alias: result.resolve.alias,
-  //   build: result.build,
-  //   rolldownOpt: result.optimizeDeps.rolldownOptions.transform.target,
-  //   rolldownBuild: result.build.rolldownOptions.transform.target,
-  // oxc: result.oxc,
-  // });
+  //   plugins: result.plugins,
+  //   filteredPlugins,
+  // //   // json: JSON.stringify(result, undefined, 2),
+  //   // alias: result.resolve.alias,
+  // //   build: result.build,
+  // //   rolldownOpt: result.optimizeDeps.rolldownOptions.transform.target,
+  // //   rolldownBuild: result.build.rolldownOptions.transform.target,
+  // // oxc: result.oxc,
+  //  });
   return result;
 });
