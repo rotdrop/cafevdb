@@ -9,10 +9,10 @@
     "build": "vite --mode production build",
     "dev": "vite --mode development build",
     "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json",
-    "vitest": "vitest",
     "postinstall": "patch-package",
     "prettier": "prettier",
-    "test": "vitest"
+    "test": "vitest run",
+    "watch": "vitest watch"
   },
   "devDependencies": {
     "@babel/node": "^7.29.0",
@@ -71,7 +71,7 @@
     "@types/qs": "^6.15.1",
     "@types/xml2js": "^0.4.14",
     "@vue/compat": "*",
-    "@vue/test-utils": "^2.4.10",
+    "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.9.1",
     "@vueuse/core": "^14.3.0",
     "actual": "^0.4.0",

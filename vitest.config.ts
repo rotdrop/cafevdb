@@ -48,11 +48,18 @@ export default defineConfig(async (configEnv) => {
         test: {
           // environment: 'node',
           environment: 'jsdom',
+          environmentOptions: {
+            jsdom: {
+              url: 'http://localhost',
+            },
+          },
+          setupFiles: [
+            'tests/vitest/setup.ts',
+          ],
           execArgv: [
             '--localstorage-file',
             path.resolve(os.tmpdir(), `vitest-${process.pid}.localstorage`),
           ],
-          testTimeout: 15000,
           include: [
             './tests/vitest/**/*.{test,spec}.?(c|m)[jt]s?(x)',
           ],
@@ -64,6 +71,26 @@ export default defineConfig(async (configEnv) => {
               'html',
               'text',
             ],
+          },
+          globals: true,
+          pool: 'vmThreads',
+          testTimeout: 300000, // 2 minutes per test
+          hookTimeout: 60000, // 60 seconds for hooks,
+          server: {
+            deps: {
+              // Workaround "SyntaxError: Cannot use import statement outside a module"
+              // caused by "import { Picker, Emoji, EmojiIndex } from 'emoji-mart-vue-fast/src'"
+              // in NcEmojiPicker.vue
+              inline: ['@nextcloud/vue'],
+            },
+          },
+          deps: {
+            optimizer: {
+              web: {
+                include: ['element-plus'],
+                enabled: true,
+              },
+            },
           },
         },
       }),
