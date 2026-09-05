@@ -21,39 +21,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { AppError } from '~/src/toolkit/types/errors.ts';
+
 import { setSilent as setLoggerSilent } from './toolkit/util/mock-console.ts';
+
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 //
 import {
   mount,
   // shallowMount,
-  createLocalVue,
   // type Wrapper,
   // type WrapperArray,
 } from '@vue/test-utils';
 import {
-  Tooltip,
-} from '@nextcloud/vue';
-import VueComponent from '@/src/CAFeVDB.vue';
-import VueRouter from 'vue-router';
-import useErrorHandler from '@/src/stores/error-handler.ts';
-import { createPinia } from 'pinia';
-import type { AppError } from '@/src/toolkit/types/errors.ts';
-import appRoutes from '@/src/router/routes.ts';
+  // createPinia,
+  setActivePinia,
+} from 'pinia';
+import { createTestingPinia } from '@pinia/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createRouter } from 'vue-router';
+import { appName } from '~/src/config.ts';
+import VueComponent from '~/src/CAFeVDB.vue';
+// import appRoutes from '~/src/router/routes.ts';
+import router from '~/src/router/app-router.ts';
+import useErrorHandler from '~/src/stores/error-handler.ts';
 
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
             case 'capabilities':
               return { passwordPolicy: null };
+            case 'apps':
+              return [{ id: appName, name: 'CAFeVDB' }];
             default:
               return null;
           }
@@ -64,14 +71,13 @@ jest.mock('@nextcloud/initial-state', () => {
   };
 });
 
-jest.mock('vue-router/composables', () => {
-  const originalModule: object = jest.requireActual('vue-router/composables');
+vi.mock(import('vue-router'), async (originalComponent) => {
+  const originalModule = await originalComponent();
 
   return {
-    __esModule: true,
     ...originalModule,
-    useRoute: jest.fn(() => ({})),
-    useRouter: jest.fn(() => ({
+    useRoute: vi.fn(() => ({})),
+    useRouter: vi.fn(() => ({
       push: () => {},
       resolve: () => ({}),
       beforeEach: () => {},
@@ -81,31 +87,30 @@ jest.mock('vue-router/composables', () => {
   };
 });
 
-const router = new VueRouter({
-  routes: appRoutes,
-});
-
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createPinia());
-localVue.use(VueRouter);
+// const pinia = createPinia();
 
 describe('App main component', () => {
-  let wrapper: ReturnType<typeof mount<VueComponent> >;
+  let wrapper: ReturnType<typeof mount<VueComponent>>;
 
   beforeEach(() => {
     document.body.id = 'body-user';
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
     const errorHandlerStore = useErrorHandler();
     errorHandlerStore.pushHandler(<E extends AppError>(error: E) => { console.error('Error handler called', error); });
 
-    const propsData = {
+    const props = {
     };
 
     wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
-      router,
+      // shallow: true,
+      props,
+      global: {
+        plugins: [pinia, router],
+        directives: { tooltip: Tooltip },
+      },
     });
     // There is no "transionend" event, however, the NcPopover
     // component only fires 'after-show' and hence NcActions its
@@ -114,12 +119,9 @@ describe('App main component', () => {
     const actionsWrapper = wrapper.findComponent({ name: 'NcActions' });
     const actionsPopover = actionsWrapper.findComponent({ ref: 'popover' });
 
-    // @ts-expect-error 2339
     const originalAfterShow = actionsPopover.vm.afterShow;
-    // @ts-expect-error 2339
     actionsPopover.vm.afterShow = async function() {
       await originalAfterShow.call(actionsPopover);
-      // @ts-expect-error 2339
       actionsPopover.vm.getPopoverContentElement().dispatchEvent(new Event('transitionend'));
     };
   });
