@@ -24,20 +24,21 @@
  * Must be imported first in order to have the mock active.
  */
 
-import { vi } from 'vitest';
+import type { ConsoleMethod } from '~/src/toolkit/util/console.ts';
 
-type ConsoleMethod = 'debug' | 'info' | 'warn' | 'error' | 'trace';
+import { vi } from 'vitest';
 
 let silent = false;
 
-export const setSilent = (arg = false) => { silent = arg; };
+export function setSilent(arg = false) { silent = arg; }
+function getSilent() { return silent; }
 
 vi.mock(import('~/src/toolkit/util/console.ts'), async (originalImport) => {
   const OriginalConsole = await originalImport();
   const mockedConsole = vi.fn(OriginalConsole.default);
 
   const emitMessage = (method: ConsoleMethod, prefix: string, ...args: any[]) => {
-    if (!silent) {
+    if (!getSilent()) {
       console[method](prefix, ...args);
     }
   };
@@ -45,6 +46,7 @@ vi.mock(import('~/src/toolkit/util/console.ts'), async (originalImport) => {
   for (const method of ['debug', 'info', 'warn', 'error', 'trace'] as ConsoleMethod[]) {
     mockedConsole.prototype[method] = function(...args: any[]) { emitMessage(method, this.prefix, ...args); };
   }
+  mockedConsole.prototype.setSilent = setSilent;
   return {
     default: mockedConsole,
   };

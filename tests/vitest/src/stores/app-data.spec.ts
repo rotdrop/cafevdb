@@ -21,14 +21,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* eslint perfectionist/sort-imports: off */
+
+import type { Project } from '~/src/stores/app-data.ts';
+import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
+
 // mock-defining imports must come first
 import { entityIdentifiers } from '../toolkit/services/mock-axios-entity-repository-controller.ts';
-import { entities } from '../toolkit/services/entity-repository-setup.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
+
 // normal imports
-import { beforeEach, describe, it, expect } from '@jest/globals';
 import { createPinia, setActivePinia } from 'pinia';
-import useAppDataStore, { type Project } from '@/src/stores/app-data.ts';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { entities } from '../toolkit/services/entity-repository-setup.ts';
+import useAppDataStore from '~/src/stores/app-data.ts';
 
 setLoggerSilent(true);
 
@@ -52,11 +58,7 @@ const projectKeys = [
   'year',
 ];
 
-const magicKeys = {
-  __ob__: 'OB VALUE',
-  // eslint-disable-next-line camelcase
-  __v_skip: 'V SKIP VALUE',
-};
+const vueInternalTag = '__v_' as const;
 
 describe('app-data store', () => {
   beforeEach(() => {
@@ -93,8 +95,8 @@ describe('app-data store', () => {
     const appData = useAppDataStore();
     const query = 'Test';
     const result = await appData.searchProjects(query);
-    const project = result![0];
-    for (const [key, value] of Object.entries(magicKeys)) {
+    const project = result![0] as unknown as Record<string, unknown>;
+    for (const [key, value] of Object.entries({ [`${vueInternalTag}blah`]: 'blubber' })) {
       project[key] = value;
       expect(project[key]).toEqual(value);
     }
@@ -105,7 +107,7 @@ describe('app-data store', () => {
     const project = await appData.getProject(entityIdentifiers.Project.id);
     expect(project).toBeDefined();
     const projectEntity = entities.Project[entityIdentifiers.Project.id];
-    for (const key of Object.keys(projectEntity)) {
+    for (const key of Object.keys(projectEntity) as (keyof FrontEndEntity<'Project'>)[]) {
       expect(project![key]).toEqual(projectEntity[key]);
     }
   });

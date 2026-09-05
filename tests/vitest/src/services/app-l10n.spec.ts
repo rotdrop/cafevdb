@@ -21,77 +21,59 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* eslint perfectionist/sort-imports: off */
+
 import type { loadTranslations } from '@nextcloud/l10n';
 
-import { expect, jest } from '@jest/globals';
+import '../toolkit/util/mock-console.ts'; // must come first
+
 import { getLanguage, register, setLanguage } from '@nextcloud/l10n';
 import fs from 'fs';
 import path from 'path';
+import { describe, expect, it, vi } from 'vitest';
 import {
   PROJECT_REGISTRATION_CATEGORY,
   RECORD_ABSENCE_CATEGORY,
-} from '../../../../build/ts-types/php-modules/Service/EventsService.ts';
-import logger from '../../../../src/logger.ts';
+} from '~/build/ts-types/php-modules/Service/EventsService.ts';
+import logger from '~/src/logger.ts';
 import {
   appTranslate,
   appTranslatePlural,
   getAppLanguage,
   getAppLocale,
   setupAppBundle,
-} from '../../../../src/services/app-l10n.ts';
-import globalState from '../../../../src/services/legacy-global-state.ts';
+} from '~/src/services/app-l10n.ts';
+import globalState, { resolveGlobalStateInitialized } from '~/src/services/legacy-global-state.ts';
 
 type AppTranslations = Awaited<ReturnType<typeof loadTranslations>>;
 
-jest.mock('../../../../src/logger.ts', () => {
-  const originalModule: object = jest.requireActual('../../../../src/logger.ts');
+declare global {
+  const APP_ROOT: string;
+}
 
-  let silent = false;
+vi.mock(import('~/src/app/globalstate.ts'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
     default: {
-      setSilent: (value: boolean) => { silent = value; },
-
-      debug: (..._args: any[]) => {
-        // if (!silent) {
-        //   console.debug(..._args);
-        // }
-      },
-
-      info: (...args: any[]) => {
-        if (!silent) {
-          console.info(...args);
-        }
-      },
-
-      error: (...args: any[]) => {
-        if (!silent) {
-          console.error(...args);
-        }
-      },
-
-      trace: (...args: any[]) => {
-        if (!silent) {
-          console.trace(...args);
-        }
-      },
+      ...(originalModule.default),
+      appLocale: 'fr_FR.UTF-8',
+      // initialized: true,
     },
   };
 });
 
-jest.mock('@nextcloud/l10n', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/l10n');
+vi.mock(import('@nextcloud/l10n'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
     loadTranslations: async (appName: string) => {
       const language = getLanguage();
       let bundle: AppTranslations;
       try {
-        const l10nJSON = await new Promise<NonSharedBuffer>((resolve, reject) => {
+        const l10nJSON = await new Promise<Buffer<ArrayBuffer>>((resolve, reject) => {
           fs.readFile(path.join(APP_ROOT, 'l10n', language + '.json'), (err, data) => {
             if (err) {
               reject(err);
@@ -141,6 +123,7 @@ const setupLocale = (locale: string) => {
   globalState.appLocale = locale;
   if (!globalState.initialized) {
     globalState.initialized = true;
+    resolveGlobalStateInitialized(globalState);
   }
   return setupAppBundle();
 };

@@ -82,6 +82,7 @@ export const synchronizeGlobalState = async () => {
 
 export {
   globalStateInitialized,
+  resolveGlobalStateInitialized,
 };
 
 export default globalState;

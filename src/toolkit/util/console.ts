@@ -34,10 +34,10 @@ const asyncStackFrames = async (offset: number, depth: number) => {
   return stackFrames.slice(offset + 1, offset + 1 + depth);
 };
 
-export type ConsoleMethods = 'debug' | 'info' | 'warn' | 'error' | 'trace';
+export type ConsoleMethod = 'debug' | 'info' | 'warn' | 'error' | 'trace';
 
 export interface ConsoleOptions {
-  smaps?: { [x in ConsoleMethods]?: boolean };
+  smaps?: { [x in ConsoleMethod]?: boolean };
   stackDepth?: number;
 }
 
@@ -84,7 +84,7 @@ class Console {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private emitMessage(method: ConsoleMethods, ...args: any[]) {
+  private emitMessage(method: ConsoleMethod, ...args: any[]) {
     const time = this.timestamp();
     const depth = Math.max(1, (args.length > 0 && typeof args[0] === 'number') ? args.shift() : this.stackDepth);
     if (this.smaps[method]) {
