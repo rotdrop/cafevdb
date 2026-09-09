@@ -42,7 +42,5 @@ declare module '*.svg' {
 declare module '*.vue' {
   import type { ComponentPublicInstance } from 'vue';
   const instance: ComponentPublicInstance;
-  export = instance;
+  export default instance;
 }
-
-export {};
