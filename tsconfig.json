@@ -1,9 +1,11 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
+    "./src/toolkit/types/custom.d.ts",
     "./build/ts-types/**.ts",
     "./node_modules/is-plain-object/**.ts",
     "./node_modules/@nextcloud/**.ts",
+    "./node_modules/@rotdrop/**.ts",
     "./node_modules/@types/**.d.ts",
     "./node_modules/@files/**.ts",
     "./node_modules/@dialogs/**.ts",
@@ -12,19 +14,17 @@
     "./node_modules/camelcase/**.ts",
     "./node_modules/ckeditor5/**.ts",
     "./node_modules/moment/**.ts",
-    "./node_modules/pinia/**.ts",
-    "./node_modules/vite/**/*.ts",
     "./node_modules/vue-router/**/*.ts",
+    "./node_modules/pinia/**.ts",
     "./node_modules/vue/**/*.ts",
     "./node_modules/vite/**/*.ts",
     "./node_modules/vitest/**/*.ts",
-    "./src/toolkit/types/custom.d.ts",
+    "./tests/vitest/**/*.ts",
     "./src/**/*.ts",
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
     "./src/*.ts",
-    "./src/*.vue",
-    "./tests/vitest/**/*.ts"
+    "./src/*.vue"
   ],
   "compilerOptions": {
     "types": [
@@ -46,7 +46,7 @@
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
     "rootDir": "./",
     "outDir": "./dist/",
-   "target": "ESNext",
+    "target": "ESNext",
     "module": "esnext",
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
