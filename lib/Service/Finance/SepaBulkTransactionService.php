@@ -531,6 +531,10 @@ class SepaBulkTransactionService
           // @todo Perhaps empty amounts should also be recorded.
           continue;
         }
+        $this->logInfo('RECEIVABLE FIELD ID ' . $receivable->getField()->getId());
+        $this->logInfo('RECEIVABLE FIELD MULTIPLICITY ' . $receivable->getField()->getMultiplicity()->value);
+        $this->refreshEntity($receivable->getField());
+        $this->logInfo('RECEIVABLE FIELD NAME ' . $receivable->getField()->getName());
         /** @var Entities\ProjectPayment $payment */
         $payment = (new Entities\ProjectPayment)
                  ->setProject($project)
