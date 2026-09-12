@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\DataConstants;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -228,7 +229,7 @@ class ProjectsController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontPageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_CHANGE_INSTRUMENTAION)]
-  public function changeInstrumentation(string $instruments, string $voices):DataResponse
+  public function changeInstrumentation(string $instruments, string $voices): DataResponse|JSONResponse
   {
     $instrumentsKey = str_replace('[]', '', $instruments);
     $instruments = array_filter($this->request[$instrumentsKey]??[]);
@@ -248,7 +249,7 @@ class ProjectsController extends Controller
       $highest = max(Renderer::NUM_VOICES_MIN, $highestConfigured + Renderer::NUM_VOICES_EXTRA);
       for ($i = 1; $i <= $highest+1; ++$i) {
         $voiceIndicator = ($i <= $highest) ? $i : '?';
-        $value = $instrument . Renderer::JOIN_KEY_SEP . $voiceIndicator;
+        $value = $instrument . DataConstants::JOIN_KEY_SEP . $voiceIndicator;
         $voiceOption = [
           'value' => $value,
           'name' => $instrumentInfo['byId'][$instrument] . ' ' . $voiceIndicator,
@@ -281,7 +282,7 @@ class ProjectsController extends Controller
    */
   #[CoreAttributes\NoAdminRequired]
   #[CoreAttributes\FrontpageRoute(verb: 'POST', url: '/' . self::BASE_PATH . '/' . self::END_POINT_MAILING_LISTS . '/{operation}')]
-  public function mailingLists(string $operation, int $projectId, bool $force = false):DataResponse
+  public function mailingLists(string $operation, int $projectId, bool $force = false): DataResponse|JSONResponse
   {
     switch ($operation) {
       case self::LIST_OPERATION_CREATE:
