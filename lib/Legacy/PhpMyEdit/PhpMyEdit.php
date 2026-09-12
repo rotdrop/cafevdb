@@ -7341,6 +7341,13 @@ EOT;
 		$this->sfn	 = $this->get_sys_cgi_var('sfn');
 		isset($this->sfn)			  || $this->sfn			 = array();
 		is_array($this->sfn)		  || $this->sfn			 = array($this->sfn);
+		foreach ($this->sfn as $sortFieldNumberOrClear) {
+			if ($this->label_cmp($sortFieldNumberOrClear, 'Clear')) {
+				$this->sfn = [];
+				break;
+			}
+		}
+
 
 		// Make sure also the key are sorted numerically. Bloody PHP.
 		ksort($this->sfn, SORT_NUMERIC);
