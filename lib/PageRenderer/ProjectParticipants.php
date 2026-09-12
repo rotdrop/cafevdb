@@ -491,7 +491,8 @@ GROUP BY t.id';
       [
         'name'     => $this->l->t('Name'),
         'tab'      => [ 'id' => 'musician' ],
-        'input|LF' => $this->pmeBare ? '' : 'H',
+        'tab|LF'   => [ 'id' => 'tab-all' ],
+        // 'input|LF' => $this->pmeBare ? '' : 'H',
         'maxlen'   => 384,
       ]);
 
@@ -500,7 +501,8 @@ GROUP BY t.id';
       [
         'name'     => $this->l->t('First Name'),
         'tab'      => [ 'id' => 'musician' ],
-        'input|LF' => $this->pmeBare ? '' : 'H',
+        'tab|LF'   => [ 'id' => 'tab-all' ],
+        // 'input|LF' => $this->pmeBare ? '' : 'H',
         'maxlen'   => 384,
       ]);
 

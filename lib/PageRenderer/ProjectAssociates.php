@@ -820,14 +820,14 @@ GROUP BY t.id';
 
     $this->makeJoinTableField(
       $opts['fdd'], DatabaseTables::MUSICIANS_TABLE, 'cloud_account_deactivated', [
-        'name' => $this->l->t('Cloud Account Deactivated'),
+        'name' => $this->l->t('Cloud login deactivated'),
         'tab'     => [ 'id' => [ 'miscinfo' ] ],
         'input' => null,
-        'select' => 'C',
+        'select' => 'O',
         'css' => [ 'postfix' => [ 'cloud-account-deactivated', ], ],
         'sort' => true,
         'default' => null,
-        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|CAP' => [ 1 => $this->l->t('Cloud login deactivated'), 0 => $this->l->t('Cloud login possible') ], // empty label for simple checkbox
         'values2|LVDF' => [
           '' => '',
           1 => '&#10004;',
@@ -843,11 +843,11 @@ GROUP BY t.id';
         'name' => $this->l->t('Hidden from Cloud'),
         'tab'     => [ 'id' => [ 'miscinfo' ] ],
         'input' => null,
-        'select' => 'C',
+        'select' => 'O',
         'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
         'sort' => true,
         'default' => 1,
-        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|CAP' => [ 1 => $this->l->t('Hidden from Cloud'), 0 => $this->l->t('Visible in Cloud') ], // empty label for simple checkbox
         'values2|LVDF' => [
           '' => '',
           1 => '&#10004;',
