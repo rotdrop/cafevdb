@@ -29,6 +29,8 @@ use InvalidArgumentException;
 use RuntimeException;
 
 use OCP\Files as CloudFiles;
+use OCP\IL10N;
+use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Toolkit\Common\DecimalRationalMonetary as MonetaryNumberType;
@@ -58,6 +60,10 @@ class ProjectParticipantFieldsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait
+  {
+    sanitizeFilename as private systemSanitizeFilename;
+  }
 
   /** Matrix of unsupported data-types. */
   private const UNSUPPORTED = [
@@ -132,6 +138,7 @@ class ProjectParticipantFieldsService
     protected EntityManager $entityManager,
   ) {
     $this->l = $configService->getL10n();
+    $this->appContainer = $configService->getAppContainer();
   }
   // phpcs:enable
 
@@ -491,13 +498,15 @@ class ProjectParticipantFieldsService
    * @return null|string Sanitized file-name, no dots, no slashes, no
    * spaces. null if the argument was null.
    */
-  private static function sanitizeFileName(?string $name):?string
+  private function sanitizeFileName(?string $name):?string
   {
     if (empty($name)) {
       return null;
     }
     $name = Util::normalizeSpaces($name);
     $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
+
+    $name = $this->systemSanitizeFilename($name);
 
     return $name;
   }
@@ -513,7 +522,7 @@ class ProjectParticipantFieldsService
   {
     assert($field->isFileSystemContext());
 
-    return self::sanitizeFileName($field->getName());
+    return $this->sanitizeFileName($field->getName());
   }
 
   /**
@@ -1459,8 +1468,8 @@ class ProjectParticipantFieldsService
    */
   private function isSupportedFieldMultiplicityTransition(FieldMultiplicity $oldFieldMultiplicity, FieldMultiplicity $newFieldMultiplicity):bool
   {
-    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity];
-    return in_array((string)$newFieldMultiplicity, $allowed);
+    $allowed = self::ALLOWED_TRANSITIONS[$oldFieldMultiplicity->value];
+    return in_array($newFieldMultiplicity->value, $allowed);
   }
 
   /**
@@ -1474,7 +1483,7 @@ class ProjectParticipantFieldsService
    *
    * @return void
    */
-  public function handleChangeFieldFieldMultiplicity(
+  public function handleChangeFieldMultiplicity(
     Entities\ProjectParticipantField $field,
     ?FieldMultiplicity $oldFieldMultiplicity,
     ?FieldMultiplicity $newFieldMultiplicity,
@@ -1504,7 +1513,7 @@ class ProjectParticipantFieldsService
     }
 
     if (!$this->isSupportedFieldMultiplicityTransition($oldFieldMultiplicity, $newFieldMultiplicity)) {
-      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldFieldMultiplicity] ?? [];
+      $allowedTransitions = self::ALLOWED_TRANSITIONS[$oldFieldMultiplicity->value] ?? [];
       if (empty($allowedTransitions)) {
         $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
         throw new Exceptions\EnduserNotificationException(
@@ -1518,9 +1527,9 @@ class ProjectParticipantFieldsService
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'The field is already in use, therefore the multiplicity may only be changed from "%1$s" to "%2$s", but not to "%3$s".', [
-              $this->l->t($oldFieldMultiplicity),
-              implode(', ', array_map(fn($value) => $this->l->t($value), $allowedTransitions)),
-              $this->l->t($newFieldMultiplicity),
+              $oldFieldMultiplicity->t($this->l),
+              implode(', ', array_map(fn($value) => $value->t($this->l), $allowedTransitions)),
+              $newFieldMultiplicity->t($this->l),
             ]));
       }
     }
