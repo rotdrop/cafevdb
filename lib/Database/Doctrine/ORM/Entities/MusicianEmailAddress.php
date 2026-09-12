@@ -57,8 +57,12 @@ class MusicianEmailAddress implements \ArrayAccess
   public function __construct(?string $address = null, ?Musician $musician = null)
   {
     $this->arrayCTOR();
-    $this->setMusician($musician);
-    $this->setAddress($address);
+    if ($musician !== null) {
+      $this->setMusician($musician);
+    }
+    if ($address !== null) {
+      $this->setAddress($address);
+    }
   }
 
   /**
