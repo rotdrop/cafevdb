@@ -81,7 +81,7 @@ export default defineConfig(async (configEnv) => {
               // Workaround "SyntaxError: Cannot use import statement outside a module"
               // caused by "import { Picker, Emoji, EmojiIndex } from 'emoji-mart-vue-fast/src'"
               // in NcEmojiPicker.vue
-              inline: ['@nextcloud/vue'],
+              inline: ['@nextcloud/vue', '@nextcloud/capabilities'],
             },
           },
           deps: {

@@ -21,6 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
 import type { AppError } from '~/src/toolkit/types/errors.ts';
 
 import { setSilent as setLoggerSilent } from './toolkit/util/mock-console.ts';

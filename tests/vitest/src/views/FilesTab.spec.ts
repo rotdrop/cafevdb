@@ -21,29 +21,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
+import type { FilesInitialState } from '~/build/ts-types/php-modules/Controller/DTO.ts';
+
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-} from '@vue/test-utils';
+
 import { createTestingPinia } from '@pinia/testing';
-import FilesTab from '@/src/views/FilesTab.vue';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import {
+  // shallowMount,
+  // createLocalVue,
+  mount,
+} from '@vue/test-utils';
+import {
+  // createPinia,
+  setActivePinia,
+} from 'pinia';
 // import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { type FilesInitialState } from '@/build/ts-types/php-modules/Controller/DTO.ts';
-import { EnumInitialStateKey } from '@/build/ts-types/php-modules/Controller.ts';
-import { Tooltip } from '@nextcloud/vue';
+import { expect, vi } from 'vitest';
+import VueComponent from '~/src/views/FilesTab.vue';
+import { EnumInitialStateKey } from '~/build/ts-types/php-modules/Controller.ts';
+import { appName } from '~/src/config.ts';
 
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -102,20 +111,24 @@ jest.mock('@nextcloud/initial-state', () => {
         default:
           return null;
       }
-    }),
+    }) as typeof originalModule['loadState'],
   };
 });
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
 
 describe('FilesTab component', () => {
   it('should be a Vue instance', () => {
-    const wrapper = mount(FilesTab, {
-      localVue,
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
+    const wrapper = mount(VueComponent, {
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+      },
     });
+
     expect(wrapper.vm).toBeTruthy();
   });
 });
