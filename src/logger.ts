@@ -21,9 +21,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Console from './util/console.ts';
+import type { ConsoleMethod } from './util/console.ts';
+
+import { watch } from 'vue';
+import { DEBUG_SMAPS } from './debug-modes.ts';
+import globalState from './services/legacy-global-state.ts';
+import Console, { defaultConsoleOptions } from './util/console.ts';
 
 const COMPONENT = 'CAFEVDB';
 const logger = new Console(COMPONENT);
+
+watch(() => globalState.debugMode, (value) => {
+  const enableSmaps = !!(value & DEBUG_SMAPS);
+  for (const method of Object.keys(defaultConsoleOptions.smaps) as ConsoleMethod[]) {
+    logger.enableSourceMaps(method, enableSmaps);
+  }
+});
 
 export default logger;
