@@ -17,18 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module '*.svg?raw' {
-  const content: string;
-  export default content;
+declare global {
+  interface Array<T> {
+    includes(searchElement: unknown, fromIndex?: number | undefined): searchElement is T;
+    indexOf(searchElement: unknown): number;
+  }
+
+  interface ReadonlyArray<T> {
+    includes(searchElement: unknown, fromIndex?: number | undefined): searchElement is T;
+    indexOf(searchElement: unknown): number;
+  }
 }
 
-declare module '*.svg' {
-  const content: string;
-  export default content;
-}
-
-declare module '*.vue' {
-  import type { ComponentPublicInstance } from 'vue';
-  const instance: ComponentPublicInstance;
-  export default instance;
-}
+export {};
