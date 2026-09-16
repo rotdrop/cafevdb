@@ -41,8 +41,8 @@ export interface ConsoleOptions {
   stackDepth?: number;
 }
 
-const defaultConsoleOptions = {
-  smaps: { debug: true, info: true, error: true, trace: true },
+export const defaultConsoleOptions = {
+  smaps: { debug: true, info: true, warn: true, error: true, trace: true },
   stackDepth: 0,
 };
 
@@ -121,11 +121,11 @@ class Console {
     return this.emitMessage('trace', ...args);
   }
 
-  enableSourceMaps(method: 'debug' | 'info' | 'error' | 'trace', state: boolean = true) {
+  enableSourceMaps(method: ConsoleMethod, state: boolean = true) {
     this.smaps[method] = state;
   }
 
-  disableSourceMaps(method: 'debug' | 'info' | 'error' | 'trace') {
+  disableSourceMaps(method: ConsoleMethod) {
     this.enableSourceMaps(method, false);
   }
 
