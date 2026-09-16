@@ -129,7 +129,6 @@ const onRouteChange = (to: RouteLocationNormalizedGeneric) => {
     },
   )
   template.value = to.params.template as string
-  // Object.assign(templateParameters.value, to.params)
   templateParameters.value = sanitizeTemplateParams(to.params)
   postDataHash.value = (to.query?.hash as string) || undefined
   noLegacyReload.value = +(to.query?.['no-reload'] ?? 0) === 1
