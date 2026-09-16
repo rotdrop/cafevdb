@@ -169,7 +169,6 @@ const overrides = defineConfig(({ mode }) => ({
     ],
   },
   plugins: [
-    // _@ts-expect-error 2345 Blah blah blah.
     svg(svgoConfig),
     postBuildHook(),
   ],
