@@ -452,7 +452,7 @@ export default defineStore(storeId, () => {
   ) => {
     const result = await stateGetProject(
       projectKey,
-      handler || errorHandlerProvider.getHandler(),
+      handler ?? errorHandlerProvider.getHandler(),
     );
     return result;
   };
