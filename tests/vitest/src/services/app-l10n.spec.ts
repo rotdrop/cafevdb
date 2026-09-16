@@ -25,7 +25,8 @@
 
 import type { loadTranslations } from '@nextcloud/l10n';
 
-import '../toolkit/util/mock-console.ts'; // must come first
+import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
+setLoggerSilent(true);
 
 import { getLanguage, register, setLanguage } from '@nextcloud/l10n';
 import fs from 'fs';
@@ -167,11 +168,7 @@ describe('app-l10n', () => {
         expect(getAppLanguage()).toBe(language);
       });
       it('should fail to setup the language given an invalid locale', async () => {
-        // @ts-expect-error 2339 Blah
-        logger.setSilent(true);
         await setupLocale('!"§$%&/()=');
-        // @ts-expect-error 2339 Blah
-        logger.setSilent(false);
         expect(getAppLanguage()).toBe('en');
       });
     }

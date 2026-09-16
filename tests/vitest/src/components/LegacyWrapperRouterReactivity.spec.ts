@@ -21,34 +21,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
-//
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-  // type Wrapper,
-  // type WrapperArray,
-} from '@vue/test-utils';
-import {
-  Tooltip,
-} from '@nextcloud/vue';
-import VueComponent from '@/src/components/LegacyWrapper.vue';
-import VueRouter from 'vue-router';
-import useErrorHandler from '@/src/stores/error-handler.ts';
-import { createPinia } from 'pinia';
-import type { AppError } from '@/src/toolkit/types/errors.ts';
-import appRoutes from '@/src/router/routes.ts';
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
 
+import type { AppError } from '~/src/toolkit/types/errors.ts';
+
+import { registerHistoryTimestampsGetter } from '../../util/mock-axios.ts';
+import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { createTestingPinia } from '@pinia/testing';
+import { setActivePinia } from 'pinia';
+import { flushPromises, mount } from '@vue/test-utils';
+import router from '~/src/router/app-router.ts';
+import VueComponent from '~/src/components/LegacyWrapperRouterReactivity.vue';
+import useErrorHandler from '~/src/stores/error-handler.ts';
+
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -60,61 +56,60 @@ jest.mock('@nextcloud/initial-state', () => {
         default:
           return null;
       }
-    }),
+    }) as typeof originalModule.loadState,
   };
 });
 
-jest.mock('vue-router/composables', () => {
-  const originalModule: object = jest.requireActual('vue-router/composables');
+vi.mock(import('vue-router'), async (originalComponent) => {
+  const originalModule = await originalComponent();
 
   return {
-    __esModule: true,
     ...originalModule,
-    useRoute: jest.fn(() => ({
-      query: {},
-    })),
-    useRouter: jest.fn(() => ({
+    useRoute: vi.fn(() => ({
+      params: {
+        template: 'a string',
+        templateParameters: {},
+      },
+      query: { 'no-reload': 1 },
+    })) as unknown as typeof originalModule.useRoute,
+    useRouter: vi.fn(() => ({
       push: () => {},
+      replace: () => {},
       resolve: () => ({}),
       beforeEach: () => {},
       afterEach: () => {},
-      onReady: () => {},
-      replace: () => {},
-    })),
+    })) as unknown as typeof originalModule.useRouter,
+    onBeforeRouteLeave: () => {},
   };
 });
 
-const router = new VueRouter({
-  routes: appRoutes,
-});
+registerHistoryTimestampsGetter();
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createPinia());
-localVue.use(VueRouter);
+describe('Legacy Reactivity Wrapper', () => {
+  let wrapper: ReturnType<typeof mount<typeof VueComponent>>;
 
-describe('App main component', () => {
-  let wrapper: ReturnType<typeof mount<VueComponent> >;
-
-  beforeEach(() => {
+  beforeEach(async () => {
     document.body.id = 'body-user';
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
     const errorHandlerStore = useErrorHandler();
     errorHandlerStore.pushHandler(<E extends AppError>(error: E) => { console.error('Error handler called', error); });
 
-    const propsData = {
-      template: 'a string',
-      // templateParameters?: Record<string, any>,
-      // hash?: string,
-      // noLegacyReload?: boolean,
-      // navButtonSize?: string,
-    };
-
     wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
-      router,
+      props: {},
+      global: {
+        plugins: [pinia, router],
+        directives: { tooltip: Tooltip },
+        stubs: {
+          RouterView: true,
+          RouterLink: true,
+        },
+      },
     });
+    await flushPromises();
+
     // There is no "transionend" event, however, the NcPopover
     // component only fires 'after-show' and hence NcActions its
     // 'opened' event after the NcPopover has received the
@@ -122,18 +117,19 @@ describe('App main component', () => {
     const actionsWrapper = wrapper.findComponent({ name: 'NcActions' });
     const actionsPopover = actionsWrapper.findComponent({ ref: 'popover' });
 
-    // @ts-expect-error 2339
     const originalAfterShow = actionsPopover.vm.afterShow;
-    // @ts-expect-error 2339
     actionsPopover.vm.afterShow = async function() {
       await originalAfterShow.call(actionsPopover);
-      // @ts-expect-error 2339
       actionsPopover.vm.getPopoverContentElement().dispatchEvent(new Event('transitionend'));
     };
   });
 
   it('should be a Vue instance', () => {
     expect(wrapper.vm).toBeTruthy();
+  });
+
+  afterAll(async () => {
+    await router.isReady();
   });
 
 });

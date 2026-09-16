@@ -30,16 +30,8 @@ import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 
 import { createTestingPinia } from '@pinia/testing';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
-import {
-  // shallowMount,
-  // createLocalVue,
-  mount,
-} from '@vue/test-utils';
-import {
-  // createPinia,
-  setActivePinia,
-} from 'pinia';
-// import { loadState } from '@nextcloud/initial-state';
+import { mount } from '@vue/test-utils';
+import { setActivePinia } from 'pinia';
 import { expect, vi } from 'vitest';
 import VueComponent from '~/src/views/FilesTab.vue';
 import { EnumInitialStateKey } from '~/build/ts-types/php-modules/Controller.ts';
@@ -114,7 +106,6 @@ vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
     }) as typeof originalModule['loadState'],
   };
 });
-
 
 describe('FilesTab component', () => {
   it('should be a Vue instance', () => {

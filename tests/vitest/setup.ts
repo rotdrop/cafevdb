@@ -8,9 +8,13 @@ import {
 globalThis._oc_webroot = '';
 globalThis.OC = globalThis.OC ?? { config: { versionstring: '33.0.0' } };
 
-beforeAll(() => {
-  vi.resetModules();
-});
+// beforeAll(() => {
+//   // vi.resetModules();
+//   // jsdom.reconfigure({
+//   //   url: 'http://localhost',
+//   // });
+//   // console.info('BEFORE ALL', { document, body: document.body });
+// });
 
 beforeEach(() => {
   const el = document.createElement('div');

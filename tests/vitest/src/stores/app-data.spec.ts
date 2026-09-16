@@ -27,8 +27,9 @@ import type { Project } from '~/src/stores/app-data.ts';
 import type { FrontEndEntity } from '~/src/toolkit/services/entity-factory.ts';
 
 // mock-defining imports must come first
-import { entityIdentifiers } from '../toolkit/services/mock-axios-entity-repository-controller.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
+setLoggerSilent(true);
+import { entityIdentifiers } from '../toolkit/services/mock-axios-entity-repository-controller.ts';
 
 // normal imports
 import { createPinia, setActivePinia } from 'pinia';
@@ -36,7 +37,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { entities } from '../toolkit/services/entity-repository-setup.ts';
 import useAppDataStore from '~/src/stores/app-data.ts';
 
-setLoggerSilent(true);
 
 const projectKeys = [
   'created',

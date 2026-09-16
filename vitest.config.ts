@@ -71,6 +71,9 @@ export default defineConfig(async (configEnv) => {
               'html',
               'text',
             ],
+            exclude: [
+              './tests/vitest/**',
+            ],
           },
           globals: true,
           pool: 'vmThreads',

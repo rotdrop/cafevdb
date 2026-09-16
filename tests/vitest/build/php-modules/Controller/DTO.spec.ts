@@ -21,7 +21,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DownloadsShareResponse } from '../../../../../build/ts-types/php-modules/Controller/DTO.ts';
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
+import type { DownloadsShareResponse } from '~/build/ts-types/php-modules/Controller/DTO.ts';
+
+import { setSilent as setLoggerSilent } from '../../../src/toolkit/util/mock-console.ts';
+setLoggerSilent(true);
 
 import fs from 'fs';
 import { DateTime } from 'luxon';

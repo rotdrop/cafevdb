@@ -42,10 +42,6 @@ export const projectFolders = {
   projectsFolder,
 };
 
-if (window !== undefined) {
-  window._oc_webroot = '';
-}
-
 async function get(url: string, options: AxiosRequestConfig) {
   // url: 'http://localhost/ocs/v2.php/apps/cafevdb/v1/entitites/ProjectParticipant?find=eyJwcm9qZWN0IjoxLCJtdXNpY2lhbiI6MX0%3D&depth=1'
   if (url.endsWith('cafevdb/tooltips')) {
@@ -172,8 +168,14 @@ async function get(url: string, options: AxiosRequestConfig) {
 
 vi.mock(import('@nextcloud/axios'), async (originalImport) => {
   const originalModule = await originalImport();
-  originalModule.default.get = get as typeof originalModule['default']['get'];
-  return originalModule;
+
+  return {
+    ...originalModule,
+    default: {
+      ...originalModule.default,
+      get,
+    } as typeof originalModule['default'],
+  };
 });
 
 beforeAll(async () => {

@@ -28,7 +28,7 @@ import type { ConsoleMethod } from '~/src/toolkit/util/console.ts';
 
 import { vi } from 'vitest';
 
-let silent = false;
+let silent = true;
 
 export function setSilent(arg = false) { silent = arg; }
 function getSilent() { return silent; }
@@ -46,7 +46,10 @@ vi.mock(import('~/src/toolkit/util/console.ts'), async (originalImport) => {
   for (const method of ['debug', 'info', 'warn', 'error', 'trace'] as ConsoleMethod[]) {
     mockedConsole.prototype[method] = function(...args: any[]) { emitMessage(method, this.prefix, ...args); };
   }
+  // @ts-expect-error 2339 We know that this method does not exist.
   mockedConsole.prototype.setSilent = setSilent;
+  // @ts-expect-error 2339 We know that this method does not exist.
+  mockedConsole.prototype.getSilent = getSilent;
   return {
     default: mockedConsole,
   };

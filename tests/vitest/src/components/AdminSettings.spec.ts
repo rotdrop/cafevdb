@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,26 +21,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
+import type { AdminInitialState } from '~/build/ts-types/php-modules/Settings.ts';
+
+// import { loadState } from '@nextcloud/initial-state';
+import { describe, expect, it, vi } from 'vitest';
+import { createTestingPinia } from '@pinia/testing';
+import { setActivePinia } from 'pinia';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import {
   mount,
   // shallowMount,
-  createLocalVue,
+  // createLocalVue,
 } from '@vue/test-utils';
-import { createTestingPinia } from '@pinia/testing';
-import AdminSettings from '../../../../src/components/AdminSettings.vue';
-// import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { INITIAL_STATE_SECTION, AUTHORIZATION_GROUP_SUFFIXES } from '../../../../build/ts-types/php-modules/Settings/Admin.ts';
-import type { AdminInitialState } from '../../../../build/ts-types/php-modules/Settings.ts';
-import { Tooltip } from '@nextcloud/vue';
+import AdminSettings from '~/src/components/AdminSettings.vue';
+import { AUTHORIZATION_GROUP_SUFFIXES, INITIAL_STATE_SECTION } from '~/build/ts-types/php-modules/Settings/Admin.ts';
+import { appName } from '~/src/config.ts';
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -72,19 +77,21 @@ jest.mock('@nextcloud/initial-state', () => {
         default:
           return null;
       }
-    }),
+    }) as typeof originalModule['loadState'],
   };
 });
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
-
 describe('AdminSettings component', () => {
   it('should be a Vue instance', () => {
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
     const wrapper = mount(AdminSettings, {
-      localVue,
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+      },
     });
     expect(wrapper.vm).toBeTruthy();
   });

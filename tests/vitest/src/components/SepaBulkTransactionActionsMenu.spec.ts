@@ -21,30 +21,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
+import type { AppError } from '~/src/toolkit/types/errors.ts';
+
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-} from '@vue/test-utils';
+
 import { createTestingPinia } from '@pinia/testing';
-import VueComponent from '@/src/components/SelectMusicians.vue';
-// import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { Tooltip } from '@nextcloud/vue';
-// import useAppDataStore from '@/src/stores/app-data.ts';
-import useErrorHandler from '@/src/stores/error-handler.ts';
-import type { AppError } from '@/src/toolkit/types/errors.ts';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { mount } from '@vue/test-utils';
+import { setActivePinia } from 'pinia';
+import { describe, expect, it, vi } from 'vitest';
+import VueComponent from '~/src/components/SepaBulkTransactionActionsMenu.vue';
+import useErrorHandler from '~/src/stores/error-handler.ts';
 
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -53,37 +52,28 @@ jest.mock('@nextcloud/initial-state', () => {
             default:
               return null;
           }
-default:
+        default:
           return null;
       }
-    }),
+    }) as typeof originalModule.loadState,
   };
 });
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
-
 describe('SettingsSelectUsers component', () => {
 
-  const propsData = {
-    clearAction: false,
-    clearable: false,
-    label: 'Label',
-    loading: false,
-    loadingIndicator: false,
-    multiple: false,
-    placeholder: 'placeholder',
-    projectId: null,
-    resetAction: true,
-    searchScope: undefined,
-    searchable: false,
-    selectAllOption: false,
-    value: undefined, // Musician|Musician[]|MusicianIdObject|MusicianIdObject[],
+  const props = {
+    enableOverviewItem: true,
+    entityId: -1,
+    menuCaption: 'Hello World!',
+    projectId: -1,
+    projectName: 'ProjectName',
+    template: 'TemplateName',
   };
 
   it('should be a Vue instance', () => {
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
 
     const errorHandlerStore = useErrorHandler();
     errorHandlerStore.pushHandler(<E extends AppError>(error: E) => { console.error('Error handler called', error); });
@@ -97,8 +87,11 @@ describe('SettingsSelectUsers component', () => {
     // };
 
     const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
+      props,
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+      },
     });
     expect(wrapper.vm).toBeTruthy();
   });

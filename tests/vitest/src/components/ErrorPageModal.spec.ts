@@ -21,37 +21,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-} from '@vue/test-utils';
-import { createTestingPinia } from '@pinia/testing';
-import VueComponent from '@/src/components/ErrorPageModal.vue';
-// import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { Tooltip } from '@nextcloud/vue';
-// import useAppDataStore from '@/src/stores/app-data.ts';
-// import useErrorHandler from '@/src/stores/error-handler.ts';
-// import type { AppError } from '@/src/toolkit/types/errors.ts';
-import fs from 'fs';
-import path from 'path';
-import type { NextcloudLogEntry } from '@/src/types/ajax/nextcloud-log.ts';
-import { AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
-import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
-import { isNextcloudExceptionResponse } from '@/src/types/ajax/php-exception-response.ts';
-import { isJqNextcloudLogEntryXHR, type JqJsonXHR } from '../../../../src/types/ajax/jqxhr-error.ts';
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
 
+import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type { JqJsonXHR } from '~/src/types/ajax/jqxhr-error.ts';
+import type { NextcloudLogEntry } from '~/src/types/ajax/nextcloud-log.ts';
+
+import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+import { describe, expect, it, vi } from 'vitest';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { setActivePinia } from 'pinia';
+import { createTestingPinia } from '@pinia/testing';
+import { mount } from '@vue/test-utils';
+import { AxiosError } from 'axios';
+import fs from 'fs';
+import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
+import path from 'path';
+import VueComponent from '~/src/components/ErrorPageModal.vue';
+import { isJqNextcloudLogEntryXHR } from '~/src/types/ajax/jqxhr-error.ts';
+import { isNextcloudExceptionResponse } from '~/src/types/ajax/php-exception-response.ts';
+
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string, fallback?: unknown) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -81,9 +79,9 @@ jest.mock('@nextcloud/initial-state', () => {
         //       return null;
         //   }
         default:
-          return null;
+          return fallback ?? null;
       }
-    }),
+    }) as typeof originalModule['loadState'],
   };
 });
 
@@ -131,16 +129,17 @@ beforeAll(() => {
   exceptionLogEntry = JSON.parse(exceptionLogEntryJSON.toString()) as NextcloudLogEntry;
 });
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
-
 describe('HtmlErrorModal component', () => {
+
+  const pinia = createTestingPinia({ stubActions: [] });
+
+  beforeEach(() => {
+    setActivePinia(pinia);
+  });
 
   const error = new Error('blah');
 
-  const propsData = {
+  const props: Record<string, unknown> = {
     error,
     heading: 'HEADING',
     initialView: 'details',
@@ -148,40 +147,39 @@ describe('HtmlErrorModal component', () => {
     closeDetailsLabel: 'CLOSE DETAILS LABEL',
   };
 
+  const mountOptions = {
+    props,
+    global: {
+      plugins: [pinia],
+      directives: { tooltip: Tooltip },
+    },
+  };
+
   it('should be a Vue instance', () => {
 
-    const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
-    });
+    const wrapper = mount(VueComponent, mountOptions);
     expect(wrapper.vm).toBeTruthy();
   });
 
   it('should handle a Nextcloud exception response', () => {
     const exceptionResponse = generateNextcloudExceptionResponse();
-    propsData.error = exceptionResponse;
+    props.error = exceptionResponse;
 
     // self test
     expect(isNextcloudExceptionResponse(exceptionResponse)).toBeTruthy();
 
-    const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
-    });
+    const wrapper = mount(VueComponent, mountOptions);
     expect(wrapper.vm).toBeTruthy();
   });
 
   it('should handle a JQuery XHR Nextcloud exception response', () => {
     const exceptionResponse = generateJqNextcloudLogEntryXHR();
-    propsData.error = exceptionResponse;
+    props.error = exceptionResponse;
 
     // self test
     expect(isJqNextcloudLogEntryXHR(exceptionResponse)).toBeTruthy();
 
-    const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
-    });
+    const wrapper = mount(VueComponent, mountOptions);
     expect(wrapper.vm).toBeTruthy();
   });
 });

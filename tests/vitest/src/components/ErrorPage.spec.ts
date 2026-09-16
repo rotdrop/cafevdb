@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,24 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-} from '@vue/test-utils';
-import { createTestingPinia } from '@pinia/testing';
-import VueComponent from '../../../../src/components/SettingsSelectGroup.vue';
-// import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { Tooltip } from '@nextcloud/vue';
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
+setLoggerSilent(true);
+
+// import { loadState } from '@nextcloud/initial-state';
+import { describe, expect, it, vi } from 'vitest';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { createTestingPinia } from '@pinia/testing';
+import { mount } from '@vue/test-utils';
+import { setActivePinia } from 'pinia';
+import VueComponent from '~/src/components/ErrorPage.vue';
+
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -70,33 +72,36 @@ jest.mock('@nextcloud/initial-state', () => {
         default:
           return null;
       }
-    }),
+    }) as typeof originalModule['loadState'],
   };
 });
 
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
+beforeAll(() => {
+  document.body.id = 'body-user';
+});
 
-describe('SettingsSelectUsers component', () => {
-  const propsData = {
-    label: 'LABEL',
-    hint: 'HINT',
-    value: 'gid',
-    disabled: false,
-    // clearable allows deselection of the last item
-    clearable: true,
-    // required blocks the final submit if no value is selected
-    required: true,
-    loading: false,
-    loadingIndicator: true,
+describe('HtmlErrorModal component', () => {
+
+  const error = new Error('blah');
+
+  const props = {
+    error,
+    initialView: 'details',
+    noSummary: false,
+    closeDetailsLabel: 'CLOSE DETAILS LABEL',
   };
 
   it('should be a Vue instance', () => {
+
+    const pinia = createTestingPinia();
+    setActivePinia(pinia);
+
     const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
+      props,
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+      },
     });
     expect(wrapper.vm).toBeTruthy();
   });

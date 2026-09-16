@@ -37,7 +37,8 @@
       "moment",
       "node",
       "popper",
-      "selectize"
+      "selectize",
+      "vitest/jsdom"
     ],
     "paths": {
       "~/*": ["./*"]

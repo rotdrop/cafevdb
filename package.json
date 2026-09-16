@@ -109,6 +109,7 @@
     "js-file-download": "^0.4.12",
     "jsdoc": "^4.0.5",
     "jsdoc-babel": "^0.5.0",
+    "jsdom": "^30.0.1",
     "jsonlint": "^1.6.3",
     "lightningcss": "^1.33.0",
     "luxon": "^3.7.2",

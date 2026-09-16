@@ -21,30 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// ... because mocks have to come top level.
+/* eslint-disable perfectionist/sort-imports */
+
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
-import {
-  mount,
-  // shallowMount,
-  createLocalVue,
-} from '@vue/test-utils';
+
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { mount } from '@vue/test-utils';
+import { setActivePinia } from 'pinia';
+import { describe, expect, it, vi } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
-import VueComponent from '@/src/components/ErrorPage.vue';
-// import { loadState } from '@nextcloud/initial-state';
-import { expect, jest } from '@jest/globals';
-import { Tooltip } from '@nextcloud/vue';
-// import useAppDataStore from '@/src/stores/app-data.ts';
-// import useErrorHandler from '@/src/stores/error-handler.ts';
-// import type { AppError } from '@/src/toolkit/types/errors.ts';
+import VueComponent from '../../../../src/components/SettingsSelectUsers.vue';
 
 setLoggerSilent(true);
 
-jest.mock('@nextcloud/initial-state', () => {
-  const originalModule: object = jest.requireActual('@nextcloud/initial-state');
+vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
+  const originalModule = await originalImport();
 
   return {
-    __esModule: true,
     ...originalModule,
-    loadState: jest.fn((app: string, section: string) => {
+    loadState: vi.fn((app: string, section: string) => {
       switch (app) {
         case 'core':
           switch (section) {
@@ -76,35 +72,29 @@ jest.mock('@nextcloud/initial-state', () => {
         default:
           return null;
       }
-    }),
+    }) as typeof originalModule.loadState,
   };
 });
 
-beforeAll(() => {
-  document.body.id = 'body-user';
-});
-
-const localVue = createLocalVue();
-localVue.directive('tooltip', Tooltip);
-// @ts-expect-error 2769
-localVue.use(createTestingPinia());
-
-describe('HtmlErrorModal component', () => {
-
-  const error = new Error('blah');
-
-  const propsData = {
-    error,
-    initialView: 'details',
-    noSummary: false,
-    closeDetailsLabel: 'CLOSE DETAILS LABEL',
+describe('SettingsSelectUsers component', () => {
+  const props = {
+    label: 'LABEL',
+    value: ['user1', 'user2'],
+    disabled: false,
+    loading: false,
+    loadingIndicator: true,
   };
+
+  const pinia = createTestingPinia();
+  setActivePinia(pinia);
 
   it('should be a Vue instance', () => {
-
     const wrapper = mount(VueComponent, {
-      propsData,
-      localVue,
+      props,
+      global: {
+        plugins: [pinia],
+        directives: { tooltip: Tooltip },
+      },
     });
     expect(wrapper.vm).toBeTruthy();
   });

@@ -26,28 +26,19 @@
 
 import type { AppError } from '~/src/toolkit/types/errors.ts';
 
+import { registerHistoryTimestampsGetter } from '../util/mock-axios.ts';
 import { setSilent as setLoggerSilent } from './toolkit/util/mock-console.ts';
+setLoggerSilent(true);
 
 import { createTestingPinia } from '@pinia/testing';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
-import {
-  mount,
-  // shallowMount,
-  // type Wrapper,
-  // type WrapperArray,
-} from '@vue/test-utils';
-import {
-  // createPinia,
-  setActivePinia,
-} from 'pinia';
+import { mount } from '@vue/test-utils';
+import { setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import VueComponent from '~/src/CAFeVDB.vue';
 import { appName } from '~/src/config.ts';
-// import appRoutes from '~/src/router/routes.ts';
 import router from '~/src/router/app-router.ts';
 import useErrorHandler from '~/src/stores/error-handler.ts';
-
-setLoggerSilent(true);
 
 vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
   const originalModule = await originalImport();
@@ -80,15 +71,15 @@ vi.mock(import('vue-router'), async (originalComponent) => {
     useRoute: vi.fn(() => ({})) as unknown as typeof originalModule.useRoute,
     useRouter: vi.fn(() => ({
       push: () => {},
+      replace: () => {},
       resolve: () => ({}),
       beforeEach: () => {},
       afterEach: () => {},
-      onReady: () => {},
     })) as unknown as typeof originalModule.useRouter,
   };
 });
 
-// const pinia = createPinia();
+registerHistoryTimestampsGetter();
 
 describe('App main component', () => {
   let wrapper: ReturnType<typeof mount<typeof VueComponent>>;
