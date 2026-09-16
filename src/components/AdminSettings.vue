@@ -1430,7 +1430,7 @@ onUnmounted(() => {
     background-size:16px 16px;
     padding-right:20px;
   }
-  &.major :deep(&__title) {
+  &.major :deep() &__title {
     background-image:url('../../img/logo-greyf-large.svg');
     background-repeat:no-repeat;
     background-origin:padding-box;
