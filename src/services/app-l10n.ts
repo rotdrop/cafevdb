@@ -21,8 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type Console from '../util/console.ts';
-
 import {
   getLanguage,
   loadTranslations,
@@ -32,13 +30,12 @@ import {
   translatePlural,
 } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
+import logger from '../logger.ts';
 import globalState, { globalStateInitialized } from '../services/legacy-global-state.ts';
 
 type TranslationOptions = Exclude<Parameters<typeof translatePlural>[5], undefined>;
 type TranslationVariables<T extends string> = Exclude<Parameters<typeof translate<T>>[2], undefined>;
 type AppTranslationsPromise = ReturnType<typeof loadTranslations>;
-
-let logger: Console;
 
 let appBundle: Awaited<AppTranslationsPromise>;
 let appLanguage: string;
@@ -48,7 +45,6 @@ export const getAppLanguage = () => appLanguage;
 
 export const setupAppBundle = async () => {
   await globalStateInitialized;
-  logger = (await import('../logger.ts')).default;
   let locale: Intl.Locale;
   try {
     // funny JavaScript conventions ...
