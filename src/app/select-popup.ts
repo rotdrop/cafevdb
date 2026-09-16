@@ -21,6 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { IOptions as SelectizeOptions } from 'selectize';
+
 import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
 import { toolTipsInit } from './cafevdb.ts';
@@ -49,7 +51,7 @@ interface Options {
   openCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
   saveCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>, selected: SelectedOptionDTO[]) => void;
   closeCallback?: (this: HTMLElement, $select: JQuery<HTMLSelectElement>) => void;
-  selectize: Selectize.IOptions;
+  selectize: Partial<SelectizeOptions>;
 }
 
 /*

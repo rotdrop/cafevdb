@@ -30,7 +30,7 @@ import { getAppRootUrl, getRootUrl as getCloudRootUrl } from '@nextcloud/router'
 import { appName, appPrefix } from '../config.ts';
 import getInitialState from '../toolkit/util/initial-state.ts';
 
-import { appNameTag } from 'variables.scss';
+import { appNameTag } from 'variables.module.scss';
 
 const initialState = {
   appName,

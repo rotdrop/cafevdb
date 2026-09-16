@@ -104,15 +104,14 @@ import {
 import { templateFromRenderer } from './template-renderer.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
+import 'selectize/dist/css/selectize.bootstrap.css';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import { loadingCssClass } from 'variables.scss';
-
-require('selectize/dist/scss/selectize.bootstrap.scss');
+import { loadingCssClass } from 'variables.module.scss';
 
 require('cafevdb-selectize.scss');
 
-require('pme-table.scss');
+import 'pme-table.scss';
 
 export type TableLoadCallback<T extends PageTemplateValue = PageTemplateValue> = {
   callback(
@@ -1018,8 +1017,8 @@ async function pmeTableDialogOpen<T extends PageTemplateValue>(tableDialogOption
     }
     post += '&' + $.param(tableDialogOptions);
   }
-  if (!tableDialogOptions[tableDialogOptions.initialName]) {
-    post += '&' + $.param({ [tableDialogOptions.initialName]: tableDialogOptions.initialValue });
+  if (!tableDialogOptions.initialName) {
+    post += '&' + $.param({ initialName: tableDialogOptions.initialValue });
   }
 
   await new Promise((resolveOpenDialog, rejectOpenDialog) =>

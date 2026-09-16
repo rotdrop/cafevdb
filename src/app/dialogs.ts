@@ -36,7 +36,7 @@ import { appName } from '../config.ts';
 import { hasProperty } from '../toolkit/types/type-traits.ts';
 import $ from './jquery.js';
 
-import { appNameTag } from 'variables.scss';
+import { appNameTag } from 'variables.module.scss';
 
 require('dialogs.scss');
 

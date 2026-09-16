@@ -21,7 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './webpack-setup.ts';
 import { runReadyCallbacks } from './app/cafevdb.ts';
 import { attachDialogHandlers } from './app/dialogs.js';
 import personalSettings from './app/personal-settings.js';

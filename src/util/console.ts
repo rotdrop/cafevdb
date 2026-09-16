@@ -32,7 +32,7 @@ class Console extends ToolKitConsole {
   constructor(prefix: string, options?: ConsoleOptions) {
     const debugSmaps = !!(globalState.debugMode & DEBUG_SMAPS);
     options = {
-      smaps: { ...{ debug: debugSmaps, info: debugSmaps, error: debugSmaps, trace: debugSmaps }, ...(options?.smaps || {}) },
+      smaps: { debug: debugSmaps, info: debugSmaps, warn: debugSmaps, error: debugSmaps, trace: debugSmaps, ...(options?.smaps || {}) },
       stackDepth: options?.stackDepth || 0,
     };
     super(prefix, options);

@@ -1,0 +1,53 @@
+diff --git a/node_modules/jquery/dist-module/jquery.module.js b/node_modules/jquery/dist-module/jquery.module.js
+index f62cc50..8b3657d 100644
+--- a/node_modules/jquery/dist-module/jquery.module.js
++++ b/node_modules/jquery/dist-module/jquery.module.js
+@@ -9634,7 +9634,12 @@ if ( typeof define === "function" && define.amd ) {
+ 	} );
+ }
+ 
+-var
++// Expose jQuery and $ identifiers, even in AMD
++// (trac-7102#comment:10, gh-557)
++// and CommonJS for browser emulators (trac-13566)
++if ( typeof noGlobal === "undefined" ) {
++
++	var
+ 
+ 	// Map over jQuery in case of overwrite
+ 	_jQuery = window.jQuery,
+@@ -9642,23 +9647,21 @@ var
+ 	// Map over the $ in case of overwrite
+ 	_$ = window.$;
+ 
+-jQuery.noConflict = function( deep ) {
+-	if ( window.$ === jQuery ) {
+-		window.$ = _$;
+-	}
++	jQuery.noConflict = function( deep ) {
++		if ( window.$ === jQuery ) {
++			window.$ = _$;
++		}
+ 
+-	if ( deep && window.jQuery === jQuery ) {
+-		window.jQuery = _jQuery;
+-	}
++		if ( deep && window.jQuery === jQuery ) {
++			window.jQuery = _jQuery;
++		}
+ 
+-	return jQuery;
+-};
++		return jQuery;
++	};
+ 
+-// Expose jQuery and $ identifiers, even in AMD
+-// (trac-7102#comment:10, gh-557)
+-// and CommonJS for browser emulators (trac-13566)
+-if ( typeof noGlobal === "undefined" ) {
+ 	window.jQuery = window.$ = jQuery;
++} else {
++	jQuery.noConflict = function() { return  jQuery; };
+ }
+ 
+ return jQuery;

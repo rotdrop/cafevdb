@@ -30,7 +30,7 @@ import generateId from './generate-id.ts';
  */
 import $ from './jquery.ts';
 
-import { disabledCssClass } from 'variables.scss';
+import { disabledCssClass } from 'variables.module.scss';
 
 const dataLockUnlockId = `${appName}LockUnlockId` as const;
 const lockUnlockVictim = `${appName}-lock-unlock-victim` as const;

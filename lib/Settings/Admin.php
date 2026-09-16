@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ use Throwable;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\App\IAppManager;
 use OCP\Settings\IDelegatedSettings;
+use OCP\Util;
 
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Service\AssetService;
@@ -54,7 +55,7 @@ class Admin implements IDelegatedSettings
   const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
   const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
   const CLOUD_USER_BACKEND = 'cloudUserBackend';
-  const CLOUD_USER_BACKEND_RESTRICTIONS = 'cloudUserBackendRestrictions';
+  // const CLOUD_USER_BACKEND_RESTRICTIONS = 'cloudUserBackendRestrictions';
   const DEFAULT_OFFICE_FONT_CONFIG = FontService::DEFAULT_OFFICE_FONT_CONFIG;
   const DEFAULT_USER_AND_GROUP_BACKEND = 'Database';
   const EMAIL_CHALLENGE_SUFFIX = 'Challenge';
@@ -106,7 +107,7 @@ class Admin implements IDelegatedSettings
   {
     $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
     // $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
-    $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
+    // $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
     $haveCloudUserBackendConfig = $this->cloudUserConnector->haveCloudUserBackendConfig();
 
     $personalAppSettingsLink = $this->urlGenerator()->getBaseUrl() . '/index.php/settings/user/' . $this->appName();
@@ -158,15 +159,10 @@ class Admin implements IDelegatedSettings
 
     $this->initialState->provideInitialState(self::INITIAL_STATE_SECTION, $configData);
 
-    return $this->templateResponse(
-      self::TEMPLATE,
-      [
-        'assets' => [
-          Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-          Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
-        ],
-      ],
-    );
+    Util::addScript($this->appName, $this->assetService->getJSAsset(self::TEMPLATE));
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset(self::TEMPLATE));
+
+    return $this->templateResponse(self::TEMPLATE);
   }
 
   /** {@inheritdoc} */

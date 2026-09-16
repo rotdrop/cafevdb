@@ -116,30 +116,26 @@ declare namespace JQueryUI {
   }
 }
 
-declare namespace Selectize {
-  interface SelectizeControl<T = string, U = { input: string }> {
-    items: T[];
-    options: Record<string|number, U>;
-    $wrapper: JQuery;
-    $input: JQuery;
-    optgroups: Record<string, unknown>;
-    registerOptionGroup(arg: { $order: number; label: string; value: string; disable: boolean }): void;
-  }
-  interface IOptions<T = string, U = { input: string }> {
-    inputClass?: string;
-    //
-    onBeforeDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
-    onDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
-    onDropdownClose?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
-    onChange?: (this: SelectizeControl<T, U>, value: T) => void;
-    onClear?: (this: SelectizeControl<T, U>) => void;
-    onOptionsRefresh?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
-    onOptionAdd?: (this: SelectizeControl<T, U>, value: T, data: U) => void;
-    onInitialize?: (this: SelectizeControl<T, U>) => void;
-    create?: boolean|((this: SelectizeControl<T, U>, input: T, setterCallback: (arg: false|U) => void) => void);
-  }
-}
-
-interface JQuery<TElement = HTMLElement> {
-  selectize<T, U>(options?: Selectize.IOptions<T, U>): JQuery<TElement>;
-}
+// declare namespace Selectize {
+//   interface SelectizeControl<T = string, U = { input: string }> {
+//     items: T[];
+//     options: Record<string|number, U>;
+//     $wrapper: JQuery;
+//     $input: JQuery;
+//     optgroups: Record<string, unknown>;
+//     registerOptionGroup(arg: { $order: number; label: string; value: string; disable: boolean }): void;
+//   }
+//   interface IOptions<T = string, U = { input: string }> {
+//     inputClass?: string;
+//     //
+//     onBeforeDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+//     onDropdownOpen?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+//     onDropdownClose?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+//     onChange?: (this: SelectizeControl<T, U>, value: T) => void;
+//     onClear?: (this: SelectizeControl<T, U>) => void;
+//     onOptionsRefresh?: (this: SelectizeControl<T, U>, $dropdown: JQuery) => void;
+//     onOptionAdd?: (this: SelectizeControl<T, U>, value: T, data: U) => void;
+//     onInitialize?: (this: SelectizeControl<T, U>) => void;
+//     create?: boolean|((this: SelectizeControl<T, U>, input: T, setterCallback: (arg: false|U) => void) => void);
+//   }
+// }

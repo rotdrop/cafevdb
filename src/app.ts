@@ -21,7 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './webpack-setup.ts';
 import appSettings from './app/app-settings.js';
 import beforeReady from './app/before-ready.ts';
 import { documentReady as blogDocumentReady } from './app/blog.ts';

@@ -25,20 +25,24 @@
 
 import localJQuery from 'jquery';
 
-const $ = localJQuery;
-
 declare global {
   interface Window {
     jQuery: JQueryStatic;
   }
 }
 
+// this triggers a deprecation warning from NC core ;)
+console.debug('Expect a deprecation warning ...');
+const windowJQuery = window.jQuery;
+
 // jQuery still installs itself globally ...
 console.debug('JQUERY INSTANCES window / self', {
-  global: window.jQuery?.fn.jquery,
+  global: windowJQuery?.fn.jquery,
   local: localJQuery.fn.jquery,
-  equal: window.jQuery === localJQuery,
+  equal: windowJQuery === localJQuery,
 });
+
+const $ = localJQuery;
 
 /**
  * Type-guard for JQuery<T>.

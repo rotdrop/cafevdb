@@ -440,7 +440,6 @@ import {
   PROJECT_EVENTS_LISTING_NAME,
 } from '../router/calendar-routes.ts'
 import appTranslate from '../services/app-l10n.ts'
-import calendarStoreSetup from '../services/calendar-store-setup.ts'
 import useAppDataStore from '../stores/app-data.ts'
 import useErrorHandlerStore from '../stores/error-handler.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
@@ -671,13 +670,8 @@ const handleOpened = () => {
 }
 
 const handleClose = () => {
-  if (origin?.transition === 'push' && origin?.transition !== 'push') {
-    logger.info('TRY GO TO PREVIOUS ON CLOSE', { origin })
-    router.go(-1) // maybe we want to avoid this altogether ...
-  } else if (origin) {
-    logger.info('TRY PUSH TO ORIGIN', { origin })
-    router.push(origin.location)
-  }
+  logger.info('TRY PUSH TO ORIGIN', { origin })
+  router.push(origin.location)
 }
 
 const aquireEventListLock = async () => {
@@ -1043,7 +1037,8 @@ const exportEvents = async () => {
   }
 }
 
-calendarStoreSetup().then((_arg) => {
+import('../services/calendar-store-setup.ts').then(async ({ default: calendarStoreSetup }) => {
+  await calendarStoreSetup()
   calendarObjectInstanceStore = useCalendarObjectInstance()
   calendarObjectsStore = useCalendarObjects()
   logger.debug('STORES', {

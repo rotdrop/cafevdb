@@ -47,7 +47,7 @@ import $ from './jquery.ts';
 import * as Notification from './notification.ts';
 import { formSelector as pmeFormSelector } from './pme-selectors.ts';
 
-import { disabledCssClass } from 'variables.scss';
+import { disabledCssClass } from 'variables.module.scss';
 
 const defaultUploadUrls = {
   upload: `${projectParticipantsBasePath}/${END_POINT_FILES}/${FILE_ACTION_UPLOAD}`,

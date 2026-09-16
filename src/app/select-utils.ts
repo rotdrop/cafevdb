@@ -21,23 +21,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type SelectizeInstance from 'selectize';
+
 import jQuery from './jquery.ts';
-require('select-utils.scss');
+
+import 'select-utils.scss';
 
 const $ = jQuery;
 
 type SelectValue = string;
 
-interface SelectizeInstance<E extends HTMLElement = HTMLElement, T extends string = string, U = { input: string }> extends Selectize.IApi<T, U> {
-  $input: JQuery<E>;
-  revertSettings: {
-    $children: JQuery;
-  };
-  settings_user: Record<string, string>;
-  $wrapper: JQuery;
-  isDisabled: boolean;
-  isLocked: boolean;
-}
+export type BLAH = SelectizeInstance<HTMLElement, string, { input: string }>['updatePlaceholder'];
+
+// interface SelectizeInstance<Element extends HTMLElement = HTMLElement, T extends string = string, U = { input: string }> extends SelectizeClass<Element, T, U> {
+//   revertSettings: {
+//     $children: JQuery;
+//   };
+//   settings_user: Record<string, string>;
+//   isDisabled: boolean;
+//   isLocked: boolean;
+// }
 
 type JQuerySelect = JQuery<HTMLSelectElement>;
 

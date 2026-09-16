@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020-2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,4 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace OCA\CAFEVDB;
-
-script($appName, $assets['js']['asset']);
-style($appName, $assets['css']['asset']);
-
-?>
 <div id="admin-settings-vue"></div>

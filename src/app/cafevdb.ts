@@ -47,7 +47,8 @@ import {
 } from './pme-selectors.ts';
 import { urlDecode } from './url-decode.ts';
 
-import { tooltipWideCssClass } from 'tooltips.scss';
+// import blah from 'tooltips.module.scss';
+import { tooltipWideCssClass } from 'tooltips.module.scss';
 
 require('cafevdb.scss');
 

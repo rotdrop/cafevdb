@@ -32,7 +32,7 @@ import * as PHPMyEdit from './../pme-selectors.ts';
 import { setPersonalUrl } from './../settings-urls.ts';
 
 import '../../legacy/nextcloud/jquery/requesttoken.js';
-import { hideDisabledCssClass, showDisabledCssClass } from 'variables.scss';
+import { hideDisabledCssClass, showDisabledCssClass } from 'variables.module.scss';
 
 /**
  * @param value Value to set.

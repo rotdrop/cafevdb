@@ -25,18 +25,14 @@ import { appName } from '../config.ts';
 import { globalState } from './globals.ts';
 import $, { jq } from './jquery.ts';
 
-/**
- * @param r TBD.
- */
-function importAll(r: webpack.Context) {
-  r.keys().forEach(r);
-}
-
+import 'jquery-ui/ui/version';
+import 'jquery-ui/ui/widget';
 import 'jquery-ui/ui/widgets/datepicker';
-importAll(require.context('jquery-ui/ui/i18n/', true, /datepicker-.*\.js$/));
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
+import 'jquery-datetimepicker/build/jquery.datetimepicker.min.css';
+
+const getLanguageAsset = (lang: string) => `../../node_modules/jquery-ui/ui/i18n/datepicker-${lang}.js`;
+const languageModules = import.meta.glob('../../node_modules/jquery-ui/ui/i18n/datepicker-*.js');
 
 // Override jquery-ui datepicker a little bit. Note that the
 // datepicker widget does not seem to follow the ui-widget framework
@@ -98,70 +94,77 @@ $.fn.datepicker = function(options?: string|DatePickerOptions, ...rest: unknown[
   }
 };
 
-const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
-Object.assign(
-  datePickerDefaults,
-  {
-    beforeShow(inputElement: string|HTMLElement|JQuery) {
-      const $inputElement = jq(inputElement);
-      if ($inputElement.prop('readonly')) {
-        return false;
-      }
-      $inputElement.data()[datePickerOldValue] = $inputElement.val();
-      return true;
-    },
-    // The datepicker will not trigger the 'change' event when onSelect() is there
-    onSelect(_dateText: string, _datePickerInstance: unknown) {
-      const $inputElement = $(this);
-      console.debug('Re-trigger jQuery-UI datepicker blur event AFTER set-date');
-      $inputElement.trigger('blur', onselectDatePickerReason);
-    },
-  },
-);
+console.info('GLOBAL STATE LANG', { lang: globalState.language, asset: getLanguageAsset(globalState.language ?? 'en') });
 
-$.datepicker.setDefaults(datePickerDefaults);
-$.datetimepicker.setLocale(globalState.language);
+languageModules[getLanguageAsset(globalState.language ?? 'en')]().then((module) => {
 
-// convert to php format, incomplete
-const dateFormat = $.datepicker.regional[globalState.language].dateFormat
-  .replace(/yy/g, 'Y')
-  .replace(/MM/g, 'F')
-//  .replace(/M/g, 'M')
-  .replace(/mm/g, 'MM')
-  .replace(/m/g, 'n')
-  .replace(/MM/g, 'm')
-  .replace(/DD/g, 'l')
-//  .replace(/D/g, 'D')
-  .replace(/dd/g, 'DD')
-  .replace(/d/g, 'j')
-  .replace(/DD/g, 'd')
-;
-const timeFormat = 'H:i';
-const dateTimeFormat = [dateFormat, timeFormat].join(', ');
+  console.info('DATE GLOBAL STATE', { gs: { ...globalState }, lang: globalState.language, module });
 
-// override datetimepicker a little bit
-const jQueryDateTimePicker = $.fn.datetimepicker;
-$.fn.datetimepicker = function(argument: Record<string, unknown>, ...rest: unknown[]) {
-  if (rest.length === 0 && typeof argument === 'object' && argument !== null) {
-    argument = {
-      format: dateTimeFormat,
-      formatTime: timeFormat,
-      formatDate: dateFormat,
-      step: 5,
-      onShow(_currentTime: unknown, $inputElement: JQuery, _event: unknown) {
-        return !$inputElement.prop('readonly');
+  const datePickerDefaults = $.datepicker.regional[globalState.language] || {};
+  Object.assign(
+    datePickerDefaults,
+    {
+      beforeShow(inputElement: string|HTMLElement|JQuery) {
+        const $inputElement = jq(inputElement);
+        if ($inputElement.prop('readonly')) {
+          return false;
+        }
+        $inputElement.data()[datePickerOldValue] = $inputElement.val();
+        return true;
       },
-      // onChangeDateTime(currentTime, $inputElement, event) {
-      //   // const dateTimePicker = this;
-      //   // $inputElement.blur();
-      //   console.info('DATETIMEPICKER CURRENT TIME', currentTime);
-      // },
-      onClose(_currentTime: unknown, $inputElement: JQuery, _event: unknown) {
-        // $inputElement.trigger('blur');
-        $inputElement.trigger('focusout');
+      // The datepicker will not trigger the 'change' event when onSelect() is there
+      onSelect(_dateText: string, _datePickerInstance: unknown) {
+        const $inputElement = $(this);
+        console.debug('Re-trigger jQuery-UI datepicker blur event AFTER set-date');
+        $inputElement.trigger('blur', onselectDatePickerReason);
       },
-      ...argument,
-    };
-  }
-  return jQueryDateTimePicker.call(this, argument, ...rest);
-};
+    },
+  );
+
+  $.datepicker.setDefaults(datePickerDefaults);
+  $.datetimepicker.setLocale(globalState.language);
+
+  // convert to php format, incomplete
+  const dateFormat = $.datepicker.regional[globalState.language].dateFormat
+    .replace(/yy/g, 'Y')
+    .replace(/MM/g, 'F')
+  //  .replace(/M/g, 'M')
+    .replace(/mm/g, 'MM')
+    .replace(/m/g, 'n')
+    .replace(/MM/g, 'm')
+    .replace(/DD/g, 'l')
+  //  .replace(/D/g, 'D')
+    .replace(/dd/g, 'DD')
+    .replace(/d/g, 'j')
+    .replace(/DD/g, 'd')
+  ;
+  const timeFormat = 'H:i';
+  const dateTimeFormat = [dateFormat, timeFormat].join(', ');
+
+  // override datetimepicker a little bit
+  const jQueryDateTimePicker = $.fn.datetimepicker;
+  $.fn.datetimepicker = function(argument: Record<string, unknown>, ...rest: unknown[]) {
+    if (rest.length === 0 && typeof argument === 'object' && argument !== null) {
+      argument = {
+        format: dateTimeFormat,
+        formatTime: timeFormat,
+        formatDate: dateFormat,
+        step: 5,
+        onShow(_currentTime: unknown, $inputElement: JQuery, _event: unknown) {
+          return !$inputElement.prop('readonly');
+        },
+        // onChangeDateTime(currentTime, $inputElement, event) {
+        //   // const dateTimePicker = this;
+        //   // $inputElement.blur();
+        //   console.info('DATETIMEPICKER CURRENT TIME', currentTime);
+        // },
+        onClose(_currentTime: unknown, $inputElement: JQuery, _event: unknown) {
+          // $inputElement.trigger('blur');
+          $inputElement.trigger('focusout');
+        },
+        ...argument,
+      };
+    }
+    return jQueryDateTimePicker.call(this, argument, ...rest);
+  };
+});

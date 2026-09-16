@@ -33,7 +33,7 @@ import { setPersonalUrl } from './../settings-urls.ts';
 
 import './../jquery-cafevdb-tooltips.ts';
 import '../../legacy/nextcloud/jquery/requesttoken.js';
-import { hiddenCssClass } from 'variables.scss';
+import { hiddenCssClass } from 'variables.module.scss';
 
 /**
  * @param value Value to set.

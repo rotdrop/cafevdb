@@ -21,6 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { IOptions as SelectizeOptions } from 'selectize';
 import type { EnumEmailFormComposerOperation as ComposerOperation, EnumEmailFormComposerTopic as ComposerTopic, EnumEmailFormComposerElement } from '../../build/ts-types/php-modules/Controller.ts';
 import type {
   // EmailFormComposerResponse,
@@ -108,12 +109,12 @@ import { urlDecode } from './url-decode.ts';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
+import 'bootstrap4-duallistbox';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap.css';
 import 'cafevdb-selectize.scss';
 import './jquery-readonly.ts';
-import 'bootstrap4-duallistbox';
-import 'emailform.scss';
+import 'emailform.module.scss';
 import {
   displayCssClass,
   dropdownOpenCssClass,
@@ -123,7 +124,7 @@ import {
   projectModeCssClass,
   projectModeOffCssClass,
   showSelectableCssClass,
-} from 'emailform.scss';
+} from 'emailform.module.scss';
 // eslint-disable-next -line n/no-missing-import
 import {
   disabledCssClass,
@@ -131,7 +132,7 @@ import {
   hiddenCssClass,
   loadingCssClass,
   reallyHiddenCssClass,
-} from 'variables.scss';
+} from 'variables.module.scss';
 
 type AttachmentElementData = {
   options: string; // HTML fragment
@@ -787,7 +788,7 @@ const emailFormCompositionHandlers = (
 
   WysiwygEditor.addEditor($dialogHolder.find(`textarea.${WYSIWYG_EDITOR}`));
 
-  const messageSelectorSelectizeOptions: Selectize.IOptions = {
+  const messageSelectorSelectizeOptions: Partial<SelectizeOptions> = {
     onBeforeDropdownOpen(_$dropdown: JQuery) {
       this.$wrapper.toggleClass(dropdownOpenCssClass, true);
     },
@@ -814,7 +815,6 @@ const emailFormCompositionHandlers = (
     create: true,
     persist: false,
     render: {
-
       option_create(data, escape) {
         return '<div class="create">' + t(appName, 'Add') + ' <strong>' + escape(data.input) + '</strong>&#x2026;</div>';
       },
@@ -1899,11 +1899,11 @@ const emailFormCompositionHandlers = (
       operation: 'validateEmailRecipients',
       recipients: $self.val() as string|undefined,
       header,
+      [header]: $self.val() as string|undefined, // remove duplicate later
       singleItem: true,
       projectId: projectId(),
       projectName: projectName(),
     } as const;
-    request[header] = request.recipients; // remove duplicate later
     applyComposerControls.call(
       this,
       request,
@@ -2316,7 +2316,7 @@ const emailFormCompositionHandlers = (
                       .find('button.save-contacts').prop('disabled', false);
                   });
               },
-            } as Selectize.IOptions,
+            },
             buttons: [
               {
                 // "text" is documented, however, this is just the
@@ -2529,6 +2529,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
         closeOnEscape: false,
         dialogClass: 'emailform custom-close',
         resizable: false,
+        draggable: true,
         open() {
           $.fn.cafevTooltip.remove();
           DialogUtils.toBackButton($dialogHolder);
@@ -2670,6 +2671,7 @@ const emailFormPopup = (post: string|JQuery.PlainObject, modal: boolean, single:
           const difference = Math.max(0, Math.min(0.5 * (viewportHeight - widgetHeight - 50), 50));
           if (difference > 0) {
             position.at = `center bottom+${difference}`;
+            console.info('EMAILL DIALOG POSITION', position);
             $dialogHolder.dialog('option', 'position', position);
           }
           $dialogWidget

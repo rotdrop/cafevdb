@@ -1,10 +1,11 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
-    "../../custom.d.ts",
+    "./src/toolkit/types/custom.d.ts",
     "./build/ts-types/**.ts",
     "./node_modules/is-plain-object/**.ts",
     "./node_modules/@nextcloud/**.ts",
+    "./node_modules/@rotdrop/**.ts",
     "./node_modules/@types/**.d.ts",
     "./node_modules/@files/**.ts",
     "./node_modules/@dialogs/**.ts",
@@ -13,10 +14,12 @@
     "./node_modules/camelcase/**.ts",
     "./node_modules/ckeditor5/**.ts",
     "./node_modules/moment/**.ts",
-    "./node_modules/pinia/**.ts",
     "./node_modules/vue-router/**/*.ts",
+    "./node_modules/pinia/**.ts",
     "./node_modules/vue/**/*.ts",
-    "./node_modules/webpack/**.ts",
+    "./node_modules/vite/**/*.ts",
+    "./node_modules/vitest/**/*.ts",
+    "./tests/vitest/**/*.ts",
     "./src/**/*.ts",
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
@@ -27,15 +30,19 @@
     "types": [
       "bootstrap",
       "camelcase",
-      "chosen",
+      "chosen-js",
       "imagesLoaded",
       "jquery",
       "jqueryui",
       "moment",
       "node",
       "popper",
-      "selectize"
+      "selectize",
+      "vitest/jsdom"
     ],
+    "paths": {
+      "~/*": ["./*"]
+    },
     "traceResolution": false,
     "lib": [ "ESNext", "DOM", "DOM.Iterable" ],
     "rootDir": "./",
@@ -56,7 +63,7 @@
     "verbatimModuleSyntax": false
   },
   "vueCompilerOptions": {
-    "target": 2.7
+    "target": "^3.5.0"
   },
   "ts-node": {
     "esm": true,

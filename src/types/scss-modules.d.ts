@@ -22,7 +22,7 @@
  */
 
 // declare module '*.scss';
-declare module 'variables.scss' {
+declare module 'variables.module.scss' {
   import type { CSS_PREFIX_POSTFIX } from '../../build/ts-types/php-modules/PageRenderer/CssClasses.ts';
   import type { AppName } from '../config.ts';
 
@@ -39,7 +39,7 @@ declare module 'variables.scss' {
   export const hideDisabledCssClass: 'hide-dsabled';
 }
 
-declare module 'emailform.scss' {
+declare module 'emailform.module.scss' {
   export const displayCssClass: 'display';
   export const dropdownOpenCssClass: 'dropdown-open';
   export const editCssClass: 'edit';
@@ -52,7 +52,7 @@ declare module 'emailform.scss' {
   export const showSelectableCssClass: 'show-selectable';
 }
 
-declare module 'tooltips.scss' {
+declare module 'tooltips.module.scss' {
   export const tooltipWideCssClass = 'tooltip-wide';
   export const tooltipVeryWideCssClass = 'tooltip-verywide';
   export const tooltipMostWideCssClass = 'tooltip-mostwide';
@@ -70,3 +70,5 @@ declare module 'personal-settings-popup.scss';
 declare module 'project-participant-fields-display.scss';
 declare module 'selectize/dist/css/selectize.bootstrap.css';
 declare module 'sepa-bank-accounts.scss';
+
+declare module '*.module.scss';

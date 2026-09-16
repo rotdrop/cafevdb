@@ -293,8 +293,8 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
   } else {
     try {
       $this.tooltip(config);
-    } catch {
-      console.error('EXCEPTION DURING TOOLTIP HANDLING', { self: this, config });
+    } catch (error) {
+      console.error('EXCEPTION DURING TOOLTIP HANDLING', { error, self: this, config });
     }
     if (config === 'dispose') {
       const appTitle = $this.data(appTitleKey);

@@ -48,6 +48,7 @@ endif
 COMPOSER_OPTIONS=--prefer-dist
 #
 NPM = $(shell which npm 2> /dev/null)
+BUNDLER_CONFIG = vite.config.ts
 OCC = $(ABSSRCDIR)/../../occ
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 WGET = $(shell which wget 2> /dev/null)
@@ -314,7 +315,7 @@ CHOSEN_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/chosen/public/*)
 BOOTSTRAP_DUALLISTBOX_DIST = $(wildcard $(ABSSRCDIR)/3rdparty/bootstrap-duallistbox/dist/*)
 
 NPM_INIT_DEPS =\
- $(MAKEFILE_DEP) package-lock.json package.json webpack.config.js eslint.config.mjs
+ $(MAKEFILE_DEP) package-lock.json package.json $(BUNDLER_CONFIG) eslint.config.mjs
 
 THIRD_PARTY_NPM_DEPS = $(SELECTIZE_DIST) $(BOOTSTRAP_DUALLISTBOX_DIST)
 

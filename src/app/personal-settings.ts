@@ -43,7 +43,7 @@ import setTooltipsMode from './settings/tooltips.ts';
 import { handleMenu as handleUserManualMenu } from './user-manual.ts';
 
 import './settings/debug-query-sql-filter.ts';
-import { appNameTag, hiddenCssClass } from 'variables.scss';
+import { appNameTag, hiddenCssClass } from 'variables.module.scss';
 
 require('nav-area-settings.scss');
 
