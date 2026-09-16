@@ -103,7 +103,7 @@ function postBuildHook(): Plugin {
   };
 }
 
-const overrides = defineConfig({
+const overrides = defineConfig(({ mode }) => ({
   css: {
     preprocessorOptions: {
       scss: {
@@ -141,6 +141,7 @@ const overrides = defineConfig({
   build: {
     // target: 'esnext',
     cssCodeSplit: true,
+    cssMinify: mode === 'development' ? false : 'esbuild',
     manifest: true,
     modulePreload: false,
     rolldownOptions: {
@@ -172,7 +173,7 @@ const overrides = defineConfig({
     svg(svgoConfig),
     postBuildHook(),
   ],
-});
+}));
 
 const appOptions: AppOptions = {
   // coreJS: {

@@ -92,6 +92,7 @@
     "deepmerge": "^4.3.1",
     "docdash": "^2.0.2",
     "easy-web-crypto": "^1.4.0",
+    "esbuild": "^0.28.2",
     "escape-html": "^1.0.3",
     "eslint": "^10.4.0",
     "find-root": "^1.1.0",
