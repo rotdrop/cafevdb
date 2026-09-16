@@ -381,7 +381,7 @@ export default defineStore(storeId, () => {
   if (!isVueRouterHistoryState(vueRouterHistory.state)) {
     // we can probably remove this now that the history state is just
     // defined right from the start
-    console.error('NO HISTORY STATE', {
+    logger.error('NO HISTORY STATE', {
       routerHistoryStateValue: { ...((vueRouterHistory?.state as undefined|VueRouterHistoryState) ?? {}) },
       routerHistoryState: vueRouterHistory.state,
       windowHistoryValue: { ...(window.history?.state ?? {}) },
@@ -838,6 +838,7 @@ export default defineStore(storeId, () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   axios.get<any, AxiosResponse<number[]>>(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
     .then((response) => {
+      // @todo: still toFixed() CHECK!
       savedHistoryStates.value = response.data.map((stamp) => +(+stamp).toFixed(3));
       logger.info('SAVE HISTORY STATES', {
         savedHistoryStates: savedHistoryStates.value,
