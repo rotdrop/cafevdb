@@ -30,6 +30,7 @@ use OCP\IUserManager;
 use Psr\Container\ContainerInterface;
 use OCP\Files\IRootFolder;
 use OC\FilesMetadata\FilesMetadataManager;
+use OC\Files\SetupManager;
 use OCP\EventDispatcher\IEventDispatcher;
 use Psr\Log\LoggerInterface;
 
@@ -41,34 +42,26 @@ class FilesScan extends \OCA\Files\Command\Scan
 {
   use AuthenticatedCommandTrait;
 
-  /**
-   * @param string $appName Needed by AuthenticatedCommandTrait.
-   * @param IL10N $l Needed by AuthenticatedCommandTrait.
-   * @param IUserManager $userManager Trait and parent.
-   * @param IUserSession $userSession Trait.
-   * @param ContainerInterface $appContainer Trait.
-   * @param IRootFolder $rootFolder Parent.
-   * @param FilesMetadataManager $filesMetadataManager Parent.
-   * @param IEventDispatcher $eventDispatcher Parent.
-   * @parma LoggerInterface $logger Parent.
-   */
+  /** {@inheritdoc} */
   public function __construct(
-    protected string $appName,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected ContainerInterface $appContainer,
-    IRootFolder $rootFolder,
+    protected string $appName,
     FilesMetadataManager $filesMetadataManager,
     IEventDispatcher $eventDispatcher,
+    IRootFolder $rootFolder,
     LoggerInterface $logger,
+    SetupManager $setupManager,
   ) {
     parent::__construct(
-      userManager: $userManager,
-      rootFolder: $rootFolder,
-      filesMetadataManager: $filesMetadataManager,
       eventDispatcher: $eventDispatcher,
+      filesMetadataManager: $filesMetadataManager,
       logger: $logger,
+      rootFolder: $rootFolder,
+      setupManager: $setupManager,
+      userManager: $userManager,
     );
   }
 
