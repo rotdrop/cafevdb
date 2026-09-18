@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2022-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +24,29 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use OCP\IL10N;
-use OCP\IUserSession;
-use OCP\IUserManager;
-use Psr\Container\ContainerInterface;
+use OCP\Console\Attribute\Argument;
+use OCP\Console\Attribute\AsCommand;
+use OCP\Console\Attribute\Option;
+use OCP\Console\ExitCode;
+use OCP\Console\IInput;
+use OCP\Console\IOutput;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\IRootFolder;
+use OCP\IL10N;
+use OCP\IUserManager;
+use OCP\IUserSession;
 use OC\FilesMetadata\FilesMetadataManager;
 use OC\Files\SetupManager;
-use OCP\EventDispatcher\IEventDispatcher;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-
 /** Authenticated files-scan which is thus also able to scan the database-backed mounts */
-class FilesScan extends \OCA\Files\Command\Scan
+#[AsCommand(
+  name: 'cafevdb:files-scan',
+  description: 'rescan filesystem',
+  supportsOutputFormat: true,
+)]
+class FilesScan
 {
   use AuthenticatedCommandTrait;
 
@@ -49,37 +57,45 @@ class FilesScan extends \OCA\Files\Command\Scan
     protected IUserManager $userManager,
     protected IUserSession $userSession,
     protected string $appName,
-    FilesMetadataManager $filesMetadataManager,
-    IEventDispatcher $eventDispatcher,
-    IRootFolder $rootFolder,
-    LoggerInterface $logger,
-    SetupManager $setupManager,
+    protected \OCA\Files\Command\Scan $filesScan,
   ) {
-    parent::__construct(
-      eventDispatcher: $eventDispatcher,
-      filesMetadataManager: $filesMetadataManager,
-      logger: $logger,
-      rootFolder: $rootFolder,
-      setupManager: $setupManager,
-      userManager: $userManager,
-    );
   }
 
   /** {@inheritdoc} */
-  protected function configure():void
-  {
-    parent::configure();
-    $this->setName($this->appName . ':files-scan');
-  }
-
-  /** {@inheritdoc} */
-  protected function execute(InputInterface $input, OutputInterface $output):int
-  {
+  public function __invoke(
+    IInput $input,
+    IOutput $output,
+    ISignalHandler $signalHandler,
+    #[Argument(name: 'user_id', description: 'will rescan all files of the given user(s)')]
+    array $userIds = [],
+    #[Option(description: 'limit rescan to this path, eg. --path="/alice/files/Music", the user_id is determined by the path and the user_id parameter and --all are ignored', shortcut: 'p')]
+    ?string $path = null,
+    #[Option(name: 'generate-metadata', description: 'Generate metadata for all scanned files; if specified only generate for named value')]
+    string|bool $generateMetadata = false,
+    #[Option(description: 'will rescan all files of all known users')]
+    bool $all = false,
+    #[Option(description: 'only scan files which are marked as not fully scanned')]
+    bool $unscanned = false,
+    #[Option(description: 'do not scan folders recursively')]
+    bool $shallow = false,
+    #[Option(name: 'home-only', description: 'only scan the home storage, ignoring any mounted external storage or share')]
+    bool $homeOnly = false,
+  ): ExitCode {
     $result = $this->authenticate($input, $output);
-    if ($result != 0) {
+    if ($result != ExitCode::Success) {
       return $result;
     }
 
-    return parent::execute($input, $output);
+    return $this->filesScan->__invoke(
+      output: $output,
+      signalHandler: $signalHandler,
+      userIds: $userIds,
+      path: $path,
+      generateMetadata: $generateMetadata,
+      all: $all,
+      unscanned: $unscanned,
+      shallow: $shallow,
+      homeOnly: $homeOnly,
+    );
   }
 }

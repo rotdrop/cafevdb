@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024, 2025 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,26 +26,33 @@ namespace OCA\CAFEVDB\Command;
 
 use Throwable;
 
-use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Services\IAppConfig;
+use OCP\Console\Attribute\Argument;
+use OCP\Console\Attribute\AsCommand;
+use OCP\Console\Attribute\Option;
+use OCP\Console\ExitCode;
+use OCP\Console\IInput;
+use OCP\Console\IOutput;
 use OCP\Files\IRootFolder;
 use OCP\IL10N;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\L10N\IFactory as IL10NFactory;
 use OC\Files\FilenameValidator;
+use Psr\Container\ContainerInterface;
 
 use OCA\Files\Service\SettingsService;
 use OCA\Files\Command\SanitizeFilenames as FilesSanitizeFilenames;
-
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions;
 
 /** Authenticated sanitize-filenames which is thus also able to scan the database-backed mounts */
-class SanitizeFilenames extends FilesSanitizeFilenames
+#[AsCommand(
+  name: 'cafevdb:sanitize-filenames',
+  description: 'Renames files to match naming constraints',
+)]
+class SanitizeFilenames
 {
   use AuthenticatedCommandTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\SanitizeFilenameTrait;
@@ -57,40 +64,37 @@ class SanitizeFilenames extends FilesSanitizeFilenames
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    FilenameValidator $filenameValidator,
-    IAppConfig $appConfig,
-    IL10NFactory $l10nFactory,
-    IRootFolder $rootFolder,
-    SettingsService $settingsService,
+    protected FilesSanitizeFilenames $filesCommand,
   ) {
-    parent::__construct(
-      userManager: $this->userManager,
-      rootFolder: $rootFolder,
-      session: $this->userSession,
-      l10nFactory: $l10nFactory,
-      filenameValidator: $filenameValidator,
-      service: $settingsService,
-      appConfig: $appConfig,
-    );
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
-  protected function configure():void
-  {
-    parent::configure();
-    $this->setName($this->appName . ':sanitize-filenames');
-  }
+  public function __invoke(
+    IInput $input,
+    IOutput $output,
+    #[Argument(
+      name: 'user_id',
+      description: 'will only rename files the given user(s) have access to',
+    )]
+    array $userIds = [],
+    #[Option(
+      name: 'dry-run',
+      description: 'Do not actually rename any files but just check filenames.',
+    )]
+    bool $dryRun = false,
+    #[Option(
+      name: 'char-replacement',
+      description: 'Replacement for invalid character (by default space, underscore or dash is used)',
+      shortcut: 'c',
+    )]
+    ?string $charReplacement = null,
+  ): ExitCode {
 
-  /** {@inheritdoc} */
-  protected function execute(InputInterface $input, OutputInterface $output):int
-  {
     $result = $this->authenticate($input, $output);
-    if ($result != 0) {
+    if ($result != ExitCode::Success) {
       return $result;
     }
-
-    $dryRun = $input->getOption('dry-run');
 
     $this->entityManager->beginTransaction();
     try {
@@ -137,6 +141,6 @@ class SanitizeFilenames extends FilesSanitizeFilenames
       );
     }
 
-    return parent::execute($input, $output);
+    return $this->filesCommand->__invoke($output, $dryRun, $charReplacement);
   }
 }

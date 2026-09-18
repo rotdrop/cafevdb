@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2025 Claus-Justus Heine
+ * @copyright 2011-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,20 +24,25 @@
 
 namespace OCA\CAFEVDB\Command;
 
+use Exception;
+
+use OCP\Console\Attribute\Argument;
+use OCP\Console\Attribute\AsCommand;
+use OCP\Console\Attribute\Option;
+use OCP\Console\ExitCode;
+use OCP\Console\IInput;
+use OCP\Console\IOutput;
 use OCP\IL10N;
-use OCP\IUserSession;
 use OCP\IUserManager;
+use OCP\IUserSession;
 use Psr\Container\ContainerInterface;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DescriptorHelper;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-
-
 /** Test-command in order to see if the abstract framework is functional. */
-class HelloWorld extends Command
+#[AsCommand(
+  name: 'cafevdb:hello-world',
+  description: 'Say "Hello!" to the world!',
+)]
+class HelloWorld
 {
   use AuthenticatedCommandTrait;
 
@@ -49,65 +54,69 @@ class HelloWorld extends Command
     protected IUserSession $userSession,
     protected ContainerInterface $appContainer,
   ) {
-    parent::__construct();
   }
 
   /** {@inheritdoc} */
-  protected function configure()
-  {
-    $this
-      ->setName($this->appName . ':hello-world')
-      ->setDescription($this->l->t('Say "Hello!" to the world!'))
-      ->addOption(
-        'only-hello',
-        'o',
-        InputOption::VALUE_NONE,
-        $this->l->t('Outputs only hello, not world.'),
-      )
-      ->addOption(
-        'authenticated',
-        'a',
-        InputOption::VALUE_NONE,
-        $this->l->t('Try to authenticate with the cloud.'),
-      )
-      ->addOption(
-        'failure',
-        'f',
-        InputOption::VALUE_NONE,
-        $this->l->t('Specifying this option with result in failure.'),
-      )
-      ;
-  }
+  public function __invoke(
+    IInput $input,
+    IOutput $output,
+    #[Option(
+      name: 'only-hello',
+      shortcut: 'o',
+      description: 'Outputs only hello, not world.',
+    )]
+    bool $onlyHello = false,
+    #[Option(
+      name: 'authenticated',
+      shortcut: 'a',
+      description: 'Try to authenticate with the cloud.',
+    )]
+    bool $authenticated = false,
+    #[Option(
+      name: 'failure',
+      shortcut: 'f',
+      description: 'Specifying this option will result in failure.',
+    )]
+    bool $failure = false,
+    #[Option(
+      name: 'exception',
+      shortcut: 'e',
+      description: 'Specifying this option will throw an exception.',
+    )]
+    bool $exception = false,
+  ): ExitCode {
 
-  /** {@inheritdoc} */
-  protected function execute(InputInterface $input, OutputInterface $output): int
-  {
     $optionCheck = true;
 
-    if ($input->getOption('failure')) {
+    if ($failure) {
       $output->writeln('<error>' . $this->l->t('Generating an artificial failure as requested.') . '</error>');
       $optionCheck = false;
+    }
+
+    if ($exception) {
+      $output->writeln('<error>' . $this->l->t('Generating an artificial exception as requested.') . '</error>');
+      throw new Exception($this->l->t('This is an serious Exception!'));
     }
 
     if (!$optionCheck) {
       $output->writeln('');
       $output->writeln('<error>' . $this->l->t('Command failed, please have a look at the error messages above.') . '</error>');
       $output->writeln('');
-      (new DescriptorHelper)->describe($output, $this);
-      return 1;
+
+      return ExitCode::Failure;
     }
 
-    if ($input->getOption('authenticated')) {
+    if ($authenticated) {
       $result = $this->authenticate($input, $output);
-      if ($result != 0) {
+      if ($result != ExitCode::Success) {
         return $result;
       }
     }
-    if ($input->getOption('only-hello')) {
+    if ($onlyHello) {
       $output->writeln($this->l->t('Hello!'));
     } else {
       $output->writeln($this->l->t('Hello World!'));
     }
-    return 0;
+    return ExitCode::Success;
   }
 }
