@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024, 2026 Claus-Justus Heine
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -56,7 +56,7 @@ class ContactsAddressBook implements IAddressBook
   }
 
   /** {@inheritdoc} */
-  public function getKey()
+  public function getKey(): string
   {
     return $this->cardBackend->getURI();
   }
