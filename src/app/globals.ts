@@ -50,7 +50,6 @@ ImagesLoaded.makeJQueryPlugin(jQuery);
 
 // still needed for jquery
 import '../legacy/nextcloud/jquery/requesttoken.js';
-// import '@nextcloud/dialogs/styles/toast.scss';
 // CSS unrelated to particular modules
 import 'oc-fixes.scss';
 import 'mobile.scss';

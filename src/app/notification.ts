@@ -21,14 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ToastOptions } from '@nextcloud/dialogs';
+import type { ToastOptions } from '../toolkit/util/toasts.ts';
 
 import {
   showMessage,
   TOAST_DEFAULT_TIMEOUT,
   TOAST_PERMANENT_TIMEOUT,
   TOAST_UNDO_TIMEOUT,
-} from '@nextcloud/dialogs';
+} from '../toolkit/util/toasts.ts';
 import globalState from './globalstate.ts';
 
 type ToastHandle = ReturnType<typeof showMessage>;

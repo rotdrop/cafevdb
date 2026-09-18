@@ -24,26 +24,26 @@
 import type { StringValued } from '../util/string-valued.ts';
 
 export interface AddressBook {
-  key: string|number,
-  uid: string,
-  uri?: string,
-  FN?: string,
-  displayName: string,
-  isSystemAddressBook?: boolean,
-  $isDisabled?: boolean,
+  key: string|number;
+  uid: string;
+  uri?: string;
+  FN?: string;
+  displayName: string;
+  isSystemAddressBook?: boolean;
+  $isDisabled?: boolean;
 }
 
 export interface Contact {
-  key: number|string,
-  name?: StringValued,
-  label: string,
-  addressBookName?: string,
-  $isDisabled?: boolean,
-  UID: string,
-  URI?: string,
-  FN?: string,
-  EMAIL?: StringValued[],
-  informalDisplayName?: string,
-  ADR?: StringValued[],
-  ORG?: string,
+  key: number|string;
+  name?: StringValued;
+  label: string;
+  addressBookName?: string;
+  $isDisabled?: boolean;
+  UID: string;
+  URI?: string;
+  FN?: string;
+  EMAIL?: StringValued[];
+  informalDisplayName?: string;
+  ADR?: StringValued[];
+  ORG?: string;
 }

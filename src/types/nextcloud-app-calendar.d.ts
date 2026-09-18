@@ -35,94 +35,94 @@ declare module '@nextcloud/app-calendar' {
   import type { Store } from 'pinia';
 
   export interface Calendar {
-    owner: string,
+    owner: string;
   }
 
   export interface TimeRange {
-    id: number,
+    id: number;
   }
 
   export type CalendarsStore = Store<
     'calendars',
     {
-      initialCalendarsLoaded: boolean,
-      loadCollections: () => Promise<{ calendars: Calendar[] }>,
-      getCalendarSyncToken: (calendar: Calendar) => string,
-      getCalendarById: (id: string) => Calendar,
-      addCalendarMutation: ({ calendar: Calendar }) => void,
-      deleteFetchedTimeRangeFromCalendarMutation: ({ calendar: Calendar, fetchedTimeRangeId: number }) => void,
-      updateCalendarSyncToken: ({ calendar: Calendar, syncToken: string }) => void,
+      initialCalendarsLoaded: boolean;
+      loadCollections: () => Promise<{ calendars: Calendar[] }>;
+      getCalendarSyncToken: (calendar: Calendar) => string;
+      getCalendarById: (id: string) => Calendar;
+      addCalendarMutation: ({ calendar: Calendar }) => void;
+      deleteFetchedTimeRangeFromCalendarMutation: ({ calendar: Calendar, fetchedTimeRangeId: number }) => void;
+      updateCalendarSyncToken: ({ calendar: Calendar, syncToken: string }) => void;
     }
   >;
   export type PrincipalsStore = Store<
     'principals',
     {
-      fetchCurrentUserPrincipal: () => Promise<void>,
-      fetchPrincipalByUrl: ({ url }) => Promise<void>,
-      getCurrentUserPrincipal: () => unknown,
+      fetchCurrentUserPrincipal: () => Promise<void>;
+      fetchPrincipalByUrl: ({ url }) => Promise<void>;
+      getCurrentUserPrincipal: () => unknown;
     }
   >;
   export type FetchedTimeRangesStore = Store<
     'fetchedTimeRanges',
     {
-      getAllTimeRangesForCalendar: (id: number) => TimeRange[],
-      removeTimeRange: ({ timeRangeId: number }) => void,
+      getAllTimeRangesForCalendar: (id: number) => TimeRange[];
+      removeTimeRange: ({ timeRangeId: number }) => void;
     }
   >;
 
   export type SettingsStore = Store<
     'settings',
     {
-      setMomentLocale: ({ locale }) => void,
+      setMomentLocale: ({ locale }) => void;
     }
   >;
 
   interface CalendarObject {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any,
-    calendarId: string,
+    [key: string]: any;
+    calendarId: string;
   }
 
   interface CalendarObjectInstance {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any,
-    startDate: Date,
-    endDate: Date,
-    description: null|string,
-    categories: string[],
-    isAllDay: boolean,
-    title: string,
-    location: null|string,
+    [key: string]: any;
+    startDate: Date;
+    endDate: Date;
+    description: null|string;
+    categories: string[];
+    isAllDay: boolean;
+    title: string;
+    location: null|string;
   }
 
   type CalendarObjectsStore = Store<
     'calendarObjects',
     {
-      modificationCount: number,
-      calendarObjects: Record<string, CalendarObject>,
-      updateCalendarObject: ({ calendarObject }) => Promise<unknown>,
+      modificationCount: number;
+      calendarObjects: Record<string, CalendarObject>;
+      updateCalendarObject: ({ calendarObject }) => Promise<unknown>;
     }
   >;
 
   type CalendarObjectInstanceStore = Store<
     'calendarObjectInstance',
     {
-      isNew: boolean|null,
-      calendarObject: CalendarObject|null,
-      calendarObjectInstance: CalendarObjectInstance|null,
+      isNew: boolean|null;
+      calendarObject: CalendarObject|null;
+      calendarObjectInstance: CalendarObjectInstance|null;
       existingEvent: {
-        objectId: string|null,
-        recurrenceId: number|null,
-      },
-      getCalendarObjectInstanceByObjectIdAndRecurrenceId: (arg: { objectId: string, recurrenceId: number, reload?: boolean })
+        objectId: string|null;
+        recurrenceId: number|null;
+      };
+      getCalendarObjectInstanceByObjectIdAndRecurrenceId: (arg: { objectId: string; recurrenceId: number; reload?: boolean })
       => Promise<{
-        calendarObject: CalendarObject,
-        calendarObjectInstance: CalendarObjectInstance,
-      }>,
-      addCategory: (arg: { calendarObjectInstance: CalendarObjectInstance, category: string }) => void,
-      removeCategory: (arg: { calendarObjectInstance: CalendarObjectInstance, category: string }) => void,
-      saveCalendarObjectInstance: (arg: { thisAndAllFuture: boolean, calendarId: string }) => Promise<void>,
-      deleteCalendarObjectInstance: (arg: { thisAndAllFuture: boolean }) => Promise<void>,
+        calendarObject: CalendarObject;
+        calendarObjectInstance: CalendarObjectInstance;
+      }>;
+      addCategory: (arg: { calendarObjectInstance: CalendarObjectInstance; category: string }) => void;
+      removeCategory: (arg: { calendarObjectInstance: CalendarObjectInstance; category: string }) => void;
+      saveCalendarObjectInstance: (arg: { thisAndAllFuture: boolean; calendarId: string }) => Promise<void>;
+      deleteCalendarObjectInstance: (arg: { thisAndAllFuture: boolean }) => Promise<void>;
     }
   >;
 }

@@ -86,7 +86,6 @@ import type { NcActions } from '@nextcloud/vue'
 import { LOGGING_LEVEL, LOGGING_LEVEL_NAMES } from '@nextcloud/app-logreader/src/constants.ts'
 import { copyToCipboard } from '@nextcloud/app-logreader/src/utils/clipboard.ts'
 import { useLogFormatting } from '@nextcloud/app-logreader/src/utils/format.ts'
-import { showSuccess } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import {
   NcActionButton,
@@ -108,6 +107,7 @@ import IconContentCopy from 'vue-material-design-icons/ContentCopy.vue'
 import IconReportError from 'vue-material-design-icons/EmailArrowRightOutline.vue'
 import LogException from './exception/LogException.vue'
 import { appName } from '../../config.ts'
+import { showSuccess } from '../../toolkit/util/toasts.ts'
 
 // @ts-expect-error 2882 I do not care.
 import 'highlight.js/styles/base16/material-darker.css'

@@ -25,7 +25,6 @@ import type * as DTO from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { GetValueResult } from './simple-set-value.ts';
 
-import { showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import { EnumPersonalSettingsKey, EnumSettingsGetApp } from '../../build/ts-types/php-modules/Controller.ts';
 import {
@@ -37,6 +36,7 @@ import * as UploadsController from '../../build/ts-types/php-modules/Controller/
 import * as ConfigConstants from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import { appName, appPrefix } from '../config.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { showInfo, TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts';
 import * as Ajax from './ajax.ts';
 import { toolTipsInit } from './cafevdb.ts';
 import * as Dialogs from './dialogs.ts';

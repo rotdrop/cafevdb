@@ -38,7 +38,6 @@ import type { EnumFromTag } from '../../build/ts-types/php-modules/EmailForm.ts'
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { UploadFile } from './file-upload.ts';
 
-import { showSuccess } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import { generateOcsUrl } from '@nextcloud/router';
 import { emit as asyncEmit, subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
@@ -83,6 +82,7 @@ import {
 } from '../event-bus-events.ts';
 import { asKey } from '../toolkit/types/type-traits.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { showSuccess } from '../toolkit/util/toasts.ts';
 import {
   handleError as ajaxHandleError,
   validateResponse as ajaxValidateResponse,

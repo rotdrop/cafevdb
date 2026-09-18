@@ -458,13 +458,6 @@ import type { CloudGroup, CloudUser } from '../stores/cloud-users-groups.ts'
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts'
 
 import axios from '@nextcloud/axios'
-import {
-  getFilePickerBuilder,
-  showError,
-  showInfo,
-  TOAST_DEFAULT_TIMEOUT,
-  TOAST_PERMANENT_TIMEOUT,
-} from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 import { translate as t } from '@nextcloud/l10n'
 import { basename } from '@nextcloud/paths'
@@ -517,6 +510,13 @@ import useTooltipsStore from '../stores/tooltips.ts'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.ts'
 import dialogConfirm from '../toolkit/util/dialog-confirm.ts'
 import { generateOcsUrl as generateAppOcsUrl, generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import {
+  getFilePickerBuilder,
+  showError,
+  showInfo,
+  TOAST_DEFAULT_TIMEOUT,
+  TOAST_PERMANENT_TIMEOUT,
+} from '../toolkit/util/toasts.ts'
 import { vueDevTools as setVueDevTools } from '../toolkit/util/vue-devtools.ts'
 import Console from '../util/console.ts'
 import formatDate from '../util/formatDate.ts'

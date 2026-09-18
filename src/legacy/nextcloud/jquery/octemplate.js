@@ -1,5 +1,5 @@
-import $ from 'jquery'
-import escapeHTML from 'escape-html'
+import escapeHTML from 'escape-html';
+import $ from 'jquery';
 
 /**
  * jQuery plugin for micro templates
@@ -56,50 +56,48 @@ import escapeHTML from 'escape-html'
  * Inspired by micro templating done by e.g. underscore.js
  */
 const Template = {
-	init(vars, options, elem) {
-		// Mix in the passed in options with the default options
-		this.vars = vars
-	  this.options = { ...this.options, ...options }
+  init(vars, options, elem) {
+    // Mix in the passed in options with the default options
+    this.vars = vars;
+    this.options = { ...this.options, ...options };
 
-		this.elem = elem
-		const self = this
+    this.elem = elem;
+    const self = this;
 
-		if (typeof this.options.escapeFunction === 'function') {
-			const keys = Object.keys(this.vars)
-			for (let key = 0; key < keys.length; key++) {
-				this.vars[keys[key]] = this.vars[keys[key]] || ''
-				if (typeof this.vars[keys[key]] === 'string') {
-					this.vars[keys[key]] = self.options.escapeFunction(this.vars[keys[key]])
-				}
-			}
-		}
+    if (typeof this.options.escapeFunction === 'function') {
+      const keys = Object.keys(this.vars);
+      for (let key = 0; key < keys.length; key++) {
+        this.vars[keys[key]] = this.vars[keys[key]] || '';
+        if (typeof this.vars[keys[key]] === 'string') {
+          this.vars[keys[key]] = self.options.escapeFunction(this.vars[keys[key]]);
+        }
+      }
+    }
 
-		const _html = this._build(this.vars)
-		return $(_html)
-	},
-	// From stackoverflow.com/questions/1408289/best-way-to-do-variable-interpolation-in-javascript
-	_build(o) {
-	  const data = (this.elem.data('type') === 'text/template' || this.elem.attr('type') === 'text/template') ? this.elem.html() : this.elem.get(0).outerHTML
-		try {
-			return data.replace(/{([^{}]*)}/g,
-				function(a, b) {
-					const r = o[b]
-					return typeof r === 'string' || typeof r === 'number' ? r : a
-				}
-			)
-		} catch (e) {
-			console.error(e, 'data:', data)
-		}
-	},
-	options: {
-		escapeFunction: escapeHTML,
-	},
-}
+    const _html = this._build(this.vars);
+    return $(_html);
+  },
+  // From stackoverflow.com/questions/1408289/best-way-to-do-variable-interpolation-in-javascript
+  _build(o) {
+    const data = (this.elem.data('type') === 'text/template' || this.elem.attr('type') === 'text/template') ? this.elem.html() : this.elem.get(0).outerHTML;
+    try {
+      return data.replace(/{([^{}]*)}/g, function(a, b) {
+        const r = o[b];
+        return typeof r === 'string' || typeof r === 'number' ? r : a;
+      });
+    } catch (e) {
+      console.error(e, 'data:', data);
+    }
+  },
+  options: {
+    escapeFunction: escapeHTML,
+  },
+};
 
 $.fn.octemplate = function(vars, options) {
-	vars = vars || {}
-	if (this.length) {
-		const _template = Object.create(Template)
-		return _template.init(vars, options, this)
-	}
-}
+  vars = vars || {};
+  if (this.length) {
+    const _template = Object.create(Template);
+    return _template.init(vars, options, this);
+  }
+};

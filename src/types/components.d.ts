@@ -21,10 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
+import type Vue from 'vue';
 
 export interface LegacyPageActionsMenu extends Vue {
-  isOpen: () => boolean,
-  openMenu: (x?: number, y?: number) => Promise<unknown>,
-  closeMenu: () => Promise<unknown>,
+  isOpen: () => boolean;
+  openMenu: (x?: number, y?: number) => Promise<unknown>;
+  closeMenu: () => Promise<unknown>;
 }
