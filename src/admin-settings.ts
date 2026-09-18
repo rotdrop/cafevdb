@@ -21,7 +21,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import AdminSettings from './components/AdminSettings.vue';
@@ -33,8 +32,8 @@ import 'core-js/actual';
 const pinia = createPinia();
 
 const app = createApp(AdminSettings);
+app.config.performance = !!(import.meta?.env?.DEV);
 app.provide('appId', appName);
-app.directive('tooltip', Tooltip);
 app.mixin(globalMixin);
 app.use(pinia);
 app.mount('#admin-settings-vue');

@@ -436,14 +436,6 @@
         </TextField>
       </div>
     </NcSettingsSection>
-    <NcSettingsSection v-if="config.isSubAdmin"
-                       class="sub-admin vue-devtools"
-                       :name="t(appId, 'Enable Vue DevTools Support')"
-    >
-      <NcCheckboxRadioSwitch v-model="vueDevTools">
-        {{ t(appId, 'Check to enable Vue Devtools support (also needs unsafe-eval CSP)') }}
-      </NcCheckboxRadioSwitch>
-    </NcSettingsSection>
   </div>
 </template>
 
@@ -465,11 +457,11 @@ import { generateOcsUrl } from '@nextcloud/router'
 import {
   NcActionButton,
   NcActions,
-  NcCheckboxRadioSwitch,
   NcListItem,
   NcProgressBar,
   NcSettingsSection,
 } from '@nextcloud/vue'
+import vTooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip'
 import {
   computed,
   onBeforeMount,
