@@ -159,8 +159,8 @@ class Admin implements IDelegatedSettings
 
     $this->initialState->provideInitialState(self::INITIAL_STATE_SECTION, $configData);
 
-    Util::addScript($this->appName, $this->assetService->getJSAsset(self::TEMPLATE));
-    Util::addStyle($this->appName, $this->assetService->getCSSAsset(self::TEMPLATE));
+    Util::addScript($this->appName(), $this->assetService->getJSAsset(self::TEMPLATE));
+    Util::addStyle($this->appName(), $this->assetService->getCSSAsset(self::TEMPLATE));
 
     return $this->templateResponse(self::TEMPLATE);
   }
