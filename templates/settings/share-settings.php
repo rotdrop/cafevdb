@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2014, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -374,7 +374,7 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                  type="checkbox"
                  class="checkbox user-sql"/>
           <label for="user-sql-backend-checkbox"
-                 title="<?php p($toolTips['settings:personal:sharing:user-sql:enable']); ?>">
+                 title="<?= $toolTips['settings:personal:sharing:user-sql:enable']; ?>">
             <?php p($l->t('Generate database-views for the "%s" cloud user-backend', $cloudUserBackend)); ?>
           </label>
           <?php $link = 'https://apps.nextcloud.com/apps/' . $cloudUserBackend; ?>
@@ -396,7 +396,7 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                  <?php empty($importClubMembersAsCloudUsers) && p('disabled'); ?>
           />
           <label for="user-sql-separate-database-checkbox"
-                 title="<?php p($toolTips['settings:personal:sharing:user-sql:separate-database']); ?>">
+                 title="<?= $toolTips['settings:personal:sharing:user-sql:separate-database']; ?>">
             <span class="hide-if-user-sql-separate-database">
               <?php p($l->t('Use a separate dedicated database for the SQL-views.')); ?>
             </span>
@@ -423,10 +423,10 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                  type="button"
                  name="userSqlBackendRecreateViews"
                  value="<?php p($l->t('Recreate')); ?>"
-                 title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>"
+                 title="<?= $toolTips['settings:personal:sharing:user-sql:recreate-views']; ?>"
           />
           <label for="user-sql-recreate-views-button"
-                 title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>">
+                 title="<?= $toolTips['settings:personal:sharing:user-sql:recreate-views']; ?>">
             <?php p($l->t('Recreate the database-views for the "%1$s"-user-backend.', $cloudUserBackend)); ?>
           </label>
         </div>
@@ -442,7 +442,7 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                  type="checkbox"
                  class="checkbox personalized-views"/>
           <label for="personalized-views-checkbox"
-                 title="<?php p($toolTips['settings:personal:sharing:personalized-views']); ?>">
+                 title="<?= $toolTips['settings:personal:sharing:personalized-views']; ?>">
             <?php p($l->t('Generate personalized single-row database-views')); ?>
           </label>
         </div>
@@ -453,10 +453,10 @@ $off = $_[ConfigConstants::SHARE_OWNER_KEY] == '' ? 'disabled' : $alloff;
                  type="button"
                  name="musicianPersonalizedViewsRecreateViews"
                  value="<?php p($l->t('Recreate')); ?>"
-                 title="<?php p($toolTips['settings:personal:sharing:personalized-views:recreate-views']); ?>"
+                 title="<?= $toolTips['settings:personal:sharing:personalized-views:recreate-views']; ?>"
           />
           <label for="personalized-views-recreate-views-button"
-                 title="<?php p($toolTips['settings:personal:sharing:personalized-views:recreate-views']); ?>">
+                 title="<?= $toolTips['settings:personal:sharing:personalized-views:recreate-views']; ?>">
             <?php p($l->t('Recreate the personalized single-row database-views')); ?>
           </label>
         </div>
