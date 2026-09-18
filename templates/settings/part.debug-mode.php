@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,6 @@ $debugModes = [
   ConfigConstants::DEBUG_TOOLTIPS => $l->t('Missing Context Help'),
   ConfigConstants::DEBUG_EMAILFORM => $l->t('Mass Email Form'),
   ConfigConstants::DEBUG_GEOCODING => $l->t('GeoCoding'),
-  ConfigConstants::DEBUG_VUE => $l->t('Vue JS Frontend'),
   ConfigConstants::DEBUG_SMAPS => $l->t('Resolve JS Sourceode'),
 ];
 
