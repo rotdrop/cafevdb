@@ -55,7 +55,6 @@ import {
 } from '../build/ts-types/php-modules/Controller/DocumentStorageUploadController.ts';
 import { END_POINT as mailMergeEndPoint } from '../build/ts-types/php-modules/Controller/MailMergeController.ts';
 import { END_POINT_PAGE } from '../build/ts-types/php-modules/Controller/VueAppController.ts';
-import { DEBUG_VUE } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import logoSvg from '../img/cafevdb.svg';
 import { appName } from './config.ts';
 import { filesMailmergeId } from './files-common.ts';
@@ -63,7 +62,6 @@ import dialogAlert from './toolkit/util/dialog-alert.ts';
 import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
 import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from './toolkit/util/toasts.ts';
-import { vueDevTools } from './toolkit/util/vue-devtools.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import Console from './util/console.ts';
 
@@ -77,8 +75,6 @@ if (!window.OCA.CAFEVDB) {
 }
 
 const initialState = getInitialState<FilesInitialState>({ section: 'files' });
-
-vueDevTools({ enabled: !!((initialState?.[EnumPersonalSettingsKey.DEBUG_MODE] ?? 0) & DEBUG_VUE) });
 
 const projectBalancesFolder = initialState?.sharing.files.folders.projectBalances;
 const projectManagementFolder = initialState?.sharing.files.folders.projectManagement;

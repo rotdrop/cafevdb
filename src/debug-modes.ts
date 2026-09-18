@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,6 @@ import {
   DEBUG_REQUEST,
   DEBUG_SMAPS,
   DEBUG_TOOLTIPS,
-  DEBUG_VUE,
 } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 import { appName } from './config.ts';
 
@@ -52,7 +51,6 @@ export {
   DEBUG_REQUEST,
   DEBUG_SMAPS,
   DEBUG_TOOLTIPS,
-  DEBUG_VUE,
 } from '../build/ts-types/php-modules/Settings/ConfigConstants.ts';
 
 export const debugOptions = {
@@ -66,7 +64,6 @@ export const debugOptions = {
   [DEBUG_REQUEST]: t(appName, 'HTTP Requests'),
   [DEBUG_SMAPS]: t(appName, 'Resolve JS Sourceode'),
   [DEBUG_TOOLTIPS]: t(appName, 'Missing Context Help'),
-  [DEBUG_VUE]: t(appName, 'Vue JS Frontend'),
 };
 
 export default debugOptions;
