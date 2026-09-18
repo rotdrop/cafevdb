@@ -44,7 +44,6 @@ class ConfigConstants
   public const DEBUG_TOOLTIPS  = (1 << 5);
   public const DEBUG_EMAILFORM = (1 << 6);
   public const DEBUG_GEOCODING = (1 << 7);
-  public const DEBUG_VUE       = (1 << 8);
   public const DEBUG_SMAPS     = (1 << 9);
   public const DEBUG_ORM       = (1 << 10);
   public const DEBUG_ALL       = 0
@@ -56,7 +55,6 @@ class ConfigConstants
     |self::DEBUG_TOOLTIPS
     |self::DEBUG_EMAILFORM
     |self::DEBUG_GEOCODING
-    |self::DEBUG_VUE
     |self::DEBUG_SMAPS
     |self::DEBUG_ORM
     ;

@@ -76,12 +76,6 @@ class DebugModeMiddleware extends Middleware
       $csp->addReportTo($reportLocation);
     }
 
-    if ($debugMode & ConfigConstants::DEBUG_VUE) {
-      // Vue devtools need script-source unsafe-eval, at least with FF.
-      $csp = $response->getContentSecurityPolicy();
-      $csp->allowEvalScript();
-    }
-
     return $response;
   }
 }
