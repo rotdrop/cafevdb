@@ -43,6 +43,7 @@ const provide = {
 };
 
 const app = createApp(CAFeVDB);
+app.config.performance = !!(import.meta?.env?.DEV);
 app.directive('tooltip', Tooltip);
 app.mixin(globalMixin);
 app.use(router);
