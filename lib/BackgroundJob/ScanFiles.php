@@ -60,7 +60,7 @@ class ScanFiles extends FilesAppScanFiles
   }
 
   /** {@inheritdoc} */
-  public function run($argument)
+  public function run($argument): void
   {
     parent::run($argument);
   }
