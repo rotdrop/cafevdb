@@ -293,7 +293,7 @@ import { END_POINT as configCheckEndPoint } from '../build/ts-types/php-modules/
 import { END_POINT_NAVIGATION } from '../build/ts-types/php-modules/Controller/VueAppController.ts'
 import { authorized, PERMISSION_FINANCE } from './authorization.ts'
 import { appName as appId, appName } from './config.ts'
-import allDebugOptions, { DEBUG_QUERY, DEBUG_VUE } from './debug-modes.ts'
+import allDebugOptions, { DEBUG_QUERY } from './debug-modes.ts'
 import * as BusEvents from './event-bus-events.ts'
 import { globalState, synchronizeGlobalState } from './services/legacy-global-state.ts'
 import { closeNavigation } from './services/navigation.ts'
@@ -308,7 +308,6 @@ import useTooltipsStore from './stores/tooltips.ts'
 import { AppError } from './toolkit/types/errors.ts'
 import generateAppUrl from './toolkit/util/generate-url.ts'
 import getInitialState from './toolkit/util/initial-state.ts'
-import { vueDevTools } from './toolkit/util/vue-devtools.ts'
 import Console from './util/console.ts'
 
 type DebugOption = {
@@ -562,8 +561,6 @@ const updateDebugModes = async (newValue: number, oldValue?: number) => {
   debugModes.value.splice(0, Infinity, ...newSelection)
   await nextTick()
   settingsLocked.value = false
-
-  vueDevTools({ enabled: !!(globalState.debugMode & DEBUG_VUE) })
 }
 
 const historyHasBeenSaved = computed(() => history.modificationTime === history.saveTime)

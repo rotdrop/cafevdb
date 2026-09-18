@@ -509,7 +509,6 @@ import {
   TOAST_DEFAULT_TIMEOUT,
   TOAST_PERMANENT_TIMEOUT,
 } from '../toolkit/util/toasts.ts'
-import { vueDevTools as setVueDevTools } from '../toolkit/util/vue-devtools.ts'
 import Console from '../util/console.ts'
 import formatDate from '../util/formatDate.ts'
 import { showErrorToast } from '../util/toasts.ts'
@@ -608,9 +607,6 @@ type GroupType = (CloudGroup|Pick<CloudGroup, 'id'|'displayname'|'backends'|'use
 const initialState: InitialState = loadState(appId, 'adminConfig')
 
 const store = useCloudUsersGroupsStore()
-
-const vueDevTools = ref(false)
-watch(vueDevTools, (value) => setVueDevTools({ enabled: value }))
 
 const defaultOfficeFont = ref<FontFileNames|undefined>(undefined)
 const loading = reactive({
