@@ -91,8 +91,8 @@ class PersonalForm
    */
   public function getForm()
   {
-    CoreUtil::addScript($this->appName, $this->assetService->getJSAsset(self::TEMPLATE));
-    CoreUtil::addStyle($this->appName, $this->assetService->getCSSAsset(self::TEMPLATE));
+    CoreUtil::addScript($this->appName(), $this->assetService->getJSAsset(self::TEMPLATE));
+    CoreUtil::addStyle($this->appName(), $this->assetService->getCSSAsset(self::TEMPLATE));
 
     if (!$this->inGroup()) {
       return $this->templateResponse(
