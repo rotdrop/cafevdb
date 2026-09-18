@@ -31,7 +31,6 @@ import type * as IRecurringReceivablesGenerator from '../../build/ts-types/php-m
 import type { FrontEndEntity } from '../toolkit/services/entity-factory.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
 
-import { showSuccess } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import { WYSIWYG_EDITOR } from '../../build/ts-types/php-modules/Controller/CssClasses.ts';
 import { END_POINT } from '../../build/ts-types/php-modules/Controller/ProjectParticipantFieldsController.ts';
@@ -39,6 +38,7 @@ import * as ValidationController from '../../build/ts-types/php-modules/Controll
 import { GENERATOR_KEY } from '../../build/ts-types/php-modules/Database/Doctrine/ORM/Entities/Constants/ProjectParticipantFieldDataOption.ts';
 import searchEntities from '../services/search-entities.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+import { showSuccess } from '../toolkit/util/toasts.ts';
 import { nonTextInputSelector, textElementSelector, textInputSelector } from '../util/css-selectors.ts';
 import * as Ajax from './ajax.ts';
 import * as CAFEVDB from './cafevdb.ts';

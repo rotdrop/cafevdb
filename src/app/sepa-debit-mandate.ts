@@ -36,8 +36,6 @@ import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts
 import type { UpdateStrategy } from './project-participant-fields.ts';
 
 import { getRequestToken } from '@nextcloud/auth';
-// import * as Email from './email.ts';
-import { showError } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import {
   CssClasses,
@@ -68,6 +66,8 @@ import * as UploadsController from '../../build/ts-types/php-modules/Controller/
 import * as DataConstants from '../../build/ts-types/php-modules/PageRenderer/DataConstants.ts';
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/SepaBankAccounts.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
+// import * as Email from './email.ts';
+import { showError } from '../toolkit/util/toasts.ts';
 import { isJqXHR } from '../types/ajax/jqxhr-error.ts';
 import * as Ajax from './ajax.ts';
 import pageBusyIcon from './busy-icon.ts';

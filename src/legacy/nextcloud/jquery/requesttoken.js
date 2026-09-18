@@ -19,14 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from 'jquery'
-
-import { getRequestToken as getToken } from '@nextcloud/auth'
+import { getRequestToken as getToken } from '@nextcloud/auth';
+import $ from 'jquery';
 
 $(document).off('ajaxSend.nextcloud').on('ajaxSend.nextcloud', function(elm, xhr, settings) {
-	if (settings.crossDomain === false) {
-		xhr.setRequestHeader('requesttoken', getToken())
-		xhr.setRequestHeader('OCS-APIREQUEST', 'true')
-		xhr.setRequestHeader('OCS-APIRequest', 'true')
-	}
-})
+  if (settings.crossDomain === false) {
+    xhr.setRequestHeader('requesttoken', getToken());
+    xhr.setRequestHeader('OCS-APIREQUEST', 'true');
+    xhr.setRequestHeader('OCS-APIRequest', 'true');
+  }
+});

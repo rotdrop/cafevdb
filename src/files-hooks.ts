@@ -31,7 +31,6 @@ import type { OCA_CAFEVDB } from './types/nextcloud-oca.d.ts';
 
 import { getCurrentUser } from '@nextcloud/auth';
 import axios from '@nextcloud/axios';
-import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import { emit, subscribe } from '@nextcloud/event-bus';
 import {
   addNewFileMenuEntry,
@@ -63,6 +62,7 @@ import { filesMailmergeId } from './files-common.ts';
 import dialogAlert from './toolkit/util/dialog-alert.ts';
 import { generateUrl as generateAppUrl } from './toolkit/util/generate-url.ts';
 import getInitialState from './toolkit/util/initial-state.ts';
+import { showError, showInfo, showSuccess, TOAST_PERMANENT_TIMEOUT } from './toolkit/util/toasts.ts';
 import { vueDevTools } from './toolkit/util/vue-devtools.ts';
 import { MailMergeCloud } from './types/ajax/mail-merge.ts';
 import Console from './util/console.ts';

@@ -31,7 +31,6 @@ import type { VueRouterHistory, VueRouterHistoryState } from '../router/app-rout
 import type { TemplatePostData } from '../util/legacy-post-data.ts';
 
 import axios from '@nextcloud/axios';
-import { showError, showInfo, showMessage } from '@nextcloud/dialogs';
 import { translate as t } from '@nextcloud/l10n';
 import moment from '@nextcloud/moment';
 import { StatusCodes as HttpStatusCodes } from 'http-status-codes';
@@ -57,6 +56,7 @@ import { isAxiosError } from '../toolkit/types/axios-type-guards.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 import generateAppUrl from '../toolkit/util/generate-url.ts';
 import getInitialState from '../toolkit/util/initial-state.ts';
+import { showError, showInfo, showMessage } from '../toolkit/util/toasts.ts';
 import Console from '../util/console.ts';
 import { generatePostHash, sanitizePostData } from '../util/legacy-post-data.ts';
 import * as SessionStorage from '../util/session-storage.ts';
