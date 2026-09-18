@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
@@ -17,12 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const cloudVersion = OC.config.versionstring.split('.').map((x) => +x);
-const cloudVersionClasses = [
-  'cloud-version',
-  'cloud-version-major-' + cloudVersion[0],
-  'cloud-version-minor-' + cloudVersion[1],
-  'cloud-version-patch-' + cloudVersion[2],
-];
+export * from '@nextcloud/dialogs';
+import { cloudVersion } from './cloud-version-classes.ts';
 
-export default cloudVersionClasses;
+import '@nextcloud/dialogs/style.css';
+
+if (cloudVersion[0] >= 32 && cloudVersion[0] <= 34) {
+  import('./toast-position.css');
+}
