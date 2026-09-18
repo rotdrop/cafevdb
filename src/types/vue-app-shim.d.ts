@@ -21,17 +21,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
+import type { translate, translatePlural } from '@nextcloud/l10n';
 import type { AppName } from '../config.ts';
-import { translate, translatePlural } from '@nextcloud/l10n';
+
+import Vue from 'vue';
 
 // needs to go to a separate file. Why?
 
 declare module 'vue/types/vue' {
   interface Vue {
-    appId: AppName,
-    t: typeof translate,
-    n: typeof translatePlural,
+    appId: AppName;
+    t: typeof translate;
+    n: typeof translatePlural;
   }
 }
 

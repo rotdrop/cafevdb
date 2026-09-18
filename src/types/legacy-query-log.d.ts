@@ -22,10 +22,10 @@
  */
 
 export interface LegacySqlQueryLogItem {
-  query: string, // SQL code
-  queryHash: string, // md5 hash of query for indexing purposes
-  affectedRows: number, // integral
-  duration: number, // micro seconds
-  errorCode: number, // 0 on success
-  errorInfo: null|string,
+  query: string; // SQL code
+  queryHash: string; // md5 hash of query for indexing purposes
+  affectedRows: number; // integral
+  duration: number; // micro seconds
+  errorCode: number; // 0 on success
+  errorInfo: null|string;
 }

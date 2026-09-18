@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { showError, showInfo, TOAST_DEFAULT_TIMEOUT /* , TOAST_PERMANENT_TIMEOUT */ } from '@nextcloud/dialogs';
+import { showError, showInfo, TOAST_DEFAULT_TIMEOUT /* , TOAST_PERMANENT_TIMEOUT */ } from '../toolkit/util/toasts.ts';
 
 export const showErrorToast = (message: string, timeout?: number, isHTML?: boolean) =>
   showError(message, { timeout: timeout || TOAST_DEFAULT_TIMEOUT, isHTML });

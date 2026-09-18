@@ -18,13 +18,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import $ from 'jquery'
-import './placeholder.js'
-import { generateUrl } from '@nextcloud/router'
-import { getCurrentUser } from '@nextcloud/auth'
+import { getCurrentUser } from '@nextcloud/auth';
+import { generateUrl } from '@nextcloud/router';
+import $ from 'jquery';
+
+import './placeholder.js';
 
 /**
  * This plugin inserts the right avatar for the user, depending on, whether a
@@ -68,98 +68,100 @@ import { getCurrentUser } from '@nextcloud/auth'
  */
 
 $.fn.avatar = function(user, size, _ie8fix, _hidedefault, callback, displayname) {
-	const setAvatarForUnknownUser = function(target) {
-		target.imageplaceholder('?')
-		target.css('background-color', '#b9b9b9')
-	}
+  const setAvatarForUnknownUser = function(target) {
+    target.imageplaceholder('?');
+    target.css('background-color', '#b9b9b9');
+  };
 
-	if (typeof (user) !== 'undefined') {
-		user = String(user)
-	}
-	if (typeof (displayname) !== 'undefined') {
-		displayname = String(displayname)
-	}
+  if (typeof (user) !== 'undefined') {
+    user = String(user);
+  }
+  if (typeof (displayname) !== 'undefined') {
+    displayname = String(displayname);
+  }
 
-	if (typeof (size) === 'undefined') {
-		if (this.height() > 0) {
-			size = this.height()
-		} else if (this.data('size') > 0) {
-			size = this.data('size')
-		} else {
-			size = 64
-		}
-	}
+  if (typeof (size) === 'undefined') {
+    if (this.height() > 0) {
+      size = this.height();
+    } else if (this.data('size') > 0) {
+      size = this.data('size');
+    } else {
+      size = 64;
+    }
+  }
 
-	this.height(size)
-	this.width(size)
+  this.height(size);
+  this.width(size);
 
-	if (typeof (user) === 'undefined') {
-		if (typeof (this.data('user')) !== 'undefined') {
-			user = this.data('user')
-		} else {
-			setAvatarForUnknownUser(this)
-			return
-		}
-	}
+  if (typeof (user) === 'undefined') {
+    if (typeof (this.data('user')) !== 'undefined') {
+      user = this.data('user');
+    } else {
+      setAvatarForUnknownUser(this);
+      return;
+    }
+  }
 
-	// sanitize
-	user = String(user).replace(/\//g, '')
+  // sanitize
+  user = String(user).replace(/\//g, '');
 
-	const $div = this
-	let url
+  const $div = this;
+  let url;
 
-	// If this is our own avatar we have to use the version attribute
-	if (user === getCurrentUser().uid) {
-		url = generateUrl(
-			'/avatar/{user}/{size}?v={version}',
-			{
-				user,
-				size: Math.ceil(size * window.devicePixelRatio),
-				version: oc_userconfig.avatar.version,
-			})
-	} else {
-		url = generateUrl(
-			'/avatar/{user}/{size}',
-			{
-				user,
-				size: Math.ceil(size * window.devicePixelRatio),
-			})
-	}
+  // If this is our own avatar we have to use the version attribute
+  if (user === getCurrentUser().uid) {
+    url = generateUrl(
+      '/avatar/{user}/{size}?v={version}',
+      {
+        user,
+        size: Math.ceil(size * window.devicePixelRatio),
+        version: oc_userconfig.avatar.version,
+      },
+    );
+  } else {
+    url = generateUrl(
+      '/avatar/{user}/{size}',
+      {
+        user,
+        size: Math.ceil(size * window.devicePixelRatio),
+      },
+    );
+  }
 
-	const img = new Image()
+  const img = new Image();
 
-	// If the new image loads successfully set it.
-	img.onload = function() {
-		$div.clearimageplaceholder()
-		$div.append(img)
+  // If the new image loads successfully set it.
+  img.onload = function() {
+    $div.clearimageplaceholder();
+    $div.append(img);
 
-		if (typeof callback === 'function') {
-			callback()
-		}
-	}
-	// Fallback when avatar loading fails:
-	// Use old placeholder when a displayname attribute is defined,
-	// otherwise show the unknown user placeholder.
-	img.onerror = function() {
-		$div.clearimageplaceholder()
-		if (typeof (displayname) !== 'undefined') {
-			$div.imageplaceholder(user, displayname)
-		} else {
-			setAvatarForUnknownUser($div)
-		}
+    if (typeof callback === 'function') {
+      callback();
+    }
+  };
+  // Fallback when avatar loading fails:
+  // Use old placeholder when a displayname attribute is defined,
+  // otherwise show the unknown user placeholder.
+  img.onerror = function() {
+    $div.clearimageplaceholder();
+    if (typeof (displayname) !== 'undefined') {
+      $div.imageplaceholder(user, displayname);
+    } else {
+      setAvatarForUnknownUser($div);
+    }
 
-		if (typeof callback === 'function') {
-			callback()
-		}
-	}
+    if (typeof callback === 'function') {
+      callback();
+    }
+  };
 
-	if (size < 32) {
-		$div.addClass('icon-loading-small')
-	} else {
-		$div.addClass('icon-loading')
-	}
-	img.width = size
-	img.height = size
-	img.src = url
-	img.alt = ''
-}
+  if (size < 32) {
+    $div.addClass('icon-loading-small');
+  } else {
+    $div.addClass('icon-loading');
+  }
+  img.width = size;
+  img.height = size;
+  img.src = url;
+  img.alt = '';
+};

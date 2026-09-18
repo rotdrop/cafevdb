@@ -218,7 +218,6 @@ import type { NextcloudExceptionLogEntry } from '../types/ajax/php-exception-res
 // import IconBack from 'vue-material-design-icons/ArrowLeft.vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import axios from '@nextcloud/axios'
-import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { loadTranslations, translate as t } from '@nextcloud/l10n'
 // import { useRouter } from 'vue-router/composables'
 import {
@@ -258,6 +257,7 @@ import {
 } from '../toolkit/types/axios-type-guards.ts'
 import { AppError } from '../toolkit/types/errors.ts'
 import generateAppUrl from '../toolkit/util/generate-url.ts'
+import { showError, showInfo, /* TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts'
 import {
   isJqJsonXHR as isJqJsonXHRGuard,
   isJqNextcloudLogEntryXHR,

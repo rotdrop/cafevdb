@@ -93,7 +93,6 @@
 import type { MailMergeOperation, MailMergePayload } from '../types/ajax/mail-merge.ts'
 
 import { getCurrentUser } from '@nextcloud/auth'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { NcActionButton } from '@nextcloud/vue'
 import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus'
@@ -111,6 +110,7 @@ import useErrorHandlerStore from '../stores/error-handler.ts'
 import useTooltipsStore from '../stores/tooltips.ts'
 import { AppError } from '../toolkit/types/errors.ts'
 import axiosFileDownload from '../toolkit/util/axios-file-download.ts'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '../toolkit/util/toasts.ts'
 import { MailMergeDataset, MailMergeDownload } from '../types/ajax/mail-merge.ts'
 
 const props = withDefaults(defineProps<{

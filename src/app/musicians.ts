@@ -81,10 +81,10 @@ import * as PHPMyEdit from './pme.ts';
 import * as ProjectParticipants from './project-participants.ts';
 import { selected as selectedValues } from './select-utils.ts';
 
+import 'jquery-ui/ui/widgets/menu';
 import 'jquery-ui/ui/widgets/autocomplete';
 import '../legacy/nextcloud/jquery/octemplate.js';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('jquery-ui/themes/base/autocomplete.css');
+import 'jquery-ui/themes/base/autocomplete.css';
 import 'musicians.scss';
 import 'sepa-bank-accounts.scss';
 import { disabledCssClass } from 'variables.module.scss';

@@ -21,30 +21,47 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as WebCrypto from 'easy-web-crypto';
-
 import type {
-  ProtectedMasterKey,
   CipherData,
+  ProtectedMasterKey,
 } from 'easy-web-crypto';
+
+import * as WebCrypto from 'easy-web-crypto';
 
 /**
  * derive a new key from passphrase and generate the master AES key
  * (you can now store this encrypted key for later use)
+ *
+ * @param passphrase
  */
 export const generateMasterKey = (passphrase: string) =>
   WebCrypto.genEncryptedMasterKey(passphrase);
 
-/** decrypt the (stored) AES key to be able to encrypt/decrypt data */
+/**
+ * decrypt the (stored) AES key to be able to encrypt/decrypt data
+ *
+ * @param passphrase
+ * @param encMasterKey
+ */
 export const decryptMasterKey = (
   passphrase: string,
   encMasterKey: ProtectedMasterKey,
 ) => WebCrypto.decryptMasterKey(passphrase, encMasterKey);
 
-/** Encrypt data */
+/**
+ * Encrypt data
+ *
+ * @param key
+ * @param data
+ */
 export const encrypt = (key: CryptoKey, data: string) =>
   WebCrypto.encrypt(key, data);
 
-/** Decrypt data */
+/**
+ * Decrypt data
+ *
+ * @param key
+ * @param encrypted
+ */
 export const decrypt = (key: CryptoKey, encrypted: CipherData) =>
   WebCrypto.decrypt(key, encrypted);
