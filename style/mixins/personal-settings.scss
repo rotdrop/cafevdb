@@ -311,6 +311,7 @@
             background-position:center center;
             background-repeat:no-repeat;
             background-size:#{$iconSize} #{$iconSize};
+            padding: calc((var(--default-clickable-area) - 1lh) / 2);
             font-size:0;
             &.busy {
               background-image:url('../../../../core/img/loading.gif');
