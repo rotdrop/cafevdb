@@ -1,3 +1,42 @@
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-audio.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-audio.js
+index e5c9202..2e6b04c 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-audio.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-audio.js
+@@ -73,7 +73,7 @@
+         if (
+           this._audioElement.canPlayType &&
+           this._audioElement.canPlayType(file.type) &&
+-          ($.type(options.maxFileSize) !== 'number' ||
++          (typeof options.maxFileSize !== 'number' ||
+             file.size <= options.maxFileSize) &&
+           (!options.fileTypes || options.fileTypes.test(file.type))
+         ) {
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-image.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-image.js
+index ac0ccf1..9c6df47 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-image.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-image.js
+@@ -168,7 +168,7 @@
+           // eslint-disable-next-line new-cap
+           dfd = $.Deferred();
+         if (
+-          ($.type(options.maxFileSize) === 'number' &&
++          (typeof options.maxFileSize === 'number' &&
+             file.size > options.maxFileSize) ||
+           (options.fileTypes && !options.fileTypes.test(file.type)) ||
+           !loadImage(
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-process.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-process.js
+index 56bf933..e4d6198 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-process.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-process.js
+@@ -103,7 +103,7 @@
+           action = this.action,
+           prefix = this.prefix === true ? action : this.prefix;
+         $.each(this, function (key, value) {
+-          if ($.type(value) === 'string' && value.charAt(0) === '@') {
++          if (typeof value === 'string' && value.charAt(0) === '@') {
+             settings[key] =
+               options[
+                 value.slice(1) ||
 diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js
 index 9cc3d3f..a07647d 100644
 --- a/node_modules/blueimp-file-upload/js/jquery.fileupload-ui.js
@@ -11,8 +50,43 @@ index 9cc3d3f..a07647d 100644
            return data.result.files;
          }
          return [];
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-validate.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-validate.js
+index 03d92ab..08da7c7 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-validate.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-validate.js
+@@ -83,7 +83,7 @@
+           fileSize = file.size;
+         }
+         if (
+-          $.type(options.maxNumberOfFiles) === 'number' &&
++          typeof options.maxNumberOfFiles === 'number' &&
+           (settings.getNumberOfFiles() || 0) + data.files.length >
+             options.maxNumberOfFiles
+         ) {
+@@ -99,7 +99,7 @@
+         } else if (fileSize > options.maxFileSize) {
+           file.error = settings.i18n('maxFileSize');
+         } else if (
+-          $.type(fileSize) === 'number' &&
++          typeof fileSize === 'number' &&
+           fileSize < options.minFileSize
+         ) {
+           file.error = settings.i18n('minFileSize');
+diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload-video.js b/node_modules/blueimp-file-upload/js/jquery.fileupload-video.js
+index 5dc78f3..54d035c 100644
+--- a/node_modules/blueimp-file-upload/js/jquery.fileupload-video.js
++++ b/node_modules/blueimp-file-upload/js/jquery.fileupload-video.js
+@@ -73,7 +73,7 @@
+         if (
+           this._videoElement.canPlayType &&
+           this._videoElement.canPlayType(file.type) &&
+-          ($.type(options.maxFileSize) !== 'number' ||
++          (typeof options.maxFileSize !== 'number' ||
+             file.size <= options.maxFileSize) &&
+           (!options.fileTypes || options.fileTypes.test(file.type))
+         ) {
 diff --git a/node_modules/blueimp-file-upload/js/jquery.fileupload.js b/node_modules/blueimp-file-upload/js/jquery.fileupload.js
-index e56ce76..3e81b60 100644
+index e56ce76..a4aa05b 100644
 --- a/node_modules/blueimp-file-upload/js/jquery.fileupload.js
 +++ b/node_modules/blueimp-file-upload/js/jquery.fileupload.js
 @@ -19,7 +19,7 @@
@@ -24,15 +98,50 @@ index e56ce76..3e81b60 100644
    } else {
      // Browser globals:
      factory(window.jQuery);
-@@ -356,7 +356,7 @@
-       if ($.type(options.formData) === 'function') {
+@@ -353,13 +353,13 @@
+ 
+     _getFormData: function (options) {
+       var formData;
+-      if ($.type(options.formData) === 'function') {
++      if (typeof options.formData === 'function') {
          return options.formData(options.form);
        }
 -      if ($.isArray(options.formData)) {
 +      if (Array.isArray(options.formData)) {
          return options.formData;
        }
-       if ($.type(options.formData) === 'object') {
+-      if ($.type(options.formData) === 'object') {
++      if (typeof options.formData === 'object') {
+         formData = [];
+         $.each(options.formData, function (name, value) {
+           formData.push({ name: name, value: value });
+@@ -510,7 +510,7 @@
+         // Ignore non-multipart setting if not supported:
+         multipart = options.multipart || !$.support.xhrFileUpload,
+         paramName =
+-          $.type(options.paramName) === 'array'
++          typeof options.paramName === 'array'
+             ? options.paramName[0]
+             : options.paramName;
+       options.headers = $.extend({}, options.headers);
+@@ -542,7 +542,7 @@
+             $.each(options.files, function (index, file) {
+               formData.push({
+                 name:
+-                  ($.type(options.paramName) === 'array' &&
++                  (typeof options.paramName === 'array' &&
+                     options.paramName[index]) ||
+                   paramName,
+                 value: file
+@@ -580,7 +580,7 @@
+                   );
+                 }
+                 formData.append(
+-                  ($.type(options.paramName) === 'array' &&
++                  (typeof options.paramName === 'array' &&
+                     options.paramName[index]) ||
+                     paramName,
+                   file,
 @@ -646,7 +646,7 @@
          if (!paramName.length) {
            paramName = [fileInput.prop('name') || 'files[]'];
@@ -42,6 +151,42 @@ index e56ce76..3e81b60 100644
          paramName = [paramName];
        }
        return paramName;
+@@ -670,7 +670,7 @@
+       // The HTTP request method must be "POST" or "PUT":
+       options.type = (
+         options.type ||
+-        ($.type(options.form.prop('method')) === 'string' &&
++        (typeof options.form.prop('method') === 'string' &&
+           options.form.prop('method')) ||
+         ''
+       ).toUpperCase();
+@@ -825,7 +825,7 @@
+         !(
+           this._isXHRUpload(options) &&
+           slice &&
+-          (ub || ($.type(mcs) === 'function' ? mcs(options) : mcs) < fs)
++          (ub || (typeof mcs === 'function' ? mcs(options) : mcs) < fs)
+         ) ||
+         options.data
+       ) {
+@@ -850,7 +850,7 @@
+         o.blob = slice.call(
+           file,
+           ub,
+-          ub + ($.type(mcs) === 'function' ? mcs(o) : mcs),
++          ub + (typeof mcs === 'function' ? mcs(o) : mcs),
+           file.type
+         );
+         // Store the current chunk size, as the blob itself
+@@ -1480,7 +1480,7 @@
+     _isRegExpOption: function (key, value) {
+       return (
+         key !== 'url' &&
+-        $.type(value) === 'string' &&
++        typeof value === 'string' &&
+         /^\/.*\/[igm]{0,3}$/.test(value)
+       );
+     },
 diff --git a/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js b/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js
 index 3e3b9a9..a8723bd 100644
 --- a/node_modules/blueimp-file-upload/js/jquery.iframe-transport.js
