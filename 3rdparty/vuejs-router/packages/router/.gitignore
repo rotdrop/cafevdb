@@ -1,0 +1,13 @@
+e2e/reports
+e2e/screenshots
+old-e2e/reports
+old-e2e/screenshots
+tests_output
+logs
+# copied from root during release
+README.md
+vue-router-*.tgz
+# size check router
+size-tests
+playwright-report
+test-results

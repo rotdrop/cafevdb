@@ -1,0 +1,57 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { createRouter } from '../src/router'
+import { createMemoryHistory } from '../src/history/memory'
+import { h } from 'vue'
+import { vi, describe, expect, it, beforeAll } from 'vitest'
+
+const delay = (t: number) => new Promise(resolve => setTimeout(resolve, t))
+
+function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = {}) {
+  const history = options.history || createMemoryHistory()
+  const router = createRouter({
+    history,
+    routes: [
+      {
+        path: '/:pathMatch(.*)',
+        component: {
+          render: () => h('div', 'any route'),
+        },
+      },
+    ],
+    ...options,
+  })
+
+  return { history, router }
+}
+
+describe('Multiple apps', () => {
+  beforeAll(() => {
+    const rootEl = document.createElement('div')
+    rootEl.id = 'app'
+    document.body.appendChild(rootEl)
+  })
+
+  it('does not listen to url changes before being ready', async () => {
+    const { router, history } = newRouter()
+
+    const spy = vi.fn((_to, _from) => {
+      return
+    })
+    router.beforeEach(spy)
+
+    history.push('/foo')
+    history.push('/bar')
+    history.go(-1, true)
+
+    await delay(5)
+    expect(spy).not.toHaveBeenCalled()
+
+    await router.push('/baz')
+
+    history.go(-1, true)
+    await delay(5)
+    expect(spy).toHaveBeenCalledTimes(2)
+  })
+})

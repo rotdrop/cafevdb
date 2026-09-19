@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:rotdrop/vuejs-router.git
+	branch = production/cafevdb
+	commit = 4ac759423d1dc5d080d81130fd525077afabd32a
+	parent = 2534530d8d8c6dba57ccab039e6ca92ee35aca50
+	method = merge
+	cmdver = 0.4.9

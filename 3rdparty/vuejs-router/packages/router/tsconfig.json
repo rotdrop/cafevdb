@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "include": [
+    // multiline
+    "src/**/*.ts",
+    "__tests__/**/*.ts",
+    "tsdown.config.ts",
+    "package.json",
+    "playwright.config.ts"
+    // FIXME: use project references maybe to isolate module augmentation
+    // "test-dts/**/*.ts"
+  ],
+  "exclude": ["dist", "src/experimental/vapor/"],
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "vue-router": ["./src/index.ts"]
+    },
+    "outDir": "dist",
+    "sourceMap": false,
+    "noEmit": true,
+    "composite": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "allowJs": false,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    // "noUncheckedIndexedAccess": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "removeComments": false,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "types": [
+      "node",
+      "vite/client"
+      // FIXME: breaks in vitest 4
+      // "@vitest/browser/providers/playwright"
+    ]
+  }
+}

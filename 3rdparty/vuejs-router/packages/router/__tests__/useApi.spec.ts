@@ -1,0 +1,45 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { mount } from '@vue/test-utils'
+import { computed } from 'vue'
+import { useRoute } from '../src/useApi'
+import { createRouter } from '../src/router'
+import { createMemoryHistory } from '../src/history/memory'
+import { describe, expect, it } from 'vitest'
+
+describe('use apis', () => {
+  it('unwraps useRoute()', async () => {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: '/:any(.*)',
+          component: {} as any,
+        },
+      ],
+    })
+
+    const wrapper = mount(
+      {
+        template: `<p>Query: {{ q }}</p>`,
+        setup() {
+          const route = useRoute()
+          const q = computed(() => route.query.q)
+
+          return { q }
+        },
+      },
+      {
+        global: {
+          plugins: [router],
+        },
+      }
+    )
+
+    expect(wrapper.text()).toBe('Query:')
+
+    await router.push('/?q=hi')
+    expect(wrapper.text()).toBe('Query: hi')
+  })
+})

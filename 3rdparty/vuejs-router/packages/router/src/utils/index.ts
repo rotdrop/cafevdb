@@ -1,0 +1,93 @@
+import type {
+  RouteParamsGeneric,
+  RouteComponent,
+  RouteParamsRawGeneric,
+  RawRouteComponent,
+} from '../types'
+
+/**
+ * Identity function that returns the value as is.
+ *
+ * @param v - the value to return
+ *
+ * @internal
+ */
+export const identityFn = <T>(v: T) => v
+
+/**
+ * Checks if a path is absolute, meaning it starts with a `/`.
+ *
+ * @param path - path to check
+ *
+ * @internal
+ */
+export const isAbsolutePath = (path: string): boolean => path.startsWith('/')
+
+export * from './env'
+
+/**
+ * Allows differentiating lazy components from functional components and vue-class-component
+ * @internal
+ *
+ * @param component
+ */
+export function isRouteComponent(
+  component: RawRouteComponent
+): component is RouteComponent {
+  return (
+    typeof component === 'object' ||
+    'displayName' in component ||
+    'props' in component ||
+    '__vccOpts' in component
+  )
+}
+
+export function isESModule(obj: any): obj is { default: RouteComponent } {
+  return (
+    obj.__esModule ||
+    obj[Symbol.toStringTag] === 'Module' ||
+    // support CF with dynamic imports that do not
+    // add the Module string tag
+    (obj.default && isRouteComponent(obj.default))
+  )
+}
+
+export const assign = Object.assign
+
+export function applyToParams(
+  fn: (v: string | number | null | undefined) => string,
+  params: RouteParamsRawGeneric | undefined
+): RouteParamsGeneric {
+  const newParams: RouteParamsGeneric = {}
+
+  for (const key in params) {
+    const value = params[key]
+    newParams[key] = isArray(value) ? value.map(fn) : fn(value)
+  }
+
+  return newParams
+}
+
+export const noop = () => {}
+
+/**
+ * Typesafe alternative to Array.isArray
+ * https://github.com/microsoft/TypeScript/pull/48228
+ *
+ * @internal
+ */
+export const isArray: (
+  arg: ArrayLike<any> | unknown
+) => arg is ReadonlyArray<any> = Array.isArray
+
+export function mergeOptions<T extends object>(
+  defaults: T,
+  partialOptions: Partial<T>
+): T {
+  const options = {} as T
+  for (const key in defaults) {
+    options[key] = key in partialOptions ? partialOptions[key]! : defaults[key]
+  }
+
+  return options
+}

@@ -1,0 +1,457 @@
+import type { Lazy, RouteComponent } from './types'
+import { isRouteLocation } from './types'
+
+import type {
+  RouteLocationNormalized,
+  RouteLocationNormalizedLoaded,
+  NavigationGuard,
+  RouteLocation,
+  RouteLocationRaw,
+  NavigationGuardNext,
+  NavigationGuardNextCallback,
+  NavigationTransition,
+} from './typed-routes'
+
+import type { NavigationFailure, NavigationRedirectError } from './errors'
+import { createRouterError, ErrorTypes } from './errors'
+import type { ComponentOptions, ComputedRef } from 'vue'
+import { onUnmounted, onActivated, onDeactivated } from 'vue'
+import { inject, getCurrentInstance } from 'vue'
+import { matchedRouteKey } from './injectionSymbols'
+import type { RouteRecordNormalized } from './matcher/types'
+import { isESModule, isRouteComponent } from './utils'
+import { diagnostics } from './diagnostics'
+import { isSameRouteRecord } from './location'
+
+function registerGuard(
+  activeRecordRef: ComputedRef<RouteRecordNormalized | undefined>,
+  name: 'leaveGuards' | 'updateGuards',
+  guard: NavigationGuard
+) {
+  const record = activeRecordRef.value
+  if (!record) {
+    if (__DEV__) {
+      const fnName =
+        name === 'updateGuards' ? 'onBeforeRouteUpdate' : 'onBeforeRouteLeave'
+      diagnostics.VUE_ROUTER_R0020({ fn: fnName })
+    }
+    return
+  }
+
+  // Track the current record the guard is registered with
+  let currentRecord = record
+
+  const removeFromList = () => {
+    currentRecord[name].delete(guard)
+  }
+
+  onUnmounted(removeFromList)
+  onDeactivated(removeFromList)
+
+  onActivated(() => {
+    // When reactivated, check if the active record has changed (e.g., keep-alive
+    // component reactivated for a different route). If so, register with the new record.
+    const newRecord = activeRecordRef.value
+    if (__DEV__ && !newRecord) {
+      diagnostics.VUE_ROUTER_R0021()
+    }
+    if (newRecord) {
+      currentRecord = newRecord
+    }
+    currentRecord[name].add(guard)
+  })
+
+  currentRecord[name].add(guard)
+}
+
+/**
+ * Add a navigation guard that triggers whenever the component for the current
+ * location is about to be left. Similar to {@link beforeRouteLeave} but can be
+ * used in any component. The guard is removed when the component is unmounted.
+ *
+ * @param leaveGuard - {@link NavigationGuard}
+ */
+export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
+  if (__DEV__ && !getCurrentInstance()) {
+    diagnostics.VUE_ROUTER_R0022({ fn: 'onBeforeRouteLeave' })
+    return
+  }
+
+  const activeRecordRef = inject(
+    matchedRouteKey,
+    // to avoid warning
+    {} as any
+  ) as ComputedRef<RouteRecordNormalized | undefined>
+
+  registerGuard(activeRecordRef, 'leaveGuards', leaveGuard)
+}
+
+/**
+ * Add a navigation guard that triggers whenever the current location is about
+ * to be updated. Similar to {@link beforeRouteUpdate} but can be used in any
+ * component. The guard is removed when the component is unmounted.
+ *
+ * @param updateGuard - {@link NavigationGuard}
+ */
+export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
+  if (__DEV__ && !getCurrentInstance()) {
+    diagnostics.VUE_ROUTER_R0022({ fn: 'onBeforeRouteUpdate' })
+    return
+  }
+
+  const activeRecordRef = inject(
+    matchedRouteKey,
+    // to avoid warning
+    {} as any
+  ) as ComputedRef<RouteRecordNormalized | undefined>
+
+  registerGuard(activeRecordRef, 'updateGuards', updateGuard)
+}
+
+export function guardToPromiseFn(
+  guard: NavigationGuard,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalizedLoaded,
+  transition?: NavigationTransition
+): () => Promise<void>
+export function guardToPromiseFn(
+  guard: NavigationGuard,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalizedLoaded,
+  transition: NavigationTransition,
+  record: RouteRecordNormalized,
+  name: string,
+  runWithContext: <T>(fn: () => T) => T
+): () => Promise<void>
+export function guardToPromiseFn(
+  guard: NavigationGuard,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalizedLoaded,
+  transition?: NavigationTransition,
+  record?: RouteRecordNormalized,
+  name?: string,
+  runWithContext: <T>(fn: () => T) => T = fn => fn()
+): () => Promise<void> {
+  // keep a reference to the enterCallbackArray to prevent pushing callbacks if a new navigation took place
+  const enterCallbackArray =
+    record &&
+    // name is defined if record is because of the function overload
+    (record.enterCallbacks[name!] = record.enterCallbacks[name!] || [])
+
+  return () =>
+    new Promise((resolve, reject) => {
+      const next: NavigationGuardNext = (
+        valid?: boolean | RouteLocationRaw | NavigationGuardNextCallback | Error
+      ) => {
+        if (valid === false) {
+          reject(
+            createRouterError<NavigationFailure>(
+              ErrorTypes.NAVIGATION_ABORTED,
+              {
+                from,
+                to,
+                transition,
+              }
+            )
+          )
+        } else if (valid instanceof Error) {
+          reject(valid)
+        } else if (isRouteLocation(valid)) {
+          reject(
+            createRouterError<NavigationRedirectError>(
+              ErrorTypes.NAVIGATION_GUARD_REDIRECT,
+              {
+                from: to,
+                to: valid,
+                transition,
+              }
+            )
+          )
+        } else {
+          if (
+            enterCallbackArray &&
+            // since enterCallbackArray is truthy, both record and name also are
+            record!.enterCallbacks[name!] === enterCallbackArray &&
+            typeof valid === 'function'
+          ) {
+            enterCallbackArray.push(valid)
+          }
+          resolve()
+        }
+      }
+
+      // wrapping with Promise.resolve allows it to work with both async and sync guards
+      const guardReturn = runWithContext(() =>
+        guard.call(
+          record && record.instances[name!],
+          to,
+          from,
+          __DEV__
+            ? withDeprecationWarning(canOnlyBeCalledOnce(next, to, from))
+            : next,
+          transition
+        )
+      )
+      let guardCall = Promise.resolve(guardReturn)
+
+      if (guard.length < 3) guardCall = guardCall.then(next)
+      if (__DEV__ && guard.length > 2) {
+        const guardInfo = { name: guard.name, guard: guard.toString() }
+        if (typeof guardReturn === 'object' && 'then' in guardReturn) {
+          guardCall = guardCall.then(resolvedValue => {
+            // @ts-expect-error: _called is added at canOnlyBeCalledOnce
+            if (!next._called) {
+              diagnostics.VUE_ROUTER_R0023(guardInfo)
+              return Promise.reject(new Error('Invalid navigation guard'))
+            }
+            return resolvedValue
+          })
+        } else if (guardReturn !== undefined) {
+          // @ts-expect-error: _called is added at canOnlyBeCalledOnce
+          if (!next._called) {
+            diagnostics.VUE_ROUTER_R0023(guardInfo)
+            reject(new Error('Invalid navigation guard'))
+            return
+          }
+        }
+      }
+      guardCall.catch(err => reject(err))
+    })
+}
+
+/**
+ * Wraps the next callback to warn when it is used. Dev-only: when __DEV__ is
+ * false (production builds), this branch is dead code and is stripped from the
+ * bundle.
+ *
+ * @internal
+ */
+function withDeprecationWarning(
+  next: NavigationGuardNext
+): NavigationGuardNext {
+  let warned = false
+  return function (this: any) {
+    if (!warned) {
+      warned = true
+      diagnostics.VUE_ROUTER_R0025()
+    }
+    return next.apply(this, arguments as any)
+  }
+}
+
+function canOnlyBeCalledOnce(
+  next: NavigationGuardNext,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized
+): NavigationGuardNext {
+  let called = 0
+  return function () {
+    if (called++ === 1)
+      diagnostics.VUE_ROUTER_R0024({ from: from.fullPath, to: to.fullPath })
+    // @ts-expect-error: we put it in the original one because it's easier to check
+    next._called = true
+    if (called === 1) next.apply(null, arguments as any)
+  }
+}
+
+type GuardType = 'beforeRouteEnter' | 'beforeRouteUpdate' | 'beforeRouteLeave'
+
+export function extractComponentsGuards(
+  matched: RouteRecordNormalized[],
+  guardType: GuardType,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalizedLoaded,
+  runWithContext: <T>(fn: () => T) => T = fn => fn()
+) {
+  const guards: Array<() => Promise<void>> = []
+
+  for (const record of matched) {
+    if (
+      __DEV__ &&
+      !record.components &&
+      // in the new records, there is no children, only parents
+      record.children &&
+      !record.children.length
+    ) {
+      diagnostics.VUE_ROUTER_R0026({ path: record.path })
+    }
+    for (const name in record.components) {
+      let rawComponent = record.components[name]
+      if (__DEV__) {
+        if (
+          !rawComponent ||
+          (typeof rawComponent !== 'object' &&
+            typeof rawComponent !== 'function')
+        ) {
+          diagnostics.VUE_ROUTER_R0027({
+            name,
+            path: record.path,
+            received: String(rawComponent),
+          })
+          // throw to ensure we stop here but warn to ensure the message isn't
+          // missed by the user
+          throw new Error('Invalid route component')
+        } else if ('then' in rawComponent) {
+          // warn if user wrote import('/component.vue') instead of () =>
+          // import('./component.vue')
+          diagnostics.VUE_ROUTER_R0028({ name, path: record.path })
+          const promise = rawComponent
+          rawComponent = () => promise
+        } else if (
+          (rawComponent as any).__asyncLoader &&
+          // warn only once per component
+          !(rawComponent as any).__warnedDefineAsync
+        ) {
+          ;(rawComponent as any).__warnedDefineAsync = true
+          diagnostics.VUE_ROUTER_R0029({ name, path: record.path })
+        }
+      }
+
+      // TODO: extract the logic relying on instances into an options-api plugin
+      // skip update and leave guards if the route component is not mounted
+      if (guardType !== 'beforeRouteEnter' && !record.instances[name]) continue
+
+      if (isRouteComponent(rawComponent)) {
+        // __vccOpts is added by vue-class-component and contain the regular options
+        const options: ComponentOptions =
+          (rawComponent as any).__vccOpts || rawComponent
+        const guard = options[guardType]
+        guard &&
+          guards.push(
+            guardToPromiseFn(guard, to, from, record, name, runWithContext)
+          )
+      } else {
+        // start requesting the chunk already
+        let componentPromise: Promise<
+          RouteComponent | null | undefined | void
+        > = (rawComponent as Lazy<RouteComponent>)()
+
+        if (__DEV__ && !('catch' in componentPromise)) {
+          diagnostics.VUE_ROUTER_R0030({ name, path: record.path })
+          componentPromise = Promise.resolve(componentPromise as RouteComponent)
+        }
+
+        guards.push(() =>
+          componentPromise.then(resolved => {
+            if (!resolved)
+              throw new Error(
+                `Couldn't resolve component "${name}" at "${record.path}"`
+              )
+            const resolvedComponent = isESModule(resolved)
+              ? resolved.default
+              : resolved
+            // keep the resolved module for plugins like data loaders
+            record.mods[name] = resolved
+            // replace the function with the resolved component
+            // cannot be null or undefined because we went into the for loop
+            record.components![name] = resolvedComponent
+            // __vccOpts is added by vue-class-component and contain the regular options
+            const options: ComponentOptions =
+              (resolvedComponent as any).__vccOpts || resolvedComponent
+            const guard = options[guardType]
+
+            return (
+              guard &&
+              guardToPromiseFn(guard, to, from, record, name, runWithContext)()
+            )
+          })
+        )
+      }
+    }
+  }
+
+  return guards
+}
+
+/**
+ * Ensures a route is loaded, so it can be passed as o prop to `<RouterView>`.
+ *
+ * @param route - resolved route to load
+ */
+export function loadRouteLocation(
+  route: RouteLocation | RouteLocationNormalized
+): Promise<RouteLocationNormalizedLoaded> {
+  return route.matched.every(record => record.redirect)
+    ? Promise.reject(new Error('Cannot load a route that redirects.'))
+    : Promise.all(
+        route.matched.map(
+          record =>
+            record.components &&
+            Promise.all(
+              Object.keys(record.components).reduce(
+                (promises, name) => {
+                  const rawComponent = record.components![name]
+                  if (
+                    typeof rawComponent === 'function' &&
+                    !('displayName' in rawComponent)
+                  ) {
+                    promises.push(
+                      (rawComponent as Lazy<RouteComponent>)().then(
+                        resolved => {
+                          if (!resolved)
+                            return Promise.reject(
+                              new Error(
+                                `Couldn't resolve component "${name}" at "${record.path}". Ensure you passed a function that returns a promise.`
+                              )
+                            )
+
+                          const resolvedComponent = isESModule(resolved)
+                            ? resolved.default
+                            : resolved
+                          // keep the resolved module for plugins like data loaders
+                          record.mods[name] = resolved
+                          // replace the function with the resolved component
+                          // cannot be null or undefined because we went into the for loop
+                          record.components![name] = resolvedComponent
+                          return
+                        }
+                      )
+                    )
+                  }
+                  return promises
+                },
+                [] as Array<Promise<RouteComponent | null | undefined>>
+              )
+            )
+        )
+      ).then(() => route as RouteLocationNormalizedLoaded)
+}
+
+/**
+ * Split the leaving, updating, and entering records.
+ * @internal
+ *
+ * @param  to - Location we are navigating to
+ * @param from - Location we are navigating from
+ */
+export function extractChangingRecords(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalizedLoaded
+): [
+  leavingRecords: RouteRecordNormalized[],
+  updatingRecords: RouteRecordNormalized[],
+  enteringRecords: RouteRecordNormalized[],
+] {
+  const leavingRecords: RouteRecordNormalized[] = []
+  const updatingRecords: RouteRecordNormalized[] = []
+  const enteringRecords: RouteRecordNormalized[] = []
+
+  const len = Math.max(from.matched.length, to.matched.length)
+  for (let i = 0; i < len; i++) {
+    const recordFrom = from.matched[i]
+    if (recordFrom) {
+      if (to.matched.find(record => isSameRouteRecord(record, recordFrom)))
+        updatingRecords.push(recordFrom)
+      else leavingRecords.push(recordFrom)
+    }
+    const recordTo = to.matched[i]
+    if (recordTo) {
+      // the type doesn't matter because we are comparing per reference
+      if (!from.matched.find(record => isSameRouteRecord(record, recordTo))) {
+        enteringRecords.push(recordTo)
+      }
+    }
+  }
+
+  return [leavingRecords, updatingRecords, enteringRecords]
+}

@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": true,
+    "paths": {
+      "vue-router": ["../dist"]
+    },
+    "noImplicitReturns": false
+  },
+  "include": [
+    "./",
+    "components.test-d.tsx",
+    "../__tests__/createRouter.test-d.ts"
+  ],
+  // experimental.test-d.ts augments `TypesConfig.Router` globally which
+  // conflicts with the classic `Router` augmentation pulled in via
+  // `./index` (re-exports from `../dist`). It has its own tsconfig.
+  "exclude": ["../__tests__", "../src", "./experimental.test-d.ts"]
+}

@@ -1,0 +1,104 @@
+import type { TreeNode, TreeNodeNamed } from '../core/tree'
+import type { ResolvedOptions } from '../options'
+import type { ParamParsersMap } from './generateParamParsers'
+import { generateParamsTypes } from './generateParamParsers'
+import {
+  EXPERIMENTAL_generateRouteParams,
+  generateRouteParams,
+  normalizeParamsForTypes,
+} from './generateRouteParams'
+import { pad, formatMultilineUnion, toStringLiteral } from '../utils'
+
+export function generateRouteNamedMap(
+  node: TreeNode,
+  options: ResolvedOptions,
+  paramParsersMap: ParamParsersMap
+): string {
+  if (node.isRoot()) {
+    return `export interface RouteNamedMap {
+${node
+  .getChildrenSorted()
+  .map(n => generateRouteNamedMap(n, options, paramParsersMap))
+  .join('')}}`
+  }
+
+  return (
+    // if the node has a filePath, it's a component, it has a routeName and it should be referenced in the RouteNamedMap
+    // otherwise it should be skipped to avoid navigating to a route that doesn't render anything
+    (node.value.components.size && node.isNamed()
+      ? pad(
+          2,
+          `${toStringLiteral(node.name)}: ${generateRouteRecordInfo(node, options, paramParsersMap)},\n`
+        )
+      : '') +
+    (node.children.size > 0
+      ? node
+          .getChildrenSorted()
+          .map(n => generateRouteNamedMap(n, options, paramParsersMap))
+          .join('\n')
+      : '')
+  )
+}
+
+// TODO: split into two functions, one for the experimental version and one for the non-experimental version, to avoid the if/else branching
+// and put the if/else branching in the caller function
+
+export function generateRouteRecordInfo(
+  node: TreeNodeNamed,
+  options: ResolvedOptions,
+  paramParsersMap: ParamParsersMap
+): string {
+  // only the experimental version handles query params and param parsers, the
+  // other one only handles path params. Both normalize once so unnamed params
+  // are reported once per route instead of once per generated type
+  const params = options.experimental.paramParsers
+    ? normalizeParamsForTypes(node, node.params)
+    : []
+  const pathParams = options.experimental.paramParsers
+    ? []
+    : normalizeParamsForTypes(node, node.pathParams)
+  const paramParsers: Array<string | null> = options.experimental.paramParsers
+    ? generateParamsTypes(params, paramParsersMap)
+    : []
+
+  const typeParams = [
+    toStringLiteral(node.name),
+    toStringLiteral(node.fullPath),
+    options.experimental.paramParsers
+      ? EXPERIMENTAL_generateRouteParams(
+          params,
+          paramParsers,
+          true,
+          paramParsersMap
+        )
+      : generateRouteParams(pathParams, true),
+    options.experimental.paramParsers
+      ? EXPERIMENTAL_generateRouteParams(
+          params,
+          paramParsers,
+          false,
+          paramParsersMap
+        )
+      : generateRouteParams(pathParams, false),
+  ]
+
+  const childRouteNames: string[] =
+    node.children.size > 0
+      ? // TODO: remove Array.from() once Node 20 support is dropped
+        Array.from(node.getChildrenDeep())
+          // skip routes that are not added to the types
+          .reduce<string[]>((acc, childRoute) => {
+            if (childRoute.value.components.size && childRoute.isNamed()) {
+              acc.push(childRoute.name)
+            }
+            return acc
+          }, [])
+          .sort()
+      : []
+
+  typeParams.push(formatMultilineUnion(childRouteNames.map(toStringLiteral), 4))
+
+  return `RouteRecordInfo<
+${typeParams.map(line => pad(4, line)).join(',\n')}
+  >`
+}

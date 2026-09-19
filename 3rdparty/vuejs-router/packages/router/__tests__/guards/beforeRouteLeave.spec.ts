@@ -1,0 +1,196 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { noGuard, newRouter as createRouter } from '../utils'
+import type { RouteRecordRaw } from '../../src/types'
+import { vi, describe, expect, it, beforeEach } from 'vitest'
+
+const Home = { template: `<div>Home</div>` }
+const Foo = { template: `<div>Foo</div>` }
+
+const nested = {
+  parent: vi.fn(),
+  nestedEmpty: vi.fn(),
+  nestedA: vi.fn(),
+  nestedB: vi.fn(),
+  nestedAbs: vi.fn(),
+  nestedNested: vi.fn(),
+  nestedNestedFoo: vi.fn(),
+  nestedNestedParam: vi.fn(),
+}
+const beforeRouteLeave = vi.fn()
+
+const routes: RouteRecordRaw[] = [
+  { path: '/', component: Home },
+  { path: '/foo', component: Foo },
+  {
+    path: '/guard',
+    component: {
+      ...Foo,
+      beforeRouteLeave,
+    },
+  },
+  {
+    path: '/nested',
+    component: {
+      ...Home,
+      beforeRouteLeave: nested.parent,
+    },
+    children: [
+      {
+        path: '',
+        name: 'nested-empty-path',
+        component: { ...Home, beforeRouteLeave: nested.nestedEmpty },
+      },
+      {
+        path: 'a',
+        name: 'nested-path',
+        component: { ...Home, beforeRouteLeave: nested.nestedA },
+      },
+      {
+        path: 'b',
+        name: 'nested-path-b',
+        component: { ...Home, beforeRouteLeave: nested.nestedB },
+      },
+      {
+        path: '/abs-nested',
+        name: 'absolute-nested',
+        component: { ...Home, beforeRouteLeave: nested.nestedAbs },
+      },
+      {
+        path: 'nested',
+        name: 'nested-nested',
+        component: { ...Home, beforeRouteLeave: nested.nestedNested },
+        children: [
+          {
+            path: 'foo',
+            name: 'nested-nested-foo',
+            component: { ...Home, beforeRouteLeave: nested.nestedNestedFoo },
+          },
+          {
+            path: 'param/:p',
+            name: 'nested-nested-param',
+            component: { ...Home, beforeRouteLeave: nested.nestedNestedParam },
+          },
+        ],
+      },
+    ],
+  },
+]
+
+function resetMocks() {
+  beforeRouteLeave.mockReset()
+  for (const key in nested) {
+    nested[key as keyof typeof nested].mockReset()
+    nested[key as keyof typeof nested].mockImplementation(noGuard)
+  }
+}
+
+beforeEach(() => {
+  resetMocks()
+})
+
+describe('beforeRouteLeave', () => {
+  it('calls beforeRouteLeave guard on navigation', async () => {
+    const router = createRouter({ routes })
+    beforeRouteLeave.mockImplementationOnce((to, _from) => {
+      if (to.path === 'foo') return false
+      else return
+    })
+    await router.push('/guard')
+    expect(beforeRouteLeave).not.toHaveBeenCalled()
+
+    // simulate a mounted route component
+    router.currentRoute.value.matched[0].instances.default = {} as any
+
+    await router.push('/foo')
+    expect(beforeRouteLeave).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not call beforeRouteLeave guard if the view is not mounted', async () => {
+    const router = createRouter({ routes })
+    beforeRouteLeave.mockImplementationOnce((_to, _from) => {
+      return
+    })
+    await router.push('/guard')
+    expect(beforeRouteLeave).not.toHaveBeenCalled()
+
+    // usually we would have to simulate a mounted route component
+    // router.currentRoute.value.matched[0].instances.default = {} as any
+
+    await router.push('/foo')
+    expect(beforeRouteLeave).not.toHaveBeenCalled()
+  })
+
+  it('calls beforeRouteLeave guard on navigation between children', async () => {
+    const router = createRouter({ routes })
+    await router.push({ name: 'nested-path' })
+
+    // simulate a mounted route component
+    router.currentRoute.value.matched[0].instances.default = {} as any
+    router.currentRoute.value.matched[1].instances.default = {} as any
+
+    resetMocks()
+    await router.push({ name: 'nested-path-b' })
+    expect(nested.nestedEmpty).not.toHaveBeenCalled()
+    expect(nested.nestedAbs).not.toHaveBeenCalled()
+    expect(nested.nestedB).not.toHaveBeenCalled()
+    expect(nested.nestedNestedFoo).not.toHaveBeenCalled()
+    expect(nested.parent).not.toHaveBeenCalled()
+    expect(nested.nestedNested).not.toHaveBeenCalled()
+    expect(nested.nestedA).toHaveBeenCalledTimes(1)
+    expect(nested.nestedA).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'nested-path-b',
+        fullPath: '/nested/b',
+      }),
+      expect.objectContaining({
+        name: 'nested-path',
+        fullPath: '/nested/a',
+      }),
+      expect.any(Function)
+    )
+  })
+
+  it('calls beforeRouteLeave guard on navigation between children in order', async () => {
+    const router = createRouter({ routes })
+    await router.push({ name: 'nested-nested-foo' })
+    resetMocks()
+    let count = 0
+    nested.nestedNestedFoo.mockImplementation((_to, _from) => {
+      expect(count++).toBe(0)
+      return
+    })
+    nested.nestedNested.mockImplementation((_to, _from) => {
+      expect(count++).toBe(1)
+      return
+    })
+    nested.parent.mockImplementation((_to, _from) => {
+      expect(count++).toBe(2)
+      return
+    })
+
+    // simulate a mounted route component
+    router.currentRoute.value.matched[0].instances.default = {} as any
+    router.currentRoute.value.matched[1].instances.default = {} as any
+    router.currentRoute.value.matched[2].instances.default = {} as any
+
+    await router.push('/')
+    expect(nested.parent).toHaveBeenCalledTimes(1)
+    expect(nested.nestedNested).toHaveBeenCalledTimes(1)
+    expect(nested.nestedNestedFoo).toHaveBeenCalledTimes(1)
+  })
+
+  it('can cancel navigation', async () => {
+    const router = createRouter({ routes })
+    beforeRouteLeave.mockImplementationOnce(async (_to, _from) => {
+      return false
+    })
+    await router.push('/guard')
+    const p = router.push('/')
+    const currentRoute = router.currentRoute.value
+    expect(currentRoute.fullPath).toBe('/guard')
+    await p.catch(_err => {}) // catch the navigation abortion
+    expect(currentRoute.fullPath).toBe('/guard')
+  })
+})

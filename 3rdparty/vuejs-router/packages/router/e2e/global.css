@@ -1,0 +1,45 @@
+:root {
+  /* required for light-dark() to resolve */
+  color-scheme: light dark;
+
+  --text: light-dark(#2c3e50, #dfe6e9);
+  --link: light-dark(#7f8c8d, #95a5a6);
+  --link-hover: #4fc08d;
+  --link-active: light-dark(darkorange, #ffa94d);
+  --link-exact-active: light-dark(red, #ff7675);
+  --outline: light-dark(red, #ff7675);
+  --surface: light-dark(white, #2b2b2b);
+}
+
+html,
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  color: var(--text);
+}
+
+#app {
+  padding: 0 20px;
+}
+
+ul {
+  line-height: 1.5em;
+  padding-left: 1.5em;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+.router-link-active {
+  color: var(--link-active);
+}
+.router-link-exact-active {
+  color: var(--link-exact-active);
+}
