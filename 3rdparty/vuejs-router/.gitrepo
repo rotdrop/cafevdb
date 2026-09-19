@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:rotdrop/vuejs-router.git
 	branch = production/cafevdb
-	commit = 4ac759423d1dc5d080d81130fd525077afabd32a
-	parent = 2534530d8d8c6dba57ccab039e6ca92ee35aca50
+	commit = 06caa59342c9536a6213d742877f63b9e95d9d84
+	parent = fc0832dc7ed682ebf41c02b2011e1f98a949608b
 	method = merge
 	cmdver = 0.4.9
