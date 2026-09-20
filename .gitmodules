@@ -42,3 +42,7 @@
 [submodule "3rdparty/typescript-transformer"]
 	path = 3rdparty/typescript-transformer
 	url = git@github.com:rotdrop/typescript-transformer.git
+[submodule "3rdparty/vuejs-router"]
+	path = 3rdparty/vuejs-router
+	url = git@github.com:rotdrop/vuejs-router.git
+	branch = main

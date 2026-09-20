@@ -145,7 +145,7 @@
     "vue": "^3.5.34",
     "vue-material-design-icons": "^5.3.1",
     "vue-multiselect": "*",
-    "vue-router": "^5.2.0",
+    "vue-router": "file:3rdparty/vuejs-router/packages/router",
     "walkjs": "^6.0.1",
     "xml-loader": "github:MrGazdag/xml-loader#patch-1",
     "xml-reader": "^2.4.3",
@@ -200,6 +200,7 @@
     "github:rotdrop/async-nextcloud-event-bus": true,
     "github:rotdrop/nextcloud-app-dokuwiki": true,
     "unrs-resolver": true,
-    "esbuild": true
+    "esbuild": true,
+    "file:../3rdparty/vuejs-router/packages/router": true
   }
 }
