@@ -46,6 +46,7 @@ const app = createApp(CAFeVDB);
 app.config.performance = !!(import.meta?.env?.DEV);
 app.directive('tooltip', Tooltip);
 app.mixin(globalMixin);
+console.trace('HELLO');
 app.use(router);
 app.use(pinia);
 for (const [key, value] of Object.entries(provide)) {

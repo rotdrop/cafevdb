@@ -179,7 +179,7 @@ export default defineStore(storeId, () => {
 
   const ready = ref(false);
 
-  const loggerRef = ref(new Console(storeId));
+  const loggerRef = ref(new Console('HISTORY STORE'));
   const logger = loggerRef.value;
 
   logger.debug('HISTORY STORE INIT');
@@ -1000,10 +1000,11 @@ export default defineStore(storeId, () => {
    */
   let inhibitRouterTransition = false;
 
-  router.beforeEach((to, from) => {
-    logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
+  router.beforeEach((to, from, _next = () => {}, transition) => {
+    logger.trace('BEFORE EACH ROUTE CHANGE', {
       to,
       from,
+      transition,
       windowHistory: { ...(window?.history?.state ?? {}) },
       vueRouterHistory: { ...vueRouterHistory.state },
     });
@@ -1039,7 +1040,13 @@ export default defineStore(storeId, () => {
    * with any other abort handlers.
    */
   // router.onNavigationFailure((error: NavigationFailure) => {
-  router.afterEach((to, from, error) => {
+  router.afterEach((to, from, error, routerTransition) => {
+    logger.debug('AFTER EACH', {
+      routerTransition,
+      error: { ...(error ?? {}) },
+      to: { ...to },
+      from: { ...from },
+    });
     const transition = updateTransitionType();
     if (transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated)) {
       logger.debug('Finish history action on duplicated navigation.', { error });

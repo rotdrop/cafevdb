@@ -53,7 +53,7 @@ export type CalendarObjectAddLocation = RouteLocationRaw & {
   query: Record<string, string>;
 };
 
-const COMPONENT_NAME = 'CalendarRoutes';
+const COMPONENT_NAME = 'CAFEVDB CALENDAR ROUTES';
 const logger = new Console(COMPONENT_NAME);
 
 const returnByPush = true;
@@ -93,8 +93,8 @@ export const CALENDAR_APP_ROUTES = [
 let preCalendarRoute: RouteLocationAsRelativeGeneric|undefined;
 let pushDepth = 0;
 
-const beforeCalendarRouteEnter: NavigationGuard = (to, from) => {
-  logger.debug('BEFORE CALENDAR ROUTE ENTER', { to, from });
+const beforeCalendarRouteEnter: NavigationGuard = (to, from, _next = () => {}, transition) => {
+  logger.debug('BEFORE CALENDAR ROUTE ENTER', { to, from, transition });
   if (!CALENDAR_APP_ROUTES.includes(from.name! as string)) {
     logger.debug('Remember previous route before entering calendar stuff', {
       from,
@@ -169,7 +169,12 @@ const calendarAppRoutes: RouteRecordRaw[] = [
     path: '--never--',
     name: 'CalendarView',
     component: () => true,
-    beforeEnter: (to, _from) => {
+    beforeEnter: (to, _from, _next = () => {}, transition) => {
+      logger.debug('NEVER BEFORE ENTER', {
+        to,
+        _from,
+        transition,
+      });
       if (returnByPush && pushDepth > 0) {
         logger.debug('Try go back', pushDepth);
         asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
@@ -204,10 +209,11 @@ const projectEventsRoute: RouteRecordRaw = {
   name: PROJECT_EVENTS_LISTING_NAME,
   component: ProjectEventsListing,
   props: (route) => ({ projectName: route.params.eventsProjectName }),
-  beforeEnter: (to, from) => {
+  beforeEnter: (to, from, _next = () => {}, transition) => {
     logger.debug('BEFORE PROJECT EVENTS LISTING ENTER', {
       to,
       from,
+      transition,
     });
     // preserve the post-data hash
     if (from.query.hash && !to.query.hash) {

@@ -39,10 +39,11 @@ const addContactsToProjectsRoute: RouteRecordRaw = {
   name: ADD_CONTACTS_TO_PROJECT_NAME,
   component: AddContactsToProject,
   props: (route) => ({ projectName: route.params.addContactsProjectName }),
-  beforeEnter: (to, from) => {
+  beforeEnter: (to, from, _next = () => {}, transition) => {
     logger.info('BEFORE ADD CONTACTS TO PROJECT ENTER', {
       to,
       from,
+      transition,
     });
     // preserve the post-data hash
     if (from.query.hash && !to.query.hash) {
