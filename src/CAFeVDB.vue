@@ -707,10 +707,11 @@ watch(
   },
 )
 
-router.beforeEach((to, from) => {
-  logger.debug('GLOBAL BEFORE EACH ROUTE CHANGE', {
+router.beforeEach((to, from, _next = () => {}, transition) => {
+  logger.debug('APP BEFORE EACH ROUTE CHANGE', {
     to,
     from,
+    transition,
     windowHistory: window?.history?.state,
     pendingHistoryAction: history.pendingHistoryAction,
     historyReady: historyReady.value,
@@ -722,11 +723,13 @@ router.beforeEach((to, from) => {
     history.scheduleHistoryAction(HistoryActionPush, to.params)
   }
 })
-router.afterEach((to, from, _failure) => {
-  logger.debug('GLOBAL AFTER EACH ROUTE CHANGE', {
+
+router.afterEach((to, from, _failure, transition) => {
+  logger.debug('APP AFTER EACH ROUTE CHANGE', {
     to,
     from,
-    windowHistory: window?.history?.state,
+    transition,
+    windowHistory: { ...window?.history?.state },
     historyReady: historyReady.value,
   })
   if (!historyReady.value) {
