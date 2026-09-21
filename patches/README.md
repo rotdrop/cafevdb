@@ -20,3 +20,9 @@ done
   and then tries to convert it back to svg with `atob()`. This fails
   as we do use the `raw` resource query in order to flag direct
   unmodified inclusion. Those btoa's have just to be removed.
+
+- the EditFull component needs an outer &lt;div&gt;...&lt;/div&gt;
+  wrapper because of the v-if in the outer-most NcModal
+  component. Other there will be rendering error when Vue does not
+  find and parent for the comment node which replaces the NcModal if
+  v-if evaluates to false.
