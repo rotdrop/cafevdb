@@ -22,6 +22,7 @@
  */
 
 import type { ComponentProps } from '../mountable-component-names.ts';
+import type { MountableComponent } from '../services/mountable-components.ts';
 
 import {
   emit as asyncEmit,
@@ -78,7 +79,11 @@ const actionMenu = async function<K extends keyof ComponentProps>(
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      const vueMenu = await generateVueMenu($actionMenu);
+      const vueMenu = await generateVueMenu($actionMenu) as (MountableComponent & {
+        isOpen(): boolean;
+        openMenu(): void;
+        closeMenu(): void;
+      });
       const entityId = $actionMenu.data('actionMenu').entityId;
 
       asyncEmit(PAGE_TEMPLATE_ACTION_MENU, {

@@ -40,11 +40,11 @@ const queryLogMenu = async ($queryLogProvider: JQuery) => {
   }
   const queryLog = $queryLogProvider.data('queryLog');
   console.info('QUERY LOG', { queryLog });
-  const queryLogComponent: Vue = await awaitEmit(GET_VUE_COMPONENT, {
+  const queryLogComponent = await awaitEmit(GET_VUE_COMPONENT, {
     name: LEGACY_QUERY_LOG,
     propsData: { queryLog },
   });
-  queryLogComponent.$mount($queryLogProvider.find('.vue-mount-point')[0]);
+  queryLogComponent.mount($queryLogProvider.find('.vue-mount-point')[0]);
   $queryLogProvider.data(vueQueryLogKey, queryLogComponent);
   return queryLogComponent;
 };
