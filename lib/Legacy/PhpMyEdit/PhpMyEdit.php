@@ -3835,7 +3835,8 @@ EOT;
 			// Don't emit tooltips
 			return '';
 		} else {
-			return ' title="'.$this->enc($title).'" ';
+			// return ' title="'.$this->enc($title).'" ';
+			return ' title="' . $title . '" ';
 		}
 	}
 
