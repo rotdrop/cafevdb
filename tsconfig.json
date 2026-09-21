@@ -17,6 +17,7 @@
     "./node_modules/vue-router/**/*.ts",
     "./node_modules/pinia/**.ts",
     "./node_modules/vue/**/*.ts",
+    "./node_modules/vue-router/**/*.ts",
     "./node_modules/vite/**/*.ts",
     "./node_modules/vitest/**/*.ts",
     "./tests/vitest/**/*.ts",
@@ -37,7 +38,6 @@
       "moment",
       "node",
       "popper",
-      "selectize",
       "vitest/jsdom"
     ],
     "paths": {
