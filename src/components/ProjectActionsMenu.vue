@@ -182,6 +182,7 @@ import {
   computed,
   onBeforeMount,
   ref,
+  useTemplateRef,
   watch,
 } from 'vue'
 import {
@@ -248,7 +249,7 @@ const tooltipsProvider = useTooltipsStore()
 tooltipsProvider.provideTooltips(tooltipKeys)
 const tooltips = tooltipsProvider.tooltipsData
 
-const actions = ref<null|typeof LegacyPageActionsMenu>(null)
+const actions = useTemplateRef<typeof LegacyPageActionsMenu>('actions')
 
 const isOpen = () => !!actions.value?.isOpen()
 const closeMenu = () => {
@@ -372,7 +373,7 @@ const openProjectEmail = (event: MouseEvent) => {
 }
 
 const getRouteHref = (route: RouterLocation) => {
-  const routeProps = router.resolve(route, 'unknown')
+  const routeProps = router.resolve(route)
   return routeProps?.href || '#'
 }
 

@@ -26,6 +26,7 @@
  * General PME table stuff, popup-handling.
  */
 
+import type { IOptions as SelectizeOptions } from 'selectize';
 import type { MountableComponent } from '../services/mountable-components.ts';
 import type {
   PageTemplateValue,
@@ -1639,7 +1640,7 @@ function installInputSelectize(containerSel: string|JQuery, onlyClass: string = 
     if (createOptions !== true) {
       delete pmeSelectizeOptions.create;
     }
-    const selectizeOptions: Selectize.IOptions<string, { [key: string]: string }> = mergician({ appendArrays: true, dedupArrays: true })(
+    const selectizeOptions: SelectizeOptions<string, { [key: string]: string }> = mergician({ appendArrays: true, dedupArrays: true })(
       {
         plugins,
         delimiter: ',',

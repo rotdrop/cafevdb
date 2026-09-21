@@ -593,7 +593,6 @@ const ready = function(selector?: string|JQuery, resizeCB: () => void = () => {}
         }
         $option.prop('disabled', !enabled);
       });
-      // @ts-expect-error 2345 IT IS OK TO SEARCH FOR NON-EXISTING ARRAY ELEMENT
       if (enabledTypes.indexOf(dataType) === -1) {
         if (enabledTypes.length > 0) {
           dataType = enabledTypes[0];

@@ -249,7 +249,7 @@ const initFileUploadRow = function<E extends HTMLElement = HTMLTableRowElement>(
     setBusyIndicators(true);
     maskInputs();
 
-    const postData = {
+    const postData: Record<string, unknown> = {
       musicianId,
       projectId,
       fieldId,
