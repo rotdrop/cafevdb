@@ -36,6 +36,10 @@ export interface ComponentProps {
     query?: Record<string, string>;
     iFrameAttributes?: Record<string, string>;
     fullScreen?: boolean;
+    onIframeLoaded?: () => void;
+    onIframeResize?: (event: ResizeObserverEntry) => void;
+    onUpdateLoading?: (loading: boolean) => void;
+    onError?: () => void;
   };
   [INVOICE_ACTIONS_MENU]: {
     amount?: number;
