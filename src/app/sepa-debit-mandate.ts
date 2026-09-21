@@ -1639,9 +1639,9 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
       [DataConstants.DATA_DATA_KEY]: Record<string, { data: string }>;
       [DataConstants.DATA_VALUES_KEY]: Record<string, string>;
     } = $bankAccountIbanInput.data('pmeValues');
-    const ibanAutoComplete: Record<string, string[]> = {};
-    const sequenceData = {}; // by musician id and iban
-    const ibanIdentifiers = {}; // identifier by IBAN
+    const ibanAutoComplete: Record<string|number, string[]> = {};
+    const sequenceData: Record<string|number, Record<string, (string|number)[]>> = {}; // by musician id and iban
+    const ibanIdentifiers: Record<string, unknown[]> = {}; // identifier by IBAN
     for (const [ibanKey, iban] of Object.entries(ibanValues.values)) {
       const ibanIds = ibanValues.data[ibanKey].data.split(DataConstants.VALUES_SEP);
       for (const ibanId of ibanIds) {
@@ -1651,9 +1651,9 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
         ibanAutoComplete[musicianId] = ibanAutoComplete[musicianId] || [];
         ibanAutoComplete[musicianId].push(iban);
         sequenceData[musicianId] = sequenceData[musicianId] || {};
-        sequenceData[musicianId][iban] = sequenceData[musicianId][iban] || [];
+        sequenceData[musicianId][iban] = sequenceData[musicianId][iban] ?? [];
         sequenceData[musicianId][iban].push(sequence); // ?? only one ??
-        ibanIdentifiers[iban] = ibanIdentifiers[iban] || [];
+        ibanIdentifiers[iban] = ibanIdentifiers[iban] ?? [];
         ibanIdentifiers[iban].push(identifierArray);
       }
     }
@@ -1664,14 +1664,14 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
       [DataConstants.DATA_VALUES_KEY]: Record<string, string>;
     } = $bankAccountOwnerInput.data('pmeValues');
     const ownerAutoComplete: string[] = [];
-    const ownerData = {}; // by musician id and sequence
+    const ownerData: Record<string|number, Record<string|number, string>> = {}; // by musician id and sequence
     for (const [ownerKey, owner] of Object.entries(ownerValues.values)) {
       const ownerIdentifiers = ownerValues.data[ownerKey].data.split(',');
       for (const ownerIdentifier of ownerIdentifiers) {
         const identifierArray = ownerIdentifier.split('-');
         const musicianId = identifierArray[0];
         const sequence = identifierArray[1];
-        ownerData[musicianId] = ownerData[musicianId] || {};
+        ownerData[musicianId] = ownerData[musicianId] ?? {};
         ownerData[musicianId][sequence] = owner;
         ownerAutoComplete.push(owner);
       }
@@ -1736,7 +1736,7 @@ const mandateReady = function(selector: string|JQuery, parameters?: TableDialogC
           const sequence = sequenceData[musicianId][iban][0];
           const owner = ownerData[musicianId][sequence];
           autoOwner = owner;
-          maybeAutoFillInput($bankAccountSequenceInput, sequence);
+          maybeAutoFillInput($bankAccountSequenceInput, '' + sequence);
           maybeAutoFillInput($bankAccountIbanInput, iban, true);
           clearAutofill = false;
         }

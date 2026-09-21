@@ -40,7 +40,7 @@ import $ from './jquery.js';
 import * as Notification from './notification.ts';
 import { parse as pathParse } from './path.ts';
 
-import { tooltipWideCssClass } from 'tooltips.scss';
+import { tooltipWideCssClass } from 'tooltips.module.scss';
 
 export interface CloudFilePickerParameters {
   setup?: () => void;
@@ -150,8 +150,9 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
               templateParameters[`${mode}Disabled`] = '';
               templateParameters[`${mode}CssClass`] += ' enabled';
             } else {
-              templateParameters[`${mode}Disabled`] = 'disabled';
-              templateParameters[`${mode}CssClass`] += ' disabled';
+              const missingMode = mode as typeof allUploadModes[number];
+              templateParameters[`${missingMode}Disabled`] = 'disabled';
+              templateParameters[`${missingMode}CssClass`] += ' disabled';
             }
           }
           // prefer linking over copy
@@ -171,7 +172,7 @@ const cloudFilePickerDialog = function(options: CloudFilePickerParameters) {
             t(appName, 'Select File System Operation'),
             {
               callback(answer) {
-                const uploadMode = $('input.cloud-file-system-operations-input:checked').val();
+                const uploadMode = $('input.cloud-file-system-operations-input:checked').val() as EnumFileUploadMode;
                 console.info('UPLOAD MODE', uploadMode);
                 if (answer) {
                   performUpload(uploadMode);

@@ -30,7 +30,8 @@ import type {
 } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ProjectWebPage } from '../../build/ts-types/php-modules/PageRenderer/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
+import type { TableLoadCallback } from './pme.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import {

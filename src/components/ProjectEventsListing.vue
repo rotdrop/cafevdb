@@ -386,9 +386,10 @@ import {
 import md5 from 'blueimp-md5'
 import capitalize from 'capitalize'
 import { DateTime } from 'luxon'
-import { storeToRefs } from 'pinia'
+import { getActivePinia, storeToRefs } from 'pinia'
 import {
   computed,
+  getCurrentInstance,
   nextTick,
   onBeforeMount,
   onUnmounted,
@@ -425,9 +426,9 @@ import IconShowDetails from 'vue-material-design-icons/UnfoldMoreHorizontal.vue'
 import { NIL as UUID_NIL } from '../../build/ts-types/php-modules/Common/Uuid.ts'
 import { RECORD_ABSENCE_CATEGORY } from '../../build/ts-types/php-modules/Service/EventsService.ts'
 import { CALENDARS } from '../../build/ts-types/php-modules/Settings/ConfigConstants.ts'
-import svgEmailUnchecked from '../../img/email-new-path.svg?raw'
-import svgEmailCross from '../../img/email-new-x-path.svg?raw'
-import svgEmailChecked from '../../img/email-new-yes-path.svg?raw'
+import svgEmailUnchecked from '../../img/email-new-path.svg'
+import svgEmailCross from '../../img/email-new-x-path.svg'
+import svgEmailChecked from '../../img/email-new-yes-path.svg'
 import { appName } from '../config.ts'
 import {
   EMAIL_POPUP,
@@ -626,11 +627,12 @@ onBeforeMount(() => {
   logger.debug('CURRENT ROUTE', { currentRoute: { ...currentRoute } })
 })
 
-onBeforeRouteUpdate((to, from) => {
+onBeforeRouteUpdate((to, from, _next = () => {}, transition) => {
   logger.debug('ON BEFORE ROUTE UPDATE', {
     to: { ...to },
     from: { ...from },
     origin: { ...(origin || {}) },
+    transition,
   })
   if (origin.location.query && to.query.hash) {
     origin.location.query.hash = to.query.hash
@@ -638,7 +640,13 @@ onBeforeRouteUpdate((to, from) => {
 })
 
 // Make sure that the event of the route is open in the events listing.
-router.afterEach((to, _from) => {
+router.afterEach((to, _from, _failure, _transition) => {
+  logger.debug('AFTER EACH ROUTE CHANGE', {
+    to: { ...to },
+    from: { ..._from },
+    failure: { _failure },
+    _transition,
+  })
   // check if the current route contains a calendar app component
   if (!CALENDAR_APP_ROUTES.includes(to.name! as string)) {
     return
@@ -1038,9 +1046,10 @@ const exportEvents = async () => {
 }
 
 import('../services/calendar-store-setup.ts').then(async ({ default: calendarStoreSetup }) => {
-  await calendarStoreSetup()
-  calendarObjectInstanceStore = useCalendarObjectInstance()
-  calendarObjectsStore = useCalendarObjects()
+  const pinia = getActivePinia();
+  await calendarStoreSetup(pinia)
+  calendarObjectInstanceStore = useCalendarObjectInstance(pinia)
+  calendarObjectsStore = useCalendarObjects(pinia)
   logger.debug('STORES', {
     calendarObjectInstanceStore,
     calendarObjectsStore,

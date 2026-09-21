@@ -187,12 +187,14 @@ const pmeFormInit = <T extends InsuranceTemplate>(containerSel: string, template
 
     const textInputs = getTextInputValues($container, template);
 
-    const oldValues = {};
-    for (const key in textInputs) {
-      oldValues[key] = textInputs[key].val();
+    type TextInputKeys = keyof ReturnType<typeof getTextInputValues<T>>;
+
+    const oldValues = <Record<TextInputKeys, string>>{};
+    for (const key of Object.keys(textInputs) as TextInputKeys[]) {
+      oldValues[key] = textInputs[key]?.val() ?? '';
     }
 
-    const validate = function(template: InsuranceTemplate, control: string, $button?: JQuery, lockCallback: (lock: boolean) => void = () => {}) {
+    const validate = function(_template: T, control: string, $button?: JQuery, lockCallback: (lock: boolean) => void = () => {}) {
 
       const validateLock = function() {
         lockCallback(true);
@@ -212,32 +214,34 @@ const pmeFormInit = <T extends InsuranceTemplate>(containerSel: string, template
         $.post(generateAppUrl(`${controllerBasePath}/${END_POINT_VALIDATE}/${control}`), post)
           .fail(function(xhr, status, errorThrown) {
             Ajax.handleError(xhr, status, errorThrown, function() {
-              for (const key in textInputs) {
-                textInputs[key].val(oldValues[key]);
+              for (const key of Object.keys(textInputs) as TextInputKeys[]) {
+                textInputs[key]?.val(oldValues[key]);
               }
               validateUnlock();
             });
           })
-          .done(function(data: ResponseData<InsuranceValidationResponse[typeof template]>) {
+          .done(function(data: ResponseData<InsuranceValidationResponse[T]>) {
             if (!Ajax.validateResponse(
               data,
-              Object.keys(textInputs) as (keyof InsuranceValidationResponse[typeof template])[],
+              Object.keys(textInputs) as (keyof InsuranceValidationResponse[T])[],
               validateUnlock,
             )) {
-              for (const key in textInputs) {
-                textInputs[key].val(oldValues[key]);
+              for (const key of Object.keys(textInputs) as TextInputKeys[]) {
+                textInputs[key]?.val(oldValues[key]);
               }
               return;
             }
 
             Notification.messages(data.messages);
 
-            if (typeof textInputs[control] !== 'undefined') {
-              textInputs[control].val(data[control]);
+            if (typeof textInputs[control as TextInputKeys] !== 'undefined') {
+              // @ts-expect-error 7053 This does match.
+              textInputs[control as TextInputKeys]?.val(data[control as TextInputKeys] ?? '');
             }
             if (control === 'submit') {
-              for (const key in textInputs) {
-                textInputs[key].val(data[key]);
+              for (const key of Object.keys(textInputs) as TextInputKeys[]) {
+                // @ts-expect-error 7053 This does match.
+                textInputs[key]?.val(data[key]);
               }
               if (typeof $button !== 'undefined') {
                 $form.off('click', submitSel);
@@ -246,8 +250,8 @@ const pmeFormInit = <T extends InsuranceTemplate>(containerSel: string, template
                 $form.trigger('submit');
               }
             }
-            for (const key in textInputs) {
-              oldValues[key] = textInputs[key].val();
+            for (const key of Object.keys(textInputs) as TextInputKeys[]) {
+              oldValues[key] = textInputs[key]?.val() ?? '';
             }
 
             validateUnlock();

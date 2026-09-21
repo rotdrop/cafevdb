@@ -22,7 +22,7 @@
  */
 
 import type { JQuerySelect } from './jquery.ts';
-import type { TableLoadCallback } from './pme-state.ts';
+import type { TableLoadCallback } from './pme.ts';
 
 import { TEMPLATE as template } from '../../build/ts-types/php-modules/PageRenderer/DonationReceipts.ts';
 import * as CAFEVDB from './cafevdb.ts';

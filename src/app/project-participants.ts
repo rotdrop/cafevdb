@@ -24,7 +24,8 @@
 import type { EnumValidateInstrumentsContext } from '../../build/ts-types/php-modules/Controller.ts';
 import type { MailingListSubscriptionsResponse, MessagesResponse } from '../../build/ts-types/php-modules/Controller/DTO.ts';
 import type { ResponseData } from '../types/ajax/response-data.d.ts';
-import type { TableDialogCallbackData, TableDialogOptions, TableLoadCallback } from './pme-state.ts';
+import type { TableDialogCallbackData, TableDialogOptions } from './pme-state.ts';
+import type { TableLoadCallback } from './pme.ts';
 
 import { translate as t } from '@nextcloud/l10n';
 import {
@@ -157,12 +158,14 @@ const personalRecordDialog = <S extends PersonalRecordTemplate>(
       break;
   }
 
-  tableOptions[pmeRecord] = record; // will be converted by $.param
-  tableOptions[pmeOperation] = options.reloadValue + '?' + pmeRecord + '=' + encodeURIComponent(JSON.stringify(record));
+  const post = {
+    [pmeRecord]: record, // will be converted by $.param
+    [pmeOperation]: options.reloadValue + '?' + pmeRecord + '=' + encodeURIComponent(JSON.stringify(record)),
+  };
 
   // alert('options: ' + CAFEVDB.print_r(tableOptions, true));
 
-  PHPMyEdit.tableDialogOpen(tableOptions as TableDialogOptions);
+  PHPMyEdit.tableDialogOpen(tableOptions as TableDialogOptions<S>, post);
 };
 
 export type ValidateInstrumentChoicesOptions = {
@@ -347,7 +350,7 @@ const loadMusicians = (
     projectMode = +projectId > 0;
   }
   const template = projectMode ? addMusiciansTemplate : allMusiciansTemplate;
-  const inputTweak = {
+  const inputTweak: Record<string, unknown> = {
     participationContext,
     template,
     templateRenderer: templateRenderer(template),

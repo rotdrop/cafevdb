@@ -29,6 +29,7 @@ import type {
   PrincipalsStore,
   SettingsStore,
 } from '@nextcloud/app-calendar';
+import type { Pinia } from 'pinia';
 
 import { mapDavCollectionToCalendar } from '@nextcloud/app-calendar/src/models/calendar.js';
 import { findAllCalendars, initializeClientForUserView } from '@nextcloud/app-calendar/src/services/caldavService.js';
@@ -97,11 +98,11 @@ const calendarSyncHandler = async ({
 
 // make sure all the required data is loaded in order to (mis-)reuse
 // the calendar editor widgets.
-const calendarStoreSetup = async () => {
+const calendarStoreSetup = async (pinia?: Pinia) => {
 
-  const calendarsStore: CalendarsStore = useCalendarsStore();
-  const principalsStore: PrincipalsStore = usePrincipalsStore();
-  const settingsStore: SettingsStore = useSettingsStore();
+  const calendarsStore: CalendarsStore = useCalendarsStore(pinia);
+  const principalsStore: PrincipalsStore = usePrincipalsStore(pinia);
+  const settingsStore: SettingsStore = useSettingsStore(pinia);
   loadMomentLocalization().then((locale: string) => {
     settingsStore.setMomentLocale({ locale });
   });
@@ -132,9 +133,9 @@ const calendarStoreSetup = async () => {
     clearInterval(backgroundSyncJob);
   }
   backgroundSyncJob = setInterval(() => calendarSyncHandler({
-    calendarObjectsStore: useCalendarObjectsStore(),
+    calendarObjectsStore: useCalendarObjectsStore(pinia),
     calendarsStore,
-    fetchedTimeRangesStore: useFechtedTimeRanges(),
+    fetchedTimeRangesStore: useFechtedTimeRanges(pinia),
     principalsStore,
   }), 1000 * 60);
 

@@ -30,6 +30,7 @@ const isStringWrapper = (arg: unknown): arg is StringWrapper =>
 export function stringValue(): undefined;
 export function stringValue(arg: undefined): undefined;
 export function stringValue(arg: StringValued): string;
+export function stringValue(arg?: StringValued): string|undefined;
 /** @param arg TBD. */
 export function stringValue(arg?: StringValued) {
   return isStringWrapper(arg) ? arg.value : arg;

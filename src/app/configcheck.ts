@@ -41,6 +41,8 @@ import $ from './jquery.ts';
 import * as Notification from './notification.ts';
 import * as Page from './page.ts';
 
+import { appNameTag } from 'variables.module.scss';
+
 /**
  * jQuery ready-callback used elsewhere.
  */
@@ -50,13 +52,16 @@ function documentReady() {
 
   $container.on('click', '#configrecheck', function() {
     console.info('Hello recheck');
+
     Page.loadPage({ template: 'maintenance/configcheck' }, true /* keepHistory */);
+
     return false;
   });
 
   let migrationDialogActive = false;
 
   const handleMigrations = async () => {
+
     if ($container.find('.config-check').length <= 0 || migrationDialogActive) {
       return;
     }
@@ -116,11 +121,15 @@ function documentReady() {
                 );
                 let redirectTimeout = 10;
                 const makeText = (timeout: number) => t(appName, 'Redirecting to the orchestra app in {timeout} seconds.', { timeout });
-                const toast = Notification.show(makeText(redirectTimeout));
+                const countDownId = `${appNameTag}-configcheck-countdown`;
+                const toast = Notification.showHtml(`<span id="${countDownId}">${makeText(redirectTimeout)}</span>`);
                 const second = 1000;
                 const notifier = setInterval(() => {
                   try {
-                    toast.toastElement!.firstChild!.textContent = makeText(--redirectTimeout);
+                    const countDownElement = document.getElementById(countDownId);
+                    if (countDownElement) {
+                      countDownElement.textContent = makeText(--redirectTimeout);
+                    }
                   } catch (e) {
                     console.error('TOAST ERROR', toast, e);
                   }
