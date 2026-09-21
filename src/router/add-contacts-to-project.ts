@@ -51,7 +51,7 @@ const addContactsToProjectsRoute: RouteRecordRaw = {
         name: to.name!,
         params: to.params,
         query: { ...to.query || {}, hash: from.query.hash },
-        replace: to.transition === 'replace',
+        replace: transition === 'replace',
       };
       return target;
     }

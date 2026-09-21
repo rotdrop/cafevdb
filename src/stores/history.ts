@@ -24,6 +24,7 @@
 import type { AxiosResponse } from '@nextcloud/axios';
 import type {
   HistoryState,
+  NavigationTransition,
   RouteLocationGeneric,
   RouteLocationNormalizedGeneric,
 } from 'vue-router';
@@ -44,6 +45,7 @@ import {
 import {
   isNavigationFailure,
   NavigationFailureType,
+  START_LOCATION,
   useRoute,
 } from 'vue-router';
 import {
@@ -77,14 +79,14 @@ export type HistoryAction = HistoryActionPush|HistoryActionReplace|HistoryAction
 export type Blah = Parameters<Parameters<VueRouterHistory['listen']>[0]>;
 export type Foo = Blah[2];
 
-type NavigationCallback = Parameters<VueRouterHistory['listen']>[0];
-type NavigationInformation = Parameters<NavigationCallback>[2];
-interface ExtendedNavigationInformation extends NavigationInformation {
-  to: Parameters<NavigationCallback>[0];
-  from: Parameters<NavigationCallback>[1];
-  fromPosition: number;
-  toPosition: number;
-}
+// type NavigationCallback = Parameters<VueRouterHistory['listen']>[0];
+// type NavigationInformation = Parameters<NavigationCallback>[2];
+// interface ExtendedNavigationInformation extends NavigationInformation {
+//   to: Parameters<NavigationCallback>[0];
+//   from: Parameters<NavigationCallback>[1];
+//   fromPosition: number;
+//   toPosition: number;
+// }
 
 export const isVueRouterHistoryState = (arg: HistoryState): arg is VueRouterHistoryState => (arg.position as number) >= 0;
 
@@ -252,18 +254,18 @@ export default defineStore(storeId, () => {
 
   const currentRoute = useRoute();
 
-  const navigationInformation = ref<Partial<ExtendedNavigationInformation>>({});
+  // const navigationInformation = ref<Partial<ExtendedNavigationInformation>>({});
 
-  vueRouterHistory.listen((to, from, info) => {
-    navigationInformation.value = {
-      to,
-      from,
-      fromPosition: vueRouterHistory.state.position - info.delta,
-      toPosition: vueRouterHistory.state.position,
-      ...info,
-    };
-    logger.info('HISTORY LISTENER', { ...navigationInformation.value });
-  });
+  // vueRouterHistory.listen((to, from, info) => {
+  //   navigationInformation.value = {
+  //     to,
+  //     from,
+  //     fromPosition: vueRouterHistory.state.position - info.delta,
+  //     toPosition: vueRouterHistory.state.position,
+  //     ...info,
+  //   };
+  //   logger.info('HISTORY LISTENER', { ...navigationInformation.value });
+  // });
 
   const saveTime = ref<number>(0);
   const modificationTime = ref<number>(0);
@@ -284,23 +286,6 @@ export default defineStore(storeId, () => {
   const atHistoryTop = computed(() => currentHistoryIndex.value === routerHistoryPositions.value.length - 1);
 
   const transitionType = ref<HistoryAction>('unknown');
-  const updateTransitionType = (): HistoryAction => {
-    if (
-      navigationInformation.value.toPosition === vueRouterHistory.state.position
-        && navigationInformation.value.fromPosition === currentHistoryPosition.value
-        && navigationInformation.value.from?.localeCompare(currentHistoryState.value.path) === 0
-        && navigationInformation.value.to?.localeCompare(vueRouterHistory.state.current) === 0
-    ) {
-      transitionType.value = HistoryActionPop;
-      navigationInformation.value = {}; // clear
-    } else if (vueRouterHistory.state.replaced) {
-      transitionType.value = HistoryActionReplace;
-    } else {
-      transitionType.value = HistoryActionPush;
-    }
-
-    return transitionType.value;
-  };
 
   const initialState: null|HistoryInitialState = getInitialState<HistoryInitialState>({
     section: 'historyPostData',
@@ -631,11 +616,17 @@ export default defineStore(storeId, () => {
    * @param route Current root.
    *
    * @param from Originating route, if any.
+   *
+   * @param routerTransition Route transition provided by hacked Vue router.
    */
-  function finishHistoryAction(route: RouteLocationNormalizedGeneric, from?: RouteLocationNormalizedGeneric) {
+  function finishHistoryAction(
+    route: RouteLocationNormalizedGeneric,
+    from?: RouteLocationNormalizedGeneric,
+    routerTransition?: NavigationTransition,
+  ) {
     const position = vueRouterHistory.state.position;
     const history = routerHistory.value;
-    const transition = updateTransitionType();
+    const transition = routerTransition ?? HistoryActionUnknown;
 
     logger.debug('ON HISTORY FINISH', {
       position,
@@ -1001,12 +992,13 @@ export default defineStore(storeId, () => {
   let inhibitRouterTransition = false;
 
   router.beforeEach((to, from, _next = () => {}, transition) => {
-    logger.trace('BEFORE EACH ROUTE CHANGE', {
-      to,
-      from,
+    logger.debug('BEFORE EACH ROUTE CHANGE', {
+      to: { ...to },
+      from: { ...from },
       transition,
-      windowHistory: { ...(window?.history?.state ?? {}) },
-      vueRouterHistory: { ...vueRouterHistory.state },
+      windowHistoryState: { ...(window?.history?.state ?? {}) },
+      vueRouterHistoryState: { ...vueRouterHistory.state },
+      inhibitRouterTransition,
     });
     if (inhibitRouterTransition) {
       // Note: just returning false would still initiate either a
@@ -1020,7 +1012,7 @@ export default defineStore(storeId, () => {
 
   // onError does catch anything __except__ routing errors.
   router.onError((error) => {
-    logger.debug('ROUTER ON ERROR HOOK', { error }, window?.history?.state);
+    logger.debug('ROUTER ON ERROR HOOK', { error, windowHistoryState: { ...(window?.history?.state ?? {}) } });
     if (error instanceof HistoryStoreNavigationInhibitRequest) {
       logger.debug('Honour inhibit navigation request.');
       settleMutationPromise(true);
@@ -1040,17 +1032,17 @@ export default defineStore(storeId, () => {
    * with any other abort handlers.
    */
   // router.onNavigationFailure((error: NavigationFailure) => {
-  router.afterEach((to, from, error, routerTransition) => {
+  router.afterEach((to, from, error, transition) => {
     logger.debug('AFTER EACH', {
-      routerTransition,
-      error: { ...(error ?? {}) },
       to: { ...to },
       from: { ...from },
+      error,
+      transition,
+      isStart: from === START_LOCATION,
     });
-    const transition = updateTransitionType();
-    if (transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated)) {
-      logger.debug('Finish history action on duplicated navigation.', { error });
-      finishHistoryAction(to, from);
+    if (!isNavigationFailure(error)
+      || (transition === HistoryActionPop && isNavigationFailure(error, NavigationFailureType.duplicated))) {
+      finishHistoryAction(to, from, transition);
     }
   });
 
@@ -1332,45 +1324,45 @@ export default defineStore(storeId, () => {
   });
 
   return {
-    logger: loggerRef,
-    errorHandler,
-    pushErrorHandler: errorHandlerProvider.pushHandler,
-    popErrorHandler: errorHandlerProvider.popHandler,
-    currentRoute,
-    routerHistory,
-    routerHistoryPositions,
-    currentHistoryPosition,
-    currentHistoryIndex,
-    currentHistoryState,
+    adjustDocumentTitle,
+    appendHistoryStack,
+    aquireMutationLock,
     atHistoryBase,
     atHistoryTop,
+    cancelHistoryAction, // abort with error
+    clearHistoryAction, // clear pending action without error
+    currentHistoryIndex,
+    currentHistoryPosition,
+    currentHistoryState,
+    currentRoute,
+    deleteHistoryState,
+    errorHandler,
+    finishHistoryAction,
+    lastUrlData,
+    lastUrlHash,
+    lastUrlPath,
+    loadHistoryData,
+    loadHistoryEntry,
+    loadHistoryState,
+    loadHistoryStates,
+    logger: loggerRef,
+    modificationTime,
     pendingHistoryAction,
+    popErrorHandler: errorHandlerProvider.popHandler,
+    pushErrorHandler: errorHandlerProvider.pushHandler,
+    pushHistoryStack,
+    ready,
+    releaseMutationLock,
+    replaceHistoryStack,
+    requestData,
+    routerHistory,
+    routerHistoryPositions,
+    saveHistoryData,
+    saveTime,
+    savedHistoryStates,
     scheduleHistoryAction,
     scheduleHistoryPush,
     scheduleHistoryReplace,
-    clearHistoryAction, // clear pending action without error
-    cancelHistoryAction, // abort with error
-    finishHistoryAction,
-    requestData,
-    lastUrlPath,
-    lastUrlHash,
-    lastUrlData,
-    saveHistoryData,
-    modificationTime,
-    saveTime,
-    savedHistoryStates,
-    loadHistoryData,
-    loadHistoryState,
-    loadHistoryStates,
-    loadHistoryEntry,
-    deleteHistoryState,
-    pushHistoryStack,
-    appendHistoryStack,
-    replaceHistoryStack,
-    adjustDocumentTitle,
-    aquireMutationLock,
-    releaseMutationLock,
-    ready,
     transitionType,
   };
 });

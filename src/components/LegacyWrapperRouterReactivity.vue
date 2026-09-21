@@ -62,7 +62,7 @@ import { PROJECT_EVENTS_LISTING_NAME } from '../router/calendar-routes.ts'
 import Console from '../util/console.ts'
 import { sanitizeTemplateParams } from '../util/legacy-post-data.ts'
 
-const COMPONENT_NAME = 'LegacyWrapperRouterReactivity'
+const COMPONENT_NAME = 'CAFEVDB LEGACY WRAPPER ROUTER REACTIVITY'
 const logger = new Console(COMPONENT_NAME)
 
 const template = ref('')
@@ -76,8 +76,6 @@ const noLegacyReload = ref(false)
 // access it vie useRoute()
 const currentRoute = useRoute()
 const router = useRouter()
-
-logger.debug('BEFORE ROUTE ENTER', { ...currentRoute }, { ...window?.history?.state })
 
 asyncSubscribe(PROJECT_EVENTS_LISTING, async (event) => {
   const location = {
@@ -154,12 +152,13 @@ onBeforeMount(() => {
 //   })
 // })
 
-const unregister = router.afterEach((to, from) => {
+const unregister = router.afterEach((to, from, _failure, transition) => {
   logger.debug('AFTER EACH', {
     to: { ...to },
     from: { ...from },
-    windowState: { ...(window?.history?.state || {}) },
+    windowHistoryState: { ...(window?.history?.state || {}) },
     route: { ...currentRoute },
+    transition,
   })
   if (!to.path.includes('--never--')
     && (to.name === 'legacy-page'
@@ -169,7 +168,11 @@ const unregister = router.afterEach((to, from) => {
 })
 
 onBeforeRouteLeave((to, from) => {
-  logger.debug('ON BEFORE ROUTE LEAVE', { ...to }, { ...from }, window?.history?.state)
+  logger.debug('ON BEFORE ROUTE LEAVE', {
+    to: { ...to },
+    from: { ...from },
+    windowHistoryState: { ...(window?.history?.state || {}) },
+  });
   unregister()
 })
 </script>
