@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022-2026 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,27 +22,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Controller\DTO;
+namespace OCA\CAFEVDB\Controller\DTO\SpecialProjectsResponse;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use OCA\CAFEVDB\Controller\EnumSpecialProjectsAction;
-use OCA\CAFEVDB\Controller\DTO\SpecialProjectsResponse\ConfirmFeedback;
 
 /**
- * DTO special projects config (members, executive board).
+ * DTO for communication prompts to the frontend.
  */
-class SpecialProjectsResponse extends MessagesResponse
+#[TSAttributes\InlineTypeScriptType]
+class ConfirmFeedback extends \OCA\CAFEVDB\Controller\DTO\ConfirmFeedback
 {
   /** {@inheritdoc} */
   public function __construct(
-    array $messages,
-    public readonly string $project,
-    public readonly int $projectId,
-    public readonly ?ConfirmFeedback $feedback,
-    public readonly ?string $newName,
-    /** @var array<ProjectOption> */
-    public readonly ?array $suggestions,
+    public readonly EnumSpecialProjectsAction $action,
+    string $title,
+    string $message,
   ) {
-    parent::__construct($messages);
+    parent::__construct(title: $title, message: $message);
   }
 
   /**
@@ -59,12 +57,10 @@ class SpecialProjectsResponse extends MessagesResponse
   {
     static::initKeys();
     extract($data);
-    if ($suggestions !== null) {
-      $suggestions = array_map(fn(array $projectOption) => ProjectOption::fromArray($projectOption), $suggestions);
-    }
-    if (is_array($feedback)) {
-      $feedback = ConfirmFeedback::fromArray($feedback);
-    }
-    return new self($messages, $project, $projectId, $feedback ?? null, $newName ?? null, $suggestions ?? null);
+    return new self(
+      action: EnumSpecialProjectsAction::get($action),
+      title: $title,
+      message: $message,
+    );
   }
 }

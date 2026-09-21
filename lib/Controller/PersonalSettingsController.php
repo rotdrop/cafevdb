@@ -825,6 +825,7 @@ class PersonalSettingsController extends Controller
         }
         $data['message'] = $this->l->t('Value for "%s" invalid: "%s".', [ $parameter, $value ]);
         return self::grumble($data);
+
       case 'memberProject':
       case 'executiveBoardProject':
         $realValue = Util::normalizeSpaces($value);
@@ -835,7 +836,7 @@ class PersonalSettingsController extends Controller
           'messages' => [],
           'project' =>  $currentProjectName,
           'projectId' => $currentProjectId,
-          'feedback' => false,
+          'feedback' => null,
           'newName' => '',
           'suggestions' => $this->projectService->projectOptions([ 'type' => 'permanent' ]),
         ];
@@ -843,12 +844,13 @@ class PersonalSettingsController extends Controller
           // erase current setting
           $this->deleteConfigValue($parameter);
           $this->deleteConfigValue($parameter.'Id');
-          $data['message'][] = $this->l->t('Erased config value for parameter "%s".', $parameter);
+          $data['messages'][] = $this->l->t('Erased config value for parameter "%s".', $parameter);
 
           // ask to also remove the project if applicable
           if (!empty($currentProjectId)
               && !empty($this->projectService->findById($currentProjectId))) {
-            $data['feedback']['Delete'] = [
+            $data['feedback'] = [
+              'action' => EnumSpecialProjectsAction::DELETE,
               'title' => $this->l->t('Delete old Project?'),
               'message' => $this->l->t(
                 'Delete old project "%s" (%d) and all its associated data?',
@@ -858,7 +860,8 @@ class PersonalSettingsController extends Controller
             $data['project'] = '';
             $data['projectId'] = null;
           }
-          return self::dataResponse($data);
+
+          return DTO\SpecialProjectsResponse::fromArray($data)->response();
         }
         if (empty($realValue)) {
           // silently ignore, just keep unconfigured
@@ -866,7 +869,7 @@ class PersonalSettingsController extends Controller
         }
         $newName = $this->projectService->sanitizeName($realValue);
         if ($newName !== $realValue) {
-          $data['message'][] = $this->l->t(
+          $data['messages'][] = $this->l->t(
             'Sanitized project name from "%s" to "%s".', [ $value, $newName ]);
         }
         $newProject = $this->projectService->findByName($newName);
@@ -876,7 +879,7 @@ class PersonalSettingsController extends Controller
 
         if ($newName !== $currentProjectName) {
           $this->setConfigValue($parameter, $newName);
-          $data['message'][] = $this->l->t(
+          $data['messages'][] = $this->l->t(
             '"%s" set to "%s".', [$parameter, $newName]);
         }
 
@@ -887,37 +890,39 @@ class PersonalSettingsController extends Controller
         if ($haveOldProject
             && empty($newProject)
             && $newName !== $currentProjectName) {
-          $data['feedback']['Rename'] = [
+          $data['feedback'] = [
+            'action' => EnumSpecialProjectsAction::RENAME,
             'title' => $this->l->t('Rename Project?'),
             'message' => $this->l->t(
               '"%s" project already exists, rename it from "%s" to "%s?',
               [ $this->l->t($parameter), $currentProjectName, $newName ]),
           ];
-          return self::dataResponse($data);
+
+          return DTO\SpecialProjectsResponse::fromArray($data)->response();
         }
 
         if (!empty($newProject)) {
           $data['project'] = $newName;
           $data['projectId'] = $newProject['id'];
-          $this->data['message'][] = $this->l->t(
+          $this->data['messages'][] = $this->l->t(
             '"%s" set to "%s".', [$parameter.'Id', $newProject['id'] ]);
           $this->setConfigValue($parameter.'Id', $newProject['id']);
           if ($newProject['type'] != Types\EnumProjectTemporalType::PERMANENT) {
             $newProject['type'] = Types\EnumProjectTemporalType::PERMANENT;
             $this->projectService->persistProject($newProject);
-            $this->data['message'][] = $this->l->t(
+            $this->data['messages'][] = $this->l->t(
               'Type of project "%s" set to "%s".', Types\EnumProjectTemporalType::PERMANENT);
           }
-          return self::dataResponse($data);
         } else {
-          $data['feedback']['Create'] = [
+          $data['feedback'] = [
+            'action' => EnumSpecialProjectsAction::CREATE,
             'title' => $this->l->t('Create project?'),
             'message' => $this->l->t(
               'A project with name "%s" does not exist, shall we create it?', $newName),
           ];
-          return self::dataResponse($data);
         }
-        break;
+        return DTO\SpecialProjectsResponse::fromArray($data)->response();
+
       case 'memberProjectValidate':
       case 'executiveBoardProjectValidate':
         $projectName = $value['projectName'];
@@ -989,6 +994,7 @@ class PersonalSettingsController extends Controller
         }
 
         return DTO\SpecialProjectsResponse::fromArray($data)->response();
+
       case 'memberProjectDelete':
       case 'executiveBoardProjectDelete':
         try {
@@ -1003,14 +1009,14 @@ class PersonalSettingsController extends Controller
                           : $this->l->t('Project "%s", id "%d" has been marked as disabled as it is still needed for financial book-keeping.', [
                             $projectName, $projectId ])),
           ];
-          return self::dataResponse($data);
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t('Failed to remove project "%s", id "%d".', [ $projectName, $projectId ]),
             prevous: $t,
           );
         }
-        break;
+        return DTO\SpecialProjectsResponse::fromArray($data)->response();
+
       case 'memberProjectRename':
       case 'executiveBoardProjectRename':
         $projectId = null;
@@ -1030,13 +1036,12 @@ class PersonalSettingsController extends Controller
           }
 
           $data = [
-            'message' => $this->l->t(
-              'Renamed project "%s" (%d) to "%s".',
-              [ $projectName, $project['id'], $newName ]),
+            'messages' => [
+              $this->l->t('Renamed project "%s" (%d) to "%s".', [ $projectName, $project['id'], $newName ]),
+            ],
             'project' => $newName,
             'projectId' => $projectId,
           ];
-          return self::dataResponse($data);
         } catch (Throwable $t) {
           throw new Exceptions\EnduserNotificationException(
             message: $this->l->t(
@@ -1046,7 +1051,8 @@ class PersonalSettingsController extends Controller
             previous: $t,
           );
         }
-        break;
+        return DTO\SpecialProjectsResponse::fromArray($data)->response();
+
       case EnumSimpleSettingsKey::PRESIDENT_USER_ID->value:
       case EnumSimpleSettingsKey::SECRETARY_USER_ID->value:
       case EnumSimpleSettingsKey::TREASURER_USER_ID->value:
