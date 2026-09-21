@@ -44,6 +44,13 @@ import router from '~/src/router/app-router.ts';
 import VueComponent from '~/src/components/ProjectActionsMenu.vue';
 import useErrorHandler from '~/src/stores/error-handler.ts';
 
+// this __is__ shitty:
+type MyVueComponent = (typeof VueComponent) & {
+  isOpen: () => boolean;
+  openMenu: (x?: number, y?: number) => Promise<unknown>;
+  closeMenu: () => Promise<unknown>;
+};
+
 vi.mock(import('@nextcloud/initial-state'), async (originalImport) => {
   const originalModule = await originalImport();
 
@@ -86,7 +93,7 @@ vi.mock(import('vue-router'), async (originalComponent) => {
 
 describe('ProjectActionsMenu component', () => {
 
-  let wrapper: ReturnType<typeof mount<typeof VueComponent>>;
+  let wrapper: ReturnType<typeof mount<MyVueComponent>>;
 
   beforeEach(() => {
     const pinia = createTestingPinia({ stubActions: [] });
@@ -132,11 +139,12 @@ describe('ProjectActionsMenu component', () => {
   });
 
   it('should expose open menu control functions', async () => {
-    expect(wrapper.vm.isOpen()).toBeFalsy();
-    await wrapper.vm.openMenu();
-    expect(wrapper.vm.isOpen()).toBeTruthy();
-    await wrapper.vm.closeMenu();
-    expect(wrapper.vm.isOpen()).toBeFalsy();
+    const vm = wrapper.vm as unknown as MyVueComponent;
+    expect(vm.isOpen()).toBeFalsy();
+    await vm.openMenu();
+    expect(vm.isOpen()).toBeTruthy();
+    await vm.closeMenu();
+    expect(vm.isOpen()).toBeFalsy();
   });
 
   // localVue.nextTick = new Promise(r => setTimeout(r, 0));
@@ -144,14 +152,15 @@ describe('ProjectActionsMenu component', () => {
   it(
     'should have links to project folders',
     async () => {
-      await wrapper.vm.openMenu();
+      const vm = wrapper.vm as unknown as MyVueComponent;
+      await vm.openMenu();
       let actionsWrappers = wrapper.findAllComponents<typeof NcActions>({ name: 'NcActions' });
       expect(actionsWrappers.length).toBe(1);
-      await wrapper.vm.closeMenu();
-      await wrapper.vm.openMenu(20, 20);
+      await vm.closeMenu();
+      await vm.openMenu(20, 20);
       actionsWrappers = wrapper.findAllComponents<typeof NcActions>({ name: 'NcActions' });
       expect(actionsWrappers.length).toBe(2);
-      const actionsWrapper: VueWrapper<typeof NcActions> = actionsWrappers.at(1); // the first one is a dummy dots provider
+      const actionsWrapper: VueWrapper<typeof NcActions> = actionsWrappers.at(1)!; // the first one is a dummy dots provider
       const popover: typeof NcPopover = actionsWrapper.findComponent<typeof NcPopover>({ name: 'NcPopover' }).vm;
       const contentHolder = popover.getPopoverContentElement();
       const anchors: HTMLAnchorElement[] = [];
