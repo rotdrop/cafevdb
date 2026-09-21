@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TableLoadCallback } from './pme-state.ts';
+import type { TableLoadCallback } from './pme.ts';
 
 import actionMenuHandlers from './action-menu.ts';
 import * as CAFEVDB from './cafevdb.ts';
@@ -87,8 +87,7 @@ const documentReady = function() {
   );
 
   CAFEVDB.addReadyCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
     $('input.alertdata.' + appPrefix('page')).each(function() {
       const title = $(this).attr('name');
       const text = $(this).attr('value')!;

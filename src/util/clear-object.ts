@@ -28,7 +28,7 @@
  *
  * @return The given object for convenience.
  */
-function clearObject(object: object) {
+function clearObject(object: Record<string|number|symbol, unknown>) {
   Object.keys(object).forEach(function(key) {
     delete object[key];
   });

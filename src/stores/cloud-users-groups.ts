@@ -24,6 +24,7 @@
 // Why is the following needed?
 import type { OCSResponse } from '@nextcloud/typings/ocs';
 import type { AxiosResponse } from 'axios';
+import type { ObjectEntries, ObjectKeys } from '../toolkit/types/type-traits.ts';
 import type Keyable from '../types/keyable.d.ts';
 import type { AnyPromise } from '../types/promise.d.ts';
 
@@ -223,11 +224,12 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
               this.groups[gid] = group;
             } else if (JSON.stringify(this.groups[gid]) !== JSON.stringify(group)) {
               // replace in order to keep the references from groups to user-details
-              for (const [key, value] of Object.entries(group)) {
+              for (const [key, value] of Object.entries(group) as ObjectEntries<typeof group>) {
                 if (oldGroup?.[key] !== value) {
+                  // @ts-expect-error 2322 What is this, why?????
                   oldGroup[key] = value;
                 }
-                for (const key of Object.keys(oldGroup)) {
+                for (const key of Object.keys(oldGroup) as ObjectKeys<typeof oldGroup>) {
                   if (group?.[key] === undefined) {
                     delete group[key];
                   }
@@ -261,11 +263,12 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
               // this.users[uid] = user;
             } else if (JSON.stringify(oldUser) !== JSON.stringify(user)) {
               // replace in order to keep the references from groups to user-details
-              for (const [key, value] of Object.entries(user as object)) {
+              for (const [key, value] of Object.entries(user) as ObjectEntries<typeof user>) {
                 if (oldUser?.[key] !== value) {
+                  // @ts-expect-error 2322 WHY ?????????????????????????
                   oldUser[key] = value;
                 }
-                for (const key of Object.keys(oldUser)) {
+                for (const key of Object.keys(oldUser) as ObjectKeys<typeof oldUser>) {
                   if (user?.[key]) {
                     delete user[key];
                   }

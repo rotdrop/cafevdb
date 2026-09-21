@@ -22,7 +22,7 @@
 import { getRequestToken as getToken } from '@nextcloud/auth';
 import $ from 'jquery';
 
-$(document).off('ajaxSend.nextcloud').on('ajaxSend.nextcloud', function(elm, xhr, settings) {
+$(document).off('ajaxSend.nextcloud').on('ajaxSend.nextcloud', function(_elm, xhr, settings) {
   if (settings.crossDomain === false) {
     xhr.setRequestHeader('requesttoken', getToken());
     xhr.setRequestHeader('OCS-APIREQUEST', 'true');

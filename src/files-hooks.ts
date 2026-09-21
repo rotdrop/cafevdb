@@ -46,7 +46,7 @@ import { translate as t } from '@nextcloud/l10n';
 import { basename } from 'path';
 import { nextTick as vueNextTick } from 'vue';
 import folderIcon from '../../../core/img/filetypes/folder.svg';
-import { EnumAddDocumentConflictAction, EnumFileUploadMode, EnumPersonalSettingsKey } from '../build/ts-types/php-modules/Controller.ts';
+import { EnumAddDocumentConflictAction, EnumFileUploadMode } from '../build/ts-types/php-modules/Controller.ts';
 import {
   DOCUMENT_ACTION_UPLOAD,
   FINANCE_TOPIC_INVOICES,

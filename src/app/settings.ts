@@ -26,7 +26,11 @@ import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { GetValueResult } from './simple-set-value.ts';
 
 import { translate as t } from '@nextcloud/l10n';
-import { EnumPersonalSettingsKey, EnumSettingsGetApp } from '../../build/ts-types/php-modules/Controller.ts';
+import {
+  EnumPersonalSettingsKey,
+  EnumSettingsGetApp,
+  EnumSpecialProjectsAction,
+} from '../../build/ts-types/php-modules/Controller.ts';
 import {
   BASE_PATH,
   END_POINT_APP_GET,
@@ -52,10 +56,12 @@ import { simpleSetHandler, simpleSetValueHandler } from './simple-set-value.ts';
 import * as WysiwygEditor from './wysiwyg-editor.ts';
 
 import '../legacy/nextcloud/jquery/showpassword.js';
+import 'jquery-ui/ui/keycode';
 import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/widgets/accordion';
 import 'jquery-ui/ui/widgets/tabs';
 import { hiddenCssClass } from 'variables.module.scss';
+import camelcase from 'camelcase';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
@@ -1123,17 +1129,15 @@ const afterLoad = function(container?: JQuery) {
             $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
           }
           if (data.feedback) {
-            const feedbackOptions = ['Create', 'Rename', 'Delete'];
-            for (const option of feedbackOptions) {
-              if (data.feedback[option]) {
+            for (const action of Object.values(EnumSpecialProjectsAction)) {
+              if (data.feedback.action === action) {
                 Dialogs.confirm(
-                  data.feedback[option].message,
-                  data.feedback[option].title,
+                  data.feedback.message,
+                  data.feedback.title,
                   function(decision: boolean) {
-                    data.feedback = decision;
                     if (decision === true) {
                       $.post(
-                        setAppUrl(name + option),
+                        setAppUrl(name + camelcase(action)),
                         {
                           value: {
                             project: data.project,
@@ -1145,16 +1149,16 @@ const afterLoad = function(container?: JQuery) {
                         .fail(function(xhr, status, errorThrown) {
                           Ajax.handleError(xhr, status, errorThrown);
                         })
-                        .done(function(data) {
-                          if (data.message) {
-                            data.message = Notification.messages(data.message, { timeout: 15 });
-                            msg.html(data.message.join('; ')).show();
+                        .done(function(data: DTO.SpecialProjectsResponse) {
+                          if (data.messages) {
+                            data.messages = Notification.messages(data.messages, { timeout: 15 });
+                            msg.html(data.messages.join('; ')).show();
                           }
                           if (data.suggestions) {
                             autocompleteProjects = data.suggestions.map((v: { name: string }) => v.name);
                             $specialMemberProjects.autocomplete('option', 'source', autocompleteProjects);
                           }
-                          if (data.projectid) {
+                          if (data.projectId) {
                             $('input[name="' + name + 'Create"]').prop('disabled', data.projectId > -1);
                           }
                         });

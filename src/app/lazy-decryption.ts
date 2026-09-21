@@ -37,7 +37,7 @@ import {
 } from './pme-selectors.ts';
 import { options as getOptions, refreshWidget } from './select-utils.ts';
 
-import { tooltipWideCssClass } from 'tooltips.scss';
+import { tooltipWideCssClass } from 'tooltips.module.scss';
 
 const cryptoCache: Record<string, UnsealedData> = {};
 
@@ -230,8 +230,16 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       .each(function() { replaceElementEncryptionPlaceholder($(this)); });
   });
   const batchJobs: Record<string, Record<string, BatchJob>> = {};
-  const batchOptions = {};
-  const batchInputs = {};
+  const batchOptions: Record<string, {
+    option: JQuery<HTMLOptionElement>;
+    select: JQuery<HTMLSelectElement>;
+  }> = {};
+  const batchInputs: Record<string, {
+    input: JQuery<HTMLInputElement>;
+    sealedData: string;
+    values: Record<string, unknown>;
+    hash: string;
+  }> = {};
   const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption') as JQuery<HTMLSelectElement>;
   $filters.each(function() {
     const $filter = $(this);
@@ -262,7 +270,7 @@ const lazyBatchDecryptValues = function($container: JQuery) {
       batchOptions[cryptoHash] = { select: $filter, option: $option };
     });
   });
-  const $inputs = $container.find(pmeInputSelector + '.lazy-decryption');
+  const $inputs = $container.find<HTMLInputElement>(pmeInputSelector + '.lazy-decryption');
   $inputs.each(function() {
     const $input = $(this);
     const metaData = getDataMetaData($input);
