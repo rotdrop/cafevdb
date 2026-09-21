@@ -36,7 +36,6 @@ import {
   PROJECT_REGISTRATION_CATEGORY,
   RECORD_ABSENCE_CATEGORY,
 } from '~/build/ts-types/php-modules/Service/EventsService.ts';
-import logger from '~/src/logger.ts';
 import {
   appTranslate,
   appTranslatePlural,
