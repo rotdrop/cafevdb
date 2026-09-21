@@ -29,6 +29,7 @@ import type {
 
 import { loadTranslations } from '@nextcloud/l10n';
 import { emit as asyncEmit } from '@rotdrop/async-nextcloud-event-bus';
+import { START_LOCATION } from 'vue-router';
 import { HISTORY_GO_REQUEST } from '../event-bus-events.ts';
 import Console from '../util/console.ts';
 
@@ -64,8 +65,6 @@ const ProjectEventsListing = async () => {
 
 const calendarSetup = async () => {
   // make sure the timezones are actually loaded
-  // @ts-expect-error 2307 blah
-  // import('@nextcloud/app-calendar/css/app-full.scss');
   import('../services/calendar-store-setup.ts')
     .then(({ default: calendarStoreSetup }) => calendarStoreSetup());
   // translations are probably not reactive, so we have to await their
@@ -121,13 +120,13 @@ const beforeCalendarRouteEnter: NavigationGuard = (to, from, _next = () => {}, t
       name: to.name!,
       params: to.params,
       query: { ...(to.query || {}), hash: from.query.hash },
-      replace: to.transition === 'replace',
+      replace: transition === 'replace',
     };
     return target;
   } else {
-    if (from.path === '/' && from.transition === 'unknown') {
+    if (from === START_LOCATION) {
       pushDepth = 1;
-    } else if (to.transition === 'push') {
+    } else if (transition === 'push') {
       ++pushDepth;
       logger.debug('PUSH DEPTH INCREASE', {
         pushDepth,
@@ -169,7 +168,7 @@ const calendarAppRoutes: RouteRecordRaw[] = [
     path: '--never--',
     name: 'CalendarView',
     component: () => true,
-    beforeEnter: (to, _from, _next = () => {}, transition) => {
+    beforeEnter: async (to, _from, _next = () => {}, transition) => {
       logger.debug('NEVER BEFORE ENTER', {
         to,
         _from,
@@ -177,7 +176,7 @@ const calendarAppRoutes: RouteRecordRaw[] = [
       });
       if (returnByPush && pushDepth > 0) {
         logger.debug('Try go back', pushDepth);
-        asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
+        await asyncEmit(HISTORY_GO_REQUEST, { level: -pushDepth });
         pushDepth = 0;
         return false;
       } else if (preCalendarRoute) {
@@ -188,13 +187,13 @@ const calendarAppRoutes: RouteRecordRaw[] = [
           // the push to --never-- to the previous page, but still
           // push to the history stack. So just keep the transition
           // type of the original target route.
-          replace: to.transition === 'replace',
+          replace: transition === 'replace',
         };
         preCalendarRoute = undefined;
         return target;
       } else {
         logger.error('No previous route defined');
-        return { name: 'home', replace: to.transition === 'replace' };
+        return { name: 'home', replace: transition === 'replace' };
       }
     },
   },
@@ -221,7 +220,7 @@ const projectEventsRoute: RouteRecordRaw = {
         name: to.name!,
         params: to.params,
         query: { ...(to.query || {}), hash: from.query.hash },
-        replace: to.transition === 'replace',
+        replace: transition === 'replace',
       };
       return target;
     } else {

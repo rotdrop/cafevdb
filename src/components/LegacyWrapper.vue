@@ -209,7 +209,7 @@ const props = withDefaults(defineProps<{
   hash: '',
   noLegacyReload: false,
 })
-const COMPONENT_NAME = 'LegacyWrapper'
+const COMPONENT_NAME = 'CAFEVDB LEGACY WRAPPER'
 const logger = new Console(COMPONENT_NAME)
 
 const showAppError = ref(false)

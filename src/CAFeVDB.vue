@@ -274,7 +274,11 @@ import {
   ref,
   watch,
 } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import {
+  isNavigationFailure,
+  useRoute,
+  useRouter,
+} from 'vue-router'
 import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import TextFieldWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import IconAppSettings from 'vue-material-design-icons/Cogs.vue'
@@ -720,23 +724,22 @@ router.beforeEach((to, from, _next = () => {}, transition) => {
     return
   }
   if (!history.pendingHistoryAction) {
-    history.scheduleHistoryAction(HistoryActionPush, to.params)
+    history.scheduleHistoryAction(transition ?? HistoryActionPush, to.params)
   }
 })
 
-router.afterEach((to, from, _failure, transition) => {
+router.afterEach((to, _from, failure, _transition) => {
   logger.debug('APP AFTER EACH ROUTE CHANGE', {
-    to,
-    from,
-    transition,
+    to: { ...to },
+    from: { ..._from },
+    transition: _transition,
     windowHistory: { ...window?.history?.state },
     historyReady: historyReady.value,
   })
-  if (!historyReady.value) {
+  if (!historyReady.value || isNavigationFailure(failure)) {
     return
   }
   pageTemplate.value = (to.params?.template as undefined | string) || 'home'
-  history.finishHistoryAction(to, from)
   // @todo: parse the query parameters, e.g.
   //
   // ?template=blah&foo=bar
