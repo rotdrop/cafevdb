@@ -29,7 +29,11 @@ $tooltipWideCssClass: tooltip-wide;
 $tooltipVeryWideCssClass: tooltip-verywide;
 $tooltipMostWideCssClass: tooltip-mostwide;
 
-div[role="tooltip"].tooltip {
+div[role="tooltip"].tooltip.#{$appNameTag} {
+
+  --bs-tooltip-bg: var(--color-main-background);
+  --bs-tooltip-color: var(--color-main-text);
+  --bs-tooltip-opacity: 1;
 
   padding: 0 !important; // undo style from core tooltip
 
