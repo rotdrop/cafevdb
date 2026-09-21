@@ -2165,7 +2165,7 @@ index a26e2b9..85c71a4 100644
  const pinia = createPinia()
  
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index fe60776..0e3a632 100644
+index fe60776..019b6e4 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 @@ -9,21 +9,21 @@ import { generateUrl } from '@nextcloud/router'
@@ -2205,6 +2205,24 @@ index fe60776..0e3a632 100644
  
  /**
   * This is a mixin for the editor. It contains common Vue stuff, that is
+@@ -630,7 +630,7 @@ export default {
+ 			const targetRouteName = getPrefixedRoute(this.$route?.name ?? 'CalendarView', 'CalendarView')
+ 
+ 			try {
+-				this.$router.push({
++				await this.$router.push({
+ 					name: targetRouteName,
+ 					params,
+ 				})
+@@ -1150,7 +1150,7 @@ export default {
+ 							closeToDate,
+ 						})
+ 						const params = { ...vm.$route.params, recurrenceId }
+-						vm.$router.replace({ name: vm.$route.name, params })
++						await vm.$router.replace({ name: vm.$route.name, params })
+ 					} catch (error) {
+ 						logger.debug(error)
+ 						vm.isError = true
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js
 index bf95603..717babc 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js
@@ -3279,9 +3297,27 @@ index be53e68..c681fc5 100644
  export default {
  	name: 'ContactsMenuAvailability',
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
-index 192cfda..30b664b 100644
+index 192cfda..639c413 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/EditFull.vue
+@@ -3,7 +3,7 @@
+   - SPDX-License-Identifier: AGPL-3.0-or-later
+ -->
+ 
+-<template>
++<template><div>
+ 	<NcModal
+ 		v-if="calendarObjectInstance"
+ 		v-model="showFullModal"
+@@ -352,7 +352,7 @@
+ 			:buttons="cancelButtons"
+ 			@update:open="showCancelDialog = $event" />
+ 	</NcModal>
+-</template>
++</div></template>
+ 
+ <script>
+ import IconCancel from '@mdi/svg/svg/cancel.svg?raw'
 @@ -383,29 +383,29 @@ import HelpCircleIcon from 'vue-material-design-icons/HelpCircleOutline.vue'
  import Delete from 'vue-material-design-icons/TrashCanOutline.vue'
  import Download from 'vue-material-design-icons/TrayArrowDown.vue'
