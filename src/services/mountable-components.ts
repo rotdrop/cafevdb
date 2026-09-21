@@ -24,17 +24,14 @@
 import type { App, Component, VNode } from 'vue';
 
 import { translate as t } from '@nextcloud/l10n';
-// import { pinia } from '../vue-app.ts';
 import { subscribe as asyncSubscribe } from '@rotdrop/async-nextcloud-event-bus';
 import {
-  // createApp,
   createVNode,
   render,
 } from 'vue';
 import { appName } from '../config.ts';
 import { GET_VUE_COMPONENT } from '../event-bus-events.ts';
 import * as MountableComponents from '../mountable-component-names.ts';
-// import router from '../router/app-router.ts';
 import { AppError } from '../toolkit/types/errors.ts';
 
 const vueComponents: Record<string, Component> = {};
@@ -42,13 +39,14 @@ const vueComponents: Record<string, Component> = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ExposedComponentProperties = undefined|null|number|string|Record<number|string, unknown>|((...args: any) => any)|VNode|HTMLElement;
 
-export type MountableComponent = {
+export type MountableComponent<T extends keyof MountableComponents.ComponentProps = keyof MountableComponents.ComponentProps> = {
   vNode?: VNode;
   element?: HTMLElement;
   parent?: HTMLElement;
   mount: (element: HTMLElement) => void;
   unmount: () => void;
   destroy: () => void;
+  props: MountableComponents.PropsData<T>;
   [x: string]: ExposedComponentProperties;
   [x: number]: ExposedComponentProperties;
 };
@@ -83,22 +81,16 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
       vueApp.component(event.name, vueComponent);
     }
     // obtain a new instance
-    // const instance = createApp(vueComponents[event.name], event.propsData);
-    // instance.use(router);
-    // instance.use(pinia);
-    // Object.assign(instance._context, vueApp);
-    // instance._context = vueApp._context;
     const vNode = createVNode(vueComponents[event.name], event.propsData);
     if (vueApp._context) {
       vNode.appContext = vueApp._context;
     }
     console.info('MOUNTABLE COMPONENT APP', {
       vueApp,
-      // instance,
       vNode,
     });
     // return instance;
-    return new Proxy<MountableComponent>(
+    return new Proxy<MountableComponent<typeof event.name>>(
       {
         vNode,
         element: undefined,
@@ -120,6 +112,7 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
         destroy() {
           this.vNode = undefined;
         },
+        props: event.propsData,
       },
       {
         set(target, property, value, receiver) {
@@ -127,7 +120,11 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
             return Reflect.set(target, property, value, receiver);
           }
           if (property in (vNode.component?.exposed ?? {})) {
-            return Reflect.set(vNode.component!.exposeProxy!, property, value);
+            throw new AppError(event, t(appName, 'Exposed property "{property}" is readonly.', { property: property as string }));
+            // return Reflect.set(vNode.component!.exposeProxy ?? vNode.component!.exposed!, property, value);
+          }
+          if (property === 'props') {
+            return Reflect.set(vNode, property, value);
           }
           return Reflect.set(target, property, value, receiver);
         },
@@ -136,7 +133,23 @@ export const provideMountableComponents = <T extends App>(vueApp: T) => {
             return Reflect.get(target, property, receiver);
           }
           if (property in (vNode.component?.exposed ?? {})) {
-            return Reflect.get(vNode.component!.exposeProxy!, property);
+            // Sometimes there is an expose proxy, sometimes not. Why?
+            if (vNode.component!.exposeProxy) {
+              return Reflect.get(vNode.component!.exposeProxy, property);
+            }
+            console.debug('NO EXPOSE PROXY???', {
+              event,
+              property,
+              vNode,
+            });
+            const exposed = vNode.component!.exposed![property as string];
+            if (typeof exposed === 'function') {
+              return exposed;
+            }
+            return exposed.__v_isRef === true ? exposed.value : exposed;
+          }
+          if (property === 'props') {
+            return Reflect.get(vNode, property);
           }
           return Reflect.get(target, property, receiver);
         },

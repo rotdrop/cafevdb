@@ -23,6 +23,7 @@
 
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
 import type { WIKI_POPUP } from '../event-bus-events.ts';
+import type { MountableComponent } from '../services/mountable-components.ts';
 
 import { awaitEmit } from '@rotdrop/async-nextcloud-event-bus';
 import { appName } from '../config.ts';
@@ -45,13 +46,7 @@ require('dokuwiki-jquery-popup.scss');
 //   }
 // }
 
-let dokuWikiWrapper: undefined|Vue & {
-  _props: {
-    wikiPage: string;
-    fullScreen?: boolean;
-  };
-  wikiIFrame: HTMLIFrameElement;
-};
+let dokuWikiWrapper: undefined|MountableComponent<typeof DOKU_WIKI_WRAPPER>;
 
 let wikiContentHeight = -1;
 
@@ -84,7 +79,7 @@ const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP]['arg'], r
     }
     $dialogHolder.dialog('close').remove();
     $dialogHolder = undefined;
-    dokuWikiWrapper?.$destroy();
+    dokuWikiWrapper?.destroy();
     dokuWikiWrapper = undefined;
   }
   if (!dokuWikiWrapper) {
@@ -94,19 +89,19 @@ const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP]['arg'], r
         wikiPage: post.wikiPage,
         fullScreen: false,
       },
-    });
+    }) as MountableComponent<'DokuWikiWrapper'>;
     if (!dokuWikiWrapper) {
       return;
     }
   } else {
     // this is supposedly illegal and also skips the consistency
     // checks, but maybe it just works ... ;)
-    dokuWikiWrapper._props.fullScreen = false;
-    dokuWikiWrapper._props.wikiPage = post.wikiPage;
+    dokuWikiWrapper.props!.fullScreen = false;
+    dokuWikiWrapper.props!.wikiPage = post.wikiPage;
   }
   if (!$dialogHolder || $dialogHolder.length === 0) {
     $dialogHolder = $('<div id="dokuwiki_popup" style="overflow:hidden;"><div></div></div>');
-    dokuWikiWrapper.$mount($dialogHolder.find('div')[0]);
+    dokuWikiWrapper.mount($dialogHolder.find('div')[0]);
   }
 
   $dialogHolder.cafevDialog({
@@ -126,36 +121,39 @@ const wikiPopup = async (post: AsyncNextcloudEvents[typeof WIKI_POPUP]['arg'], r
       dialogToBackButton($dialogHolder);
       const $dialogWidget = $dialogHolder.dialog('widget');
       const titleHeight = $dialogWidget.find('.ui-dialog-titlebar').outerHeight()!;
-      dokuWikiWrapper!.$on('iframe-loaded', (/* event */) => {
-        // console.debug('WIKI POPUP LOADED LISTENER', { event });
+      dokuWikiWrapper!.props.onIframeLoaded = (...args) => {
+        console.debug('WIKI POPUP LOADED LISTENER', { ...args });
         const newHeight = $dialogWidget.height()! - titleHeight;
         $dialogHolder.height(newHeight);
-      });
-      dokuWikiWrapper!.$on('iframe-resize', (event: ResizeObserverEntry) => {
+      };
+      dokuWikiWrapper!.props.onIframeResize = (event: ResizeObserverEntry) => {
         console.debug('WIKI POPUP RESIZE LISTENER', { event });
         const height = event.contentRect.height;
         if (height === wikiContentHeight || height === 0) {
           return;
         }
         wikiContentHeight = height;
+        const wikiIFrame = dokuWikiWrapper!.wikiIFrame as HTMLIFrameElement;
         console.debug('new height', {
           height,
           contentHeight: wikiContentHeight,
-          frameHeight: dokuWikiWrapper!.wikiIFrame.style.height,
+          frameHeight: wikiIFrame.style.height,
         });
         // $dialogHolder.contentHeight = height;
-        dokuWikiWrapper!.wikiIFrame.style.height = height + 'px';
+        wikiIFrame.style.height = height + 'px';
         $dialogHolder.height(height);
         $dialogWidget.height(height + titleHeight);
         const widgetHeight = $dialogWidget.outerHeight()!;
         const maxHeight = widgetHeight - titleHeight;
-        dokuWikiWrapper!.wikiIFrame.style['max-height'] = maxHeight + 'px';
+        wikiIFrame.style.maxHeight = maxHeight + 'px';
         $dialogHolder.height(maxHeight);
-      });
+      };
+      console.info('DW WRAPPER', { dokuWikiWrapper });
     },
     close() {
       modalizer(false);
-      dokuWikiWrapper!.$off(['iframe-loaded', 'iframe-resize']);
+      dokuWikiWrapper!.props.onIframeLoaded =
+        dokuWikiWrapper!.props.onIframeResize = undefined;
     },
   });
 };
