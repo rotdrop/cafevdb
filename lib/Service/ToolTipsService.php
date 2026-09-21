@@ -45,7 +45,7 @@ class ToolTipsService implements \ArrayAccess, \Countable
   public const PARAGRAPH = '<p class="tooltip-paragraph">';
   public const OPTION_HTML = 'html';
   public const DEFAULT_OPTIONS = [
-    self::OPTION_HTML => false,
+    self::OPTION_HTML => true,
   ];
   public const DEFAULT_KEY = 'default';
 
