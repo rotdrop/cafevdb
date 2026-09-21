@@ -33,7 +33,8 @@ import toolTipProvider from 'bootstrap/js/dist/tooltip.js';
 import { appName } from '../config.ts';
 import $ from './jquery.ts';
 
-require('tooltips.scss');
+import 'tooltips.scss';
+import { appNameTag } from 'variables.module.scss';
 
 type TooltipOptions = Tooltip.Options & {
   cssclass: string[];
@@ -75,7 +76,7 @@ const defaultOptions: Partial<TooltipOptions> = {
   fallbackPlacements: ['top', 'right', 'bottom', 'left'],
   boundary: 'clippingParents',
   timestamp: undefined,
-  //  delay: { show: 500, hide: 100000 },
+  // delay: { show: 500, hide: 100000 },
 };
 
 export type TooltipsStatistics = {
@@ -255,7 +256,6 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
     if (typeof optionsForAll.placement === 'string') {
       const words = optionsForAll.placement.split(' ');
       for (const word of words) {
-        // @ts-expect-error 2345 includes really should allow an arbitrary string
         if (Placements.includes(word)) {
           optionsForAll.placement = word as typeof Placements[number];
           break;
@@ -265,7 +265,7 @@ function cafevTooltip<T extends HTMLElement>(this: JQuery<T>, config?: Partial<T
     if (optionsForAll.cssclass && typeof optionsForAll.cssclass === 'string') {
       optionsForAll.cssclass = [optionsForAll.cssclass];
     }
-    optionsForAll.cssclass!.push('app-' + appName);
+    optionsForAll.cssclass!.push(appNameTag);
     // Iterator over individual element in order to pick up the
     // correct class-arguments. The setTimeout() hack is in order to
     // fake background jobs and keep the UI somewhat responsive.
