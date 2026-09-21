@@ -156,6 +156,10 @@ pre-build: php-scoper-install app-toolkit-stamp
 post-build:
 #	$(OCC) maintenance:mode --off
 	chmod g+rw $(ABSSRCDIR)/../../config/config.php
+	@if [ $$(npm list --parseable pinia|wc -l) -gt 1 ]; then\
+ echo -e "\nMultiple different versions of pinia are installed, this is likely to crash at runtime!\n" 1>&2;\
+ exit 1;\
+fi
 .PHONY: post-build
 
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
@@ -599,13 +603,13 @@ phpunitfilter:
 .PHONY: phpunitfilter
 
 #@private
-run-jest:
-	npm run jest
-.PHONY: run-jest
+run-jstest:
+	npm run test
+.PHONY: run-jstest
 
 #@@ Runs integration test for TypeScript code
-jest: dev-setup ts-app-config ts-types-files run-jest post-build
-.PHONY: jest
+jstest: dev-setup ts-app-config ts-types-files run-jstest post-build
+.PHONY: jstest
 
 #@private
 run-tide:
@@ -617,7 +621,7 @@ tide: dev-setup ts-app-config ts-types-files run-tide post-build
 .PHONY: tide
 
 #@@ Runs integration test for PHP and TypeScript code
-test: phpunit tide jest
+test: phpunit tide jstest
 .PHONY: test
 
 .PHONY: l10n
