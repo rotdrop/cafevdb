@@ -132,7 +132,7 @@ const open = ref(false)
 const referenceElement = ref<null|HTMLElement>(null)
 const triggerButton = ref<null|NcButtonType>(null)
 const positioned = ref(false)
-const cssClass = computed(() => appName + '-legacy-page-actions')
+const cssClass = computed(() => `${appName}-legacy-page-actions`)
 const showMenuCaption = computed(() => props.menuCaption && positioned.value)
 
 // watchers
