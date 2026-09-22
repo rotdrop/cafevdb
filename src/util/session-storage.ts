@@ -29,7 +29,7 @@ const COMPONENT_NAME = 'session-storage';
 const logger = new Console(COMPONENT_NAME);
 const browserStorage = getBuilder(appName).clearOnLogout().build();
 
-export const setItem = (key: string, data: unknown) => {
+export const setItem = <T>(key: string, data: T) => {
   try {
     browserStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
@@ -37,13 +37,13 @@ export const setItem = (key: string, data: unknown) => {
   }
 };
 
-export const getItem = (key: string) => {
+export const getItem = <T = unknown>(key: string) => {
   const data = browserStorage.getItem(key);
   if (!data) {
     return null;
   }
   try {
-    return JSON.parse(data);
+    return JSON.parse(data) as T;
   } catch (error) {
     logger.error('Unable to decode data.', { error, key, data });
     return null;
