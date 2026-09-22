@@ -243,11 +243,12 @@ export default defineStore(storeId, () => {
 
     // just convert _hash to hash.
     toJSON() {
-      return Object.fromEntries(
-        Object.entries(this).map(([key, value]) => key === '_hash' ? ['hash', value] : [key, value]),
-      );
+      return {
+        state: this.state,
+        hash: this.hash,
+        path: this.path,
+      };
     }
-
   }
 
   const routerHistory = ref<Record<number, RouterHistoryRecord>>({});
@@ -272,6 +273,13 @@ export default defineStore(storeId, () => {
   const updateModificationTime = () => {
     modificationTime.value = Date.now() / 1000.0;
   };
+
+  /**
+   * During history stack manipulation the vue router is bypassed. The
+   * respective code-paths set this flag in order to disable some
+   * consistency checks. The flag is reset in the afterEach call.
+   */
+  const vueRouterHistoryStateValid = ref(true);
 
   const currentHistoryPosition = ref<number>(vueRouterHistory.state.position);
   const routerHistoryPositions = computed(() => Object.keys(routerHistory.value).map((a) => +a).sort((a, b) => a - b));
@@ -334,9 +342,8 @@ export default defineStore(storeId, () => {
 
   const getSessionStorageHistoryData = (): HistoryPersistenceRecord|null => {
     try {
-      const historyData = SessionStorage.getItem(sessionStorageHistoryKey);
+      const historyData = SessionStorage.getItem<HistoryPersistenceRecord>(sessionStorageHistoryKey);
       logger.debug('GOT HISTORY DATA', JSON.stringify(historyData, undefined, 2));
-      // SessionStorage.removeItem(sessionStorageHistoryKey);
       return historyData;
     } catch (error) {
       logger.error('Unable to retrieve history data from the session storage', error);
@@ -432,7 +439,9 @@ export default defineStore(storeId, () => {
    * @param hash Hash value of request data. Recomputed if not provided.
    */
   function scheduleHistoryAction(action: HistoryAction, post: TemplatePostData, hash?: string): string {
-    const position = vueRouterHistory.state.position;
+    const position = vueRouterHistoryStateValid.value
+      ? vueRouterHistory.state.position
+      : window.history.length;
     pendingHistoryAction.value = action;
     pendingHistoryData.value = post || {};
     hash = pendingHistoryHash.value = hash || generatePostHash(pendingHistoryData.value);
@@ -450,7 +459,12 @@ export default defineStore(storeId, () => {
     if (action !== HistoryActionPop
         && currentHistoryPosition.value !== -1
         && oldHistoryPosition.value !== currentHistoryPosition.value) {
-      logger.trace('SCHEDULE HISTORY KEY MISMATCH', oldHistoryPosition.value, currentHistoryPosition.value);
+      logger.trace('SCHEDULE HISTORY KEY MISMATCH', {
+        oldHistoryPosition: oldHistoryPosition.value,
+        currentHistoryPosition: currentHistoryPosition.value,
+        length: window.history.length,
+        routerState: vueRouterHistory.state,
+      });
     }
     return pendingHistoryHash.value;
   }
@@ -742,7 +756,6 @@ export default defineStore(storeId, () => {
           );
         }
         removeHistoryTail();
-        const position = vueRouterHistory.state.position;
         history[position] = new RouterHistoryRecord({
           hash: pendingHistoryHash.value,
           post: pendingHistoryData.value,
@@ -788,7 +801,19 @@ export default defineStore(storeId, () => {
         break;
       }
       case HistoryActionPop: {
-        currentHistoryPosition.value = window.history?.state?.position ?? -1;
+        if (!routerHistoryPositions.value.includes(currentHistoryPosition)) {
+          logger.debug('ADDING CURRENT HISTORY POSITION TO HISTORY STORAGE');
+          history[position] = new RouterHistoryRecord({
+            post: {},
+            state: vueRouterHistory.state,
+            path: route.fullPath,
+          });
+          currentHistoryState.value.replaceState({
+            ...currentHistoryState.value.state,
+            forward: vueRouterHistory.state.current,
+          });
+        }
+        currentHistoryPosition.value = position;
         updateModificationTime();
         break;
       }
@@ -898,6 +923,7 @@ export default defineStore(storeId, () => {
     //   currentRequestData: { ...requestData[currentHistoryState.value.hash] },
     // }, undefined, 2));
     return {
+      modificationTime: modificationTime.value,
       position: currentHistoryPosition.value,
       requestData, // the post data proper
       history: routerHistory.value,
@@ -1033,6 +1059,7 @@ export default defineStore(storeId, () => {
    */
   // router.onNavigationFailure((error: NavigationFailure) => {
   router.afterEach((to, from, error, transition) => {
+    vueRouterHistoryStateValid.value = true;
     logger.debug('AFTER EACH', {
       to: { ...to },
       from: { ...from },
@@ -1122,13 +1149,16 @@ export default defineStore(storeId, () => {
       // So there is at least one additional state. Just install the
       // post-data and path into the current history state.
       currentHistoryState.value.replaceHash(entry);
-      currentHistoryState.value.replaceState(entry.state);
+      currentHistoryState.value.replaceState({
+        ...entry.state,
+        position: vueRouterHistory.state.position,
+      });
       if (entry.path !== entry.state.current) {
         logger.error('HISTORY STATE PATH MISMATCH', { entry });
         currentHistoryState.value.replacePath(entry.path);
       }
       // bypass routing
-      const windowHistoryState = { ...currentHistoryState.value.state, position: vueRouterHistory.state.position };
+      const windowHistoryState = { ...currentHistoryState.value.state };
       const url = generateAppUrl(entry.path.replace(/^\/+/, ''));
       logger.debug('REPLACE HISTORY STATE', {
         windowHistoryState: { ...(window?.history?.state ?? {}) },
@@ -1136,6 +1166,7 @@ export default defineStore(storeId, () => {
         url,
         newState: windowHistoryState,
       });
+      vueRouterHistoryStateValid.value = false;
       window.history.replaceState(windowHistoryState, '', url);
     }
 
@@ -1149,6 +1180,7 @@ export default defineStore(storeId, () => {
 
     if (positions.length > 0) {
       // we need to tweak the positions of the given chain
+      vueRouterHistoryStateValid.value = false;
       let counter = 0;
       const offset = currentHistoryPosition.value;
       const positionMap = Object.fromEntries(positions.map((position) => [position, (+offset + ++counter)])) as Record<number, number>;
@@ -1307,7 +1339,8 @@ export default defineStore(storeId, () => {
       vueRouterHistoryState: { ...vueRouterHistory.state },
     });
 
-    // try load history from session storage ...
+    // try load history from session storage ... we restore the
+    // history data if the user manually issued a page reload.
     const historyData = getSessionStorageHistoryData();
 
     ready.value = true;
@@ -1320,6 +1353,12 @@ export default defineStore(storeId, () => {
         entry.post = historyData.requestData[entry.hash];
       }
       replaceHistoryStack(historyData.history, historyData.position);
+    } else {
+      logger.debug('DISCARDING SESSION STORAGE HISTORY DATA', {
+        currentRoute: { ...currentRoute },
+        path: historyData?.history[historyData?.position]?.path,
+        historyData,
+      });
     }
   });
 
@@ -1364,5 +1403,6 @@ export default defineStore(storeId, () => {
     scheduleHistoryPush,
     scheduleHistoryReplace,
     transitionType,
+    vueRouterHistoryStateValid,
   };
 });
