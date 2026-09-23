@@ -32,7 +32,7 @@
     </template>
     <template #description>
       <span>
-        {{ t(appName, 'Please click on the ☰-button in order to open the navigation menu.') }}
+        {{ t(appName, 'Please click on the ◧-button in order to open the navigation menu.'}
         {{ t(appName, 'Please click on your avatar or initials (top-right) for logout and configuration options.') }}
       </span>
     </template>
