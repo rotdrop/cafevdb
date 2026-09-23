@@ -52,7 +52,7 @@
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
                     counterType="highlighted"
                     :forceDisplayActions="true"
-                    @click.prevent="pushRoute(mtime, state.position)"
+                    @click.prevent="pushRoute(mtime, `${state.position}`)"
         >
           <template #icon>
             <IconHistoryState />
@@ -110,41 +110,43 @@ and navigate to the last active view of the saved history.`)"
           </template>
         </NcListItem>
         <!-- .stop in order to prevent floating-vue to close the tooltip -->
-        <NcListItem v-for="(entry, key) in state.history"
-                    v-show="expandedState === mtime"
-                    :key="key"
-                    v-tooltip="{
-                      content: () => makePostDataTooltip(mtime, key),
-                      html: true,
-                      shown: isDataPopupShown(mtime, key),
-                      triggers: [],
-                    }"
-                    :bold="key === state.position"
+        <NcListItem v-for="(entry, position) in (expandedState === mtime ? state.history : {})"
+                    :key="position"
+                    :bold="+position === state.position"
                     :href="generateAppUrl(state.history[state.position].path.replace(/^\/+/, ''))"
                     :forceDisplayActions="true"
-                    @click.stop.prevent="pushRoute(mtime, key)"
+                    @click.stop.prevent="pushRoute(mtime, position)"
         >
           <template #icon>
-            <IconLinkPosition v-if="key === state.position" />
-            <IconLink v-else />
+            <component :is="position === `${state.position}` ? IconLinkPosition : IconLink" />
           </template>
           <template #name>
-            <span v-tooltip="key === state.position ? t(appName, 'Active page when the history was saved.') : undefined"
+            <span v-tooltip="position === `${state.position}` ? t(appName, 'Active page when the history was saved.') : undefined"
                   class="history-entry-name"
-                  :class="{ 'current-position': key === state.position }"
-            >{{ '' + key }}</span>
+                  :class="{ 'current-position': position === `${state.position}` }"
+            >{{ '' + position }}</span>
           </template>
           <template #subname>
-            <NcEllipsisedOption :name="pathDisplayName(entry)" />
+            <NcEllipsisedOption :name="pathDisplayName(entry)"
+                                v-tooltip="{
+                                  content: () => makePostDataTooltip(mtime, position),
+                                  loadingContent: t(appName, 'Loading form data, please wait ...'),
+                                  html: true,
+                                  shown: isDataPopupShown(mtime, position),
+                                  triggers: [],
+                                }"
+            />
           </template>
           <template #actions>
             <!-- .stop in order to prevent floating-vue to close the tooltip -->
-            <NcActionButton v-tooltip="t(appName, 'Show the raw data submitted to the server (expert use).')"
-                            @click.stop.prevent="toggleDataPopupShown(mtime, key)"
-            >
+            <NcActionButton @click.stop.prevent="toggleDataPopupShown(mtime, position)">
               <template #icon>
-                <IconViewData v-if="!isDataPopupShown(mtime, key)" />
-                <IconHideData v-else />
+                <IconViewData v-if="!isDataPopupShown(mtime, position)"
+                              v-tooltip="t(appName, 'Show the raw data submitted to the server (expert use).')"
+                />
+                <IconHideData v-else
+                              v-tooltip="t(appName, 'Hide the raw data submitted to the server.')"
+                />
               </template>
               {{ t(appName, 'Data-Record') }}
             </NcActionButton>
@@ -173,6 +175,7 @@ import {
   NcListItem,
   NcModal,
 } from '@nextcloud/vue'
+import vTooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip'
 import { v4 as uuidv4 } from 'uuid'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -226,10 +229,10 @@ const expandedState = ref<undefined|TimestampType>(undefined)
 
 const dataPopupShown = ref<undefined|string>(undefined)
 
-const isDataPopupShown = (mtime: TimestampType, key: string) => dataPopupShown.value === '' + mtime + key
+const isDataPopupShown = (mtime: TimestampType, position: number|`${number}`) => dataPopupShown.value === `${mtime}:${position}`
 
-const toggleDataPopupShown = (mtime: TimestampType, key: string) => {
-  dataPopupShown.value = isDataPopupShown(mtime, key) ? undefined : ('' + mtime + key)
+const toggleDataPopupShown = (mtime: TimestampType, position: `${number}`) => {
+  dataPopupShown.value = isDataPopupShown(mtime, position) ? undefined : (`${mtime}:${position}`)
 }
 
 const requestData: Record<string, TemplatePostData> = {}
@@ -238,26 +241,26 @@ const loading = ref(false)
 
 const router = useRouter()
 
-const loadPostData = async (timestamp: TimestampType, key: string) => {
-  if (historyData.value[timestamp].history[key].post) {
-    return historyData.value[timestamp].history[key].post
+const loadPostData = async (timestamp: TimestampType, position: `${number}`) => {
+  if (historyData.value[timestamp].history[position].post) {
+    return historyData.value[timestamp].history[position].post
   }
-  const entry = await history.loadHistoryEntry(timestamp, key)
+  const entry = await history.loadHistoryEntry(timestamp, position)
   if (entry) {
     requestData[entry.hash] = entry.post
-    historyData.value[timestamp].history[key].post = entry.post
+    historyData.value[timestamp].history[position].post = entry.post
   }
-  return historyData.value[timestamp].history[key].post
+  return historyData.value[timestamp].history[position].post
 }
 
-const pushRoute = async (timestamp: TimestampType, key: string) => {
-  const entry = historyData.value[timestamp].history[key]
-  const postData = await loadPostData(timestamp, key)
+const pushRoute = async (timestamp: TimestampType, position: `${number}`) => {
+  const entry = historyData.value[timestamp].history[position]
+  const postData = await loadPostData(timestamp, position)
   if (!postData) {
     return
   }
   logger.info('POST DATA', postData)
-  const resolved = router.resolve(entry.path, 'unknown')
+  const resolved = router.resolve(entry.path)
   logger.info('RESOLVED ROUTE', resolved)
   const params = sanitizePostData(Object.assign(postData, resolved.params))
   const location = {
@@ -269,7 +272,7 @@ const pushRoute = async (timestamp: TimestampType, key: string) => {
 }
 
 const ensurePostData = async (timestamp: TimestampType) => {
-  const promises = Object.keys(historyData.value[timestamp].history).map((key) => loadPostData(timestamp, key))
+  const promises = (Object.keys(historyData.value[timestamp].history) as `${number}`[]).map((key) => loadPostData(timestamp, key))
   await Promise.all(promises) // the attached error handler should catch all errors
   for (const entry of Object.values(historyData.value[timestamp].history)) {
     if (!entry.post) {
@@ -322,14 +325,15 @@ const deleteHistoryState = async (timestamp: TimestampType) => {
   const status = await history.deleteHistoryState(timestamp)
   if (status) {
     delete historyData.value[timestamp]
-    if (history.modificationTime === history.saveTime && timestamp === history.saveTime) {
+    if (history.modificationTime.toFixed(3) === history.saveTime.toFixed(3)
+      && timestamp === history.saveTime.toFixed(3)) {
       history.saveTime = 0
     }
   }
 }
 
-const makePostDataTooltip = async (timestamp: TimestampType, key: string) => {
-  const data = await loadPostData(timestamp, key)
+const makePostDataTooltip = async (timestamp: TimestampType, position: `${number}`) => {
+  const data = await loadPostData(timestamp, position)
   return data
     ? '<pre style="text-align:left;">' + JSON.stringify(data, undefined, 2) + '</pre>'
     : t(appName, 'No data coulde be found.')
