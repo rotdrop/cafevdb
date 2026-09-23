@@ -166,12 +166,10 @@ export interface HistoryPersistenceRecord<Mode extends FetchMode = 'deep'> {
   requestData: Mode extends 'deep' ? Record<string, TemplatePostData> : undefined|Record<string, TemplatePostData>;
 }
 
-type LoadHistoryDataType<T extends FetchAll|number, M extends string> =
+type LoadHistoryDataType<T extends FetchAll|`${number}`, M extends string> =
   T extends FetchAll
     ? (M extends FetchMode ? Record<number, HistoryPersistenceRecord<M>> : never)
-    : (M extends FetchMode
-      ? HistoryPersistenceRecord<M>
-      : RouterHistoryState<'deep'>);
+    : (M extends FetchMode ? HistoryPersistenceRecord<M> : RouterHistoryState<'deep'>);
 
 export default defineStore(storeId, () => {
   const errorHandlerProvider = useErrorHandler();
@@ -460,10 +458,12 @@ export default defineStore(storeId, () => {
         && currentHistoryPosition.value !== -1
         && oldHistoryPosition.value !== currentHistoryPosition.value) {
       logger.trace('SCHEDULE HISTORY KEY MISMATCH', {
+        routerStateValid: vueRouterHistoryStateValid.value,
         oldHistoryPosition: oldHistoryPosition.value,
         currentHistoryPosition: currentHistoryPosition.value,
         length: window.history.length,
-        routerState: vueRouterHistory.state,
+        routerState: { ...vueRouterHistory.state },
+        windowHistory: { ...(window.history?.state ?? {}) },
       });
     }
     return pendingHistoryHash.value;
@@ -854,7 +854,6 @@ export default defineStore(storeId, () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   axios.get<any, AxiosResponse<number[]>>(generateAppUrl(`${controllerBasePath}/${getTimestamps}`))
     .then((response) => {
-      // @todo: still toFixed() CHECK!
       savedHistoryStates.value = response.data.map((stamp) => +(+stamp).toFixed(3));
       logger.info('SAVE HISTORY STATES', {
         savedHistoryStates: savedHistoryStates.value,
@@ -869,7 +868,10 @@ export default defineStore(storeId, () => {
       errorHandler(error);
     });
 
-  const loadHistoryData = async <T extends FetchAll|number, M extends string>(timestamp: T, modeOrPosition: M): Promise<undefined|LoadHistoryDataType<T, M>> => {
+  const loadHistoryData = async <T extends FetchAll|`${number}`, M extends FetchMode|`${number}`>(
+    timestamp: T,
+    modeOrPosition: M,
+  ): Promise<undefined|LoadHistoryDataType<T, M>> => {
     const url = generateAppUrl(`${controllerBasePath}/{timestamp}/{modeOrPosition}`, {
       timestamp,
       modeOrPosition,
@@ -883,21 +885,19 @@ export default defineStore(storeId, () => {
         message = t(appName, 'Unable to load the available history states.');
       } else if (modeOrPosition === 'shallow' || modeOrPosition === 'deep') {
         message = t(appName, 'Unable to load the history states at time {time} (timestamp: {timestamp}).', {
-          time: moment((timestamp as number) * 1000).format('LLL'),
+          time: moment(+timestamp * 1000).format('LLL'),
           timestamp,
         });
       } else {
         message = t(appName, 'Unable to load the history state data for "{position}" at time {time} (timestamp: {timestamp}).', {
           position: modeOrPosition,
-          time: moment((timestamp as number) * 1000).format('LLL'),
+          time: moment(+timestamp * 1000).format('LLL'),
           timestamp,
         });
       }
       errorHandler(new HistoryStorePersistenceError(message, { cause: e }));
     }
   };
-
-  const loadHistoryState = (timestamp: number, modeOrPosition: FetchMode = 'shallow') => loadHistoryData(timestamp, modeOrPosition);
 
   function loadHistoryStates(): ReturnType<typeof loadHistoryData<'all', 'shallow'>>;
   function loadHistoryStates<M extends FetchMode>(mode: M): ReturnType<typeof loadHistoryData<'all', M>>;
@@ -907,7 +907,7 @@ export default defineStore(storeId, () => {
   function loadHistoryStates(mode: FetchMode = 'shallow') {
     return loadHistoryData('all', mode);
   }
-  const loadHistoryEntry = (timestamp: number, position: string) => loadHistoryData(timestamp, position);
+  const loadHistoryEntry = (timestamp: `${number}`, position: `${number}`) => loadHistoryData(timestamp, position);
 
   /**
    * Collect the current history state into one JSON serializatble
@@ -969,9 +969,9 @@ export default defineStore(storeId, () => {
    *
    * @param timestamp Unix timestamp in seconds.
    */
-  const deleteHistoryState = async (timestamp: number) => {
+  const deleteHistoryState = async (timestamp: `${number}`) => {
     const url = generateAppUrl(`${controllerBasePath}/{timestamp}`, { timestamp });
-    const time = moment(timestamp * 1000).format('LLL');
+    const time = moment(+timestamp * 1000).format('LLL');
 
     try {
       await axios.delete(url);
@@ -1382,7 +1382,6 @@ export default defineStore(storeId, () => {
     lastUrlPath,
     loadHistoryData,
     loadHistoryEntry,
-    loadHistoryState,
     loadHistoryStates,
     logger: loggerRef,
     modificationTime,
