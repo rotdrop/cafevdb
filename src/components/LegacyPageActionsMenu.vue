@@ -154,6 +154,15 @@ const openOverview = () => {
     template: props.template,
   })
 }
+
+let ignoreClosedEvent = false
+
+const nextFrame = () => {
+  return new Promise((resolve) => requestAnimationFrame(() => {
+    requestAnimationFrame(resolve)
+  }))
+}
+
 const setPosition = (x?: number, y?: number) => {
   if (x !== undefined && y !== undefined) {
     referenceElement.value!.style.position = 'fixed'
@@ -168,14 +177,6 @@ const setPosition = (x?: number, y?: number) => {
 
     positioned.value = false
   }
-}
-
-let ignoreClosedEvent = false
-
-const nextFrame = () => {
-  return new Promise((resolve) => requestAnimationFrame(() => {
-    requestAnimationFrame(resolve)
-  }))
 }
 
 const closeMenu = async () => {
@@ -295,7 +296,7 @@ onMounted(() => {
     width: 28px;
     height: 28px;
   }
-  .action-item.action-item--open.positioned {
+  .action-item.positioned {
     &, :deep(*) {
       width: 0 !important;
       height: 0 !important;
@@ -304,6 +305,7 @@ onMounted(() => {
       max-width: 0 !important;
       max-height: 0 !important;
       overflow: hidden;
+      visibility: hidden;
     }
   }
 }
