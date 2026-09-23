@@ -96,24 +96,6 @@ class WebBrowserHistoryEntry implements \ArrayAccess
     return $this;
   }
 
-  /** @return null|string */
-  public function getKey(): ?string
-  {
-    return $this->key ?? null;
-  }
-
-  /**
-   * @param string $key
-   *
-   * @return WebBrowserHistoryEntry
-   */
-  public function setKey(string $key): WebBrowserHistoryEntry
-  {
-    $this->key = $key;
-
-    return $this;
-  }
-
   /** @return ?int */
   public function getPosition(): ?int
   {

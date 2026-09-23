@@ -140,19 +140,19 @@ class WebBrowserHistoryState implements \ArrayAccess
   public function addEntry(WebBrowserHistoryEntry $entry):WebBrowserHistoryState
   {
     $entry->setState($this);
-    $this->stack->set($entry->getKey(), $entry);
+    $this->stack->set($entry->getPosition(), $entry);
 
     return $this;
   }
 
   /**
-   * @param ?string $key
+   * @param ?int $position
    *
    * @return null|WebBrowserHistoryEntry
    */
-  public function getEntry(?string $key): ?WebBrowserHistoryEntry
+  public function getEntry(?int $position): ?WebBrowserHistoryEntry
   {
-    return ($key !== null && $this->stack->containsKey($key)) ? $this->stack->get($key) : null;
+    return ($position !== null && $this->stack->containsKey($position)) ? $this->stack->get($position) : null;
   }
 
   /**
