@@ -1125,7 +1125,15 @@ SELECT t.* FROM " . $table . " t";
         } elseif (preg_match(self::CREATE_VIEW_REGEXP, $sql)) {
           $currentStatement = sprintf(self::REVOKE_SELECT, $key, $cloudDbUser);
           $this->logDebug('SQL ' . $currentStatement);
-          $this->connection->prepare($currentStatement)->executeQuery();
+          try {
+            $this->connection->prepare($currentStatement)->executeQuery();
+          } catch (DBALDriverException $e) {
+            $sqlState = $e->getSQLState();
+            $code = $e->getCode();
+            if ($sqlState === '42000' && $code === 1147) {
+              // ignore, the grant just does not exist
+            }
+          }
           $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $key);
         } else {
           $matches = null;
