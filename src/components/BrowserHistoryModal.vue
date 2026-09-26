@@ -127,14 +127,14 @@ and navigate to the last active view of the saved history.`)"
             >{{ '' + position }}</span>
           </template>
           <template #subname>
-            <NcEllipsisedOption :name="pathDisplayName(entry)"
-                                v-tooltip="{
+            <NcEllipsisedOption v-tooltip="{
                                   content: () => makePostDataTooltip(mtime, position),
                                   loadingContent: t(appName, 'Loading form data, please wait ...'),
                                   html: true,
                                   shown: isDataPopupShown(mtime, position),
                                   triggers: [],
                                 }"
+                                :name="pathDisplayName(entry)"
             />
           </template>
           <template #actions>
