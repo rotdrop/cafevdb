@@ -1046,7 +1046,7 @@ const exportEvents = async () => {
 }
 
 import('../services/calendar-store-setup.ts').then(async ({ default: calendarStoreSetup }) => {
-  const pinia = getActivePinia();
+  const pinia = getActivePinia()
   await calendarStoreSetup(pinia)
   calendarObjectInstanceStore = useCalendarObjectInstance(pinia)
   calendarObjectsStore = useCalendarObjects(pinia)

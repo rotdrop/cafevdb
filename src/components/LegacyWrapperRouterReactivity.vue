@@ -172,7 +172,7 @@ onBeforeRouteLeave((to, from) => {
     to: { ...to },
     from: { ...from },
     windowHistoryState: { ...(window?.history?.state || {}) },
-  });
+  })
   unregister()
 })
 </script>
