@@ -26,6 +26,7 @@ import type { ResponseData } from '../types/ajax/response-data.d.ts';
 import type { GetValueResult } from './simple-set-value.ts';
 
 import { translate as t } from '@nextcloud/l10n';
+import camelcase from 'camelcase';
 import {
   EnumPersonalSettingsKey,
   EnumSettingsGetApp,
@@ -61,7 +62,6 @@ import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/widgets/accordion';
 import 'jquery-ui/ui/widgets/tabs';
 import { hiddenCssClass } from 'variables.module.scss';
-import camelcase from 'camelcase';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('jquery-ui/themes/base/autocomplete.css');
