@@ -1,5 +1,5 @@
 diff --git a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
-index 60dff4b..1f0ad9d 100644
+index 60dff4b..ac8a557 100644
 --- a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
 +++ b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
 @@ -1,3 +1,5 @@
@@ -26,6 +26,21 @@ index 60dff4b..1f0ad9d 100644
      };
  
      const hasProto = (v, constructor, predicate) => {
+@@ -172,11 +166,12 @@
+       }
+     };
+ 
+-    var withEachContainedEditor = function (subject, callback) {
++  var withEachContainedEditor = function (subject, callback) {
++      var jq = getJquery();
+       subject.each(function (i, elem) {
+         for (var _a = 0, _b = getTinymce().get(); _a < _b.length; _a++) {
+           var editor = _b[_a];
+-          if ($.contains(elem, editor.getContentAreaContainer())) {
++          if (jq.contains(elem, editor.getContentAreaContainer())) {
+             if (callback(editor, elem, subject) === false) {
+               return false;
+             }
 diff --git a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js
 deleted file mode 100644
 index 457c8b1..0000000
