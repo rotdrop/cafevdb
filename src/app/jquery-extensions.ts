@@ -45,6 +45,9 @@ import 'jquery-ui/ui/widgets/mouse';
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/dialog';
 import 'jquery-ui/ui/widgets/resizable';
+// import 'jquery-ui/themes/base/theme.css';
+import 'jquery-ui/dist/themes/base/jquery-ui.css';
+import 'jquery-ui-fixes.scss';
 import { appNameTag } from 'variables.module.scss';
 
 /**

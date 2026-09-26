@@ -60,6 +60,8 @@ import 'jquery-ui/ui/keycode';
 import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/widgets/accordion';
 import 'jquery-ui/ui/widgets/tabs';
+import 'jquery-ui/dist/themes/base/jquery-ui.css';
+import 'jquery-ui-fixes.scss';
 import { hiddenCssClass } from 'variables.module.scss';
 import camelcase from 'camelcase';
 
