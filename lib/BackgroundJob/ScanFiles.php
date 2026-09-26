@@ -29,6 +29,8 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IDBConnection;
+use OCP\IUserManager;
+use OC\Files\SetupManager;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -49,6 +51,8 @@ class ScanFiles extends FilesAppScanFiles
     LoggerInterface $logger,
     IDBConnection $connection,
     ITimeFactory $time,
+    SetupManager $setupManager,
+    IUserManager $userManager,
   ) {
     parent::__construct(
       config: $config,
