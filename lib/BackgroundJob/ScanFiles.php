@@ -60,6 +60,8 @@ class ScanFiles extends FilesAppScanFiles
       logger: $logger,
       connection: $connection,
       time: $time,
+      setupManager: $setupManager,
+      userManager: $userManager,
     );
   }
 
