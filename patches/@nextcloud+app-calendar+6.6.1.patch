@@ -135,7 +135,7 @@ index 6814369..8bcd72e 100644
  const props = defineProps<{
  	config: AppointmentConfig
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue b/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
-index 24c7706..1bef291 100644
+index 1f4b2c0..bd9fae1 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/AppNavigation/CalendarList.vue
 @@ -4,7 +4,7 @@
@@ -761,12 +761,12 @@ index 37533b1..8d34504 100644
  export default {
  	name: 'AppointmentSlot',
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/CalendarGrid.vue b/node_modules/@nextcloud/app-calendar/src/components/CalendarGrid.vue
-index 573f68b..e17c29a 100644
+index e72a59e..0ed68f1 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/CalendarGrid.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/CalendarGrid.vue
-@@ -24,38 +24,38 @@ import { DateTimeValue } from '@nextcloud/calendar-js'
- import debounce from 'debounce'
+@@ -25,38 +25,38 @@ import debounce from 'debounce'
  import { mapState, mapStores } from 'pinia'
+ import { isNavigationFailure, NavigationFailureType } from 'vue-router'
  // Import event sources
 -import eventSource from '@/fullcalendar/eventSources/eventSource.js'
 +import eventSource from '../../src/fullcalendar/eventSources/eventSource.js'
@@ -1755,7 +1755,7 @@ index 2f57f95..6356fca 100644
  /**
   * Search and filter state for a list of rooms
 diff --git a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
-index 8a8301b..2f54a38 100644
+index 8a8301b..f2a237f 100644
 --- a/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
 +++ b/node_modules/@nextcloud/app-calendar/src/contactsMenu.js
 @@ -3,14 +3,14 @@
@@ -1763,7 +1763,7 @@ index 8a8301b..2f54a38 100644
   */
  
 -import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg'
-+import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg?raw'
++import CalendarBlankSvg from '@mdi/svg/svg/calendar-blank.svg?rawb'
  import { getRequestToken } from '@nextcloud/auth'
  import { translate as t } from '@nextcloud/l10n'
  import { linkTo } from '@nextcloud/router'
@@ -2165,7 +2165,7 @@ index a26e2b9..85c71a4 100644
  const pinia = createPinia()
  
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
-index fe60776..019b6e4 100644
+index fe60776..0e3a632 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 +++ b/node_modules/@nextcloud/app-calendar/src/mixins/EditorMixin.js
 @@ -9,21 +9,21 @@ import { generateUrl } from '@nextcloud/router'
@@ -2205,24 +2205,6 @@ index fe60776..019b6e4 100644
  
  /**
   * This is a mixin for the editor. It contains common Vue stuff, that is
-@@ -630,7 +630,7 @@ export default {
- 			const targetRouteName = getPrefixedRoute(this.$route?.name ?? 'CalendarView', 'CalendarView')
- 
- 			try {
--				this.$router.push({
-+				await this.$router.push({
- 					name: targetRouteName,
- 					params,
- 				})
-@@ -1150,7 +1150,7 @@ export default {
- 							closeToDate,
- 						})
- 						const params = { ...vm.$route.params, recurrenceId }
--						vm.$router.replace({ name: vm.$route.name, params })
-+						await vm.$router.replace({ name: vm.$route.name, params })
- 					} catch (error) {
- 						logger.debug(error)
- 						vm.isError = true
 diff --git a/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js b/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js
 index bf95603..717babc 100644
 --- a/node_modules/@nextcloud/app-calendar/src/mixins/PropertyLinksMixin.js
@@ -3372,7 +3354,7 @@ index 192cfda..639c413 100644
  export default {
  	name: 'EditFull',
 diff --git a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
-index f721add..8fb415a 100644
+index 549c82c..1dbfc13 100644
 --- a/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/views/EditSimple.vue
 @@ -327,25 +327,25 @@ import EditIcon from 'vue-material-design-icons/PencilOutline.vue'
