@@ -202,6 +202,7 @@ const appOptions: AppOptions = {
       { name: 'shared', minShareCount: 2, minSize: 70_000 },
       { name: 'common', entriesAware: true, entriesAwareMergeThreshold: 90_000, minSize: 70_000 },
       { name: 'vendor', test: /node_modules/ },
+      { name: 'toast-position', test: /toast-position.css/ },
       { name: 'remain' },
     ],
   },
