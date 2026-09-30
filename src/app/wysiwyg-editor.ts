@@ -45,7 +45,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
   switch (globalState.wysiwygEditor) {
     case 'ckeditor':
       console.debug('attach ckeditor');
-      import('@ckeditor/ckeditor5-build-classic')
+      import('./ckeditor-provider.ts')
         .then(({ default: ClassicEditor }) => {
           // this is a Gurkerei because jQuery is missing allSettled and
           // because ckeditor by default updates the textarea content
