@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020-2025, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Storage;
 use OCA\CAFEVDB\Wrapped\ZipStream\ZipStream;
 
 use OCP\IL10N;
+use OCP\IURLGenerator;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Exceptions;
@@ -48,15 +49,18 @@ class DatabaseStorageUtil
    *
    * @param EntityManager $entityManager The ...
    *
+   * @param IL10N $l Guess what.
+   *
    * @param ILogger $logger Cloud-logger.
    *
-   * @param IL10N $l Guess what.
+   * @param IURLGenerator $urlGenerator
    */
   public function __construct(
     protected string $appName,
     protected EntityManager $entityManager,
-    protected ILogger $logger,
     protected IL10N $l,
+    protected ILogger $logger,
+    protected IURLGenerator $urlGenerator,
   ) {
   }
 
@@ -93,7 +97,6 @@ class DatabaseStorageUtil
    */
   public function getDownloadLink($fileIdentifier, ?string $fileName = null):string
   {
-    $urlGenerator = \OC::$server->getURLGenerator();
     $queryParameters = [
       'requesttoken' => \OCP\Util::callRegister(),
       'fileName' => $fileName,
@@ -109,7 +112,7 @@ class DatabaseStorageUtil
         $items[] = $dirEntry->getId();
       }
 
-      $filesUrl = $urlGenerator->linkToRoute(
+      $filesUrl = $this->urlGenerator->linkToRoute(
         $this->appName.'.downloads.get', [
           'section' => DownloadsController::SECTION_DATABASE,
           'object' => DownloadsController::OBJECT_COLLECTION,
@@ -119,7 +122,7 @@ class DatabaseStorageUtil
       $file = $this->get($fileIdentifier);
       $id = $file->getId();
 
-      $filesUrl = $urlGenerator->linkToRoute(
+      $filesUrl = $this->urlGenerator->linkToRoute(
         $this->appName.'.downloads.get', [
           'section' => DownloadsController::SECTION_DATABASE,
           'object' => $id,
