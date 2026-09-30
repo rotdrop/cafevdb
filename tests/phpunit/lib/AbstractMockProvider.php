@@ -274,6 +274,7 @@ abstract class AbstractMockProvider
     self::$appContainer = $this->app->get(ContainerInterface::class);
     self::$appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
     \OC::$server->registerService(LoggerInterface::class, fn() => $this->logger);
+    unset(\OC::$server[\OC\L10N\Factory::class]);
     $appContainers = new ReflectionProperty(\OC\ServerContainer::class, 'appContainers')->getValue(\OC::$server);
     if (empty(self::$serverContainerSnapshot)) {
       self::$serverContainerSnapshot = self::snapshotContainer(\OC::$server);
