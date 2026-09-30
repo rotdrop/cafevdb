@@ -56,7 +56,10 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 // store output of different transformers in different files
 
-$excludes = [];
+$excludes = [
+  'lib/Toolkit/Backend',
+  'lib/Toolkit/Service/ArchiveService.php',
+];
 
 $scopedNamespaces = [
   \Doctrine::class,
