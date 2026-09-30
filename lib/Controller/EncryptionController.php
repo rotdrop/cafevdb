@@ -88,7 +88,7 @@ class EncryptionController extends OCSController
   #[Attributes\NoGroupMemberRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'GET',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . '/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
     defaults: [ 'userId' => null ],
   )]
@@ -129,7 +129,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'DELETE',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . '/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function deleteRecryptRequest(string $userId, bool $notifyUser = true):Response
@@ -232,7 +232,7 @@ class EncryptionController extends OCSController
   #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFEVDB\Settings\Admin::class)]
   #[CoreAttributes\ApiRoute(
     verb: 'POST',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . '/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function handleRecryptRequest(string $userId, bool $notifyUser = true, bool $allowFailure = false):Response
