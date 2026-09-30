@@ -470,10 +470,10 @@ class AsymmetricKeyService
       ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [ 'timestamp' => $requestData ])
       ->addAction($notification->createAction()
         ->setLabel(Notifier::ACCEPT_ACTION)
-        ->setLink('user_recrypt_request', 'POST'))
+        ->setLink('https://user_recrypt_request', 'POST'))
       ->addAction($notification->createAction()
         ->setLabel(Notifier::DECLINE_ACTION)
-        ->setLink('user_recrypt_request', 'DELETE'));
+        ->setLink('https://user_recrypt_request', 'DELETE'));
 
     /** @var OrganizationalRolesService $organizationalRoles */
     $organizationalRoles = $this->appContainer->get(OrganizationalRolesService::class);
@@ -547,7 +547,7 @@ class AsymmetricKeyService
     if ($allowProtest) {
       $notification->addAction($notification->createAction()
         ->setLabel(Notifier::PROTEST_ACTION)
-        ->setLink('user_recrypt_request', 'PUT'));
+        ->setLink('https://user_recrypt_request', 'PUT'));
     }
 
     $this->logInfo('PUSHING RECRYPTION DENIED ' . $ownerId . ', VALID ' . (int)$notification->isValid());
