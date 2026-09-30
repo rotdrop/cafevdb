@@ -344,6 +344,7 @@ class EncryptionController extends OCSController
   private function recryptForUser(string $userId):?string
   {
     $this->entityManager = $this->appContainer->get(EntityManager::class);
+    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     /** @var Entities\Musician $musician */
     $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUserId($userId);
     if (!empty($musician)) {
