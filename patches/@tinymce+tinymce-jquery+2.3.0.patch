@@ -1,5 +1,5 @@
 diff --git a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
-index 60dff4b..ac8a557 100644
+index 60dff4b..ffcf42d 100644
 --- a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
 +++ b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.js
 @@ -1,3 +1,5 @@
@@ -41,6 +41,122 @@ index 60dff4b..ac8a557 100644
              if (callback(editor, elem, subject) === false) {
                return false;
              }
+@@ -226,11 +221,11 @@
+               }
+             }, function (el) {
+               if (isFunction(valueOrProducer)) {
+-                var origValue = origAttrFn.call($(el), 'value');
++                var origValue = origAttrFn.call(jQuery(el), 'value');
+                 var newValue = valueOrProducer.call(el, i, origValue);
+-                origAttrFn.call($(el), 'value', newValue);
++                origAttrFn.call(jQuery(el), 'value', newValue);
+               } else {
+-                origAttrFn.call($(el), 'value', valueOrProducer);
++                origAttrFn.call(jQuery(el), 'value', valueOrProducer);
+               }
+             });
+           });
+@@ -282,7 +277,7 @@
+     };
+     var stringifyContent = function (origFn, content) {
+       var dummy = document.createElement('div');
+-      origFn.apply($(dummy), content);
++      origFn.apply(jQuery(dummy), content);
+       return dummy.innerHTML;
+     };
+     var patchJqPend = function (origFn, position) {
+@@ -310,7 +305,7 @@
+             var addition = contentStr(elm, oldContent);
+             ed.setContent(prepend ? addition + oldContent : oldContent + addition);
+           }, function (el) {
+-            return void origFn.apply($(el), args);
++            return void origFn.apply(jQuery(el), args);
+           });
+         });
+         return this;
+@@ -323,7 +318,7 @@
+             return withTinymceInstance(this[0], function (ed) {
+               return ed.getContent();
+             }, function (el) {
+-              return origFn.call($(el));
++              return origFn.call(jQuery(el));
+             });
+           }
+           return undefined;
+@@ -334,20 +329,20 @@
+               var htmlOrNode = isFunction(htmlOrNodeOrProducer) ? htmlOrNodeOrProducer.call(el, i, ed.getContent()) : htmlOrNodeOrProducer;
+               var html = isString(htmlOrNode) ? htmlOrNode : function () {
+                 if (isPrototypeOf(htmlOrNode)) {
+-                  removeEditors($(htmlOrNode));
++                  removeEditors(jQuery(htmlOrNode));
+                 }
+                 var elem = document.createElement('div');
+-                origFn.call($(elem), htmlOrNode !== null && htmlOrNode !== void 0 ? htmlOrNode : '');
++                origFn.call(jQuery(elem), htmlOrNode !== null && htmlOrNode !== void 0 ? htmlOrNode : '');
+                 return elem.innerHTML;
+               }();
+               ed.setContent(html);
+             }, function (elm) {
+               if (isFunction(htmlOrNodeOrProducer)) {
+-                var origValue = origFn.call($(el));
++                var origValue = origFn.call(jQuery(el));
+                 var newValue = htmlOrNodeOrProducer.call(el, i, origValue);
+-                origFn.call($(el), newValue);
++                origFn.call(jQuery(el), newValue);
+               } else {
+-                origFn.call($(elm), htmlOrNodeOrProducer !== null && htmlOrNodeOrProducer !== void 0 ? htmlOrNodeOrProducer : '');
++                origFn.call(jQuery(elm), htmlOrNodeOrProducer !== null && htmlOrNodeOrProducer !== void 0 ? htmlOrNodeOrProducer : '');
+               }
+             });
+           });
+@@ -363,7 +358,7 @@
+             out_1 += withTinymceInstance(el, function (ed) {
+               return ed.getContent({ format: 'text' });
+             }, function (elm) {
+-              return origFn.call($(elm));
++              return origFn.call(jQuery(elm));
+             });
+           });
+           return out_1;
+@@ -377,11 +372,11 @@
+               ed.setContent(dummy.innerHTML);
+             }, function (elm) {
+               if (isFunction(valueOrProducer)) {
+-                var origValue = origFn.call($(el));
++                var origValue = origFn.call(jQuery(el));
+                 var newValue = valueOrProducer.call(el, i, origValue);
+-                origFn.call($(el), newValue);
++                origFn.call(jQuery(el), newValue);
+               } else {
+-                origFn.call($(elm), valueOrProducer !== null && valueOrProducer !== void 0 ? valueOrProducer : '');
++                origFn.call(jQuery(elm), valueOrProducer !== null && valueOrProducer !== void 0 ? valueOrProducer : '');
+               }
+             });
+           });
+@@ -396,7 +391,7 @@
+             return withTinymceInstance(this[0], function (ed) {
+               return ed.getContent();
+             }, function (elm) {
+-              return origFn.call($(elm));
++              return origFn.call(jQuery(elm));
+             });
+           }
+           return undefined;
+@@ -408,11 +403,11 @@
+               ed.setContent(html);
+             }, function (elm) {
+               if (isFunction(valueOrProducer)) {
+-                var origValue = origFn.call($(el));
++                var origValue = origFn.call(jQuery(el));
+                 var newValue = valueOrProducer.call(el, i, origValue !== null && origValue !== void 0 ? origValue : '');
+-                origFn.call($(el), newValue);
++                origFn.call(jQuery(el), newValue);
+               } else {
+-                origFn.call($(elm), valueOrProducer !== null && valueOrProducer !== void 0 ? valueOrProducer : '');
++                origFn.call(jQuery(elm), valueOrProducer !== null && valueOrProducer !== void 0 ? valueOrProducer : '');
+               }
+             });
+           });
 diff --git a/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js b/node_modules/@tinymce/tinymce-jquery/dist/tinymce-jquery.min.js
 deleted file mode 100644
 index 457c8b1..0000000
