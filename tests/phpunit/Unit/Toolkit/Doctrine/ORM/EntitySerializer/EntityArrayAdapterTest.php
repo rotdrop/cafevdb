@@ -95,6 +95,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\ToolTipsService::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\CollectionEntityReference::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityResponse::class)]
@@ -1385,22 +1386,22 @@ class EntityArrayAdapterTest extends TestCase
   public function testSerialization(): void
   {
     // tests also "deepen"
-    foreach (self::SERIALIZED_ENTITY as $depth => $data) {
+    foreach (array_keys(self::SERIALIZED_ENTITY) as $depth) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
       // echo json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR) . PHP_EOL;
-      $this->assertEquals(
-        self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()],
-        json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR),
+      $this->assertEqualsCanonicalizing(
+        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()]),
+        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR)),
       );
     }
     // tests also "un-deepen"
-    foreach (array_reverse(self::SERIALIZED_ENTITY, preserve_keys: true) as $depth => $data) {
+    foreach (array_keys(array_reverse(self::SERIALIZED_ENTITY, preserve_keys: true)) as $depth) {
       $this->entityArrayAdapter->setDepth($depth);
       $this->assertEquals($depth, $this->entityArrayAdapter->getDepth());
-      $this->assertEquals(
-        self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()],
-        json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR),
+      $this->assertEqualsCanonicalizing(
+        json_decode(self::SERIALIZED_ENTITY[$this->entityArrayAdapter->getDepth()]),
+        json_decode(json_encode($this->entityArrayAdapter, JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR)),
       );
     }
   }

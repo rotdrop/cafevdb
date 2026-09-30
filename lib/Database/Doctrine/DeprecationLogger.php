@@ -68,7 +68,8 @@ class DeprecationLogger extends ConsoleLogger
   /** {@inheritdoc} */
   public function log($level, string|\Stringable $message, array $context = []): void
   {
-    $level = $this->isCLI ? LogLevel::WARNING : $this->logLevel;
+    // the unit tests install their own error handlers.
+    $level = ($this->isCLI && !defined('ROT_DROP_PHPUNIT')) ? LogLevel::WARNING : $this->logLevel;
     $this->actualLogger->log($level, $message, $context);
   }
 }

@@ -31,13 +31,14 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\Migrations as MigrationsNamespace;
-use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
+use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test integer overflow for Unix epoche after 2028. */
 #[Attributes\CoversClass(MigrationsNamespace\Version20260206193722::class)]
@@ -157,6 +158,20 @@ class Version20260206193722Test extends TestCase
   private const START_DATE = '20-01-2038';
   private const END_DATE = '27-01-2038';
 
+    /** {@inheritdoc} */
+  public function setup(): void
+  {
+    \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
+    error_reporting(E_ALL);
+    DeprecationException::throwOnDeprecations(exclude: '/Table::addColumn|OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+  }
+
+  /** @return void */
+  public function tearDown(): void
+  {
+    restore_error_handler();
+  }
+
   /** @return void */
   public function testVersion20260206193722(): void
   {
@@ -174,9 +189,10 @@ class Version20260206193722Test extends TestCase
       ->willReturn(DateTimeImmutable::createFromFormat('d-m-Y', self::START_DATE));
     $this->mockProvider->registerClassInstance(TimeFactory::class, $timeFactory, global: true);
 
+    $this->generateCalendarBackend();
+
     // up to the previous
     $this->applyMigrations(upToVersion: '20260131090857');
-    $this->generateCalendarBackend();
 
     /** @var EventsService $eventsService */
     $eventsService = $this->appContainer->get(EventsService::class);

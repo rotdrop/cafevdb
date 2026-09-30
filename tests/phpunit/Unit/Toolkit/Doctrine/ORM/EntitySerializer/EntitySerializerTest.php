@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /** Test the entity serializer with fake entities. */
+#[Attributes\CoversClass(EntitySerializer\CollectionEntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReferenceCollection::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityResponse::class)]

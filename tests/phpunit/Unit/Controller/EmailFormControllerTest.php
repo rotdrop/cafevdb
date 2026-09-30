@@ -112,6 +112,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\DefaultOptions::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Events\EncryptionServiceBound::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Exceptions\EnduserNotificationException::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Legacy\PhpMyEdit\PhpMyEdit::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\PageRenderer\PME\Config::class)]
@@ -297,12 +298,12 @@ class EmailFormControllerTest extends TestCase
           $share = $this->linkShares[$filesSharing]['share'];
           $dav = $this->linkShares[$filesSharing]['dav'];
         } else {
-          $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Helper::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
+          $token = $this->appContainer->get(ISecureRandom::class)->generate(\OC\Share\Constants::DEFAULT_TOKEN_LENGTH, ISecureRandom::CHAR_HUMAN_READABLE);
           $filesSharing = $this->urlGenerator->linkToRouteAbsolute('files_sharing.sharecontroller.showShare', ['token' => $token]);
           $dav = $this->urlGenerator->getAbsoluteURL('/public.php/dav/files/' . $token);
           $share = $this->createStub(\OCP\Share\IShare::class);
           $share->method('getNode')->willReturn($folder);
-          $share->method('getId')->willReturn($this->shareId++);
+          $share->method('getId')->willReturn((string)$this->shareId++);
           $share->method('getPassword')->willReturn($password);
           $share->method('getExpirationDate')->willReturn($expirationDate);
           $this->linkSharesByPath[$folder->getPath()] = $filesSharing;

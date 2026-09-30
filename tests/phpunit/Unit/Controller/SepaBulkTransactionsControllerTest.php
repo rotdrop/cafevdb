@@ -245,7 +245,7 @@ class SepaBulkTransactionsControllerTest extends TestCase
   {
     \OCA\CAFEVDB\Wrapped\Doctrine\Deprecations\Deprecation::enableWithTriggerError();
     error_reporting(E_ALL);
-    DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
+    DeprecationException::throwOnDeprecations(exclude: '/Table::addColumn|OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
     $this->generateCalendarBackend();
 

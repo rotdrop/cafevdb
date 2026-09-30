@@ -271,7 +271,7 @@ trait SetupCalendarBackendTrait
           return new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
             ->invoke($this->calDavBackend, self::$calendarObjects[$key]);
         }
-        echo new \Exception('')->getTraceAsString() . PHP_EOL;
+        echo new UnexpectedValueException('')->getTraceAsString() . PHP_EOL;
         echo 'NOT FOUND ' . $calendarId . ' ' . $objectUri . PHP_EOL;
         print_r(array_keys(self::$calendarObjects));
         return null;
@@ -283,11 +283,13 @@ trait SetupCalendarBackendTrait
         $calendarData,
         $calendarType = self::CALENDAR_TYPE_CALENDAR,
       ) {
-        $rowData = self::$calendarObjects["{$calendarId}-{$objectUri}"] ?? null;
-        $this->assertNotNull($rowData);
+        $oldRowData = self::$calendarObjects["{$calendarId}-{$objectUri}"] ?? null;
+        $this->assertNotNull($oldRowData);
         $extraData = $this->calDavBackend->getDenormalizedData($calendarData);
+        $oldObjectRow =  new ReflectionMethod(CalDavBackend::class, 'rowToCalendarObject')
+          ->invoke($this->calDavBackend, $oldRowData);
         $rowData = array_merge(
-          $rowData, // preserve the id
+          $oldRowData, // preserve the id
           [
             'calendarid' => $calendarId,
             'uri' => $objectUri,
@@ -312,6 +314,7 @@ trait SetupCalendarBackendTrait
           $this->calDavBackend->getCalendarById($calendarId),
           [],
           $objectRow,
+          $oldObjectRow,
           $etag,
         );
         \OCP\Server::get(\OCP\EventDispatcher\IEventDispatcher::class)->dispatchTyped($event);
