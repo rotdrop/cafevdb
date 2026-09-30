@@ -156,7 +156,7 @@ class EncryptionController extends OCSController
   #[Attributes\NoGroupMemberRequired]
   #[CoreAttributes\ApiRoute(
     verb: 'PUT',
-    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . 't/{userId}',
+    url: '/' . self::BASE_PATH . '/' . self::END_POINT_RECRYPT . '/{userId}',
     requirements: [ 'apiVersion' => 'v1' ],
   )]
   public function putRecryptRequest(string $userId):Response
