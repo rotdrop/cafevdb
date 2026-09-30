@@ -344,17 +344,17 @@ abstract class AbstractMockProvider
     $instance->method('getLoginCredentials')->willReturn(
       new class implements ILoginCredentials {
         /** {@inheritdoc} */
-        public function getUID()
+        public function getUID(): string
         {
           return AbstractMockProvider::CLOUD_USER_UID;
         }
         /** {@inheritdoc} */
-        public function getLoginName()
+        public function getLoginName(): string
         {
           return $this->getUID();
         }
         /** {@inheritdoc} */
-        public function getPassword()
+        public function getPassword(): string
         {
           return 'nothing';
         }
