@@ -200,13 +200,13 @@ class ArtifactsTest extends TestCase
     $this->mockProvider->registerClassInstance(UserStorage::class, $userStorage, global: true);
     $this->mockProvider->getUserSession()->method('isLoggedIn')->willReturn(true);
     $this->appContainer = $this->appContainer ?? $this->mockProvider->getAppContainer();
+    $this->generateCalendarBackend();
     /** @var EventsService $eventsService */
     $eventsService = $this->appContainer->get(EventsService::class);
     $this->mockProvider->registerClassInstance(EventsService::class, $eventsService, global: true);
 
     // up to the previous
     $this->applyMigrations(upToVersion: 'latest');
-    $this->generateCalendarBackend();
 
     $this->generateProjectParticipant(persist: true, delete: false);
     $this->generateInstruments(persist: true);
