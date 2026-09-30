@@ -41,6 +41,8 @@ require_once __DIR__ . '/../Service/AppInfoService.php';
  */
 abstract class AbstractApplication extends App implements IBootstrap
 {
+  public const APP_ROOT_FOLDER = 'appRootFolder';
+
   protected static ?ContainerInterface $appContainer = null;
 
   protected static ?string $appName;
@@ -92,6 +94,18 @@ abstract class AbstractApplication extends App implements IBootstrap
   /**
    * {@inheritdoc}
    *
+   * Dummy boot() method.
+   *
+   * @param IBootContext $context
+   */
+  public function boot(IBootContext $context): void
+  {
+    // nothing
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * Called earlier than boot, so anything initialized in the
    * "boot()" method must not be used here.
    */
@@ -101,5 +115,7 @@ abstract class AbstractApplication extends App implements IBootstrap
     if ((include_once $appFolderPath . '/vendor/autoload.php') === false) {
       throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
+
+    $context->registerService(self::APP_ROOT_FOLDER, fn($context) => $appFolderPath);
   }
 }
