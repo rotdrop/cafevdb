@@ -337,4 +337,10 @@ class SepaBankAccount implements \ArrayAccess
   {
     $this->sanitizeEncryptionContext($this->musician);
   }
+
+  /** {@inheritdoc} */
+  public function __toString(): string
+  {
+    return 'BankAccount ' . $this->musician->getPublicName() . ' (' . $this->bankAccountOwner . ') ' . $this->iban;
+  }
 }

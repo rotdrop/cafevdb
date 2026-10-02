@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2024, 2025 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,5 +69,11 @@ class EncryptedFileData extends FileData
     foreach (($this->file->getOwners()??[]) as $owner) {
       $this->sanitizeEncryptionContext($owner);
     }
+  }
+
+  /** {@inheritdoc} */
+  public function __toString(): string
+  {
+    return 'FILE DATA ' . $this->file->getBaseName();
   }
 }
