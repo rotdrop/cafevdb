@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\UserEncryptionService;
 
 /** AJAX end-points in order to support encryption. */
 #[TSAttributes\TypeScript]
@@ -63,15 +64,13 @@ class EncryptionController extends OCSController
   public const END_POINT_REVOKE = 'revoke';
   public const END_POINT_BULK_ENCRYPTION = 'bulk-recryption';
 
-  // @todo move this definition somewhere else
-  const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     $appName,
     IRequest $request,
     protected ContainerInterface $appContainer,
     private AsymmetricKeyService $keyService,
+    private UserEncryptionService $userEncrytptionService,
     protected ILogger $logger,
     protected IL10N $l,
   ) {
@@ -203,7 +202,7 @@ class EncryptionController extends OCSController
       $musician->setCloudAccountDeactivated(true);
       $musician->setCloudAccountDisabled(true);
       $this->flush();
-      $this->keyService->deleteSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY);
+      $this->keyService->deleteSharedPrivateValue($userId, UserEncryptionService::ROW_ACCESS_TOKEN_KEY);
       return new DataResponse([
         'userId' => $userId,
         'access' => 'revoked',
@@ -239,7 +238,7 @@ class EncryptionController extends OCSController
   {
     try {
       try {
-        $appEncryptionKey = $this->recryptForUser($userId);
+        $appEncryptionKey = $this->userEncrytptionService->recrypt($userId);
       } catch (Throwable $t) {
         if ($allowFailure) {
           return new DTO\UserRecryptionResponse(
@@ -248,7 +247,7 @@ class EncryptionController extends OCSController
             message: $t->getMessage(),
           )->response();
         }
-        throw $t;
+        throw new OCS\OCSBadRequestException($t->getMessage(), $t);
       }
 
       if ($notifyUser) {
@@ -325,7 +324,7 @@ class EncryptionController extends OCSController
         array_map(function(Entities\Musician $musician) use ($grantAccess) {
           try {
             $userId = $musician->getUserIdSlug();
-            $this->recryptForUser($userId);
+            $this->userEncrytptionService->recrypt($userId);
             return new DTO\UserRecryptionResponse(userId: $userId, status: $grantAccess ? EnumRecryptionStatus::GRANTED : EnumRecryptionStatus::REVOKED);
           } catch (Throwable $t) {
             $this->logException($t);
@@ -334,76 +333,6 @@ class EncryptionController extends OCSController
         }, $musicians)
       );
     }
-  }
-
-  /**
-   * @param string $userId
-   *
-   * @return null|string Encryption-key.
-   */
-  private function recryptForUser(string $userId):?string
-  {
-    $this->entityManager = $this->appContainer->get(EntityManager::class);
-    $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-    /** @var Entities\Musician $musician */
-    $musician = $this->getDatabaseRepository(Entities\Musician::class)->findByUserId($userId);
-    if (!empty($musician)) {
-      $accessToken = \random_bytes(Entities\MusicianRowAccessToken::HASH_LENGTH / 8);
-      $this->entityManager->beginTransaction();
-      try {
-        $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, $accessToken);
-        $tokenEntity = $musician->getRowAccessToken();
-        if (empty($tokenEntity)) {
-          $tokenEntity = new Entities\MusicianRowAccessToken($musician, $accessToken);
-          $this->persist($tokenEntity);
-        } else {
-          $tokenEntity->setAccessToken($accessToken)
-            ->setUserId($musician->getUserIdSlug());
-        }
-        $this->flush();
-        $this->entityManager->commit();
-      } catch (Throwable $t) {
-        $this->entityManager->rollback();
-        $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
-        $this->logException($t, 'Unable to set row access-token for user ' . $userId);
-        throw new OCS\OCSBadRequestException($this->l->t('Unable to set row access-token for user "%s".', $userId), $t);
-      }
-
-      // next we should try to recrypt all encrypted entities of the user ...
-      $encryptedEntities = [];
-      $encryptedEntities = array_merge($encryptedEntities, $musician->getSepaBankAccounts()->toArray());
-      /** @var Entities\EncryptedFile $encryptedFile */
-      foreach ($musician->getEncryptedFiles() as $encryptedFile) {
-        $encryptedEntities[] = $encryptedFile->getFileData();
-      }
-      try {
-        $this->entityManager->recryptEntityList($encryptedEntities);
-      } catch (Throwable $t) {
-        $this->logException($t, 'Unable to recrypt encrypted data for user ' . $userId);
-        throw new OCS\OCSBadRequestException($this->l->t('Unable to recrypt encrypted data for user "%s".', $userId), $t);
-      }
-    }
-
-    $appEncryptionKey = null;
-
-    /** @var AuthorizationService $authorizationService */
-    $authorizationService = $this->appContainer->get(AuthorizationService::class);
-    if ($authorizationService->getUserPermissions($userId) != AuthorizationService::PERMISSION_NONE) {
-      // set encryption key for this user
-      /** @var EncryptionService $encryptionService */
-      $encryptionService = $this->appContainer->get(EncryptionService::class);
-      if (!$encryptionService->encryptionKeyValid()) {
-        throw new OCS\OCSBadRequestException($this->l->t('Encryption key is invalid'));
-      }
-      try {
-        $appEncryptionKey = $encryptionService->getAppEncryptionKey();
-        $encryptionService->setUserEncryptionKey($appEncryptionKey, $userId);
-      } catch (Exceptions\EncryptionException $e) {
-        throw new OCS\OCSBadRequestException($this->l->t('Unable to set app-encryption-key for user "%s".', $userId), $e);
-      }
-    }
-
-    return $appEncryptionKey;
   }
 
   /**
