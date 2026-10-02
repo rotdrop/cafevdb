@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020-2025 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -426,7 +426,6 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           if (!$openingBalance) {
             $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
             $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
-            $this->logInfo('OVERVIEW ' . print_r($overview, true));
             /** @var Entities\DatabaseStorageFile $supportingDocument */
             $supportingDocument = $datum->getSupportingDocument();
             if (empty($supportingDocument)) {
@@ -440,9 +439,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
               $datum->setSupportingDocument($supportingDocument);
             } elseif (true || $updateStrategy == self::UPDATE_STRATEGY_REPLACE || $fee->toDecimal(2) != $datum->getOptionValue()) {
+              $file = $supportingDocument->getFile();
+              $this->loginfo('UPDATE SUPPORTING DOCUMENT ' . $musician->getId() . ' ' . $file->getId());
               $supportingDocument
                 ->setName($overviewFilename)
                 ->getFile()
+                ->addOwner($musician)
                 ->setFileName($overviewFilename)
                 ->setMimeType('application/pdf')
                 ->setSize(strlen($overviewLetter))
