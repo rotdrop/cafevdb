@@ -42,4 +42,4 @@
 [submodule "3rdparty/vuejs-router"]
 	path = 3rdparty/vuejs-router
 	url = git@github.com:rotdrop/vuejs-router.git
-	branch = main
+	branch = production/cafevdb
