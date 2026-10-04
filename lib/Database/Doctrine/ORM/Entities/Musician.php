@@ -1344,6 +1344,24 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * @param EncryptedFile $file
+   *
+   * @return Musician
+   */
+  public function addEncryptedFile(EncryptedFile $file): Musician
+  {
+    $fileId = $file->getId();
+    if (empty($fileId)) {
+      throw new RuntimeException('The file does not seem to have an id.');
+    }
+    if (!$this->encryptedFiles->containsKey($fileId)) {
+      $this->encryptedFiles->set($fileId, $file);
+      $file->addOwner($this);
+    }
+    return $this;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
