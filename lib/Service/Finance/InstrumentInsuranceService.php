@@ -285,7 +285,7 @@ class InstrumentInsuranceService
       $minDueDate = empty($minDueDate) ? $dueDate : min($dueDate, $minDueDate);
       $maxDueDate = empty($maxDueDate) ? $dueDate : max($dueDate, $maxDueDate);
 
-      $annualFee = $rate->getRate()->mul($insurance->getInsuranceAmount());
+      $annualFee = MonetaryNumberType::create($insurance->getInsuranceAmount())->mul($rate->getRate());
       $annualFee->mulEq($this->yearFraction($insuranceStart, $insuranceEnd, $dueDate));
 
       $fee->addEq($annualFee->mul($taxFactor));
@@ -473,9 +473,9 @@ class InstrumentInsuranceService
         continue;
       }
 
-      $amount = $insurance->getInsuranceAmount();
+      $amount = MonetaryNumberType::create($insurance->getInsuranceAmount());
       $fraction = $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
-      $annualFee = $rate->getRate()->mul($amount);
+      $annualFee = $amount->mul($rate->getRate());
 
       $instrumentHolder = $insurance->getInstrumentHolder();
       $instrumentHolderId = $instrumentHolder->getId();
@@ -574,7 +574,7 @@ class InstrumentInsuranceService
     // Prepare the data doing some translations first
     foreach ($overview['musicians'] as &$insurance) {
       foreach ($insurance['items'] as &$item) {
-        $item['scope'] = $this->l->t($item['scope']);
+        $item['scope'] = $item['scope']->t($this->l);
       }
     }
 
