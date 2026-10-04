@@ -512,7 +512,7 @@ trait ParticipantFieldsTrait
                     'participantFolder' => $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true),
                     'documentsFolders' => $this->getDocumentsFolderName(),
                     'supportingDocumentsFolder' => $this->getSupportingDocumentsFolderName(),
-                    'liabilitiesReceivablesFolder' => $fieldDataType == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
+                    'liabilitiesReceivablesFolder' => $field->getDataType() == FieldDataType::RECEIVABLES ? $this->getReceivablesFolderName() : $this->getLiabilitiesFolderName(),
                   ];
                   $participantFolder = $pathChain['participantFolder'];
 
