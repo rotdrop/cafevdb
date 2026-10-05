@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.2/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
          bootstrap="tests/phpunit/bootstrap.php"
          cacheDirectory=".phpunit.cache"
          displayDetailsOnPhpunitDeprecations="true"
-	 displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          displayDetailsOnSkippedTests="true"
-         executionOrder="depends,defects"
+         executionOrder="defects"
          failOnPhpunitDeprecation="true"
          failOnRisky="true"
          failOnWarning="true"
          requireCoverageMetadata="true"
          testdox="true"
->
+         resolveDependencies="true"
+  >
   <testsuites>
     <testsuite name="unit">
       <directory>tests/phpunit/Unit</directory>
