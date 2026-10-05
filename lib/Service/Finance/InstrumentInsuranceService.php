@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EntitySerializer\EntityArrayAdapter;
@@ -134,8 +135,7 @@ class InstrumentInsuranceService
     DateTimeInterface $insuranceStart,
     ?DateTimeInterface $insuranceEnd,
     DateTimeInterface $dueDate,
-  ): RationalNumber
-  {
+  ): RationalNumber {
     $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
     $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone);
@@ -407,10 +407,6 @@ class InstrumentInsuranceService
    *
    * @param null|DateTime $date Determines the insurance year.
    *
-   * @param null|string|Entities\InsuranceBroker $broker Short name (db id) or
-   * database entity or null. If null compute the fee for all brokers,
-   * otherwise only for the given one.
-   *
    * @return array
    */
   public function musicianOverview(
@@ -535,19 +531,21 @@ class InstrumentInsuranceService
     $billToParty = $overview['billTo'];
 
     $userIdSlug = $billToParty['userIdSlug'];
-    $camelCaseSlug = Util::dashesToCamelCase($userIdSlug, true, '_-.');
+
+    $dashes = ' _-.';
 
     $year = $overview['date']->format('Y');
 
     $components = [
-      $this->timeStamp(),
-      $billToParty['id'],
-      $camelCaseSlug,
-      strtolower($this->l->t('insurance')),
-      $year, $year + 1,
+      Util::dashesToCamelCase($this->l->t('Insurance Fee'), true, $dashes),
+      $year,
+      $year + 1,
     ];
+    if (!empty($overview['broker'])) {
+      $components[] = Util::dashesToCamelCase($overview['broker'], true, $dashes);
+    }
 
-    return implode('-', $components) . '.pdf';
+    return MusicianService::slugifyFileName(implode('-', $components) . '.pdf', $userIdSlug);
   }
 
   /**
