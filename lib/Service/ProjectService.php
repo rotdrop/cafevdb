@@ -124,13 +124,6 @@ class ProjectService
     private MusicianService $musicianService,
     private IEventDispatcher $eventDispatcher
   ) {
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->userStorage = $userStorage;
-    $this->participantFieldsService = $participantFieldsService;
-    $this->musicianService = $musicianService;
-    $this->eventDispatcher = $eventDispatcher;
-
     try {
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (Throwable $t) {
