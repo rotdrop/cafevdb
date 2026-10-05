@@ -129,6 +129,8 @@ class EntitySerializerTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
+    self::$uuidIndex = 0;
+
     /** @var MockProvider $mockProvider */
     $mockProvider = MockProvider::create($this);
 
@@ -182,6 +184,21 @@ class EntitySerializerTest extends TestCase
     $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
   }
+
+  /** @return void */
+  public function testNonMatchingCommonPrefix(): void
+  {
+    $this->entitySerializer->setCommonPrefix('Hutzli\\Putzli\\');
+    $this->entitySerializer->addEntity($this->musician);
+    $exportData = $this->entitySerializer->export();
+    json_encode($exportData, JSON_PRETTY_PRINT);
+    $this->assertInstanceOf(EntitySerializer\EntityResponse::class, $exportData);
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
+  }
+
 
   /** @return void */
   public function testExportWithShortNames(): void
