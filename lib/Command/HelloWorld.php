@@ -95,7 +95,7 @@ class HelloWorld
 
     if ($exception) {
       $output->writeln('<error>' . $this->l->t('Generating an artificial exception as requested.') . '</error>');
-      throw new Exception($this->l->t('This is an serious Exception!'));
+      throw new Exception($this->l->t('This is a serious Exception!'));
     }
 
     if (!$optionCheck) {
