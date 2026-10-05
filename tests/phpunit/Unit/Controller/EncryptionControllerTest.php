@@ -32,6 +32,7 @@ use OCP\IRequest;
 
 use OCA\CAFEVDB\Controller;
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFEVDB\Service\UserEncryptionService;
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\RotDrop\Tests\DeprecationException;
 
@@ -80,12 +81,13 @@ class EncryptionControllerTest extends TestCase
     $appContainer = $this->mockProvider->getAppContainer();
 
     $this->controller = new Controller\EncryptionController(
-      appName: $this->mockProvider->appName,
-      request: $request,
       appContainer: $appContainer,
+      appName: $this->mockProvider->appName,
       keyService: $appContainer->get(AsymmetricKeyService::class),
-      logger: $this->mockProvider->getLoggerInterface(),
       l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
+      request: $request,
+      userEncryptionService: $this->createStub(UserEncryptionService::class), // fix this when implementing real tests
     );
   }
 

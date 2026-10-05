@@ -70,7 +70,7 @@ class EncryptionController extends OCSController
     IRequest $request,
     protected ContainerInterface $appContainer,
     private AsymmetricKeyService $keyService,
-    private UserEncryptionService $userEncrytptionService,
+    private UserEncryptionService $userEncryptionService,
     protected ILogger $logger,
     protected IL10N $l,
   ) {
@@ -238,7 +238,7 @@ class EncryptionController extends OCSController
   {
     try {
       try {
-        $appEncryptionKey = $this->userEncrytptionService->recrypt($userId);
+        $appEncryptionKey = $this->userEncryptionService->recrypt($userId);
       } catch (Throwable $t) {
         if ($allowFailure) {
           return new DTO\UserRecryptionResponse(
@@ -324,7 +324,7 @@ class EncryptionController extends OCSController
         array_map(function(Entities\Musician $musician) use ($grantAccess) {
           try {
             $userId = $musician->getUserIdSlug();
-            $this->userEncrytptionService->recrypt($userId);
+            $this->userEncryptionService->recrypt($userId);
             return new DTO\UserRecryptionResponse(userId: $userId, status: $grantAccess ? EnumRecryptionStatus::GRANTED : EnumRecryptionStatus::REVOKED);
           } catch (Throwable $t) {
             $this->logException($t);
