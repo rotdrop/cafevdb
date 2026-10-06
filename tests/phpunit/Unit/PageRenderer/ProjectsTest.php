@@ -159,6 +159,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Service\SimpleSharingService::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\TranslatableTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\BackedEnumTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Toolkit\Traits\TranslatableEnumTrait::class)]
@@ -166,6 +167,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesTrait(\OCA\CAFEVDB\Traits\UserPreferencesTrait::class)]
 class ProjectsTest extends TestCase
 {
+  use \OCA\CAFEVDB\Tests\Unit\Database\Doctrine\EnableDeprecationsTrait;
   use \OCA\CAFEVDB\Tests\Unit\Maintenance\Migrations\SetupMigrationTrait;
   use \OCA\CAFEVDB\Tests\Unit\Service\SetupCalendarBackendTrait;
   use \OCA\CAFEVDB\Tests\Unit\Storage\MockUserStorageTrait;
@@ -183,13 +185,7 @@ class ProjectsTest extends TestCase
   /** {@inheritdoc} */
   public function setup(): void
   {
-    error_reporting(E_ALL);
-    DeprecationException::throwOnDeprecations(
-      exclude: '/'
-      . 'OCP\\\\IConfig\\:\\:(get|set|delete)AppValue'
-      . '|' . 'OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch'
-      . '/',
-    );
+    self::enableDeprecations(extraExclude: 'OCP\\\\EventDispatcher\\\\IEventDispatcher\\:\\:dispatch');
 
     $this->generateCalendarBackend();
 
