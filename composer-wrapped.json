@@ -36,7 +36,8 @@
     "phpunit/phpunit": "*",
     "psr/clock": "*",
     "psr/log": "^3.0.0",
-    "symfony/console": "^6.0.0"
+    "symfony/console": "^6.0.0",
+    "symfony/polyfill-php86": "*"
   },
   "repositories": [
     {
@@ -89,8 +90,7 @@
         "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
       },
       "doctrine/dbal": {
-        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch",
-        "Fix MariaDB default values for date(time) stuff": "../composer-patches/doctrine/dbal/fix-mariadb-datetime-defaults.patch"
+        "Fix Index::spansColumns() to also check the number of columns": "../composer-patches/doctrine/dbal/fix-index-spans-columns.patch"
       },
       "doctrine/migrations": {
         "Make the DependencyFactory extendable": "../composer-patches/doctrine/migrations/extendable-dependency-factory.patch",
