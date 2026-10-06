@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use SortDirection;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\PageRenderer\DatabaseTables;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
@@ -117,7 +119,7 @@ class SentEmail
    * @var Collection<string, SentEmail>
    */
   #[ORM\OneToMany(targetEntity: SentEmail::class, mappedBy: 'referencing', indexBy: 'message_id', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-  #[ORM\OrderBy(['bulkRecipients' => 'ASC'])]
+  #[ORM\OrderBy(['bulkRecipients' => SortDirection::Ascending])]
   private Collection $referencedBy;
 
   #[ORM\ManyToOne(targetEntity: SepaBulkTransaction::class, inversedBy: 'preNotificationEmails')]

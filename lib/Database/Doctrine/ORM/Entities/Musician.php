@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
 use Exception;
+use RuntimeException;
 
 use GenderDetector;
 
@@ -1356,7 +1357,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
     }
     if (!$this->encryptedFiles->containsKey($fileId)) {
       $this->encryptedFiles->set($fileId, $file);
-      $file->addOwner($this);
+      if ($this->getId() !== null) {
+        $file->addOwner($this);
+      }
     }
     return $this;
   }
@@ -1735,6 +1738,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     $this->email = strtolower($this->email);
     $this->prePersistUuid();
+  }
+
+  /**
+   * The id of this entity is note available before it has been persisted. So
+   * update any needed file-ownership updates after being persisted.
+   *
+   * @return void
+   */
+  #[ORM\PostPersist]
+  public function postPersist(): void
+  {
+    /** @var EncryptedFile $file */
+    foreach ($this->encryptedFiles as $file) {
+      $file->addOwner($this);
+    }
   }
 
   /** {@inheritdoc} */

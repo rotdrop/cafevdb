@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 /**
@@ -300,14 +301,13 @@ trait EntityManagerTrait
    *
    * @param mixed    $id          The identifier.
    *
-   * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
-   *                              or NULL if no specific lock mode should be used
-   *                              during the search.
+   * @param LockMode $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants.
+   *
    * @param int|null $lockVersion The lock version.
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function find(mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
+  protected function find(mixed $id, LockMode $lockMode = LockMode::NONE, ?int $lockVersion = null)
   {
     return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
@@ -319,14 +319,13 @@ trait EntityManagerTrait
    *
    * @param mixed    $id          The identifier.
    *
-   * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
-   *                              or NULL if no specific lock mode should be used
-   *                              during the search.
+   * @param LockMode $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants.
+   *
    * @param int|null $lockVersion The lock version.
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function findEntity(string $entityClassName, mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
+  protected function findEntity(string $entityClassName, mixed $id, LockMode $lockMode = LockMode::NONE, ?int $lockVersion = null)
   {
     if (filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
       $id = [ 'id' => $id ];

@@ -9,6 +9,7 @@ return [
   'prefix' => 'OCA\\CAFEVDB\\Wrapped',
   'exclude-classes' => [
     'OC',
+    'SortDirection',
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
@@ -19,6 +20,9 @@ return [
     // 'OC',
     //'OCA',
     //'OCP',
+  ],
+  'exclude-files' => [
+    './symfony/polyfill-php86/Resources/stubs/SortDirection.php',
   ],
   // By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
   // directory. You can however define which files should be scoped by defining a collection of Finders in the

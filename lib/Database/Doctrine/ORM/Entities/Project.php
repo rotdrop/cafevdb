@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
+use SortDirection;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
@@ -116,7 +117,7 @@ class Project implements \ArrayAccess
    * @todo This does not work well with _AT_Gedmo\Translatable
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
-  #[ORM\OrderBy(['displayOrder' => 'DESC'])]
+  #[ORM\OrderBy(['displayOrder' => SortDirection::Descending])]
   private Collection $participantFields;
 
   /** @var Collection<ProjectParticipantFieldDatum> */
@@ -443,7 +444,7 @@ class Project implements \ArrayAccess
     if ($this->participantFields instanceof \OCA\CAFEVDB\Wrapped\Doctrine\ORM\PersistentCollection) {
       $this->participantFields->initialize();
     }
-    $fields = $this->participantFields->matching(Criteria::create(true)->orderBy(['tab' => Order::Ascending, 'displayOrder' => Order::Descending]));
+    $fields = $this->participantFields->matching(Criteria::create()->orderBy(['tab' => Order::Ascending, 'displayOrder' => Order::Descending]));
     if ($participationContext != Types\EnumParticipationContext::UNRESTRICTED) {
       $fields = $fields->filter(function(ProjectParticipantField $field) use ($participationContext) {
         $context = $field->getParticipationContext();

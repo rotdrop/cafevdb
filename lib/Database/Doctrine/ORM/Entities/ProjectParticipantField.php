@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use InvalidArgumentException;
-
 use DateTimeInterface;
+use InvalidArgumentException;
+use SortDirection;
 
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -91,7 +91,7 @@ class ProjectParticipantField implements \ArrayAccess
    * @var Collection<UuidInterface, ProjectParticipantFieldDataOption>
    */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDataOption::class, mappedBy: 'field', indexBy: 'key', cascade: ['persist'], orphanRemoval: true)]
-  #[ORM\OrderBy(['label' => 'ASC', 'key' => 'ASC'])]
+  #[ORM\OrderBy(['label' => SortDirection::Ascending, 'key' => SortDirection::Ascending])]
   #[Gedmo\SoftDeleteableCascade(delete: true, undelete: true)]
   private Collection $dataOptions;
 

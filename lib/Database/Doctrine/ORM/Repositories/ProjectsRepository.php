@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Toolkit\Doctrine\ORM\EnumOrderByOptions;
 
 /** Entity repository for projects. */
 class ProjectsRepository extends EntityRepository
@@ -44,8 +45,8 @@ class ProjectsRepository extends EntityRepository
   public function findAll():array
   {
     return $this->findBy([], [
-      'year' => 'DESC',
-      'name' => 'ASC'
+      'year' => EnumOrderByOptions::DESC,
+      'name' => EnumOrderByOptions::ASC,
     ]);
   }
 

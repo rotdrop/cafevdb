@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use DateTimeInterface;
+use SortDirection;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -61,7 +62,7 @@ class WebBrowserHistoryState implements \ArrayAccess
 
   /** @var Collection<string, WebBrowserHistoryEntry> */
   #[ORM\OneToMany(targetEntity: WebBrowserHistoryEntry::class, mappedBy: 'state', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'position', fetch: 'EXTRA_LAZY')]
-  #[ORM\OrderBy(['position' => 'ASC'])]
+  #[ORM\OrderBy(['position' => SortDirection::Ascending])]
   protected Collection $stack;
 
   #[ORM\JoinColumn(name: 'pos_state_id', referencedColumnName: 'state_id', nullable: true)]

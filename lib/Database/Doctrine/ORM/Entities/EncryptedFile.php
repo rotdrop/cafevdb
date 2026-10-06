@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /** File with encrypted data. */
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EncryptedFilesRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class EncryptedFile extends File
 {
   /**
@@ -75,7 +76,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function setOwners(Collection $owners):EncryptedFile
+  public function setOwners(Collection $owners): EncryptedFile
   {
     $this->owners = $owners;
 
@@ -87,7 +88,7 @@ class EncryptedFile extends File
    *
    * @return Collection
    */
-  public function getOwners():Collection
+  public function getOwners(): Collection
   {
     return $this->owners;
   }
@@ -99,7 +100,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function addOwner(Musician $musician):EncryptedFile
+  public function addOwner(Musician $musician): EncryptedFile
   {
     $musicianId = $musician->getId();
     if (empty($musicianId)) {
@@ -107,9 +108,26 @@ class EncryptedFile extends File
     }
     if (!$this->owners->containsKey($musicianId)) {
       $this->owners->set($musicianId, $musician);
-      $musician->addEncryptedFile($this);
+      if ($this->getId() !== null) {
+        $musician->addEncryptedFile($this);
+      }
     }
     return $this;
+  }
+
+  /**
+   * The id of this entity is note available before it has been persisted. So
+   * update any needed file-ownership updates after being persisted.
+   *
+   * @return void
+   */
+  #[ORM\PostPersist]
+  public function postPersist(): void
+  {
+    /** @var Musician $owner */
+    foreach ($this->owners as $owner) {
+      $owner->addEncryptedFile($this);
+    }
   }
 
   /**
@@ -119,7 +137,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function removeOwner(Musician $musician):EncryptedFile
+  public function removeOwner(Musician $musician): EncryptedFile
   {
     $this->owners->remove($musician->getId());
 
@@ -133,7 +151,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function setDatabaseStorageDirEntries(Collection $dirEntries):EncryptedFile
+  public function setDatabaseStorageDirEntries(Collection $dirEntries): EncryptedFile
   {
     $this->databaseStorageDirEntries = $dirEntries;
     return $this;
@@ -144,7 +162,7 @@ class EncryptedFile extends File
    *
    * @return Collection
    */
-  public function getDatabaseStorageDirEntries():Collection
+  public function getDatabaseStorageDirEntries(): Collection
   {
     return $this->databaseStorageDirEntries;
   }
@@ -156,7 +174,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function addDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
+  public function addDatabaseStorageDirEntry(DatabaseStorageFile $entity): EncryptedFile
   {
     if (!$this->databaseStorageDirEntries->contains($entity)) {
       $this->databaseStorageDirEntries->add($entity);
@@ -171,7 +189,7 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function removeDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
+  public function removeDatabaseStorageDirEntry(DatabaseStorageFile $entity): EncryptedFile
   {
     if ($this->databaseStorageDirEntries->contains($entity)) {
       $this->databaseStorageDirEntries->removeElement($entity);
@@ -184,7 +202,7 @@ class EncryptedFile extends File
    *
    * @return int
    */
-  public function getNumberOfLinks():int
+  public function getNumberOfLinks(): int
   {
     return $this->databaseStorageDirEntries->count();
   }
