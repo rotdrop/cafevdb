@@ -31,12 +31,13 @@ use RuntimeException;
 use Throwable;
 use UnexpectedValueException;
 
-use OCP\IDateTimeZone;
 use OCP\IL10N;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Common\TimeFactory;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumSepaTransaction;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaDebitNote as DebitNote;
@@ -81,8 +82,8 @@ class SepaBulkTransactionService
    */
   public const DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS = 1;
 
-  public const TRANSACTION_TYPE_DEBIT_NOTE = 'debitnote';
-  public const TRANSACTION_TYPE_BANK_TRANSFER = 'banktransfer';
+  public const TRANSACTION_TYPE_DEBIT_NOTE = EnumSepaTransaction::DEBIT_NOTE->value;
+  public const TRANSACTION_TYPE_BANK_TRANSFER = EnumSepaTransaction::BANK_TRANSFER->value;
 
   private const SUBMISSION_EVENT = 'submissionEvent';
   private const SUBMISSION_TASK = 'submisisonTask';
@@ -139,12 +140,13 @@ class SepaBulkTransactionService
 
   /** {@inheritdoc} */
   public function __construct(
-    protected EntityManager $entityManager,
-    private FinanceService $financeService,
     private EventsService $eventsService,
+    private FinanceService $financeService,
+    private TimeFactory $timeFactory,
     protected ContainerInterface $appContainer,
-    protected ILogger $logger,
+    protected EntityManager $entityManager,
     protected IL10N $l,
+    protected ILogger $logger,
   ) {
   }
 
@@ -156,7 +158,9 @@ class SepaBulkTransactionService
    *
    * @param Entities\SepaBulkTransaction $bulkTransaction The bulk-transaction to modify.
    *
-   * @param DateTimeInterface $submitDate The date of submittance.
+   * @param ?DateTimeInterface $submitDate The date of submittance. This is a
+   * UTC-date-time at mignight UTC if non null. If null the associated tasks
+   * and calendar events are reset to their "unsubmitted" state.
    *
    * @return void
    */
@@ -165,21 +169,28 @@ class SepaBulkTransactionService
     ?DateTimeInterface $submitDate,
   ):void {
 
-    // $submitDate is in UTC but means the current date in local time.
-    /** @var IDateTimeZone $dateTimeZone */
-    $dateTimeZone = $this->appContainer->get(IDateTimeZone::class);
-    $now = (new DateTimeImmutable)->setTimezone($dateTimeZone->getTimeZone());
-    $now = self::convertToTimezoneDate($now, $submitDate->getTimezone());
+    if ($submitDate !== null) {
+      // $submitDate is in UTC but means the current date in local time.
+      $today = self::getCurrentDate();
+      $submitDate = self::convertToTimezoneDate($submitDate, $today->getTimezone());
+
+      if ($submitDate > $today) {
+        throw new UnexpectedValueException($this->l->t(
+          'Given submit date "%s" points to the future.',
+          $this->l->l('date', $submitDate),
+        ));
+      }
+    }
 
     $bulkTransaction->setSubmitDate($submitDate);
 
     $this->entityManager->registerPreCommitAction(
-      function() use ($bulkTransaction, $submitDate, $now) {
+      function() use ($bulkTransaction, $submitDate, $today) {
         $submissionTaskUri = $bulkTransaction->getSubmissionTaskUri();
         $submissionTask = $this->financeService->findFinanceCalendarEntry($submissionTaskUri);
         if (!empty($submissionTask)) {
           $stash = [ self::SUBMISSION_TASK => Util::cloneArray($submissionTask) ];
-          if (empty($submitDate) || $submitDate > $now) {
+          if ($submitDate === null) {
             $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
           } else {
             $this->eventsService->setCalendarTaskStatus($submissionTask, dateCompleted: $submitDate);
@@ -191,13 +202,13 @@ class SepaBulkTransactionService
         $this->restoreCalendarObjects($stash);
       },
     )->register(
-      function() use ($bulkTransaction, $submitDate, $now) {
+      function() use ($bulkTransaction, $submitDate, $today) {
         $submissionEventUri = $bulkTransaction->getSubmissionEventUri();
         $submissionEvent = $this->financeService->findFinanceCalendarEntry($submissionEventUri);
         if (!empty($submissionEvent)) {
           $stash = [ self::SUBMISSION_EVENT => Util::cloneArray($submissionEvent) ];
-          if (empty($submitDate) || $submitDate > $now) {
-            $this->logInfo('SUBMIT > NOW ' . print_r($submitDate, true) . ' ' . print_r($now, true));
+          if ($submitDate === null) {
+            $this->logInfo('NULL submit date.');
             // leave as is for the moment
           } else {
             $project = $bulkTransaction->getPayments()->first()->getProject();
@@ -268,7 +279,7 @@ class SepaBulkTransactionService
   public function handlePreNotification(
     Entities\SepaDebitNote $debitNote,
     Entities\CompositePayment $payment,
-  ):void {
+  ): void {
 
     $notifiedCount = $debitNote->getPayments()->filter(
       fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
@@ -307,7 +318,7 @@ class SepaBulkTransactionService
           . "\n"
           . $this->l->t('Person: %s', $musician->getPublicName(true) . ' <' . $musician->getEmail() . '>')
           . "\n"
-          . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime(new DateTimeImmutable))
+          . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime($this->timeFactory->now()))
           . "\n"
           . $this->l->t('MessageId: %s', $payment->getNotificationMessageId());
         $updateData = [
@@ -324,60 +335,57 @@ class SepaBulkTransactionService
   }
 
   /**
-   * Given the raw due-data calculate the deadlines for submission and
-   * pre-notification. We allow for extra "space" between the resulting
-   * due-date and the submission date. So the idea is to allow two more
-   * business days by adding another work-day between due-date and hard
-   * bank-submission dead-line.
+   * Given the due-date calculate the pre-notification deadline for the debit
+   * mandate.  We allow for extra "space" between the resulting due-date and
+   * the submission date. So the idea is to allow two more business days by
+   * adding another work-day between due-date and hard bank-submission
+   * dead-line.
    *
    * @param Entities\SepaDebitMandate $debitMandate Database entity.
    *
-   * @param null|DateTimeImmutable $baseDate Either pre-notificatio date or
-   * due-date, es determined by $fromDueDate. If omitted now() is assumed.
+   * @param DateTimeImmutable $dueDate The due-date of the debit mandate.
    *
-   * @param bool $fromDueDate \true means that $baseDate is the due-date of
-   * the debit-node. \false is the default and means that $baseDate is the
-   * pre-notification date.
-   *
-   * @return array
-   * ```
-   * [
-   *   dueDate => DATE,
-   *   preNotificationDeadline => DATE,
-   *   submissionDeadline => DATE,
-   *   hardSubmissionDeadline => DATE,
-   * ]
-   * ```
+   * @return DateTimeImmutable
    */
-  public function calculateDebitNoteDeadlines(
+  public function calculateDebitNotePreNotificationDeadline(
     Entities\SepaDebitMandate $debitMandate,
-    ?DateTimeImmutable $baseDate = null,
-    bool $fromDueDate = false,
-  ) {
-    if ($baseDate === null) {
-      $baseDate = new DateTimeImmutable;
-    }
+    DateTimeImmutable $dueDate,
+  ): DateTimeImmutable {
     $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
       + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
       + self::DEBIT_NOTE_SUBMISSION_DEADLINE;
-    if ($fromDueDate) {
-      $due = $baseDate;
-      $preNotification = $this->financeService->targetDeadline(
-        -$preNotificationBusinessDays,
-        -$debitMandate->getPreNotificationCalendarDays() ?: 0,
-        $due);
-    } else {
-      $preNotification = $baseDate;
-      $due = $this->financeService->targetDeadline(
-        $preNotificationBusinessDays,
-        $debitMandate->getPreNotificationCalendarDays() ?: 0,
-        $preNotification);
-    }
+    // compute pre-notification dead-line
+    $deadline = $this->financeService->targetDeadline(
+      -$preNotificationBusinessDays,
+      -$debitMandate->getPreNotificationCalendarDays() ?: 0,
+      $dueDate);
 
-    return [
-      'dueDate' => $due,
-      'preNotificationDeadline' => $preNotification,
-    ];
+    return $deadline;
+  }
+
+  /**
+   * Calculate the debit-note due-date based on the current date.  We allow
+   * for extra "space" between the resulting due-date and the submission
+   * date. So the idea is to allow two more business days by adding another
+   * work-day between due-date and hard bank-submission dead-line.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate Database entity.
+   *
+   * @return DateTimeImmutable
+   */
+  public function calculateDebitNoteDueDate(
+    Entities\SepaDebitMandate $debitMandate,
+  ): DateTimeImmutable {
+    $preNotification = $this->timeFactory->now();
+    $preNotificationBusinessDays = $debitMandate->getPreNotificationBusinessDays()
+      + self::DEBIT_NOTE_SUBMISSION_EXTRA_WORKING_DAYS
+      + self::DEBIT_NOTE_SUBMISSION_DEADLINE;
+    $dueDate = $this->financeService->targetDeadline(
+      $preNotificationBusinessDays,
+      $debitMandate->getPreNotificationCalendarDays() ?: 0,
+      $preNotification);
+
+    return $dueDate;
   }
 
   /**

@@ -390,7 +390,7 @@ class SepaBulkTransactionsController extends Controller
           $dueDateEstimate = max(
             $dueDateEstimate,
             $this->financeService->targetDeadline(
-              $debitMandate->getPreNotificationBusinessDays()?:0,
+              $debitMandate->getPreNotificationBusinessDays() ?: 0,
               $debitMandate->getPreNotificationCalendarDays(),
               $now)
           );
@@ -462,13 +462,11 @@ class SepaBulkTransactionsController extends Controller
 
         if (empty($dueDeadline)) {
           // count forward from now, just take the maximum
-          list('dueDate' => $dueDate,) = $this->bulkTransactionService->calculateDebitNoteDeadlines($debitMandate);
+          $dueDate = $this->bulkTransactionService->calculateDebitNoteDueDate($debitMandate);
           $earliestDueDate = max($earliestDueDate, $dueDate);
         } else {
           // count backwards from desired deadline
-          list(
-            'preNotificationDeadline' => $notificationDeadline,
-          ) = $this->bulkTransactionService->calculateDebitNoteDeadlines($debitMandate, $dueDeadline, fromDueDate:true);
+          $notificationDeadline = $this->bulkTransactionService->calculateDebitNotePreNotificationDeadline($debitMandate, $dueDeadline);
           if ($notificationDeadline < $now) {
             $preNotificationConflicts[] = [
               'mandate' => $debitMandate,

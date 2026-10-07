@@ -40,6 +40,8 @@ use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+use OCP\AppFramework\Utility\ITimeFactory;
+
 use OCA\CAFEVDB\Tests\MockProvider;
 use OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon as WrappedCarbon;
@@ -52,11 +54,15 @@ class TestClass
     DateTimeTrait::ensureDate as public;
     DateTimeTrait::convertToDateTime as public;
     DateTimeTrait::convertToTimezoneDate as public;
+    DateTimeTrait::getCurrentDate as public;
   }
 }
 
 /** Test the DateTimeTrait which manufactures dates from any arguments. */
 #[Attributes\CoversTrait(DateTimeTrait::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Toolkit\AppInfo\AbstractApplication::class)]
 class DateTimeTraitTest extends TestCase
 {
   private const DATE_TIME_CLASSES = [
@@ -143,5 +149,22 @@ class DateTimeTraitTest extends TestCase
       // echo json_encode($date, JSON_PRETTY_PRINT) . PHP_EOL;
       $this->assertEquals($output, json_encode($date, JSON_PRETTY_PRINT));
     }
+  }
+
+  /** {@inheritdoc} */
+  public function testGetCurrentDate(): void
+  {
+    $timezone = new DateTimeZone('Europe/Berlin');
+    $now = new DateTime()->setTimezone($timezone)->setDate(2099, 2, 14)->setTime(0, 30, 0);
+
+    $mockProvider = MockProvider::create($this);
+    $timeFactory = $this->getMockBuilder(ITimeFactory::class)->getMock();
+    $timeFactory->expects($this->once())->method('getDateTime')->willReturnCallback(fn(string $ignored, DateTimeZone $timezone) => (clone $now)->setTimezone($timezone));
+    $mockProvider->registerClassInstance(ITimeFactory::class, $timeFactory, global: true);
+
+    $today = TestClass::getCurrentDate($timezone);
+
+    $this->assertEquals('2099-02-14T00:00:00+0100', $today->format(DateTimeInterface::ISO8601));
+    // echo json_encode($today, JSON_PRETTY_PRINT) . PHP_EOL;
   }
 }

@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFEVDB\Tests\MockProvider;
+use OCA\CAFEVDB\Tests\Unit\Common\TimeFactoryTrait;
 use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 
 /** Test the SepaBulkTransactionsService */
@@ -86,6 +87,7 @@ use OCA\CAFEVDB\Tests\Unit\Database\Doctrine\ORM\Entities\EntityGeneratorTrait;
 class SepaBulkTransactionServiceTest extends TestCase
 {
   use EntityGeneratorTrait;
+  use TimeFactoryTrait;
 
   private FinanceService $financeService;
 
@@ -117,6 +119,8 @@ class SepaBulkTransactionServiceTest extends TestCase
 
     $l10n = $mockProvider->getL10N();
 
+    $this->mockTimeFactory();
+
     $this->sepaBulkTransactionsService = new SepaBulkTransactionService(
       entityManager: $this->entityManager,
       financeService: $this->financeService,
@@ -124,6 +128,7 @@ class SepaBulkTransactionServiceTest extends TestCase
       appContainer: $appContainer,
       logger: $logger,
       l: $l10n,
+      timeFactory: $this->timeFactory,
     );
   }
 
