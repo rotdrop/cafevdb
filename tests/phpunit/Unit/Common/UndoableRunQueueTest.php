@@ -81,7 +81,7 @@ class UndoableRunQueueTest extends TestCase
   /** @return void */
   public function testConstruction(): void
   {
-    // $this->expectNotToPerformAssertions(); ???
+    $this->expectNotToPerformAssertions();
   }
 
   /** @return void */
