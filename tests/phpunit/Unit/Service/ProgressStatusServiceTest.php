@@ -46,6 +46,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\CoversClass(Service\ProgressStatusService::class)]
 #[Attributes\CoversClass(\OCA\CAFEVDB\Storage\AppStorage::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\Uuid::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\L10N\L10NFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Service\Registration::class)]

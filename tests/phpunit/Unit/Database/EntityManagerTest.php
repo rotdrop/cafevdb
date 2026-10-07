@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 #[Attributes\CoversMethod(EntityManager::class, 'connected')]
 #[Attributes\CoversMethod(EntityManager::class, 'connectionParameters')]
 #[Attributes\UsesClass(\OCA\CAFEVDB\AppInfo\Application::class)]
+#[Attributes\UsesClass(\OCA\CAFEVDB\Common\TimeFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Common\UndoableRunQueue::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteCryptoFactory::class)]
 #[Attributes\UsesClass(\OCA\CAFEVDB\Crypto\HaliteSymmetricStreamCryptor::class)]
