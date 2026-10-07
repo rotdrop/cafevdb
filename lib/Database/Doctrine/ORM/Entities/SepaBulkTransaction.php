@@ -47,7 +47,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: DatabaseTables::SEPA_BULK_TRANSACTIONS_TABLE)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'sepa_transaction', type: DBALTypes::ENUM, enumType: EnumSepaTransaction::class)]
-#[ORM\DiscriminatorMap(['debit_note' => 'SepaDebitNote', 'bank_transfer' => 'SepaBankTransfer'])]
+#[ORM\DiscriminatorMap([
+  EnumSepaTransaction::DEBIT_NOTE->value => SepaDebitNote::class,
+  EnumSepaTransaction::BANK_TRANSFER->value => SepaBankTransfer::class,
+])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener::class])]

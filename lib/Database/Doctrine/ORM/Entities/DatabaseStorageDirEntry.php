@@ -40,9 +40,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: DirEntryType::class)]
 #[ORM\DiscriminatorMap([
-  DirEntryType::GENERIC->value => 'DatabaseStorageDirEntry',
-  DirEntryType::FILE->value => 'DatabaseStorageFile',
-  DirEntryType::FOLDER->value => 'DatabaseStorageFolder',
+  DirEntryType::GENERIC->value => DatabaseStorageDirEntry::class,
+  DirEntryType::FILE->value => DatabaseStorageFile::class,
+  DirEntryType::FOLDER->value => DatabaseStorageFolder::class,
 ])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository::class)]
 #[ORM\HasLifecycleCallbacks]

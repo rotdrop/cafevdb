@@ -49,9 +49,9 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
 #[ORM\DiscriminatorMap([
-  EnumFileType::GENERIC->value => 'File',
-  EnumFileType::ENCRYPTED->value => 'EncryptedFile',
-  EnumFileType::IMAGE->value => 'Image',
+  EnumFileType::GENERIC->value => File::class,
+  EnumFileType::ENCRYPTED->value => EncryptedFile::class,
+  EnumFileType::IMAGE->value => Image::class,
 ])]
 #[ORM\Entity(repositoryClass: \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository::class)]
 #[ORM\HasLifecycleCallbacks]
