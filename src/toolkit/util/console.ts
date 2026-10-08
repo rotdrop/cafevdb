@@ -127,7 +127,7 @@ class Console {
 
   enableSourceMaps(method?: ConsoleMethod, state: boolean = true) {
     if (!method) {
-      for (const key of Object.keys(this.smaps)) {
+      for (const key of Object.keys(this.smaps) as ConsoleMethod[]) {
         this.smaps[key] = state;
       }
     } else {

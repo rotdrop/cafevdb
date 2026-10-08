@@ -32,7 +32,7 @@ import { createTestingPinia } from '@pinia/testing';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { mount } from '@vue/test-utils';
 import { setActivePinia } from 'pinia';
-import { expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import VueComponent from '~/src/views/FilesTab.vue';
 import { EnumInitialStateKey } from '~/build/ts-types/php-modules/Controller.ts';
 import { appName } from '~/src/config.ts';

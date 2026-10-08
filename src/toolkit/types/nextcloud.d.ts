@@ -21,9 +21,6 @@
  * @module
  */
 
-// The core window.d.ts seems to be ignored (why?) so we duplicate the defs here
-import type Settings from '../../../../files/src/services/Settings.js';
-
 import '@nextcloud/typings';
 
 type SidebarAPI = Sidebar & {
@@ -41,7 +38,7 @@ declare global {
   // Private Files namespace
   var OCA: {
     Files: {
-      Settings: Settings;
+      Settings: unknown;
       Sidebar: SidebarAPI;
     };
   } & Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any

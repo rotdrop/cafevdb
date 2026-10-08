@@ -61,7 +61,7 @@ const addEditor = function(selector: string|JQuery, initCallback?: () => void) {
               $editorElements.map(async function(_index, editorElement) {
                 const $editorElement = $(editorElement);
                 return ClassicEditor
-                  .create(editorElement)
+                  .create({ attachTo: editorElement })
                   .then((editorInstance) => {
                     $editorElement.data('ckeditorInstance', editorInstance);
                     editorInstance.ui.focusTracker.on('change:isFocused', (_evt: unknown, _name: unknown, isFocused: boolean) => {

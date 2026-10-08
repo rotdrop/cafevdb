@@ -31,7 +31,7 @@ import type { NextcloudLogEntry } from '~/src/types/ajax/nextcloud-log.ts';
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 setLoggerSilent(true);
 
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { setActivePinia } from 'pinia';
 import { createTestingPinia } from '@pinia/testing';

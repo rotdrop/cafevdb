@@ -26,7 +26,7 @@
 
 import { setSilent as setLoggerSilent } from '../toolkit/util/mock-console.ts';
 
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createTestingPinia } from '@pinia/testing';
 import { setActivePinia } from 'pinia';
