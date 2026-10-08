@@ -32,12 +32,11 @@
       "bootstrap",
       "camelcase",
       "chosen-js",
-      "imagesLoaded",
       "jquery",
       "jqueryui",
       "moment",
       "node",
-      "popper",
+      "popper.js",
       "vitest/jsdom"
     ],
     "paths": {
