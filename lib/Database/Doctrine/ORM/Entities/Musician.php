@@ -847,7 +847,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Guess the gender from the name.
    *
-   * @param ?|\OCP\IL10N $l
+   * @param ?\OCP\IL10N $l
    *
    * @return array An array of guesses.
    */
