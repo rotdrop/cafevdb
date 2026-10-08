@@ -1,4 +1,6 @@
 /**
+ * @file
+ *
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -19,6 +21,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @module
  */
 
 import type { AsyncNextcloudEvents } from '@rotdrop/async-nextcloud-event-bus';
@@ -556,22 +560,22 @@ type ProjectWebPageRequest = {
  *  { action: delete,
  *    articleId: XX,
  *    projectId: XX,
- *    articleData: JSON }
+ *    articleData: JSON \}
  *
  *  { action: add,
  *    projectId: XX,
  *    articleId: XX,
- *    articleData: JSON }
+ *    articleData: JSON \}
  *
  *  { action: link,
  *    projectId: XX,
  *    articleId: XX,
- *    articleData: JSON }
+ *    articleData: JSON \}
  *
  *  { action: unlink,
  *    projectId: XX,
  *    articleId: XX,
- *    articleData: JSON }
+ *    articleData: JSON \}
  *
  *  For Action 'add' a negative ArticleId triggers the geneation
  *  of a new article, otherwise it is the id of an existing

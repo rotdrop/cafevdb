@@ -51,6 +51,8 @@ export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value 
 }
 
 /**
+ * @file
+ *
  * AJAX call with a simple value
  *
  * @param $element TBD.
@@ -63,6 +65,8 @@ export interface UserCallbacks<Element extends HTMLElement = HTMLElement, Value 
  *    an object: partial object with keys 'setup', 'success', 'fail',
  *    'cleanup', 'getValue', each pointing to a function performing
  *    the respective task.
+ *
+ * @module
  */
 const simpleSetValueHandler = <Element extends HTMLElement = HTMLElement, Value = DefaultValueType<Element>, Data = Record<string, Value>>(
   $element: JQuery<Element>,

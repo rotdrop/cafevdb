@@ -2,6 +2,8 @@ import { translate as t } from '@nextcloud/l10n';
 import { appName } from '../config.ts';
 import generateId from './generate-id.ts';
 /**
+ * @file
+ *
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
@@ -22,6 +24,8 @@ import generateId from './generate-id.ts';
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @module
  */
 /**
  * @file
