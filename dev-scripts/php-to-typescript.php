@@ -31,6 +31,7 @@ $appDir = realpath(__DIR__) . '/..';
 define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
 
 try {
+  $autoloader = require_once(__DIR__ . '/lib/scripts/vendor/autoload.php');
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once($appDir . '/vendor/autoload.php');
   require_once($appDir . '/vendor-wrapped/autoload.php');
@@ -40,12 +41,12 @@ try {
   exit(1);
 }
 
-\OC::$composerAutoloader->addPsr4(
+$autoloader->addPsr4(
   \OCA\RotDrop\DevScripts\PhpToTypeScript::class . '\\',
   __DIR__ . '/lib/scripts/php-to-typescript',
   true,
 );
-\OC::$composerAutoloader->addPsr4(
+$autoloader->addPsr4(
   \OCA\RotDrop\Toolkit::class . '\\',
   $appDir . '/php-toolkit/',
   true,
