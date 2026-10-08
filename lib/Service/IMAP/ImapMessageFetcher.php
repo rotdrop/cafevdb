@@ -22,6 +22,7 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * @file Copied from the Nextcloud mail app, {@see https://github.com/nextcloud/mail.git}.
  */
 
 namespace OCA\CAFEVDB\Service\IMAP;
