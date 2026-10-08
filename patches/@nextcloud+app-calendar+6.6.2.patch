@@ -1189,10 +1189,10 @@ index 6331c9a..400a3b3 100644
  export default {
  	name: 'OrganizerListItem',
 diff --git a/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyColor.vue b/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyColor.vue
-index 30fa5dd..ff3cfe3 100644
+index 4ef8d5a..b3c6f9b 100644
 --- a/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyColor.vue
 +++ b/node_modules/@nextcloud/app-calendar/src/components/Editor/Properties/PropertyColor.vue
-@@ -54,7 +54,7 @@ import {
+@@ -55,7 +55,7 @@ import {
  	NcColorPicker,
  } from '@nextcloud/vue'
  import Undo from 'vue-material-design-icons/Undo.vue'
@@ -2076,7 +2076,7 @@ index 7eb6da8..68492c6 100644
  /**
   * Adjusts the colSpan attribute of day-headers in the list view
 diff --git a/node_modules/@nextcloud/app-calendar/src/fullcalendar/rendering/eventDidMount.js b/node_modules/@nextcloud/app-calendar/src/fullcalendar/rendering/eventDidMount.js
-index 7f5dc03..dc2bdd9 100644
+index 2ca5d6b..1584e01 100644
 --- a/node_modules/@nextcloud/app-calendar/src/fullcalendar/rendering/eventDidMount.js
 +++ b/node_modules/@nextcloud/app-calendar/src/fullcalendar/rendering/eventDidMount.js
 @@ -3,9 +3,9 @@
