@@ -25,7 +25,15 @@
     "./src/**/*.vue",
     "./src/*-shim.d.ts",
     "./src/*.ts",
+    "./build/ts-types/app-config.ts",
+    "./build/ts-types/php-modules/**.ts",
     "./src/*.vue"
+  ],
+  "exclude": [
+    "./node_modules/**/*.spec*",
+    "./node_modules/**/e2e/**/*",
+    "./node_modules/**/*test*/**/*",
+    "./node_modules/**/src/**/*"
   ],
   "compilerOptions": {
     "types": [
