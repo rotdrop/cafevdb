@@ -3,8 +3,12 @@
     "allowUnknownTags": false
   },
   "source": {
-    "include": "src",
-    "includePattern": "(\\.js|\\.ts)$",
+    "include": [
+      "src/",
+      "build/ts-types/app-config.ts",
+      "build/ts-types/php-modules/"
+    ],
+    "includePattern": "(\\.js|\\.ts|\\.d.ts)$",
     "excludePattern": "(node_modules|src/toolkit/types/vue-shim.d.ts)"
   },
   "plugins": [
