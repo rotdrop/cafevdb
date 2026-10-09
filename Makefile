@@ -329,7 +329,7 @@ DW_APP_CONFIG_PATCH = patches/
 $(DW_APP_CONFIG): node_modules
 	if ! [ -f $(DW_APP_CONFIG) ]; then\
  cd $(ABSSRCDIR);\
- patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.0.patch;\
+ patch -p1 < $(ABSSRCDIR)/patches/@rotdrop+nextcloud-app-dokuwiki+1.2.1.patch;\
 fi
 
 WEBPACK_DEPS =\
@@ -410,13 +410,14 @@ $(APP_BUILD_HASH):
 # START DOCS
 
 #@@ Build the documentation. May take a long time
-doc: phpdoc doxygen jsdoc
+doc: phpdoc doxygen jsdoc tsdoc
 .PHONY: doc
 
 GH_PAGES_BUILD_DIR = $(DOC_BUILD_DIR)/gh-pages/
 GH_PAGES_PHPDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/phpdoc/html/
 GH_PAGES_DOXYGEN_HTML = $(GH_PAGES_BUILD_DIR)/docs/doxygen/html/
 GH_PAGES_JSDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/jsdoc/html/
+GH_PAGES_TSDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/typedoc/html/
 
 $(GH_PAGES_BUILD_DIR):
 	if [ -d "$@" ]; then\
@@ -491,6 +492,20 @@ $(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.htm
 $(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) $(MAKEFILE_DEP)
 	rm -rf $(JSDOC_HTML)
 	mkdir -p $(JSDOC_HTML)
+	$(NPM) run generate-docs
+
+TSDOC_HTML = $(DOC_BUILD_DIR)/typedoc/
+
+.PHONY: tsdoc
+tsdoc: $(TSDOC_HTML)/index.html
+
+$(GH_PAGES_TSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(TSDOC_HTML)/index.html
+	mkdir -p $(GH_PAGES_TSDOC_HTML)
+	cp -a $(TSDOC_HTML)/. $(GH_PAGES_TSDOC_HTML)/.
+
+$(TSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH) $(WEBPACK_DEPS) $(MAKEFILE_DEP)
+	rm -rf $(TSDOC_HTML)
+	mkdir -p $(TSDOC_HTML)
 	$(NPM) run generate-docs
 
 # END DOCS
