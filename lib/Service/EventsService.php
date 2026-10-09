@@ -2658,11 +2658,11 @@ class EventsService
    * object. If the identifier ends with '.ics' it is assumed to be an URI,
    * other a UID.
    *
-   * @return array|null
+   * @return ?array
    *
    * @see CalDavService::getCalendarObject()
    */
-  public function findCalendarEntry(mixed $calId, string $objectIdentifier)
+  public function findCalendarEntry(mixed $calId, string $objectIdentifier): ?array
   {
     $event = $this->calDavService->getCalendarObject($calId, $objectIdentifier);
 
